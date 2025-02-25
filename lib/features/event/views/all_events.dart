@@ -29,7 +29,7 @@ class _AllEventsState extends ConsumerState<AllEvents> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(eventVmProvider.notifier).getEventWithStatus(1);
+      ref.read(eventVmProvider.notifier).getEventWithStatus(page:1);
     });
     searchController = TextEditingController();
     searchController.addListener(() {
@@ -70,7 +70,7 @@ class _AllEventsState extends ConsumerState<AllEvents> {
     return Expanded(
         child: RefreshIndicator(
             onRefresh: () =>
-                ref.read(eventVmProvider.notifier).getEventWithStatus(1),
+                ref.read(eventVmProvider.notifier).getEventWithStatus(page:1),
             child: ListView(
               children: [
                 WayaButton(

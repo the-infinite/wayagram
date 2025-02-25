@@ -49,8 +49,7 @@ class OrderedProductCard extends StatelessWidget {
                         width: context.width * 0.3,
                         child: Text(
                           orders.productName,
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customBlack,
+                          style: TextStyle(color: wayaTheme.colorScheme.customBlack,
                               fontWeight: FontWeight.w500,
                               fontSize: 14),
                           overflow: TextOverflow.ellipsis,

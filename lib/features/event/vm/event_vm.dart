@@ -62,7 +62,7 @@ class EventVm extends StateNotifier<EventState> {
   //   }
   // }
 
-  Future<PaginatedResult<EventDoc>?> getEventWithStatus(int page) async {
+  Future<PaginatedResult<EventDoc>?> getEventWithStatus({required int page}) async {
     try {
       state = state.copyWith(isLoadingEventWithStatus: true);
       final response = await _eventRepository.getEventWithStatus(
@@ -97,7 +97,7 @@ class EventVm extends StateNotifier<EventState> {
     //
   }
 
-  Future<PaginatedResult<EventDoc>?> getUserEvents(int page) async {
+  Future<PaginatedResult<EventDoc>?> getUserEvents({required int page}) async {
     try {
       state = state.copyWith(isLoadingUserEvents: true);
 
@@ -206,7 +206,7 @@ class EventVm extends StateNotifier<EventState> {
     }
   }
 
-  Future<PaginatedResult<Doc>?> getAttendees(int page) async {
+  Future<PaginatedResult<Doc>?> getAttendees({required int page}) async {
     try {
       state = state.copyWith(isLoadingAttendees: true);
       final userId = await _secureDataSource.getUserId();

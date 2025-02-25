@@ -399,7 +399,7 @@ class MomentVm extends StateNotifier<MomentState> {
     state = state.copyWith(momentId: mId);
   }
 
-  Future<PaginatedResult<MomentViewer>?> momentViewers(int page) async {
+  Future<PaginatedResult<MomentViewer>?> momentViewers({required int page}) async {
     try {
       state = state.copyWith(isLoadingUserMoments: true);
 

@@ -141,7 +141,7 @@ class StepWidget extends StatelessWidget {
                 children: [
                   Text(
                     orderStatus.title,
-                    style: wayaTheme.textTheme.bodyLarge,
+                    style: wayaTheme.textTheme.bodyMedium,
                   ),
                   const Gap(8),
                   Text(

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/shop/data/model/product_detail_type.dart';
+import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/views/products_view_page.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
@@ -11,26 +12,89 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/shop/widgets/products_grid.dart';
 
-class AllProducts extends ConsumerWidget {
+class AllProducts extends ConsumerStatefulWidget {
   const AllProducts({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<AllProducts> createState() => _AllProductsState();
+}
+
+class _AllProductsState extends ConsumerState<AllProducts> {
+  late TextEditingController searchController;
+  List<String> categories = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    searchController = TextEditingController();
+    searchController.addListener(() {
+      setState(() {}); // Rebuild when search text changes
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final notifier = ref.watch(shopVmProvider.notifier);
     final state = ref.watch(shopVmProvider);
 
+    final allProducts = state.products;
+
+    // search filter
+    final searchFilteredProducts = WayaUtils.search<Product>(
+        allProducts,
+        [
+          'id',
+          'deliveryAddress',
+          'name',
+          'options',
+          'condition',
+          'materialType',
+          'description'
+        ],
+        searchController.text);
+
+    // category filter
+    final categoriesFilteredProducts = searchFilteredProducts.where((prod) {
+      if (categories.isNotEmpty && !categories.contains(prod.categoryId)) {
+        return false;
+      }
+
+      return true;
+    }).toList();
+
+    // wayagram deal products
+    final wayagramProducts = categoriesFilteredProducts.where((prod) {
+      return prod.wayagramDeal == true;
+    }).toList();
+
+    // Non - wayagram products
+    final otherProducts = categoriesFilteredProducts.where((prod) {
+      return prod.wayagramDeal == null || prod.wayagramDeal == false;
+    }).toList();
+
     return Expanded(
         child: RefreshIndicator(
-            onRefresh: () =>
-                ref.read(shopVmProvider.notifier).getAllProducts(1),
+            onRefresh: () => ref
+                .read(shopVmProvider.notifier)
+                .getAllProducts(page: 1, limit: 20),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   FilterWidget(
-                    search: TextEditingController(),
+                    search: searchController,
                   ),
                   const Gap(5),
+                  CategoriesFilterWidget(
+                    setCategory: (value) => {
+                      setState(() {
+                        categories = value;
+                      })
+                    },
+                    uniqueKey: 'all-product',
+                  ),
+                  const Gap(20),
                   GroupedWidgetHeader(
                     onTap: () {
                       WayaNav.toNamed(ProductsViewPage.route,
@@ -40,15 +104,9 @@ class AllProducts extends ConsumerWidget {
                     title: 'Wayagram Deals',
                   ),
                   const Gap(10),
-                  CategoriesFilterWidget(
-                    setCategory: (value) => {},
-                    uniqueKey: 'all-product',
-                  ),
-                  const Gap(25),
                   state.isLoading
                       ? _wayagramDealProductLoadingState(context: context)
-                      : ProductsGrid(
-                          products: notifier.filteredWayagramDealProducts),
+                      : ProductsGrid(products: wayagramProducts),
                   const Gap(25),
                   GroupedWidgetHeader(
                     onTap: () {
@@ -61,7 +119,7 @@ class AllProducts extends ConsumerWidget {
                   const Gap(25),
                   state.isLoading
                       ? _recommendedProductLoadingState(context: context)
-                      : ProductsGrid(products: notifier.filteredProducts),
+                      : ProductsGrid(products: otherProducts),
                   SizedBox(
                     height: 100,
                   )
