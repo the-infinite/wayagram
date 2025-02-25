@@ -49,10 +49,10 @@ class ShopVm extends StateNotifier<ShopState> {
     state = state.copyWith(searchQuery: query);
   }
 
-  Future<PaginatedResult<Product>?> getAllProducts(int page) async {
+  Future<PaginatedResult<Product>?> getAllProducts({ required int page, int limit = 20}) async {
     state = state.copyWith(isLoading: true);
     try {
-      final response = await _repository.getProducts(page);
+      final response = await _repository.getProducts(page: page, limit: limit);
       List<Product> allProducts = [];
       bool hasNextPage = false;
       if (response.success) {

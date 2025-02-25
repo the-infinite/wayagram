@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
@@ -25,6 +24,7 @@ class AddProductState {
   final bool applyDiscount;
   final String productCategory;
   final Select? selectedCategory;
+  final String productId;
 
   final String productType;
 
@@ -55,6 +55,7 @@ class AddProductState {
       this.selectedCategory,
       this.productColor = '',
       this.productCondition = '',
+      this.productId = '',
       this.productType = '',
       this.selectedDiscountType,
       TextEditingController? productDepth,
@@ -121,6 +122,7 @@ class AddProductState {
       Select? selectedDiscountType,
       bool? isLoading,
       bool? isLoadingEditingMode,
+      String? productId,
       String? shopId}) {
     return AddProductState(
         productName: productName ?? this.productName,
@@ -144,6 +146,7 @@ class AddProductState {
         uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
         productImage: productImage ?? this.productImage,
         shopId: shopId ?? this.shopId,
+        productId: productId ?? this.productId,
         isWayagramDeal: isWayagramDeal ?? this.isWayagramDeal,
         categories: categories ?? this.categories,
         discountPercentage: discountPercentage ?? this.discountPercentage,

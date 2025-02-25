@@ -6,7 +6,7 @@ enum ProductDetailType { wayagramdeal, recommended }
 class ProductDetailModel {
   final String title;
   final String? description;
-  final Future<PaginatedResult<Product>?> Function(int page) fetchData;
+  final Future<PaginatedResult<Product>?> Function({required int page}) fetchData;
 
   ProductDetailModel({
     required this.title,

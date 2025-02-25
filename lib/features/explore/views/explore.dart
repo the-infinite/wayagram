@@ -48,8 +48,8 @@ class _ExploreState extends ConsumerState<Explore> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(shopVmProvider.notifier).allCategories(1);
-      ref.read(shopVmProvider.notifier).getAllProducts(1);
-      ref.read(eventVmProvider.notifier).getEventWithStatus(1);
+      ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 20);
+      ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1);
       ref.read(cartVmProvider.notifier).loadCart();
     });
     super.initState();

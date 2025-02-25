@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/features/shop/cart/data/repo/cart_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
@@ -90,14 +91,13 @@ class CartVm extends StateNotifier<CartState> {
             totalFee: price * count,
             products: [
               CartProduct(
-                price: price,
-                quantity: count,
-                productId: productId,
-                productName: productName,
-                deliveryCharge: false,
-                productImage: productImage,
-                deliveryOptions: ""
-              ),
+                  price: price,
+                  quantity: count,
+                  productId: productId,
+                  productName: productName,
+                  deliveryCharge: false,
+                  productImage: productImage,
+                  deliveryOptions: ""),
             ],
           ),
         ],
@@ -132,18 +132,17 @@ class CartVm extends StateNotifier<CartState> {
         if (!productAdded) {
           updatedProducts.add(
             CartProduct(
-              price: price,
-              quantity: count,
-              productId: productId,
-              productName: productName,
-              deliveryCharge: false,
-              productImage: productImage,
-              deliveryOptions: ''
-            ),
+                price: price,
+                quantity: count,
+                productId: productId,
+                productName: productName,
+                deliveryCharge: false,
+                productImage: productImage,
+                deliveryOptions: ''),
           );
           productAdded = true;
-           print("add item for a shop ");
-                 await postCartItem(id: productId, shopId: shopId, price: price);
+          print("add item for a shop ");
+          await postCartItem(id: productId, shopId: shopId, price: price);
         }
 
         updatedItems[i] = updatedItems[i].copyWith(products: updatedProducts);
@@ -170,14 +169,13 @@ class CartVm extends StateNotifier<CartState> {
           totalFee: price * count,
           products: [
             CartProduct(
-              price: price,
-              quantity: count,
-              productId: productId,
-              productName: productName,
-              deliveryCharge: false,
-              productImage: productImage,
-              deliveryOptions: ''
-            ),
+                price: price,
+                quantity: count,
+                productId: productId,
+                productName: productName,
+                deliveryCharge: false,
+                productImage: productImage,
+                deliveryOptions: ''),
           ],
         ),
       );
@@ -340,6 +338,8 @@ class CartVm extends StateNotifier<CartState> {
         shopId: shopId,
       );
       if (response.success) {
+        WayaSnackBar.showToast(
+            "You have successfully requested for the delivery price");
         print(response.data);
       }
     } catch (e) {

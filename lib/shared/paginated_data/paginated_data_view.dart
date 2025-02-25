@@ -5,7 +5,7 @@ import 'package:wayagram/features/shop/data/model/shop_state.dart';
 
 class PaginatedDataView<T> extends ConsumerStatefulWidget {
   final String uniqueKey;
-  final Future<PaginatedResult<T>?> Function(int page) fetchData;
+  final Future<PaginatedResult<T>?> Function({required int page}) fetchData;
   final Widget Function(List<T>, ScrollController) result;
   final Widget? loadingState;
   final Widget? emptyState;

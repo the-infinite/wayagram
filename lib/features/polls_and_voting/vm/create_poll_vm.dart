@@ -653,7 +653,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  Future<PaginatedResult<Docs>?> getMyPolls( page) async {
+  Future<PaginatedResult<Docs>?> getMyPolls({required int page}) async {
 
     try{
     state = state.copyWith(isLoading: true);
@@ -678,7 +678,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  Future<PaginatedResult<Docs>?> getAllPolls(int page) async {
+  Future<PaginatedResult<Docs>?> getAllPolls({required int page}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.getAllPolls(page);

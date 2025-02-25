@@ -91,6 +91,7 @@ class CreateShopState {
       vendorId: vendorId,
       state: state,
       lga: lga,
+      country: "Nigeria"
     );
   }
 }
