@@ -60,6 +60,7 @@ import 'package:wayagram/features/quotation/seller/views/bids/map_screen.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/see_seller_bids.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
+import 'package:wayagram/features/shop/filter/views/product_search_result.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
 import 'package:wayagram/features/shop/seller/views/delivery_request/delivery_request.dart';
@@ -223,6 +224,7 @@ class WayaAppRoutes {
     SupportRequestScreen.route: () => SupportRequestScreen(),
     SupportDisputeScreen.route: () => SupportDisputeScreen(),
     SupportChatScreen.route: () => SupportChatScreen(),
+    ProductSearchResult.route:() => ProductSearchResult()
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and

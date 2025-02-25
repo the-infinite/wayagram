@@ -77,7 +77,7 @@ class Product extends BaseModel<Product>{
   final bool approve;
   final bool deliveryCharge;
   final String options;
-  final String pickupAddress;
+  final String? pickupAddress;
   final String? rating;
   final int discountPercentage;
   final String shopId;

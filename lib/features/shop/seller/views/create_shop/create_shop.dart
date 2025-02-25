@@ -274,7 +274,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           uniqueKey: 'shop-state',
                           label: "State",
                           value: viewModel.state,
@@ -283,7 +283,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                           onSelected: (value) => ref
                               .read(createAdditionalShopVmProvider(uniqueKey)
                                   .notifier)
-                              .selectState(value)),
+                              .selectState(value.first)),
                       if (formState.hasError && viewModel.state.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
@@ -308,7 +308,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           uniqueKey: 'shop-lga',
                           label: "LGA",
                           hintText: 'Select LGA',
@@ -317,7 +317,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                           onSelected: (value) => ref
                               .read(createAdditionalShopVmProvider(uniqueKey)
                                   .notifier)
-                              .selectLGA(value)),
+                              .selectLGA(value.first)),
                       if (formState.hasError && viewModel.lga.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
