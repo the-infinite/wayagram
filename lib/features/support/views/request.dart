@@ -279,14 +279,14 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                     ValueListenableBuilder(
                       valueListenable: notifier.topicNotifier,
                       builder: (context, selectedTopic, _) {
-                        return WayaSelectField(
+                        return WayaSelectField<String>(
                           height: 0.2,
                           uniqueKey: 'support-topic',
                           value: selectedTopic?.value,
                           label: "Support Topic",
                           hintText: 'Select Topic',
                           items: notifier.supportTopics,
-                          onSelected: (value) => notifier.topicNotifier.value = value,
+                          onSelected: (value) => notifier.topicNotifier.value = value.first,
                         );
                       },
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import '../widgets/filter_chip_item.dart';
@@ -7,8 +8,8 @@ import 'package:gap/gap.dart';
 
 class FilterSection extends ConsumerStatefulWidget {
   final String title;
-  final List<String> options;
-  final String selectedOption;
+  final List<Select> options;
+  final List<String> selectedOption;
   final Function(String) onOptionSelected;
 
   const FilterSection({
@@ -91,9 +92,10 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
                     children: [
                       Icon(Icons.keyboard_arrow_down),
                       const Gap(5),
-                      Text("Enlarge", style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.customBlack,
-                            fontSize: 14))
+                      Text("Enlarge",
+                          style: TextStyle().wayaCopyWith(
+                              color: wayaTheme.colorScheme.customBlack,
+                              fontSize: 14))
                     ],
                   ),
                 ),
@@ -106,13 +108,13 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
           curve: Curves.easeInOut,
           child: _showCollpase
               ? Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: 6,
+                  runSpacing: 6,
                   children: widget.options.map((option) {
                     return FilterChipItem(
-                      label: option,
-                      isSelected: option == widget.selectedOption,
-                      onSelected: () => widget.onOptionSelected(option),
+                      label: option.label,
+                      isSelected: widget.selectedOption.contains(option.value),
+                      onSelected: () => widget.onOptionSelected(option.value),
                     );
                   }).toList(),
                 )

@@ -251,7 +251,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          WayaSelectField(
+                          WayaSelectField<String>(
                               height: 0.3,
                               label: "State",
                               uniqueKey: 'state',
@@ -261,7 +261,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                                   .restructuredState(),
                               onSelected: (value) => ref
                                   .read(createRequestProvider.notifier)
-                                  .update(value, "deliveryState")),
+                                  .update(value.first, "deliveryState")),
                           if (formState.hasError &&
                               viewModel.deliveryState.isEmpty)
                             Padding(
@@ -288,7 +288,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          WayaSelectField(
+                          WayaSelectField<String>(
                               height: 0.3,
                               uniqueKey: 'lga',
                               label: "LGA",
@@ -298,7 +298,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                                   .restructuredLga(),
                               onSelected: (value) => ref
                                   .read(createRequestProvider.notifier)
-                                  .update(value, "deliveryLga")),
+                                  .update(value.first, "deliveryLga")),
                           if (formState.hasError &&
                               viewModel.deliveryLga.isEmpty)
                             Padding(
@@ -331,7 +331,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           height: 0.3,
                           label: "Bidding Start Time",
                           hintText: 'Select Bidding Start Time',
@@ -341,7 +341,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                               .restructuredBidTime(),
                           onSelected: (value) => ref
                               .read(createRequestProvider.notifier)
-                              .update(value, "biddingStartTime")),
+                              .update(value.first, "biddingStartTime")),
                       if (formState.hasError &&
                           viewModel.biddingStartTime.isEmpty)
                         Padding(

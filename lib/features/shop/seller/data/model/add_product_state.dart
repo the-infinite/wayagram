@@ -30,7 +30,8 @@ class AddProductState {
 
   final String productCondition;
 
-  final String productColor;
+  final List<Select>? productColor;
+  final String? selectedColor;
   final String pickUpOption;
   final String discountType;
   final List<Select> categories;
@@ -53,7 +54,8 @@ class AddProductState {
       TextEditingController? deliveryPrice,
       this.productCategory = '',
       this.selectedCategory,
-      this.productColor = '',
+      this.productColor = const [],
+      this.selectedColor = '',
       this.productCondition = '',
       this.productId = '',
       this.productType = '',
@@ -103,7 +105,7 @@ class AddProductState {
       String? productCategory,
       Select? selectedCategory,
       bool? isEditMode,
-      String? productColor,
+      List<Select>? productColor,
       String? productCondition,
       String? productType,
       String? pickUpOption,
@@ -115,6 +117,7 @@ class AddProductState {
       TextEditingController? discountPercentage,
       List<String>? images,
       File? productImage,
+      String? selectedColor,
       bool? isWayagramDeal,
       List<Select>? categories,
       List<Select>? allDiscountTypes,
@@ -146,6 +149,7 @@ class AddProductState {
         uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
         productImage: productImage ?? this.productImage,
         shopId: shopId ?? this.shopId,
+        selectedColor: selectedColor ?? this.selectedColor,
         productId: productId ?? this.productId,
         isWayagramDeal: isWayagramDeal ?? this.isWayagramDeal,
         categories: categories ?? this.categories,
