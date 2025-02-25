@@ -93,7 +93,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                WayaSelectField(
+                WayaSelectField<String>(
                   height: 0.3,
                   value: viewModel2.entrySelectType,
                   label: "Entry Type",
@@ -102,12 +102,12 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                       .read(contestNotifierProvider.notifier)
                       .ugtPaymentType(),
                   onSelected: (value) {
-                    if (value.label == "Free") {
+                    if (value.first.label == "Free") {
                       viewModel2.amount.text = "0";
                     }
                     ref
                         .read(contestNotifierProvider.notifier)
-                        .updateEntryType(value.label);
+                        .updateEntryType(value.first.label);
                   },
                   uniqueKey: 'contest-state',
                 ),
@@ -175,7 +175,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                         height: 0.3,
                         value: viewModel2.durationSelectType,
                         label: "Duration Type",
@@ -185,7 +185,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                             .ugtDurationType(),
                         onSelected: (value) => ref
                             .read(contestNotifierProvider.notifier)
-                            .updateDurationType(value.label),
+                            .updateDurationType(value.first.label),
                         uniqueKey: 'contest-state',
                       ),
                       if (formState.hasError &&
@@ -260,7 +260,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                         .showDatePickerDialog(context);
                   },
                   child: AbsorbPointer(
-                    child: WayaSelectField(
+                    child: WayaSelectField<String>(
                       height: 0.3,
                       value: viewModel2.startDate.isEmpty
                           ? 'DD/MM/YYYY'
@@ -272,7 +272,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                           .ugtDurationType(),
                       onSelected: (value) => ref
                           .read(contestNotifierProvider.notifier)
-                          .updateDurationType(value.label),
+                          .updateDurationType(value.first.label),
                       uniqueKey: 'contest-state',
                     ),
                   ),

@@ -245,7 +245,7 @@ class PollDashboardModelDocs {
     if (json['choices'] != null) {
       choices = [];
       json['choices'].forEach((v) {
-        choices?.add(Choices.fromJson(v));
+        choices?.add(PollDashboardChoices.fromJson(v));
       });
     }
     userData = json['user_data'] != null ? UserData.fromJson(json['user_data']) : null;
@@ -267,7 +267,7 @@ class PollDashboardModelDocs {
   String? createdAt;
   String? updatedAt;
   dynamic deletedAt;
-  List<Choices>? choices;
+  List<PollDashboardChoices>? choices;
   UserData? userData;
   PollDashboardModelDocs copyWith({  String? id,
   List<String>? categories,
@@ -286,7 +286,7 @@ class PollDashboardModelDocs {
   String? createdAt,
   String? updatedAt,
   dynamic deletedAt,
-  List<Choices>? choices,
+  List<PollDashboardChoices>? choices,
   UserData? userData,
 }) => PollDashboardModelDocs(  id: id ?? this.id,
   categories: categories ?? this.categories,
@@ -397,10 +397,10 @@ UserData copyWith({  String? id,
 
 }
 
-Choices choicesFromJson(String str) => Choices.fromJson(json.decode(str));
-String choicesToJson(Choices data) => json.encode(data.toJson());
-class Choices {
-  Choices({
+PollDashboardChoices choicesFromJson(String str) => PollDashboardChoices.fromJson(json.decode(str));
+String choicesToJson(PollDashboardChoices data) => json.encode(data.toJson());
+class PollDashboardChoices {
+  PollDashboardChoices({
       this.id, 
       this.pollId, 
       this.text, 
@@ -412,7 +412,7 @@ class Choices {
       this.createdAt, 
       this.updatedAt,});
 
-  Choices.fromJson(dynamic json) {
+  PollDashboardChoices.fromJson(dynamic json) {
     id = json['id'];
     pollId = json['pollId'];
     text = json['text'];
@@ -436,7 +436,7 @@ class Choices {
   num? uniqueVotes;
   String? createdAt;
   String? updatedAt;
-Choices copyWith({  String? id,
+  PollDashboardChoices copyWith({  String? id,
   String? pollId,
   String? text,
   String? description,
@@ -446,7 +446,7 @@ Choices copyWith({  String? id,
   num? uniqueVotes,
   String? createdAt,
   String? updatedAt,
-}) => Choices(  id: id ?? this.id,
+}) => PollDashboardChoices(  id: id ?? this.id,
   pollId: pollId ?? this.pollId,
   text: text ?? this.text,
   description: description ?? this.description,

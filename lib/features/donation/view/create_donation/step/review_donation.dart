@@ -8,6 +8,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/donation/donation_modal/donation_modal.dart';
 import 'package:wayagram/features/donation/state/donation_state.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 
@@ -94,33 +95,12 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
           callback: !viewModel!.isLoading
               ? ()  async{
 
-          /*  CreateBuyerRequest createBuyerRequest = CreateBuyerRequest(
-                buyerId: buyerId,
-                productName: viewModel!.title.text,
-                brand: viewModel!.description.text,
-                category: viewModel!.details.text,
-                condition: viewModel!.amount.text,
-                description: viewModel!.productDescription.text,
-                quantity: viewModel!.quantity.text,
-                bidStart: viewModel!.startDate,
-                bidEnd: viewModel!.endDate,
-                deliveryDetails: '----',
-                minDistance: viewModel!.minDistance.text,
-                maxDistance: viewModel!.maxDistance.text,
-                stateOfPurchase: viewModel!.stateOfPurchase,
-                lga: viewModel!.lga,
-                vendorsCanSeeBidFromAnyDistance: '${viewModel!.vendorSeeBuyRequest}',
-                deliveryType: 'delivery',
-                deliveryAddress: viewModel!.deliveryAddress.text,
-                deliveryState: viewModel!.deliveryState,
-                deliveryLga: viewModel!.deliveryLga,
-                maxBidAmount: viewModel!.maxBidAmount.text,
-                bidStartingAmount: viewModel!.bidStartingAmount.text.replaceAll(',', ''));
-            await ref.read(createRequestProvider.notifier).createBuyerRequest(
-                createBuyerRequest
-            );*/
+            WayaUtils.showModalSheet(
+              context,
+              child: DonationSuccessModal(),
+            );
 
-            donation.reset();
+            //donation.reset();
             //WayaNav.toNamed('/seeBuyer-bids');
           }
               : null,

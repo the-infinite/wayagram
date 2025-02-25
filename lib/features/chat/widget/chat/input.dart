@@ -228,9 +228,9 @@ class ChatInputController {
   }
 
   /// A helper function used to initialize this controller with a new chat.
-  void setChat(ChatModel chat) async {
+  void setChat(ChatModel? chat) async {
     _chat = chat;
-    _soundRecorder = RecorderController();
+    _soundRecorder ??= RecorderController();
 
     //? If permission was not granted.
     if (!await _soundRecorder!.checkPermission()) return;
@@ -323,13 +323,17 @@ class ChatInputWidget extends StatelessWidget {
   final ChatInputController controller;
   final ChatNotifier notifier;
   final bool voiceEnabled;
+  final bool padded;
+  final Future<ChatModel?> Function() createChat;
 
   // Construct.
   const ChatInputWidget({
     super.key,
     required this.controller,
     required this.notifier,
+    required this.createChat,
     this.voiceEnabled = true,
+    this.padded = true,
   });
 
   /// Helper function used to add an attachment.
@@ -388,6 +392,14 @@ class ChatInputWidget extends StatelessWidget {
 
   /// Helper function used to send a message.
   void _sendMessage() async {
+    //? If this conversation does not yet exist...
+    if (controller._chat == null) {
+      final chat = await createChat();
+      controller.setChat(chat);
+      if (chat != null) notifier.setChat(chat);
+    }
+
+    //? Since we are fine, do all the needful.
     final message = controller.buildMessage;
     final quoted = controller._replyTo.value;
     final isEdit = controller.isEditing;
@@ -434,7 +446,7 @@ class ChatInputWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15, bottom: 12),
+      padding: padded ? const EdgeInsets.only(left: 15, right: 15, bottom: 12) : EdgeInsets.zero,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -545,6 +557,9 @@ class ChatInputWidget extends StatelessWidget {
                           if (controller._currentType.value == MessageType.text) {
                             controller._canSend.value = value.trim().isNotEmpty;
                           }
+
+                          //? If this has no chat yet...
+                          if (controller._chat == null) return;
 
                           //? If this is not in the state we are thinking of...
                           if (!controller._isTyping.value) {

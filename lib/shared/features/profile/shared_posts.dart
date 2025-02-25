@@ -40,25 +40,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //? Just if there are some top rated posts to show.
-        if (state.topPosts.isNotEmpty) ...[
-          Text(
-            "Recommended For You",
-            style: wayaTheme.textTheme.bodyMedium,
-          ),
-          const Gap(10),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: posts.length,
-            itemBuilder: (context, index) {
-              return WayaPostWidget(
-                data: posts[index],
-                index: index,
-              );
-            },
-          ),
-        ],
+     
 
         //? If there are posts to show and this is full view...
         if (state.posts.isNotEmpty && widget.isExpanded) ...[
@@ -119,6 +101,26 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
                 textColor: wayaTheme.colorScheme.customPrimary,
               )
           ],
+        ],
+
+           //? Just if there are some top rated posts to show.
+        if (state.topPosts.isNotEmpty) ...[
+          Text(
+            "Recommended For You",
+            style: wayaTheme.textTheme.bodyMedium,
+          ),
+          const Gap(10),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: posts.length,
+            itemBuilder: (context, index) {
+              return WayaPostWidget(
+                data: posts[index],
+                index: index,
+              );
+            },
+          ),
         ],
       ],
     );

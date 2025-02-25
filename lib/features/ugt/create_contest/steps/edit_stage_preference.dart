@@ -124,7 +124,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                         height: 0.3,
                         value: entryType.value,
                         label: "Entry Type ",
@@ -133,10 +133,10 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             .read(contestNotifierProvider.notifier)
                             .ugtPaymentType(),
                         onSelected: (value) {
-                          if (value.label == "Free") {
+                          if (value.first.label == "Free") {
                             _contestController.entryAmountController.text = "0";
                           }
-                          entryType.value = value.label;
+                          entryType.value = value.first.label;
                         },
                         uniqueKey: 'entry-type',
                       ),
@@ -213,7 +213,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                               "";
                         },
                         child: AbsorbPointer(
-                          child: WayaSelectField(
+                          child: WayaSelectField<String>(
                             height: 0.3,
                             value: startDate.value.isEmpty
                                 ? 'DD/MM/YYYY'
@@ -225,7 +225,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                                 .ugtDurationType(),
                             onSelected: (value) => ref
                                 .read(contestNotifierProvider.notifier)
-                                .updateDurationType(value.label),
+                                .updateDurationType(value.first.label),
                             uniqueKey: 'contest-state',
                           ),
                         ),
@@ -262,7 +262,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                               "";
                         },
                         child: AbsorbPointer(
-                          child: WayaSelectField(
+                          child: WayaSelectField<String>(
                             height: 0.3,
                             value: endDate.value.isEmpty
                                 ? 'DD/MM/YYYY'
@@ -274,7 +274,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                                 .ugtDurationType(),
                             onSelected: (value) => ref
                                 .read(contestNotifierProvider.notifier)
-                                .updateDurationType(value.label),
+                                .updateDurationType(value.first.label),
                             uniqueKey: 'End Date',
                           ),
                         ),
@@ -386,7 +386,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                         height: 0.3,
                         value: priceWinner.value,
                         label: "Prize for the Winner?",

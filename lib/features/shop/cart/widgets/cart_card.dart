@@ -10,7 +10,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/cart/widgets/cart_card_vm.dart';
@@ -77,7 +76,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                               color: wayaTheme.colorScheme.customBlack),
                         ),
                         Text(
-                          "Delivery Date: ${WayaHelpers.formatDateString(widget.cartItem.deliveryDate != null ?widget.cartItem.deliveryDate: null)}",
+                          "Delivery Date: ${(widget.cartItem.deliveryDate != null && widget.cartItem.deliveryDate!.isNotEmpty) ? WayaHelpers.formatDateString(widget.cartItem.deliveryDate) : ''}",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.greyColor400,
                               fontSize: 14),
@@ -209,7 +208,7 @@ class CartProductCard extends ConsumerWidget {
               Row(
                 children: [
                   WayaImage(
-                    imageUrl: cartProduct.productImage,
+                    imageUrl: cartProduct.productImage ?? '',
                     height: 70,
                     width: 50,
                     radius: BorderRadius.circular(8),
@@ -233,13 +232,12 @@ class CartProductCard extends ConsumerWidget {
                       ),
                       const Gap(5),
                       Text(
-                        "Quantity: ${cartProduct.quantity} x ${WayaHelpers.formatPrice(cartProduct.price)}",
+                        "Quantity: ${cartProduct.quantity} x ${WayaHelpers.formatPrice((cartProduct.price / cartProduct.quantity).toInt())}",
                         style: wayaTheme.textTheme.hintStyle,
                       ),
                       const Gap(5),
                       Text(
-                        WayaHelpers.formatPrice(
-                            cartProduct.quantity * cartProduct.price),
+                        WayaHelpers.formatPrice(cartProduct.price),
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
                             fontWeight: FontWeight.w600,
@@ -259,7 +257,7 @@ class CartProductCard extends ConsumerWidget {
                           shopId: shopId,
                           price: (cartProduct.price / cartProduct.quantity)
                               .toInt(),
-                          productImage: cartProduct.productImage,
+                          productImage: cartProduct.productImage ?? '',
                           productName: cartProduct.productName);
                     },
                     child: SvgPicture.asset('assets/icons/a-cart.svg'),

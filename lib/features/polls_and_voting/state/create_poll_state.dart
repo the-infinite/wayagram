@@ -27,8 +27,8 @@ class CreatePollVotingState {
   final List<SingleDashboardVotes>? votes;
   final List<Select> pollTypes;
   final VoteUrlData? voteUrlData;
-  final List<PollDashboardModelDocs>? pollDashboardModelDocs;
-  //final List<VoteUrlChoices> voteUrlChoices;
+  final List<PollDashboardModelDocs> pollDashboardModelDocs;
+  final List<PollDashboardChoices> pollDashboardChoices;
 
 
   final String moneyGenerated;
@@ -79,7 +79,7 @@ class CreatePollVotingState {
     this.voteUrlData ,
     this.choices = const [],
     this.pollDashboardModelDocs = const [],
-    //this.voteUrlChoices = const [],
+    this.pollDashboardChoices = const [],
     this.fetchAllPols =  const [],
     this.getPollModel = const [],
     this.getAllPollModel = const [],
@@ -134,6 +134,7 @@ class CreatePollVotingState {
     List<CastVoteData>? castVoteModel,
     List<Choice>? choices,
     List<Select>? pollTypes,
+    List<PollDashboardChoices>? pollDashboardChoices,
   }) {
     return CreatePollVotingState(
       isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ?? this.isPersonalNotUpgradedToBusiness,
@@ -171,6 +172,7 @@ class CreatePollVotingState {
         voteCount: voteCount  ?? this.voteCount,
       numberOfPeopleVoted: numberOfPeopleVoted  ?? this.numberOfPeopleVoted,
       moneyGenerated: moneyGenerated ?? this.moneyGenerated,
+      pollDashboardChoices: pollDashboardChoices ?? this.pollDashboardChoices
 
     );
   }

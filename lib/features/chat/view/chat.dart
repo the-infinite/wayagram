@@ -5,6 +5,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -60,6 +61,10 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
 
   // We start a video call.
   void _startVideoCall() async {}
+
+  Future<ChatModel?> _startConversation() async {
+    return null;
+  }
 
   // This is fine.
   @override
@@ -310,6 +315,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
               ChatInputWidget(
                 controller: inputController,
                 notifier: notifier,
+                createChat: _startConversation,
               )
             ],
           ),

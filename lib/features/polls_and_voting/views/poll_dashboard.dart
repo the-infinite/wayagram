@@ -184,9 +184,12 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: viewModel.pollDashboardModelDocs?.length,
+                itemCount: viewModel.pollDashboardChoices.length,
                 itemBuilder: (context, index) {
-                  final poll = viewModel.pollDashboardModelDocs?[index];
+                  final poll = viewModel.pollDashboardChoices[index];
+
+                  print('DASHBOARD LENGTH ===>> ${viewModel.pollDashboardModelDocs.length}');
+
                   // int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
 
                   // int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
@@ -204,8 +207,8 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
                       return txt = '${index}th';
                     }
                   }
-                  return statisticCard('${poll?.voteCount} ${poll?.voteCount == 1 || poll?.voteCount == 0? 'Vote' :'Votes'}',
-                      '${position(index)}', '${poll?.choices?[index].text?.capitalizeFirst}',
+                  return statisticCard('${poll.voteCount} ${poll.voteCount == 1 || poll.voteCount == 0? 'Vote' :'Votes'}',
+                      '${position(index)}', '${poll.text?.capitalizeFirst}',
                       Theme.of(context).colorScheme.success50, index == 0);
 
                 }),

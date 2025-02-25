@@ -60,7 +60,7 @@ class _AddNewRequirementModalState
               key: _formKey,
               child: Column(
                 children: [
-                  WayaSelectField(
+                  WayaSelectField<String>(
                     height: 0.3,
                     value: requirementType.value,
                     label: "Requirement Type ",
@@ -69,7 +69,7 @@ class _AddNewRequirementModalState
                         .read(contestNotifierProvider.notifier)
                         .ugtRequirementType(),
                     onSelected: (value) {
-                      requirementType.value = value.label;
+                      requirementType.value = value.first.label;
                     },
                     uniqueKey: 'contest-category',
                   ),

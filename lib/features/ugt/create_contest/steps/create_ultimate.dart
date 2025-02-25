@@ -117,7 +117,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                WayaSelectField(
+                WayaSelectField<String>(
                   height: 0.3,
                   value: viewModel.categorys,
                   label: "Contest Category",
@@ -125,10 +125,10 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   items:
                       ref.read(contestNotifierProvider.notifier).ugtCategory(),
                   onSelected: (value) {
-                    print('eee ${value.toJson()}');
+                    print('eee ${value.first.toJson()}');
                     ref
                         .read(contestNotifierProvider.notifier)
-                        .update(value, "contestCat");
+                        .update(value.first, "contestCat");
                   },
                   uniqueKey: 'contest-category',
                 ),
@@ -155,7 +155,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                WayaSelectField(
+                WayaSelectField<String>(
                   height: 0.3,
                   value: viewModel.state,
                   label: "Contest State",
@@ -165,7 +165,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     print(" heree $value");
                     return ref
                         .read(contestNotifierProvider.notifier)
-                        .selectState(value);
+                        .selectState(value.first);
                   },
                   uniqueKey: 'contest-state',
                 ),

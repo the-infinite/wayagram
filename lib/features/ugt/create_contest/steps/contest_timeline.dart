@@ -61,7 +61,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                         .showDateContestStart(context);
                   },
                   child: AbsorbPointer(
-                    child: WayaSelectField(
+                    child: WayaSelectField<String>(
                       height: 0.3,
                       value: viewModel2.contestTimelineStartDate.isEmpty
                           ? 'DD/MM/YYYY'
@@ -73,7 +73,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                           .ugtDurationType(),
                       onSelected: (value) => ref
                           .read(contestNotifierProvider.notifier)
-                          .updateContestTimeStartDate(value.label),
+                          .updateContestTimeStartDate(value.first.label),
                       uniqueKey: 'contest-state',
                     ),
                   ),
@@ -109,7 +109,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                         .showDateContestEnd(context);
                   },
                   child: AbsorbPointer(
-                    child: WayaSelectField(
+                    child: WayaSelectField<String>(
                       height: 0.3,
                       value: viewModel2.contestTimelineEndDate.isEmpty
                           ? 'DD/MM/YYYY'
@@ -121,7 +121,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                           .ugtDurationType(),
                       onSelected: (value) => ref
                           .read(contestNotifierProvider.notifier)
-                          .updateContestTimeEndDate(value.label),
+                          .updateContestTimeEndDate(value.first.label),
                       uniqueKey: 'contest-state',
                     ),
                   ),
@@ -150,7 +150,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                WayaSelectField(
+                WayaSelectField<String>(
                   height: 0.3,
                   value: viewModel2.contestTimelineMultipleStage,
                   label: "Multiple Stages?",
@@ -161,7 +161,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                   onSelected: (value) {
                     ref
                         .read(contestNotifierProvider.notifier)
-                        .updateContestTimeMultipleStage(value.label);
+                        .updateContestTimeMultipleStage(value.first.label);
                   },
                   uniqueKey: 'contest-state',
                 ),
@@ -190,7 +190,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                WayaSelectField(
+                WayaSelectField<String>(
                   height: 0.3,
                   value: viewModel2.contestTimelineCurrentStage,
                   label: "Current Stage",
@@ -201,7 +201,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                   onSelected: (value) {
                     ref
                         .read(contestNotifierProvider.notifier)
-                        .updateContestTimeCurrentStage(value.label);
+                        .updateContestTimeCurrentStage(value.first.label);
                   },
                   uniqueKey: 'contest-state',
                 ),

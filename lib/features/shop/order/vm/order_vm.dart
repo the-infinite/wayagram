@@ -13,7 +13,7 @@ class OrderVm extends StateNotifier<OrderState> {
   OrderVm(this._orderRepository, this._secureDataSource, this.ref)
       : super(OrderState());
 
-  Future<PaginatedResult<Order>?> getOrders(int page) async {
+  Future<PaginatedResult<Order>?> getOrders({required int page}) async {
     try {
       state = state.copyWith(isLoading: false);
       final userId = await _secureDataSource.getUserId();

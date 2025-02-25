@@ -18,7 +18,7 @@ class ShopRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getAllCategories(int page) {
-    return get('$serviceUrl/category/all?page=$page');
+    return get('$serviceUrl/category/all?page=$page&limit=1000');
   }
 
   Future<WayaRequestResponse> createProduct(
@@ -31,7 +31,7 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/discount/all?page=$page');
   }
 
-  Future<WayaRequestResponse> getProducts(int page) {
+  Future<WayaRequestResponse> getProducts({required int page, int limit = 20}) {
     return get('$serviceUrl/products/get?page=$page');
   }
 
@@ -43,8 +43,8 @@ class ShopRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> editProductRequest(
-      {required AddProductModel payload}) {
-    return post("$serviceUrl/products/create", payload.toJson());
+      {required AddProductModel payload, required String productId}) {
+    return patch("$serviceUrl/products/edit/$productId", payload.toJson());
   }
 
   Future<WayaRequestResponse> getSellerProducts(

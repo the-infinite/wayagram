@@ -127,7 +127,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           height: 0.3,
                           uniqueKey: 'buyer_product_category',
                           label: "Product Category",
@@ -137,7 +137,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                               .restructuredCategory(),
                           onSelected: (value) => ref
                               .read(createRequestProvider.notifier)
-                              .update(value, "productCategory")),
+                              .update(value.first, "productCategory")),
                       if (formState.hasError &&
                           viewModel.productCategory.isEmpty)
                         Padding(
@@ -163,7 +163,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           height: 0.3,
                           label: "Product Condition",
                           hintText: 'Select Product Condition',
@@ -172,7 +172,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                               .restructuredCondition(),
                           onSelected: (value) => ref
                               .read(createRequestProvider.notifier)
-                              .update(value, "productCondition")),
+                              .update(value.first, "productCondition")),
                       if (formState.hasError &&
                           viewModel.productCondition.isEmpty)
                         Padding(
@@ -270,7 +270,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                      return Column(
                        crossAxisAlignment: CrossAxisAlignment.start,
                        children: [
-                         WayaSelectField(
+                         WayaSelectField<String>(
                              height: 0.3,
                              uniqueKey: 'buyer_state',
                              label: "State of Purchase",
@@ -280,7 +280,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                                  .restructuredState(),
                              onSelected: (value) => ref
                                  .read(createRequestProvider.notifier)
-                                 .update(value, "stateOfPurchase")),
+                                 .update(value.first, "stateOfPurchase")),
                          if (formState.hasError &&
                              viewModel.stateOfPurchase.isEmpty)
                            Padding(
@@ -307,7 +307,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                      return Column(
                        crossAxisAlignment: CrossAxisAlignment.start,
                        children: [
-                         WayaSelectField(
+                         WayaSelectField<String>(
                              height: 0.3,
                              label: "LGA",
                              uniqueKey: 'buyer_lga',
@@ -317,7 +317,7 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                                  .restructuredLga(),
                              onSelected: (value) => ref
                                  .read(createRequestProvider.notifier)
-                                 .update(value, "lga")),
+                                 .update(value.first, "lga")),
                          if (formState.hasError &&
                              viewModel.lga.isEmpty)
                            Padding(

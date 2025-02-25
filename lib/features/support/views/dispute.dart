@@ -280,14 +280,14 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                     ValueListenableBuilder(
                       valueListenable: notifier.typeNotifier,
                       builder: (context, selectedTopic, _) {
-                        return WayaSelectField(
+                        return WayaSelectField<String>(
                           height: 0.2,
                           uniqueKey: 'dispute-type',
                           value: selectedTopic?.value,
                           label: "Dispute Type",
                           hintText: 'Select Type',
                           items: notifier.disputeType,
-                          onSelected: (value) => notifier.typeNotifier.value = value,
+                          onSelected: (value) => notifier.typeNotifier.value = value.first,
                         );
                       },
                     ),
