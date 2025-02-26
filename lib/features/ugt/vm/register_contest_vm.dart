@@ -101,8 +101,8 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     state = [...fieldList];
   }
 
-  Future<void> submitDetail(
-      BuildContext context, ValueNotifier<bool> isLoading) async {
+  Future<void> submitDetail(BuildContext context, ValueNotifier<bool> isLoading,
+      String mySelectedState) async {
     isLoading.value = true;
     // print("Mean  werr $state");
     List<Map<String, dynamic>> detailsList = state.map(
@@ -149,9 +149,10 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
       "address": address.text,
       "phoneNumber": phoneNumber.text,
       // "university": university,
-      // "state": selectedState,
+      "state": mySelectedState,
       "applicationData": mapNew
     };
+    print(map);
     final response = await _contestRepository.registerContest(map);
     isLoading.value = false;
 

@@ -7,10 +7,13 @@ import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_contestant_card.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 class UgtDetailsContestants extends ConsumerStatefulWidget {
-  const UgtDetailsContestants({super.key});
+  final Contest model;
+  const UgtDetailsContestants(this.model, {super.key});
 
   @override
   _UgtDetailsContestantsState createState() => _UgtDetailsContestantsState();
@@ -30,6 +33,7 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
 
     final wayaTheme = Theme.of(context);
     // final postNotifier = ref.read(postProvider.notifier);
+    final viewModel = ref.read(votersContestNotifier);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,39 +49,28 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
           hintText: "search by name, univerisity , stage, category",
         ),
         Gap(10),
-        UgtContestantCard(),
-        UgtContestantCard(),
-        UgtContestantCard(),
-        UgtContestantCard(),
-        UgtContestantCard(),
-        UgtContestantCard(),
 
         //  if (posts.isEmpty) emptyWidget(),
-        /*   if (posts.isNotEmpty)
-          ListView.builder(
-            controller: _scrollController,
-            shrinkWrap: true,
-            itemCount: posts.length,
-            itemBuilder: (context, index) {
-              if (postNotifier.isLoading) {
-                return Center(child: CircularProgressIndicator());
-              }
+        //  if (posts.isNotEmpty)
+        ListView.builder(
+          controller: _scrollController,
+          shrinkWrap: true,
+          itemCount: viewModel.myContestList?.length,
+          itemBuilder: (context, index) {
+            if (viewModel.isLoading!) {
+              return Center(child: CircularProgressIndicator());
+            }
 
-              final post = posts[index];
-              return GestureDetector(
-                onTap: () {
-                  ref.read(selectedContestProvider.notifier).state = post;
-                  WayaNav.toNamed('/upcoming-manage-contest-details');
-                },
-                child: ContestCard(
-                  post,
-                  postNotifier.toggleLike,
-                  postNotifier.toggleShare,
-                  postNotifier.doFollow,
-                ),
-              );
-            },
-          ), */
+            final post = viewModel.myContestList![index];
+            return GestureDetector(
+              onTap: () {},
+              child: UgtContestantCard(
+                widget.model,
+                post
+              ),
+            );
+          },
+        ),
       ],
     );
   }

@@ -81,6 +81,7 @@ dependencies:
   video_trimmer: ^3.0.1-LTS
 
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

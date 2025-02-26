@@ -8,6 +8,7 @@ class AdminCard extends StatelessWidget {
   final String name;
   final String votes;
   final double? radius;
+  final bool? isCenter;
 
   const AdminCard({
     super.key,
@@ -15,6 +16,7 @@ class AdminCard extends StatelessWidget {
     required this.rank,
     required this.name,
     required this.votes,
+    this.isCenter = false,
     this.radius,
   });
 
@@ -29,10 +31,10 @@ class AdminCard extends StatelessWidget {
           children: [
             // Circular Image with Border
             Container(
-              padding: const EdgeInsets.all(4),
+              // padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.orange, width: 4),
+                border: Border.all(color: Colors.orange, width: 2),
               ),
               child: CircleAvatar(
                 radius: radius ?? 35,
@@ -48,13 +50,13 @@ class AdminCard extends StatelessWidget {
               left: 0,
               right: 0,
               child: Container(
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(6),
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   color: Colors.orange,
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(10.0),
+                  padding: const EdgeInsets.all(5.0),
                   child: Center(
                     child: Text(
                       rank,
@@ -73,22 +75,31 @@ class AdminCard extends StatelessWidget {
         Gap(40),
 
         // Name
-        Text(
-          name,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
+        Transform.translate(
+          offset:
+              isCenter! ? Offset(0, -5) : Offset(0, 0), // Shift up by 10 pixels
 
-        // Votes
-        Text(
-          votes,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
+          child: Column(
+            children: [
+              Text(
+                name,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+
+              // Votes
+              Text(
+                votes,
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
           ),
         ),
       ],

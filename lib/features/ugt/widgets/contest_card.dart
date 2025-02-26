@@ -62,24 +62,31 @@ class ContestCard extends ConsumerWidget {
                         colorFilter: ColorFilter.mode(
                             wayaTheme.colorScheme.success, BlendMode.srcIn),
                       ),*/
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                              45), // Adjust the radius as needed
-                          child: post.uploadCoverImages != null
-                              ? Image.network(
-                                  post.uploadCoverImages!,
-                                  height: 45,
-                                  width: 45,
-                                  fit: BoxFit
-                                      .cover, // Ensures the image covers the area properly
-                                )
-                              : Image.asset(
-                                  'assets/images/frameuni.png',
-                                  height: 45,
-                                  width: 45,
-                                  fit: BoxFit
-                                      .cover, // Ensures the image covers the area properly
-                                ),
+                        GestureDetector(
+                          onTap: () {
+                            WayaNav.toNamed(
+                              '/contest-profile-page',
+                            );
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                                45), // Adjust the radius as needed
+                            child: post.uploadCoverImages != null
+                                ? Image.network(
+                                    post.uploadCoverImages!,
+                                    height: 45,
+                                    width: 45,
+                                    fit: BoxFit
+                                        .cover, // Ensures the image covers the area properly
+                                  )
+                                : Image.asset(
+                                    'assets/images/frameuni.png',
+                                    height: 45,
+                                    width: 45,
+                                    fit: BoxFit
+                                        .cover, // Ensures the image covers the area properly
+                                  ),
+                          ),
                         ),
                         /*WayaImage(
                         imageUrl: 'assets/images/destructive.png',
@@ -203,7 +210,8 @@ class ContestCard extends ConsumerWidget {
                   const Gap(30),
                   AboutUgtWidget(
                       title: "Prize",
-                      content: "NGN ${formatMoney(post.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
+                      content:
+                          "NGN ${formatMoney(post.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
                   const Gap(30),
                   AboutUgtWidget(
                       title: "Category",

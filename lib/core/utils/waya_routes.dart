@@ -84,6 +84,8 @@ import 'package:wayagram/features/shop/views/products_view_page.dart';
 import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
 import 'package:wayagram/features/support/views/request.dart';
+import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart';
+import 'package:wayagram/features/ugt/contest_profiles/profile_dashboard.dart';
 import 'package:wayagram/features/ugt/contest_setting/contest_setting_content.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
 import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
@@ -161,6 +163,8 @@ class WayaAppRoutes {
     UgtGetStarted.route: () => UgtGetStarted(),
     UgtHome.route: () => UgtHome(),
     CreateContest.route: () => CreateContest(),
+    ContestProfilePage.route: () => ContestProfilePage(),
+    DashboardContestProfilePage.route: () => DashboardContestProfilePage(),
     ContestSettingContent.route: () => ContestSettingContent(),
     EditStagePreference.route: () => EditStagePreference(),
     CreateRequest.route: () => CreateRequest(),
@@ -206,7 +210,8 @@ class WayaAppRoutes {
     EditPageInfo.route: () => EditPageInfo(),
     AddTeamMember.route: () => AddTeamMember(),
     PrivateGroup.route: () => PrivateGroup(),
-    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
+    SingleChatScreen.route: () =>
+        SingleChatScreen(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route: () => DisplayFeed(),
     GroupSetting.route: () => GroupSetting(),
     AllUpcomingEvents.route: () => AllUpcomingEvents(),
@@ -233,13 +238,15 @@ class WayaAppRoutes {
     SupportRequestScreen.route: () => SupportRequestScreen(),
     SupportDisputeScreen.route: () => SupportDisputeScreen(),
     SupportChatScreen.route: () => SupportChatScreen(),
-    DisputeDetail.route: () => DisputeDetail(id: WayaNav.search['id'].toString()),
-    ProductSearchResult.route:() => ProductSearchResult()
+    DisputeDetail.route: () =>
+        DisputeDetail(id: WayaNav.search['id'].toString()),
+    ProductSearchResult.route: () => ProductSearchResult()
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getSingleChatRoute(String id) => "${SingleChatScreen.route}?id=$id";
+  static String getSingleChatRoute(String id) =>
+      "${SingleChatScreen.route}?id=$id";
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
@@ -247,7 +254,8 @@ class WayaAppRoutes {
 
   /// Helper function that is used to get the route to the details of a single
   /// dispute by its ID.
-  static String getDisputeDetailsRoute(String id) => "${DisputeDetail.route}?id=$id";
+  static String getDisputeDetailsRoute(String id) =>
+      "${DisputeDetail.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages => routes.entries.map((entry) {

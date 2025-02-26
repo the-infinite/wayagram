@@ -2,10 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_post_card.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 class UgtDetailsPost extends ConsumerStatefulWidget {
-  const UgtDetailsPost({super.key});
+  final Contest model;
+  const UgtDetailsPost( this.model, {super.key});
 
   @override
   _UgtDetailsPostState createState() => _UgtDetailsPostState();
@@ -29,6 +31,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtDetailsPost> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        UgtPostCard(),
         UgtPostCard()
         //  if (posts.isEmpty) emptyWidget(),
         /*   if (posts.isNotEmpty)

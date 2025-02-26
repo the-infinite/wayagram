@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 class UgtDetailsLeaderboard extends ConsumerStatefulWidget {
-  const UgtDetailsLeaderboard({super.key});
+  final Contest model;
+  const UgtDetailsLeaderboard(this. model, {super.key});
 
   @override
   _UgtDetailsLeaderboardState createState() => _UgtDetailsLeaderboardState();

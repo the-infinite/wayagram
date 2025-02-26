@@ -8,11 +8,16 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
+import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
+import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 
 import '../../vote/contest_vote_modal.dart';
 
 class UgtContestantCard extends ConsumerWidget {
-  const UgtContestantCard({super.key});
+  final Contest model;
+  final MyContestContestantModel contestantData;
+  const UgtContestantCard(this.model, this.contestantData, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,8 +39,8 @@ class UgtContestantCard extends ConsumerWidget {
               ClipRRect(
                 borderRadius:
                     BorderRadius.circular(45), // Adjust the radius as needed
-                child: Image.asset(
-                  'assets/images/frameuni.png',
+                child: Image.network(
+                  contestantData.profilePhoto ?? "",
                   height: 45,
                   width: 45,
                   fit: BoxFit
@@ -44,7 +49,7 @@ class UgtContestantCard extends ConsumerWidget {
               ),
               Gap(10),
               Text(
-                "Rufai Maleek",
+                contestantData.contestApplicant?.fullName ?? "Name",
                 overflow: TextOverflow.ellipsis,
                 style: wayaTheme.textTheme.bodyMedium,
               ),
@@ -64,11 +69,19 @@ class UgtContestantCard extends ConsumerWidget {
                 WayaUtils.showModalSheet(
                   context,
                   child: VoteOptionModal(
-                    voteFee: "89",
+                    voteFee: model.amountPerVote?.toString() ?? "0",
                     //   amountPaid: "89",
-                    choiceId: "6",
-                    pollId: "6",
-                    candidateName: "candidateName",
+                    model: ContestVoteModel(
+                        contestId: contestantData.contestId ?? "",
+                        contestantId: contestantData.id ?? "",
+                        hostUserId: model.hostId ?? "",
+                        amount: "0",
+                        numberOfVotes: "0",
+                        profileId: contestantData.profileId,
+                        type: model.type ?? ""),
+
+                   
+                    candidateName:   contestantData.contestApplicant?.fullName ?? "Name",
                     votingLink: "votingLink",
                   ),
                 );

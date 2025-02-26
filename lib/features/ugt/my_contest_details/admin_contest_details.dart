@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -18,6 +19,7 @@ import 'package:wayagram/features/ugt/for_you_contest.dart';
 import 'package:wayagram/features/ugt/my_contest_details/my_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/admin_card.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
@@ -39,6 +41,11 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    useEffect(() {
+      ref.read(votersContestNotifier.notifier).getContestantProfileVoteDetails(
+          ref.read(selectedContestProvider.notifier).state.id ?? "");
+      return null;
+    }, []);
     var model = ref.watch(selectedContestProvider.notifier).state;
     final selectedViewIndex = useState(0);
     return WayaScaffold(
@@ -197,8 +204,8 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 children: [
                   Expanded(
                     child: AdminCard(
-                      imageUrl:
-                          "assets/profile.jpg", // Change to your image path
+                      imageUrl: WayaAssets
+                          .images.avatars.path, // Change to your image path
                       rank: "2",
                       name: "Oludase Busola",
                       votes: "59,450 Votes",
@@ -206,9 +213,10 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                   ),
                   Expanded(
                     child: AdminCard(
-                      imageUrl:
-                          "assets/profile.jpg", // Change to your image path
+                      imageUrl: WayaAssets
+                          .images.avatars.path, // Change to your image path
                       rank: "2",
+                      isCenter: true,
                       radius: 40,
                       name: "Oludase Busola",
                       votes: "59,450 Votes",
@@ -216,8 +224,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                   ),
                   Expanded(
                     child: AdminCard(
-                      imageUrl:
-                          "assets/profile.jpg", // Change to your image path
+                      imageUrl: WayaAssets.images.avatars.path,
                       rank: "2",
                       name: "Oludase Busola",
                       votes: "59,450 Votes",
@@ -255,10 +262,10 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 ],
               ),
               const Gap(10),
-              if (selectedViewIndex.value == 0) UgtDetailsPost(),
-              if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(),
-              if (selectedViewIndex.value == 2) UgtDetailsContestants(),
-              if (selectedViewIndex.value == 3) UgtDetailsGallery(),
+              if (selectedViewIndex.value == 0) UgtDetailsPost(model),
+              if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(model),
+              if (selectedViewIndex.value == 2) UgtDetailsContestants(model),
+              if (selectedViewIndex.value == 3) UgtDetailsGallery(model),
             ],
           ),
         ),

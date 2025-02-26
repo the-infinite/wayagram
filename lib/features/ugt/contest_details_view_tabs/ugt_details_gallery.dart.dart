@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 class UgtDetailsGallery extends ConsumerStatefulWidget {
-  const UgtDetailsGallery({super.key});
+  final Contest model;
+  const UgtDetailsGallery(this.model, {super.key});
 
   @override
   _UgtDetailsGalleryState createState() => _UgtDetailsGalleryState();
@@ -16,22 +18,20 @@ class _UgtDetailsGalleryState extends ConsumerState<UgtDetailsGallery> {
   @override
   void initState() {
     super.initState();
-   
   }
 
   @override
   Widget build(BuildContext context) {
-   // final posts = ref.watch(postProvider);
+    // final posts = ref.watch(postProvider);
 
     final wayaTheme = Theme.of(context);
-   // final postNotifier = ref.read(postProvider.notifier);
+    // final postNotifier = ref.read(postProvider.notifier);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-       
-      //  if (posts.isEmpty) emptyWidget(),
-      /*   if (posts.isNotEmpty)
+        //  if (posts.isEmpty) emptyWidget(),
+        /*   if (posts.isNotEmpty)
           ListView.builder(
             controller: _scrollController,
             shrinkWrap: true,
@@ -68,8 +68,8 @@ class _UgtDetailsGalleryState extends ConsumerState<UgtDetailsGallery> {
         title: "No Contest Created",
         buttonText: "Host a Contest",
         onTap: () {
-        //  ivalidateUGTVM(ref);
-        //  WayaNav.toNamed("/create-contest");
+          //  ivalidateUGTVM(ref);
+          //  WayaNav.toNamed("/create-contest");
         });
   }
 

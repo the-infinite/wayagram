@@ -42,6 +42,10 @@ class ContestRepo extends BaseRepository {
     return get(
         '$serviceUrl2/contests/contest-follow-vote/$userId');
   }
+     Future<WayaRequestResponse> getContestantProfileVoteDetails(String userId) {
+    return get(
+        '$serviceUrl2/profile/votes/$userId');
+  }
 
   Future<WayaRequestResponse> likeContest(payLoad) {
     return post('$serviceUrl2/contestInteraction/like', payLoad,
@@ -60,6 +64,11 @@ class ContestRepo extends BaseRepository {
   
   Future<WayaRequestResponse> createProfile(payLoad) {
     return post('$serviceUrl2/profile/create', payLoad,
+        formdata: false);
+  }
+
+   Future<WayaRequestResponse> voteContestant(payLoad) {
+    return post('$serviceUrl2/vote', payLoad,
         formdata: false);
   }
 
