@@ -24,7 +24,6 @@ class MyMomentWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return GestureDetector(
       onTap: () async {
@@ -180,7 +179,6 @@ class MyMomentActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
 
     Future<void> showDelete() async {

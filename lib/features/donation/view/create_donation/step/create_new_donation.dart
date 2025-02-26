@@ -30,7 +30,6 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
     return Column(

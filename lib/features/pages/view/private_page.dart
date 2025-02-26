@@ -35,7 +35,6 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
     final dynamic args  = ModalRoute.of(context)?.settings.arguments;

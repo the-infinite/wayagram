@@ -120,7 +120,6 @@ class SellerProductEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

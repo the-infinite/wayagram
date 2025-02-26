@@ -12,7 +12,6 @@ class MomentsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Stack(
       clipBehavior: Clip.none,

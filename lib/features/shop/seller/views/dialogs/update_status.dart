@@ -36,7 +36,6 @@ class _UpdateStatusState extends State<UpdateStatus> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Dialog(
       shape: RoundedRectangleBorder(

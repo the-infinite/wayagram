@@ -16,7 +16,6 @@ class ApplicationProductDetails extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final viewModel = ApplicationProductDetailsVm();
-    // TODO: implement build
     return WayaScaffold(
         isLoading: false,
         isScrollable: true,
