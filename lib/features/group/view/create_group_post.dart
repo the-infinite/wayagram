@@ -80,7 +80,6 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
 

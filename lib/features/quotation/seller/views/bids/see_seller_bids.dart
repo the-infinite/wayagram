@@ -22,7 +22,7 @@ import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 
 
 class SeeSellerBids extends ConsumerStatefulWidget {
-  static const route = '/seeSeller-bids';
+  static const route = '/quotation/seller/bids';
   const SeeSellerBids({super.key});
 
   @override

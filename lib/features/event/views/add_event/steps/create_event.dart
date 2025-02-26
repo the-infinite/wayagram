@@ -28,7 +28,6 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final key = 'add-event';
     final wayaTheme = Theme.of(context);
 

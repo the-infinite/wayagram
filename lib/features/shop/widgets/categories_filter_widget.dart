@@ -30,7 +30,6 @@ class _CategoriesFilterWidgetState
 
     final categories = ref.watch(shopVmProvider).categories;
 
-    // TODO: implement build
     return SizedBox(
       height: 45,
       child: ListView.builder(

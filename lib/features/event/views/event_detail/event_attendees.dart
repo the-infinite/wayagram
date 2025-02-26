@@ -20,7 +20,6 @@ class _EventAttendeesState extends ConsumerState<EventAttendees> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Expanded(
    
     child: 

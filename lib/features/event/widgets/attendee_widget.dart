@@ -42,7 +42,6 @@ class _AttendeeWidgetState extends ConsumerState<AttendeeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final state = ref.watch(eventVmProvider);
     return Column(

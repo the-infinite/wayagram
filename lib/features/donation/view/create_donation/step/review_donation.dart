@@ -101,7 +101,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
             );
 
             //donation.reset();
-            //WayaNav.toNamed('/seeBuyer-bids');
+            //WayaNav.toNamed('/quotation/buyer/bids');
           }
               : null,
           centerWidget: LoadingState(
