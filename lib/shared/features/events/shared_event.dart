@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:gap/gap.dart';
