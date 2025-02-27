@@ -44,7 +44,8 @@ class OrderDetails extends ConsumerWidget {
                 itemCount: arg?.order.items.length,
                 itemBuilder: (context, index) {
                   CartProduct order = CartProduct(
-                      price: arg?.order.items[index].price ?? 0,
+                      price: double.parse(arg?.order.items[index].price ?? '0')
+                              .toInt(),
                       quantity: arg?.order.items[index].quantity ?? 0,
                       productId: arg?.order.items[index].productId ?? '',
                       productName: arg?.order.items[index].productName ?? '',
@@ -56,9 +57,11 @@ class OrderDetails extends ConsumerWidget {
                 }),
             const Gap(25),
             OrderAddressWidget(
-                type: 'Pickup Address', address: arg?.order.pickupAddress ?? ''),
+                type: 'Pickup Address',
+                address: arg?.order.pickupAddress ?? ''),
             OrderAddressWidget(
-                type: 'Delivery Address', address: arg?.order.deliveryAddress ?? ''),
+                type: 'Delivery Address',
+                address: arg?.order.deliveryAddress ?? ''),
             Text("Token", style: wayaTheme.textTheme.bodyMedium),
             const Gap(10),
             CopyCode(
@@ -71,14 +74,14 @@ class OrderDetails extends ConsumerWidget {
                     : "Delivery Progress",
                 style: wayaTheme.textTheme.bodyMedium),
             const Gap(10),
-            // OrderTracking(
-            //     statuses: arg?.order.deliveryType == 'Pickup'
-            //         ? pickupStatus
-            //         : deliveryStatus,
-            //     type: arg?.order.deliveryType,
-            //     status: arg?.order.deliveryType == 'Pickup'
-            //         ? arg?.order.pickupStatus
-            //         : arg?.order.deliveryStatus),
+            OrderTracking(
+                statuses: arg?.order.deliveryType == 'Pickup'
+                    ? pickupStatus
+                    : deliveryStatus,
+                type: arg?.order.deliveryType,
+                currentStatuses: arg?.order.deliveryType == 'Pickup'
+                    ? arg?.order.pickupStatusHistory
+                    : arg?.order.deliveryStatusHistory),
             // const Gap(25),
             // Visibility(
             //     visible: arg?.order.deliveryStatus == 'completed' ||

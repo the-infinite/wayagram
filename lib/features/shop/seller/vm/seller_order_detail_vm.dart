@@ -83,33 +83,28 @@ class SellerOrderDetailVm extends ChangeNotifier {
 
   Future<void> updateOrderStatus(
       {required BuildContext context, required String orderId}) async {
-    final response = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return UpdateStatus(
-              currentStatus: orderStatus,
-              title: "Update Pickup Status",
-              subTtile:
-                  "Choose the new pickup status you want this order to display for both you and the buyer",
-              statuses: pickupStatus,
-              cta: "Choose new order status");
-        });
+    final response = await WayaUtils.showModalSheet(context,
+        child: UpdateStatus(
+            currentStatus: orderStatus,
+            title: "Update Pickup Status",
+            subTtile:
+                "Choose the new pickup status you want this order to display for both you and the buyer",
+            statuses: pickupStatus,
+            cta: "Choose new order status"));
     updateOrder(response, orderId);
   }
 
   Future<void> updateDeliveryStatus(
       {required BuildContext context, required String orderId}) async {
-    final response = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return UpdateStatus(
-              currentStatus: delivery,
-              title: "Update Delivery Status",
-              subTtile:
-                  "Choose the new delivery status you want this order to display for both you and the buyer",
-              statuses: deliveryStatus,
-              cta: "Choose new delivery status");
-        });
+    final response = await WayaUtils.showModalSheet(context,
+        child: UpdateStatus(
+            currentStatus: delivery,
+            title: "Update Delivery Status",
+            subTtile:
+                "Choose the new delivery status you want this order to display for both you and the buyer",
+            statuses: deliveryStatus,
+            cta: "Choose new delivery status"));
+
     updateDelivery(response, orderId);
   }
 }

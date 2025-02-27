@@ -15,7 +15,7 @@ class OrderRepository extends BaseRepository {
       'userId': userId
     };
 
-    if (pickupAddress != null) payload['pickUpAddress'] = pickupAddress;
+    if (pickupAddress != null) payload['pickupAddress'] = pickupAddress;
 
     return post("$serviceUrl/orders/place-order", payload);
   }

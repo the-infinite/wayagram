@@ -6,10 +6,12 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_order_detail_vm.dart';
 import 'package:wayagram/features/shop/widgets/dotted_border_order_info_widget.dart';
 import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
+import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class SellerOrderDetails extends ConsumerWidget {
   static const route = '/seller-order-details';
@@ -41,12 +43,22 @@ class SellerOrderDetails extends ConsumerWidget {
             const Gap(30),
             Text("Product Ordered", style: wayaTheme.textTheme.bodyMedium),
             const Gap(15),
-            ListView.builder(
+                    ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 2,
+                itemCount: arg?.items.length,
                 itemBuilder: (context, index) {
-                  return Container();
+                  CartProduct order = CartProduct(
+                      price: double.parse(arg?.items[index].price ?? '0')
+                              .toInt() ,
+                      quantity: arg?.items[index].quantity ?? 0,
+                      productId: arg?.items[index].productId ?? '',
+                      productName: arg?.items[index].productName ?? '',
+                      deliveryCharge: false,
+                      unitPrice: "${arg?.items[index].price ?? 0}",
+                      productImage: arg?.items[index].productImage ?? '',
+                      deliveryOptions: '');
+                  return OrderedProductCard(orders: order);
                 }),
             const Gap(10),
             DottedBorderOrderInfoWidget(

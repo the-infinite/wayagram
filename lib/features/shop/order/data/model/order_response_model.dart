@@ -72,59 +72,60 @@ class Order extends BaseModel<Order> {
   final String shopPhone;
   final String? deliveryToken;
   final String? deliveryType;
-  final List<dynamic> deliveryStatusHistory;
-  final List<dynamic> pickupStatusHistory;
+  final List<CartOrderStatus> deliveryStatusHistory;
+  final List<CartOrderStatus> pickupStatusHistory;
 
-  Order({
-    required this.id,
-    required this.userId,
-    required this.items,
-    required this.shopId,
-    required this.vendorId,
-    required this.total,
-    required this.status,
-    this.deliveryType,
-    this.pickupAddress,
-    this.deliveryAddress,
-    this.deliveryFee,
-    this.deliveryDate,
-    this.deliveryToken,
-    required this.version,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.shopName,
-    required this.shopPhone,
-    this.deliveryStatusHistory = const [],
-    this.pickupStatusHistory = const []
-  });
+  Order(
+      {required this.id,
+      required this.userId,
+      required this.items,
+      required this.shopId,
+      required this.vendorId,
+      required this.total,
+      required this.status,
+      this.deliveryType,
+      this.pickupAddress,
+      this.deliveryAddress,
+      this.deliveryFee,
+      this.deliveryDate,
+      this.deliveryToken,
+      required this.version,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.shopName,
+      required this.shopPhone,
+      this.deliveryStatusHistory = const [],
+      this.pickupStatusHistory = const []});
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
-      id: json['id'],
-      userId: json['userId'],
-      items: (json['items'] as List).map((e) => OrderItem.fromJson(e)).toList(),
-      shopId: json['shopId'],
-      vendorId: json['vendorId'],
-      total: json['total'],
-      status: json['status'],
-      pickupAddress: json['pickupAddress'],
-      deliveryType: json['deliveryType'],
- 
-      deliveryToken: json['deliveryToken'],
-      deliveryAddress: json['deliveryAddress'],
-      deliveryFee: json['deliveryFee'] ?? '0',
-      deliveryDate: json['deliveryDate'] != null
-          ? DateTime.parse(json['deliveryDate'])
-          : null,
-  
-      version: json['_v'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-      shopName: json['shopName'],
-      shopPhone: json['shopPhone'],
-      deliveryStatusHistory: json['deliveryStatusHistory'],
-      pickupStatusHistory: json['pickupStatusHistory']
-    );
+        id: json['id'],
+        userId: json['userId'],
+        items:
+            (json['items'] as List).map((e) => OrderItem.fromJson(e)).toList(),
+        shopId: json['shopId'],
+        vendorId: json['vendorId'],
+        total: json['total'],
+        status: json['status'],
+        pickupAddress: json['pickupAddress'],
+        deliveryType: json['deliveryType'],
+        deliveryToken: json['deliveryToken'],
+        deliveryAddress: json['deliveryAddress'],
+        deliveryFee: json['deliveryFee'] ?? '0',
+        deliveryDate: json['deliveryDate'] != null
+            ? DateTime.parse(json['deliveryDate'])
+            : null,
+        version: json['_v'],
+        createdAt: DateTime.parse(json['createdAt']),
+        updatedAt: DateTime.parse(json['updatedAt']),
+        shopName: json['shopName'],
+        shopPhone: json['shopPhone'],
+        deliveryStatusHistory: (json['deliveryStatusHistory'] as List)
+            .map((e) => CartOrderStatus.fromJson(e))
+            .toList(),
+        pickupStatusHistory: (json['pickupStatusHistory'] as List)
+            .map((e) => CartOrderStatus.fromJson(e))
+            .toList());
   }
 
   Map<String, dynamic> toJson() => {
@@ -136,7 +137,6 @@ class Order extends BaseModel<Order> {
         'total': total,
         'status': status,
         'pickupAddress': pickupAddress,
-     
         'deliveryAddress': deliveryAddress,
         'deliveryFee': deliveryFee,
         'deliveryDate': deliveryDate?.toIso8601String(),
@@ -162,7 +162,6 @@ class Order extends BaseModel<Order> {
         'pickupAddress': pickupAddress,
         'deliveryAddress': deliveryAddress,
         'deliveryFee': deliveryFee,
-    
         'shopName': shopName,
         'shopPhone': shopPhone,
         'deliveryToken': deliveryToken,
@@ -172,14 +171,14 @@ class Order extends BaseModel<Order> {
 
 class OrderItem {
   final String productName;
-  final int? price;
+  final String price;
   final int quantity;
   final String productId;
   final String? productImage;
 
   OrderItem({
     required this.productName,
-     this.price,
+    required this.price,
     required this.quantity,
     required this.productId,
     this.productImage,
@@ -201,5 +200,24 @@ class OrderItem {
         'quantity': quantity,
         'productId': productId,
         'productImage': productImage,
+      };
+}
+
+class CartOrderStatus {
+  final String status;
+  final String updatedAt;
+
+  CartOrderStatus({required this.status, required this.updatedAt});
+
+  factory CartOrderStatus.fromJson(Map<String, dynamic> json) {
+    return CartOrderStatus(
+      status: json['productName'] ?? '',
+      updatedAt: json['updatedAt'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'status': status,
+        'updatedAt': updatedAt,
       };
 }
