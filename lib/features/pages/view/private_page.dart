@@ -39,7 +39,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
     final dynamic args  = ModalRoute.of(context)?.settings.arguments;
-
+      print('PRIVATE ARGS $args');
     return WayaScaffold(
       padding: EdgeInsets.zero,
         isLoading: viewModel.isLoading,
@@ -90,7 +90,10 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                     Gap(15),
                     GestureDetector(
                       onTap: () {
-                        WayaNav.toNamed('/editPageInfo', arguments: '${args['pageId']}');
+                        WayaNav.toNamed('/editPageInfo',
+                            arguments: args
+                           // '${args['pageId']}'
+                        );
                       },
                       child: Container(
                         margin: EdgeInsets.only(right: 20.w),

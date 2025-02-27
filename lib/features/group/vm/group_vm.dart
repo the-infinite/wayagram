@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
@@ -12,12 +13,14 @@ import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.d
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/fetch_all_event_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
+import 'package:wayagram/features/group/data/model/group_popular_post_model.dart';
 import 'package:wayagram/features/group/data/model/group_post_model.dart';
 import 'package:wayagram/features/group/data/model/group_response.dart';
 import 'package:wayagram/features/group/data/model/join_request_model.dart';
 import 'package:wayagram/features/group/data/model/joined_group_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
 import 'package:wayagram/features/group/state/group_state.dart';
+import 'package:wayagram/features/group/view/groups.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/comment.dart';
@@ -398,6 +401,7 @@ class GroupVm extends StateNotifier<GroupState> {
         state = state.copyWith(getAllPost: responseModel.data?.docs);
       } else {}
     } catch (e) {
+      print(e);
     } finally {}
   }
 
@@ -510,6 +514,26 @@ class GroupVm extends StateNotifier<GroupState> {
     } finally {}
   }
 
+  Future<void> getPopularPosts() async {
+    print('Fetching popular posts...');
+
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.fetchPopularPost();
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        GroupPopularPostModel responseModel = GroupPopularPostModel.fromJson(response.data);
+        state = state.copyWith(groupPopularPostdocs: responseModel.data?.docs);
+      }
+    } catch (e) {
+     print(e);
+    } finally {}
+  }
+
   Future<void> getRecommendedGroups() async {
     try {
       state = state.copyWith(isLoading: true);
@@ -562,128 +586,44 @@ class GroupVm extends StateNotifier<GroupState> {
     } finally {}
   }
 
-/*
-  Future<List<Comments>> getCommentsStream(String postId) async {
+  Future<void> reportGroup(
+      {required String groupId,
+        required String reason,
+        String? comment,
+        required BuildContext context}) async {
     try {
-      state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.getComment(postId);
-      state = state.copyWith(isLoading: false);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        FetchComment responseModel = FetchComment.fromJson(response.data);
-        state = state.copyWith(comments: responseModel.data?.comments);
-        return responseModel.data?.comments ?? [];
-      }
-    } catch (e) {
-      print(e);
-    }
-    state = state.copyWith(isLoading: false);
-    return [];
-  }
+      state = state.copyWith(isReportingGroup: true);
+      final userId = await _secureDataSource.getUserId();
+      final response = await _groupRepository.reportGroup(
+          groupId, reason);
 
+      if (response.success && context.mounted) {
+        // show success modal
+        Navigator.of(context).pop();
 
-  Future<void> commentOnPost(String postId, String content) async {
-    try {
-      final response = await _groupRepository.commentOnPost(postId, content);
-      if (response!.statusCode == 200 || response.statusCode == 201) {
-        getCommentsStream(postId);
+        if (context.mounted) {
+          await WayaUtils.showNotice(
+              context: context,
+              title: "Thank you for reporting",
+              onPress: () {
+                WayaNav.replaceNamed(Groups.route);
+              },
+              icon: Image.asset(
+                WayaAssets.images.eCheckEvent.path,
+                scale: 1.5,
+              ),
+              message:
+              'Your report has been submitted. Our team will review the issue and take appropriate action.',
+              buttonText: 'Go to Group Page');
+        }
+        print(response.data);
       }
-    }catch (e) {
-      print("Error: $e");
-    }
-  }
-
-  Future<void> deletePost( ctx, {required String postId, required String userId}) async {
-    try {
-      final response =  await _groupRepository.deletePost(postId);
-      if(response.success && ctx.mounted){
-        getAllPosts(userId);
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Post deleted successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    } catch (e) {
-      print(e);
-    } finally{
-      state = state.copyWith(isLoading: false);
+    } catch (error) {
+      print(error);
+    } finally {
+      state = state.copyWith(isReportingGroup: false);
     }
   }
-
-  Future<void> repost( ctx, {required String postId}) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.repost(postId);
-      state = state.copyWith(isLoading: false);
-      if(response.success && ctx.mounted){
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Post reposted successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    } catch (e) {
-      print(e);
-    } finally{
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
-  Future<void> sharePost( ctx, {required String postId}) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.sharePost(postId);
-      state = state.copyWith(isLoading: false);
-      if(response.success && ctx.mounted){
-      }
-    } catch (e) {
-      print(e);
-    } finally{
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
-  Future<void> bookmarkPost( ctx, {required String postId}) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.bookMarkPost(postId);
-      state = state.copyWith(isLoading: false);
-      if(response.success && ctx.mounted){
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Post bookmarked successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    } catch (e) {
-      print(e);
-    } finally{
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
-  Future<void> likePost( ctx, {required String postId, required String userId}) async {
-    try {
-      //state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.likePost(postId);
-      //state = state.copyWith(isLoading: false);
-      if(response.success && ctx.mounted){
-        getAllPosts(userId);
-
-      }
-    } catch (e) {
-      print(e);
-    } finally{
-      //state = state.copyWith(isLoading: false);
-    }
-  }
-*/
 }
 
 final groupResponseProvider = StateProvider<GroupResponse?>((ref) => null);

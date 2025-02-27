@@ -34,17 +34,17 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
     return WayaScaffold(
       title: "Manage Donation",
       isLoading: viewModel.isLoading,
-
       isScrollable: true,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Send Michael to Oxford University",
+            args['title'],
             style: TextStyle().wayaCopyWith(
                 color: wayaTheme.colorScheme.black,
                 fontSize: 24,
@@ -52,22 +52,22 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
           ),
           Gap(10),
           WayaImage(
-              imageUrl: "",
+              imageUrl: args['image'],
               height: 180.h,
               width: double.infinity,
               radius: BorderRadius.all(Radius.circular(12))
           ),
           Gap(10),
           EngagementRange(
-              topLeft: "₦20,000 raised from ₦100,000",
-              bottomLeft: "500 Donators",
-              bottomRight: "20 days left",
+              topLeft: "${WayaHelpers.formatPrice(int.parse('${args['amountRaised']}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount']}'))}",
+              bottomLeft: "0 Donations",
+              bottomRight: "${args['daysLeft']} days left",
               range: 0.4),
           Gap(10),
           Row(children: [
-            Expanded(child: _detailCard('₦20,000', 'Amount Raised', wayaTheme.colorScheme.success50),),
+            Expanded(child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['amountRaised']}')), 'Amount Raised', wayaTheme.colorScheme.success50),),
             Gap(10),
-            Expanded(child:  _detailCard('₦500,000', 'Target Amount', wayaTheme.colorScheme.pendingColor),)
+            Expanded(child:  _detailCard(WayaHelpers.formatPrice(int.parse('${args['targetAmount']}')), 'Target Amount', wayaTheme.colorScheme.pendingColor),)
 
           ],),
           Gap(20),
@@ -79,14 +79,13 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
                 fontWeight: FontWeight.w400),
           ),
           Gap(20),
-          _reviewText('Cause Title', 'Send Michael to Oxford University'),
+          _reviewText('Cause Title', '${args['title']}'),
           Gap(10),
-          _reviewText('Cause  Description', 'Help us send Michael to Oxford University! Michael is a bright and ambitious student with dreams of making a difference in the world. Your generous donations will support his tuition, living expenses, and educational materials, allowing him to focus on his studies and achieve his goals. With your help, we can provide him with the opportunity of a lifetime to learn from the best and contribute to his community upon his return. Join us in making this dream a reality!'),
+          _reviewText('Cause  Description', '${args['desc']}'),
           Gap(10),
-          _reviewText('Proposed Solution', 'Support Michael\'s journey to Oxford University! Your contributions will help cover his tuition and living expenses, allowing him to focus on his studies. Together, we can help him learn from top educators and make a positive impact in his community. Let\'s make this dream a reality!'),
+          _reviewText('Proposed Solution', '${args['solution']}'),
           Gap(10),
-          _reviewText('Impact Statement', 'Support Michael\'s dream of studying at Oxford! Your donations will help cover his tuition and living costs, allowing him to focus on his education. Together, we can turn this aspiration into reality!'),
-
+          _reviewText('Impact Statement', '${args['impact']}'),
         ],
       ),
       bottomNavigationBar: Row(
@@ -116,7 +115,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
               border:
               Border.all(width: 1, color: wayaTheme.colorScheme.primary500),
               callback: () {
-                Share.share('h', subject: 'Share Options');
+                Share.share('${args['url']}', subject: 'Share Options');
               },
               color: wayaTheme.colorScheme.white,
             ),
@@ -131,7 +130,9 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
                 callback: () {
                   WayaUtils.showModalSheet(
                     context,
-                    child: DonationAmountSetupModal(),
+                    child: DonationAmountSetupModal(
+                      id: args['id'],
+                    ),
                   );
                 }),
           )

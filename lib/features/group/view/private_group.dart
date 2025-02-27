@@ -15,9 +15,7 @@ import 'package:wayagram/features/group/view/approval_screen.dart';
 import 'package:wayagram/features/group/view/events.dart';
 import 'package:wayagram/features/group/view/group_post.dart';
 import 'package:wayagram/features/group/view/group_team.dart';
-import 'package:wayagram/features/group/view/mediaPost.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/pages/view/pages_for_you.dart';
 
 class PrivateGroup extends ConsumerStatefulWidget {
   static const route = '/privateGroup';

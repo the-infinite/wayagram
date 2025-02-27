@@ -97,7 +97,7 @@ class GroupRepository extends BaseRepository {
 
 
   Future<WayaRequestResponse> getAllGroups() {
-    return get("$serviceUrl/groups");
+    return get("$serviceUrl/groups?limit=500");
   }
 
   Future<WayaRequestResponse> getGroupPost(groupId) {
@@ -106,6 +106,10 @@ class GroupRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getGroupMember(groupId) {
     return get("$serviceUrl/groups/members?groupId=$groupId");
+  }
+
+  Future<WayaRequestResponse> fetchPopularPost() {
+    return get("$serviceUrl/groups/popular-post");
   }
 
   Future<WayaRequestResponse> getEvent() {

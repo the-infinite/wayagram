@@ -42,6 +42,7 @@ import 'package:wayagram/features/pages/view/confirm_page_details.dart';
 import 'package:wayagram/features/pages/view/create_page.dart';
 import 'package:wayagram/features/pages/view/create_page_post.dart';
 import 'package:wayagram/features/pages/view/pages.dart';
+import 'package:wayagram/features/pages/view/public_page.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
@@ -193,6 +194,7 @@ class WayaAppRoutes {
     Suggestion.route: () => Suggestion(),
     GroupSuggestion.route: () => GroupSuggestion(),
     PrivatePage.route: () => PrivatePage(),
+    PublicPage.route: () => PublicPage(),
     MembersScreen.route: () => MembersScreen(),
     CreatePost.route: () => CreatePost(),
     CreateGroupPost.route: () => CreateGroupPost(),
