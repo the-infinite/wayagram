@@ -23,7 +23,7 @@ class AddEventState {
   final String endTime;
   final String startDateString;
   final String endDateString;
-  final DocType? eventImage;
+  final List<DocType> eventImage;
   final String? image;
   final String userId;
   final bool isEditingMode;
@@ -47,7 +47,7 @@ class AddEventState {
       this.endDate = '',
       this.endTime = '',
       this.image,
-      this.eventImage,
+      this.eventImage = const [],
       this.startDateString = '',
       this.userId = '',
       this.isEditingMode = false,
@@ -78,7 +78,7 @@ class AddEventState {
       String? startTime,
       String? endDate,
       String? endTime,
-      DocType? eventImage,
+      List<DocType>? eventImage,
       String? startDateString,
       String? image,
       String? userId,

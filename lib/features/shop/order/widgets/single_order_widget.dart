@@ -57,7 +57,7 @@ class SingleOrderWidget extends ConsumerWidget {
                         const Gap(8),
                         _buildOrderStatus(
                             context: context,
-                            status: order.deliveryStatus,
+                            status: 'pending',
                             deliveryType: order.deliveryType!)
                       ],
                     )

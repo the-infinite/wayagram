@@ -17,6 +17,7 @@ import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dar
 import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
+import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/order/widgets/single_order_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
@@ -165,8 +166,14 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                     title: "Wayagram Deals",
                     icon: SvgPicture.asset(WayaAssets.icons.dealIcon.path),
                     color: Color(0xffFFF0EB),
+                    metric: viewModel.numberOfWayaGramDeals,
+                    isStacked: true,
                     onTap: () {
-                      WayaNav.toNamed(WayaDealAd.route);
+                      if (viewModel.numberOfWayaGramDeals > 0) {
+                        WayaNav.toNamed(WayaGramDeals.route);
+                      } else {
+                        WayaNav.toNamed(WayaDealAd.route);
+                      }
                     },
                   ),
                   QuickActionWidget(

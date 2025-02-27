@@ -27,24 +27,27 @@ class _CartViewState extends ConsumerState<CartView> {
   @override
   Widget build(BuildContext context) {
     final restructuredCart = ref.watch(cartVmProvider);
-   
 
     return WayaScaffold(
         isLoading: restructuredCart.isLoading,
         isScrollable: true,
         onRefresh: () => ref.read(cartVmProvider.notifier).loadCart(),
         title: "Cart",
-        body: restructuredCart.cart == null ? Center(child: CartEmptyState(),): ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: restructuredCart.cart == null
-                ? 0
-                : restructuredCart.cart!.items.length,
-            itemBuilder: (context, index) {
-              return CartCard(
-                  cartId: restructuredCart.cart!.id,
-                  cartItem: restructuredCart.cart!.items[index]);
-            }));
+        body: restructuredCart.cart == null
+            ? Center(
+                child: CartEmptyState(),
+              )
+            : ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: restructuredCart.cart == null
+                    ? 0
+                    : restructuredCart.cart!.items.length,
+                itemBuilder: (context, index) {
+                  return CartCard(
+                      cartId: restructuredCart.cart!.id,
+                      cartItem: restructuredCart.cart!.items[index]);
+                }));
   }
 }
 

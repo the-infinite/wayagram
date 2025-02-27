@@ -24,17 +24,19 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
     final pin = ref.watch(orderPinProvider);
     final viewModel = ref.read(confirmOrderDeliveryVmProvider.notifier);
     final wayaTheme = Theme.of(context);
+    final state = ref.watch(confirmOrderDeliveryVmProvider);
 
     final String? arg = ModalRoute.of(context)?.settings.arguments as String?;
 
     return WayaScaffold(
         title: 'Confirm Order Delivery',
+        isLoading: state.isLoading,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(
-                //height: context.height * 0.35,
+                
                 child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,14 +68,19 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                           borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: RichText(
                           text: const TextSpan(children: [
-                        TextSpan(text: "Having issue? ", style: WayaTextStyles.bodySmall),
-                        TextSpan(text: "Contact Support", style: WayaTextStyles.smallActiveLinkStyle),
                         TextSpan(
                             text: "Having issue? ",
                             style: WayaTextStyles.bodySmall),
                         TextSpan(
                             text: "Contact Support",
-                            style: WayaTextStyles.smallActiveLinkStyle,),
+                            style: WayaTextStyles.smallActiveLinkStyle),
+                        TextSpan(
+                            text: "Having issue? ",
+                            style: WayaTextStyles.bodySmall),
+                        TextSpan(
+                          text: "Contact Support",
+                          style: WayaTextStyles.smallActiveLinkStyle,
+                        ),
                       ]))),
                 ),
               ],
@@ -83,7 +90,7 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                    // height: context.height * 0.40,
+                   
                     child: PinKeyboard(
                         onKeyTap: viewModel.handleKeyPress,
                         onSubmit: () => viewModel.submitPins(context),

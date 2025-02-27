@@ -62,11 +62,9 @@ class Order extends BaseModel<Order> {
   final String total;
   final String status;
   final String? pickupAddress;
-  final String pickupStatus;
   final String? deliveryAddress;
   final dynamic deliveryFee;
   final DateTime? deliveryDate;
-  final String deliveryStatus;
   final String version;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -74,6 +72,8 @@ class Order extends BaseModel<Order> {
   final String shopPhone;
   final String? deliveryToken;
   final String? deliveryType;
+  final List<dynamic> deliveryStatusHistory;
+  final List<dynamic> pickupStatusHistory;
 
   Order({
     required this.id,
@@ -85,17 +85,17 @@ class Order extends BaseModel<Order> {
     required this.status,
     this.deliveryType,
     this.pickupAddress,
-    required this.pickupStatus,
     this.deliveryAddress,
     this.deliveryFee,
     this.deliveryDate,
     this.deliveryToken,
-    required this.deliveryStatus,
     required this.version,
     required this.createdAt,
     required this.updatedAt,
     required this.shopName,
     required this.shopPhone,
+    this.deliveryStatusHistory = const [],
+    this.pickupStatusHistory = const []
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -109,19 +109,21 @@ class Order extends BaseModel<Order> {
       status: json['status'],
       pickupAddress: json['pickupAddress'],
       deliveryType: json['deliveryType'],
-      pickupStatus: json['pickupStatus'],
+ 
       deliveryToken: json['deliveryToken'],
       deliveryAddress: json['deliveryAddress'],
       deliveryFee: json['deliveryFee'] ?? '0',
       deliveryDate: json['deliveryDate'] != null
           ? DateTime.parse(json['deliveryDate'])
           : null,
-      deliveryStatus: json['deliveryStatus'],
+  
       version: json['_v'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       shopName: json['shopName'],
       shopPhone: json['shopPhone'],
+      deliveryStatusHistory: json['deliveryStatusHistory'],
+      pickupStatusHistory: json['pickupStatusHistory']
     );
   }
 
@@ -134,11 +136,10 @@ class Order extends BaseModel<Order> {
         'total': total,
         'status': status,
         'pickupAddress': pickupAddress,
-        'pickupStatus': pickupStatus,
+     
         'deliveryAddress': deliveryAddress,
         'deliveryFee': deliveryFee,
         'deliveryDate': deliveryDate?.toIso8601String(),
-        'deliveryStatus': deliveryStatus,
         'deliveryToken': deliveryToken,
         'deliveryType': deliveryType,
         '_v': version,
@@ -146,6 +147,8 @@ class Order extends BaseModel<Order> {
         'updatedAt': updatedAt.toIso8601String(),
         'shopName': shopName,
         'shopPhone': shopPhone,
+        'deliveryStatusHistory': deliveryStatusHistory,
+        'pickupStatusHistory': pickupStatusHistory
       };
 
   @override
@@ -157,10 +160,9 @@ class Order extends BaseModel<Order> {
         'total': total,
         'status': status,
         'pickupAddress': pickupAddress,
-        'pickupStatus': pickupStatus,
         'deliveryAddress': deliveryAddress,
         'deliveryFee': deliveryFee,
-        'deliveryStatus': deliveryStatus,
+    
         'shopName': shopName,
         'shopPhone': shopPhone,
         'deliveryToken': deliveryToken,
@@ -169,39 +171,35 @@ class Order extends BaseModel<Order> {
 }
 
 class OrderItem {
-  final String name;
-  final int price;
+  final String productName;
+  final int? price;
   final int quantity;
   final String productId;
   final String? productImage;
-  
 
   OrderItem({
-    required this.name,
-    required this.price,
+    required this.productName,
+     this.price,
     required this.quantity,
     required this.productId,
     this.productImage,
-    
   });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
-      name: json['name'] ?? '',
+      productName: json['productName'] ?? '',
       price: json['price'],
       quantity: json['quantity'],
       productId: json['productId'],
       productImage: json['productImage'],
-      
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'name': name,
+        'productName': productName,
         'price': price,
         'quantity': quantity,
         'productId': productId,
         'productImage': productImage,
-       
       };
 }

@@ -80,7 +80,7 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
                           
                       // wayagram deal products
                       final wayagramProducts = filteredProducts.where((prod) {
-                        return prod.wayagramDeal == true;
+                        return prod.wayagramDealApprove == true;
                       }).toList();
 
                       // Non - wayagram products

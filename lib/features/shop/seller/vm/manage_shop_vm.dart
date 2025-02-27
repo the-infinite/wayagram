@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/order/data/repo/order_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/delivery_request_response_model.dart';
@@ -99,8 +100,12 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
       {required List<SellerProduct>? products,
       required List<DeliveryRequestData>? requests}) {
     if (products != null && products.isNotEmpty) {
-      state = state.copyWith(numberOfProducts: products.length);
+      List<SellerProduct> wayaProduct =
+          products.where((prod) => prod.wayagramDeal == true).toList();
 
+      state = state.copyWith(
+          numberOfProducts: products.length,
+          numberOfWayaGramDeals: wayaProduct.length);
       List<SalesMetric> sales = List.from(state.salesMetric);
 
       sales = sales.map((value) {
@@ -132,9 +137,12 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
               .where((value) => value.status == 'pending')
               .toList()
               .length;
+          // final totalSales = ordersResponse.data.data.where((ord) => ord.status == 'compl')
           List<SalesMetric> sales = List.from(state.salesMetric);
           sales = sales.map((value) {
             if (value.title == "Pending Orders") {
+              return value.copyWith(metrics: "$numberOfPendingOrders");
+            } else if (value.title == 'Total Sales') {
               return value.copyWith(metrics: "$numberOfPendingOrders");
             }
             return value;
@@ -146,6 +154,58 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
     } catch (e) {
       print(e);
     } finally {}
+  }
+
+  // main endpoint to get seller paginated poduct --others will later be removed
+
+  Future<PaginatedResult<SellerProduct>?> approvedWayaDeals(
+      {required int page}) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final response = await _shopRepository.getSellerProducts(
+          shopId: state.singleShop!.id, page: page);
+      List<SellerProduct> sellerProducts = [];
+      bool hasNextPage = false;
+      if (response.success) {
+        SellerProductResponseModel responseModel =
+            SellerProductResponseModel.fromJson(response.data);
+        sellerProducts = responseModel.data.products
+            .where((c) => c.wayagramDealApprove == true)
+            .toList();
+        hasNextPage = responseModel.data.pagination.hasNextPage;
+      }
+      return PaginatedResult(hasNextPage: hasNextPage, items: sellerProducts);
+    } catch (e) {
+      print(e);
+      return null;
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<PaginatedResult<SellerProduct>?> appliedWayaDeals(
+      {required int page}) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final response = await _shopRepository.getSellerProducts(
+          shopId: state.singleShop!.id, page: page);
+      List<SellerProduct> sellerProducts = [];
+      bool hasNextPage = false;
+      if (response.success) {
+        SellerProductResponseModel responseModel =
+            SellerProductResponseModel.fromJson(response.data);
+        sellerProducts = responseModel.data.products
+            .where((c) => c.wayagramDeal != null)
+            .toList();
+        hasNextPage = responseModel.data.pagination.hasNextPage;
+      }
+      return PaginatedResult(hasNextPage: hasNextPage, items: sellerProducts);
+    } catch (e) {
+      print(e);
+      return null;
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
   }
 }
 

@@ -16,10 +16,12 @@ class ManageShopState {
   final int numberOfOrders;
   final bool isLoadingOrder;
   final List<Order> orders;
+  final int numberOfWayaGramDeals;
 
   const ManageShopState(
       {this.isLoading = false,
       this.data,
+      this.numberOfWayaGramDeals = 0,
       this.hasShop = false,
       this.shop = const [],
       this.orders = const [],
@@ -47,6 +49,7 @@ class ManageShopState {
       int? numberOfProducts,
       bool? isLoadingOrder,
       int? numberOfOrders,
+      int? numberOfWayaGramDeals,
       bool? isPersonalNotUpgradedToBusiness}) {
     return ManageShopState(
         isLoading: isLoading ?? this.isLoading,
@@ -61,7 +64,8 @@ class ManageShopState {
             numberOfPendingOrders ?? this.numberOfPendingOrders,
         isLoadingOrder: isLoadingOrder ?? this.isLoadingOrder,
         orders: orders ?? this.orders,
-        numberOfOrders :numberOfOrders?? this.numberOfOrders,
+        numberOfOrders: numberOfOrders ?? this.numberOfOrders,
+        numberOfWayaGramDeals: numberOfWayaGramDeals ?? this.numberOfWayaGramDeals,
         isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ??
             this.isPersonalNotUpgradedToBusiness);
   }
@@ -81,6 +85,7 @@ class ManageShopState {
         numberOfRequests: json['numberOfRequests'],
         numberOfProducts: json['numberOfProducts'],
         numberOfOrders: json['numberOfOrders'],
+        numberOfWayaGramDeals: json['numberOfWayaGramDeals'],
         shop: json['shop']);
   }
 
@@ -94,9 +99,10 @@ class ManageShopState {
         'numberOfRequests': numberOfRequests,
         'numberOfPendingOrders': numberOfPendingOrders,
         'orders': orders,
-        'numberOfOrders':numberOfOrders,
+        'numberOfOrders': numberOfOrders,
         "shop": shop,
         "singleShop": singleShop,
+        "numberOfWayaGramDeals": numberOfWayaGramDeals,
         "isPersonalNotUpgradedToBusiness": isPersonalNotUpgradedToBusiness
       };
 }

@@ -38,10 +38,10 @@ class PreviewAddedEvent extends ConsumerWidget {
         const Gap(15),
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: viewModel.eventImage != null
-              ? viewModel.eventImage!.file != null
+          child: viewModel.eventImage.isNotEmpty
+              ? viewModel.eventImage[0].file != null
                   ? Image.file(
-                      viewModel.eventImage!.file!,
+                      viewModel.eventImage[0].file!,
                       fit: BoxFit.cover,
                       height: 200,
                       width: double.infinity,
@@ -49,7 +49,7 @@ class PreviewAddedEvent extends ConsumerWidget {
                       scale: 1,
                     )
                   : Image.network(
-                      viewModel.eventImage!.url,
+                      viewModel.eventImage[0].url,
                       fit: BoxFit.cover,
                       height: 200,
                       width: double.infinity,

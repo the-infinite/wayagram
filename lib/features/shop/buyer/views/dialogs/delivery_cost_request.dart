@@ -119,6 +119,7 @@ class DeliveryCostRequest extends ConsumerWidget {
                 controller: _controller,
                 hintText: "Enter delivery address for this order",
                 line: 5,
+                padding: const EdgeInsets.all(12),
                 label: "Delivery Address",
               ),
               const Gap(24),

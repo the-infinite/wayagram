@@ -46,7 +46,7 @@ class SellerOrderDetails extends ConsumerWidget {
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: 2,
                 itemBuilder: (context, index) {
-                  return Container(); // OrderedProductCard()
+                  return Container();
                 }),
             const Gap(10),
             DottedBorderOrderInfoWidget(
@@ -67,11 +67,11 @@ class SellerOrderDetails extends ConsumerWidget {
                 description: WayaHelpers.formatDateString(
                     arg?.updatedAt.toIso8601String())),
             const Gap(8),
-            OrderInfoWidget(
-                title: "Order Status",
-                description: arg?.deliveryType == 'Pickup'
-                    ? arg?.pickupStatus ?? ""
-                    : arg?.deliveryStatus ?? ""),
+            // OrderInfoWidget(
+            //     title: "Order Status",
+            //     description: arg?.deliveryType == 'Pickup'
+            //         ? arg?.pickupStatus ?? ""
+            //         : arg?.deliveryStatus ?? ""),
             const Gap(8),
             OrderInfoWidget(
                 title: "Delivery Type", description: arg?.deliveryType ?? ''),
@@ -112,9 +112,9 @@ class SellerOrderDetails extends ConsumerWidget {
                       title: "Delivery Address",
                       description: arg?.deliveryAddress ?? '-'),
                   const Gap(8),
-                  OrderInfoWidget(
-                      title: "Delivery Status",
-                      description: arg?.deliveryStatus ?? '-'),
+                  // OrderInfoWidget(
+                  //     title: "Delivery Status",
+                  //     description: arg?.deliveryStatus ?? '-'),
                   const Gap(8),
                   OrderInfoWidget(
                       title: "Delivery Price",
@@ -172,16 +172,17 @@ class SellerOrderDetails extends ConsumerWidget {
                   width: 20,
                 ),
               ),
-            // WayaButton(
-            //   color: wayaTheme.colorScheme.transparent,
-            //   textColor: wayaTheme.colorScheme.greyColor500,
-            //   border: Border.all(
-            //       width: 1, color: wayaTheme.colorScheme.greyColor300),
-            //   callback: () {
-            //     viewModel.rejectOrder(context);
-            //   },
-            //   text: "Reject Order",
-            // )
+            const Gap(10),
+            WayaButton(
+              color: wayaTheme.colorScheme.transparent,
+              textColor: wayaTheme.colorScheme.greyColor900,
+              border: Border.all(
+                  width: 1, color: wayaTheme.colorScheme.greyColor300),
+              callback: () {
+                viewModel.rejectOrder(context, arg!.id);
+              },
+              text: "Reject Order",
+            )
           ],
         ));
   }
