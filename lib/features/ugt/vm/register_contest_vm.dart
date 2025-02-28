@@ -3,10 +3,9 @@ import 'dart:io';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
-import 'package:wayagram/features/quotation/data/model/model.dart';
-import 'package:wayagram/features/ugt/data/model/register_for_contest_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
@@ -59,7 +58,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
 
   void addDefault(List<FormRequirements> model, Contest post) {
     postId = post.id;
-      this.post = post;
+    this.post = post;
 
     var fieldList = <DynamicField>[];
 /*     var list = [
@@ -102,8 +101,8 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     state = [...fieldList];
   }
 
-  Future<void> submitDetail(
-      BuildContext context, ValueNotifier<bool> isLoading) async {
+  Future<void> submitDetail(BuildContext context, ValueNotifier<bool> isLoading,
+      String mySelectedState) async {
     isLoading.value = true;
     // print("Mean  werr $state");
     List<Map<String, dynamic>> detailsList = state.map(
@@ -150,17 +149,17 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
       "address": address.text,
       "phoneNumber": phoneNumber.text,
       // "university": university,
-      // "state": selectedState,
+      "state": mySelectedState,
       "applicationData": mapNew
     };
+    print(map);
     final response = await _contestRepository.registerContest(map);
     isLoading.value = false;
 
     if (response.success) {
-      WayaUtils.showModalSheetUgt(
-        context,
-        child: ApplicationStatus(post),
-      );
+      WayaSnackBar.showToast(
+          "Application sent, Your Application is under review");
+      Navigator.pop(context);
     }
   }
 

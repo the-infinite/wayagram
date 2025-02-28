@@ -1,0 +1,237 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
+
+import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
+
+import '../../../core/components/waya_scaffold.dart';
+
+class ContestActiveDisqualify extends StatefulHookConsumerWidget {
+  static const route = '/contest-active-disqualify';
+  const ContestActiveDisqualify({super.key});
+
+  @override
+  ConsumerState<ContestActiveDisqualify> createState() =>
+      _ManageStateContestState();
+}
+
+class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
+  final List<Map<String, String>> data = [
+    {
+      "name": "Ademola Lookman",
+      "state": "Ogun",
+      "votes": "25",
+      "status": "Inactive"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Osun",
+      "votes": "25",
+      "status": "Active"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Oyo",
+      "votes": "25",
+      "status": "Active"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Ondo",
+      "votes": "25",
+      "status": "Inactive"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Lagos",
+      "votes": "25",
+      "status": "Active"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Lagos",
+      "votes": "25",
+      "status": "Active"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Lagos",
+      "votes": "25",
+      "status": "Active"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Lagos",
+      "votes": "25",
+      "status": "Active"
+    },
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return WayaScaffold(
+      isLoading: false,
+      isScrollable: true,
+      title: "Manage Contestant",
+      backgroundColor: Colors.white,
+      body: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: DataTable(
+          columnSpacing: 20.0,
+          headingRowColor:
+              WidgetStateColor.resolveWith((states) => Colors.white),
+          columns: [
+            DataColumn(
+                label: Text("Name",
+                    style: TextStyle(fontWeight: FontWeight.bold))),
+            DataColumn(
+                label: Text("State",
+                    style: TextStyle(fontWeight: FontWeight.bold))),
+            DataColumn(
+                label: Text("No of Votes",
+                    style: TextStyle(fontWeight: FontWeight.bold))),
+            DataColumn(
+                label: Text("Status",
+                    style: TextStyle(fontWeight: FontWeight.bold))),
+            DataColumn(
+                label: Text("Action",
+                    style: TextStyle(fontWeight: FontWeight.bold))),
+          ],
+          rows: data.map((item) {
+            return DataRow(cells: [
+              DataCell(Text(item["name"]!)),
+              DataCell(Text(item["state"]!)),
+              DataCell(Text(item["votes"]!)),
+              DataCell(
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: item["status"] == "Active"
+                        ? Colors.green[100]
+                        : Colors.red[100],
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Text(
+                    item["status"]!,
+                    style: TextStyle(
+                      color: item["status"] == "Active"
+                          ? Colors.green
+                          : Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              DataCell(
+                PopupMenuButton(
+                  onSelected: (value) {},
+                  position: PopupMenuPosition.under,
+                  itemBuilder: (context) {
+                    return [
+                      PopupMenuItem<int>(
+                        value: 0,
+                        child: _buildActionNav(
+                            context: context,
+                            onTap: () {
+                              Navigator.pop(context);
+                              WayaNav.toNamed(
+                                  '/contest-mydashboard-profile-page');
+                            },
+                            asset: WayaAssets.icons.cProfileUser.svg(
+                              color: wayaTheme.colorScheme.customBlack,
+                              height: 20,
+                            ),
+                            text: "View Profile",
+                            color: wayaTheme.colorScheme.customBlack),
+                      ),
+                      PopupMenuItem<int>(
+                        value: 1,
+                        child: _buildActionNav(
+                            context: context,
+                            onTap: () {
+                              Navigator.pop(context);
+                              // WayaNav.toNamed('/pages');
+                            },
+                            asset: WayaAssets.icons.mComments.svg(
+                              color: wayaTheme.colorScheme.customBlack,
+                              height: 20,
+                            ),
+                            text: "Send Message",
+                            color: wayaTheme.colorScheme.customBlack),
+                      ),
+                      PopupMenuItem<int>(
+                        value: 1,
+                        child: _buildActionNav(
+                            context: context,
+                            onTap: () {
+                              Navigator.pop(context);
+                              // WayaNav.toNamed('/pages');
+                            },
+                            asset: WayaAssets.images.pages.flag.svg(
+                              color: wayaTheme.colorScheme.error500,
+                              height: 20,
+                            ),
+                            text: "Disqualify",
+                            color: wayaTheme.colorScheme.error500),
+                      )
+                    ];
+                  },
+                  child: Icon(Icons.more_vert),
+                ),
+              ),
+            ]);
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}
+
+InkWell _buildActionNav(
+    {required BuildContext context,
+    required VoidCallback onTap,
+    required Widget asset,
+    required String text,
+    required Color color}) {
+  final wayaTheme = Theme.of(context);
+  return InkWell(
+    onTap: onTap,
+    splashFactory: NoSplash.splashFactory,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        asset,
+        const Gap(4),
+        Text(
+          text,
+          style: TextStyle().wayaCopyWith(
+              color: color, fontWeight: FontWeight.w500, fontSize: 12),
+        )
+      ],
+    ),
+  );
+}
+
+Color getColor(bool isText, String text) {
+  return isText ? Color(0xff9E0A05) : Color(0xffFEF6E7);
+  /*  } else if (text == "rejected") {
+      return isText ? Color(0xff9E0A05) : Color(0xffFBEAE9);
+    } else {
+      return isText ? Color(0xff865503) : Color(0xffFEF6E7);
+    } */
+}
+
+String formatMoney(String value) {
+  final oCcy = NumberFormat("#,##0.00", "en_US");
+  return oCcy.format(double.parse(value));
+}
