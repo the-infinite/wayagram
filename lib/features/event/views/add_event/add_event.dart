@@ -37,7 +37,6 @@ class _AddEventState extends ConsumerState<AddEvent>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return WayaScaffoldWithProgressBar(
         isLoading: false,
         isScrollable: true,

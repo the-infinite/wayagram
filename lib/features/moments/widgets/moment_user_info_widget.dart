@@ -32,7 +32,6 @@ class MomentUserInfoWidget extends ConsumerStatefulWidget {
 class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Container(
       width: double.infinity,

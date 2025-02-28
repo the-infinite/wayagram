@@ -1,18 +1,15 @@
-
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-//import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/quotation/buyer/model/create_request_state_model.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
 import 'package:wayagram/features/quotation/widgets/single_see_bid_widget.dart';
 
@@ -25,12 +22,8 @@ class MapScreen extends ConsumerStatefulWidget {
 }
 
 class _MapScreenState extends ConsumerState<MapScreen> {
-/*  final Completer<GoogleMapController> _controller = Completer();
+  final _controller = Completer<GoogleMapController>();
 
-  static final CameraPosition _kGoogle = const CameraPosition(
-    target: LatLng(37.42796133580664, -122.885749655962),
-    zoom: 14.4746,
-  );
 
   static const CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
@@ -39,163 +32,176 @@ class _MapScreenState extends ConsumerState<MapScreen> {
       tilt: 59.440717697143555,
       zoom: 19.151926040649414);
 
-
-  List<Marker> _marker = [];
-  final List<Marker> _list = const [
-    // List of Markers Added on Google Map
+  final Set<Marker> _marker = {};
+  final _list = const <Marker>[
     Marker(
-        markerId: MarkerId('1'),
-        position: LatLng(6.4478, 3.4723),
-        //position: LatLng(20.42796133580664, 80.885749655962),
-        infoWindow: InfoWindow(
-          title: 'My Position',
-        )),
-
+      markerId: MarkerId('1'),
+      position: LatLng(6.4478, 3.4723),
+      infoWindow: InfoWindow(
+        title: 'My Position',
+      ),
+    ),
     Marker(
-        markerId: MarkerId('2'),
-        //position: LatLng(25.42796133580664, 80.885749655962),
-        position: LatLng(6.4478, 3.4723),
-        infoWindow: InfoWindow(
-          title: 'Location 1',
-        )),
-
+      markerId: MarkerId('2'),
+      position: LatLng(6.4478, 3.4723),
+      infoWindow: InfoWindow(
+        title: 'Location 1',
+      ),
+    ),
     Marker(
-        markerId: MarkerId('3'),
-        position: LatLng(6.4478, 3.4723),
-        //position: LatLng(20.42796133580664, 73.885749655962),
-        infoWindow: InfoWindow(
-          title: 'Location 2',
-        )),
-  ];*/
-
-
+      markerId: MarkerId('3'),
+      position: LatLng(6.4478, 3.4723),
+      infoWindow: InfoWindow(
+        title: 'Location 2',
+      ),
+    ),
+  ];
 
   @override
   void initState() {
-
+    _marker.addAll(_list);
     super.initState();
-    //_marker.addAll(_list);
   }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createRequestProvider);
     final wayaTheme = Theme.of(context);
-    return Scaffold(
-      //appBarTrailing: bidIcon(context),
-      body: Stack(children: [
-      /*  GoogleMap(
+
+    //? This is even better.
+    return WayaScaffold(
+      isScrollable: false,
+      isLoading: false,
+      body: Stack(
+        children: [
+          //? At the bottom, the google map.
+          GoogleMap(
             initialCameraPosition: _kLake,
             mapType: MapType.normal,
             myLocationEnabled: true,
             compassEnabled: true,
             zoomControlsEnabled: false,
-            onMapCreated: (GoogleMapController controller) {
+            onMapCreated: (controller) {
               _controller.complete(controller);
             },
             myLocationButtonEnabled: true,
-            minMaxZoomPreference: const MinMaxZoomPreference(3,13)
-        ),*/
-        /*Positioned(
-          top: 130,
-          bottom: 40,
-          child: Padding(
-            padding: EdgeInsets.only(top: 150.h, left: 20.w, right: 20.w),
-            child: Row(children: [
-              Text(
-                "Bids Around You",
-                style: TextStyle().wayaCopyWith(
-                  color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                ),
+            minMaxZoomPreference: const MinMaxZoomPreference(3, 13),
+          ),
+
+          //? This is fine.
+          Positioned(
+            top: 130,
+            bottom: 40,
+            child: Padding(
+              padding: EdgeInsets.only(top: 150.h, left: 20.w, right: 20.w),
+              child: Row(
+                children: [
+                  Text(
+                    "Bids Around You",
+                    style: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.customBlack,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const Spacer(),
+                  InkWell(
+                      onTap: () => Navigator.pop(context),
+                      child: Image.asset(
+                        'assets/images/bid/back-arrow.png',
+                        height: 24,
+                        width: 24,
+                      )),
+                ],
               ),
-              const Spacer(),
-              InkWell(
-                  onTap:()=>Navigator.pop(context),
-                  child: Image.asset('assets/images/bid/back-arrow.png', height: 24, width: 24,)),],),
-          ),
-        ),*/
-
-        Padding(
-          padding:  EdgeInsets.only( top: 340.h),
-          child: Container(
-            padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-            height: 420.h,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              //border: Border.all(width: 1, color: AppColor.colorAppGray0,),
-              color: Colors.white,
             ),
-            child: ListView(
-              padding: EdgeInsets.zero,
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 340.h),
+            child: Container(
+              padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+              height: 420.h,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.white,
+              ),
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  const Gap(10),
+                  Text(
+                    "Bids Around You",
+                    style: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.customBlack,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  const Gap(10),
+                  Text(
+                    "Explore open opportunities nearby and submit your best offers to get started",
+                    style: TextStyle().wayaCopyWith(
+                      color: WayaColors.greyColor500,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                  const Gap(20),
+                  SingleSeeBidWidget(
+                    color: wayaTheme.colorScheme.scaffoldColor,
+                  ),
+                  SingleSeeBidWidget(
+                    color: wayaTheme.colorScheme.scaffoldColor,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
+            child: Row(
               children: [
-                const Gap(10),
-                Text(
-                  "Bids Around You",
-                  style: TextStyle().wayaCopyWith(
-                    color: wayaTheme.colorScheme.customBlack,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 630.h),
+                  child: InkWell(
+                      onTap: () => Navigator.pop(context),
+                      child: Image.asset(
+                        'assets/images/bid/back-arrow.png',
+                        height: 60.h,
+                      )),
                 ),
-                const Gap(10),
-                Text(
-                  "Explore open opportunities nearby and submit your best offers to get started",
-                  style: TextStyle().wayaCopyWith(
-                    color: WayaColors.greyColor500,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
+                Flexible(
+                  child: FormField<String>(
+                    validator: (value) {
+                      return null;
+                    },
+                    builder: (formState) {
+                      return WayaTextFormField(
+                        keyboardType: TextInputType.text,
+                        controller: viewModel.maxDistance,
+                        hintText: 'Ikeja city, Lagos state',
+                        borderColor: formState.hasError && viewModel.maxDistance.text.isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
+                        label: '',
+                        fillColor: Colors.white,
+                        prefixIcon: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          child: Text(
+                            "Km",
+                            style: wayaTheme.textTheme.hintStyle,
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                ),
-                const Gap(20),
-                SingleSeeBidWidget(color:  wayaTheme.colorScheme.scaffoldColor,),
-                SingleSeeBidWidget(color:  wayaTheme.colorScheme.scaffoldColor,),
-
-              ],),
-          ),
-        ),
-
-        Padding(
-          padding: EdgeInsets.only(top: 20.h, left: 20.w, right: 20.w),
-          child: Row(children: [
-
-            Padding(
-              padding:  EdgeInsets.only(bottom: 630.h),
-              child: InkWell(
-                  onTap:()=>Navigator.pop(context),
-                  child: Image.asset('assets/images/bid/back-arrow.png', height: 60.h,)),
+                )
+              ],
             ),
-
-           Flexible(
-             child: FormField<String>(validator: (value) {
-               return null;
-             }, builder: (formState)  {
-               return WayaTextFormField(
-                 keyboardType: TextInputType.text,
-                 controller: viewModel.maxDistance,
-                 hintText: 'Ikeja city, Lagos state',
-                 borderColor: formState.hasError &&
-                     viewModel.maxDistance.text.isEmpty
-                     ? wayaTheme.colorScheme.error
-                     : null,
-                 label: '',
-                 fillColor: Colors.white,
-                 //prefixIcon:Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Text("Km", style: wayaTheme.textTheme.hintStyle),)
-               );
-             }),
-           )
-          ],
-
-
           ),
-        ),
-
-
-
-      ],),
-
+        ],
+      ),
     );
   }
 }

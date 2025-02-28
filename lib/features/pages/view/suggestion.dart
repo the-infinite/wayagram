@@ -36,7 +36,6 @@ class _SuggestionState extends ConsumerState<Suggestion> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
     final pageModel = ref.watch(createPageProvider.notifier);

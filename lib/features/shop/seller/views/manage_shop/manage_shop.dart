@@ -35,8 +35,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final ShopData shop =
-          ModalRoute.of(context)!.settings.arguments as ShopData;
+      final shop = ModalRoute.of(context)!.settings.arguments as ShopData;
       ref.read(manageShopVmProvider.notifier).getCurrentShop(shop);
       ref.read(manageShopVmProvider.notifier).fetchData();
     });
@@ -65,8 +64,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(viewModel.singleShop!.name.capitalizeFirst!,
-                        style: wayaTheme.textTheme.titleLarge),
+                    Text(viewModel.singleShop!.name.capitalizeFirst!, style: wayaTheme.textTheme.titleLarge),
                     const Gap(3),
                     Text(
                       'Manage your shop activity',
@@ -89,8 +87,10 @@ class _ManageShopState extends ConsumerState<ManageShop> {
             const Gap(30),
             WayaButton(
               callback: () {
-                WayaNav.toNamed(SellerProducts.route,
-                    arguments: viewModel.singleShop!.id);
+                WayaNav.toNamed(
+                  SellerProducts.route,
+                  arguments: viewModel.singleShop!.id,
+                );
               },
               color: wayaTheme.colorScheme.primar50,
               centerWidget: Row(
@@ -99,16 +99,13 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 children: [
                   SvgPicture.asset(
                     WayaAssets.icons.buttonIcon.path,
-                    colorFilter: ColorFilter.mode(
-                        wayaTheme.colorScheme.customPrimary, BlendMode.srcIn),
+                    colorFilter: ColorFilter.mode(wayaTheme.colorScheme.customPrimary, BlendMode.srcIn),
                   ),
                   const Gap(6),
                   Text(
                     "View My Products",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500),
+                        color: wayaTheme.colorScheme.customPrimary, fontSize: 14, fontWeight: FontWeight.w500),
                   )
                 ],
               ),
@@ -131,10 +128,8 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 }),
             const Gap(15),
             Text("Quick Action",
-                style: TextStyle().wayaCopyWith(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: wayaTheme.colorScheme.customBlack)),
+                style: TextStyle()
+                    .wayaCopyWith(fontSize: 15, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.customBlack)),
             const Gap(15),
             Container(
               width: double.infinity,
@@ -146,18 +141,14 @@ class _ManageShopState extends ConsumerState<ManageShop> {
               child: GridView(
                 shrinkWrap: true,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    mainAxisSpacing: 0,
-                    childAspectRatio: 3 / 4,
-                    crossAxisSpacing: 8),
+                    crossAxisCount: 4, mainAxisSpacing: 0, childAspectRatio: 3 / 4, crossAxisSpacing: 8),
                 children: [
                   QuickActionWidget(
                     title: "Orders",
                     icon: SvgPicture.asset(WayaAssets.icons.orders.path),
                     color: Color(0xffE7F6EC),
                     onTap: () {
-                      WayaNav.toNamed(AllSellerOrders.route,
-                          arguments: viewModel.singleShop!.id);
+                      WayaNav.toNamed(AllSellerOrders.route, arguments: viewModel.singleShop!.id);
                     },
                     metric: viewModel.numberOfOrders,
                     isStacked: true,
@@ -182,8 +173,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                       WayaAssets.icons.buttonIcon.path,
                       width: 28,
                       height: 28,
-                      colorFilter:
-                          ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
+                      colorFilter: ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
                     ),
                     color: Color(0xffFBEAE9),
                     onTap: () {
@@ -205,17 +195,13 @@ class _ManageShopState extends ConsumerState<ManageShop> {
             ),
             const Gap(15),
             Text("Recent Orders",
-                style: TextStyle().wayaCopyWith(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
-                    color: wayaTheme.colorScheme.customBlack)),
+                style: TextStyle()
+                    .wayaCopyWith(fontSize: 15, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.customBlack)),
             const Gap(15),
             viewModel.orders.isEmpty
                 ? Center(
                     child: EmptyState(
-                        assetImage: WayaAssets.images.wallet.searchDocu
-                            .image(scale: 1.5),
-                        message: 'No Recent Order'),
+                        assetImage: WayaAssets.images.wallet.searchDocu.image(scale: 1.5), message: 'No Recent Order'),
                   )
                 : ListView.builder(
                     itemCount: viewModel.orders.length,

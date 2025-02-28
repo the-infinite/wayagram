@@ -39,6 +39,9 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
   bool sel =  false;
   bool sel2 =  false;
 
+  String? image;
+  String? editCoverImage;
+
   File? _selectedImage; // Holds the selected image
   File? _coverImage; // Holds the selected image
   final ImagePicker _picker = ImagePicker();
@@ -63,38 +66,61 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+      setState(() {
+        image = args['profileImage'];
+        editCoverImage = args['coverImage'];
+
+      });
+      ref.read(createGroupProvider.notifier).prefillFunc(args);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createGroupProvider);
     final viewModel2 = ref.watch(createGroupProvider.notifier);
     final wayaTheme = Theme.of(context);
 
-    final  id  = ModalRoute.of(context)?.settings.arguments as String;
+   // final  id  = ModalRoute.of(context)?.settings.arguments as String;
+
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
     return WayaScaffold(
       padding: EdgeInsets.zero,
       title: "Edit Group Info",
-      // onTapBackButton: (){
-      //   Navigator.pop(context);
-      //   viewModel2.reset();
-      //
-      // },
       isLoading: viewModel.isLoading,
       isScrollable: true,
       appBarTrailing: Padding(
         padding: const EdgeInsets.only(right: 20),
-        child: WayaButton(
+        child:  WayaButton(
           callback: !viewModel.isLoading
               ? () async {
             if (_formKey.currentState!.validate()) {
-              if(!sel && !sel2){
                 await  viewModel2.editGroup(context, viewModel.groupName.text,
-                viewModel.groupDescription.text, sel? true: false,
-                ( _coverImage as File).path,  ( _selectedImage as File).path, id);
-                WayaNav.toNamed('/groups');
-                ref.watch(createGroupProvider.notifier).reset();
-            } else{
-                WayaNav.toNamed('/groups');
-                ref.watch(createGroupProvider.notifier).reset();
-              }
+                    viewModel.groupDescription.text, sel? true: false,
+                    _coverImage == null ? editCoverImage!:( _coverImage as File).path,
+                    _selectedImage == null? image!: ( _selectedImage as File).path,
+                    args['groupId']
+                  //id
+                );
+
+                //ref.watch(createGroupProvider.notifier).reset();
+            } else if(!sel && !sel2){
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'Select group type',
+                    style:
+                    TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                  ),
+                  backgroundColor: WayaColors.primary,
+                  duration: Duration(seconds: 2),
+                ),
+              );
+              //ref.watch(createGroupProvider.notifier).reset();
             }
           } : null,
           text: 'Continue',
@@ -107,11 +133,12 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
           height: 30,
 
         ),
+
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Stack(
+          /*Stack(
             clipBehavior: Clip.none,
             children: [
               Column(
@@ -178,7 +205,8 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                         )
                             : null,
                       ),
-                      /* if (_coverImage == null)
+                      */
+          /* if (_coverImage == null)
                           Positioned.fill(
                             child: CircleAvatar(
                               radius: 10,
@@ -189,13 +217,92 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                               ),
                             ),
                           ),*/
+          /*
                     ],
                   ),
                 ),
               ),
 
             ],
+          ),*/
+
+          Stack(
+            clipBehavior: Clip.none,
+            children: [
+              // Banner Container
+              Container(
+                width: double.infinity,
+                height: 200, // Banner height
+                decoration: BoxDecoration(
+                    color: WayaColors.primaryBrown50,
+                    borderRadius: BorderRadius.circular(0),
+                    image: _selectedImage != null
+                        ? DecorationImage(
+                      image: FileImage(_selectedImage!),
+                      fit: BoxFit.cover,
+                    )
+                        : image != null ? DecorationImage(
+                      image: NetworkImage(image!),
+                      fit: BoxFit.cover,
+                    )  : DecorationImage(
+                      image: NetworkImage(args['']),
+                      fit: BoxFit.cover,
+                    )
+                  // const DecorationImage(
+                  //   image: AssetImage("assets/placeholder.jpg"),
+                  //   fit: BoxFit.cover,
+                  // ),
+                ),
+              ),
+
+              // Upload Icon Button
+              Positioned(
+                top: 140,
+                right: 10,
+                child: IconButton(
+                  onPressed: _pickImage,
+                  icon: Image.asset('assets/images/pages/cam.png', height: 14.h,),
+                  padding: EdgeInsets.all(10),
+                  constraints: BoxConstraints(),
+                  color: WayaColors.greyColor600, // Background overlay
+                ),
+              ),
+
+              Positioned(
+                left: 16.w,
+                bottom: -20.h,
+                child: GestureDetector(
+                  onTap: _pickCoverImage,
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 20,
+                        backgroundColor: wayaTheme.colorScheme.greyColor200,
+                        backgroundImage: _coverImage != null
+                            ?  FileImage(_coverImage!)
+                            : null,
+                        child: _coverImage == null
+                            ? Icon(
+                          Icons.person,
+                          color: wayaTheme.colorScheme.greyColor600,
+                        )
+                            :editCoverImage != null ?CircleAvatar(
+                            radius: 20,
+                            backgroundColor: wayaTheme.colorScheme.greyColor200,
+                            backgroundImage: NetworkImage(editCoverImage!)
+                        ): CircleAvatar(
+                            radius: 20,
+                            backgroundColor: wayaTheme.colorScheme.greyColor200,
+                            backgroundImage: NetworkImage(args[''])
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
+
           const Gap(30),
          Padding(
            padding: EdgeInsets.only(left: 15, right: 15, bottom: 20),

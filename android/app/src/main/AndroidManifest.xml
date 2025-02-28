@@ -30,7 +30,7 @@
     <!--Now
     for the app itself  -->
     <application
-        android:label="wayagram"
+        android:label="Wayagram"
         android:name="${applicationName}"
         android:icon="@mipmap/wayagram_ic">
 

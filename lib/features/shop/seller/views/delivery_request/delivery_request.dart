@@ -31,7 +31,6 @@ class _DeliveryRequestState extends ConsumerState<DeliveryRequest> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final viewModel = ref.watch(deliveryRequestVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(

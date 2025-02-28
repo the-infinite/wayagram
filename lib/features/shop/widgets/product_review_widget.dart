@@ -11,7 +11,6 @@ class ProductReviewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
 
     return Column(
@@ -76,7 +75,6 @@ class RatingStars extends StatefulWidget {
 class _RatingStarState extends State<RatingStars> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Row(
       children: List.generate(5, (index) {

@@ -34,7 +34,6 @@ class _EventsState extends ConsumerState<Events> with SingleTickerProviderStateM
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
 

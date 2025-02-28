@@ -87,7 +87,6 @@ class CreateSheet extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(20),
@@ -169,7 +168,7 @@ class CreateSheet extends ConsumerWidget {
               _CreateActionButton(
                   icon: WayaAssets.icons.csPage.path,
                   title: "Page",
-                  description: "Ceate a page for your business or fan",
+                  description: "Create a page for your business or fan",
                   callback: () {
                     WayaNav.toNamed(CreatePage.route);
                   }),

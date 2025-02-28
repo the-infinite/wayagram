@@ -20,7 +20,6 @@ class _ProductSearchResultState extends ConsumerState<ProductSearchResult> {
   Widget build(BuildContext context) {
     final List<Product> products =
         ModalRoute.of(context)?.settings.arguments as List<Product>;
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         isLoading: false,

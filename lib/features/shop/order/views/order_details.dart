@@ -18,10 +18,9 @@ class OrderDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+    final arg = ModalRoute.of(context)?.settings.arguments as OrderDetailArg?;
 
-    final OrderDetailArg? arg =
-        ModalRoute.of(context)?.settings.arguments as OrderDetailArg?;
-
+    //? The actual components.
     return WayaScaffold(
         isLoading: false,
         isScrollable: true,

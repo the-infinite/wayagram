@@ -3,8 +3,12 @@ import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/buyer_dispute/views/detail.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
 import 'package:wayagram/features/donation/view/create_donation.dart';
+import 'package:wayagram/features/donation/view/donation_details.dart';
+import 'package:wayagram/features/donation/view/donation_management.dart';
+import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
@@ -39,6 +43,7 @@ import 'package:wayagram/features/pages/view/confirm_page_details.dart';
 import 'package:wayagram/features/pages/view/create_page.dart';
 import 'package:wayagram/features/pages/view/create_page_post.dart';
 import 'package:wayagram/features/pages/view/pages.dart';
+import 'package:wayagram/features/pages/view/public_page.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
@@ -191,6 +196,7 @@ class WayaAppRoutes {
     Suggestion.route: () => Suggestion(),
     GroupSuggestion.route: () => GroupSuggestion(),
     PrivatePage.route: () => PrivatePage(),
+    PublicPage.route: () => PublicPage(),
     MembersScreen.route: () => MembersScreen(),
     CreatePost.route: () => CreatePost(),
     CreateGroupPost.route: () => CreateGroupPost(),
@@ -214,16 +220,20 @@ class WayaAppRoutes {
           title: '',
           postId: '',
         ),
-    EditGroupInfo.route: ()=> EditGroupInfo(),
-    AddGroupMember.route: ()=> AddGroupMember(),
+    EditGroupInfo.route: () => EditGroupInfo(),
+    AddGroupMember.route: () => AddGroupMember(),
     SearchView.route: () => SearchView(),
     //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
-    CreateDonation.route: ()=> CreateDonation(),
-    ChatAndSocial.route:() => ChatAndSocial(),
+    Donations.route: () => Donations(),
+    DonationDetails.route: () => DonationDetails(),
+    CreateDonation.route: () => CreateDonation(),
+    DonationManagement.route: () => DonationManagement(),
+    ChatAndSocial.route: () => ChatAndSocial(),
     SupportRequestScreen.route: () => SupportRequestScreen(),
     SupportDisputeScreen.route: () => SupportDisputeScreen(),
     SupportChatScreen.route: () => SupportChatScreen(),
+    DisputeDetail.route: () => DisputeDetail(id: WayaNav.search['id'].toString()),
     ProductSearchResult.route:() => ProductSearchResult()
   };
 
@@ -234,6 +244,10 @@ class WayaAppRoutes {
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
   static String getProfileRoute(String id) => "${ProfilePage.route}?id=$id";
+
+  /// Helper function that is used to get the route to the details of a single
+  /// dispute by its ID.
+  static String getDisputeDetailsRoute(String id) => "${DisputeDetail.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages => routes.entries.map((entry) {

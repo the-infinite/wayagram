@@ -12,7 +12,6 @@ import 'package:wayagram/features/quotation/vm/seller_bids_vm.dart';
 import 'package:wayagram/features/quotation/widgets/single_bid_widget.dart';
 
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
-import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 
 class AllSellerBids extends ConsumerWidget {
   static const route = '/seller-bids';
@@ -20,7 +19,6 @@ class AllSellerBids extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(sellerBidsVmProvider);
     return WayaScaffold(

@@ -29,7 +29,6 @@ class ChatAndSocial extends ConsumerStatefulWidget {
 class _ChatAndSocialState extends ConsumerState<ChatAndSocial> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       isLoading: false,
