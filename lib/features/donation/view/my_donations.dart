@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
@@ -35,6 +36,7 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(donationVmProvider.notifier).getMyDonation();
+      ref.read(donationVmProvider.notifier).getMyKYC();
     });
     searchController = TextEditingController();
     searchController.addListener(() {
@@ -47,6 +49,8 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
     searchController.dispose();
     super.dispose();
   }
+
+  String userType = "PERSONAL";
   
   @override
   Widget build(BuildContext context) {
@@ -84,7 +88,33 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
             ],
           ),
           callback: () {
-            WayaNav.toNamed('/createDonation');
+            if (userType == "PERSONAL") {
+              print('MY POLLING');
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                WayaUtils.showNotice(
+                    context: context,
+                    title: "You don't have a Business Account",
+                    message: 'Please upgrade to a business account to create a donation post',
+                    onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
+                    buttonText: 'Upgrade to Business',
+                    secondButtonText: 'Cancel',
+                    icon: Image.asset('assets/images/cp-shop.png'));
+              });
+            }else if(viewModel.kycStatus != 'APPROVED'){
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'You must complete KYC verification before creating a campaign',
+                    style:
+                    TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                  ),
+                  backgroundColor: WayaColors.primary,
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            }else{
+              WayaNav.toNamed('/createDonation');
+            }
           },
           color: wayaTheme.colorScheme.primar50,
         ),

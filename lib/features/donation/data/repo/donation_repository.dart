@@ -59,6 +59,10 @@ class DonationRepository extends BaseRepository {
     return get("$serviceUrl/client/campaigns/$campaignId");
   }
 
+  Future<WayaRequestResponse> getMyKYC(String userId,) {
+    return get("https://services.staging.wayagram.ng/wayagram-profile/api/v2/client/kyc/get-business-kyc-by-user-id?userId=$userId");
+  }
+
   Future<WayaRequestResponse> confirmWalletPin(ConfirmWalletPin payload) {
     return post('wayagram-wallet/api/v2/client/wallet-pin/confirm-pin',
         payload.toJson());

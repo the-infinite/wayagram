@@ -17,6 +17,7 @@ class DonationState{
     final TextEditingController details;
     final DocType? donationImage;
     final MultipartFile? image;
+    final String? kycStatus;
     final String privacyOption;
     final String startDate;
     final String endDate;
@@ -44,6 +45,7 @@ class DonationState{
       this.donationImage,
       this.image,
       this.startDate = '',
+      this.kycStatus = '',
       this.privacyOption = '',
       this.endDate = '',
       this.startDateString = '',
@@ -79,6 +81,7 @@ class DonationState{
       String? startDate,
       String? endDate,
       String? startDateString,
+      String? kycStatus,
       String? endDateString,
       bool? isLoading,
       bool? isPublic,
@@ -94,6 +97,7 @@ class DonationState{
       solution: solution ?? this.solution,
       statement: statement ?? this.statement,
       amount: amount ?? this.amount,
+      kycStatus: kycStatus ?? this.kycStatus,
       targetAmount: targetAmount?? this.targetAmount,
       minimumDonationAmount: minimumDonationAmount ?? this.minimumDonationAmount,
       details: details ?? this.details,
