@@ -4,13 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/group/view/joined_group.dart';
 import 'package:wayagram/features/group/view/manage_groups.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/pages/view/pages_for_you.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 import '../../bottom_view/bottom_view.dart';
 import 'groups_for_you.dart';

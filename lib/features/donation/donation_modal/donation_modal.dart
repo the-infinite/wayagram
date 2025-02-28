@@ -25,11 +25,13 @@ final String targetAmount;
 final String title;
 final String campaignId;
 final String privacy;
+final String daysLeft;
+final String donationCount;
 final String minimumDonationAmount;
   const DonationModal({super.key, required this.amountRaised,
     required this.targetAmount, required this.title,
     required this.campaignId, required this.privacy,
-    required this.minimumDonationAmount});
+    required this.minimumDonationAmount, required this.daysLeft, required this.donationCount});
 
   @override
   ConsumerState<DonationModal> createState() => _DonationModalState();
@@ -146,9 +148,9 @@ class _DonationModalState extends ConsumerState<DonationModal> {
               ),
               child: EngagementRange(
                   topLeft: "${WayaHelpers.formatPrice(int.parse(widget.amountRaised))} raised from ${WayaHelpers.formatPrice(int.parse(widget.targetAmount))} ",
-                  bottomLeft: "0 Donators",
-                  bottomRight: "20 days left",
-                  range: 0.4),),
+                  bottomLeft: "${widget.donationCount} Donations",
+                  bottomRight: "${widget.daysLeft} ${widget.daysLeft == '1' ? 'day' : 'days'} left",
+                  range:widget.donationCount == '0'? 0.0 : 0.4),),
             const Gap(40),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

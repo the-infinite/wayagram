@@ -33,6 +33,7 @@ import 'package:wayagram/features/group/view/members_screen.dart';
 import 'package:wayagram/features/group/view/private_group.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
+import 'package:wayagram/features/group/view/view_full_media.dart';
 import 'package:wayagram/features/moments/views/media_moment.dart';
 import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
@@ -233,6 +234,7 @@ class WayaAppRoutes {
     MyMoments.route: () => MyMoments(),
     ViewMoment.route: () => ViewMoment(),
     VideoTrimmerScreen.route: () => VideoTrimmerScreen(),
+    ViewFullMedia.route: ()=> ViewFullMedia(),
     EditPost.route: () => EditPost(
           initialContent: '',
           initialImageUrl: '',
