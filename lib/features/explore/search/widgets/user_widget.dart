@@ -44,7 +44,6 @@ class _UserWidgetState extends ConsumerState<UserWidget> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final state = ref.watch(eventVmProvider);
     if (widget.user.id == state.userId) {

@@ -98,7 +98,7 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                       arguments:{
                         'image': _selectedImage,
                         'coverImage': _coverImage,
-                        'type': sel?'Public Group': 'Private Group'
+                        'type': sel?'Public Page': 'Private Page'
                       }
                       //arguments: sel?'Public Page': 'Private Page'
                   );

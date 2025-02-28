@@ -15,7 +15,6 @@ class DisputeChatInput extends ConsumerStatefulWidget {
 class _DisputeChatInput extends ConsumerState<DisputeChatInput> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Container(
       padding:  const EdgeInsets.fromLTRB(0,12, 0, 0),

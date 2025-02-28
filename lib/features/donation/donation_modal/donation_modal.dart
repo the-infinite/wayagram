@@ -20,8 +20,16 @@ import '../../../core/components/components.dart';
 import '../../polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 
 class DonationModal extends ConsumerStatefulWidget {
-
-  const DonationModal({super.key,});
+final String amountRaised;
+final String targetAmount;
+final String title;
+final String campaignId;
+final String privacy;
+final String minimumDonationAmount;
+  const DonationModal({super.key, required this.amountRaised,
+    required this.targetAmount, required this.title,
+    required this.campaignId, required this.privacy,
+    required this.minimumDonationAmount});
 
   @override
   ConsumerState<DonationModal> createState() => _DonationModalState();
@@ -77,11 +85,19 @@ class _DonationModalState extends ConsumerState<DonationModal> {
         errorMessage = "Please enter a valid amount";
       });
       return;
+    }else if(num.parse(amount) < num.parse(widget.minimumDonationAmount.replaceAll('.00', ''))){
+      ScaffoldMessenger.of(context).showSnackBar(
+         SnackBar(
+          content: Text('Minimum donation amount is ${widget.minimumDonationAmount}'),
+          backgroundColor: WayaColors.primary,
+          duration: Duration(seconds: 2),
+        ),
+      );
     }else{
       Navigator.of(context).pop();
       WayaUtils.showModalSheet(
         context,
-        child: DonationPinEntryBottomSheet()
+        child: DonationPinEntryBottomSheet(amount: amount, campaignId: widget.campaignId, campaignTitle: widget.title,)
       );
     }
 
@@ -110,7 +126,7 @@ class _DonationModalState extends ConsumerState<DonationModal> {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Send Michael to Oxford University',
+                    text: widget.title,
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
                       fontSize: 12,
@@ -129,8 +145,8 @@ class _DonationModalState extends ConsumerState<DonationModal> {
                 borderRadius: BorderRadius.all(Radius.circular(12))
               ),
               child: EngagementRange(
-                  topLeft: "₦20,000 raised from ₦100,000 ",
-                  bottomLeft: "500 Donators",
+                  topLeft: "${WayaHelpers.formatPrice(int.parse(widget.amountRaised))} raised from ${WayaHelpers.formatPrice(int.parse(widget.targetAmount))} ",
+                  bottomLeft: "0 Donators",
                   bottomRight: "20 days left",
                   range: 0.4),),
             const Gap(40),
@@ -196,7 +212,7 @@ class _DonationModalState extends ConsumerState<DonationModal> {
                         ),
                       ),
                       TextSpan(
-                        text: '₦1000',
+                        text: WayaHelpers.formatPrice(int.parse(widget.minimumDonationAmount.replaceAll('.00', ''))),
                         style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor500,
                           fontSize: 14,
@@ -253,7 +269,11 @@ class _DonationModalState extends ConsumerState<DonationModal> {
 }
 
 class DonationPinEntryBottomSheet extends ConsumerStatefulWidget {
-  const DonationPinEntryBottomSheet({super.key,});
+  final String amount;
+  final String campaignId;
+  final String campaignTitle;
+  const DonationPinEntryBottomSheet({super.key, required this.amount,
+    required this.campaignId, required this.campaignTitle});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _DonationPinEntryBottomSheetState();
@@ -280,18 +300,50 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
     }
   }
 
-  void _submitPin() {
+  // void _submitPin() {
+  //   if (_pin.length == _pinLength) {
+  //
+  //     Navigator.of(context).pop();
+  //
+  //      WayaUtils.showModalSheet(
+  //       context,
+  //       child: DonationGenerosityModal(),
+  //     );
+  //
+  //
+  //
+  //   }
+  // }
+
+  void _submitPin() async {
     if (_pin.length == _pinLength) {
+      // TODO: Submit PIN
+      // log('PIN submitted: $_pin');
+      var isPass =
+      await ref.read(donationVmProvider.notifier).verifyWalletPin(_pin, context);
 
-      Navigator.of(context).pop();
-
- WayaUtils.showModalSheet(
-        context,
-        child: DonationGenerosityModal(),
-      );
-
-
-
+      if (isPass) {
+        Navigator.of(context).pop();
+       await ref.watch(donationVmProvider.notifier)
+            .makeDonation(widget.campaignId, widget.amount, widget.campaignTitle, context);
+        WayaUtils.showModalSheet(
+          context,
+          child: DonationGenerosityModal(),
+        );
+      } else {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Invalid pin',
+              style:
+              TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
 
@@ -299,7 +351,7 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(donationVmProvider);
+    final viewModel = ref.watch(donationVmProvider.notifier);
     return Container(
       height: 490.h,
       padding: const EdgeInsets.all(16),
@@ -375,8 +427,9 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
                     onPressed: (){
                       final userId = _wayaLocalDataSource.getUserId();
                       if (_pin.length == _pinLength) {
-
-                        Navigator.of(context).pop();
+                       // viewModel.submitPins(context);
+                   // viewModel.verifyWalletPin(_pin);
+                        //Navigator.of(context).pop();
                      _submitPin();
 
 
@@ -417,7 +470,8 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
 }
 
 class DonationSuccessModal extends ConsumerStatefulWidget {
-  const DonationSuccessModal({super.key,});
+  final String url;
+  const DonationSuccessModal({super.key, required this.url});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _DonationSuccessModalState();
@@ -464,9 +518,9 @@ class _DonationSuccessModalState extends ConsumerState<DonationSuccessModal> {
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                Share.share('hh');
+                Navigator.pop(context);
+                Share.share(widget.url);
 
-                //WayaNav.toNamed('/share-voting', arguments: widget.votingLink);
               },
               text: "Share Donation Link",
               textColor: WayaColors.black,
@@ -601,7 +655,8 @@ class _DonationGenerosityModalState extends ConsumerState<DonationGenerosityModa
 }
 
 class DonationAmountSetupModal extends ConsumerStatefulWidget {
-  const DonationAmountSetupModal({super.key,});
+  final String id;
+  const DonationAmountSetupModal({super.key, required this.id});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _DonationAmountSetupModalState();
@@ -700,11 +755,15 @@ class _DonationAmountSetupModalState extends ConsumerState<DonationAmountSetupMo
             SizedBox(height: 40.h),
             WayaButton(
               callback: () async {
+
+                await ref.read(donationVmProvider.notifier).editCampaign(context,
+                    viewModel.amount.text, widget.id);
                 Navigator.of(context).pop();
                 WayaNav.toNamed("/donations");
                 ref.read(donationVmProvider.notifier).reset();
               },
               text: "Set Minimum Amount",
+              isLoading: viewModel.isLoading,
             ),
             SizedBox(height: 17.h),
             WayaButton(

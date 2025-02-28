@@ -16,7 +16,7 @@ import 'package:wayagram/features/quotation/widgets/single_negotiation_bid.dart'
 import '../../vm/cancel_buy_request_vm.dart';
 
 class SeeBuyerBids extends ConsumerStatefulWidget {
-  static const route = '/seeBuyer-bids';
+  static const route = '/quotation/buyer/bids';
   const SeeBuyerBids({super.key});
 
   @override

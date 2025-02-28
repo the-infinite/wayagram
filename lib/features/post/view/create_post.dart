@@ -12,11 +12,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:wayagram/shared/model/media_upload_model.dart';
-
-import '../../../core/utils/waya_navigation.dart';
-import '../../auth/account_creation/view/loading_state.dart';
-import '../../explore/widgets/service_card.dart';
 
 class CreatePost extends ConsumerStatefulWidget {
   static const route = '/createPost';
@@ -80,7 +75,6 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
 

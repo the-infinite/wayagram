@@ -8,6 +8,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
@@ -191,6 +192,14 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       default:
       state = state.copyWith(dateIsoFormat: value.value);
     }
+  }
+
+
+  bool isStartDateAfterEndDate(String startDate, String endDate) {
+    DateTime start = DateTime.parse(startDate);
+    DateTime end = DateTime.parse(endDate);
+
+    return start.isAfter(end);
   }
 
   @override
@@ -522,7 +531,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       'question': question,
       'startDate': startDate,
       'endDate': endDate,
-      'feePerVote': feePerVote,
+      //'feePerVote': feePerVote,
       'maxVotesPerUser': maxVotes,
       //'ispaid': true,
       'pollType': pollType,
@@ -532,6 +541,13 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     print('CHOICE  MAP ==>>  $choiceMap');
 
     try {
+
+      // validate date
+      if (isStartDateAfterEndDate(state.startDate, state.endDate)) {
+        WayaSnackBar.showToast("Start date must be before the end date");
+        return;
+      }
+
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.createPoll(formdata);
       if (response.success && context.mounted) {
@@ -602,6 +618,13 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     print('CHOICE  MAP ==>>  $choiceMap');
 
     try {
+
+      // validate date
+      if (isStartDateAfterEndDate(state.startDate, state.endDate)) {
+        WayaSnackBar.showToast("Start date must be before the end date");
+        return;
+      }
+
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.createPoll(formdata);
       if (response.success && context.mounted) {

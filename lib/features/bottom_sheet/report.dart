@@ -49,7 +49,6 @@ class _ReportEventState extends ConsumerState<Report> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
 
     return SingleChildScrollView(

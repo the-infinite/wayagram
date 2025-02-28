@@ -56,7 +56,6 @@ class _EventDetailState extends ConsumerState<EventDetail> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final viewModel = ref.watch(eventVmProvider);
     final wayaTheme = Theme.of(context);
     final EventDoc event =
@@ -221,7 +220,6 @@ class EventDetailAction extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return PopupMenuButton(
         onSelected: (value) {},

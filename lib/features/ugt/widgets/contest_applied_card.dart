@@ -28,7 +28,6 @@ class ContestAppliedCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    // TODO: implement build
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

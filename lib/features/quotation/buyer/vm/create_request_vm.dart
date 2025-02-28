@@ -1,27 +1,19 @@
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
-import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart';
 import 'package:wayagram/features/quotation/buyer/model/create_request_state_model.dart';
 import 'package:wayagram/features/quotation/data/model/model.dart';
 import 'package:wayagram/features/quotation/data/model/quotation_model.dart';
 import 'package:wayagram/features/quotation/data/repo/quotation_repository.dart';
 
-
 class CreateRequestVm extends StateNotifier<CreateRequestState> {
   final QuotationRepository _quotationRepository;
-  final WayaLocalDataSource _localDataSource;
-  final WayaSecureDataSource _secureDataSource;
-
   final _logger = getLogger('CreateRequestVm');
 
-  CreateRequestVm(this._quotationRepository, this._localDataSource, this._secureDataSource ) : super(CreateRequestState());
+  CreateRequestVm(this._quotationRepository) : super(CreateRequestState());
 
   void selectStateOfPurchase(Select value) {
     state = state.copyWith(stateOfPurchase: value.value);
@@ -53,38 +45,34 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
 
   List<Select> restructuredCategory() {
     return categories.asMap().entries.map((entries) {
-      return Select(
-          value: entries.value.id.toString(), label: entries.value.category);
+      return Select(value: entries.value.id.toString(), label: entries.value.category);
     }).toList();
   }
 
   List<Select> restructuredBidTime() {
     return bidTimes.asMap().entries.map((entries) {
-      return Select(
-          value: entries.value.id.toString(), label: entries.value.bidTime);
+      return Select(value: entries.value.id.toString(), label: entries.value.bidTime);
     }).toList();
   }
 
   List<Select> restructuredState() {
     return states.asMap().entries.map((entries) {
-      return Select(
-          value: entries.value.id.toString(), label: entries.value.state);
+      return Select(value: entries.value.id.toString(), label: entries.value.state);
     }).toList();
   }
 
   List<Select> restructuredCondition() {
     return productConditions.asMap().entries.map((entries) {
-      return Select(
-          value: entries.value.id.toString(), label: entries.value.productCondition);
+      return Select(value: entries.value.id.toString(), label: entries.value.productCondition);
     }).toList();
   }
 
   List<Select> restructuredLga() {
     return lgas.asMap().entries.map((entries) {
-      return Select(
-          value: entries.value.id.toString(), label: entries.value.lga);
+      return Select(value: entries.value.id.toString(), label: entries.value.lga);
     }).toList();
   }
+
   void focusChanged(bool hasFocus) {
     state = state.copyWith(isFocused: hasFocus);
   }
@@ -92,10 +80,9 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
       final response = await showDatePicker(
-          context: context,
-          firstDate: DateTime(1950),
-         lastDate: DateTime(2050),
-          initialDate: DateTime.now());
+
+          context: context, firstDate: DateTime(1950), lastDate: DateTime.now(), initialDate: DateTime.now());
+
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
@@ -109,11 +96,14 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
 
   Future<void> showDatePickerDialogTwo(BuildContext context) async {
     try {
+      final moment = DateTime.now();
       final response = await showDatePicker(
-          context: context,
-          firstDate: DateTime(1950),
-          lastDate: DateTime(2050),
-          initialDate: DateTime.now());
+        context: context,
+        firstDate: DateTime(1950),
+        lastDate: DateTime(moment.year + 1),
+        initialDate: moment,
+      );
+
 
       if (response != null) {
         final endDate = "${response.year}-${response.month}-${response.day}";
@@ -152,10 +142,9 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
 
   Future<void> createBuyerRequest(CreateBuyerRequest createBuyerRequest) async {
     try {
-
       state = state.copyWith(isLoading: true);
       final response = await _quotationRepository.createBuyerRequest(createBuyerRequest);
-      if (response.success ) {
+      if (response.success) {
         _logger.i(response.data['data']);
       }
     } catch (e) {
@@ -167,18 +156,17 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
 
   Future<void> getBuyerRequest() async {
     state = state.copyWith(isLoading: true);
-    final response = await _quotationRepository!.getBuyerRequest();
+    final response = await _quotationRepository.getBuyerRequest();
     state = state.copyWith(isLoading: false);
     if (response.success) {
       BuyerRequestModel responseModel = BuyerRequestModel.fromJson(response.data);
 
-      state = state.copyWith(buyerRequest:  responseModel.data?.buyerRequests);
+      state = state.copyWith(buyerRequest: responseModel.data?.buyerRequests);
       //print(state.productDescription);
     } else {
       state = state.copyWith(isLoading: false);
     }
   }
-
 }
 
 final quotationRepositoryProvider = Provider((ref) => QuotationRepository());
@@ -187,10 +175,9 @@ final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
   return WayaLocalDataSource();
 });
 
-final createRequestProvider =
-StateNotifierProvider<CreateRequestVm, CreateRequestState>((ref){
-  final quotationRepository = ref.watch(quotationRepositoryProvider);
-  final localDataSource = ref.watch(localDataSourceProvider);
-
-  return CreateRequestVm(quotationRepository, localDataSource, WayaSecureDataSource());
-});
+final createRequestProvider = StateNotifierProvider<CreateRequestVm, CreateRequestState>(
+  (ref) {
+    final quotationRepository = ref.watch(quotationRepositoryProvider);
+    return CreateRequestVm(quotationRepository);
+  },
+);

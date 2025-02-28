@@ -6,16 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/data/model/feeds.dart';
 import 'package:wayagram/features/pages/data/model/followers_model.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
+import 'package:wayagram/features/pages/data/model/page_popular_post_model.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/data/model/pages_users_follow_model.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
+import 'package:wayagram/features/pages/view/pages.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
@@ -23,6 +27,7 @@ import 'package:wayagram/features/post/model/saved_posts.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../shared/features/file/repo/default.dart';
+import '../../group/data/model/group_post_model.dart';
 import '../../post/model/fetch_comment.dart';
 
 class UploadedImage {
@@ -255,7 +260,9 @@ class PageVm extends StateNotifier<PageState> {
 
       if (response.success) {
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
-        state = state.copyWith(getAllPost: responseModel.data?.docs);
+        GroupPostModel postModel =GroupPostModel.fromJson(response.data);
+        state = state.copyWith(getAllPost: responseModel.data?.docs,
+        postCount: postModel.data?.totalPages);
       } else {
         print('Error: Status code ${response.statusCode}');
         _errorMessage2 =
@@ -266,6 +273,7 @@ class PageVm extends StateNotifier<PageState> {
       _errorMessage2 = 'Something went wrong. Please try again later.';
     } finally {}
   }
+
  
   Future<void> getSinglePost(userId) async {
     print('Fetching saved posts...');
@@ -290,6 +298,45 @@ class PageVm extends StateNotifier<PageState> {
       print('Exception occurred while fetching saved posts: $e');
       _errorMessage2 = 'Something went wrong. Please try again later.';
     } finally {}
+  }
+
+  Future<void> reportPage(
+      {required String pageId,
+        required String reason,
+        String? comment,
+        required BuildContext context}) async {
+    try {
+      state = state.copyWith(isReportingPage: true);
+      final userId = await _secureDataSource.getUserId();
+      final response = await _pageRepository.reportPage(
+          pageId, reason);
+
+      if (response.success && context.mounted) {
+        // show success modal
+        Navigator.of(context).pop();
+
+        if (context.mounted) {
+          await WayaUtils.showNotice(
+              context: context,
+              title: "Thank you for reporting",
+              onPress: () {
+                WayaNav.replaceNamed(Pages.route);
+              },
+              icon: Image.asset(
+                WayaAssets.images.eCheckEvent.path,
+                scale: 1.5,
+              ),
+              message:
+              'Your report has been submitted. Our team will review the issue and take appropriate action.',
+              buttonText: 'Go to Page Dashboard');
+        }
+        print(response.data);
+      }
+    } catch (error) {
+      print(error);
+    } finally {
+      state = state.copyWith(isReportingPage: false);
+    }
   }
 
   Future<void> createPage(ctx, pageName, pageDesc, pageType, String coverImage, String profileImage) async {
@@ -751,6 +798,26 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
+  Future<void> getPopularPosts() async {
+    print('Fetching popular posts...');
+
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.fetchPopularPost();
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        PagePopularPostModel responseModel = PagePopularPostModel.fromJson(response.data);
+        state = state.copyWith(pagePopularPostDocs: responseModel.data?.docs);
+      }
+    } catch (e) {
+      print(e);
+    } finally {}
+  }
+
   Future<void> getPageMember(pageId) async {
     try {
       state = state.copyWith(isLoading: true);
@@ -784,7 +851,7 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-    Future<void> getRecommendedPages() async {
+  Future<void> getRecommendedPages() async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.getRecommendedPages();
@@ -800,7 +867,6 @@ class PageVm extends StateNotifier<PageState> {
       print(e);
     } finally {}
   }
-
 
   Future<void> updateTeamMember(ctx, role, pageId, memberId) async {
     try {
@@ -842,12 +908,12 @@ class PageVm extends StateNotifier<PageState> {
       pageDesc,
       pageType,
       String coverImage,
-      //String profileImage,
+      String profileImage,
       String pageId) async {
     final coverImageUrl = await WayaFileRepository.instance.uploadFile(
       File(coverImage),
     );
-    //final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage),);
+    final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage),);
 
     try {
       state = state.copyWith(isLoading: true);
@@ -856,7 +922,7 @@ class PageVm extends StateNotifier<PageState> {
           pageDesc,
           pageType,
           coverImageUrl ?? '',
-          //profileImageUrl ??'',
+          profileImageUrl ??'',
           pageId);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
@@ -882,7 +948,17 @@ class PageVm extends StateNotifier<PageState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  void prefillFunc(args){
+    state = state.copyWith(
+        pageName: TextEditingController(text: '${args['name']}'),
+        pageDescription: TextEditingController(text: '${args['desc']}'),
+    );
+  }
+
 }
+
+
 
 final pageProvider = Provider((ref) => PageRepository());
 final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {

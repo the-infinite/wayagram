@@ -39,7 +39,6 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     //final state = ref.watch(orderVmProvider);
 
     return Expanded(

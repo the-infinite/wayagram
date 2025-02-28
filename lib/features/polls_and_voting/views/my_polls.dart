@@ -8,15 +8,12 @@ import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
-import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
@@ -30,16 +27,7 @@ class MyPolls extends ConsumerStatefulWidget {
 }
 class _MyPollsState extends ConsumerState<MyPolls> {
 
-  WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
 
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     ref.read(createPollVotingProvider.notifier).getMyPolls(_wayaLocalDataSource.getUserId());
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,14 +45,14 @@ class _MyPollsState extends ConsumerState<MyPolls> {
           emptyState:PollEmptyState(),
           fetchData: ref.read(createPollVotingProvider.notifier).getMyPolls,
           result: (data, s) {
-            return    ListView.builder(
+            return ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: viewModel.fetchAllPols.length,
                 itemBuilder: (context, index) {
                   final poll = viewModel.fetchAllPols[index];
                   int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
-                  int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
+                  //int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
                   print('URL ===> ${poll.url}');
 
                   String formatTimeAgo(String dateString) {
@@ -87,8 +75,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                           const Gap(3),
                           Text('${poll.userData?.firstName} ${poll.userData?.lastName}', style: wayaTheme.textTheme.titleLarge),
                           const Gap(3),
-                          Text(
-                            ' • ${formatTimeAgo('${poll.createdAt}')}',
+                          Text(' • ${ WayaHelpers.formatTimeAgo('${poll.startDate}')}',
                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
@@ -112,8 +99,6 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                                     fontWeight: FontWeight.w400,
                                     color: Theme.of(context).colorScheme.greyColor500 ),
                               ),),
-
-
 
                         const Gap(10),
                         Text(

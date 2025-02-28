@@ -9,7 +9,6 @@ class LoadingState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return loading
         ? SizedBox(

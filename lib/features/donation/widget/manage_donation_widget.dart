@@ -13,13 +13,21 @@ import 'package:wayagram/shared/components/engagement_range.dart';
 class ManageDonationWidget extends ConsumerWidget {
   final VoidCallback? onTap;
   final String text;
+  final int? donationCount;
+  final String? title;
+  final String? image;
+  final String? targetAmount;
+  final String? amountRaised;
+  final String? dayLeft;
   final double buttonWidth;
   const ManageDonationWidget({super.key, required this.onTap,
-    required this.text, required this.buttonWidth });
+    required this.text, required this.donationCount, required this.title,
+    required this.image, required this.targetAmount,
+    required this.amountRaised, required this.dayLeft,
+    required this.buttonWidth });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
@@ -33,7 +41,7 @@ class ManageDonationWidget extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WayaImage(
-                  imageUrl: "",
+                  imageUrl: '$image',
                   height: 180.h,
                   width: double.infinity,
                   radius: BorderRadius.only(
@@ -54,15 +62,14 @@ class ManageDonationWidget extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Send Micheal to oxford university",
+                                  '$title',
                                   overflow: TextOverflow.ellipsis,
                                   style: wayaTheme.textTheme.bodyMedium,
                                 ),
                                 SizedBox(
                                   height: 3.h,
                                 ),
-                                Text(
-                                  "${WayaHelpers.formatPrice(20000)} raised from ${WayaHelpers.formatPrice(100000)}",
+                                Text('$amountRaised raised from $targetAmount',
                                   style: wayaTheme.textTheme.hintStyle,
                                   overflow: TextOverflow.ellipsis,
                                 )
@@ -96,9 +103,10 @@ class ManageDonationWidget extends ConsumerWidget {
                         height: 6.h,
                       ),
                       EngagementRange(
-                          bottomLeft: "500 Donators",
-                          bottomRight: "20 days left",
-                          range: 0.4)
+                         // bottomLeft: "$donationCount  Donations",
+                          bottomLeft: '$donationCount ${donationCount == 0 || donationCount == 1 ? 'Donation' : 'Donations'}',
+                          bottomRight: "$dayLeft days left",
+                          range: donationCount == 0 ? 0.0 : 0.4)
                     ],
                   ),
                 )

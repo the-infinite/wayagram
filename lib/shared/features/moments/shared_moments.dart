@@ -27,7 +27,6 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
   @override
   Widget build(BuildContext context) {
      final momentState = ref.watch(momentVmProvider);
-    // TODO: implement build
     return SizedBox(
       height: 80,
       child: ListView.builder(
