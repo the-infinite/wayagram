@@ -127,11 +127,11 @@ String docsToJson(GetAllGroupDocs data) => json.encode(data.toJson());
 class GetAllGroupDocs {
   GetAllGroupDocs({
       this.id,
-    this.url,
+      this.url,
       this.name, 
       this.description,
-     this.memberCount,
-     this.isOpen,
+      this.memberCount,
+      this.isOpen,
       this.isPrivate, 
       this.coverImage, 
       this.profileImage, 

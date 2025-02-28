@@ -21,8 +21,9 @@ import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class AddGroupMember extends ConsumerStatefulWidget {
+  final String? groupId;
   static const route = '/addGroupMember';
-  const AddGroupMember({super.key,});
+  const AddGroupMember({super.key,  this.groupId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _AddGroupMemberState();
@@ -69,7 +70,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
           callback: !viewModel.isLoading
               ? () async {
             if (_formKey.currentState!.validate()) {
-              await team.inviteUserToGroup(context, 'groupId', viewModel.roleType, 'targetId');
+              await team.inviteUserToGroup(context, widget.groupId!, viewModel.roleType, 'targetId');
               showCustomDialog(context, 'Success! ${viewModel.username} has been added as a\nModerator','You can now collaborate seamlessly and\nmanage the page together.');
               ref.watch(createGroupProvider.notifier).reset();
               Navigator.pop(context);

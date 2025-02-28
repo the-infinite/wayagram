@@ -64,7 +64,7 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
               ],
             ),
             callback: () {
-              WayaNav.toNamed('/addGroupMember');
+              WayaNav.toNamed('/addGroupMember', arguments: widget.groupId);
             },
             color: wayaTheme.colorScheme.primar50,
           ),

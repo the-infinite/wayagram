@@ -61,7 +61,8 @@ class GetPollData {
       this.id, 
       this.creatorId, 
       this.isPaid, 
-      this.isSettled, 
+      this.isSettled,
+    this.voteCount,
       this.question, 
       this.startDate, 
       this.endDate, 
@@ -76,6 +77,7 @@ class GetPollData {
     id = json['id'];
     creatorId = json['creatorId'];
     isPaid = json['isPaid'];
+    voteCount = json['voteCount'];
     isSettled = json['isSettled'];
     question = json['question'];
     startDate = json['startDate'];
@@ -97,6 +99,7 @@ class GetPollData {
   String? id;
   String? creatorId;
   bool? isPaid;
+  num? voteCount;
   bool? isSettled;
   String? question;
   String? startDate;
@@ -113,6 +116,7 @@ class GetPollData {
     map['id'] = id;
     map['creatorId'] = creatorId;
     map['isPaid'] = isPaid;
+    map['voteCount'] = voteCount;
     map['isSettled'] = isSettled;
     map['question'] = question;
     map['startDate'] = startDate;
@@ -139,7 +143,8 @@ class Choices {
       this.id, 
       this.pollId, 
       this.text, 
-      this.description, 
+      this.description,
+    this.voteCount,
       this.imageUrl, 
       this.order, 
       this.createdAt, 
@@ -151,6 +156,7 @@ class Choices {
     pollId = json['pollId'];
     text = json['text'];
     description = json['description'];
+    voteCount = json['voteCount'];
     imageUrl = json['imageUrl'];
     order = json['order'];
     createdAt = json['createdAt'];
@@ -162,6 +168,7 @@ class Choices {
   String? pollId;
   String? text;
   String? description;
+  num? voteCount;
   String? imageUrl;
   int? order;
   String? createdAt;
@@ -173,6 +180,7 @@ class Choices {
     map['pollId'] = pollId;
     map['text'] = text;
     map['description'] = description;
+    map['voteCount'] = voteCount;
     map['imageUrl'] = imageUrl;
     map['order'] = order;
     map['createdAt'] = createdAt;

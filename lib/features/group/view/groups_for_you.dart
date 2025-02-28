@@ -39,7 +39,6 @@ class GroupsForYou extends ConsumerStatefulWidget {
 
 class _GroupsForYouState extends ConsumerState<GroupsForYou>
     with SingleTickerProviderStateMixin {
-  WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
 
   static const int _pageSize = 10;
   final PagingController<int, Post> _pagingController = PagingController(firstPageKey: 1);
@@ -52,7 +51,8 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(createGroupProvider.notifier).getRecommendedGroups();
       //ref.read(createGroupProvider.notifier).getGroupPosts();
-      ref.read(createPageProvider.notifier).getAllPosts('${ConversationState.self.id}');
+      ref.read(createPageProvider.notifier).getAllPosts(ConversationState.self.id);
+      ref.read(createGroupProvider.notifier).getPopularPosts();
     });
   }
 
@@ -65,6 +65,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
     //final viewModel2 = ref.watch(createGroupProvider);
     final recommended = ref.watch(createGroupProvider);
     final group = ref.watch(createGroupProvider.notifier);
+    final viewGroup = ref.watch(createGroupProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -79,13 +80,12 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                   color: WayaColors.greyColor700,
                   fontFamily: WayaConstants.fontFamily)),
         ),
-
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: viewModel2.getAllPost?.length,
+            itemCount: viewGroup.groupPopularPostdocs?.length,
             itemBuilder: (_, index,) {
-              final post = viewModel2.getAllPost![index];
+              final post = viewGroup.groupPopularPostdocs![index];
 
               String formatTimeAgo(String dateString) {
                 DateTime dateTime =
@@ -122,7 +122,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   WayaDp(
-                                    image: post.user?.profilePicture,
+                                    image: post.group?.coverImage,
                                     radius: 20,
                                   ),
                                   SizedBox(width: 10.w),
@@ -132,7 +132,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                                       Row(
                                         children: [
                                           Text(
-                                            '${post.user?.firstName} ${post.user?.lastName}',
+                                            '${post.group?.name}',
                                             style: TextStyle(
                                               fontFamily:
                                               WayaConstants.fontFamily,
@@ -190,7 +190,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                                         context: context,
                                         onTap: () {
                                           viewModel.deletePost(context,
-                                              postId: '${post.id}', userId: '${ConversationState.self.id}');
+                                              postId: '${post.id}', userId: ConversationState.self.id);
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             const SnackBar(
@@ -283,7 +283,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                           ...post.hashtags!.map((e) => Row(
                             children: [
                               Text(
-                                '$e',
+                                e,
                                 style: TextStyle(
                                   color: WayaColors.primary,
                                   fontFamily: WayaConstants.fontFamily,
@@ -326,30 +326,11 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                     padding: EdgeInsets.fromLTRB(15.w, 8.0.h, 15.w, 8.w),
                     child: Row(
                       children: [
-                        /*LikeButtonWithReactions(
-                        // isLiked: post.isLiked,
-                        // onLike: onLike,
-                        // onReact: onReact ?? (react){},
-
-                        isLiked: post.likeCount,
-                        onLike: onLike,
-                        onReact: onReact ?? (react){},
-
-                        // onLike: (String? reaction) async {
-                        //   viewModel.likePost(, reaction: reaction);
-                        // },
-                        // onReact: (String reaction) {
-                        //   viewModel.likePost(post, reaction: reaction);
-                        // },
-                        // onComment: () {
-                        //   viewModel.commentPost2(post);
-                        // },
-                      ),*/
                         actionType(
                             '${post.likeCount} ${post.likeCount! <= 1 ? 'Like' : 'Likes'}',
                             'assets/images/pages/like2.png', onPressed: () {
                           viewModel.likePost(context, postId: '${post.id}',
-                              userId: '${ConversationState.self.id}');
+                              userId: ConversationState.self.id);
                         },
                             color: post.likeCount == 0
                                 ? WayaColors.greyColor500
@@ -380,6 +361,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                 ],
               );
             }),
+
         const Gap(25),
         GroupedWidgetHeader(
             onTap: () {
@@ -457,16 +439,21 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
               }),
         ),
         Gap(20),
+        Padding(
+          padding: const EdgeInsets.only(left: 10),
+          child: Text('Based on Groups you joined',
+              style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: WayaColors.greyColor700,
+                  fontFamily: WayaConstants.fontFamily)),
+        ),
         ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: viewModel2.getAllPost?.length,
-            itemBuilder: (
-                _,
-                index,
-                ) {
-              final post = viewModel2.getAllPost![index];
-              final posts = viewModel2.getAllPost;
+            itemCount: viewGroup.groupPopularPostdocs?.length,
+            itemBuilder: (_, index,) {
+              final post = viewGroup.groupPopularPostdocs![index];
 
               String formatTimeAgo(String dateString) {
                 DateTime dateTime =
@@ -478,22 +465,14 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                 return text.replaceAll(RegExp(r'#\w+'), '').trim();
               }
 
-              List<dynamic> mediaUrls = post.media ?? [];
-
-              print('My Hashtags ${post.hashtags}');
-              print('My Images ${post.media}');
-
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  // Container(
-                  //   height: 14.h,
-                  //   color: Colors.grey.withOpacity(0.2),
-                  // ),
+
                   // Post header with author details
                   Padding(
-                    padding: EdgeInsets.fromLTRB(15.0.w, 25.h, 15.w, 15.w),
+                    padding: EdgeInsets.fromLTRB(10.w, 25.h, 15.w, 15.w),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -511,7 +490,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   WayaDp(
-                                    image: post.user?.profilePicture,
+                                    image: post.group?.coverImage,
                                     radius: 20,
                                   ),
                                   SizedBox(width: 10.w),
@@ -521,7 +500,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                                       Row(
                                         children: [
                                           Text(
-                                            '${post.user?.firstName} ${post.user?.lastName}',
+                                            '${post.group?.name}',
                                             style: TextStyle(
                                               fontFamily:
                                               WayaConstants.fontFamily,
@@ -579,7 +558,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                                         context: context,
                                         onTap: () {
                                           viewModel.deletePost(context,
-                                              postId: '${post.id}', userId: '${ConversationState.self.id}');
+                                              postId: '${post.id}', userId: ConversationState.self.id);
                                           ScaffoldMessenger.of(context)
                                               .showSnackBar(
                                             const SnackBar(
@@ -672,7 +651,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                           ...post.hashtags!.map((e) => Row(
                             children: [
                               Text(
-                                '$e',
+                                e,
                                 style: TextStyle(
                                   color: WayaColors.primary,
                                   fontFamily: WayaConstants.fontFamily,
@@ -715,30 +694,11 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                     padding: EdgeInsets.fromLTRB(15.w, 8.0.h, 15.w, 8.w),
                     child: Row(
                       children: [
-                        /*LikeButtonWithReactions(
-                        // isLiked: post.isLiked,
-                        // onLike: onLike,
-                        // onReact: onReact ?? (react){},
-
-                        isLiked: post.likeCount,
-                        onLike: onLike,
-                        onReact: onReact ?? (react){},
-
-                        // onLike: (String? reaction) async {
-                        //   viewModel.likePost(, reaction: reaction);
-                        // },
-                        // onReact: (String reaction) {
-                        //   viewModel.likePost(post, reaction: reaction);
-                        // },
-                        // onComment: () {
-                        //   viewModel.commentPost2(post);
-                        // },
-                      ),*/
                         actionType(
                             '${post.likeCount} ${post.likeCount! <= 1 ? 'Like' : 'Likes'}',
                             'assets/images/pages/like2.png', onPressed: () {
                           viewModel.likePost(context, postId: '${post.id}',
-                              userId: '${ConversationState.self.id}');
+                              userId: ConversationState.self.id);
                         },
                             color: post.likeCount == 0
                                 ? WayaColors.greyColor500
@@ -765,9 +725,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                       ],
                     ),
                   ),
-                  SizedBox(
-                    height: 12.h,
-                  )
+
                 ],
               );
             }),
@@ -1131,24 +1089,26 @@ class PostEmptyState extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    return Container(
-      padding: EdgeInsets.all(30),
-      child: EmptyState(
-          hasButton: false,
-          onTap: () {
-            WayaNav.toNamed(CreatePost.route);
-          },
-          buttontext: 'Create a Post',
-          buttonTrailingIcon: SvgPicture.asset(
-            WayaAssets.icons.addEventIcon.path,
-            colorFilter:
-            ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
-          ),
-          assetImage: Image.asset(
-            WayaAssets.images.emptyEvent.path,
-            scale: 1.5,
-          ),
-          message: "You haven't created any post yet"),
+    return Center(
+      child: Container(
+        padding: EdgeInsets.all(30),
+        child: EmptyState(
+            hasButton: false,
+            onTap: () {
+              WayaNav.toNamed(CreatePost.route);
+            },
+            buttontext: 'Create a Post',
+            buttonTrailingIcon: SvgPicture.asset(
+              WayaAssets.icons.addEventIcon.path,
+              colorFilter:
+              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            ),
+            assetImage: Image.asset(
+              WayaAssets.images.emptyEvent.path,
+              scale: 1.5,
+            ),
+            message: "You haven't created any post yet"),
+      ),
     );
   }
 }

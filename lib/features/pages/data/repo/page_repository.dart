@@ -92,6 +92,7 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/posts?userId=$userId&status=active");
   }
 
+
   Future<WayaRequestResponse> fetchSinglePost(postId) {
     return get("$serviceUrl/posts?postId=$postId&status=active");
   }
@@ -102,6 +103,14 @@ class PageRepository extends BaseRepository {
       //"parentCommentId": postId // this is optional and is only required for child comment.
     };
     return post("$serviceUrl/posts/comments/$postId", payload);
+  }
+
+  Future<WayaRequestResponse> reportPage(String pageId, String reason) {
+    final payload = {
+      "pageId": pageId,
+      "reason": reason
+    };
+    return post("$serviceUrl/moderation", payload);
   }
 
   // Future<WayaRequestResponse> likePost(postId) {
@@ -149,8 +158,7 @@ class PageRepository extends BaseRepository {
       bool pageType, String coverImage, String profileImage) {
     final payload = {
       "name": pageName,
-      "description": pageName,
-
+      "description": pageDesc,
       "isPublic": pageType, //Optional field, if you leave it blank it defaults to false
       //"isOpen": false, // this defaults to true if it is not inserted
       "coverImage":  coverImage,
@@ -167,6 +175,10 @@ class PageRepository extends BaseRepository {
         "$serviceUrl/posts/?status=active&&orderBy=popularityScore&orderDirection=DESC&privacy=public&limit=$limit");
   }
 
+  Future<WayaRequestResponse> fetchPopularPost() {
+    return get("$serviceUrl/pages/popular-post");
+  }
+
   Future<WayaRequestResponse> getAllPostsWithCategory(
       {required String category, required int page, int? limit =5}) async {
     return get(
@@ -174,7 +186,7 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getAllPages(ownerId) {
-    return get("$serviceUrl/pages?ownerId=$ownerId");
+    return get("$serviceUrl/pages?limit=500&ownerId=$ownerId");
   }
 
 
@@ -194,12 +206,14 @@ class PageRepository extends BaseRepository {
     return put("$serviceUrl/pages/$pageId/team-members/$memberId", payload);
   }
 
-  Future<WayaRequestResponse> editPage(String name, String desc, bool pageType, String coverImage, String pageId) {
+  Future<WayaRequestResponse> editPage(String name, String desc, bool pageType,
+      String coverImage, String profileImage, String pageId) {
     final payload = {
       "name": name,
       "description": desc,
       "isPublic": pageType,
-      "coverImage": coverImage
+      "coverImage": coverImage,
+      "profileImage": profileImage
     };
 
     return put("$serviceUrl/pages/$pageId", payload);
