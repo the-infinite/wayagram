@@ -233,6 +233,8 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                                             deliveryAddress: address,
                                             userId: widget.data.userId,
                                             shopId: shopId);
+                                    WayaSnackBar.showToast(
+                                        "Delivery detail updated");
 
                                     WayaNav.offNamed(ManageShop.route);
                                   }

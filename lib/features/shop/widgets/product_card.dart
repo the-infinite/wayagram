@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -331,7 +332,7 @@ class SellerProductCard extends ConsumerWidget {
                     callback: () {
                       WayaNav.toNamed(AddProduct.route,
                           arguments: UpdateProductArg(
-                              uniqueKey: 'update-product', product: product));
+                              uniqueKey: Uuid().v4(), product: product));
                     },
                     height: 38,
                     radius: 6,

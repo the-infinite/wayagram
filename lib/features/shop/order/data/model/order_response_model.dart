@@ -211,7 +211,7 @@ class CartOrderStatus {
 
   factory CartOrderStatus.fromJson(Map<String, dynamic> json) {
     return CartOrderStatus(
-      status: json['productName'] ?? '',
+      status: json['status'] ?? '',
       updatedAt: json['updatedAt'] ?? '',
     );
   }

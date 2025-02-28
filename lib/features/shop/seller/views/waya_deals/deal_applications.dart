@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -37,7 +38,7 @@ class _DealApplicationsState extends ConsumerState<DealApplications> {
               onTap: () {
                 WayaNav.toNamed(AddProduct.route,
                     arguments: AddWayagramArg(
-                        uniqueKey: 'add-waya-product', isWayagram: true));
+                        uniqueKey: Uuid().v4(), isWayagram: true));
               },
               buttontext: 'Add Wayagram Deal',
               buttonTrailingIcon: SvgPicture.asset(

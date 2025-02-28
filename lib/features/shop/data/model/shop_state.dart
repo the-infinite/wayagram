@@ -7,7 +7,9 @@ class ShopState {
   final List<String>? selectedCategoryId;
   final int totalNoOfCategoryPages;
   final String searchQuery;
+  final bool isReviewing;
   final List<Product> products;
+  
 
   ShopState(
       {this.categories = const [],
@@ -15,6 +17,7 @@ class ShopState {
       this.selectedCategoryId = const [],
       this.products = const [],
       this.searchQuery = '',
+      this.isReviewing = false,
       this.totalNoOfCategoryPages = 1});
 
   ShopState copyWith(
@@ -23,9 +26,11 @@ class ShopState {
       List<String>? selectedCategoryId,
       List<Product>? products,
       String? searchQuery,
+      bool? isReviewing,
       int? totalNoOfCategoryPages}) {
     return ShopState(
         categories: categories ?? this.categories,
+        isReviewing: isReviewing ?? this.isReviewing,
         selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
         totalNoOfCategoryPages:
             totalNoOfCategoryPages ?? this.totalNoOfCategoryPages,

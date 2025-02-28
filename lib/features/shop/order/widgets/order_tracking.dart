@@ -50,10 +50,8 @@ class _OrderTrackingState extends State<OrderTracking> {
   @override
   void initState() {
     super.initState();
+
     setState(() {
-      print(widget.currentStatuses!.length);
-      print(
-          widget.currentStatuses?.map((s) => s.status.toLowerCase()).toList());
       currentStatusList =
           widget.currentStatuses?.map((s) => s.status.toLowerCase()).toList() ??
               [];

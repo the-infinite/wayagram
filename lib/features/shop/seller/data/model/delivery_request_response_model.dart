@@ -93,9 +93,9 @@ class DeliveryProduct {
 
   factory DeliveryProduct.fromJson(Map<String, dynamic> json) {
     return DeliveryProduct(
-      price: json['price'] as int,
-      quantity: json['quantity'] as int,
-      productId: json['productId'] as String,
+      price: double.parse(json['unitPrice'] as String).toInt(),
+      quantity: json['quantity'],
+      productId: json['productId'],
     );
   }
 

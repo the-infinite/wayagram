@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/buyer/views/dialogs/review_product.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 
 final orderPinProvider = StateProvider<String>((ref) => '');
@@ -42,7 +42,7 @@ class ConfirmOrderDeliveryVm extends StateNotifier<States> {
     ref.read(orderPinProvider.notifier).state = '';
   }
 
-  Future<void> submitPins(BuildContext context) async {
+  Future<void> submitPins(BuildContext context, String productId) async {
     final pin = ref.read(orderPinProvider);
 
     try {
@@ -63,17 +63,16 @@ class ConfirmOrderDeliveryVm extends StateNotifier<States> {
           await _shopRepository.addToken(deliveryToken: pin.toString());
 
       if (response.success && context.mounted) {
-        WayaUtils.showNotice(
-            context: context,
-            title: 'Handover Successful!',
-            message:
-                'The confirmation code has been verified. The product is now officially handed over to the buyer',
-            onPress: () => WayaNav.replaceNamed(BottomView.route, arguments: 1),
-            icon: Image.asset('assets/icons/d-code-valid.svg'),
-            buttonText: 'Go To Shop');
+        clearPins();
+        state = state.copyWith(isLoading: false);
+        await WayaUtils.showModalSheet(context,
+            child: ReviewProduct(
+              productId: productId,
+            ));
       }
     } catch (error) {
       print(error);
+      clearPins();
     } finally {
       state = state.copyWith(isLoading: false);
     }

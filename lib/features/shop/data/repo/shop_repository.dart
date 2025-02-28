@@ -67,14 +67,37 @@ class ShopRepository extends BaseRepository {
     return post("$serviceUrl/favorites/add/$shopId", {"productId": productId});
   }
 
-
-
   ///
   Future<WayaRequestResponse> addToken({required String deliveryToken}) {
     return post(
         "$serviceUrl/orders/complete-order", {"deliveryToken": deliveryToken});
   }
 
-  ///rating/create
+  Future<WayaRequestResponse> createRating(
+      {required String raterId,
+      String? productId,
+      String? shopId,
+      required int score,
+      required String review,
+      required String type}) {
+    final payload = {
+      'raterId': raterId,
+      'score': score,
+      'review': review,
+      'type': type
+    };
+
+    if (productId != null) payload['productId'];
+    if (shopId != null) payload['shopId'];
+
+    return post("$serviceUrl/rating/create", payload);
+  }
+
+  ///
+  Future<WayaRequestResponse> getProductRating({required String productId}) {
+    return get('$serviceUrl/rating/userRatings?productId=$productId');
+  }
+
+  //
 }
 //
