@@ -100,7 +100,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                     context: context,
                     onTap: () {
                       viewGroupModel.deleteGroup(
-                          context, '', '${ConversationState.self.id}');
+                          context, '', ConversationState.self.id);
                       Navigator.pop(context);
                     },
                     asset: SvgPicture.asset(

@@ -178,7 +178,6 @@ class GroupRepository extends BaseRepository {
   Future<WayaRequestResponse> removeReaction(
       String postId, String? reactionId) async {
     return delete("$serviceUrl/posts/$postId/like");
-    // return getBooleanResponse(response);
   }
 
   Future<WayaRequestResponse> getComment(postId) {
@@ -188,8 +187,6 @@ class GroupRepository extends BaseRepository {
   Future<WayaRequestResponse> deleteComment(String commentId) async {
     return delete("$serviceUrl/posts/$commentId/comment");
   }
-
-
 
 
 }

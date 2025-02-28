@@ -150,7 +150,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                           'minimumDonationAmount':'${donation.minimumDonationAmount}',
                           'daysLeft':'$daysLeft',
                           'privacy':'${donation.privacy}',
-                          'id': '${donation.id}'
+                          'id': '${donation.id}',
+                          'donationCount': '${donation.donationCount}'
 
                         });
                   },

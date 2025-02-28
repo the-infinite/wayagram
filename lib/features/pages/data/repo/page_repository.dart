@@ -229,7 +229,7 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> unFollowPage(String pageId) async {
-    return delete("$serviceUrl/pages/follow/$pageId");
+    return delete("$serviceUrl/pages/unfollow/$pageId");
   }
 
   Future<WayaRequestResponse> getPagesAUserFollows() {

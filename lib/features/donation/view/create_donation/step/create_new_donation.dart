@@ -10,6 +10,7 @@ import 'package:wayagram/features/auth/add_business_account/widget/add_document_
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/event/widgets/event_date_widget.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
+import 'package:wayagram/shared/components/radio_select.dart';
 
 class CreateNewDonation extends ConsumerStatefulWidget {
   final Function gotoNextTab;
@@ -30,8 +31,11 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
 
   @override
   Widget build(BuildContext context) {
+    final key = 'add-donation';
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
+    final selectedOption = ref.watch(radioSelectProvider(key));
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,8 +57,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
 
                 AddDocumentWidget(
                     addFile: ref.read(donationVmProvider.notifier).addFile,
-                    removeFile:
-                    ref.read(donationVmProvider.notifier).removeFile,
+                    removeFile: ref.read(donationVmProvider.notifier).removeFile,
                     title: viewModel.donationImage != null
                         ? viewModel.donationImage!.name
                         : "Upload Event Thumbnail",
@@ -415,7 +418,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                     fontWeight: FontWeight.w500,
                     color: Theme.of(context).colorScheme.black),),
                 const Gap(10),
-                Row(children: [
+               /* Row(children: [
                   InkWell(
                     splashFactory: NoSplash.splashFactory,
                     splashColor: Colors.transparent,
@@ -453,7 +456,51 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           color: Theme.of(context).colorScheme.black),),
-                ],),
+                ],),*/
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: RadioSelect(
+                        title: Text("Public",
+                            style: wayaTheme.textTheme.titleMedium!
+                                .wayaCopyWith(
+                                fontSize: 14,
+                                color:
+                                wayaTheme.colorScheme.customBlack)),
+                        value: 'public',
+                        groupedValue: selectedOption,
+                        onChanged: (value) {
+                          ref
+                              .read(radioSelectProvider(key).notifier)
+                              .state = value;
+                          ref
+                              .read(donationVmProvider.notifier)
+                              .updatePrivacyOption(value!);
+                        },
+                      ),
+                    ),
+                    const Gap(10),
+                    Expanded(
+                        child: RadioSelect(
+                          title: Text("Private",
+                              style: wayaTheme.textTheme.titleMedium!
+                                  .wayaCopyWith(
+                                  fontSize: 14,
+                                  color:
+                                  wayaTheme.colorScheme.customBlack)),
+                          value: 'private',
+                          groupedValue: selectedOption,
+                          onChanged: (value) {
+                            ref.read(radioSelectProvider(key).notifier).state =
+                                value;
+
+                            ref.read(donationVmProvider.notifier)
+                                .updatePrivacyOption(value!);
+                          },
+                        )),
+                  ],
+                ),
                 const Gap(20),
                 WayaButton(
                     callback:  () async {

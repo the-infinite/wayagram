@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:slide_countdown/slide_countdown.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -87,6 +88,34 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
 
                           Spacer(),
                           Image.asset('assets/images/polls/menu.png', height: 32.h,),
+                         /* InkWell(
+                              onTap: (){
+                                PopupMenuButton(
+                                  onSelected: (value) {},
+                                  iconColor: wayaTheme.colorScheme.greyColor400,
+                                  position: PopupMenuPosition.under,
+                                  itemBuilder: (context) {
+                                    return [
+
+                                      PopupMenuItem<int>(
+                                        value: 0,
+                                        child: _buildActionNav(
+                                          context: context,
+                                          onTap: () {
+                                            Share.share('${poll.url}');
+                                          },
+                                          asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                                          text: "Share Group link",
+                                          color: wayaTheme.colorScheme.customBlack,
+                                        ),
+                                      ),
+
+                                    ];
+                                  },
+                                );
+                              },
+                              //child: Image.asset('assets/images/polls/menu.png', height: 32.h,)
+                          ),*/
 
                         ],),
                         const Gap(10),
@@ -119,8 +148,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                   choiceStatistics('${e.imageUrl}',
                                       '${e.text}', context, true, poll.feePerVote,
                                       e.id, e.pollId,e.text, poll.url,
-                                      '${(viewModel.fetchAllPols[index].voteCount!/(e.voteCount!))*100}',
-                                      //'${(e.voteCount)!*100}',
+                                      '${(((e.voteCount!)/viewModel.fetchAllPols[index].voteCount!)*100)}',
+                                      //'${(viewModel.fetchAllPols[index].voteCount!/(e.voteCount!))*100}',
                                       '${e.voteCount}'))
                           ],
                         )
@@ -401,7 +430,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                     color: Theme.of(ctx).colorScheme.black ),
               ),
               Text(
-                '$voteCount votes',
+                '$voteCount ${voteCount == '1'? 'vote' : 'votes'}',
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
                     fontSize: 12,
                     fontWeight: FontWeight.w400,
@@ -409,6 +438,35 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
               ),
             ],
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionNav({
+    required BuildContext context,
+    required VoidCallback onTap,
+    required Widget asset,
+    required String text,
+    required Color color,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      splashFactory: NoSplash.splashFactory,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          asset,
+          const Gap(4),
+          Text(
+            text,
+            style: TextStyle().wayaCopyWith(
+              color: color,
+              fontWeight: FontWeight.w500,
+              fontSize: 12,
+            ),
+          )
         ],
       ),
     );

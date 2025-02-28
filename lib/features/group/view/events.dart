@@ -9,8 +9,10 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
+import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
@@ -53,75 +55,8 @@ class _EventsState extends ConsumerState<Events> with SingleTickerProviderStateM
               itemCount: viewModel.fetchAllEventDocs?.length,
               itemBuilder: (_, index){
                 final event =  viewModel.fetchAllEventDocs?[index];
-                return Container(
-                  margin: EdgeInsets.only(bottom: 15),
-                  padding: EdgeInsets.only(left: 10, right:10),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.white,
-                    border:Border.all(color:Theme.of(context).colorScheme.greyColor200 )
-                  ),
-                  height: 76.h,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Row(
-                        children: [
-                          WayaImage(imageUrl: '${event?.image}', height: 40.h,),
-                          WayaImage(
-                            imageUrl:'${event?.image}',
-                            height: 60,
-                            width: 60,
-                            radius: BorderRadius.circular(12),
-                          ),
-                          const Gap(10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Text(
-                                   '${event?.title?.capitalizeFirst}',
-                                    style: wayaTheme.textTheme.bodyMedium),
-                                Text(
-                                  '${event?.locationAddress?.capitalizeFirst}',
-                                  style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w400,
-                                      color: Theme.of(context).colorScheme.greyColor500
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                  maxLines: 1,
-                            
-                                ),
-                              ],
-                            ),
-                          ),
-                          //Spacer(),
-                          SizedBox(
-                            width: context.width * 0.20,
-                            child:WayaButton(
-                              callback: (){
-
-                              },
-                              text: 'Register',
-                              textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600,
-                                  color: Theme.of(context).colorScheme.white ),
-                              height: 32.h,
-                            ),
-                          ),
-
-
-                        ],
-                      ),
-                    ],
-                  ),
-                );
+                return EventCard(event: event!, userId: ConversationState.self.id,);
               }),
-
         ],
       ),
     );
