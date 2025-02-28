@@ -20,3 +20,4 @@ export 'waya_paginated_list.dart';
 export 'waya_observable_scroll.dart';
 export 'waya_indexer.dart';
 export 'waya_time_picker.dart';
+export 'waya_confirmation_view.dart';
