@@ -4,14 +4,11 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
-import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart';
-import 'package:wayagram/features/quotation/vm/quotation_vm.dart';
 
 class RequestCard extends ConsumerWidget {
   //final Quotation quotation;
