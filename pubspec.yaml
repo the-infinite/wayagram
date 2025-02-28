@@ -74,6 +74,10 @@ dependencies:
   flutter_hooks: ^0.20.5
   syncfusion_flutter_sliders: ^28.2.6
   video_trimmer: ^3.0.1-LTS
+  #video thumbnail
+  get_thumbnail_video: ^0.7.2
+
+
 
 
 dev_dependencies:

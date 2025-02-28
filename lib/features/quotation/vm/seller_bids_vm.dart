@@ -7,24 +7,13 @@ class SellerBidsVm extends ChangeNotifier {
 
   List<Map<String, dynamic>> orderMetrics = [
     {"title": "Open Bids", "metrics": "100", "color": Color(0xffFEF6E7)},
-    {
-      "title": "Won Bids",
-      "metrics": "284",
-      "color": Color(0xffE7F6EC)
-    },
-    {"title": "Closed Bids", "metrics": "50", "color":Color(0xffE3EFFC) },
-
+    {"title": "Won Bids", "metrics": "284", "color": Color(0xffE7F6EC)},
+    {"title": "Closed Bids", "metrics": "50", "color": Color(0xffE3EFFC)},
   ];
 
   List<Map<String, dynamic>> otherMetrics = [
     {"title": "Paid Orders", "metrics": "100", "color": Color(0xffF7F9FC)},
-    {
-      "title": "Local Shipment Timer",
-      "metrics": "4hrs 5min Left",
-      "color": Color(0xffFFF0EB)
-    },
-
-
+    {"title": "Local Shipment Timer", "metrics": "4hrs 5min Left", "color": Color(0xffFFF0EB)},
   ];
 }
 

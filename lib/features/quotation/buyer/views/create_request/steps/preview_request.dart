@@ -30,17 +30,18 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
 
   //? This is fine too.
   void disposeControllers() {
-    viewModel.productName.dispose();
-    viewModel.brandName.dispose();
-    viewModel.productDescription.dispose();
-    viewModel.quantity.dispose();
-    viewModel.minDistance.dispose();
-    viewModel.maxDistance.dispose();
-    viewModel.bidStartingAmount.dispose();
-    viewModel.maxBidAmount.dispose();
-    viewModel.deliveryAddress.dispose();
-    viewModel.startTime.dispose();
-    viewModel.endTime.dispose();
+    viewModel.productName.clear();
+    viewModel.brandName.clear();
+    viewModel.productDescription.clear();
+    viewModel.quantity.clear();
+    viewModel.minDistance.clear();
+    viewModel.maxDistance.clear();
+    viewModel.bidStartingAmount.clear();
+    viewModel.maxBidAmount.clear();
+    viewModel.deliveryAddress.clear();
+    viewModel.startTime.value = null;
+    viewModel.endTime.value = null;
+    viewModel.bidDate.value = null;
   }
 
   @override
@@ -218,42 +219,44 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           ],
         ),
 
-        // Some space.
-        const Gap(15),
+        if (!viewModel.skipAddress && viewModel.pickUpOption == 'delivery') ...[
+          // Some space.
+          const Gap(15),
 
-        //? For our delivery address.
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child:
-                  AboutProduct(title: 'Delivery Address', content: '${viewModel.deliveryAddress.text.capitalizeFirst}'),
-            )
-          ],
-        ),
+          //? For our delivery address.
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: AboutProduct(
+                    title: 'Delivery Address', content: '${viewModel.deliveryAddress.text.capitalizeFirst}'),
+              )
+            ],
+          ),
 
-        // Some more space.
-        const Gap(15),
+          // Some more space.
+          const Gap(15),
 
-        //? For our delivery state and LGA.
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: AboutProduct(
-                title: 'State',
-                content: '${viewModel.deliveryState.capitalizeFirst}',
+          //? For our delivery state and LGA.
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: AboutProduct(
+                  title: 'State',
+                  content: '${viewModel.deliveryState.capitalizeFirst}',
+                ),
               ),
-            ),
-            Expanded(
-              child: AboutProduct(
-                title: 'LGA',
-                content: '${viewModel.deliveryLga.capitalizeFirst}',
-              ),
-            )
-          ],
-        ),
+              Expanded(
+                child: AboutProduct(
+                  title: 'LGA',
+                  content: '${viewModel.deliveryLga.capitalizeFirst}',
+                ),
+              )
+            ],
+          ),
+        ],
 
         // Some more space.
         const Gap(30),
@@ -276,13 +279,23 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
             Expanded(
               child: AboutProduct(
                 title: 'Start Time',
-                content: viewModel.startDate,
+                content: WayaDateHelper.getFullTimestamp(
+                  viewModel.bidDate.value!.copyWith(
+                    hour: viewModel.startTime.value!.hour,
+                    minute: viewModel.startTime.value!.minute,
+                  ),
+                ),
               ),
             ),
             Expanded(
               child: AboutProduct(
                 title: 'End Time',
-                content: viewModel.endDate,
+                content: WayaDateHelper.getFullTimestamp(
+                  viewModel.bidDate.value!.copyWith(
+                    hour: viewModel.endTime.value!.hour,
+                    minute: viewModel.endTime.value!.minute,
+                  ),
+                ),
               ),
             )
           ],
@@ -295,6 +308,14 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
         WayaProgressiveButton(
           callback: () async {
             final buyerId = ConversationState.self.id;
+            final startTime = viewModel.bidDate.value!.copyWith(
+              hour: viewModel.startTime.value!.hour,
+              minute: viewModel.startTime.value!.minute,
+            );
+            final endTime = viewModel.bidDate.value!.copyWith(
+              hour: viewModel.endTime.value!.hour,
+              minute: viewModel.endTime.value!.minute,
+            );
 
             //? Create a buyer request.
             final createBuyerRequest = CreateBuyerRequest(
@@ -305,30 +326,30 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
               condition: viewModel.productCondition.toLowerCase(),
               description: viewModel.productDescription.text,
               quantity: viewModel.quantity.text,
-              bidStart: viewModel.startDate,
-              bidEnd: viewModel.endDate,
+              bidStart: startTime.toIso8601String(),
+              bidEnd: endTime.toIso8601String(),
               deliveryDetails: '----',
               minDistance: viewModel.minDistance.text,
               maxDistance: viewModel.maxDistance.text,
               stateOfPurchase: viewModel.stateOfPurchase,
               lga: viewModel.lga,
               vendorsCanSeeBidFromAnyDistance: '${viewModel.vendorSeeBuyRequest}',
-              deliveryType: 'delivery',
-              deliveryAddress: viewModel.deliveryAddress.text,
-              deliveryState: viewModel.deliveryState,
-              deliveryLga: viewModel.deliveryLga,
-              maxBidAmount: viewModel.maxBidAmount.text,
-              bidStartingAmount: viewModel.bidStartingAmount.text.replaceAll(',', ''),
+              deliveryType: viewModel.pickUpOption,
+              deliveryAddress: viewModel.canDeliver ? viewModel.deliveryAddress.text : null,
+              deliveryState: viewModel.canDeliver ? viewModel.deliveryState : null,
+              deliveryLga: viewModel.canDeliver ? viewModel.deliveryLga : null,
+              maxBidAmount: double.tryParse(viewModel.maxBidAmount.text.replaceAll(',', '')) ?? 0.0,
+              bidStartingAmount: double.tryParse(viewModel.bidStartingAmount.text.replaceAll(',', '')) ?? 0.0,
             );
 
             //? Create the buyer request.
-            await notifier.createBuyerRequest(createBuyerRequest);
+            if (!await notifier.createBuyerRequest(createBuyerRequest)) return;
 
-            //? This is fine.
+            //? Clear all data inside our controllers first.
             disposeControllers();
 
             //? Go to the get quotations bids page.
-            WayaNav.toNamed(SeeBuyerBids.route);
+            WayaNav.removeUntilNamed(SeeBuyerBids.route, predicate: (_) => WayaNav.currentRoute == BottomView.route);
           },
           text: "Find offers",
           notifier: loadingController,

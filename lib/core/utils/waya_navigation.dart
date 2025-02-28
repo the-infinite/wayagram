@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
 class WayaNav<T> {
+  static String get currentRoute => Get.currentRoute;
+
   static void to(Widget page, {Function(dynamic)? onResult}) {
     Get.to(
       () => page,
@@ -20,9 +22,12 @@ class WayaNav<T> {
     );
   }
 
-  static void removeUntilNamed(String route,{dynamic arguments, Function(dynamic)? onResult}) {
-    Get.offAllNamed( route,
+  static void removeUntilNamed(String route,
+      {dynamic arguments, Function(dynamic)? onResult, RoutePredicate? predicate}) {
+    Get.offAllNamed(
+      route,
       arguments: arguments,
+      predicate: predicate,
     )?.then((result) {
       if (onResult != null) {
         onResult(result);

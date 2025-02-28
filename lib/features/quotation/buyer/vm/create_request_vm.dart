@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart';
 import 'package:wayagram/features/quotation/buyer/model/create_request_state_model.dart';
 import 'package:wayagram/features/quotation/data/model/model.dart';
 import 'package:wayagram/features/quotation/data/model/quotation_model.dart';
-import 'package:wayagram/features/quotation/data/repo/quotation_repository.dart';
+import 'package:wayagram/shared/features/quotation/repo/default.dart';
 
 class CreateRequestVm extends StateNotifier<CreateRequestState> {
-  final QuotationRepository _quotationRepository;
+  final _quotationRepository = QuotationRepository.instance;
   final _logger = getLogger('CreateRequestVm');
 
-  CreateRequestVm(this._quotationRepository) : super(CreateRequestState());
+  CreateRequestVm() : super(CreateRequestState());
 
   void selectStateOfPurchase(Select value) {
     state = state.copyWith(stateOfPurchase: value.value);
+  }
+
+  void setPickupOption(String value) {
+    state = state.copyWith(pickUpOption: value);
   }
 
   void selectState(Select value) {
@@ -80,7 +83,9 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
       final response = await showDatePicker(
+
           context: context, firstDate: DateTime(1950), lastDate: DateTime.now(), initialDate: DateTime.now());
+
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
@@ -101,6 +106,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
         lastDate: DateTime(moment.year + 1),
         initialDate: moment,
       );
+
 
       if (response != null) {
         final endDate = "${response.year}-${response.month}-${response.day}";
@@ -137,18 +143,23 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
     }
   }
 
-  Future<void> createBuyerRequest(CreateBuyerRequest createBuyerRequest) async {
+  Future<bool> createBuyerRequest(CreateBuyerRequest createBuyerRequest) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _quotationRepository.createBuyerRequest(createBuyerRequest);
-      if (response.success) {
-        _logger.i(response.data['data']);
-      }
+
+      //? Since this can be fine.
+      if (response.success) {}
+
+      //? Return this one as is.
+      return response.success;
     } catch (e) {
       _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);
     }
+
+    return false;
   }
 
   Future<void> getBuyerRequest() async {
@@ -166,15 +177,8 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
   }
 }
 
-final quotationRepositoryProvider = Provider((ref) => QuotationRepository());
-
-final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
-  return WayaLocalDataSource();
-});
-
 final createRequestProvider = StateNotifierProvider<CreateRequestVm, CreateRequestState>(
   (ref) {
-    final quotationRepository = ref.watch(quotationRepositoryProvider);
-    return CreateRequestVm(quotationRepository);
+    return CreateRequestVm();
   },
 );
