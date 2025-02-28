@@ -12,6 +12,7 @@ import 'package:wayagram/shared/features/events/shared_event.dart';
 import 'package:wayagram/shared/features/profile/shared_posts.dart';
 import 'package:wayagram/shared/features/moments/shared_moments.dart';
 import 'package:wayagram/features/explore/search/search.dart';
+import 'package:wayagram/shared/features/profile/view/polls.dart';
 
 class DisplayFeed extends ConsumerStatefulWidget {
   static const route = "/feed";
@@ -61,14 +62,18 @@ class _DisplayFeedState extends ConsumerState<DisplayFeed> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(10),
-              Text(
-            "Based on your follows",
-            style: wayaTheme.textTheme.bodyMedium,
-          ),
+            Text(
+              "Based on your follows",
+              style: wayaTheme.textTheme.bodyMedium,
+            ),
             const Gap(10),
             SharedMoments(),
             const Gap(10),
-            SharedPosts(isExpanded: true,),
+            SharedPosts(
+              isExpanded: true,
+            ),
+            const Gap(25),
+            PollsFeedWidget(),
             const Gap(25),
             SharedEvent()
           ],

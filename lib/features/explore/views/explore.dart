@@ -32,9 +32,9 @@ import 'package:wayagram/features/ugt/widgets/ugt_card.dart';
 import 'package:wayagram/shared/features/chat/widget/conversation.dart';
 import 'package:wayagram/shared/features/profile/shared_posts.dart';
 import 'package:wayagram/shared/features/moments/shared_moments.dart';
-import 'package:wayagram/shared/features/pages/widgets/pages_feed_widget.dart';
+import 'package:wayagram/shared/features/profile/view/pages.dart';
 
-import 'package:wayagram/shared/features/groups/widgets/groups_feed_widget.dart';
+import 'package:wayagram/shared/features/profile/view/groups.dart';
 
 class Explore extends ConsumerStatefulWidget {
   const Explore({super.key});

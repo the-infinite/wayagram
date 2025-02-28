@@ -36,7 +36,7 @@ class _AllProductsState extends ConsumerState<AllProducts> {
 
   @override
   Widget build(BuildContext context) {
-    final notifier = ref.watch(shopVmProvider.notifier);
+   
     final state = ref.watch(shopVmProvider);
 
     final allProducts = state.products;

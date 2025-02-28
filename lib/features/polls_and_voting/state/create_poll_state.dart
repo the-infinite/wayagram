@@ -30,7 +30,6 @@ class CreatePollVotingState {
   final List<PollDashboardModelDocs> pollDashboardModelDocs;
   final List<PollDashboardChoices> pollDashboardChoices;
 
-
   final String moneyGenerated;
   final String voteCount;
   final String numberOfPeopleVoted;
@@ -47,6 +46,7 @@ class CreatePollVotingState {
   final bool isLoadingPollWithStatus;
   bool? isPersonalNotUpgradedToBusiness;
   List<Docs> fetchAllPols;
+  final List<Docs> feedPolls;
   List<GetPollData> getPollModel;
   List<GetAllPollData> getAllPollModel;
   List<PollData> getMyPollModel;
@@ -63,8 +63,8 @@ class CreatePollVotingState {
     TextEditingController? firstChoiceDescription,
     TextEditingController? secondChoiceDescription,
     this.voteCount = '',
-    this.moneyGenerated ='',
-    this.numberOfPeopleVoted  = '',
+    this.moneyGenerated = '',
+    this.numberOfPeopleVoted = '',
     this.pollType = '',
     this.startDate = '',
     this.endDate = '',
@@ -76,28 +76,32 @@ class CreatePollVotingState {
     this.isLoading = false,
     this.isLoadingPollWithStatus = false,
     this.candidateImage,
-    this.voteUrlData ,
+    this.voteUrlData,
     this.choices = const [],
     this.pollDashboardModelDocs = const [],
     this.pollDashboardChoices = const [],
-    this.fetchAllPols =  const [],
+    this.fetchAllPols = const [],
     this.getPollModel = const [],
     this.getAllPollModel = const [],
     this.getMyPollModel = const [],
     this.votes = const [],
     this.castVoteModel = const [],
     this.pollTypes = const [],
+    this.feedPolls = const [],
     this.uploadedDocuments = const [],
     this.isPersonalNotUpgradedToBusiness = false,
   })  : pollTitle = pollTitle ?? TextEditingController(),
         pollDescription = pollDescription ?? TextEditingController(),
-        pollCompanyDescription = pollCompanyDescription ?? TextEditingController(),
+        pollCompanyDescription =
+            pollCompanyDescription ?? TextEditingController(),
         votePrice = votePrice ?? TextEditingController(),
         voteNumber = voteNumber ?? TextEditingController(),
         firstChoice = firstChoice ?? TextEditingController(),
         secondChoice = secondChoice ?? TextEditingController(),
-        firstChoiceDescription = firstChoiceDescription ?? TextEditingController(),
-        secondChoiceDescription = secondChoiceDescription ?? TextEditingController();
+        firstChoiceDescription =
+            firstChoiceDescription ?? TextEditingController(),
+        secondChoiceDescription =
+            secondChoiceDescription ?? TextEditingController();
 
   CreatePollVotingState copyWith({
     TextEditingController? pollTitle,
@@ -134,47 +138,54 @@ class CreatePollVotingState {
     List<CastVoteData>? castVoteModel,
     List<Choice>? choices,
     List<Select>? pollTypes,
+    List<Docs>? feedPolls,
     List<PollDashboardChoices>? pollDashboardChoices,
   }) {
     return CreatePollVotingState(
-      isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ?? this.isPersonalNotUpgradedToBusiness,
-      pollTitle: pollTitle ?? this.pollTitle,
-      pollDescription: pollDescription ?? this.pollDescription,
-      pollCompanyDescription: pollCompanyDescription ?? this.pollCompanyDescription,
-      votePrice: votePrice ?? this.votePrice,
-      voteNumber: voteNumber ?? this.voteNumber,
-      firstChoice: firstChoice ?? this.firstChoice,
-      secondChoice: secondChoice ?? this.secondChoice,
-      firstChoiceDescription: firstChoiceDescription ?? this.firstChoiceDescription,
-      secondChoiceDescription: secondChoiceDescription ?? this.secondChoiceDescription,
-      pollType: pollType ?? this.pollType,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      startDateString: startDateString ?? this.startDateString,
-      endDateString: endDateString ?? this.endDateString,
-      candidateImage: candidateImage ?? this.candidateImage,
-      dateIsoFormat: dateIsoFormat ?? this.dateIsoFormat,
-      isFocused: isFocused ?? this.isFocused,
-      isLoading: isLoading ?? this.isLoading,
-      isLoadingPollWithStatus: isLoadingPollWithStatus ?? this.isLoadingPollWithStatus,
-      fetchAllPols: fetchAllPols  ?? this.fetchAllPols,
-      getPollModel: getPollModel ?? this.getPollModel,
-      getAllPollModel: getAllPollModel ?? this.getAllPollModel,
-      getMyPollModel : getMyPollModel ?? this.getMyPollModel,
-      pollDashboardModelDocs: pollDashboardModelDocs ?? this.pollDashboardModelDocs,
-      votes: votes ?? this.votes,
+        isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ??
+            this.isPersonalNotUpgradedToBusiness,
+        pollTitle: pollTitle ?? this.pollTitle,
+        pollDescription: pollDescription ?? this.pollDescription,
+        pollCompanyDescription:
+            pollCompanyDescription ?? this.pollCompanyDescription,
+        votePrice: votePrice ?? this.votePrice,
+        voteNumber: voteNumber ?? this.voteNumber,
+        firstChoice: firstChoice ?? this.firstChoice,
+        secondChoice: secondChoice ?? this.secondChoice,
+        firstChoiceDescription:
+            firstChoiceDescription ?? this.firstChoiceDescription,
+        secondChoiceDescription:
+            secondChoiceDescription ?? this.secondChoiceDescription,
+        pollType: pollType ?? this.pollType,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        startDateString: startDateString ?? this.startDateString,
+        endDateString: endDateString ?? this.endDateString,
+        candidateImage: candidateImage ?? this.candidateImage,
+        dateIsoFormat: dateIsoFormat ?? this.dateIsoFormat,
+        isFocused: isFocused ?? this.isFocused,
+        isLoading: isLoading ?? this.isLoading,
+        isLoadingPollWithStatus:
+            isLoadingPollWithStatus ?? this.isLoadingPollWithStatus,
+        fetchAllPols: fetchAllPols ?? this.fetchAllPols,
+        getPollModel: getPollModel ?? this.getPollModel,
+        getAllPollModel: getAllPollModel ?? this.getAllPollModel,
+        getMyPollModel: getMyPollModel ?? this.getMyPollModel,
+        pollDashboardModelDocs:
+            pollDashboardModelDocs ?? this.pollDashboardModelDocs,
+        votes: votes ?? this.votes,
         castVoteModel: castVoteModel ?? this.castVoteModel,
-      uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
-      choices: choices ?? this.choices,
-      voteUrlData: voteUrlData ?? this.voteUrlData,
-      pollTypes: pollTypes ?? this.pollTypes,
-      pollTypeId: pollTypeId ?? this.pollTypeId,
-        voteCount: voteCount  ?? this.voteCount,
-      numberOfPeopleVoted: numberOfPeopleVoted  ?? this.numberOfPeopleVoted,
-      moneyGenerated: moneyGenerated ?? this.moneyGenerated,
-      pollDashboardChoices: pollDashboardChoices ?? this.pollDashboardChoices
-
-    );
+        uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
+        choices: choices ?? this.choices,
+        voteUrlData: voteUrlData ?? this.voteUrlData,
+        pollTypes: pollTypes ?? this.pollTypes,
+        pollTypeId: pollTypeId ?? this.pollTypeId,
+        voteCount: voteCount ?? this.voteCount,
+        feedPolls: feedPolls ?? this.feedPolls,
+        numberOfPeopleVoted: numberOfPeopleVoted ?? this.numberOfPeopleVoted,
+        moneyGenerated: moneyGenerated ?? this.moneyGenerated,
+        pollDashboardChoices:
+            pollDashboardChoices ?? this.pollDashboardChoices);
   }
 }
 

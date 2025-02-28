@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -31,8 +30,6 @@ import 'package:wayagram/features/shop/data/model/shop_state.dart';
 
 import '../data/model/get_all_poll_model.dart';
 
-
-
 class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
   final Ref ref;
   final PollAndVotingRepository _pollAndVotingRepository;
@@ -51,19 +48,19 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
           text: TextEditingController(text: ''))
     ]);
 
-    state = state.copyWith(pollTitle: TextEditingController(text:'' ));
-    state = state.copyWith(pollDescription: TextEditingController(text:''));
-    state = state.copyWith(pollCompanyDescription: TextEditingController(text:''));
-    state = state.copyWith(voteNumber: TextEditingController(text:''));
-    state = state.copyWith(votePrice: TextEditingController(text:''));
-    state = state.copyWith(firstChoice: TextEditingController(text:''));
-    state = state.copyWith(firstChoiceDescription: TextEditingController(text:''));
-    state = state.copyWith(secondChoice: TextEditingController(text:''));
-    state = state.copyWith(secondChoiceDescription: TextEditingController(text:''));
-
+    state = state.copyWith(pollTitle: TextEditingController(text: ''));
+    state = state.copyWith(pollDescription: TextEditingController(text: ''));
+    state =
+        state.copyWith(pollCompanyDescription: TextEditingController(text: ''));
+    state = state.copyWith(voteNumber: TextEditingController(text: ''));
+    state = state.copyWith(votePrice: TextEditingController(text: ''));
+    state = state.copyWith(firstChoice: TextEditingController(text: ''));
+    state =
+        state.copyWith(firstChoiceDescription: TextEditingController(text: ''));
+    state = state.copyWith(secondChoice: TextEditingController(text: ''));
+    state = state.copyWith(
+        secondChoiceDescription: TextEditingController(text: ''));
   }
-
-
 
   void focusChanged(bool hasFocus) {
     state = state.copyWith(isFocused: hasFocus);
@@ -81,7 +78,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     state = state.copyWith(endDateString: date, endDate: date);
   }
 
-
   void addChoice() {
     List<Choice> allChoices = [];
     allChoices = List.from(state.choices);
@@ -94,13 +90,9 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     state = state.copyWith(choices: allChoices);
   }
 
-
-
   void reset() {
     state = CreatePollVotingState();
   }
-
-
 
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
@@ -152,8 +144,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     });
   }
 
-
-
 // added fn to remove a choice
   void removeChoiceAtindex(int i) {
     List<Choice> allChoices = [];
@@ -189,7 +179,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       case "endDate":
         state = state.copyWith(endDate: value.value);
       default:
-      state = state.copyWith(dateIsoFormat: value.value);
+        state = state.copyWith(dateIsoFormat: value.value);
     }
   }
 
@@ -205,7 +195,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     super.dispose();
   }
 
-   formatDate(String inputDate) {
+  formatDate(String inputDate) {
     // Parse the input date string
     DateTime parsedDate = DateTime.parse(inputDate);
 
@@ -334,10 +324,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return def;
   }
 
-   formatDt(j) {
+  formatDt(j) {
     String dt = '';
-    if(j != null){
-      if(j.contains('-')){
+    if (j != null) {
+      if (j.contains('-')) {
         String a = j.split('-')[0];
         String b = j.split('-')[1];
         String c = j.split('-')[2];
@@ -352,10 +342,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
   formatDt1(j) {
     String dt = '';
-    if(j != null){
-      if(j.toString().contains('T')){
+    if (j != null) {
+      if (j.toString().contains('T')) {
         String x = j.toString().split('T')[0];
-        if(x.contains('-')){
+        if (x.contains('-')) {
           String a = x.split('-')[0];
           String b = x.split('-')[1];
           String c = x.split('-')[2];
@@ -484,7 +474,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return am;
   }
 
-
   Future<void> createFreePoll(
       BuildContext context,
       String question,
@@ -507,16 +496,18 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
     //final List<Map<String, dynamic>> choices = [];
 
-
     final Map<String, dynamic> choiceMap = {};
 
     for (var i = 0; i < state.choices.length; i++) {
       choiceMap["choices[$i][text]"] = state.choices[i].text.text;
-      choiceMap["choices[$i][image]"] = state.choices[i].image !=null? await MultipartFile.fromFile(state.choices[i].image!.path, contentType: MediaType.parse('image/*')):null;
+      choiceMap["choices[$i][image]"] = state.choices[i].image != null
+          ? await MultipartFile.fromFile(state.choices[i].image!.path,
+              contentType: MediaType.parse('image/*'))
+          : null;
+
       ///choiceMap["choices[$i].image"] = await MultipartFile.fromFile(state.choices[i].image!.path, contentType: MediaType.parse('image/*'));
       choiceMap["choices[$i][description]"] = state.choices[i].description.text;
     }
-
 
     final formdata = {
       'question': question,
@@ -577,16 +568,18 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
     //final List<Map<String, dynamic>> choices = [];
 
-
     final Map<String, dynamic> choiceMap = {};
 
     for (var i = 0; i < state.choices.length; i++) {
       choiceMap["choices[$i][text]"] = state.choices[i].text.text;
-      choiceMap["choices[$i][image]"] = state.choices[i].image !=null? await MultipartFile.fromFile(state.choices[i].image!.path, contentType: MediaType.parse('image/*')):null;
+      choiceMap["choices[$i][image]"] = state.choices[i].image != null
+          ? await MultipartFile.fromFile(state.choices[i].image!.path,
+              contentType: MediaType.parse('image/*'))
+          : null;
+
       ///choiceMap["choices[$i].image"] = await MultipartFile.fromFile(state.choices[i].image!.path, contentType: MediaType.parse('image/*'));
       choiceMap["choices[$i][description]"] = state.choices[i].description.text;
     }
-
 
     final formdata = {
       'question': question,
@@ -605,7 +598,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.createPoll(formdata);
       if (response.success && context.mounted) {
-
         showDialog(
             useRootNavigator: false,
             context: context,
@@ -622,27 +614,28 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  Future<void> castYourVote(String amountPaid, String qty, String choiceId, String  pollId,ctx, candidateName, votingLink) async {
+  Future<void> castYourVote(String amountPaid, String qty, String choiceId,
+      String pollId, ctx, candidateName, votingLink) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pollAndVotingRepository.castVote(amountPaid, qty, choiceId, pollId);
+      final response = await _pollAndVotingRepository.castVote(
+          amountPaid, qty, choiceId, pollId);
       state = state.copyWith(isLoading: false);
       Navigator.of(ctx).pop();
       if (response.success && ctx.mounted) {
         WayaUtils.showModalSheet(
           ctx,
-          child: VoteSuccessModal(candidateName: candidateName,votingLink: votingLink,),
+          child: VoteSuccessModal(
+            candidateName: candidateName,
+            votingLink: votingLink,
+          ),
         );
 
         _logger.i(response.data['data']);
-      }else if( response.data['error'] == 'Insufficient wallet balance'){
-
-     // }else {
-       // _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        WayaUtils.showModalSheet(
-          ctx,
-          child: VoteInsufficientModal()
-        );
+      } else if (response.data['error'] == 'Insufficient wallet balance') {
+        // }else {
+        // _logger.i('LOGGER  ==>>> ${response.data['error']}');
+        WayaUtils.showModalSheet(ctx, child: VoteInsufficientModal());
 
         print('CHECKINGGGGG');
       }
@@ -654,26 +647,27 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
   }
 
   Future<PaginatedResult<Docs>?> getMyPolls({required int page}) async {
-
-    try{
-    state = state.copyWith(isLoading: true);
-    final response = await _pollAndVotingRepository.getMyPolls(ConversationState.self.id,page);
-    List<Docs>? fetchAllPols = [];
-    bool? hasNextPage = false;
-    state = state.copyWith(isLoading: false);
-    if (response.success) {
-      FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
-      fetchAllPols = responseModel.data?.docs;
-      hasNextPage = responseModel.data?.hasNextPage;
-      state = state.copyWith(fetchAllPols: fetchAllPols);
-      state = state.copyWith(fetchAllPols: responseModel.data?.docs);
-    } else {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.getMyPolls(
+          ConversationState.self.id, page);
+      List<Docs>? fetchAllPols = [];
+      bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
-    }
-    return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchAllPols!);
-    }catch (e){
+      if (response.success) {
+        FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
+        fetchAllPols = responseModel.data?.docs;
+        hasNextPage = responseModel.data?.hasNextPage;
+        state = state.copyWith(fetchAllPols: fetchAllPols);
+        state = state.copyWith(fetchAllPols: responseModel.data?.docs);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchAllPols!);
+    } catch (e) {
       _logger.e(e);
-    }finally {
+      return null;
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
@@ -693,11 +687,11 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchAllPols!);
-    }catch (e){
+      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchAllPols!);
+    } catch (e) {
       _logger.e(e);
       return null;
-    }finally {
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
@@ -712,12 +706,11 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
       state = state.copyWith(voteUrlData: responseModel.data
           //voteUrlChoices: responseModel.data?.choices
-      );
+          );
     } else {
       state = state.copyWith(isLoading: false);
     }
   }
-
 
   Future<void> getPollsById(String pollId) async {
     state = state.copyWith(isLoading: true);
@@ -733,7 +726,6 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-
   Future<void> getSinglePollDashboard(pollId) async {
     print('Fetching single Poll...');
 
@@ -743,14 +735,16 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       state = state.copyWith(isLoading: false);
 
       if (response.success) {
-        SingleDashboardModel responseModel = SingleDashboardModel.fromJson(response.data);
+        SingleDashboardModel responseModel =
+            SingleDashboardModel.fromJson(response.data);
 
         print('VOTECOUNT ===>> ${responseModel.data?.voteCount.toString()}');
         state = state.copyWith(
             votes: responseModel.data?.votes,
             voteCount: responseModel.data?.voteCount.toString(),
             moneyGenerated: responseModel.data?.moneyGenerated.toString(),
-            numberOfPeopleVoted: responseModel.data?.numberOfPeopleVoted.toString());
+            numberOfPeopleVoted:
+                responseModel.data?.numberOfPeopleVoted.toString());
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -768,17 +762,19 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       state = state.copyWith(isLoading: false);
 
       if (response.success) {
-        PollDashboardModel responseModel = PollDashboardModel.fromJson(response.data);
-       print('LENGTH IS ==>>> ${responseModel.data?.docs?[0].choices}');
+        PollDashboardModel responseModel =
+            PollDashboardModel.fromJson(response.data);
+        print('LENGTH IS ==>>> ${responseModel.data?.docs?[0].choices}');
         state = state.copyWith(
             // startDate: responseModel.data?.docs?[0].endDate,
             // endDate: responseModel.data?.docs?[0].endDate,
             //pollDashboardModelDocs: responseModel.data?.docs?[0].choices,
-            pollDashboardChoices:responseModel.data?.docs?[0].choices,
+            pollDashboardChoices: responseModel.data?.docs?[0].choices,
             //pollDashboardChoices: responseModel?.data!.docs,
             voteCount: responseModel.data?.docs?[0].voteCount.toString(),
             moneyGenerated: responseModel.data?.docs?[0].amountGenerated,
-            numberOfPeopleVoted: responseModel.data?.docs?[0].numberOfVoters.toString());
+            numberOfPeopleVoted:
+                responseModel.data?.docs?[0].numberOfVoters.toString());
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -787,21 +783,31 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     } finally {}
   }
 
+  Future<void> getFeedPolls() async {
+    try {
+      final response = await _pollAndVotingRepository.getAllFeedPolls();
+
+      if (response.success) {
+        FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
+
+         state = state.copyWith(feedPolls: responseModel.data?.docs);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
 }
-
-
 
 final pollAndVotingProvider = Provider((ref) => PollAndVotingRepository());
 final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
   return WayaLocalDataSource();
 });
 
-final createPollVotingProvider =
-    StateNotifierProvider.autoDispose<CreatePollVotingVm, CreatePollVotingState>((ref) {
+final createPollVotingProvider = StateNotifierProvider.autoDispose<
+    CreatePollVotingVm, CreatePollVotingState>((ref) {
   final pollAndVotingRepository = ref.watch(pollAndVotingProvider);
   final localDataSource = ref.watch(localDataSourceProvider);
 
   return CreatePollVotingVm(ref, ImagePicker(), pollAndVotingRepository,
       localDataSource, WayaSecureDataSource());
 });
-
