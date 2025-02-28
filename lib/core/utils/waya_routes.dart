@@ -84,10 +84,16 @@ import 'package:wayagram/features/shop/views/products_view_page.dart';
 import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
 import 'package:wayagram/features/support/views/request.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disqualify.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_application_contest.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_contest.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/view_single_contestant_data.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart';
-import 'package:wayagram/features/ugt/contest_profiles/profile_dashboard.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 import 'package:wayagram/features/ugt/contest_setting/contest_setting_content.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
+import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.dart';
 import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
 import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
@@ -163,8 +169,14 @@ class WayaAppRoutes {
     UgtGetStarted.route: () => UgtGetStarted(),
     UgtHome.route: () => UgtHome(),
     CreateContest.route: () => CreateContest(),
+    CreateContestPost.route: () => CreateContestPost(),
+    ViewSingleContestantData.route: () => ViewSingleContestantData(),
+    ContestActiveDisqualify.route: () => ContestActiveDisqualify(),
     ContestProfilePage.route: () => ContestProfilePage(),
-    DashboardContestProfilePage.route: () => DashboardContestProfilePage(),
+    ManageApplicationContest.route: () => ManageApplicationContest(),
+    ManageStateSingleContest.route: () => ManageStateSingleContest(),
+    DashboardContestPage.route: () => DashboardContestPage(),
+    ManageStateContest.route: () => ManageStateContest(),
     ContestSettingContent.route: () => ContestSettingContent(),
     EditStagePreference.route: () => EditStagePreference(),
     CreateRequest.route: () => CreateRequest(),

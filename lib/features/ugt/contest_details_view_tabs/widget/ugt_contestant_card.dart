@@ -7,17 +7,21 @@ import 'package:wayagram/core/components/components.dart';
 
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
-import '../../vote/contest_vote_modal.dart';
 
 class UgtContestantCard extends ConsumerWidget {
   final Contest model;
   final MyContestContestantModel contestantData;
-  const UgtContestantCard(this.model, this.contestantData, {super.key});
+  final int position;
+  const UgtContestantCard(this.model, this.contestantData, this.position,
+      {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,30 +34,39 @@ class UgtContestantCard extends ConsumerWidget {
           contentPadding: EdgeInsets.zero,
           visualDensity: VisualDensity(horizontal: -4, vertical: -4),
           leading: Text(
-            "4",
+            "$position",
             overflow: TextOverflow.ellipsis,
             style: wayaTheme.textTheme.bodyMedium,
           ),
-          title: Row(
-            children: [
-              ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(45), // Adjust the radius as needed
-                child: Image.network(
-                  contestantData.profilePhoto ?? "",
-                  height: 45,
-                  width: 45,
-                  fit: BoxFit
-                      .cover, // Ensures the image covers the area properly
+          title: GestureDetector(
+            onTap: () {
+               ref.read(selectedContestantProfile.notifier).state =
+                            contestantData;
+              WayaNav.toNamed(
+                '/contest-profile-page',
+              );
+            },
+            child: Row(
+              children: [
+                ClipRRect(
+                  borderRadius:
+                      BorderRadius.circular(45), // Adjust the radius as needed
+                  child: Image.network(
+                    contestantData.profilePhoto ?? "",
+                    height: 45,
+                    width: 45,
+                    fit: BoxFit
+                        .cover, // Ensures the image covers the area properly
+                  ),
                 ),
-              ),
-              Gap(10),
-              Text(
-                contestantData.contestApplicant?.fullName ?? "Name",
-                overflow: TextOverflow.ellipsis,
-                style: wayaTheme.textTheme.bodyMedium,
-              ),
-            ],
+                Gap(10),
+                Text(
+                  contestantData.contestApplicant?.fullName ?? "Name",
+                  overflow: TextOverflow.ellipsis,
+                  style: wayaTheme.textTheme.bodyMedium,
+                ),
+              ],
+            ),
           ),
           trailing: SizedBox(
             width: 100,
@@ -74,14 +87,14 @@ class UgtContestantCard extends ConsumerWidget {
                     model: ContestVoteModel(
                         contestId: contestantData.contestId ?? "",
                         contestantId: contestantData.id ?? "",
-                        hostUserId: model.hostId ?? "",
+                        hostUserId: contestantData.profileId ?? "",
                         amount: "0",
                         numberOfVotes: "0",
-                        profileId: contestantData.profileId,
+                        profileId: "",
                         type: model.type ?? ""),
 
-                   
-                    candidateName:   contestantData.contestApplicant?.fullName ?? "Name",
+                    candidateName:
+                        contestantData.contestApplicant?.fullName ?? "Name",
                     votingLink: "votingLink",
                   ),
                 );

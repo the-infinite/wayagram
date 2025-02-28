@@ -8,9 +8,18 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 
 class UgtLeaderboardCard extends ConsumerWidget {
-  const UgtLeaderboardCard({super.key});
+  final Contest model;
+  final MyContestContestantModel contestantData;
+  final int position;
+  const UgtLeaderboardCard(
+      {required this.model,
+      required this.contestantData,
+      required this.position,
+      super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,9 +30,10 @@ class UgtLeaderboardCard extends ConsumerWidget {
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
+          onTap: () {},
           visualDensity: VisualDensity(horizontal: -4, vertical: -4),
           leading: Text(
-            "4",
+            "$position",
             overflow: TextOverflow.ellipsis,
             style: wayaTheme.textTheme.bodyMedium,
           ),
@@ -32,8 +42,8 @@ class UgtLeaderboardCard extends ConsumerWidget {
               ClipRRect(
                 borderRadius:
                     BorderRadius.circular(45), // Adjust the radius as needed
-                child: Image.asset(
-                  'assets/images/frameuni.png',
+                child: Image.network(
+                  contestantData.profilePhoto ?? "",
                   height: 45,
                   width: 45,
                   fit: BoxFit
@@ -42,14 +52,14 @@ class UgtLeaderboardCard extends ConsumerWidget {
               ),
               Gap(10),
               Text(
-                "Rufai Maleek",
+                contestantData.contestApplicant?.fullName ?? "",
                 overflow: TextOverflow.ellipsis,
                 style: wayaTheme.textTheme.bodyMedium,
               ),
             ],
           ),
           trailing: Text(
-            '33,938 Votes',
+            '${contestantData.votes} Votes',
             style: wayaTheme.textTheme.hintStyle,
           ),
         ),

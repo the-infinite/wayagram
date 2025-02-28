@@ -15,8 +15,10 @@ import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/widgets/about_ugt_widget.dart';
 import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
+import 'package:wayagram/features/ugt/widgets/status_widget.dart';
 
 import '../../../core/utils/waya_navigation.dart';
 
@@ -63,11 +65,7 @@ class ContestCard extends ConsumerWidget {
                             wayaTheme.colorScheme.success, BlendMode.srcIn),
                       ),*/
                         GestureDetector(
-                          onTap: () {
-                            WayaNav.toNamed(
-                              '/contest-profile-page',
-                            );
-                          },
+                          onTap: () {},
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(
                                 45), // Adjust the radius as needed
@@ -202,10 +200,17 @@ class ContestCard extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  StatusOngoing(
-                    title: "Status",
-                    content: "Ongoing",
-                  ),
+                  if (post.status?.toLowerCase() == "pending" ||
+                      post.status?.toLowerCase() == "closed")
+                    StatusWidget(
+                      title: "Application",
+                      content: post.status ?? "Pending",
+                    ),
+                  if (post.status?.toLowerCase() == "ongoing")
+                    StatusOngoing(
+                      title: "Application",
+                      content: post.status ?? "Pending",
+                    ),
                   //  AboutUgtWidget(title: "Status", content: "Ongoing", ),
                   const Gap(30),
                   AboutUgtWidget(
@@ -221,11 +226,16 @@ class ContestCard extends ConsumerWidget {
               const Gap(20),
               WayaButton(
                 callback: () {
-                  ref.read(registerFormProvider.notifier).addDefault(
-                      post.contestSettings?.formRequirements ?? [], post);
-                  //  WayaNav.toNamed("/register-contest1");
-                  ref.read(selectedContestProvider.notifier).state = post;
-                  WayaNav.toNamed("/upcoming-contest-details");
+                  if (isDateInFuture(post.startDate ?? "")) {
+                    ref.read(registerFormProvider.notifier).addDefault(
+                        post.contestSettings?.formRequirements ?? [], post);
+                    //  WayaNav.toNamed("/register-contest1");
+                    ref.read(selectedContestProvider.notifier).state = post;
+                    WayaNav.toNamed("/upcoming-contest-details");
+                  } else {
+                    ref.read(selectedContestProvider.notifier).state = post;
+                    WayaNav.toNamed('/upcoming-manage-contest-details');
+                  }
                 },
                 text: "View Details",
               ),

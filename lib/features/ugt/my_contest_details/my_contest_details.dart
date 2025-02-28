@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_followed_contest_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/utils/waya_navigation.dart';
@@ -191,8 +192,16 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                       }
 
                       final post = host[index];
-                      return ContestCard(post, hostNotifier.toggleLike,
-                          hostNotifier.toggleShare, hostNotifier.doFollow);
+                      return GestureDetector(
+                        onTap: () {
+                          //To be removed, it a sample
+                          ref.read(selectedContestProvider.notifier).state =
+                              post;
+                          WayaNav.toNamed('/upcoming-manage-contest-details');
+                        },
+                        child: ContestCard(post, hostNotifier.toggleLike,
+                            hostNotifier.toggleShare, hostNotifier.doFollow),
+                      );
                     },
                   ),
 

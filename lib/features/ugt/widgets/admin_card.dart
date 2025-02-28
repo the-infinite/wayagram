@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 
 class AdminCard extends StatelessWidget {
@@ -40,7 +41,7 @@ class AdminCard extends StatelessWidget {
                 radius: radius ?? 35,
                 backgroundColor:
                     Colors.pink[100], // Background color behind image
-                backgroundImage: AssetImage(imageUrl),
+                backgroundImage: NetworkImage(imageUrl),
               ),
             ),
 
@@ -80,11 +81,14 @@ class AdminCard extends StatelessWidget {
               isCenter! ? Offset(0, -5) : Offset(0, 0), // Shift up by 10 pixels
 
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 name,
-                style: const TextStyle(
-                  fontSize: 14,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
                 ),
@@ -93,8 +97,8 @@ class AdminCard extends StatelessWidget {
               // Votes
               Text(
                 votes,
-                style: const TextStyle(
-                  fontSize: 14,
+                style: TextStyle(
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
                   color: Colors.black87,
                 ),

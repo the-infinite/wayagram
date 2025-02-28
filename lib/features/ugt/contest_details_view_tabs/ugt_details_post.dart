@@ -6,8 +6,7 @@ import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 class UgtDetailsPost extends ConsumerStatefulWidget {
-  final Contest model;
-  const UgtDetailsPost( this.model, {super.key});
+  const UgtDetailsPost({super.key});
 
   @override
   _UgtDetailsPostState createState() => _UgtDetailsPostState();

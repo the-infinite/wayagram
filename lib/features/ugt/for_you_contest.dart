@@ -121,8 +121,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
               final post = posts[index];
               return GestureDetector(
                 onTap: () {
-                  ref.read(selectedContestProvider.notifier).state = post;
-                  WayaNav.toNamed('/upcoming-manage-contest-details');
+                 
                 },
                 child: ContestCard(
                   post,

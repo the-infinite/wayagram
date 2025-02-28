@@ -335,6 +335,7 @@ class _ContestSignupRequirementState
                       }
                     }
                     ref.read(contestNotifierProvider.notifier).onSubmit(
+                        ref,
                         context,
                         isLoading,
                         ref.read(stateRequirementProvider.notifier).state,

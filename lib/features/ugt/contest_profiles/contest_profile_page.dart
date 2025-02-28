@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get_thumbnail_video/index.dart';
+import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -18,7 +21,9 @@ import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_lead
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_stages_section.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/video_player.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/admin_card.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
@@ -35,9 +40,36 @@ class ContestProfilePage extends StatefulHookConsumerWidget {
 
 class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
   @override
+  void initState() {
+    // getImageUrl();
+    super.initState();
+  }
+
+  Future<String> getImageUrl(String videoLink) async {
+    XFile thumbnailFile = await VideoThumbnail.thumbnailFile(
+      video: videoLink,
+      thumbnailPath: (await getTemporaryDirectory()).path,
+      imageFormat: ImageFormat.WEBP,
+      maxHeight:
+          200, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
+      quality: 70,
+    );
+
+    return thumbnailFile.path;
+  }
+
+  @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    var model = ref.watch(selectedContestProvider.notifier).state;
+    //var model = ref.watch(selectedContestProvider.notifier).state;
+    var model = ref.watch(selectedContestantProfile.notifier).state;
+    final imageUrl = useState(model!.profilePhoto ?? "");
+    useEffect(() {
+      getImageUrl(model.introVideo ?? "").then((value) {
+        imageUrl.value = value;
+      });
+      return null;
+    }, []);
     final selectedViewIndex = useState(0);
     return WayaScaffold(
       isLoading: false,
@@ -53,125 +85,106 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
           const Gap(20),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Gap(10),
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  ClipRRect(
-                    borderRadius:
-                        BorderRadius.circular(6), // Adjust the radius as needed
-                    child: model.uploadCoverImages == null
-                        ? Image.asset(
-                            'assets/images/frameuni.png',
-                            height: 200,
-                            fit: BoxFit
-                                .cover, // Ensures the image covers the area properly
-                          )
-                        : Image.network(
-                            model.uploadCoverImages ?? "",
-                            height: 200,
-                            fit: BoxFit
-                                .cover, // Ensures the image covers the area properly
-                          ),
-                  ),
-                  Positioned(
-                    bottom: -45,
-                    left: 20,
-                    child: Container(
-                      padding: const EdgeInsets.all(0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        border: Border.all(color: Colors.white, width: 4),
-                      ),
-                      child: CircleAvatar(
-                        radius: 35,
-                        backgroundColor:
-                            Colors.pink[100], // Background color behind image
-                        backgroundImage:
-                            AssetImage(WayaAssets.images.avatars.path),
-                      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Gap(10),
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                VideoThumbnailPlayer(
+                  imageUrl: imageUrl.value,
+                  videoUrl: model.introVideo ?? "",
+                ),
+                Positioned(
+                  bottom: -45,
+                  left: 20,
+                  child: Container(
+                    padding: const EdgeInsets.all(0),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 4),
+                    ),
+                    child: CircleAvatar(
+                      radius: 35,
+                      backgroundColor:
+                          Colors.pink[100], // Background color behind image
+                      backgroundImage: NetworkImage(model.profilePhoto ?? ""),
                     ),
                   ),
-                  Positioned(
-                      bottom: -50,
-                      right: 0,
-                      child: GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          margin: EdgeInsets.only(right: 20.w),
-                          padding: REdgeInsets.symmetric(
-                              vertical: 8.dg, horizontal: 12.dg),
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: wayaTheme.colorScheme.primary600,
-                              width: 1.5,
-                            ),
-                            color: wayaTheme.colorScheme.white,
-                            borderRadius: BorderRadius.circular(5.r),
+                ),
+                Positioned(
+                    bottom: -50,
+                    right: 0,
+                    child: GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        margin: EdgeInsets.only(right: 20.w),
+                        padding: REdgeInsets.symmetric(
+                            vertical: 8.dg, horizontal: 12.dg),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: wayaTheme.colorScheme.primary600,
+                            width: 1.5,
                           ),
-                          child: Text(
-                            'Edit Profile',
-                            style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
-                              color: wayaTheme.colorScheme.primary600,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          color: wayaTheme.colorScheme.white,
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: Text(
+                          'Edit Profile',
+                          style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                            color: wayaTheme.colorScheme.primary600,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                      ))
-                ],
-              ),
-              const Gap(50),
-              Text("Rufai Maleek", style: wayaTheme.textTheme.bodyMedium),
-              const Gap(5),
-              Row(
-                children: [
-                  Text("Total Votes:",
-                      style: wayaTheme.textTheme.hintStyle
-                          .wayaCopyWith(fontSize: 14)),
-                  const Gap(2),
-                  Text("69,450",
-                      style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                        color: WayaColors.primary,
-                      )),
-                ],
-              ),
-              Text("Your Bio", style: wayaTheme.textTheme.bodyMedium),
-              Text(
-                  "🌟 Passionate traveler | Coffee enthusiast ☕ | Tech geek 💻 | Sharing my adventures and insights on life! 🌍✨",
-                  style: wayaTheme.textTheme.hintStyle),
-              const Gap(20),
-              Text("what you expect from the voters",
-                  style: wayaTheme.textTheme.bodyMedium),
-              Text(
-                  "Dear supporters, your voice is crucial in shaping our future together. I invite you to stand with me as we work towards a brighter tomorrow. Every vote counts, and your support can make a significant difference in our community. ",
-                  style: wayaTheme.textTheme.hintStyle),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  WayaTabButton(
-                    isSelected: selectedViewIndex.value == 0,
-                    text: 'Posts',
-                    onTap: () => selectedViewIndex.value = 0,
-                  ),
-                  WayaTabButton(
-                    isSelected: selectedViewIndex.value == 1,
-                    text: 'Stages',
-                    onTap: () => selectedViewIndex.value = 1,
-                  ),
-                ],
-              ),
-              const Gap(10),
-              if (selectedViewIndex.value == 0) UgtDetailsPost(model),
-              if (selectedViewIndex.value == 1) ContestProfileStagesSection(model.contestSettings?.stages??[]),
-            ],
-          ),
+                      ),
+                    ))
+              ],
+            ),
+            const Gap(50),
+            Text(model.contestApplicant?.fullName ?? "",
+                style: wayaTheme.textTheme.bodyMedium),
+            const Gap(5),
+            Row(
+              children: [
+                Text("Total Votes:",
+                    style: wayaTheme.textTheme.hintStyle
+                        .wayaCopyWith(fontSize: 14)),
+                const Gap(2),
+                Text("${model.votes}",
+                    style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                      color: WayaColors.primary,
+                    )),
+              ],
+            ),
+            Text("Your Bio", style: wayaTheme.textTheme.bodyMedium),
+            Text(model.bio ?? "", style: wayaTheme.textTheme.hintStyle),
+            const Gap(20),
+            Text("what you expect from the voters",
+                style: wayaTheme.textTheme.bodyMedium),
+            Text(model.expectationFromVoters ?? "",
+                style: wayaTheme.textTheme.hintStyle),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                WayaTabButton(
+                  isSelected: selectedViewIndex.value == 0,
+                  text: 'Posts',
+                  onTap: () => selectedViewIndex.value = 0,
+                ),
+                WayaTabButton(
+                  isSelected: selectedViewIndex.value == 1,
+                  text: 'Stages',
+                  onTap: () => selectedViewIndex.value = 1,
+                ),
+              ],
+            ),
+            const Gap(10),
+            if (selectedViewIndex.value == 0) UgtDetailsPost(),
+            if (selectedViewIndex.value == 1) ContestProfileStagesSection([]),
+          ],
         ),
       ),
     );

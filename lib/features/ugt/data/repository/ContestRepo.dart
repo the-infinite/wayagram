@@ -67,6 +67,11 @@ class ContestRepo extends BaseRepository {
         formdata: false);
   }
 
+    Future<WayaRequestResponse> createContestPost(payLoad) {
+    return post('$serviceUrl2/gallery/upload', payLoad,
+        formdata: false);
+  }
+
    Future<WayaRequestResponse> voteContestant(payLoad) {
     return post('$serviceUrl2/vote', payLoad,
         formdata: false);

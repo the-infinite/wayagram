@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
 import 'package:wayagram/features/ugt/data/model/category_response.dart';
@@ -16,6 +17,7 @@ import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/ugt_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
 import '../../../core/data/local_data_source.dart';
 import '../../../core/data/model/model.dart';
@@ -100,6 +102,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   //var contestSignUpRequirement = [];
 
   Future<void> onSubmit(
+      WidgetRef ref,
       BuildContext context,
       ValueNotifier<bool> isLoading,
       List<NewRequirementModel> newRequirementList,
@@ -206,9 +209,17 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       isLoading.value = false;
 
       if (response.success) {
+        ref.read(postProvider.notifier).fetchPosts();
+      //  ref.read(postProvider.notifier).fetchPosts();
+       // ref.read(postProvider.notifier).fetchPosts();
         WayaUtils.showModalSheetUgt(
           context,
-          child: SuccessfulModal(),
+          child: SuccessfulModal(
+              "Contest created Successfully",
+              "Your contest is now live and visible to the public. Manage or share your contest details from your dashboard.",
+              true, () {
+            WayaNav.removeUntilNamed("/ugt-home");
+          }),
         );
       }
     } catch (e) {
@@ -230,9 +241,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   ) async {
     isLoading.value = true;
     final imageUrl = await WayaFileRepository.instance
-        .uploadFile(File(imagePath), "ugt-video-${Uuid().v4()}");
+        .uploadFile(File(imagePath), "ugt-image-${Uuid().v4()}");
     final videoUrl = await WayaFileRepository.instance
-        .uploadFile(File(videoPath), "ugt-image-${Uuid().v4()}");
+        .uploadFile(File(videoPath), "ugt-video-${Uuid().v4()}");
     var model = ref.read(selectedAppliedContestProvider.notifier).state;
     var map = {
       "profileId": _localDataSource.getUserId().toString(),
@@ -543,11 +554,14 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   }
 }
 
-
 final authRepositoryProvider = Provider((ref) => ContestRepo());
 final contestControllerProvider = Provider((ref) => ContestController());
 final stateContactProvider = StateProvider<List<StagePrefModel>>((ref) => [
       StagePrefModel(id: 0, stageName: "Qualification Stage"),
+      StagePrefModel(id: 1, stageName: "Contest Stage"),
+      StagePrefModel(id: 2, stageName: "Contest Stage"),
+      StagePrefModel(id: 3, stageName: "Contest Stage"),
+      StagePrefModel(id: 4, stageName: "Contest Stage"),
     ]);
 
 final stateRequirementProvider =
@@ -574,4 +588,18 @@ ivalidateUGTVM(WidgetRef ref) {
   ref.invalidate(contestNotifierProvider);
   ref.invalidate(stateRequirementProvider);
   ref.invalidate(stateContactProvider);
+}
+
+bool isDateInFuture(String dateString) {
+  DateTime givenDate = DateTime.parse(dateString);
+  DateTime now = DateTime.now();
+
+  return givenDate.isAfter(now);
+}
+
+bool isDateBefore(String dateString) {
+  DateTime givenDate = DateTime.parse(dateString);
+  DateTime now = DateTime.now();
+
+  return givenDate.isBefore(now);
 }

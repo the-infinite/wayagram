@@ -21,6 +21,7 @@ import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
@@ -127,13 +128,14 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
     }
   }
 
-  void _submitPin() async {
+  void _submitPin(ValueNotifier<bool> isLoading) async {
     if (_pin.length == _pinLength) {
       // TODO: Submit PIN
       // log('PIN submitted: $_pin');
-      Navigator.of(context).pop();
-      var isPass =
-          await ref.read(votersContestNotifier.notifier).verifyWalletPin(_pin, {
+      // Navigator.of(context).pop();
+      var isPass = await ref
+          .read(votersContestNotifier.notifier)
+          .verifyWalletPin(isLoading, _pin, {
         "contestId": widget.model.contestId ?? "",
         "contestantId": widget.model.contestantId ?? "",
         "hostUserId": widget.model.hostUserId ?? "",
@@ -144,17 +146,29 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
       });
 
       if (isPass) {
+        ref
+            .read(votersContestNotifier.notifier)
+            .getContestantProfileVoteDetails(
+                ref.read(selectedContestProvider.notifier).state.id ?? "");
+        Navigator.of(context).pop();
         WayaUtils.showModalSheet(context,
             child: VoteSuccessModal(
               candidateName: widget.candidateName,
               votingLink: "link",
             ));
-      } else {}
+      } else {
+        /* WayaUtils.showModalSheet(context,
+            child: VoteSuccessModal(
+              candidateName: widget.candidateName,
+              votingLink: "link",
+            )); */
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = useState(false);
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: const BoxDecoration(
@@ -226,9 +240,21 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                   );
                 } else if (index == 11) {
                   return _buildKeypadButton(
-                    child:
-                        const Icon(Icons.arrow_forward, color: Colors.black54),
-                    onPressed: _submitPin,
+                    child: isLoading.value
+                        ? SizedBox(
+                            height: 40,
+                            width: 40,
+                            child: CircularProgressIndicator())
+                        : const Icon(Icons.arrow_forward,
+                            color: Colors.black54),
+                    onPressed: isLoading.value
+                        ? () {
+                            print(" i am so here");
+                          }
+                        : () {
+                            print(" i am so noooooooot here");
+                            _submitPin(isLoading);
+                          },
                   );
                 } else {
                   return _buildKeypadButton(
@@ -577,6 +603,7 @@ class _ConfirmVoteOptionModalState
             WayaButton(
               callback: !viewModel.isLoading
                   ? () async {
+                      Navigator.of(context).pop();
                       ref.watch(votersContestNotifier.notifier).getUserWallet();
                       print('${widget.amount} ${widget.voteFee}');
                       WayaUtils.showModalSheet(
@@ -1134,3 +1161,5 @@ class _PaymentDialogState extends State<PaymentDialog> {
         ));
   }
 }
+
+

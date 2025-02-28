@@ -11,6 +11,7 @@ import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
+import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
 //import 'package:wayagram/features/explore/data/model/default.dart';
 import 'package:wayagram/features/ugt/widgets/status_widget.dart';
 
@@ -156,7 +157,14 @@ class ContestAppliedCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  StatusWidget(
+                  
+                 if(post.contest?.status?.toLowerCase() == "pending" ||post.contest?.status?.toLowerCase() == "closed") StatusWidget(
+                   
+                    title: "Application",
+                    content: post.contest?.status ?? "Pending",
+                  ),
+                  if(post.contest?.status?.toLowerCase() == "ongoing" ) StatusOngoing(
+                   
                     title: "Application",
                     content: post.contest?.status ?? "Pending",
                   ),

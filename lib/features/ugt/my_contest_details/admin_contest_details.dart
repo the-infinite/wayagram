@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +11,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_contestants.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_gallery.dart.dart';
@@ -46,6 +49,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           ref.read(selectedContestProvider.notifier).state.id ?? "");
       return null;
     }, []);
+    var viewModel = ref.watch(votersContestNotifier);
     var model = ref.watch(selectedContestProvider.notifier).state;
     final selectedViewIndex = useState(0);
     return WayaScaffold(
@@ -54,7 +58,52 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
       title: "Contest Details",
       appBarTrailing: Row(
         children: [
-          Image.asset("assets/images/vector.png"),
+          //  Image.asset("assets/images/vector.png"),
+          PopupMenuButton(
+            onSelected: (value) {},
+            position: PopupMenuPosition.under,
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem<int>(
+                  value: 0,
+                  child: _buildActionNav(
+                      context: context,
+                      onTap: () {
+                        Navigator.pop(context);
+                        WayaNav.toNamed('/contest-mydashboard-profile-page');
+                      },
+                      asset: SvgPicture.asset('assets/images/pages/flag.svg'),
+                      text: "Dashboard",
+                      color: wayaTheme.colorScheme.customBlack),
+                ),
+                PopupMenuItem<int>(
+                  value: 1,
+                  child: _buildActionNav(
+                      context: context,
+                      onTap: () {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Post deleted successfully!'),
+                            backgroundColor: WayaColors.primary,
+                            duration: Duration(seconds: 2),
+                          ),
+                        );
+                        Navigator.pop(context);
+                        WayaNav.toNamed('/pages');
+                      },
+                      asset: SvgPicture.asset(
+                        'assets/images/pages/delete.svg',
+                        color: wayaTheme.colorScheme.error500,
+                        height: 20,
+                      ),
+                      text: "Delete Contest",
+                      color: wayaTheme.colorScheme.error500),
+                )
+              ];
+            },
+            child: Image.asset("assets/images/vector.png"),
+          ),
+
           const Gap(20),
           ClipRRect(
             borderRadius: BorderRadius.circular(45),
@@ -62,6 +111,13 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
               model.uploadCoverImages ?? "",
               height: 45,
               width: 45,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  height: 45,
+                  width: 45,
+                  color: wayaTheme.colorScheme.greyColor400,
+                );
+              },
               fit: BoxFit.cover, // Ensures the image covers the area properly
             ),
           ),
@@ -202,34 +258,71 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
-                    child: AdminCard(
-                      imageUrl: WayaAssets
-                          .images.avatars.path, // Change to your image path
-                      rank: "2",
-                      name: "Oludase Busola",
-                      votes: "59,450 Votes",
+                  if (viewModel.myContestList!.length >= 2)
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          ref.read(selectedContestantProfile.notifier).state =
+                              viewModel.myContestList?[1];
+                          WayaNav.toNamed(
+                            '/contest-profile-page',
+                          );
+                        },
+                        child: AdminCard(
+                          imageUrl: viewModel.myContestList?[1].profilePhoto ??
+                              "", // Change to your image path
+                          rank: "2",
+                          name: viewModel.myContestList?[1].contestApplicant
+                                  ?.fullName ??
+                              "",
+                          votes: "${viewModel.myContestList?[1].votes} Votes",
+                        ),
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: AdminCard(
-                      imageUrl: WayaAssets
-                          .images.avatars.path, // Change to your image path
-                      rank: "2",
-                      isCenter: true,
-                      radius: 40,
-                      name: "Oludase Busola",
-                      votes: "59,450 Votes",
+                  if (viewModel.myContestList!.isNotEmpty)
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          ref.read(selectedContestantProfile.notifier).state =
+                              viewModel.myContestList?[0];
+                          WayaNav.toNamed(
+                            '/contest-profile-page',
+                          );
+                        },
+                        child: AdminCard(
+                          imageUrl: viewModel.myContestList?[0].profilePhoto ??
+                              "", // Change to your image path
+                          rank: "1",
+                          isCenter: true,
+                          radius: 40,
+                          name: viewModel.myContestList?[0].contestApplicant
+                                  ?.fullName ??
+                              "",
+                          votes: "${viewModel.myContestList?[0].votes} Votes",
+                        ),
+                      ),
                     ),
-                  ),
-                  Expanded(
-                    child: AdminCard(
-                      imageUrl: WayaAssets.images.avatars.path,
-                      rank: "2",
-                      name: "Oludase Busola",
-                      votes: "59,450 Votes",
+                  if (viewModel.myContestList!.length >= 3)
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          ref.read(selectedContestantProfile.notifier).state =
+                              viewModel.myContestList?[2];
+                          WayaNav.toNamed(
+                            '/contest-profile-page',
+                          );
+                        },
+                        child: AdminCard(
+                          imageUrl:
+                              viewModel.myContestList?[2].profilePhoto ?? "",
+                          rank: "3",
+                          name: viewModel.myContestList?[2].contestApplicant
+                                  ?.fullName ??
+                              "",
+                          votes: "${viewModel.myContestList?[2].votes} Votes",
+                        ),
+                      ),
                     ),
-                  ),
                 ],
               ),
               Row(
@@ -262,13 +355,58 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 ],
               ),
               const Gap(10),
-              if (selectedViewIndex.value == 0) UgtDetailsPost(model),
+              if (selectedViewIndex.value == 0) UgtDetailsPost(),
               if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(model),
               if (selectedViewIndex.value == 2) UgtDetailsContestants(model),
               if (selectedViewIndex.value == 3) UgtDetailsGallery(model),
             ],
           ),
         ),
+      ),
+      floatingActionButton: viewModel.createPostId.trim().isNotEmpty
+          ? SizedBox(
+              height: 50,
+              width: 50,
+              child: WayaButton(
+                callback: () {
+                  WayaNav.toNamed('/create-contest-post');
+                },
+                height: 50,
+                centerWidget: Center(
+                  child: Icon(
+                    Icons.add,
+                    color: wayaTheme.colorScheme.white,
+                    size: 40,
+                  ),
+                ),
+              ),
+            )
+          : null,
+    );
+  }
+
+  InkWell _buildActionNav(
+      {required BuildContext context,
+      required VoidCallback onTap,
+      required Widget asset,
+      required String text,
+      required Color color}) {
+    final wayaTheme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      splashFactory: NoSplash.splashFactory,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          asset,
+          const Gap(4),
+          Text(
+            text,
+            style: TextStyle().wayaCopyWith(
+                color: color, fontWeight: FontWeight.w500, fontSize: 12),
+          )
+        ],
       ),
     );
   }
@@ -280,204 +418,6 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     } else {
       return isText ? Color(0xff865503) : Color(0xffFEF6E7);
     } */
-  }
-
-  Widget _buildStages(Stages model) {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      shape: Border.all(color: Colors.transparent), // Removes default border
-      collapsedShape: Border.all(color: Colors.transparent),
-      title: Text(
-        model.stageName ?? "name",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(
-                title: "Start Date",
-                isFromDetailsPage: true,
-                content: formatDate(model.startDate ?? "")),
-            const Gap(20),
-            UpcomingWidget(
-                isFromDetailsPage: true,
-                title: "End Date",
-                content: formatDate(model.endDate ?? "")),
-            const Gap(20),
-            UpcomingWidget(
-                isFromDetailsPage: true,
-                title: "Entry Type",
-                content: model.entryType ?? ""),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(
-                isFromDetailsPage: true,
-                title: "No of Posts",
-                content:
-                    "${model.numberOfPostPerWeek?.toString()} of Duration"),
-            const Gap(20),
-            UpcomingWidget(
-                isFromDetailsPage: true,
-                title: "Prize for Winner",
-                content:
-                    "NGN${formatMoney(model.priceOfTheWinner.toString())}"),
-            const Gap(20),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
-  }
-
-  Widget _buildStagesContestLevel1() {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      title: Text(
-        "Contest Level 1",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
-            const Gap(20),
-            UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
-  }
-
-  Widget _buildStagesContestLevel2() {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      title: Text(
-        "Contest Level 2",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
-            const Gap(20),
-            UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
-  }
-
-  Widget _buildStagesContestLevel3() {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      title: Text(
-        "Contest Level 3",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
-            const Gap(20),
-            UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
-  }
-
-  Widget _buildStagesContestFinal() {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      title: Text(
-        "Final Stage",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
-            const Gap(20),
-            UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
   }
 }
 

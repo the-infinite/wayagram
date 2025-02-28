@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_contestant_card.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
@@ -13,6 +14,7 @@ import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 class UgtDetailsContestants extends ConsumerStatefulWidget {
   final Contest model;
+
   const UgtDetailsContestants(this.model, {super.key});
 
   @override
@@ -34,6 +36,7 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
     final wayaTheme = Theme.of(context);
     // final postNotifier = ref.read(postProvider.notifier);
     final viewModel = ref.read(votersContestNotifier);
+    final notifier = ref.read(votersContestNotifier.notifier);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,7 +47,9 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
             Icons.search,
             color: wayaTheme.colorScheme.greyColor400,
           ),
-          onChanged: (value) {},
+          onChanged: (value) {
+            //notifier.searchList(value);
+          },
           controller: searchController,
           hintText: "search by name, univerisity , stage, category",
         ),
@@ -63,10 +68,10 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
 
             final post = viewModel.myContestList![index];
             return GestureDetector(
-              onTap: () {},
               child: UgtContestantCard(
                 widget.model,
-                post
+                post,
+                index + 1,
               ),
             );
           },

@@ -389,6 +389,16 @@ class _UpcomingContestDetailsState
 }
 
 String formatMoney(String value) {
-  final oCcy = NumberFormat("#,##0.00", "en_US");
-  return oCcy.format(double.parse(value));
+  /*  final oCcy = NumberFormat("#,##0.00", "en_US");
+  return oCcy.format(double.parse(value)); */
+  final formatter =
+      NumberFormat('#,##0.00'); // Formats with commas and decimals
+  double amount = double.parse(value);
+  if (amount >= 1e9) {
+    return '${(amount / 1e9).toStringAsFixed(1)}B';
+  } else if (amount >= 1e6) {
+    return '${(amount / 1e6).toStringAsFixed(1)}M';
+  } else {
+    return formatter.format(amount); // Adds commas and two decimal places
+  }
 }
