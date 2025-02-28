@@ -35,7 +35,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(donationVmProvider.notifier).getAllDonation(1);
+      ref.read(donationVmProvider.notifier).getAllDonation(page: 1);
     });
     searchController = TextEditingController();
     searchController.addListener(() {

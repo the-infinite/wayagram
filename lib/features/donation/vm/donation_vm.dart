@@ -112,7 +112,7 @@ class DonationVm extends StateNotifier<DonationState> {
   }
 
 
-  Future<PaginatedResult<AllDonationDocs>?> getAllDonation(int page) async {
+  Future<PaginatedResult<AllDonationDocs>?> getAllDonation({required int page}) async {
 
     try{
       state = state.copyWith(isLoading: true);
