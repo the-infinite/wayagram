@@ -25,11 +25,11 @@ CreateBuyerRequest _$CreateBuyerRequestFromJson(Map<String, dynamic> json) =>
       vendorsCanSeeBidFromAnyDistance:
           json['vendorsCanSeeBidFromAnyDistance'] as String,
       deliveryType: json['deliveryType'] as String,
-      deliveryAddress: json['deliveryAddress'] as String,
-      deliveryState: json['deliveryState'] as String,
-      deliveryLga: json['deliveryLga'] as String,
-      maxBidAmount: json['maxBidAmount'] as String,
-      bidStartingAmount: json['bidStartingAmount'] as String,
+      deliveryAddress: json['deliveryAddress'] as String?,
+      deliveryState: json['deliveryState'] as String?,
+      deliveryLga: json['deliveryLga'] as String?,
+      maxBidAmount: (json['maxBidAmount'] as num).toDouble(),
+      bidStartingAmount: (json['bidStartingAmount'] as num).toDouble(),
     );
 
 Map<String, dynamic> _$CreateBuyerRequestToJson(CreateBuyerRequest instance) =>

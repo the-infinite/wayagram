@@ -17,11 +17,10 @@ import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/explore/widgets/explore_header.dart';
 import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
-import 'package:wayagram/features/explore/widgets/pages_card.dart';
 import 'package:wayagram/features/explore/widgets/polls_card.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
-import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
+import 'package:wayagram/features/quotation/buyer/views/create_request/create_request.dart';
 import 'package:wayagram/shared/engagement/provider/product_engagement_monitor.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
@@ -30,11 +29,13 @@ import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_card.dart';
 import 'package:wayagram/shared/features/chat/widget/conversation.dart';
+import 'package:wayagram/shared/features/location/vm/default.dart';
 import 'package:wayagram/shared/features/profile/shared_posts.dart';
 import 'package:wayagram/shared/features/moments/shared_moments.dart';
 import 'package:wayagram/shared/features/pages/widgets/pages_feed_widget.dart';
 
 import 'package:wayagram/shared/features/groups/widgets/groups_feed_widget.dart';
+import 'package:wayagram/shared/features/quotation/view/buy_request.dart';
 
 class Explore extends ConsumerStatefulWidget {
   const Explore({super.key});
@@ -46,7 +47,8 @@ class Explore extends ConsumerStatefulWidget {
 class _ExploreState extends ConsumerState<Explore> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(regionsProvider.notifier).getCurrentCountry();
       ref.read(shopVmProvider.notifier).allCategories(1);
       ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 1000);
       ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1);
@@ -126,9 +128,7 @@ class _ExploreState extends ConsumerState<Explore> {
             SharedMoments(),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Have a buy request, just create a quote',
-                title: 'Get Quotation'),
+                onTap: () {}, subTitle: 'Have a buy request, just create a quote', title: 'Get Quotation'),
             const Gap(20),
             WayaButton(
               centerWidget: Row(
@@ -151,18 +151,19 @@ class _ExploreState extends ConsumerState<Explore> {
                   ),
                 ],
               ),
-              callback: () {},
+              callback: () {
+                WayaNav.toNamed(CreateRequest.route);
+              },
               color: wayaTheme.colorScheme.primar50,
             ),
+
+            // Some space.
             const Gap(25),
-            ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: viewModel.quotations.length,
-                itemBuilder: (context, index) {
-                  return QuotationCard(quotation: viewModel.quotations[index]);
-                }),
-            const Gap(25),
+
+            //? The shared quotations widget.
+            const SharedOthersBuyRequestsWidget(isExpanded: false),
+
+            //? For the next section.
             GroupedWidgetHeader(
                 onTap: () {
                   Navigator.pushNamed(context, BottomView.route, arguments: 1);
@@ -173,9 +174,7 @@ class _ExploreState extends ConsumerState<Explore> {
             CategoriesFilterWidget(setCategory: (value) {
               ref.read(shopVmProvider.notifier).setCategory(value);
               for (String categoryId in value) {
-                ref
-                    .read(productEngagementProvider.notifier)
-                    .addCategory(categoryId, ProductPoint.searchPoint.value);
+                ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
               }
             }),
             const Gap(25),
@@ -186,10 +185,7 @@ class _ExploreState extends ConsumerState<Explore> {
                         ? notifier.filteredProducts.sublist(0, 2)
                         : notifier.filteredProducts),
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Support a course that matters',
-                title: 'Donations'),
+            GroupedWidgetHeader(onTap: () {}, subTitle: 'Support a course that matters', title: 'Donations'),
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
@@ -292,10 +288,7 @@ class _ExploreState extends ConsumerState<Explore> {
             const ConversationFeedWidget(isExpanded: false),
 
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Join Upcoming Activities',
-                title: 'University Got Talent'),
+            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
