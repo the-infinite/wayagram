@@ -19,6 +19,7 @@ import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/data/model/role_type.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/shared/features/user/vm/search.dart';
 
 class AddGroupMember extends ConsumerStatefulWidget {
   //final String groupId;
@@ -109,7 +110,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FormField<String>(validator: (value) {
+                /*  FormField<String>(validator: (value) {
                     if (viewModel.username.text.isEmpty) {
                       return 'Username/Email is required';
                     }
@@ -144,6 +145,17 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                       ],
                     );
                   }),
+                  const Gap(20),*/
+                  WayaConfirmationView(
+                    debounceTimer: const Duration(milliseconds: 20),
+                    getResult: ref.read(userSearchProvider.notifier).getUserByEmail,
+                    getText: (user) => user?.fullname ?? "User not found",
+                    backgroundColor: wayaTheme.colorScheme.primar50,
+                    searchController: viewModel.username,
+                    buttonTextStyle: wayaTheme.textTheme.bodyBold.copyWith(
+                      color: wayaTheme.colorScheme.primary,
+                    ),
+                  ),
                   const Gap(20),
                   FormField<String>(validator: (value) {
                     if (viewModel.roleType.isEmpty) {

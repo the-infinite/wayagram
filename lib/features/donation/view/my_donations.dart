@@ -109,14 +109,13 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
             itemBuilder: (context, index){
               final donation = filteredMyDonations[index];
               int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
-              //int daysLeft = DateTime.parse('${donation?.expirationDate}').day;
               return ManageDonationWidget(
-                text:  "Manage Donation",
+                text: "Manage Donation",
                 amountRaised:  WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
                 targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
                 title: donation.title?.capitalizeFirst,
                 image: donation.imageURL,
-                dayLeft: '$daysLeft',
+                dayLeft: daysLeft < 0  ? '0' : '$daysLeft',
                 donationCount: donation.donationCount!,
                 onTap: (){
                   WayaNav.toNamed('/donationManagement',

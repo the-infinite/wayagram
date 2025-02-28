@@ -150,7 +150,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                       e.id, e.pollId,e.text, poll.url,
                                       '${(((e.voteCount!)/viewModel.fetchAllPols[index].voteCount!)*100)}',
                                       //'${(viewModel.fetchAllPols[index].voteCount!/(e.voteCount!))*100}',
-                                      '${e.voteCount}'))
+                                      '${e.voteCount}', daysLeft))
                           ],
                         )
 
@@ -266,13 +266,14 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
   }
 
   choiceStatistics(img, name, ctx, chk, voteFee, choiceId,
-      pollId,candidateName, votingLink, votePercentage, voteCount, ){
+      pollId,candidateName, votingLink, votePercentage, voteCount, dateCheck){
     return voteCount == '0'? Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
         splashColor: Colors.transparent,
         splashFactory: NoSplash.splashFactory,
         onTap: (){
+          print('DIALA CHECKING DATE $dateCheck');
           WayaUtils.showModalSheet(
             ctx,
             child: VoteOptionModal(voteFee:  voteFee,choiceId: choiceId,
