@@ -134,7 +134,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
                   title: donation.title?.capitalizeFirst,
                   image: donation.imageURL,
-                  dayLeft: '$daysLeft',
+                  dayLeft: daysLeft < 0  ? '0' : '$daysLeft',
                   donationCount: donation.donationCount,
                   onTap: (){
                     WayaNav.toNamed('/donationDetails',
