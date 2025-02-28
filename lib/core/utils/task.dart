@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:math';
 
 import 'package:flutter/services.dart';
 
@@ -167,6 +168,9 @@ class TaskExecutor {
     executor.broadcastReceiver = executor.receiver.asBroadcastStream();
     executor.communicatorSendPort = await executor.broadcastReceiver.first;
 
+    //? Then pause it as soon as it is created.
+    executor.pause();
+
     // Return the executor we just made.
     return executor;
   }
@@ -234,6 +238,9 @@ class TaskExecutor {
   /// This is a helper function that is used to execute a single task on the
   /// isolator that this task executor leaves running in the background.
   void execute<T>(Task task) async {
+    //? First, resume the isolate if it is paused.
+    if (_capability != null) resume();
+
     // Send the task to the task to the
     try {
       // This is fair enough.
@@ -289,7 +296,7 @@ class TaskScheduler {
   /// The maximum number of isolates that can be run in parallel. This is the value
   /// determines how many tasks can be run in parallel inside any app that uses this
   /// library.
-  static final int maxParallel = Platform.numberOfProcessors - 1;
+  static final int maxParallel = max((Platform.numberOfProcessors ~/ 2) - 1, 2);
 
   /// The list of all the isolates that were spawned in this application to
   /// assist with making the process of executing any given app using this core

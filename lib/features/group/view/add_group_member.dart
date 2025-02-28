@@ -151,7 +151,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        WayaSelectField(
+                        WayaSelectField<String>(
                             height: 0.3,
                             label: "Select Role",
                             value: viewModel.roleType.capitalizeFirst,
@@ -159,7 +159,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                             hintText: 'Choose User\'s Role',
                             items: DummyData.roleList,
                             onSelected: (value){
-                              ref.read(createGroupProvider.notifier).selectRoleType(value.value);
+                              ref.read(createGroupProvider.notifier).selectRoleType(value.first.value);
                             }),
                         if (formState.hasError && viewModel.roleType.isEmpty)
                           Padding(

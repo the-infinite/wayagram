@@ -232,13 +232,12 @@ class CartProductCard extends ConsumerWidget {
                       ),
                       const Gap(5),
                       Text(
-                        "Quantity: ${cartProduct.quantity} x ${WayaHelpers.formatPrice(cartProduct.price)}",
+                        "Quantity: ${cartProduct.quantity} x ${WayaHelpers.formatPrice((cartProduct.price / cartProduct.quantity).toInt())}",
                         style: wayaTheme.textTheme.hintStyle,
                       ),
                       const Gap(5),
                       Text(
-                        WayaHelpers.formatPrice(
-                            cartProduct.quantity * cartProduct.price),
+                        WayaHelpers.formatPrice(cartProduct.price),
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
                             fontWeight: FontWeight.w600,

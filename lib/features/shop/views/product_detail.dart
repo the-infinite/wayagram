@@ -13,7 +13,7 @@ import 'package:wayagram/shared/engagement/provider/product_engagement_monitor.d
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/product_detail_vm.dart';
-
+import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/features/shop/widgets/product_description_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_image_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_review_widget.dart';
@@ -42,7 +42,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
 
       provider.startViewingProduct();
 
-      provider.addCategory(product.categoryId, ProductPoint.viewPoints.value );
+      provider.addCategory(product.categoryId, ProductPoint.viewPoints.value);
     });
   }
 
@@ -86,33 +86,33 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: wayaTheme.colorScheme.secondaryColor2,
-                    shape: BoxShape.circle,
-                  ),
-                  padding: EdgeInsets.all(7),
-                  child: InkWell(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                    },
-                    child: SvgPicture.asset(WayaAssets.icons.heart.path,
-                        fit: BoxFit.none),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: wayaTheme.colorScheme.secondaryColor2,
-                    shape: BoxShape.circle,
-                  ),
-                  padding: EdgeInsets.all(7),
-                  child: InkWell(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                    },
-                    child: SvgPicture.asset(WayaAssets.icons.shareNetwork.path,
-                        fit: BoxFit.none),
-                  ),
+                // Container(
+                //   decoration: BoxDecoration(
+                //     color: wayaTheme.colorScheme.secondaryColor2,
+                //     shape: BoxShape.circle,
+                //   ),
+                //   padding: EdgeInsets.all(7),
+                //   child: InkWell(
+                //     onTap: () {
+                //       HapticFeedback.lightImpact();
+                //     },
+                //     child: SvgPicture.asset(WayaAssets.icons.heart.path,
+                //         fit: BoxFit.none),
+                //   ),
+                // ),
+                InkWell(
+                  onTap: () {
+                    Share.share("Share");
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: wayaTheme.colorScheme.secondaryColor2,
+                        shape: BoxShape.circle,
+                      ),
+                      padding: EdgeInsets.all(7),
+                      child: SvgPicture.asset(
+                          WayaAssets.icons.shareNetwork.path,
+                          fit: BoxFit.none)),
                 )
               ],
             ),

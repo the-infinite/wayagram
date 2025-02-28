@@ -38,7 +38,6 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
 

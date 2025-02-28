@@ -9,6 +9,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
+import 'package:wayagram/features/shop/filter/constants/filter_options.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
@@ -153,8 +154,11 @@ class AddProductVm extends StateNotifier<AddProductState> {
       }
       state = state.copyWith(images: addedimages);
 
-      final response = await _shopRepository.createProduct(
-          payload: state.addProductModel, id: state.shopId);
+      final response = state.isEditMode
+          ? await _shopRepository.editProductRequest(
+              payload: state.addProductModel, productId: state.productId)
+          : await _shopRepository.createProduct(
+              payload: state.addProductModel, id: state.shopId);
       if (response.success && context.mounted) {
         if (state.isWayagramDeal != null && state.isWayagramDeal == true) {
           WayaUtils.showNotice(
@@ -204,25 +208,31 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }
   }
 
-  void update(Select value, String name) {
+  void update(Select? value, String name) {
     switch (name) {
       case "productCategory":
-        state = state.copyWith(productCategory: value.label);
+        state =
+            state.copyWith(productCategory: value != null ? value.label : '');
         state = state.copyWith(selectedCategory: value);
 
       case "productCondition":
-        state = state.copyWith(productCondition: value.value);
+        state =
+            state.copyWith(productCondition: value != null ? value.value : '');
       case "productType":
-        state = state.copyWith(productType: value.value);
+        state = state.copyWith(productType: value != null ? value.value : '');
       case "pickUpOption":
-        state = state.copyWith(pickUpOption: value.value);
-        updatePackageOption(value.value);
+        state = state.copyWith(pickUpOption: value != null ? value.value : '');
+        updatePackageOption(value != null ? value.value : '');
       case "discountType":
-        state = state.copyWith(discountType: value.label);
+        state = state.copyWith(discountType: value != null ? value.label : '');
         state = state.copyWith(selectedDiscountType: value);
       default:
-        state = state.copyWith(productColor: value.value);
     }
+  }
+
+  void updateColor(List<Select> select) {
+    state = state.copyWith(productColor: select);
+    state = state.copyWith(selectedColor: select.map((e) => e.value).join(','));
   }
 
   void updatePackageOption(String value) {
@@ -256,9 +266,11 @@ class AddProductVm extends StateNotifier<AddProductState> {
 
       state = state.copyWith(
         isEditMode: true,
+        productId: product.id,
         productName: TextEditingController(text: product.name),
         productDescription: TextEditingController(text: product.description),
         materialType: TextEditingController(text: product.materialType),
+        selectedColor: product.color,
         pricePerUnit: TextEditingController(
             text: double.parse(product.price).toInt().toString()),
         pickUpAddress: TextEditingController(text: product.pickupAddress),
@@ -281,6 +293,21 @@ class AddProductVm extends StateNotifier<AddProductState> {
         applyDiscount:
             product.discountTypeId != null || product.discountPercentage > 0,
       );
+
+      if (product.color.isNotEmpty) {
+        bool isHasComma = product.color.contains(',');
+        if (isHasComma) {
+          List<Select> colors = FilterOptions.colorOptions
+              .where((c) => [product.color].contains(c.value))
+              .toList();
+          state = state.copyWith(productColor: colors);
+        } else {
+          List<Select> color = FilterOptions.colorOptions
+              .where((c) => c.value == product.color)
+              .toList();
+          state = state.copyWith(productColor: color);
+        }
+      }
 
       if (product.images.isNotEmpty) {
         // Convert existing images to DocType

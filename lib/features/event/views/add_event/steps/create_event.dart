@@ -28,7 +28,6 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final key = 'add-event';
     final wayaTheme = Theme.of(context);
 
@@ -179,7 +178,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           height: 0.3,
                           uniqueKey: 'location-type',
                           label: "Location Type",
@@ -190,7 +189,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                               .locationTypes,
                           onSelected: (value) => ref
                               .read(addEventVmProvider.notifier)
-                              .update(value, "locationType")),
+                              .update(value.first, "locationType")),
                       if (formState.hasError && viewModel.eventType.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
@@ -351,7 +350,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           height: 0.3,
                           uniqueKey: 'event-type',
                           label: "Event Type",
@@ -361,7 +360,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                               ref.read(addEventVmProvider.notifier).eventTypes,
                           onSelected: (value) => ref
                               .read(addEventVmProvider.notifier)
-                              .update(value, "eventType")),
+                              .update(value.first, "eventType")),
                       if (formState.hasError && viewModel.eventType.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),

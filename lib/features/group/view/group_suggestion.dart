@@ -37,7 +37,6 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
     final group = ref.watch(createGroupProvider.notifier);

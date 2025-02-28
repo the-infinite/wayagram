@@ -4,58 +4,111 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 
-class WayaBottomSheetContent extends StatelessWidget {
+class WayaBottomSheetContent extends StatefulWidget {
   final double? contextHeight;
   final String title;
   final List<Select> items;
-  const WayaBottomSheetContent({super.key, this.contextHeight = 0.3, required this.items, required this.title});
+  final bool multi;
+  final List<Select>? selectedItems;
+
+  const WayaBottomSheetContent({
+    super.key,
+    this.contextHeight = 0.3,
+    required this.items,
+    required this.title,
+    this.selectedItems,
+    this.multi = false,
+  });
+
+  @override
+  State<StatefulWidget> createState() => _WayaBottomSheetContentState();
+}
+
+class _WayaBottomSheetContentState extends State<WayaBottomSheetContent> {
+  late List<Select> _selectedItems;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedItems = widget.selectedItems ?? [];
+  }
+
+  void _toggleSelection(Select item) {
+    setState(() {
+      if (_selectedItems.contains(item)) {
+        _selectedItems.remove(item);
+      } else {
+        _selectedItems.add(item);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Container(
-      height: context.height * contextHeight!,
+      height: context.height * widget.contextHeight!,
       width: double.infinity,
-      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
       decoration: BoxDecoration(
         color: wayaTheme.colorScheme.white,
-        borderRadius: BorderRadius.only(
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(50),
           topRight: Radius.circular(50),
         ),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            title,
-            style: wayaTheme.textTheme.titleLarge,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(widget.title, style: wayaTheme.textTheme.titleLarge),
+              if (widget.multi)
+                IconButton(
+                    onPressed: () => Navigator.pop(context, _selectedItems),
+                    icon: Icon(
+                      Icons.close,
+                      color: wayaTheme.colorScheme.greyColor400,
+                      size: 20,
+                    ))
+            ],
           ),
           const Gap(20),
           Expanded(
             child: ListView.builder(
-              itemCount: items.length,
-              shrinkWrap: true,
+              itemCount: widget.items.length,
               itemBuilder: (context, index) {
+                final item = widget.items[index];
+                final isSelected = _selectedItems.contains(item);
+
                 return GestureDetector(
-                  // EdgeInsets.symmetric(vertical: 0),
+                  onTap: () {
+                    if (widget.multi) {
+                      _toggleSelection(item);
+                    } else {
+                      final isSelected = _selectedItems.contains(item);
+                      Navigator.pop(context, isSelected ? [Select(label: '', value: '')] : [item]);
+                    }
+                  },
                   child: Padding(
-                    padding: EdgeInsets.symmetric(vertical: 4),
-                    child: Text(
-                      items[index].label,
-                      style: wayaTheme.textTheme.labelMedium,
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(item.label,
+                            style: wayaTheme.textTheme.labelMedium),
+                        if (isSelected)
+                          Icon(Icons.check,
+                              color: wayaTheme.colorScheme.customBlack,
+                              size: 18),
+                      ],
                     ),
                   ),
-                  onTap: () {
-                    Navigator.pop(context, items[index]);
-                  },
                 );
               },
             ),
-          )
+          ),
         ],
       ),
     );

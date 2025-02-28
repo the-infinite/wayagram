@@ -59,7 +59,6 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
     final viewModel2 = ref.watch(createGroupProvider.notifier);

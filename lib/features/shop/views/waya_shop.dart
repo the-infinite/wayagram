@@ -14,25 +14,34 @@ import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 import 'package:gap/gap.dart';
 
 class WayaShop extends ConsumerStatefulWidget {
-  const WayaShop({super.key});
+  final int currentIndex;
+  const WayaShop({super.key, this.currentIndex = 0});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _WayaShopState();
 }
 
-class _WayaShopState extends ConsumerState<WayaShop> with SingleTickerProviderStateMixin {
+class _WayaShopState extends ConsumerState<WayaShop>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    _selectedIndex = widget.currentIndex;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
 
     return WayaScaffold(
       isLoading: ref.watch(createShopVmProvider).isLoading,
       isScrollable: false,
       progressIndicator: loadingState(context: context),
-      onTapBackButton: () => Navigator.pushNamed(context, BottomView.route, arguments: 0),
+      onTapBackButton: () =>
+          Navigator.pushNamed(context, BottomView.route, arguments: 0),
       title: 'Shop',
       appBarTrailing: WayaCartIcon(),
       body: Column(
@@ -64,13 +73,16 @@ class _WayaShopState extends ConsumerState<WayaShop> with SingleTickerProviderSt
         ],
       ),
       floatingActionButton: Visibility(
-        visible: ref.read(successfulSetupVmProvider).user!.user!.role!.name != 'PERSONAL' && _selectedIndex == 2,
+        visible: ref.read(successfulSetupVmProvider).user!.user!.role!.name !=
+                'PERSONAL' &&
+            _selectedIndex == 2,
         child: SizedBox(
           height: 50,
           width: 50,
           child: WayaButton(
             callback: () {
-              WayaNav.toNamed(CreateShop.route, arguments: CreateShopArg(uniqueKey: 'create-shop'));
+              WayaNav.toNamed(CreateShop.route,
+                  arguments: CreateShopArg(uniqueKey: 'create-shop'));
             },
             height: 50,
             centerWidget: Center(
@@ -95,8 +107,9 @@ class _WayaShopState extends ConsumerState<WayaShop> with SingleTickerProviderSt
         SizedBox(height: 10),
         Text(
           "Creating your shop",
-          style: wayaTheme.textTheme.bodyMedium
-              ?.copyWith(color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600),
+          style: wayaTheme.textTheme.bodyMedium?.copyWith(
+              color: wayaTheme.colorScheme.customPrimary,
+              fontWeight: FontWeight.w600),
         ),
       ],
     );

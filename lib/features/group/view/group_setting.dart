@@ -23,7 +23,6 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
 

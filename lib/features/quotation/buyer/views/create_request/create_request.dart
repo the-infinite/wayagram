@@ -39,11 +39,10 @@ class _CreateRequestState extends ConsumerState<CreateRequest> with SingleTicker
   void _goBack(int index) {
     _tabController.animateTo(index);
   }
-  final _formKey = GlobalKey<FormState>();
+  // final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return WayaScaffoldWithProgressBar(
         isLoading: false,
         isScrollable: true,

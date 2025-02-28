@@ -1,7 +1,6 @@
 import 'package:wayagram/features/shop/seller/data/model/pagination_model.dart';
 import 'package:wayagram/shared/model/base_model.dart';
 
-
 class OrdersResponse {
   final String message;
   final bool status;
@@ -65,7 +64,7 @@ class Order extends BaseModel<Order> {
   final String? pickupAddress;
   final String pickupStatus;
   final String? deliveryAddress;
-  final int? deliveryFee;
+  final dynamic deliveryFee;
   final DateTime? deliveryDate;
   final String deliveryStatus;
   final String version;
@@ -175,6 +174,7 @@ class OrderItem {
   final int quantity;
   final String productId;
   final String? productImage;
+  
 
   OrderItem({
     required this.name,
@@ -182,6 +182,7 @@ class OrderItem {
     required this.quantity,
     required this.productId,
     this.productImage,
+    
   });
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
@@ -191,6 +192,7 @@ class OrderItem {
       quantity: json['quantity'],
       productId: json['productId'],
       productImage: json['productImage'],
+      
     );
   }
 
@@ -200,5 +202,6 @@ class OrderItem {
         'quantity': quantity,
         'productId': productId,
         'productImage': productImage,
+       
       };
 }

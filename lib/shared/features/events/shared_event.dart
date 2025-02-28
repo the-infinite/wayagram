@@ -25,7 +25,7 @@ class _SharedEventState extends ConsumerState<SharedEvent> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(servicesProvider.notifier).getEvents();
       ref.read(eventVmProvider.notifier).joinedEvents();
-      ref.read(eventVmProvider.notifier).getUserEvents(1);
+      ref.read(eventVmProvider.notifier).getUserEvents(page: 1);
     });
     super.initState();
   }
@@ -45,7 +45,6 @@ class _SharedEventState extends ConsumerState<SharedEvent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-   
         if (myEvents.isNotEmpty && widget.isChatAndSocial) ...[
           Text(
             "My Events",
@@ -91,7 +90,7 @@ class _SharedEventState extends ConsumerState<SharedEvent> {
                     event: state.events[index], userId: state.userId);
               })
         ],
-             if (state.topEvents.isNotEmpty) ...[
+        if (state.topEvents.isNotEmpty) ...[
           Text(
             "Recommended for you",
             style: wayaTheme.textTheme.bodyMedium,

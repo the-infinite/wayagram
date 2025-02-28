@@ -12,7 +12,6 @@ class MyContests extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
 
-    // TODO: implement build
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
         desc:

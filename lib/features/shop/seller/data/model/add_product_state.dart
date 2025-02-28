@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
@@ -25,12 +24,14 @@ class AddProductState {
   final bool applyDiscount;
   final String productCategory;
   final Select? selectedCategory;
+  final String productId;
 
   final String productType;
 
   final String productCondition;
 
-  final String productColor;
+  final List<Select>? productColor;
+  final String? selectedColor;
   final String pickUpOption;
   final String discountType;
   final List<Select> categories;
@@ -53,8 +54,10 @@ class AddProductState {
       TextEditingController? deliveryPrice,
       this.productCategory = '',
       this.selectedCategory,
-      this.productColor = '',
+      this.productColor = const [],
+      this.selectedColor = '',
       this.productCondition = '',
+      this.productId = '',
       this.productType = '',
       this.selectedDiscountType,
       TextEditingController? productDepth,
@@ -102,7 +105,7 @@ class AddProductState {
       String? productCategory,
       Select? selectedCategory,
       bool? isEditMode,
-      String? productColor,
+      List<Select>? productColor,
       String? productCondition,
       String? productType,
       String? pickUpOption,
@@ -114,6 +117,7 @@ class AddProductState {
       TextEditingController? discountPercentage,
       List<String>? images,
       File? productImage,
+      String? selectedColor,
       bool? isWayagramDeal,
       List<Select>? categories,
       List<Select>? allDiscountTypes,
@@ -121,6 +125,7 @@ class AddProductState {
       Select? selectedDiscountType,
       bool? isLoading,
       bool? isLoadingEditingMode,
+      String? productId,
       String? shopId}) {
     return AddProductState(
         productName: productName ?? this.productName,
@@ -144,6 +149,8 @@ class AddProductState {
         uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
         productImage: productImage ?? this.productImage,
         shopId: shopId ?? this.shopId,
+        selectedColor: selectedColor ?? this.selectedColor,
+        productId: productId ?? this.productId,
         isWayagramDeal: isWayagramDeal ?? this.isWayagramDeal,
         categories: categories ?? this.categories,
         discountPercentage: discountPercentage ?? this.discountPercentage,

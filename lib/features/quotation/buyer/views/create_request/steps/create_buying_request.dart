@@ -5,10 +5,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
-
-import '../../../model/create_request_state_model.dart';
 
 class CreateBuyingRequest extends ConsumerStatefulWidget {
   final Function gotoNextTab;
@@ -16,27 +13,24 @@ class CreateBuyingRequest extends ConsumerStatefulWidget {
   const CreateBuyingRequest({super.key, required this.gotoNextTab, required this.gotoPreviousTab});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CreateBuyingRequestState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _CreateBuyingRequestState();
 }
 
 class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
   final _formKey = GlobalKey<FormState>();
-  
-  RangeValues values = RangeValues(0.1, 0.5);
 
+  RangeValues values = RangeValues(0.1, 0.5);
 
   @override
   Widget build(BuildContext context) {
     RangeLabels labels = RangeLabels(values.start.toString(), values.end.toString());
     final viewModel = ref.watch(createRequestProvider);
     final wayaTheme = Theme.of(context);
-    return  Column(
+    return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Create Buying Request",
-            style: wayaTheme.textTheme.titleLarge),
+        Text("Create Buying Request", style: wayaTheme.textTheme.titleLarge),
         const Gap(5),
         Text("It's your first step towards receiving personalized offers\ntailored to your needs.",
             style: wayaTheme.textTheme.hintStyle),
@@ -61,21 +55,17 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                         keyboardType: TextInputType.text,
                         controller: viewModel.productName,
                         hintText: 'Enter Product Name',
-                        borderColor: formState.hasError &&
-                            viewModel.productName.text.isEmpty
+                        borderColor: formState.hasError && viewModel.productName.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         label: 'Product Name',
                       ),
-                      if (formState.hasError &&
-                          viewModel.productName.text.isEmpty)
+                      if (formState.hasError && viewModel.productName.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
@@ -96,28 +86,22 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                         keyboardType: TextInputType.text,
                         controller: viewModel.brandName,
                         hintText: 'Enter Brand Name',
-                        borderColor: formState.hasError &&
-                            viewModel.brandName.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
+                        borderColor:
+                            formState.hasError && viewModel.brandName.text.isEmpty ? wayaTheme.colorScheme.error : null,
                         label: 'Brand Name (Optional)',
                       ),
-                      if (formState.hasError &&
-                          viewModel.brandName.text.isEmpty)
+                      if (formState.hasError && viewModel.brandName.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
                   );
                 }),
                 const Gap(10),
-
                 FormField<String>(validator: (value) {
                   if (viewModel.productCategory.isEmpty) {
                     return 'Product Category is required';
@@ -127,33 +111,26 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           height: 0.3,
                           uniqueKey: 'buyer_product_category',
                           label: "Product Category",
                           hintText: 'Select Product Category',
-                          items: ref
-                              .read(createRequestProvider.notifier)
-                              .restructuredCategory(),
-                          onSelected: (value) => ref
-                              .read(createRequestProvider.notifier)
-                              .update(value, "productCategory")),
-                      if (formState.hasError &&
-                          viewModel.productCategory.isEmpty)
+                          items: ref.read(createRequestProvider.notifier).restructuredCategory(),
+                          onSelected: (value) =>
+                              ref.read(createRequestProvider.notifier).update(value.first, "productCategory")),
+                      if (formState.hasError && viewModel.productCategory.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
                   );
                 }),
                 const Gap(10),
-
                 FormField<String>(validator: (value) {
                   if (viewModel.productCondition.isEmpty) {
                     return 'Product Condition is required';
@@ -163,25 +140,19 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           height: 0.3,
                           label: "Product Condition",
                           hintText: 'Select Product Condition',
-                          items: ref
-                              .read(createRequestProvider.notifier)
-                              .restructuredCondition(),
-                          onSelected: (value) => ref
-                              .read(createRequestProvider.notifier)
-                              .update(value, "productCondition")),
-                      if (formState.hasError &&
-                          viewModel.productCondition.isEmpty)
+                          items: ref.read(createRequestProvider.notifier).restructuredCondition(),
+                          onSelected: (value) =>
+                              ref.read(createRequestProvider.notifier).update(value.first, "productCondition")),
+                      if (formState.hasError && viewModel.productCondition.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
@@ -202,22 +173,19 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                         line: 6,
                         keyboardType: TextInputType.text,
                         controller: viewModel.productDescription,
-                        hintText: 'Write a Brief Product Description Include size, type, color, and additional specifications',
-                        borderColor: formState.hasError &&
-                            viewModel.productDescription.text.isEmpty
+                        hintText:
+                            'Write a Brief Product Description Include size, type, color, and additional specifications',
+                        borderColor: formState.hasError && viewModel.productDescription.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         label: 'Product Description',
                       ),
-                      if (formState.hasError &&
-                          viewModel.productDescription.text.isEmpty)
+                      if (formState.hasError && viewModel.productDescription.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
@@ -237,191 +205,177 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                         keyboardType: TextInputType.number,
                         controller: viewModel.quantity,
                         hintText: 'Specify the number of items needed',
-                        borderColor: formState.hasError &&
-                            viewModel.quantity.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
+                        borderColor:
+                            formState.hasError && viewModel.quantity.text.isEmpty ? wayaTheme.colorScheme.error : null,
                         label: 'Quantity',
                       ),
-                      if (formState.hasError &&
-                          viewModel.quantity.text.isEmpty)
+                      if (formState.hasError && viewModel.quantity.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
                   );
                 }),
-
                 const Gap(10),
-               Row(children: [
-                 Expanded(
-                   child: FormField<String>(validator: (value) {
-                     if (viewModel.stateOfPurchase.isEmpty) {
-                       return 'State is required';
-                     }
-                     return null;
-                   }, builder: (formState) {
-                     return Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       children: [
-                         WayaSelectField(
-                             height: 0.3,
-                             uniqueKey: 'buyer_state',
-                             label: "State of Purchase",
-                             hintText: 'Select state',
-                             items: ref
-                                 .read(createRequestProvider.notifier)
-                                 .restructuredState(),
-                             onSelected: (value) => ref
-                                 .read(createRequestProvider.notifier)
-                                 .update(value, "stateOfPurchase")),
-                         if (formState.hasError &&
-                             viewModel.stateOfPurchase.isEmpty)
-                           Padding(
-                             padding: const EdgeInsets.only(top: 5),
-                             child: Text(
-                               formState.errorText!,
-                               style: TextStyle(
-                                   color: wayaTheme.colorScheme.error,
-                                   fontSize: 12),
-                             ),
-                           ),
-                       ],
-                     );
-                   }),
-                 ),
-                 const Gap(10),
-                 Expanded(
-                   child: FormField<String>(validator: (value) {
-                     if (viewModel.lga.isEmpty) {
-                       return 'LGA is required';
-                     }
-                     return null;
-                   }, builder: (formState) {
-                     return Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
-                       children: [
-                         WayaSelectField(
-                             height: 0.3,
-                             label: "LGA",
-                             uniqueKey: 'buyer_lga',
-                             hintText: 'Select LGA',
-                             items: ref
-                                 .read(createRequestProvider.notifier)
-                                 .restructuredLga(),
-                             onSelected: (value) => ref
-                                 .read(createRequestProvider.notifier)
-                                 .update(value, "lga")),
-                         if (formState.hasError &&
-                             viewModel.lga.isEmpty)
-                           Padding(
-                             padding: const EdgeInsets.only(top: 5),
-                             child: Text(
-                               formState.errorText!,
-                               style: TextStyle(
-                                   color: wayaTheme.colorScheme.error,
-                                   fontSize: 12),
-                             ),
-                           ),
-                       ],
-                     );
-                   }),
-                 ),
-               ],),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FormField<String>(validator: (value) {
+                        if (viewModel.stateOfPurchase.isEmpty) {
+                          return 'State is required';
+                        }
+                        return null;
+                      }, builder: (formState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            WayaSelectField<String>(
+                                height: 0.3,
+                                uniqueKey: 'buyer_state',
+                                label: "State of Purchase",
+                                hintText: 'Select state',
+                                items: ref.read(createRequestProvider.notifier).restructuredState(),
+                                onSelected: (value) =>
+                                    ref.read(createRequestProvider.notifier).update(value.first, "stateOfPurchase")),
+                            if (formState.hasError && viewModel.stateOfPurchase.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  formState.errorText!,
+                                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                                ),
+                              ),
+                          ],
+                        );
+                      }),
+                    ),
+                    const Gap(10),
+                    Expanded(
+                      child: FormField<String>(validator: (value) {
+                        if (viewModel.lga.isEmpty) {
+                          return 'LGA is required';
+                        }
+                        return null;
+                      }, builder: (formState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            WayaSelectField<String>(
+                                height: 0.3,
+                                label: "LGA",
+                                uniqueKey: 'buyer_lga',
+                                hintText: 'Select LGA',
+                                items: ref.read(createRequestProvider.notifier).restructuredLga(),
+                                onSelected: (value) =>
+                                    ref.read(createRequestProvider.notifier).update(value.first, "lga")),
+                            if (formState.hasError && viewModel.lga.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  formState.errorText!,
+                                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                                ),
+                              ),
+                          ],
+                        );
+                      }),
+                    ),
+                  ],
+                ),
                 const Gap(10),
                 Text(
                   "Distance Range",
-                  style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.black, fontWeight: FontWeight.w500, fontSize: 14),
+                  style: TextStyle()
+                      .wayaCopyWith(color: wayaTheme.colorScheme.black, fontWeight: FontWeight.w500, fontSize: 14),
                 ),
                 const Gap(10),
-                RangeSlider(values: values, divisions: 10, labels: labels,
-                onChanged: (newValues){
-                  setState(() {
-                    values = newValues;
-                  });
-                },),
-                Row(children: [
-                  Expanded(
-                    child: FormField<String>(validator: (value) {
-                      if (viewModel.minDistance.text.isEmpty) {
-                        return 'Min Distance is required';
-                      }
-                      return null;
-                    }, builder: (formState)  {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          WayaTextFormField(
-                            keyboardType: TextInputType.number,
-                            controller: viewModel.minDistance,
-                            hintText: 'Min Distance',
-                            borderColor: formState.hasError &&
-                                viewModel.minDistance.text.isEmpty
-                                ? wayaTheme.colorScheme.error
-                                : null,
-                            label: '',
-                              suffixIcon:Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Text("Km", style: wayaTheme.textTheme.hintStyle),)
-                          ),
-                          if (formState.hasError &&
-                              viewModel.minDistance.text.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Text(
-                                formState.errorText!,
-                                style: TextStyle(
-                                    color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                RangeSlider(
+                  values: values,
+                  divisions: 10,
+                  labels: labels,
+                  onChanged: (newValues) {
+                    setState(() {
+                      values = newValues;
+                    });
+                  },
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: FormField<String>(validator: (value) {
+                        if (viewModel.minDistance.text.isEmpty) {
+                          return 'Min Distance is required';
+                        }
+                        return null;
+                      }, builder: (formState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            WayaTextFormField(
+                                keyboardType: TextInputType.number,
+                                controller: viewModel.minDistance,
+                                hintText: 'Min Distance',
+                                borderColor: formState.hasError && viewModel.minDistance.text.isEmpty
+                                    ? wayaTheme.colorScheme.error
+                                    : null,
+                                label: '',
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 15),
+                                  child: Text("Km", style: wayaTheme.textTheme.hintStyle),
+                                )),
+                            if (formState.hasError && viewModel.minDistance.text.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  formState.errorText!,
+                                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                                ),
                               ),
-                            ),
-                        ],
-                      );
-                    }),
-                  ),
-                  const Gap(10),
-                  Expanded(
-                    child: FormField<String>(validator: (value) {
-                      if (viewModel.minDistance.text.isEmpty) {
-                        return 'Max Distance is required';
-                      }
-                      return null;
-                    }, builder: (formState)  {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          WayaTextFormField(
-                            keyboardType: TextInputType.number,
-                            controller: viewModel.maxDistance,
-                            hintText: 'Max Distance',
-                            borderColor: formState.hasError &&
-                                viewModel.maxDistance.text.isEmpty
-                                ? wayaTheme.colorScheme.error
-                                : null,
-                            label: '',
-                              suffixIcon:Padding(padding: EdgeInsets.symmetric(vertical: 15), child: Text("Km", style: wayaTheme.textTheme.hintStyle),)
-                          ),
-                          if (formState.hasError &&
-                              viewModel.maxDistance.text.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Text(
-                                formState.errorText!,
-                                style: TextStyle(
-                                    color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                          ],
+                        );
+                      }),
+                    ),
+                    const Gap(10),
+                    Expanded(
+                      child: FormField<String>(validator: (value) {
+                        if (viewModel.minDistance.text.isEmpty) {
+                          return 'Max Distance is required';
+                        }
+                        return null;
+                      }, builder: (formState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            WayaTextFormField(
+                                keyboardType: TextInputType.number,
+                                controller: viewModel.maxDistance,
+                                hintText: 'Max Distance',
+                                borderColor: formState.hasError && viewModel.maxDistance.text.isEmpty
+                                    ? wayaTheme.colorScheme.error
+                                    : null,
+                                label: '',
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 15),
+                                  child: Text("Km", style: wayaTheme.textTheme.hintStyle),
+                                )),
+                            if (formState.hasError && viewModel.maxDistance.text.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  formState.errorText!,
+                                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                                ),
                               ),
-                            ),
-                        ],
-                      );
-                    }),
-                  ),
-                ],),
+                          ],
+                        );
+                      }),
+                    ),
+                  ],
+                ),
                 const Gap(10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -429,15 +383,14 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                   children: [
                     Switch(
                         value: viewModel.vendorSeeBuyRequest,
-                        onChanged: (value) => ref.read(createRequestProvider.notifier).updateVendorSeeBuyRequest(value)
-                    ),
+                        onChanged: (value) =>
+                            ref.read(createRequestProvider.notifier).updateVendorSeeBuyRequest(value)),
                     const Gap(10),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("All",
-                            style: wayaTheme.textTheme.titleMedium),
+                        Text("All", style: wayaTheme.textTheme.titleMedium),
                         const Gap(6),
                         Text(
                           "Vendors can see this Buy request from any\ndistance.",
@@ -449,29 +402,14 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                 ),
                 const Gap(20),
                 WayaButton(
-                  callback:  () async {
-                    if (_formKey.currentState!.validate()) {
-                      print(viewModel.minDistance.text);
-                      widget.gotoNextTab();
-                      print('=>>>>> ${viewModel?.productCategory}');
-                    }
-                  },
-                    text: 'Setup Pricing & Delivery'
-                ),
-                /*WayaButton(
-                  callback: !viewModel.isLoading
-                      ? () async {
-                    if (_formKey.currentState!.validate()) {
-                      print(viewModel.minDistance.text);
-                      widget.gotoNextTab();
-                      print('=>>>>> ${viewModel?.productCategory}');
-                    }
-                  }
-                      : null,
-                  centerWidget: LoadingState(
-                      loading: viewModel.isLoading, text: 'Setup Pricing & Delivery'),
-                ),*/
-
+                    callback: () async {
+                      if (_formKey.currentState!.validate()) {
+                        print(viewModel.minDistance.text);
+                        widget.gotoNextTab();
+                        print('=>>>>> ${viewModel.productCategory}');
+                      }
+                    },
+                    text: 'Setup Pricing & Delivery'),
                 const Gap(8),
                 WayaButton(
                     text: 'Go Back',
@@ -485,7 +423,6 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
               ],
             ))
       ],
-
     );
   }
 }

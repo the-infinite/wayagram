@@ -259,7 +259,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              WayaSelectField(
+                              WayaSelectField<String>(
                                   height: 0.2,
                                   uniqueKey: 'business-type',
                                   value: viewModel.businessTypeId,
@@ -268,7 +268,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                   items: viewModel.businessTypes,
                                   onSelected: (value) => ref
                                       .read(personalFirstStepProvider.notifier)
-                                      .selectBizType(value)),
+                                      .selectBizType(value.first)),
                               if (formState.hasError &&
                                   viewModel.businessTypeId.isEmpty)
                                 Padding(
@@ -428,7 +428,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           uniqueKey: 'country',
                           label: "Country",
                           value: viewModel.country,
@@ -436,7 +436,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                           items: viewModel.countries,
                           onSelected: (value) => ref
                               .read(personalFirstStepProvider.notifier)
-                              .selectCountry(value)),
+                              .selectCountry(value.first)),
                       if (formState.hasError && viewModel.country.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
@@ -464,7 +464,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          WayaSelectField(
+                          WayaSelectField<String>(
                               height: 0.2,
                               uniqueKey: 'state',
                               label: "State",
@@ -474,7 +474,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               items: viewModel.states,
                               onSelected: (value) => ref
                                   .read(personalFirstStepProvider.notifier)
-                                  .selectState(value)),
+                                  .selectState(value.first)),
                           if (formState.hasError && viewModel.state.isEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
@@ -500,7 +500,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            WayaSelectField(
+                            WayaSelectField<String>(
                                 uniqueKey: 'city',
                                 label: "City",
                                 value: viewModel.city,
@@ -508,7 +508,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                 items: viewModel.cities,
                                 onSelected: (value) => ref
                                     .read(personalFirstStepProvider.notifier)
-                                    .selectCity(value)),
+                                    .selectCity(value.first)),
                             if (formState.hasError && viewModel.city.isEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
@@ -536,7 +536,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           height: 0.2,
                           uniqueKey: 'lga',
                           label: "LGA",
@@ -545,7 +545,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                           items: viewModel.lgas,
                           onSelected: (value) => ref
                               .read(personalFirstStepProvider.notifier)
-                              .selectLGA(value)),
+                              .selectLGA(value.first)),
                       if (formState.hasError && viewModel.lga.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
@@ -655,7 +655,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           height: 0.2,
                           label: "Gender",
                           value: viewModel.gender,
@@ -664,7 +664,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                           items: genders,
                           onSelected: (value) => ref
                               .read(personalFirstStepProvider.notifier)
-                              .selectGender(value.value)),
+                              .selectGender(value.first.value)),
                       if (formState.hasError && viewModel.gender.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
