@@ -25,7 +25,8 @@ class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerPr
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
-      ref.read(createGroupProvider.notifier).getAllGroups();
+      //ref.read(createGroupProvider.notifier).getAllGroups();
+      ref.read(createGroupProvider.notifier).getMyGroups();
       // ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
       // print('THE PUBLIC GROUP ID is $id');
     });
@@ -42,14 +43,14 @@ class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerPr
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        viewModel.getAllGroups!.isEmpty ? GroupEmptyState():
+        viewModel.myGroups!.isEmpty ? GroupEmptyState():
         ListView.builder(
             padding: EdgeInsets.only(bottom: 40),
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: viewModel.getAllGroups?.length,
+            itemCount: viewModel.myGroups?.length,
             itemBuilder: (_, index){
-             final group = viewModel.getAllGroups?[index];
+             final group = viewModel.myGroups?[index];
               return GroupWidget(
                   name: '${group?.name?.capitalizeFirst}',
                   desc: '${group?.description?.capitalizeFirst}',
@@ -57,7 +58,6 @@ class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerPr
                   buttonText: '',
                   chk: false,
                   onTap: (){
-
                     print('DARLINGTON===>> ${group?.isPrivate}');
                     group?.isPrivate == true?
                     WayaNav.toNamed('/privateGroup',

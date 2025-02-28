@@ -27,6 +27,7 @@ import 'package:wayagram/features/post/model/saved_posts.dart';
 import 'package:http/http.dart' as http;
 
 import '../../../shared/features/file/repo/default.dart';
+import '../../group/data/model/group_post_model.dart';
 import '../../post/model/fetch_comment.dart';
 
 class UploadedImage {
@@ -259,7 +260,9 @@ class PageVm extends StateNotifier<PageState> {
 
       if (response.success) {
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
-        state = state.copyWith(getAllPost: responseModel.data?.docs);
+        GroupPostModel postModel =GroupPostModel.fromJson(response.data);
+        state = state.copyWith(getAllPost: responseModel.data?.docs,
+        postCount: postModel.data?.totalPages);
       } else {
         print('Error: Status code ${response.statusCode}');
         _errorMessage2 =
@@ -905,12 +908,12 @@ class PageVm extends StateNotifier<PageState> {
       pageDesc,
       pageType,
       String coverImage,
-      //String profileImage,
+      String profileImage,
       String pageId) async {
     final coverImageUrl = await WayaFileRepository.instance.uploadFile(
       File(coverImage),
     );
-    //final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage),);
+    final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage),);
 
     try {
       state = state.copyWith(isLoading: true);
@@ -919,7 +922,7 @@ class PageVm extends StateNotifier<PageState> {
           pageDesc,
           pageType,
           coverImageUrl ?? '',
-          //profileImageUrl ??'',
+          profileImageUrl ??'',
           pageId);
       state = state.copyWith(isLoading: false);
       //? If this is fine...

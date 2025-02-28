@@ -81,7 +81,7 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
     final editPage = ref.watch(createPageProvider.notifier);
 
     //final  id  = ModalRoute.of(context)?.settings.arguments as String;
-    final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
 
 print('MY ARGS $args');
     final wayaTheme = Theme.of(context);
@@ -98,8 +98,10 @@ print('MY ARGS $args');
             if (_formKey.currentState!.validate()) {
               await  editPage.editPage(context, viewModel.pageName.text,
              viewModel.pageDescription.text, sel? true: false,
-                  ( _coverImage as File).path,
-                  args.id!
+                  _coverImage == null ? editCoverImage!:( _coverImage as File).path,
+                  _selectedImage == null? image!: ( _selectedImage as File).path,
+                  args['pageId']
+                  //args.id!
                   //id
               );
               WayaNav.toNamed("/pages");

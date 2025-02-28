@@ -160,7 +160,8 @@ class _PublicPageState extends ConsumerState<PublicPage>
                     Gap(15),
                     GestureDetector(
                       onTap: () {
-                        WayaNav.toNamed('/editPageInfo', arguments: '${args['pageId']}');
+                        // WayaNav.toNamed('/editPageInfo',
+                        //     arguments: '${args['pageId']}');
                       },
                       child: Container(
                         margin: EdgeInsets.only(right: 20.w),

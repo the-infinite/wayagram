@@ -206,12 +206,14 @@ class PageRepository extends BaseRepository {
     return put("$serviceUrl/pages/$pageId/team-members/$memberId", payload);
   }
 
-  Future<WayaRequestResponse> editPage(String name, String desc, bool pageType, String coverImage, String pageId) {
+  Future<WayaRequestResponse> editPage(String name, String desc, bool pageType,
+      String coverImage, String profileImage, String pageId) {
     final payload = {
       "name": name,
       "description": desc,
       "isPublic": pageType,
-      "coverImage": coverImage
+      "coverImage": coverImage,
+      "profileImage": profileImage
     };
 
     return put("$serviceUrl/pages/$pageId", payload);

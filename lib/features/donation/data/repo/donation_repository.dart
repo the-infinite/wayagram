@@ -5,7 +5,7 @@ import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.d
 class DonationRepository extends BaseRepository {
   static const serviceUrl = "wayagram-products/api/v1";
 
-  Future<WayaRequestResponse> donate(String campaignId, int amount, String message) {
+  Future<WayaRequestResponse> donate(String campaignId, dynamic amount, String message) {
     final payload = {
       "amount": amount,
       "isAnonymous": false,
@@ -62,6 +62,11 @@ class DonationRepository extends BaseRepository {
   Future<WayaRequestResponse> confirmWalletPin(ConfirmWalletPin payload) {
     return post('wayagram-wallet/api/v2/client/wallet-pin/confirm-pin',
         payload.toJson());
+  }
+
+  Future<WayaRequestResponse> createPin(CreateWalletPin payload) {
+    return post(
+        'wayagram-wallet/api/v2/client/wallet-pin/create', payload.toJson());
   }
 
 

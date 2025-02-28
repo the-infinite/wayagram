@@ -32,6 +32,7 @@ class GroupState {
   List<GetAllPostDocs>? getAllPost;
   List<GroupPostDocs>? groupPostdocs;
   List<GroupPopularPostDocs>? groupPopularPostdocs;
+  num? postCount;
 
   final bool isReportingGroup;
   final bool isFocused;
@@ -50,6 +51,7 @@ class GroupState {
     this.openToEveryone = false,
     this.requireApproval = false,
     this.isReportingGroup = false,
+    this.postCount,
     this.roleType = '',
     this.profileImage = '',
     this.coverImage = '',
@@ -85,6 +87,7 @@ class GroupState {
     List<JoinedGroupDocs>? joinedGroup,
     List<RecommendedGroupDocs>? recommendedGroupDocs,
     List<GroupPostDocs>? groupPostdocs,
+    num? postCount,
     List<GetAllPostDocs>? getAllPost,
     bool? isReportingGroup,
     bool? isFocused,
@@ -103,6 +106,7 @@ class GroupState {
       groupDescription: groupDescription ?? this.groupDescription,
       username: username ?? this.username,
       content: content ?? this.content,
+      postCount: postCount ?? this.postCount,
       docs: docs ?? this.docs,
       groupPopularPostdocs: groupPopularPostdocs ?? this.groupPopularPostdocs,
       getAllPost: getAllPost ?? this.getAllPost,

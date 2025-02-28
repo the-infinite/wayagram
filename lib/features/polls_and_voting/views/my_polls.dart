@@ -52,7 +52,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                 itemBuilder: (context, index) {
                   final poll = viewModel.fetchAllPols[index];
                   int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
-                  int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
+                  //int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
                   print('URL ===> ${poll.url}');
 
                   String formatTimeAgo(String dateString) {
@@ -75,8 +75,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                           const Gap(3),
                           Text('${poll.userData?.firstName} ${poll.userData?.lastName}', style: wayaTheme.textTheme.titleLarge),
                           const Gap(3),
-                          Text(
-                            ' • ${formatTimeAgo('${poll.createdAt}')}',
+                          Text(' • ${ WayaHelpers.formatTimeAgo('${poll.startDate}')}',
                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
@@ -100,8 +99,6 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                                     fontWeight: FontWeight.w400,
                                     color: Theme.of(context).colorScheme.greyColor500 ),
                               ),),
-
-
 
                         const Gap(10),
                         Text(

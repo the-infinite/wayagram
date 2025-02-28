@@ -54,7 +54,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                 itemBuilder: (context, index) {
                   final poll = viewModel.fetchAllPols[index];
                   int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
-                  int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
+                  //int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
                   print('URL ===> ${poll.url}');
 
                   String formatTimeAgo(String dateString) {
@@ -78,7 +78,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           Text('${poll.userData?.firstName?.capitalizeFirst}', style: wayaTheme.textTheme.titleLarge),
                           const Gap(3),
                           Text(
-                            ' • ${formatTimeAgo('${poll.createdAt}')}',
+                            ' • ${ WayaHelpers.formatTimeAgo('${poll.startDate}')}',
                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
@@ -119,8 +119,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                   choiceStatistics('${e.imageUrl}',
                                       '${e.text}', context, true, poll.feePerVote,
                                       e.id, e.pollId,e.text, poll.url,
-                                      //'${(viewModel.fetchAllPols[index].voteCount!/(e.voteCount!))*100}',
-                                      '${(e.voteCount)!*100}',
+                                      '${(viewModel.fetchAllPols[index].voteCount!/(e.voteCount!))*100}',
+                                      //'${(e.voteCount)!*100}',
                                       '${e.voteCount}'))
                           ],
                         )

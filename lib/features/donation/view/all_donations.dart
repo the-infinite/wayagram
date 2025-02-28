@@ -65,7 +65,9 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
      searchController.text,
    );
 
-    return Column(
+
+
+    return filteredAllDonations.isEmpty ?DonationEmptyState() :Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         WayaButton(
@@ -116,7 +118,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             child: Center(
               child: CircularProgressIndicator(),
             )),
-        emptyState:PollEmptyState(),
+        emptyState:DonationEmptyState(),
         fetchData: ref.read(donationVmProvider.notifier).getAllDonation,
         result: (data, s ) {
           return ListView.builder(
@@ -125,8 +127,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
               itemCount: filteredAllDonations.length,
               itemBuilder: (context, index){
                final donation = filteredAllDonations[index];
-               int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.createdAt}')).inDays;
-               //int daysLeft = DateTime.parse('${donation.expirationDate}').day;
+               int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
                 return ManageDonationWidget(
                   text:  "Donate",
                   amountRaised:  WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
@@ -134,6 +135,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   title: donation.title?.capitalizeFirst,
                   image: donation.imageURL,
                   dayLeft: '$daysLeft',
+                  donationCount: donation.donationCount,
                   onTap: (){
                     WayaNav.toNamed('/donationDetails',
                         arguments: {
@@ -146,7 +148,9 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                           'impact': '${donation.impact}',
                           'url': '${donation.url}',
                           'minimumDonationAmount':'${donation.minimumDonationAmount}',
-                          'daysLeft':'$daysLeft'
+                          'daysLeft':'$daysLeft',
+                          'privacy':'${donation.privacy}',
+                          'id': '${donation.id}'
 
                         });
                   },
@@ -185,7 +189,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   itemCount: viewModel.allDonationDocs?.length,
                   itemBuilder: (context, index){
                     final donation = viewModel.allDonationDocs?[index];
-                    int daysLeft = DateTime.parse('${donation?.expirationDate}').day;
+                    int daysLeft = DateTime.parse('${donation?.expirationDate}').difference(DateTime.parse('${donation?.startDate}')).inDays;
+                    //int daysLeft = DateTime.parse('${donation?.expirationDate}').day;
                     return ManageDonationWidget(
                       text: "Donate",
                       amountRaised: donation?.amountRaised,
@@ -193,8 +198,24 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                       title: donation?.title?.capitalizeFirst,
                       image: donation?.imageURL,
                       dayLeft: '$daysLeft',
+                      donationCount: donation?.donationCount!,
                       onTap: (){
-                        WayaNav.toNamed('/donationDetails');
+                        WayaNav.toNamed('/donationDetails',
+                            arguments: {
+                              'title':'${donation?.title?.capitalizeFirst}',
+                              'image':'${donation?.imageURL}',
+                              'amountRaised': '${donation?.amountRaised?.replaceAll('.00', '')}',
+                              'targetAmount': '${donation?.targetAmount?.replaceAll('.00', '')}',
+                              'desc': '${donation?.description}',
+                              'solution': '${donation?.solution}',
+                              'impact': '${donation?.impact}',
+                              'url': '${donation?.url}',
+                              'minimumDonationAmount':'${donation?.minimumDonationAmount}',
+                              'daysLeft':'$daysLeft',
+                              'privacy':'${donation?.privacy}',
+                              'id': '${donation?.id}'
+
+                            });
                       },
                       buttonWidth: 60.0,
                     );

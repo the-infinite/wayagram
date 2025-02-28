@@ -187,7 +187,8 @@ class AllDonationDocs extends BaseModel<AllDonationDocs> {
       this.solution, 
       this.impact, 
       this.organizerId, 
-      this.categories, 
+      this.categories,
+      this.donationCount,
       this.targetAmount, 
       this.showRaised, 
       this.minimumDonationAmount, 
@@ -211,6 +212,7 @@ class AllDonationDocs extends BaseModel<AllDonationDocs> {
     impact = json['impact'];
     organizerId = json['organizerId'];
     categories = json['categories'] != null ? json['categories'].cast<String>() : [];
+    donationCount = json['donationCount'];
     targetAmount = json['targetAmount'];
     showRaised = json['showRaised'];
     minimumDonationAmount = json['minimumDonationAmount'];
@@ -233,6 +235,7 @@ class AllDonationDocs extends BaseModel<AllDonationDocs> {
   String? impact;
   String? organizerId;
   List<String>? categories;
+  int? donationCount;
   String? targetAmount;
   bool? showRaised;
   String? minimumDonationAmount;
@@ -254,6 +257,7 @@ class AllDonationDocs extends BaseModel<AllDonationDocs> {
   String? impact,
   String? organizerId,
   List<String>? categories,
+  int? donationCount,
   String? targetAmount,
   bool? showRaised,
   String? minimumDonationAmount,
@@ -275,6 +279,7 @@ class AllDonationDocs extends BaseModel<AllDonationDocs> {
   impact: impact ?? this.impact,
   organizerId: organizerId ?? this.organizerId,
   categories: categories ?? this.categories,
+    donationCount: donationCount ?? this.donationCount,
   targetAmount: targetAmount ?? this.targetAmount,
   showRaised: showRaised ?? this.showRaised,
   minimumDonationAmount: minimumDonationAmount ?? this.minimumDonationAmount,
@@ -299,6 +304,7 @@ class AllDonationDocs extends BaseModel<AllDonationDocs> {
     map['impact'] = impact;
     map['organizerId'] = organizerId;
     map['categories'] = categories;
+    map['donationCount'] = donationCount;
     map['targetAmount'] = targetAmount;
     map['showRaised'] = showRaised;
     map['minimumDonationAmount'] = minimumDonationAmount;

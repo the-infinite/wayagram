@@ -13,6 +13,7 @@ import 'package:wayagram/shared/components/engagement_range.dart';
 class ManageDonationWidget extends ConsumerWidget {
   final VoidCallback? onTap;
   final String text;
+  final int? donationCount;
   final String? title;
   final String? image;
   final String? targetAmount;
@@ -20,7 +21,7 @@ class ManageDonationWidget extends ConsumerWidget {
   final String? dayLeft;
   final double buttonWidth;
   const ManageDonationWidget({super.key, required this.onTap,
-    required this.text, required this.title,
+    required this.text, required this.donationCount, required this.title,
     required this.image, required this.targetAmount,
     required this.amountRaised, required this.dayLeft,
     required this.buttonWidth });
@@ -70,7 +71,6 @@ class ManageDonationWidget extends ConsumerWidget {
                                   height: 3.h,
                                 ),
                                 Text('$amountRaised raised from $targetAmount',
-                                  //"${WayaHelpers.formatPrice(20000)} raised from ${WayaHelpers.formatPrice(100000)}",
                                   style: wayaTheme.textTheme.hintStyle,
                                   overflow: TextOverflow.ellipsis,
                                 )
@@ -104,9 +104,10 @@ class ManageDonationWidget extends ConsumerWidget {
                         height: 6.h,
                       ),
                       EngagementRange(
-                          bottomLeft: "0 Donations",
+                         // bottomLeft: "$donationCount  Donations",
+                          bottomLeft: '$donationCount ${donationCount == 0 || donationCount == 1 ? 'Donation' : 'Donations'}',
                           bottomRight: "$dayLeft days left",
-                          range: 0.4)
+                          range: donationCount == 0 ? 0.0 : 0.4)
                     ],
                   ),
                 )

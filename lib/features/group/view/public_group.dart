@@ -255,7 +255,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                       onPressed: ()=> WayaNav.toNamed('/membersScreen',
                       arguments: '${args['groupId']}')),
                   const Gap(10),
-                  actionType('0', 'Posts'),
+                  actionType('${ ref.read(createPageProvider).postCount}', 'Posts'),
                 ],
               ),
               const Gap(10),

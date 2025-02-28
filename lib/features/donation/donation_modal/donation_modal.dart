@@ -23,9 +23,13 @@ class DonationModal extends ConsumerStatefulWidget {
 final String amountRaised;
 final String targetAmount;
 final String title;
+final String campaignId;
+final String privacy;
 final String minimumDonationAmount;
   const DonationModal({super.key, required this.amountRaised,
-    required this.targetAmount, required this.title, required this.minimumDonationAmount});
+    required this.targetAmount, required this.title,
+    required this.campaignId, required this.privacy,
+    required this.minimumDonationAmount});
 
   @override
   ConsumerState<DonationModal> createState() => _DonationModalState();
@@ -93,7 +97,7 @@ class _DonationModalState extends ConsumerState<DonationModal> {
       Navigator.of(context).pop();
       WayaUtils.showModalSheet(
         context,
-        child: DonationPinEntryBottomSheet()
+        child: DonationPinEntryBottomSheet(amount: amount, campaignId: widget.campaignId, campaignTitle: widget.title,)
       );
     }
 
@@ -265,7 +269,11 @@ class _DonationModalState extends ConsumerState<DonationModal> {
 }
 
 class DonationPinEntryBottomSheet extends ConsumerStatefulWidget {
-  const DonationPinEntryBottomSheet({super.key,});
+  final String amount;
+  final String campaignId;
+  final String campaignTitle;
+  const DonationPinEntryBottomSheet({super.key, required this.amount,
+    required this.campaignId, required this.campaignTitle});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _DonationPinEntryBottomSheetState();
@@ -292,18 +300,50 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
     }
   }
 
-  void _submitPin() {
+  // void _submitPin() {
+  //   if (_pin.length == _pinLength) {
+  //
+  //     Navigator.of(context).pop();
+  //
+  //      WayaUtils.showModalSheet(
+  //       context,
+  //       child: DonationGenerosityModal(),
+  //     );
+  //
+  //
+  //
+  //   }
+  // }
+
+  void _submitPin() async {
     if (_pin.length == _pinLength) {
+      // TODO: Submit PIN
+      // log('PIN submitted: $_pin');
+      var isPass =
+      await ref.read(donationVmProvider.notifier).verifyWalletPin(_pin, context);
 
-      Navigator.of(context).pop();
-
-       WayaUtils.showModalSheet(
-        context,
-        child: DonationGenerosityModal(),
-      );
-
-
-
+      if (isPass) {
+        Navigator.of(context).pop();
+       await ref.watch(donationVmProvider.notifier)
+            .makeDonation(widget.campaignId, widget.amount, widget.campaignTitle, context);
+        WayaUtils.showModalSheet(
+          context,
+          child: DonationGenerosityModal(),
+        );
+      } else {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Invalid pin',
+              style:
+              TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
     }
   }
 
@@ -387,9 +427,10 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
                     onPressed: (){
                       final userId = _wayaLocalDataSource.getUserId();
                       if (_pin.length == _pinLength) {
-                    viewModel.verifyWalletPin(_pin);
+                       // viewModel.submitPins(context);
+                   // viewModel.verifyWalletPin(_pin);
                         //Navigator.of(context).pop();
-                    // _submitPin();
+                     _submitPin();
 
 
                       }
@@ -714,7 +755,9 @@ class _DonationAmountSetupModalState extends ConsumerState<DonationAmountSetupMo
             SizedBox(height: 40.h),
             WayaButton(
               callback: () async {
-                await ref.read(donationVmProvider.notifier).editCampaign(context, viewModel.minimumDonationAmount.text, widget.id);
+
+                await ref.read(donationVmProvider.notifier).editCampaign(context,
+                    viewModel.amount.text, widget.id);
                 Navigator.of(context).pop();
                 WayaNav.toNamed("/donations");
                 ref.read(donationVmProvider.notifier).reset();

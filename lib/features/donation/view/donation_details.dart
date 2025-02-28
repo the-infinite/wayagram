@@ -139,6 +139,8 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                   targetAmount: '${args['targetAmount']}',
                   title: '${args['title']}',
                   minimumDonationAmount: '${args['minimumDonationAmount']}',
+                  campaignId: '${args['id']}',
+                  privacy: '${args['privacy']}',
                 ),
               );
             }),
@@ -166,12 +168,15 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
             ),
           ),
           const Gap(10),
-          Text(
-            number,
-            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.black ),
+          FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(
+              number,
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.black ),
+            ),
           ),
 
 

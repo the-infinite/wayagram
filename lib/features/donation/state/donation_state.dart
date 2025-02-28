@@ -78,6 +78,8 @@ class DonationState{
       String? startDateString,
       String? endDateString,
       bool? isLoading,
+      bool? isPublic,
+      bool? isPrivate,
       bool? showAmountRaised,
       bool? showNumberOfDonors,
       CreateDonationResponse? createDonationResponse,

@@ -252,6 +252,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
+        WayaNav.toNamed('/groups');
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text(
@@ -278,6 +279,13 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
+  void prefillFunc(args){
+    state = state.copyWith(
+      groupName: TextEditingController(text: '${args['name']}'),
+      groupDescription: TextEditingController(text: '${args['desc']}'),
+    );
+  }
+
   Future<void> leaveGroup(ctx, {required String groupId}) async {
     try {
       state = state.copyWith(isLoading: true);
@@ -301,9 +309,9 @@ class GroupVm extends StateNotifier<GroupState> {
 
   Future<void> joinGroup(ctx, String groupId) async {
     try {
-      state = state.copyWith(isLoading: true);
+      //state = state.copyWith(isLoading: true);
       final response = await _groupRepository.joinGroup(groupId);
-      state = state.copyWith(isLoading: false);
+      //state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
@@ -316,7 +324,7 @@ class GroupVm extends StateNotifier<GroupState> {
     } catch (e) {
       print(e);
     } finally {
-      state = state.copyWith(isLoading: false);
+     // state = state.copyWith(isLoading: false);
     }
   }
 
@@ -415,7 +423,9 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       if (response.success) {
         GroupPostModel responseModel =GroupPostModel.fromJson(response.data);
-        state = state.copyWith(groupPostdocs: responseModel.data?.docs);
+        GroupPostModel postModel =GroupPostModel.fromJson(response.data);
+        state = state.copyWith(groupPostdocs: responseModel.data?.docs,
+        postCount: postModel.data?.totalDocs);
 
       }
     } catch (e) {
@@ -463,12 +473,11 @@ class GroupVm extends StateNotifier<GroupState> {
 
   Future<void> getMyGroups() async {
     try {
-      
+      state = state.copyWith(isLoading: true);
       final response = await _groupRepository.getMyGroups();
-
+      state = state.copyWith(isLoading: false);
       if (response.success) {
-        GetAllGroups responseModel =
-            GetAllGroups.fromJson(response.data);
+        GetAllGroups responseModel = GetAllGroups.fromJson(response.data);
         state = state.copyWith(myGroups: responseModel.data?.docs);
       } else {
         print('Error: Status code ${response.statusCode}');

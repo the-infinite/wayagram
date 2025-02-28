@@ -106,11 +106,10 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: filteredMyDonations.length,
-            //viewModel.myDonationDocs?.length,
             itemBuilder: (context, index){
-              //final donation = viewModel.myDonationDocs?[index];
               final donation = filteredMyDonations[index];
-              int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.createdAt}')).inDays;
+              int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
+              //int daysLeft = DateTime.parse('${donation?.expirationDate}').day;
               return ManageDonationWidget(
                 text:  "Manage Donation",
                 amountRaised:  WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
@@ -118,6 +117,7 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
                 title: donation.title?.capitalizeFirst,
                 image: donation.imageURL,
                 dayLeft: '$daysLeft',
+                donationCount: donation.donationCount!,
                 onTap: (){
                   WayaNav.toNamed('/donationManagement',
                   arguments: {
@@ -131,7 +131,7 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
                     'url': '${donation.url}',
                     'minimumDonationAmount':'${donation.minimumDonationAmount}',
                     'daysLeft':'$daysLeft',
-                    'id':'${donation.id}'
+                    'id':'${donation.id}',
                   });
                 },
                 buttonWidth: 120.0,

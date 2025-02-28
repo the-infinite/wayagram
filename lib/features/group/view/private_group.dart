@@ -155,7 +155,9 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                   GestureDetector(
                     onTap: () {
                       WayaNav.toNamed('/editGroupInfo',
-                          arguments: '${args['groupId']}');
+                          arguments: args
+                         // '${args['groupId']}'
+                      );
                     },
                     child: Container(
                       margin: EdgeInsets.only(right: 20.w),
@@ -216,7 +218,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                         onPressed: ()=> WayaNav.toNamed('/membersScreen',
                             arguments: '${args['groupId']}')),
                     const Gap(10),
-                    actionType('0', 'Posts'),
+                    actionType('${ref.read(createGroupProvider).postCount}', 'Posts'),
                   ],
                 ),
                 const Gap(10),

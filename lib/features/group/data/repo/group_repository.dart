@@ -54,7 +54,7 @@ class GroupRepository extends BaseRepository {
       String coverImage, String profileImage, groupId) {
     final payload = {
       "name": groupName,
-      "description": groupName,
+      "description": groupDesc,
       "isPrivate": groupType, //Optional field, if you leave it blank it defaults to false
       //"isOpen": false, // this defaults to true if it is not inserted
       "coverImage":  coverImage,
@@ -92,7 +92,7 @@ class GroupRepository extends BaseRepository {
 
   // all the group filter by id
   Future<WayaRequestResponse> getMyGroups() {
-    return get("$serviceUrl/groups/user-groups");
+    return get("$serviceUrl/groups/user-groups?limit=100");
   }
 
 

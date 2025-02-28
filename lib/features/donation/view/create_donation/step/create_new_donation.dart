@@ -424,7 +424,6 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                       setState(() {
                         public = true;
                         private = false;
-                        //
                       });
                     },
                     child: public ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
@@ -441,6 +440,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                     splashFactory: NoSplash.splashFactory,
                     splashColor: Colors.transparent,
                     onTap: (){
+
                       setState(() {
                         public = false;
                         private = true;

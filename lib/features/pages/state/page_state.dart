@@ -20,6 +20,7 @@ class PageState {
   final List<Docs>? fetchAllPostData;
   final List<GetAllPostDocs>? getAllPost;
   final List<Comments>? comments;
+  final num? postCount;
   List<PagesUsersFollowDocs>? pagesUsersFollow;
   List<PagesUsersFollowDocs>? myPages;
   List<PagesUsersFollowDocs>? recommendedPages;
@@ -41,6 +42,7 @@ class PageState {
     this.isFocused = false,
     this.isLoading = false,
     this.isReportingPage = false,
+    this.postCount,
     this.images = const [],
     this.fetchAllPostData = const [],
     this.comments = const [],
@@ -74,6 +76,7 @@ class PageState {
     List<Comments>? comments,
     List<dynamic>? docs,
     MediaUploadData? data,
+    num? postCount,
     ShareModelData? shareModelData,
     bool? isFocused,
     bool? isLoading,
@@ -86,6 +89,7 @@ class PageState {
       content: content ?? this.content,
       images: images ?? this.images,
       data: data ?? this.data,
+      postCount: postCount ?? this.postCount,
       recommendedPages: recommendedPages ?? this.recommendedPages,
       shareModelData: shareModelData ?? this.shareModelData,
       fetchAllPostData: fetchAllPostData ?? this.fetchAllPostData,
