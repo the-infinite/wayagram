@@ -1,4 +1,4 @@
-#!/usr/bin/zsh
+#!/bin/bash
 # shellcheck disable=SC1090
 
 # First, configure the correct repository commit template.

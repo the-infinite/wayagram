@@ -29,7 +29,14 @@ class DonationDetails extends ConsumerStatefulWidget {
 
 class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTickerProviderStateMixin {
 
-
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
+      ref.read(donationVmProvider.notifier).getSingleDonation('${args['id']}');
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,10 +44,10 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
     final wayaTheme = Theme.of(context);
     final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
     print('MY Donation ARGS $args');
+    print('MY Donation Count==>>${args['donationCount']}');
     return WayaScaffold(
         title: "Donation Details",
         isLoading: viewModel.isLoading,
-
         isScrollable: true,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -63,9 +70,9 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
             Gap(10),
             EngagementRange(
                 topLeft: "${WayaHelpers.formatPrice(int.parse('${args['amountRaised']}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount']}'))}",
-                bottomLeft: "0 Donators",
-                bottomRight: "${args['daysLeft']} days left",
-                range: 0.4),
+                bottomLeft: "${args['donationCount']} Donations",
+                bottomRight: "${args['daysLeft']} ${args['daysLeft'] == '1' ? 'day': 'days'} left",
+                range: args['donationCount'] == '0' ? 0.0 : 0.4),
             Gap(10),
             Row(children: [
               Expanded(child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['amountRaised']}')), 'Amount Raised', wayaTheme.colorScheme.success50),),
@@ -92,60 +99,68 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
 
           ],
         ),
-    bottomNavigationBar: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-      SizedBox(
-        width: context.width * 0.45,
-        child: WayaButton(
-          centerWidget: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                'assets/images/share.svg',
-                colorFilter: ColorFilter.mode(
-                    wayaTheme.colorScheme.primary300, BlendMode.srcIn),
-              ),
-              const Gap(10),
-              Text(
-                "Share Invite",
-                style: TextStyle().wayaCopyWith(
-                    color: wayaTheme.colorScheme.customPrimary,
-                    fontWeight: FontWeight.w600, fontSize: 16),
-              ),
-            ],
-          ),
-          border:
-          Border.all(width: 1, color: wayaTheme.colorScheme.primary500),
-          callback: () {
-            Share.share('${args['url']}', subject: 'Share Options');
-          },
-          color: wayaTheme.colorScheme.white,
-        ),
-      ),
-      const Gap(8),
-      SizedBox(
-        width: context.width * 0.45,
-        child: WayaButton(
-            text: 'Donate',
-            color: wayaTheme.colorScheme.primary500,
-            textStyle: TextStyle(color: wayaTheme.colorScheme.white),
-            callback: () {
-              WayaUtils.showModalSheet(
-                context,
-                child: DonationModal(
-                  amountRaised: '${args['amountRaised']}',
-                  targetAmount: '${args['targetAmount']}',
-                  title: '${args['title']}',
-                  minimumDonationAmount: '${args['minimumDonationAmount']}',
-                  campaignId: '${args['id']}',
-                  privacy: '${args['privacy']}',
+    bottomNavigationBar: Container(
+    width: double.infinity,
+    padding: EdgeInsets.fromLTRB(10, 4, 10, 10),
+    decoration: BoxDecoration(
+    color: wayaTheme.colorScheme.white,),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+        SizedBox(
+          width: context.width * 0.45,
+          child: WayaButton(
+            centerWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'assets/images/share.svg',
+                  colorFilter: ColorFilter.mode(
+                      wayaTheme.colorScheme.primary300, BlendMode.srcIn),
                 ),
-              );
-            }),
-      )
-    ],),);
+                const Gap(10),
+                Text(
+                  "Share Invite",
+                  style: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.customPrimary,
+                      fontWeight: FontWeight.w600, fontSize: 16),
+                ),
+              ],
+            ),
+            border:
+            Border.all(width: 1, color: wayaTheme.colorScheme.primary500),
+            callback: () {
+              Share.share('${args['url']}', subject: 'Share Options');
+            },
+            color: wayaTheme.colorScheme.white,
+          ),
+        ),
+        const Gap(8),
+        SizedBox(
+          width: context.width * 0.45,
+          child: WayaButton(
+              text: 'Donate',
+              color: wayaTheme.colorScheme.primary500,
+              textStyle: TextStyle(color: wayaTheme.colorScheme.white),
+              callback: () {
+                WayaUtils.showModalSheet(
+                  context,
+                  child: DonationModal(
+                    amountRaised: '${args['amountRaised']}',
+                    targetAmount: '${args['targetAmount']}',
+                    title: '${args['title']}',
+                    minimumDonationAmount: '${args['minimumDonationAmount']}',
+                    campaignId: '${args['id']}',
+                    privacy: '${args['privacy']}',
+                    daysLeft: '${args['daysLeft']}',
+                    donationCount: '${args['donationCount']}'
+                  ),
+                );
+              }),
+        )
+      ],),
+    ),);
   }
   _detailCard(number, name, color){
     return Container(

@@ -108,8 +108,10 @@ List<Category> categories = [
 ];
 
 List<ProductCondition> productConditions = [
-  ProductCondition(id: 'New', productCondition: 'New'),
-  //ProductCondition(id: 'Fairly used', productCondition: 'Fairly used'),
+  ProductCondition(id: 'all', productCondition: 'All'),
+  ProductCondition(id: 'new', productCondition: 'New'),
+  ProductCondition(id: 'used', productCondition: 'Fairly used'),
+  // ProductCondition(id: 'refurbished', productCondition: 'Refurbished'),
 ];
 
 List<State> states = [
@@ -183,7 +185,15 @@ List<MultipleStage> multipleStages = [
 
 List<CurrentStage> currentStages = [
   CurrentStage(id: 1, currentStage: 'Stage 1'),
-  CurrentStage(id: 2, currentStage: 'null'),
+  CurrentStage(id: 2, currentStage: 'Stage 2'),
+  CurrentStage(id: 3, currentStage: 'Stage 3'),
+  CurrentStage(id: 4, currentStage: 'Stage 4'),
+  CurrentStage(id: 5, currentStage: 'Stage 5'),
+  CurrentStage(id: 6, currentStage: 'Stage 6'),
+  CurrentStage(id: 7, currentStage: 'Stage 7'),
+  CurrentStage(id: 8, currentStage: 'Stage 8'),
+  CurrentStage(id: 9, currentStage: 'Stage 9'),
+  CurrentStage(id: 10, currentStage: 'Stage 10'),
 ];
 
 List<WinnerPrize> winnerPrizes = [
@@ -192,8 +202,23 @@ List<WinnerPrize> winnerPrizes = [
 ];
 
 List<Lga> lgas = [
+  Lga(id: 'All LGAs', lga: 'All LGAs'),
+  Lga(id: 'Alimosho', lga: 'Alimosho'),
+  Lga(id: 'Ajeromi-Ifelodun', lga: 'Ajeromi-Ifelodun'),
+  Lga(id: 'Kosofe', lga: 'Kosofe'),
+  Lga(id: 'Mushin', lga: 'Mushin'),
+  Lga(id: 'Oshodi-Isolo', lga: 'Oshodi-Isolo'),
+  Lga(id: 'Ojo', lga: 'Ojo'),
+  Lga(id: 'Ikorodu', lga: 'Ikorodu'),
   Lga(id: 'Badagry', lga: 'Badagry'),
   Lga(id: 'Surulere', lga: 'Surulere'),
   Lga(id: 'Agege', lga: 'Agege'),
   Lga(id: 'Ikeja', lga: 'Ikeja'),
+  Lga(id: 'Ifako-Ijaye', lga: 'Ifako-Ijaye'),
+  Lga(id: 'Eti-Osa', lga: 'Eti-Osa'),
+  Lga(id: 'Lagos Mainland', lga: 'Lagos Mainland'),
+  Lga(id: 'Ibeju-Lekki', lga: 'Ibeju-Lekki'),
+  Lga(id: 'Apapa', lga: 'Apapa'),
+  Lga(id: 'Lagos Island', lga: 'Lagos Island'),
+  Lga(id: 'Epe', lga: 'Epe'),
 ];

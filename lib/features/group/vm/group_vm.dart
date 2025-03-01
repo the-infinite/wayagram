@@ -10,6 +10,7 @@ import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
+import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/fetch_all_event_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
@@ -385,6 +386,8 @@ class GroupVm extends StateNotifier<GroupState> {
         //     duration: Duration(seconds: 2),
         //   ),
         // );
+      }else{
+        Navigator.pop(ctx);
       }
     } catch (e) {
       print(e);
@@ -567,8 +570,7 @@ class GroupVm extends StateNotifier<GroupState> {
       final response = await _groupRepository.getEvent();
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        FetchAllEventModel responseModel =
-            FetchAllEventModel.fromJson(response.data);
+        EventResponse responseModel = EventResponse.fromJson(response.data);
         state = state.copyWith(fetchAllEventDocs: responseModel.data?.docs);
       } else {
         print('Error: Status code ${response.statusCode}');

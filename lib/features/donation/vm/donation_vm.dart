@@ -46,6 +46,10 @@ class DonationVm extends StateNotifier<DonationState> {
     state = state.copyWith(showNumberOfDonors: value);
   }
 
+  void updatePrivacyOption(String value) {
+    state = state.copyWith(privacyOption: value);
+  }
+
   void selectStartDate({required String date, required String iso}) {
     state = state.copyWith(startDateString: date, startDate: date);
   }
@@ -258,12 +262,30 @@ class DonationVm extends StateNotifier<DonationState> {
   }
 
   Future<void> getMyDonation() async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _donationRepository.getMyCampaigns( ConversationState.self.id);
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
+        state = state.copyWith(myDonationDocs: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      print(e);
+    } finally {}
+  }
+
+  Future<void> getSingleDonation(String campaignId) async {
     print('Fetching saved posts...');
 
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _donationRepository.getMyCampaigns( ConversationState.self.id);
+      final response = await _donationRepository.getMyCampaigns(campaignId);
       state = state.copyWith(isLoading: false);
       print('API Response: ${response.data}');
       print('Status Code: ${response.statusCode}');

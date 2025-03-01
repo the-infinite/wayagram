@@ -43,16 +43,24 @@ class _MediaPostState extends ConsumerState<MediaPost>
 
   int like = 0;
 
+  //@override
+  // void initState() {
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  //     ref.read(createGroupProvider.notifier).getGroupSinglePosts(widget.groupId);
+  //   });
+  // }
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createGroupProvider.notifier).getGroupSinglePosts(widget.groupId);
+      print('GROUP IDIDIDID===>> ${widget.groupId}');
+      ref.read(createGroupProvider.notifier).getGroupPosts(widget.groupId);
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
+ /* Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider.notifier);
     final viewModel2 = ref.watch(createPageProvider);
@@ -331,7 +339,8 @@ class _MediaPostState extends ConsumerState<MediaPost>
                       padding: EdgeInsets.fromLTRB(0.w, 8.0.h, 15.w, 8.w),
                       child: Row(
                         children: [
-                          /*LikeButtonWithReactions(
+                          */
+  /*LikeButtonWithReactions(
                           // isLiked: post.isLiked,
                           // onLike: onLike,
                           // onReact: onReact ?? (react){},
@@ -350,6 +359,7 @@ class _MediaPostState extends ConsumerState<MediaPost>
                           //   viewModel.commentPost2(post);
                           // },
                         ),*/
+  /*
                           actionType(
                               '${post.likeCount} ${post.likeCount! <= 1 ? 'Like' : 'Likes'}',
                               'assets/images/pages/like2.png', onPressed: () {
@@ -386,6 +396,342 @@ class _MediaPostState extends ConsumerState<MediaPost>
                 );
               }),
 
+        ],
+      ),
+    );
+  }*/
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    final viewModel = ref.watch(createPageProvider.notifier);
+    //final viewModel2 = ref.watch(createPageProvider);
+    final viewModel2 = ref.watch(createGroupProvider);
+
+    return Padding(
+      padding: const  EdgeInsets.only(left: 25),
+      child: viewModel2.groupPostdocs!.isEmpty? PostEmptyState() : Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          Text('Latest post',
+              style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: WayaColors.greyColor700,
+                  fontFamily: WayaConstants.fontFamily)),
+
+          ListView.builder(
+            //padding: EdgeInsets.only(left: 15, right: 15,),
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: viewModel2.groupPostdocs?.length,
+              itemBuilder: (_, index,) {
+                final post = viewModel2.groupPostdocs?[index];
+
+                String formatTimeAgo(String dateString) {
+                  DateTime dateTime =
+                  DateTime.parse(dateString); // Convert string to DateTime
+                  return timeago.format(dateTime); // Convert to "time ago" format
+                }
+
+                String removeHashtags(String text) {
+                  return text.replaceAll(RegExp(r'#\w+'), '').trim();
+                }
+
+                return viewModel2.groupPostdocs!.isEmpty ? PostEmptyState(): Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+
+                    // Post header with author details
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0, 25.h, 15.w, 15.w),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  if (post is Post) {
+                                    //showProfilePage(post.author.id);
+                                  }
+                                },
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    WayaDp(
+                                      image: post?.user?.profilePicture,
+                                      radius: 20,
+                                    ),
+                                    SizedBox(width: 10.w),
+                                    Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              '${post?.user?.firstName} ${post?.user?.lastName}',
+                                              style: TextStyle(
+                                                fontFamily:
+                                                WayaConstants.fontFamily,
+                                                fontSize: 16.sp,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                            const Gap(5),
+                                            Text(
+                                              '• ${formatTimeAgo('${post?.createdAt}')}',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .wayaCopyWith(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .greyColor500),
+                                            ),
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 5.h,
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const Spacer(),
+                              PopupMenuButton(
+                                onSelected: (value) {},
+                                position: PopupMenuPosition.under,
+                                itemBuilder: (context) {
+                                  return [
+
+                                    PopupMenuItem<int>(
+                                      value: 0,
+                                      child: _buildActionNav(
+                                          context: context,
+                                          onTap: () {
+                                            viewModel.repost(context,
+                                                postId: '${post?.id}');
+                                            Navigator.pop(context);
+                                          },
+                                          asset: SvgPicture.asset(
+                                              'assets/images/pages/flag.svg'),
+                                          text: "Repost",
+                                          color:
+                                          wayaTheme.colorScheme.customBlack),
+                                    ),
+                                    PopupMenuItem<int>(
+                                      value: 1,
+                                      child: _buildActionNav(
+                                          context: context,
+                                          onTap: () {
+                                            viewModel.deletePost(context,
+                                                postId: '${post?.id}', userId: '${ConversationState.self.id}');
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(
+                                              const SnackBar(
+                                                content: Text(
+                                                    'Post deleted successfully!'),
+                                                backgroundColor:
+                                                WayaColors.primary,
+                                                duration: Duration(seconds: 2),
+                                              ),
+                                            );
+                                            Navigator.pop(context);
+                                            WayaNav.toNamed('/pages');
+                                          },
+                                          asset: SvgPicture.asset(
+                                            'assets/images/pages/delete.svg',
+                                            color: wayaTheme.colorScheme.error500,
+                                            height: 20,
+                                          ),
+                                          text: "Delete Post",
+                                          color: wayaTheme.colorScheme.error500),
+                                    )
+                                  ];
+                                },
+                                child: Image.asset(
+                                  'assets/images/polls/menu.png',
+                                  height: 32.h,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 15.h,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              //viewFull!();
+                            },
+                            child: ReadMoreText(
+                              removeHashtags('${post?.content?.capitalizeFirst}'),
+                              style: TextStyle(
+                                fontFamily: WayaConstants.fontFamily,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14.sp,
+                              ),
+                              trimLines: 2,
+                              annotations: [
+                                Annotation(
+                                  regExp: RegExp(
+                                      r'((https?:\/\/)?([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(\/[^\s]*)?)'),
+                                  spanBuilder: (
+                                      {required String text,
+                                        TextStyle? textStyle}) =>
+                                      TextSpan(
+                                        text: text,
+                                        style: TextStyle(
+                                            fontSize: 15.sp,
+                                            color: Colors.blue,
+                                            decoration: TextDecoration.underline,
+                                            decorationColor: Colors.blue),
+                                        recognizer: TapGestureRecognizer()
+                                          ..onTap = () async {
+                                            final String fullUrl =
+                                            text.startsWith('http')
+                                                ? text
+                                                : 'https://$text';
+                                            _launchUrl(fullUrl);
+                                          },
+                                      ),
+                                ),
+                              ],
+                              colorClickableText: Colors.blue,
+                              trimMode: TrimMode.Line,
+                              trimCollapsedText: "read more",
+                              trimExpandedText: "show less",
+                              moreStyle: const TextStyle(color: Colors.blue),
+                              lessStyle:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                color: WayaColors.primary,
+                                fontFamily: WayaConstants.fontFamily,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                          ),
+                          // PostContent(content: post.content),
+                          SizedBox(
+                            height: 5.h,
+                          ),
+                          if (post?.hashtags != null)
+                            ...?post?.hashtags!.map((e) => Row(
+                              children: [
+                                Text(
+                                  '$e',
+                                  style: TextStyle(
+                                    color: WayaColors.primary,
+                                    fontFamily: WayaConstants.fontFamily,
+                                    fontWeight: FontWeight.w400,
+                                    fontSize: 14.sp,
+                                  ),
+                                ),
+                              ],
+                            )),
+                          /* if(post.media != null)
+                          ...post.media!.map((e)=>
+                              Row(
+                                children: [
+                                 Image.network('$e', fit: BoxFit.fitWidth,)
+                                ],
+                              )),*/
+
+                        ],
+                      ),
+                    ),
+                    post?.media == null || post!.media!.contains("cat.jpg")? Container():
+                    // if (post.media != null)
+                    SizedBox(
+                      height: 200, // Adjust based on your image size
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal, // Enables horizontal scrolling
+                        itemCount: post.media?.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 0.0),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10), // Optional: rounded corners
+                              child: Image.network(
+                                post.media![index],
+                                fit: BoxFit.cover,
+                                width: 350, // Adjust width for better display
+                                height: 200, // Matches the container height
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+
+                    // Post actions: Like, Comment, Repost, Share
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0.w, 8.0.h, 15.w, 8.w),
+                      child: Row(
+                        children: [
+                          /*LikeButtonWithReactions(
+                          // isLiked: post.isLiked,
+                          // onLike: onLike,
+                          // onReact: onReact ?? (react){},
+
+                          isLiked: post.likeCount,
+                          onLike: onLike,
+                          onReact: onReact ?? (react){},
+
+                          // onLike: (String? reaction) async {
+                          //   viewModel.likePost(, reaction: reaction);
+                          // },
+                          // onReact: (String reaction) {
+                          //   viewModel.likePost(post, reaction: reaction);
+                          // },
+                          // onComment: () {
+                          //   viewModel.commentPost2(post);
+                          // },
+                        ),*/
+                          actionType(
+                              '${post?.likeCount} ${post?.likeCount == 1 || post?.likeCount == 0 ? 'Like' : 'Likes'}',
+                              'assets/images/pages/like2.png', onPressed: () {
+                            viewModel.likePost(context, postId: '${post?.id}',
+                                userId: '${ConversationState.self.id}');
+                          },
+                              color: post?.likeCount == 0
+                                  ? WayaColors.greyColor500
+                                  : WayaColors.primary),
+                          actionType('${post?.commentCount} Comments',
+                              'assets/images/pages/comment2.png', onPressed: () {
+                                showCommentBox(context, post?.id);
+                                print(post?.id);
+                              }),
+                          actionType('${post?.shareCount} Shares',
+                              'assets/images/pages/share2.png', onPressed: () {
+                                viewModel.sharePost(context, postId: '${post?.id}');
+                                Share.share('${post?.url}', subject: 'Share Options');
+                              }),
+                          InkWell(
+                              onTap: () {
+                                viewModel.bookmarkPost(context,
+                                    postId: '${post?.id}');
+                              },
+                              child: Image.asset(
+                                'assets/images/pages/save.png',
+                                height: 32.h,
+                              )),
+                        ],
+                      ),
+                    ),
+
+                  ],
+                );
+              }),
+          const Gap(25),
         ],
       ),
     );

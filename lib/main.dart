@@ -16,7 +16,7 @@ import 'firebase_options.dart';
 void main() async {
   //? First, initialize everything that should be initialized.
   await GetStorage.init();
-  Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await PushNotifications.init();
   WayaSnackBar.setUpSnackBarUI();
   await TaskScheduler.init();

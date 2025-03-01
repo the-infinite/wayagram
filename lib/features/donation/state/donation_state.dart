@@ -17,6 +17,7 @@ class DonationState{
     final TextEditingController details;
     final DocType? donationImage;
     final MultipartFile? image;
+    final String privacyOption;
     final String startDate;
     final String endDate;
     final String startDateString;
@@ -43,6 +44,7 @@ class DonationState{
       this.donationImage,
       this.image,
       this.startDate = '',
+      this.privacyOption = '',
       this.endDate = '',
       this.startDateString = '',
       this.endDateString = '',
@@ -73,6 +75,7 @@ class DonationState{
       List<MyDonationDocs>? myDonationDocs,
       DocType? donationImage,
       MultipartFile? image,
+      String? privacyOption,
       String? startDate,
       String? endDate,
       String? startDateString,
@@ -96,6 +99,7 @@ class DonationState{
       details: details ?? this.details,
       donationImage: donationImage ?? this.donationImage,
       image: image ?? this.image,
+      privacyOption: privacyOption ?? this.privacyOption,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       startDateString: startDateString ?? this.startDateString,

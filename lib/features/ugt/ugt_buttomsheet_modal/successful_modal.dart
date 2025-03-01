@@ -12,7 +12,13 @@ import '../../../core/components/waya_text_form_field.dart';
 import '../../../core/utils/waya_navigation.dart';
 
 class SuccessfulModal extends StatefulWidget {
-  const SuccessfulModal({super.key});
+  final String title;
+  final String subtitle;
+  final bool showCopyLink;
+  final VoidCallback onTap;
+  const SuccessfulModal(
+      this.title, this.subtitle, this.showCopyLink, this.onTap,
+      {super.key});
 
   @override
   State<SuccessfulModal> createState() => _SuccessfulModalState();
@@ -32,31 +38,27 @@ class _SuccessfulModalState extends State<SuccessfulModal> {
               'assets/images/successugt.png',
             ),
             SizedBox(height: 20.h),
-            Text("Contest created Successfully",
-                style: wayaTheme.textTheme.bodyMedium),
+            Text(widget.title, style: wayaTheme.textTheme.bodyMedium),
             SizedBox(height: 3.h),
             Text(
-              "Your contest is now live and visible to the public.\n Manage or  share your contest details from your dashboard.",
+              widget.subtitle,
               style: wayaTheme.textTheme.hintStyle,
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 17.h),
             WayaButton(
-              callback: () async {
-                //  Navigator.pop(context);
-                WayaNav.removeUntilNamed("/ugt-home");
-                //  WayaNav.toNamed("/contest-setting-content");
-              },
+              callback: widget.onTap,
               text: "Manage Contest",
             ),
             const Gap(10),
-            WayaButton(
-                text: 'Copy Contest Invite Link',
-                color: wayaTheme.colorScheme.greyColor300,
-                textColor: wayaTheme.colorScheme.customBlack,
-                border: Border.all(
-                    width: 1, color: wayaTheme.colorScheme.greyColor300),
-                callback: () {})
+            if (widget.showCopyLink)
+              WayaButton(
+                  text: 'Copy Contest Invite Link',
+                  color: wayaTheme.colorScheme.greyColor300,
+                  textColor: wayaTheme.colorScheme.customBlack,
+                  border: Border.all(
+                      width: 1, color: wayaTheme.colorScheme.greyColor300),
+                  callback: () {})
           ],
         ),
       ),

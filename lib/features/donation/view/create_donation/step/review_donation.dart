@@ -102,7 +102,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
         const Gap(10),
     _reviewText('Fundraiser Details', '${viewModel.details.text.capitalizeFirst}'),
         const Gap(10),
-    _reviewText('Privacy Settings', 'Public'),
+    _reviewText('Privacy Settings', viewModel.privacyOption.capitalizeFirst),
         const Gap(10),
     Row(children: [
       _reviewText('Show Amount Raised', viewModel.showAmountRaised ? 'Yes':'No'),
@@ -111,8 +111,6 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
     ],),
 
         const Gap(30),
-
-
 
         WayaButton(
           callback: !viewModel.isLoading
@@ -123,7 +121,9 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
                 viewModel.statement.text,
                 viewModel.targetAmount.text,
                 viewModel.minimumDonationAmount.text,
-                'public', viewModel.endDate,
+                //'public',
+                viewModel.privacyOption,
+                viewModel.endDate,
                 viewModel.donationImage, viewModel.startDate, context: context);
 
             //donation.reset();

@@ -13,7 +13,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 
@@ -64,7 +63,9 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
               ],
             ),
             callback: () {
-              WayaNav.toNamed('/addGroupMember', arguments: widget.groupId);
+              WayaNav.toNamed('/addGroupMember', arguments: {
+                'groupId': widget.groupId
+              });
             },
             color: wayaTheme.colorScheme.primar50,
           ),

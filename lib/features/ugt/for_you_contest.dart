@@ -119,7 +119,17 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
               }
 
               final post = posts[index];
-              return ContestCard(post);
+              return GestureDetector(
+                onTap: () {
+                 
+                },
+                child: ContestCard(
+                  post,
+                  postNotifier.toggleLike,
+                  postNotifier.toggleShare,
+                  postNotifier.doFollow,
+                ),
+              );
             },
           ),
       ],

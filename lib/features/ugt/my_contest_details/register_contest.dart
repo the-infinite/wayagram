@@ -59,7 +59,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
     final notifier = ref.read(registerFormProvider.notifier);
     final wayaTheme = Theme.of(context);
     // final selectedUniversity = useState("");
-    //final selectedState = useState("");
+    final selectedState = useState("");
     final isLoading = useState(false);
     return WayaScaffold(
       isLoading: false,
@@ -264,7 +264,45 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
             const Gap(20),
             Text("University Information",
                 style: wayaTheme.textTheme.hintStyle),
-            //   const Gap(20),
+            //  const Gap(20),
+            FormField<String>(validator: (value) {
+              if (selectedState.value.isEmpty) {
+                return 'Contest State is required';
+              }
+
+              return null;
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WayaSelectField<String>(
+                    height: 0.3,
+                    value: selectedState.value,
+                    label: "State",
+                    hintText: 'Select State',
+                    items:
+                        ref.read(contestNotifierProvider.notifier).ugtStates(),
+                    onSelected: (value) {
+                      print(" heree $value");
+                      selectedState.value = value.first.label;
+                      return ref
+                          .read(contestNotifierProvider.notifier)
+                          .selectState(value.first);
+                    },
+                    uniqueKey: 'contest-state',
+                  ),
+                  if (formState.hasError && selectedState.value.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText ?? "",
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                      ),
+                    ),
+                ],
+              );
+            }),
             /*    FormField<String>(validator: (value) {
               if (notifier.university.isEmpty) {
                 return 'Business Type is required';
@@ -450,7 +488,8 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                             }
                           }
                         }
-                        notifier.submitDetail(context, isLoading);
+                        notifier.submitDetail(
+                            context, isLoading, selectedState.value);
                       }
                     }
                   : null,

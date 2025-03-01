@@ -51,9 +51,11 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
     }
   }
 
+
   // Toggle Like
   void toggleLike(String postId) {
     // Contest? contestPost = null;
+     print("Contest hosted contest");
     state = state.map((post) {
       if (post.id == postId) {
         if (!post.isLiked!) {
@@ -105,6 +107,22 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
     }).toList();
     doshare(postId);
   }
+  
+  void doFollow(String postId) async {
+    // print("do like stuff");
+    final response = await _contestRepository.followContest({
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": postId
+    });
+
+    if (response.success) {
+      //  print("do like stuff Fail");
+
+      WayaSnackBar.showToast("Followed");
+    } else {
+       WayaSnackBar.showToast("Please try again later");
+    }
+  }
 
   void doshare(String postId) async {
     // print("do like stuff");
@@ -131,14 +149,14 @@ class ContestDetailNotifier extends StateNotifier<List<Contest>> {
   }
 
   // Toggle Follow
-  void toggleFollow(String postId) {
+/*   void toggleFollow(String postId) {
     state = state.map((post) {
       if (post.id == postId) {
         return post.copyWith(isFollowing: !post.isFollowing!);
       }
       return post;
     }).toList();
-  }
+  } */
 }
 
 // Provider

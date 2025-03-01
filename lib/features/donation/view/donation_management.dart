@@ -88,55 +88,61 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
           _reviewText('Impact Statement', '${args['impact']}'),
         ],
       ),
-      bottomNavigationBar: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: context.width * 0.45,
-            child: WayaButton(
-              centerWidget: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/images/share.svg',
-                    colorFilter: ColorFilter.mode(
-                        wayaTheme.colorScheme.primary300, BlendMode.srcIn),
-                  ),
-                  const Gap(10),
-                  Text(
-                    "Share Invite",
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontWeight: FontWeight.w600, fontSize: 16),
-                  ),
-                ],
-              ),
-              border:
-              Border.all(width: 1, color: wayaTheme.colorScheme.primary500),
-              callback: () {
-                Share.share('${args['url']}', subject: 'Share Options');
-              },
-              color: wayaTheme.colorScheme.white,
-            ),
-          ),
-          const Gap(8),
-          SizedBox(
-            width: context.width * 0.45,
-            child: WayaButton(
-                text: 'Set Minimum amount',
-                color: wayaTheme.colorScheme.primary500,
-                textStyle: TextStyle(color: wayaTheme.colorScheme.white),
-                callback: () {
-                  WayaUtils.showModalSheet(
-                    context,
-                    child: DonationAmountSetupModal(
-                      id: args['id'],
+      bottomNavigationBar: Container(
+        width: double.infinity,
+        padding: EdgeInsets.fromLTRB(10, 4, 10, 10),
+        decoration: BoxDecoration(
+          color: wayaTheme.colorScheme.white,),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(
+              width: context.width * 0.45,
+              child: WayaButton(
+                centerWidget: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/images/share.svg',
+                      colorFilter: ColorFilter.mode(
+                          wayaTheme.colorScheme.primary300, BlendMode.srcIn),
                     ),
-                  );
-                }),
-          )
-        ],),);
+                    const Gap(10),
+                    Text(
+                      "Share Invite",
+                      style: TextStyle().wayaCopyWith(
+                          color: wayaTheme.colorScheme.customPrimary,
+                          fontWeight: FontWeight.w600, fontSize: 16),
+                    ),
+                  ],
+                ),
+                border:
+                Border.all(width: 1, color: wayaTheme.colorScheme.primary500),
+                callback: () {
+                  Share.share('${args['url']}', subject: 'Share Options');
+                },
+                color: wayaTheme.colorScheme.white,
+              ),
+            ),
+            const Gap(8),
+            SizedBox(
+              width: context.width * 0.45,
+              child: WayaButton(
+                  text: 'Set Minimum amount',
+                  color: wayaTheme.colorScheme.primary500,
+                  textStyle: TextStyle(color: wayaTheme.colorScheme.white),
+                  callback: () {
+                    WayaUtils.showModalSheet(
+                      context,
+                      child: DonationAmountSetupModal(
+                        id: args['id'],
+                      ),
+                    );
+                  }),
+            )
+          ],),
+      ),);
   }
   _detailCard(number, name, color){
     return Container(
@@ -159,12 +165,15 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
             ),
           ),
           const Gap(10),
-          Text(
-            number,
-            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.black ),
+          FittedBox(
+            fit: BoxFit.fitWidth,
+            child: Text(
+              number,
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: Theme.of(context).colorScheme.black ),
+            ),
           ),
 
 

@@ -19,11 +19,14 @@ import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/data/model/role_type.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/shared/features/user/vm/search.dart';
 
 class AddGroupMember extends ConsumerStatefulWidget {
-  final String? groupId;
+  //final String groupId;
   static const route = '/addGroupMember';
-  const AddGroupMember({super.key,  this.groupId});
+  const AddGroupMember({super.key,
+    //required this.groupId
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _AddGroupMemberState();
@@ -40,6 +43,8 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createGroupProvider);
     final team = ref.watch(createGroupProvider.notifier);
+
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
@@ -70,7 +75,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
           callback: !viewModel.isLoading
               ? () async {
             if (_formKey.currentState!.validate()) {
-              await team.inviteUserToGroup(context, widget.groupId!, viewModel.roleType, 'targetId');
+              await team.inviteUserToGroup(context, args['groupId'], viewModel.roleType, 'targetId');
               showCustomDialog(context, 'Success! ${viewModel.username} has been added as a\nModerator','You can now collaborate seamlessly and\nmanage the page together.');
               ref.watch(createGroupProvider.notifier).reset();
               Navigator.pop(context);
@@ -105,7 +110,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  FormField<String>(validator: (value) {
+                /*  FormField<String>(validator: (value) {
                     if (viewModel.username.text.isEmpty) {
                       return 'Username/Email is required';
                     }
@@ -118,7 +123,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                         WayaTextFormField(
                           keyboardType: TextInputType.text,
                           controller: viewModel.username,
-                          hintText: 'Enter page name here',
+                          hintText: 'Enter username/ Email address',
                           borderColor: formState.hasError &&
                               viewModel.username.text.isEmpty
                               ? wayaTheme.colorScheme.error
@@ -140,6 +145,17 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                       ],
                     );
                   }),
+                  const Gap(20),*/
+                  WayaConfirmationView(
+                    debounceTimer: const Duration(milliseconds: 20),
+                    getResult: ref.read(userSearchProvider.notifier).getUserByEmail,
+                    getText: (user) => user?.fullname ?? "User not found",
+                    backgroundColor: wayaTheme.colorScheme.primar50,
+                    searchController: viewModel.username,
+                    buttonTextStyle: wayaTheme.textTheme.bodyBold.copyWith(
+                      color: wayaTheme.colorScheme.primary,
+                    ),
+                  ),
                   const Gap(20),
                   FormField<String>(validator: (value) {
                     if (viewModel.roleType.isEmpty) {
@@ -316,7 +332,8 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                             children: [
                               InkWell(
                                   onTap:(){
-                                    Navigator.of(cxt).pop();
+                                    WayaNav.toNamed('/groups');
+                                    //Navigator.of(cxt).pop();
                                   },
                                   child: Image.asset('assets/images/pages/success.png', height: 32, width: 32,)),
                               Gap(10),
