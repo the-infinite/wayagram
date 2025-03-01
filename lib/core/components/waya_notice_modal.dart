@@ -8,7 +8,7 @@ class WayaNoticeModal extends StatelessWidget {
   final String title;
   final String message;
   final VoidCallback onPress;
-  final VoidCallback onCancel;
+  final VoidCallback? onCancel;
   final String? buttonText;
   final String? secondButtonText;
   final Widget? buttonCenterWidget;
