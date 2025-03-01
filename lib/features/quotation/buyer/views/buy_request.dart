@@ -6,13 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
-import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:gap/gap.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
-import '../../../../core/utils/waya_navigation.dart';
-import '../../widgets/request_card.dart';
+import 'package:wayagram/shared/features/quotation/view/buy_request.dart';
 
 class BuyRequests extends ConsumerStatefulWidget {
   const BuyRequests({super.key});
@@ -31,9 +28,6 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createRequestProvider.notifier).getBuyerRequest();
-    });
     timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
       if (currentPage < 2) {
         currentPage++;
@@ -53,7 +47,6 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(createRequestProvider);
     return Column(
       children: [
         //? How we filter inside of our purchase requests.
@@ -117,21 +110,7 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
         ),
 
         //? The buyer requests that we have.
-        ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: viewModel.buyerRequest.length,
-          itemBuilder: (context, index) {
-            return viewModel.buyerRequest.isEmpty
-                ? Center(child: Text('No request'))
-                : RequestCard(
-                    product: viewModel.buyerRequest[index],
-                    onTap: () {
-                      WayaNav.toNamed('/quotation/seller/bids');
-                    },
-                  );
-          },
-        ),
+        const SharedOthersBuyRequestsWidget(isExpanded: false),
 
         // Some space.
         const Gap(25),
@@ -143,19 +122,7 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
         const Gap(25),
 
         //? Explore the available buyer requests.
-        ListView.builder(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          itemCount: viewModel.buyerRequest.length,
-          itemBuilder: (context, index) {
-            return RequestCard(
-              product: viewModel.buyerRequest[index],
-              onTap: () {
-                WayaNav.toNamed('/quotation/seller/bids');
-              },
-            );
-          },
-        ),
+        const SharedOthersBuyRequestsWidget(isExpanded: false),
       ],
     );
   }
