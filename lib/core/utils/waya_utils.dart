@@ -29,9 +29,12 @@ class WayaUtils {
       String? secondButtonText,
       Widget? buttonCenterWidget,
       Widget? secondButtonCenterWidget,
+      bool isDismissible = true,
       VoidCallback? onCancel}) {
+    print(onCancel != null);
     return showModalSheet(
       context,
+      isDismissible: isDismissible,
       child: WayaNoticeModal(
         title: title,
         onPress: onPress ?? () => {},
@@ -47,40 +50,43 @@ class WayaUtils {
   }
 
   static Future<List<Select>> showSelectModal({
-  required BuildContext context,
-  required String title,
-  required List<Select> items,
-  List<Select>? selectedItems,
-  bool multi = false,
-}) async {
-  final result = await showModalBottomSheet(
-    context: context,
-    isDismissible: !multi,
-    builder: (BuildContext context) {
-      return WayaBottomSheetContent(
-        title: title,
-        items: items,
-        selectedItems: selectedItems,
-        multi: multi,
-      );
-    },
-  );
+    required BuildContext context,
+    required String title,
+    required List<Select> items,
+    List<Select>? selectedItems,
+    bool multi = false,
+  }) async {
+    final result = await showModalBottomSheet(
+      context: context,
+      isDismissible: !multi,
+      builder: (BuildContext context) {
+        return WayaBottomSheetContent(
+          title: title,
+          items: items,
+          selectedItems: selectedItems,
+          multi: multi,
+        );
+      },
+    );
 
-  return result ?? [];
-}
+    return result ?? [];
+  }
 
   static copyText(String text) async {
     await Clipboard.setData(ClipboardData(text: text));
     WayaSnackBar.showToast('Copied');
   }
 
-  static Future<T?> showModalSheet<T>(BuildContext context, {required Widget child}) {
+  static Future<T?> showModalSheet<T>(BuildContext context,
+      {required Widget child, bool isDismissible = true}) {
     return showModalBottomSheet<T?>(
       constraints: BoxConstraints(maxHeight: Get.height * 0.8),
       context: context,
       isScrollControlled: true,
+      isDismissible: isDismissible,
       useRootNavigator: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
       builder: (context) => child,
     );
   }
@@ -93,18 +99,21 @@ class WayaUtils {
       useRootNavigator: true,
       /*isDismissible: true,
         enableDrag: false,*/
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
       builder: (context) => child,
     );
   }
 
-  static showModalSheetQuotation(BuildContext context, {required Widget child}) {
+  static showModalSheetQuotation(BuildContext context,
+      {required Widget child}) {
     return showModalBottomSheet(
         constraints: BoxConstraints(maxHeight: Get.height * 0.8),
         context: context,
         isScrollControlled: true,
         useRootNavigator: true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
         builder: (context) => child);
   }
 
@@ -171,7 +180,8 @@ class WayaUtils {
         if (value is String) {
           return value.toLowerCase().contains(searchTerm.toLowerCase());
         } else if (value is List<String>) {
-          return value.any((element) => element.toLowerCase().contains(searchTerm.toLowerCase()));
+          return value.any((element) =>
+              element.toLowerCase().contains(searchTerm.toLowerCase()));
         }
 
         return false;
@@ -179,20 +189,24 @@ class WayaUtils {
     }).toList();
   }
 
-  static Future<String?> uploadFile({required UploadFileRepository repository, required File file}) async {
+  static Future<String?> uploadFile(
+      {required UploadFileRepository repository, required File file}) async {
     String publicUrl = '';
     try {
       // filename and content-type
       String fileName = WayaHelpers.extractFileName(file);
       String? contentType = WayaHelpers.getContentType(file);
 
-      final uploadUrlResponse = await repository.getUploadUrl(fileName: fileName);
+      final uploadUrlResponse =
+          await repository.getUploadUrl(fileName: fileName);
       if (uploadUrlResponse.success) {
-        MediaUploadModel uploadModel = MediaUploadModel.fromJson(uploadUrlResponse.data);
+        MediaUploadModel uploadModel =
+            MediaUploadModel.fromJson(uploadUrlResponse.data);
 
         final String url = uploadModel.data!.url!;
         publicUrl = uploadModel.data!.publicUrl!;
-        await repository.putFile(url: url, file: file, contentType: contentType!);
+        await repository.putFile(
+            url: url, file: file, contentType: contentType!);
       }
 
       return publicUrl;
@@ -218,7 +232,8 @@ class WayaUtils {
         if (value is String) {
           return value.toLowerCase().contains(searchTerm.toLowerCase());
         } else if (value is List<String>) {
-          return value.any((element) => element.toLowerCase().contains(searchTerm.toLowerCase()));
+          return value.any((element) =>
+              element.toLowerCase().contains(searchTerm.toLowerCase()));
         }
 
         return false;

@@ -8,14 +8,14 @@ class OrderRepository extends BaseRepository {
       {required String cartId,
       required String shopId,
       required String userId,
-      String? pickUpAddress}) {
+      String? pickupAddress}) {
     Map<String, dynamic> payload = {
       'cartId': cartId,
       'shopId': shopId,
       'userId': userId
     };
 
-    if (pickUpAddress != null) payload['pickUpAddress'] = pickUpAddress;
+    if (pickupAddress != null) payload['pickupAddress'] = pickupAddress;
 
     return post("$serviceUrl/orders/place-order", payload);
   }
@@ -39,5 +39,12 @@ class OrderRepository extends BaseRepository {
       {required String orderId, required String status}) async {
     return put(
         "$serviceUrl/orders/pickupStatus/$orderId", {"pickupStatus": status});
+  }
+
+
+    Future<WayaRequestResponse> declineOrder(
+      {required String orderId, required String reason}) {
+    return post("$serviceUrl/orders/decline-order",
+        {"orderId": orderId, "reason": reason});
   }
 }

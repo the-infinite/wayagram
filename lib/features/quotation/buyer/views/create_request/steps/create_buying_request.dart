@@ -7,7 +7,6 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
 import 'package:wayagram/shared/features/location/vm/default.dart';
-import 'package:wayagram/shared/features/user/vm/search.dart';
 
 class CreateBuyingRequest extends ConsumerStatefulWidget {
   final Function gotoNextTab;

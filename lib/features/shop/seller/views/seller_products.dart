@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -66,7 +67,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                         callback: () {
                           WayaNav.toNamed(AddProduct.route,
                               arguments:
-                                  AddProductArg(uniqueKey: 'new-product'));
+                                  AddProductArg(uniqueKey: Uuid().v4()));
                         },
                         color: wayaTheme.colorScheme.primar50,
                         centerWidget: Row(
@@ -203,7 +204,7 @@ class SellerProductEmptyState extends StatelessWidget {
         WayaButton(
           callback: () {
             WayaNav.toNamed(AddProduct.route,
-                arguments: AddProductArg(uniqueKey: 'add-product'));
+                arguments: AddProductArg(uniqueKey: Uuid().v4()));
           },
           centerWidget: Row(
             mainAxisAlignment: MainAxisAlignment.center,

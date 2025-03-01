@@ -155,7 +155,7 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
                     'title': '${donation.title?.capitalizeFirst}',
                     'image': '${donation.imageURL}',
                     'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
-                    'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
+                  'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
                     'desc': '${donation.description}',
                     'solution': '${donation.solution}',
                     'impact': '${donation.impact}',

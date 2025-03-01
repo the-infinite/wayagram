@@ -4,8 +4,7 @@ class ContestContestantModelMean {
   int? statusCode;
   List<MyContestContestantModel>? data;
 
-  ContestContestantModelMean(
-      {this.message, this.status, this.statusCode, this.data});
+  ContestContestantModelMean({this.message, this.status, this.statusCode, this.data});
 
   ContestContestantModelMean.fromJson(Map<String, dynamic> json) {
     message = json['message'];
@@ -21,16 +20,15 @@ class ContestContestantModelMean {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['status'] = this.status;
-    data['statusCode'] = this.statusCode;
+    data['message'] = message;
+    data['status'] = status;
+    data['statusCode'] = statusCode;
     if (this.data != null) {
       data['data'] = this.data!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 }
-
 
 class MyContestContestantModel {
   String? id;
@@ -74,29 +72,28 @@ class MyContestContestantModel {
     status = json['status'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
-    contestApplicant = json['contestApplicant'] != null
-        ? new ContestApplicant.fromJson(json['contestApplicant'])
-        : null;
+    contestApplicant =
+        json['contestApplicant'] != null ? new ContestApplicant.fromJson(json['contestApplicant']) : null;
     votes = json['votes'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['profileId'] = this.profileId;
-    data['contestApplicationId'] = this.contestApplicationId;
-    data['contestId'] = this.contestId;
-    data['profilePhoto'] = this.profilePhoto;
-    data['bio'] = this.bio;
-    data['expectationFromVoters'] = this.expectationFromVoters;
-    data['introVideo'] = this.introVideo;
-    data['status'] = this.status;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    if (this.contestApplicant != null) {
-      data['contestApplicant'] = this.contestApplicant!.toJson();
+    data['id'] = id;
+    data['profileId'] = profileId;
+    data['contestApplicationId'] = contestApplicationId;
+    data['contestId'] = contestId;
+    data['profilePhoto'] = profilePhoto;
+    data['bio'] = bio;
+    data['expectationFromVoters'] = expectationFromVoters;
+    data['introVideo'] = introVideo;
+    data['status'] = status;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    if (contestApplicant != null) {
+      data['contestApplicant'] = contestApplicant!.toJson();
     }
-    data['votes'] = this.votes;
+    data['votes'] = votes;
     return data;
   }
 }
@@ -111,23 +108,24 @@ class ContestApplicant {
   String? address;
   ApplicationData? applicationData;
   String? status;
-  Null? rejectionReason;
+  Null rejectionReason;
   String? createdAt;
   String? updatedAt;
 
-  ContestApplicant(
-      {this.id,
-      this.contestId,
-      this.userId,
-      this.fullName,
-      this.email,
-      this.phoneNumber,
-      this.address,
-      this.applicationData,
-      this.status,
-      this.rejectionReason,
-      this.createdAt,
-      this.updatedAt});
+  ContestApplicant({
+    this.id,
+    this.contestId,
+    this.userId,
+    this.fullName,
+    this.email,
+    this.phoneNumber,
+    this.address,
+    this.applicationData,
+    this.status,
+    this.rejectionReason,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   ContestApplicant.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -137,9 +135,7 @@ class ContestApplicant {
     email = json['email'];
     phoneNumber = json['phoneNumber'];
     address = json['address'];
-    applicationData = json['applicationData'] != null
-        ? new ApplicationData.fromJson(json['applicationData'])
-        : null;
+    applicationData = json['applicationData'] != null ? ApplicationData.fromJson(json['applicationData']) : null;
     status = json['status'];
     rejectionReason = json['rejectionReason'];
     createdAt = json['createdAt'];
@@ -148,20 +144,20 @@ class ContestApplicant {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['contestId'] = this.contestId;
-    data['userId'] = this.userId;
-    data['fullName'] = this.fullName;
-    data['email'] = this.email;
-    data['phoneNumber'] = this.phoneNumber;
-    data['address'] = this.address;
-    if (this.applicationData != null) {
-      data['applicationData'] = this.applicationData!.toJson();
+    data['id'] = id;
+    data['contestId'] = contestId;
+    data['userId'] = userId;
+    data['fullName'] = fullName;
+    data['email'] = email;
+    data['phoneNumber'] = phoneNumber;
+    data['address'] = address;
+    if (applicationData != null) {
+      data['applicationData'] = applicationData!.toJson();
     }
-    data['status'] = this.status;
-    data['rejectionReason'] = this.rejectionReason;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    data['status'] = status;
+    data['rejectionReason'] = rejectionReason;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
     return data;
   }
 }
@@ -181,9 +177,9 @@ class ApplicationData {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['Full Name'] = this.fullName;
-    data['Portfolio'] = this.portfolio;
-    data['Email Address'] = this.emailAddress;
+    data['Full Name'] = fullName;
+    data['Portfolio'] = portfolio;
+    data['Email Address'] = emailAddress;
     return data;
   }
 }

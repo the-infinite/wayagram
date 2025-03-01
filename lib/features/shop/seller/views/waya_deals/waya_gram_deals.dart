@@ -24,7 +24,7 @@ class _WayaGramDealState extends ConsumerState<WayaGramDeals> {
 
     return WayaScaffold(
         isLoading: false,
-        isScrollable: true,
+        isScrollable: false,
         title: 'Wayagram Deals',
         body: Column(
           children: [

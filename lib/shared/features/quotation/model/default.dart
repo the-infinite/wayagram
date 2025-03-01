@@ -1,3 +1,4 @@
+import 'package:get/get_utils/get_utils.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'default.g.dart';
@@ -82,7 +83,7 @@ class BuyRequestModel {
     this.deliveryLga,
   });
 
-  String get fullname => '${brand.isNotEmpty ? '$brand ' : ''}$productName';
+  String get fullname => '${brand.isNotEmpty ? '${brand.capitalize} ' : ''}${productName.capitalize}';
 
   factory BuyRequestModel.fromJson(Map<String, dynamic> json) => _$BuyRequestModelFromJson(json);
 

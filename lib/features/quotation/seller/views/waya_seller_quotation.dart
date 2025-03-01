@@ -4,12 +4,11 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/quotation/buyer/views/buy_request.dart';
 import 'package:wayagram/features/quotation/buyer/views/my_request.dart';
 import 'package:wayagram/features/quotation/seller/views/bid_dashboard/bid_dashboard.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
-
-import '../../../../core/utils/waya_navigation.dart';
-import '../../buyer/views/buy_request.dart';
 
 class WayaSellerQuotation extends ConsumerStatefulWidget {
   const WayaSellerQuotation({super.key});

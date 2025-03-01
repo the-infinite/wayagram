@@ -5,6 +5,8 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/order/widgets/single_order_widget.dart';
@@ -25,6 +27,7 @@ class AllSellerOrders extends ConsumerStatefulWidget {
 
 class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
   late TextEditingController searchController;
+  List<SalesMetric> orders = orderMetrics;
 
   void initState() {
     super.initState();
@@ -48,63 +51,43 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
   @override
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(sellerOrdersVmProvider);
+    final shopState = ref.watch(shopVmProvider);
+
+    if (shopState.sellerMetrics != null) {
+      int numberOfPendingOrders = // products
+          shopState.sellerMetrics!.totalOrders.pending.count;
+
+      int numberOfCancelledOrders = // products
+          shopState.sellerMetrics!.totalOrders.cancelled.count;
+
+      int numberOfCompletedOrders = // products
+          shopState.sellerMetrics!.totalOrders.completed.count;
+
+      //  int numberOfProcessingOrders = // products
+      // shopState.sellerMetrics!.totalOrders.processing.count;
+
+      orders = orders.map((metric) {
+        if (metric.title == "Pending Orders") {
+          return metric.copyWith(metrics: "$numberOfPendingOrders");
+        } else if (metric.title == "Delivered Orders") {
+          return metric.copyWith(metrics: "$numberOfCompletedOrders");
+        } else if (metric.title == "Cancelled Orders") {
+          return metric.copyWith(metrics: "$numberOfCancelledOrders");
+        }
+
+        return metric;
+      }).toList();
+    }
     return WayaScaffold(
         isLoading: false,
-        isScrollable: true,
+        isScrollable: false,
         title: 'Orders',
         appBarTrailing: WayaCartIcon(),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Orders", style: wayaTheme.textTheme.titleLarge),
-            const Gap(3),
-            Text(
-              'View and Manage your orders',
-              style: wayaTheme.textTheme.hintStyle,
-            ),
-            const Gap(20),
-            FilterWidget(
-              hintText: 'Search Order',
-              search: searchController,
-            ),
-            const Gap(15),
-            GridView.builder(
-                itemCount: 3,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: viewModel.salesMetric.length,
-                    mainAxisSpacing: 0,
-                    childAspectRatio: 1.22,
-                    crossAxisSpacing: 8),
-                itemBuilder: (context, index) {
-                  return InventoryWidget(
-                      metrics: viewModel.salesMetric[index].metrics,
-                      color: viewModel.salesMetric[index].color!,
-                      title: viewModel.salesMetric[index].title);
-                }),
-            // const Gap(6),
-            // GridView.builder(
-            //     itemCount: 2,
-            //     physics: const NeverScrollableScrollPhysics(),
-            //     shrinkWrap: true,
-            //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //         crossAxisCount: viewModel.otherMetrics.length,
-            //         mainAxisSpacing: 0,
-            //         childAspectRatio: 1.8,
-            //         crossAxisSpacing: 8),
-            //     itemBuilder: (context, index) {
-            //       return InventoryWidget(
-            //           metrics: viewModel.otherMetrics[index]["metrics"],
-            //           color: viewModel.otherMetrics[index]['color'],
-            //           title: viewModel.otherMetrics[index]['title']);
-            //     }),
-            const Gap(20),
-            PaginatedDataView<Order>(
+        body: Expanded(
+            child: PaginatedDataView<Order>(
                 uniqueKey: 'seller-orders',
+                trailingWidget:
+                    _buildTrailing(context: context, orders: orders),
                 emptyState: EmptyState(
                     assetImage:
                         WayaAssets.images.wallet.searchDocu.image(scale: 1.5),
@@ -113,7 +96,7 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
                   count: 6,
                 ),
                 fetchData: ref.read(sellerOrdersVmProvider.notifier).getOrders,
-                result: (data,s) {
+                result: (data, s) {
                   final filteredOrder = WayaUtils.search<Order>(
                       data,
                       [
@@ -135,8 +118,45 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
                           order: filteredOrder[index],
                         );
                       });
-                })
-          ],
-        ));
+                })));
+  }
+
+  Widget _buildTrailing(
+      {required BuildContext context, required List<SalesMetric> orders}) {
+    final wayaTheme = Theme.of(context);
+    final viewModel = ref.watch(sellerOrdersVmProvider);
+    return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Orders", style: wayaTheme.textTheme.titleLarge),
+          const Gap(3),
+          Text(
+            'View and Manage your orders',
+            style: wayaTheme.textTheme.hintStyle,
+          ),
+          const Gap(20),
+          FilterWidget(
+            hintText: 'Search Order by ID, shop name, token etc',
+            search: searchController,
+          ),
+          const Gap(15),
+          GridView.builder(
+              itemCount: 3,
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: orders.length,
+                  mainAxisSpacing: 0,
+                  childAspectRatio: 1.22,
+                  crossAxisSpacing: 8),
+              itemBuilder: (context, index) {
+                return InventoryWidget(
+                    metrics: orders[index].metrics,
+                    color: orders[index].color!,
+                    title: orders[index].title);
+              }),
+          const Gap(20),
+        ]);
   }
 }

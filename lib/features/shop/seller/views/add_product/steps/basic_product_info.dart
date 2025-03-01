@@ -94,6 +94,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                         keyboardType: TextInputType.text,
                         controller: viewModel.productDescription,
                         hintText: 'Enter Product Description',
+                         padding: const EdgeInsets.all(12),
                         borderColor: formState.hasError &&
                                 viewModel.productDescription.text.isEmpty
                             ? wayaTheme.colorScheme.error

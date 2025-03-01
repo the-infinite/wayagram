@@ -7,6 +7,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 
@@ -74,6 +75,8 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
 
   Future<void> _placeBid() async {}
 
+  Future<void> _viewBids() async {}
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -96,38 +99,6 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              //   widget.data.images.isEmpty
-              //       ? Container(
-              //           height: 140,
-              //           decoration: BoxDecoration(
-              //               color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(8)),
-              //         )
-              //       : quotation.images.length == 1
-              //           ? WayaImage(imageUrl: quotation.images[0], height: 140)
-              //           : GridView.count(
-              //               shrinkWrap: true,
-              //               crossAxisCount: 2,
-              //               crossAxisSpacing: 4,
-              //               mainAxisSpacing: 20,
-              //               childAspectRatio: 1.3,
-              //               children: [
-              //                 WayaImage(imageUrl: quotation.images[0], height: 100),
-              //                 WayaImage(
-              //                   imageUrl: quotation.images[1],
-              //                   height: 100,
-              //                   overlay: Center(
-              //                     child: Text(
-              //                       "+${quotation.images.length - 1}",
-              //                       style: TextStyle().wayaCopyWith(
-              //                           color: wayaTheme.colorScheme.customBlack,
-              //                           fontSize: 50,
-              //                           fontWeight: FontWeight.w600),
-              //                     ),
-              //                   ),
-              //                 ),
-              //               ],
-              //             ),
-              // const Gap(20),
               Container(
                 padding: EdgeInsets.all(10),
                 width: 110,
@@ -225,18 +196,39 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
                 },
               ),
 
-              //? Where we find the delivery details.
-              if (widget.data.status == BuyRequestStatus.active) ...[
-                // Some space.
-                const Gap(20),
+              // Some space.
+              const Gap(20),
 
-                //? The button that we use to place a bid.
-                WayaButton(
-                  callback: _placeBid,
-                  text: 'Place Bid',
-                  height: 48,
+              //? Now, for the starting bid amount.
+              RichText(
+                text: TextSpan(
+                  children: [
+                    //* For the section title.
+                    TextSpan(text: 'Starting Price: ', style: wayaTheme.textTheme.hintStyle),
+
+                    //* For the starting amount.
+                    TextSpan(
+                      text: '₦ ${widget.data.bidStartingAmount}',
+                      style: wayaTheme.textTheme.bodyBold.copyWith(
+                        color: wayaTheme.colorScheme.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
+
+              // Some space.
+              const Gap(20),
+
+              //? The button that we use to place a bid.
+              WayaButton(
+                callback: widget.data.buyerId == ConversationState.self.id ? _viewBids : _placeBid,
+                text: widget.data.buyerId == ConversationState.self.id ? 'View Bids' : 'Place Bid',
+                height: 48,
+                isDisabled: widget.data.status != BuyRequestStatus.active,
+              ),
             ],
           ),
         ),

@@ -25,7 +25,7 @@ class OrderInfoWidget extends StatelessWidget {
           Text(
             title,
             style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.greyColor500, fontSize: 10),
+                color: wayaTheme.colorScheme.greyColor500, fontSize: 11),
           ),
         
          Container(

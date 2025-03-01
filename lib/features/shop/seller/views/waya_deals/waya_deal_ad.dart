@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -76,7 +77,7 @@ class WayaDealAd extends ConsumerWidget {
               callback: () {
                 WayaNav.toNamed(AddProduct.route,
                     arguments: AddWayagramArg(
-                        uniqueKey: 'add-waya-product', isWayagram: true));
+                        uniqueKey: Uuid().v4(), isWayagram: true));
               },
               text: 'Participate',
             )

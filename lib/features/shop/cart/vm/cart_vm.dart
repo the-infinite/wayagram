@@ -71,10 +71,7 @@ class CartVm extends StateNotifier<CartState> {
       required String productImage,
       required String productId}) async {
     final existingCart = state.cart;
-    // int intPrice = double.parse(product.price).toInt();
-    // int price = product.discountPercentage > 0
-    //     ? (intPrice - (intPrice * product.discountPercentage / 100)).toInt()
-    //     : intPrice;
+   
 
     if (existingCart == null) {
       final newCart = CartData(
@@ -92,6 +89,7 @@ class CartVm extends StateNotifier<CartState> {
             products: [
               CartProduct(
                   price: price,
+                  unitPrice: "$price",
                   quantity: count,
                   productId: productId,
                   productName: productName,
@@ -105,7 +103,7 @@ class CartVm extends StateNotifier<CartState> {
       state = state.copyWith(cart: newCart);
       // Post cart item
       getTotalProductQuantity();
-      await postCartItem(id: productId, shopId: shopId, price: price);
+      await postCartItem(id: productId, shopId: shopId);
       return;
     }
 
@@ -133,6 +131,7 @@ class CartVm extends StateNotifier<CartState> {
           updatedProducts.add(
             CartProduct(
                 price: price,
+                unitPrice: "$price",
                 quantity: count,
                 productId: productId,
                 productName: productName,
@@ -142,14 +141,14 @@ class CartVm extends StateNotifier<CartState> {
           );
           productAdded = true;
           print("add item for a shop ");
-          await postCartItem(id: productId, shopId: shopId, price: price);
+          await postCartItem(id: productId, shopId: shopId);
         }
 
         updatedItems[i] = updatedItems[i].copyWith(products: updatedProducts);
 
         final totalFee = updatedItems[i].products.fold<int>(
               0,
-              (sum, product) => sum + (product.price * product.quantity),
+              (sum, product) => sum + (double.parse(product.unitPrice).toInt() * product.quantity),
             );
         updatedItems[i] = updatedItems[i].copyWith(totalFee: totalFee);
 
@@ -171,6 +170,7 @@ class CartVm extends StateNotifier<CartState> {
             CartProduct(
                 price: price,
                 quantity: count,
+                unitPrice: "$price",
                 productId: productId,
                 productName: productName,
                 deliveryCharge: false,
@@ -180,7 +180,7 @@ class CartVm extends StateNotifier<CartState> {
         ),
       );
 
-      await postCartItem(id: productId, shopId: shopId, price: price);
+      await postCartItem(id: productId, shopId: shopId);
     }
 
     // final total = updatedItems.fold<double>(
@@ -225,7 +225,7 @@ class CartVm extends StateNotifier<CartState> {
 
           final totalFee = updatedProducts.fold<int>(
             0,
-            (sum, product) => sum + (product.price * product.quantity),
+            (sum, product) => sum + (double.parse(product.unitPrice).toInt() * product.quantity),
           );
 
           return item.copyWith(products: updatedProducts, totalFee: totalFee);
@@ -255,7 +255,7 @@ class CartVm extends StateNotifier<CartState> {
   }
 
   Future<void> postCartItem(
-      {required String id, required String shopId, required int price}) async {
+      {required String id, required String shopId}) async {
     try {
       final userId = await _secureDataSource.getUserId();
 
@@ -264,7 +264,7 @@ class CartVm extends StateNotifier<CartState> {
           quantity: 1,
           userId: userId!,
           shopId: shopId,
-          price: price);
+          );
 
       if (response.success) {
         print(response.data);

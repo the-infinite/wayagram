@@ -156,7 +156,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
 
                       ],),
                   );
-                });
+                }
+                );
           }),
 
 
