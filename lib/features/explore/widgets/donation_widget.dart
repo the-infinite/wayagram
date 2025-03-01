@@ -19,9 +19,21 @@ class DonationWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    int daysLeft = DateTime.parse('${donation.expirationDate}')
-        .difference(DateTime.parse('${donation.startDate}'))
+
+    int daysLeft = DateTime.parse(donation.expirationDate!)
+        .difference(DateTime.now())
         .inDays;
+
+    if (daysLeft < 0) {
+      daysLeft = 0;
+    }
+
+    int amountRaised = double.parse(donation.amountRaised!).toInt();
+
+    int targetedAmount = double.parse(donation.targetAmount!).toInt();
+
+    double ratioLeft = amountRaised / targetedAmount;
+
     return Column(
       children: [
         Container(
@@ -95,8 +107,8 @@ class DonationWidget extends ConsumerWidget {
                               },
                               text: "Donate",
                               height: 30,
-                              color: wayaTheme.colorScheme.customPrimary,
-                              textColor: wayaTheme.colorScheme.white,
+                              color: wayaTheme.colorScheme.primar50,
+                              textColor: wayaTheme.colorScheme.customPrimary,
                               radius: 5,
                             ),
                           ),
@@ -106,10 +118,10 @@ class DonationWidget extends ConsumerWidget {
                         height: 6.h,
                       ),
                       EngagementRange(
-                          bottomLeft: "500 Donators",
+                          bottomLeft: "${donation.donationCount} Donation",
                           bottomRight:
                               "$daysLeft ${daysLeft > 0 ? "Days" : "Day"} left",
-                          range: 0.4)
+                          range: ratioLeft)
                     ],
                   ),
                 )

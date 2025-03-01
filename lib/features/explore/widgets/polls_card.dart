@@ -27,7 +27,7 @@ class PollsCard extends StatelessWidget {
       double aCalc = totalVotes > 0 ? aVote / totalVotes : 0;
       double bCalc = totalVotes > 0 ? bVote / totalVotes : 0;
 
-      return bCalc.compareTo(aCalc); // Descending order
+      return bCalc.compareTo(aCalc); 
     });
 
     return Column(

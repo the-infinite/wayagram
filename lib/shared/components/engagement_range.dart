@@ -37,6 +37,7 @@ class EngagementRange extends StatelessWidget {
           width: double.infinity,
           height: 10,
           child: Stack(
+           clipBehavior: Clip.hardEdge,
             children: [
               Container(
                 decoration: BoxDecoration(

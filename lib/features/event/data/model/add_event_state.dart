@@ -170,6 +170,7 @@ class AddEventState {
         location: location.toLowerCase(),
         startDate: startDate,
         endDate: endDate,
+        description: description.text,
         endTime: endTime,
         startTime: startTime,
         eventType: eventType.toLowerCase(),
@@ -177,9 +178,9 @@ class AddEventState {
         privacyOption: privacyOption.toLowerCase(),
         image: image!,
         maxCapacity: maxCapacity!.text.isEmpty && isEditingMode
-            ? 0
+            ? null
             : maxCapacity!.text.isEmpty
-                ? 0
+                ? null
                 : int.parse(maxCapacity!.text),
         locationAddress: location == 'Physical' ? address.text : link.text,
         userId: userId);

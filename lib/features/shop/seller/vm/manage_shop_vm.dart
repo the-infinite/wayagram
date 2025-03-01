@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/order/data/repo/order_repository.dart';
@@ -25,15 +26,13 @@ List<SalesMetric> salesMetrics = [
 
 class ManageShopVm extends StateNotifier<ManageShopState> {
   final ShopRepository _shopRepository;
-  final WayaSecureDataSource _secureDataSource;
-  final OrderRepository _orderRepository;
+ 
   final Ref ref;
 
   final _logger = getLogger('ManageShopVm');
 
-  ManageShopVm(this._shopRepository, this._orderRepository,
-      this._secureDataSource, this.ref)
-      : super(ManageShopState.initial());
+  ManageShopVm(this._shopRepository,  this.ref)
+      : super(ManageShopState.initial()) ;
 
   Future<void> getSellerShops() async {
     final isBusiness = ref.read(successfulSetupVmProvider).business;
@@ -47,9 +46,9 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
     state = state.copyWith(isPersonalNotUpgradedToBusiness: false);
 
     try {
-      final userId = await _secureDataSource.getUserId();
+      
       state = state.copyWith(isLoading: true);
-      final response = await _shopRepository.getShopBySellerId(userId!);
+      final response = await _shopRepository.getShopBySellerId(ConversationState.self.id);
 
       if (response.success) {
         ShopResponseModel responseModel =
@@ -163,5 +162,5 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 final manageShopVmProvider =
     StateNotifierProvider.autoDispose<ManageShopVm, ManageShopState>((ref) {
   return ManageShopVm(
-      ShopRepository(), OrderRepository(), WayaSecureDataSource(), ref);
+      ShopRepository(), ref);
 });
