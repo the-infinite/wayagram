@@ -1,5 +1,8 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/order/data/model/order_state.dart';
@@ -13,7 +16,7 @@ class OrderVm extends StateNotifier<OrderState> {
   OrderVm(this._orderRepository, this._secureDataSource, this.ref)
       : super(OrderState());
 
-  Future<PaginatedResult<Order>?> getOrders(int page) async {
+  Future<PaginatedResult<Order>?> getOrders({required int page}) async {
     try {
       state = state.copyWith(isLoading: false);
       final userId = await _secureDataSource.getUserId();
@@ -30,6 +33,28 @@ class OrderVm extends StateNotifier<OrderState> {
     } catch (e) {
       print(e);
       return null;
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> declineOrder(
+      {required String orderId,
+      required String reason,
+      required BuildContext context}) async {
+    try {
+      state = state.copyWith(isRejecting: true);
+      final response =
+          await _orderRepository.declineOrder(orderId: orderId, reason: reason);
+
+      if (response.success && context.mounted) {
+        WayaSnackBar.showToast("You have declined this order");
+        Navigator.pop(context);
+        WayaNav.toNamed(BottomView.route,
+            arguments: {'index': 1, 'current': 2});
+      }
+    } catch (e) {
+      print(e);
     } finally {
       state = state.copyWith(isLoading: false);
     }

@@ -3,6 +3,9 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
+import 'package:intl/intl.dart';
+import 'package:wayagram/features/shop/order/data/model/order_state.dart';
 
 class OrderStatus {
   final bool status;
@@ -20,93 +23,139 @@ class OrderStatus {
   });
 }
 
-class OrderTracking extends StatelessWidget {
+class OrderTracking extends StatefulWidget {
   final String? status;
   final String? type;
   final List<String> statuses;
-  const OrderTracking(
-      {super.key, this.status, required this.type, required this.statuses});
+  final List<CartOrderStatus>? currentStatuses;
+
+  const OrderTracking({
+    super.key,
+    this.status,
+    required this.type,
+    required this.statuses,
+    this.currentStatuses,
+  });
+
+  @override
+  State<OrderTracking> createState() => _OrderTrackingState();
+}
+
+class _OrderTrackingState extends State<OrderTracking> {
+  final DateFormat formatter = DateFormat('dd MMM.');
+
+  List<OrderStatus> orderStatusList = [];
+  List<String> currentStatusList = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    setState(() {
+      currentStatusList =
+          widget.currentStatuses?.map((s) => s.status.toLowerCase()).toList() ??
+              [];
+    });
+    _updateOrderStatusList();
+  }
+
+  @override
+  void didUpdateWidget(covariant OrderTracking oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.currentStatuses != oldWidget.currentStatuses) {
+      _updateOrderStatusList();
+    }
+  }
+
+  void _updateOrderStatusList() {
+    final List<String> expectedStatuses =
+        widget.type == 'Pickup' ? pickupStatus : deliveryStatus;
+
+    // final List<String> currentStatusList =
+    //     widget.currentStatuses?.map((s) => s.status.toLowerCase()).toList() ??
+    //         [];
+
+    print(expectedStatuses);
+
+    print(currentStatusList);
+
+    int lastActiveIndex = expectedStatuses
+        .lastIndexWhere((status) => currentStatusList.contains(status));
+
+    setState(() {
+      orderStatusList = expectedStatuses.map((s) {
+        final int statusIndex = expectedStatuses.indexOf(s);
+        final bool isActive = statusIndex <= lastActiveIndex;
+        final CartOrderStatus? cartStatus = widget.currentStatuses
+            ?.firstWhereOrNull((c) => c.status.toLowerCase() == s);
+        final DateTime? updatedAt =
+            cartStatus != null ? DateTime.tryParse(cartStatus.updatedAt) : null;
+        final String formattedDate =
+            updatedAt != null ? formatter.format(updatedAt) : '';
+        final String formattedTime =
+            updatedAt != null ? DateFormat('h:mm a').format(updatedAt) : '';
+
+        return OrderStatus(
+          description: getStatusDescription(s),
+          title: getStatusTitle(s),
+          date: formattedDate,
+          time: formattedTime,
+          status: isActive,
+        );
+      }).toList();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    // Define the order statuses
-
-    final currentStatusIndex = status != null ? statuses.indexOf(status!) : -1;
-    List<OrderStatus> pickUp = [
-      OrderStatus(
-        description:
-            "Your order has been received and is awaiting confirmation",
-        title: "Pending",
-        date: '10 Oct.',
-        time: '9:00PM',
-        status: currentStatusIndex >= 0,
-      ),
-      OrderStatus(
-        description: "Your order is ready for pickup",
-        title: "Ready for pickup",
-        time: '9:00PM',
-        date: '10 Oct.',
-        status: currentStatusIndex >= 1,
-      ),
-      OrderStatus(
-        description: "Your order is scheduled for pickup",
-        title: "In Transit",
-        time: '9:00PM',
-        date: '10 Oct.',
-        status: currentStatusIndex >= 2,
-      ),
-      OrderStatus(
-        description: "Your order has been picked up",
-        title: "Completed",
-        date: '10 Oct.',
-        time: '9:00PM',
-        status: currentStatusIndex >= 3,
-      ),
-    ];
-
-    List<OrderStatus> delivery = [
-      OrderStatus(
-        description:
-            "Your order has been received and is awaiting confirmation",
-        title: "Pending",
-        date: '10 Oct.',
-        time: '9:00PM',
-        status: currentStatusIndex >= 0,
-      ),
-      OrderStatus(
-        description: "We are preparing your order for delivery",
-        title: "Processing",
-        time: '9:00PM',
-        date: '10 Oct.',
-        status: currentStatusIndex >= 1,
-      ),
-      OrderStatus(
-        description: "Your order is on its way to your location",
-        title: "In Transit",
-        time: '9:00PM',
-        date: '10 Oct.',
-        status: currentStatusIndex >= 2,
-      ),
-      OrderStatus(
-        description: "Your order is delivered",
-        title: "Delivered",
-        date: '10 Oct.',
-        time: '9:00PM',
-        status: currentStatusIndex >= 3,
-      ),
-    ];
-    List<OrderStatus> orderStatus = type == 'Pickup' ? pickUp : delivery;
-
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: List.generate(orderStatus.length, (index) {
+      children: List.generate(orderStatusList.length, (index) {
         return StepWidget(
-          orderStatus: orderStatus[index],
-          isNotLast: index != orderStatus.length - 1,
+          orderStatus: orderStatusList[index],
+          isNotLast: index != orderStatusList.length - 1,
         );
       }),
     );
+  }
+
+  String getStatusDescription(String status) {
+    switch (status) {
+      case 'pending':
+        return "Your order has been received and is awaiting confirmation";
+      case 'processing':
+        return "We are preparing your order for delivery";
+      case 'onTransit':
+        return "Your order is on its way to your location";
+      case 'completed':
+        return "Your order has been delivered";
+      case 'readyForPickUp':
+        return "Your order is ready for pickup";
+      case 'pickUpScheduled':
+        return "Your order is scheduled for pickup";
+      default:
+        return "";
+    }
+  }
+
+  String getStatusTitle(String status) {
+    switch (status) {
+      case 'pending':
+        return "Pending";
+      case 'processing':
+        return "Processing";
+      case 'onTransit':
+        return "In Transit";
+      case 'completed':
+        return "Delivered";
+      case 'readyForPickUp':
+        return "Ready for Pickup";
+      case 'pickUpScheduled':
+        return "Pickup Scheduled";
+      default:
+        return "";
+    }
   }
 }
 
@@ -141,7 +190,7 @@ class StepWidget extends StatelessWidget {
                 children: [
                   Text(
                     orderStatus.title,
-                    style: wayaTheme.textTheme.bodyLarge,
+                    style: wayaTheme.textTheme.bodyMedium,
                   ),
                   const Gap(8),
                   Text(

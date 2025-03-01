@@ -1,24 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:wayagram/core/data/model/model.dart';
-import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
-import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart';
-import 'package:wayagram/features/quotation/data/model/model.dart';
 
 class CreateRequestState {
   final TextEditingController productName;
   final TextEditingController brandName;
   final TextEditingController productDescription;
-  late final TextEditingController startTime;
-  final TextEditingController endTime;
-   final TextEditingController deliveryAddress;
+  final ValueNotifier<TimeOfDay?> startTime;
+  final ValueNotifier<TimeOfDay?> endTime;
+  final ValueNotifier<DateTime?> bidDate;
+  final TextEditingController deliveryAddress;
   final TextEditingController deliveryPrice;
   final TextEditingController quantity;
   final TextEditingController minDistance;
@@ -44,7 +37,7 @@ class CreateRequestState {
   final String deliveryState;
   final String biddingStartTime;
   final String productColor;
-  late final String pickUpOption;
+  final String pickUpOption;
   final String discountType;
   List<DocType> uploadedDocuments;
   File? productImage;
@@ -55,8 +48,9 @@ class CreateRequestState {
     TextEditingController? productName,
     TextEditingController? brandName,
     TextEditingController? productDescription,
-    TextEditingController? startTime,
-    TextEditingController? endTime,
+    ValueNotifier<TimeOfDay?>? startTime,
+    ValueNotifier<TimeOfDay?>? endTime,
+    ValueNotifier<DateTime?>? bidDate,
     TextEditingController? pricePerUnit,
     TextEditingController? deliveryAddress,
     TextEditingController? deliveryPrice,
@@ -80,7 +74,7 @@ class CreateRequestState {
     TextEditingController? bidStartingAmount,
     TextEditingController? maxBidAmount,
     this.discountType = '',
-    this.pickUpOption = '',
+    this.pickUpOption = 'delivery',
     this.vendorSeeBuyRequest = false,
     this.skipAddress = false,
     this.applyDiscount = false,
@@ -91,8 +85,9 @@ class CreateRequestState {
   })  : productName = productName ?? TextEditingController(),
         brandName = brandName ?? TextEditingController(),
         productDescription = productDescription ?? TextEditingController(),
-        startTime = startTime ?? TextEditingController(),
-        endTime = endTime ?? TextEditingController(),
+        startTime = startTime ?? ValueNotifier<TimeOfDay?>(null),
+        endTime = endTime ?? ValueNotifier<TimeOfDay?>(null),
+        bidDate = bidDate ?? ValueNotifier<DateTime?>(null),
         deliveryAddress = deliveryAddress ?? TextEditingController(),
         deliveryPrice = deliveryPrice ?? TextEditingController(),
         quantity = quantity ?? TextEditingController(),
@@ -101,13 +96,13 @@ class CreateRequestState {
         bidStartingAmount = bidStartingAmount ?? TextEditingController(),
         maxBidAmount = maxBidAmount ?? TextEditingController();
 
-
   CreateRequestState copyWith({
     TextEditingController? productName,
     TextEditingController? brandName,
     TextEditingController? productDescription,
-    TextEditingController? startTime,
-    TextEditingController? endTime,
+    ValueNotifier<TimeOfDay?>? startTime,
+    ValueNotifier<TimeOfDay?>? endTime,
+    ValueNotifier<DateTime?>? bidDate,
     TextEditingController? pricePerUnit,
     TextEditingController? deliveryAddress,
     TextEditingController? deliveryPrice,
@@ -146,6 +141,7 @@ class CreateRequestState {
       productDescription: productDescription ?? this.productDescription,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
+      bidDate: bidDate ?? this.bidDate,
       deliveryAddress: deliveryAddress ?? this.deliveryAddress,
       deliveryPrice: deliveryPrice ?? this.deliveryPrice,
       productCategory: productCategory ?? this.productCategory,
@@ -178,5 +174,6 @@ class CreateRequestState {
       isFocused: isFocused ?? this.isFocused,
     );
   }
-}
 
+  bool get canDeliver => pickUpOption == 'delivery' && !skipAddress;
+}

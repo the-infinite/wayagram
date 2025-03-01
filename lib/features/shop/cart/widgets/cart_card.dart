@@ -232,13 +232,12 @@ class CartProductCard extends ConsumerWidget {
                       ),
                       const Gap(5),
                       Text(
-                        "Quantity: ${cartProduct.quantity} x ${WayaHelpers.formatPrice(cartProduct.price)}",
+                        "Quantity: ${cartProduct.quantity} x ${WayaHelpers.formatPrice((double.parse(cartProduct.unitPrice)).toInt())}",
                         style: wayaTheme.textTheme.hintStyle,
                       ),
                       const Gap(5),
                       Text(
-                        WayaHelpers.formatPrice(
-                            cartProduct.quantity * cartProduct.price),
+                        WayaHelpers.formatPrice(double.parse(cartProduct.unitPrice).toInt() * cartProduct.quantity),
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
                             fontWeight: FontWeight.w600,
@@ -256,8 +255,7 @@ class CartProductCard extends ConsumerWidget {
                           count: 1,
                           productId: cartProduct.productId,
                           shopId: shopId,
-                          price: (cartProduct.price / cartProduct.quantity)
-                              .toInt(),
+                          price: double.parse(cartProduct.unitPrice).toInt(),
                           productImage: cartProduct.productImage ?? '',
                           productName: cartProduct.productName);
                     },

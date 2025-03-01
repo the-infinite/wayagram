@@ -5,24 +5,12 @@ import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/quotation/seller/views/bid_dashboard/widgets/inventory_widget.dart';
-import 'package:wayagram/features/quotation/vm/seller_bids_vm.dart';
-import 'package:wayagram/features/quotation/widgets/single_bid_widget.dart';
 import 'package:wayagram/features/quotation/widgets/single_see_bid_widget.dart';
-import 'package:wayagram/features/quotation/widgets/single_settlement_widget.dart';
-
-import 'package:wayagram/features/shop/seller/vm/seller_orders_vm.dart';
-import 'package:wayagram/features/shop/widgets/filter_widget.dart';
-import 'package:wayagram/features/shop/order/widgets/single_order_widget.dart';
-import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
-
-
 
 class SeeSellerBids extends ConsumerStatefulWidget {
-  static const route = '/seeSeller-bids';
+  static const route = '/quotation/seller/bids';
   const SeeSellerBids({super.key});
 
   @override

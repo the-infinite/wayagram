@@ -26,8 +26,8 @@ extension WayaColorSchemeExtension on ColorScheme {
   Color get success700 => WayaColors.success700;
 
   // pending color
- Color get pending50 => WayaColors.pending50;
-  Color get pending => WayaColors.pending;
+ Color get pending50 => const Color(0xFFFBF8DE);
+  Color get pending => const Color(0xFFF1B10E);
 
     // info color
  Color get info50 => WayaColors.info50;

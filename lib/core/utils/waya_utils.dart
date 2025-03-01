@@ -23,47 +23,53 @@ class WayaUtils {
       {required BuildContext context,
       required String title,
       required String message,
-   VoidCallback? onPress,
+      VoidCallback? onPress,
       required Widget icon,
       String? buttonText,
       String? secondButtonText,
       Widget? buttonCenterWidget,
       Widget? secondButtonCenterWidget,
+      bool isDismissible = true,
       VoidCallback? onCancel}) {
-    return showModalSheet(context,
-        child: WayaNoticeModal(
-          title: title,
-          onPress: onPress ?? () => {},
-          message: message,
-          icon: icon,
-          buttonText: buttonText,
-          secondButtonCenterWidget: secondButtonCenterWidget,
-          buttonCenterWidget: buttonCenterWidget,
-          secondButtonText: secondButtonText,
-          onCancel: onCancel,
-        )
-        );
+    print(onCancel != null);
+    return showModalSheet(
+      context,
+      isDismissible: isDismissible,
+      child: WayaNoticeModal(
+        title: title,
+        onPress: onPress ?? () => {},
+        message: message,
+        icon: icon,
+        buttonText: buttonText,
+        secondButtonCenterWidget: secondButtonCenterWidget,
+        buttonCenterWidget: buttonCenterWidget,
+        secondButtonText: secondButtonText,
+        onCancel: onCancel,
+      ),
+    );
   }
 
-  static Future<Select> showSelectModal({
+  static Future<List<Select>> showSelectModal({
     required BuildContext context,
     required String title,
     required List<Select> items,
+    List<Select>? selectedItems,
+    bool multi = false,
   }) async {
     final result = await showModalBottomSheet(
       context: context,
+      isDismissible: !multi,
       builder: (BuildContext context) {
         return WayaBottomSheetContent(
           title: title,
           items: items,
+          selectedItems: selectedItems,
+          multi: multi,
         );
       },
-      transitionAnimationController: AnimationController(
-        duration: const Duration(milliseconds: 300),
-        vsync: Navigator.of(context),
-      ),
     );
-    return result;
+
+    return result ?? [];
   }
 
   static copyText(String text) async {
@@ -72,11 +78,12 @@ class WayaUtils {
   }
 
   static Future<T?> showModalSheet<T>(BuildContext context,
-      {required Widget child}) {
+      {required Widget child, bool isDismissible = true}) {
     return showModalBottomSheet<T?>(
       constraints: BoxConstraints(maxHeight: Get.height * 0.8),
       context: context,
       isScrollControlled: true,
+      isDismissible: isDismissible,
       useRootNavigator: true,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
@@ -156,32 +163,31 @@ class WayaUtils {
     }
   }
 
- static List<T> search<T extends BaseModel<T>>(
-  List<T> data,
-  List<String> accessorKeys,
-  String searchTerm,
-) {
-  if (searchTerm.isEmpty) {
-    return data;
+  static List<T> search<T extends BaseModel<T>>(
+    List<T> data,
+    List<String> accessorKeys,
+    String searchTerm,
+  ) {
+    if (searchTerm.isEmpty) {
+      return data;
+    }
+
+    return data.where((item) {
+      final map = item.toMap();
+      return accessorKeys.any((key) {
+        final value = map[key];
+
+        if (value is String) {
+          return value.toLowerCase().contains(searchTerm.toLowerCase());
+        } else if (value is List<String>) {
+          return value.any((element) =>
+              element.toLowerCase().contains(searchTerm.toLowerCase()));
+        }
+
+        return false;
+      });
+    }).toList();
   }
-
-  return data.where((item) {
-    final map = item.toMap();
-    return accessorKeys.any((key) {
-      final value = map[key];
-
-      if (value is String) {
-        return value.toLowerCase().contains(searchTerm.toLowerCase());
-      } else if (value is List<String>) {
-        return value.any((element) =>
-            element.toLowerCase().contains(searchTerm.toLowerCase()));
-      }
-
-      return false;
-    });
-  }).toList();
-}
-
 
   static Future<String?> uploadFile(
       {required UploadFileRepository repository, required File file}) async {
@@ -210,31 +216,30 @@ class WayaUtils {
   }
 
   static List<T> strictSearch<T extends BaseModel<T>>(
-  List<T> data,
-  List<String> accessorKeys,
-  String searchTerm,
-) {
-  if (searchTerm.isEmpty) {
-    return [];
+    List<T> data,
+    List<String> accessorKeys,
+    String searchTerm,
+  ) {
+    if (searchTerm.isEmpty) {
+      return [];
+    }
+
+    final filteredData = data.where((item) {
+      final map = item.toMap();
+      return accessorKeys.any((key) {
+        final value = map[key];
+
+        if (value is String) {
+          return value.toLowerCase().contains(searchTerm.toLowerCase());
+        } else if (value is List<String>) {
+          return value.any((element) =>
+              element.toLowerCase().contains(searchTerm.toLowerCase()));
+        }
+
+        return false;
+      });
+    }).toList();
+
+    return filteredData.isNotEmpty ? filteredData : [];
   }
-
-  final filteredData = data.where((item) {
-    final map = item.toMap();
-    return accessorKeys.any((key) {
-      final value = map[key];
-
-      if (value is String) {
-        return value.toLowerCase().contains(searchTerm.toLowerCase());
-      } else if (value is List<String>) {
-        return value.any((element) =>
-            element.toLowerCase().contains(searchTerm.toLowerCase()));
-      }
-
-      return false;
-    });
-  }).toList();
-
-  return filteredData.isNotEmpty ? filteredData : [];
-}
-
 }

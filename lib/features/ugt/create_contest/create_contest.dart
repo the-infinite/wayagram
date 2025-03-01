@@ -44,7 +44,6 @@ class _CreateContestState extends ConsumerState<CreateContest>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final viewModel = ref.watch(contestNotifierProvider);
     return WayaScaffoldWithProgressBar(
         isLoading:false,

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ContestResponse {
   final String message;
   final bool status;
@@ -148,6 +146,7 @@ class Contest {
   ContestSettings? contestSettings;
   bool? isLiked;
   bool? isFollowing;
+  bool? isShared;
 
   Contest({
     this.id,
@@ -191,15 +190,18 @@ class Contest {
     this.contestSettings,
     this.isLiked,
     this.isFollowing,
+    this.isShared,
   });
 
-  Contest.fromJson(Map<String, dynamic> json) : likeCount = json['likeCount'] ?? 0 {
+  Contest.fromJson(Map<String, dynamic> json)
+      : likeCount = json['likeCount'] ?? 0 {
     id = json['id'];
     profileId = json['profileId'];
     hostId = json['hostId'];
     title = json['title'];
     isLiked = false;
     isFollowing = false;
+    isShared = false;
     category = json['category'];
     state = json['state'];
     description = json['description'];
@@ -230,7 +232,7 @@ class Contest {
     updatedAt = json['updatedAt'];
     deletedAt = json['deletedAt'];
     categoryName = json['categoryName'];
-    likeCount = json['likeCount']??0;
+    likeCount = json['likeCount'] ?? 0;
     shareCount = json['shareCount'];
     followCount = json['followCount'];
     applicantCount = json['applicantCount'];
@@ -286,7 +288,6 @@ class Contest {
     return data;
   }
 
-
   Contest copyWith({
     String? id,
     String? profileId,
@@ -329,6 +330,7 @@ class Contest {
     ContestSettings? contestSettings,
     bool? isLiked,
     bool? isFollowing,
+    bool? isShared,
   }) {
     return Contest(
       id: id ?? this.id,
@@ -351,7 +353,8 @@ class Contest {
       amount: amount ?? this.amount,
       durationType: durationType ?? this.durationType,
       numberOfDuration: numberOfDuration ?? this.numberOfDuration,
-      participationStartDate: participationStartDate ?? this.participationStartDate,
+      participationStartDate:
+          participationStartDate ?? this.participationStartDate,
       descriptionOfAwards: descriptionOfAwards ?? this.descriptionOfAwards,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
@@ -372,6 +375,7 @@ class Contest {
       contestSettings: contestSettings ?? this.contestSettings,
       isLiked: isLiked ?? this.isLiked,
       isFollowing: isFollowing ?? this.isFollowing,
+      isShared: isShared ?? this.isShared,
     );
   }
 /*   Contest copyWith({

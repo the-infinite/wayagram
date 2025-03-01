@@ -236,7 +236,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          WayaSelectField(
+                          WayaSelectField<String>(
                               height: 0.3,
                               label: "Poll Type",
                               value: viewModel.pollType.capitalizeFirst,
@@ -245,7 +245,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                               items: pollTypes,
                               onSelected: (value) => ref
                                   .read(createPollVotingProvider.notifier)
-                                  .selectPollType(value.value)),
+                                  .selectPollType(value.first.value)),
                           if (formState.hasError && viewModel.pollType.isEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
@@ -270,7 +270,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          WayaSelectField(
+                          WayaSelectField<String>(
                               height: 0.3,
                               label: "Poll Type",
                               uniqueKey: 'poll_type',

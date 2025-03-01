@@ -28,7 +28,6 @@ class AddProductImages extends ConsumerStatefulWidget {
 class _AddProductImagesState extends ConsumerState<AddProductImages> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final viewModel = ref.watch(addProductProvider(widget.uniqueKey));
     final provider = ref.read(addProductProvider(widget.uniqueKey).notifier);
     final wayaTheme = Theme.of(context);
@@ -191,7 +190,6 @@ class AddedImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Stack(
       children: [

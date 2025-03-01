@@ -5,12 +5,13 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_order_detail_vm.dart';
 import 'package:wayagram/features/shop/widgets/dotted_border_order_info_widget.dart';
 import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
+import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class SellerOrderDetails extends ConsumerWidget {
   static const route = '/seller-order-details';
@@ -18,7 +19,6 @@ class SellerOrderDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final viewModel = ref.watch(sellerOrderDetailVmProvider);
 
     final wayaTheme = Theme.of(context);
@@ -42,12 +42,22 @@ class SellerOrderDetails extends ConsumerWidget {
             const Gap(30),
             Text("Product Ordered", style: wayaTheme.textTheme.bodyMedium),
             const Gap(15),
-            ListView.builder(
+                    ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 2,
+                itemCount: arg?.items.length,
                 itemBuilder: (context, index) {
-                  return Container(); // OrderedProductCard()
+                  CartProduct order = CartProduct(
+                      price: double.parse(arg?.items[index].price ?? '0')
+                              .toInt() ,
+                      quantity: arg?.items[index].quantity ?? 0,
+                      productId: arg?.items[index].productId ?? '',
+                      productName: arg?.items[index].productName ?? '',
+                      deliveryCharge: false,
+                      unitPrice: "${arg?.items[index].price ?? 0}",
+                      productImage: arg?.items[index].productImage ?? '',
+                      deliveryOptions: '');
+                  return OrderedProductCard(orders: order);
                 }),
             const Gap(10),
             DottedBorderOrderInfoWidget(
@@ -68,11 +78,11 @@ class SellerOrderDetails extends ConsumerWidget {
                 description: WayaHelpers.formatDateString(
                     arg?.updatedAt.toIso8601String())),
             const Gap(8),
-            OrderInfoWidget(
-                title: "Order Status",
-                description: arg?.deliveryType == 'Pickup'
-                    ? arg?.pickupStatus ?? ""
-                    : arg?.deliveryStatus ?? ""),
+            // OrderInfoWidget(
+            //     title: "Order Status",
+            //     description: arg?.deliveryType == 'Pickup'
+            //         ? arg?.pickupStatus ?? ""
+            //         : arg?.deliveryStatus ?? ""),
             const Gap(8),
             OrderInfoWidget(
                 title: "Delivery Type", description: arg?.deliveryType ?? ''),
@@ -113,9 +123,9 @@ class SellerOrderDetails extends ConsumerWidget {
                       title: "Delivery Address",
                       description: arg?.deliveryAddress ?? '-'),
                   const Gap(8),
-                  OrderInfoWidget(
-                      title: "Delivery Status",
-                      description: arg?.deliveryStatus ?? '-'),
+                  // OrderInfoWidget(
+                  //     title: "Delivery Status",
+                  //     description: arg?.deliveryStatus ?? '-'),
                   const Gap(8),
                   OrderInfoWidget(
                       title: "Delivery Price",
@@ -173,16 +183,17 @@ class SellerOrderDetails extends ConsumerWidget {
                   width: 20,
                 ),
               ),
-            // WayaButton(
-            //   color: wayaTheme.colorScheme.transparent,
-            //   textColor: wayaTheme.colorScheme.greyColor500,
-            //   border: Border.all(
-            //       width: 1, color: wayaTheme.colorScheme.greyColor300),
-            //   callback: () {
-            //     viewModel.rejectOrder(context);
-            //   },
-            //   text: "Reject Order",
-            // )
+            const Gap(10),
+            WayaButton(
+              color: wayaTheme.colorScheme.transparent,
+              textColor: wayaTheme.colorScheme.greyColor900,
+              border: Border.all(
+                  width: 1, color: wayaTheme.colorScheme.greyColor300),
+              callback: () {
+                viewModel.rejectOrder(context, arg!.id);
+              },
+              text: "Reject Order",
+            )
           ],
         ));
   }

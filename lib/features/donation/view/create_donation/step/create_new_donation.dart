@@ -10,6 +10,7 @@ import 'package:wayagram/features/auth/add_business_account/widget/add_document_
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/event/widgets/event_date_widget.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
+import 'package:wayagram/shared/components/radio_select.dart';
 
 class CreateNewDonation extends ConsumerStatefulWidget {
   final Function gotoNextTab;
@@ -30,9 +31,11 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    final key = 'add-donation';
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
+    final selectedOption = ref.watch(radioSelectProvider(key));
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,8 +57,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
 
                 AddDocumentWidget(
                     addFile: ref.read(donationVmProvider.notifier).addFile,
-                    removeFile:
-                    ref.read(donationVmProvider.notifier).removeFile,
+                    removeFile: ref.read(donationVmProvider.notifier).removeFile,
                     title: viewModel.donationImage != null
                         ? viewModel.donationImage!.name
                         : "Upload Event Thumbnail",
@@ -213,7 +215,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                 }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
-                  if (viewModel.amount.text.isEmpty) {
+                  if (viewModel.targetAmount.text.isEmpty) {
                     return 'Amount is required';
                   }
 
@@ -224,7 +226,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                     children: [
                       WayaTextFormField(
                         keyboardType: TextInputType.number,
-                        controller: viewModel.amount,
+                        controller: viewModel.targetAmount,
                         hintText: 'e.g., 500,000',
                         suffixIcon: Padding(
                           padding: EdgeInsets.symmetric(vertical: 15),
@@ -232,13 +234,54 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                               style: wayaTheme.textTheme.hintStyle),
                         ),
                         borderColor: formState.hasError &&
-                            viewModel.amount.text.isEmpty
+                            viewModel.targetAmount.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         label: 'Target Amount',
                       ),
                       if (formState.hasError &&
-                          viewModel.amount.text.isEmpty)
+                          viewModel.targetAmount.text.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(10),
+
+                FormField<String>(validator: (value) {
+                  if (viewModel.minimumDonationAmount.text.isEmpty) {
+                    return 'Minimum Donation Amount is required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaTextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: viewModel.minimumDonationAmount,
+                        hintText: 'e.g., 500,000',
+                        suffixIcon: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 15),
+                          child: Text("NGN",
+                              style: wayaTheme.textTheme.hintStyle),
+                        ),
+                        borderColor: formState.hasError &&
+                            viewModel.minimumDonationAmount.text.isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
+                        label: 'Minimum Donation Amount',
+                      ),
+                      if (formState.hasError &&
+                          viewModel.minimumDonationAmount.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -252,7 +295,6 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                   );
                 }),
                 const Gap(20),
-
 
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -376,7 +418,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                     fontWeight: FontWeight.w500,
                     color: Theme.of(context).colorScheme.black),),
                 const Gap(10),
-                Row(children: [
+               /* Row(children: [
                   InkWell(
                     splashFactory: NoSplash.splashFactory,
                     splashColor: Colors.transparent,
@@ -384,7 +426,6 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                       setState(() {
                         public = true;
                         private = false;
-                        //
                       });
                     },
                     child: public ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
@@ -401,6 +442,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                     splashFactory: NoSplash.splashFactory,
                     splashColor: Colors.transparent,
                     onTap: (){
+
                       setState(() {
                         public = false;
                         private = true;
@@ -414,7 +456,51 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           fontSize: 16,
                           fontWeight: FontWeight.w500,
                           color: Theme.of(context).colorScheme.black),),
-                ],),
+                ],),*/
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: RadioSelect(
+                        title: Text("Public",
+                            style: wayaTheme.textTheme.titleMedium!
+                                .wayaCopyWith(
+                                fontSize: 14,
+                                color:
+                                wayaTheme.colorScheme.customBlack)),
+                        value: 'public',
+                        groupedValue: selectedOption,
+                        onChanged: (value) {
+                          ref
+                              .read(radioSelectProvider(key).notifier)
+                              .state = value;
+                          ref
+                              .read(donationVmProvider.notifier)
+                              .updatePrivacyOption(value!);
+                        },
+                      ),
+                    ),
+                    const Gap(10),
+                    Expanded(
+                        child: RadioSelect(
+                          title: Text("Private",
+                              style: wayaTheme.textTheme.titleMedium!
+                                  .wayaCopyWith(
+                                  fontSize: 14,
+                                  color:
+                                  wayaTheme.colorScheme.customBlack)),
+                          value: 'private',
+                          groupedValue: selectedOption,
+                          onChanged: (value) {
+                            ref.read(radioSelectProvider(key).notifier).state =
+                                value;
+
+                            ref.read(donationVmProvider.notifier)
+                                .updatePrivacyOption(value!);
+                          },
+                        )),
+                  ],
+                ),
                 const Gap(20),
                 WayaButton(
                     callback:  () async {

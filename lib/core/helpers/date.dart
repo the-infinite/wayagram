@@ -62,6 +62,13 @@ class WayaDateHelper {
     return '${duration.inHours == 0 ? '' : '$hh:'}$mm:$ss';
   }
 
+  static String convertDurationToCountdown(Duration duration) {
+    final hh = (duration.inHours).toString().padLeft(2, '0');
+    final mm = (duration.inMinutes % 60).toString().padLeft(2, '0');
+    final ss = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    return '${duration.inHours == 0 ? '' : '${hh}h '}${mm}m ${ss}s';
+  }
+
   static String getSocialTimestamp(DateTime timestamp) {
     final now = DateTime.now();
     final gap = now.difference(timestamp);

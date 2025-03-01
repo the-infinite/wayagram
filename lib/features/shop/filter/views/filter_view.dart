@@ -3,105 +3,206 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/filter/vm/filter_vm.dart';
-
+import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
+import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
+import 'package:wayagram/features/shop/filter/views/product_search_result.dart';
 import '../constants/filter_options.dart';
 import '../widgets/filter_section.dart';
 import '../widgets/price_range_input.dart';
+import '../widgets/measurement_range.dart';
+import '../widgets/color_filter.dart';
 
-class FilterView extends ConsumerWidget {
+class FilterView extends ConsumerStatefulWidget {
   static const route = '/filter';
   const FilterView({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _FilterViewState();
+}
+
+class _FilterViewState extends ConsumerState<FilterView> {
+  List<Product> filteredProducts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    applyFilter(); // Run filter initially to set the correct state
+  }
+
+  void applyFilter() {
+    final filterState = ref.read(filterVmProvider);
+    final allProducts = ref.read(shopVmProvider).products;
+
+    setState(() {
+      filteredProducts = allProducts.where((product) {
+        return (filterState.selectedCategory.isEmpty ||
+                filterState.selectedCategory.contains(product.categoryId)) &&
+            (filterState.minPrice.isEmpty ||
+                double.tryParse(product.price.toString())! >=
+                    double.tryParse(filterState.minPrice)!) &&
+            (filterState.maxPrice.isEmpty ||
+                double.tryParse(product.price.toString())! <=
+                    double.tryParse(filterState.maxPrice)!) &&
+            (filterState.deliveryType.isEmpty ||
+                filterState.deliveryType.contains(product.options)
+                    ) &&
+            (filterState.discountType.isEmpty ||
+                filterState.discountType.contains(product.discountTypeId)) &&
+            (filterState.condition.isEmpty ||
+                filterState.condition.contains(product.condition)) &&
+            (product.height >= filterState.minHeight &&
+                product.height <= filterState.maxHeight) &&
+            (product.width >= filterState.minWidth &&
+                product.width <= filterState.maxWidth) &&
+            (product.depth >= filterState.minDepth &&
+                product.depth <= filterState.maxDepth) &&
+            (filterState.colors.isEmpty ||
+                (product.color != null &&
+                    filterState.colors.contains(product.color))) &&
+            (product.wayagramDeal == null || product.wayagramDeal == false);
+      }).toList();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final filterState = ref.watch(filterVmProvider);
     final viewModel = ref.read(filterVmProvider.notifier);
+    final categories = ref.watch(shopVmProvider).categories;
+    final deliveryTypes =
+        ref.watch(addProductProvider('filter')).allDiscountTypes;
     final wayaTheme = Theme.of(context);
+
     return WayaScaffold(
-        isScrollable: true,
-        isLoading: false,
-        title: "Filters",
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      isScrollable: true,
+      isLoading: false,
+      title: "Filters",
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FilterSection(
+            title: 'Category',
+            options: categories!,
+            selectedOption: filterState.selectedCategory,
+            onOptionSelected: (value) {
+              viewModel.updateCategory(value);
+              applyFilter(); // Trigger filtering
+            },
+          ),
+          const SizedBox(height: 24),
+          PriceRangeInput(
+            minPrice: filterState.minPrice,
+            maxPrice: filterState.maxPrice,
+            onPriceRangeChanged: (min, max) {
+              viewModel.updatePriceRange(min, max);
+              applyFilter(); // Trigger filtering
+            },
+          ),
+          const SizedBox(height: 24),
+          FilterSection(
+            title: 'Delivery Type',
+            options: FilterOptions.deliveryTypes,
+            selectedOption: filterState.deliveryType,
+            onOptionSelected: (value) {
+              viewModel.updateDeliveryType(value);
+              applyFilter(); // Trigger filtering
+            },
+          ),
+          FilterSection(
+            title: 'Condition',
+            options: FilterOptions.conditions,
+            selectedOption: filterState.condition,
+            onOptionSelected: (value) {
+              viewModel.updateCondition(value);
+              applyFilter(); // Trigger filtering
+            },
+          ),
+          const SizedBox(height: 24),
+          FilterSection(
+            title: 'Discount Type',
+            options: deliveryTypes,
+            selectedOption: filterState.discountType,
+            onOptionSelected: (value) {
+              viewModel.updateDiscountType(value);
+              applyFilter(); // Trigger filtering
+            },
+          ),
+          const SizedBox(height: 24),
+          ColorFilter(
+            onChanged: (colors) {
+              viewModel.updateColors(colors);
+              applyFilter(); // Trigger filtering
+            },
+            colors: filterState.colors,
+          ),
+          const SizedBox(height: 24),
+          MeasurementRange(
+            maxValue: filterState.maxHeight,
+            minValue: filterState.minHeight,
+            title: 'Height',
+            onChanged: (min, max) {
+              viewModel.updateHeight(min, max);
+              applyFilter(); // Trigger filtering
+            },
+          ),
+          const SizedBox(height: 24),
+          MeasurementRange(
+            maxValue: filterState.maxWidth,
+            minValue: filterState.minWidth,
+            title: 'Width',
+            onChanged: (min, max) {
+              viewModel.updateWidth(min, max);
+              applyFilter(); // Trigger filtering
+            },
+          ),
+          const SizedBox(height: 24),
+          MeasurementRange(
+            maxValue: filterState.maxDepth,
+            minValue: filterState.minDepth,
+            title: 'Depth',
+            onChanged: (min, max) {
+              viewModel.updateDepth(min, max);
+              applyFilter(); // Trigger filtering
+            },
+          ),
+        ],
+      ),
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            FilterSection(
-              title: 'Category',
-              options: FilterOptions.categories,
-              selectedOption: filterState.selectedCategory,
-              onOptionSelected: viewModel.updateCategory,
+            SizedBox(
+              width: context.width * 0.45,
+              child: WayaButton(
+                callback: () {
+                  viewModel.reset();
+                  applyFilter(); // Reset filtering
+                },
+                text: 'Reset',
+                color: wayaTheme.colorScheme.greyColor100,
+                textColor: wayaTheme.colorScheme.customBlack,
+              ),
             ),
-            const SizedBox(height: 24),
-            PriceRangeInput(
-              minPrice: filterState.minPrice,
-              maxPrice: filterState.maxPrice,
-              onPriceRangeChanged: viewModel.updatePriceRange,
-            ),
-            const SizedBox(height: 24),
-            FilterSection(
-              title: 'Delivery Type',
-              options: FilterOptions.deliveryTypes,
-              selectedOption: filterState.deliveryType,
-              onOptionSelected: viewModel.updateDeliveryType,
-            ),
-            const SizedBox(height: 24),
-            FilterSection(
-              title: 'Discount Type',
-              options: FilterOptions.discountTypes,
-              selectedOption: filterState.discountType,
-              onOptionSelected: viewModel.updateDiscountType,
-            ),
-            const SizedBox(height: 24),
-            FilterSection(
-              title: 'Height',
-              options: FilterOptions.heightOptions,
-              selectedOption: filterState.height,
-              onOptionSelected: viewModel.updateHeight,
-            ),
-            const SizedBox(height: 24),
-            FilterSection(
-              title: 'Depth',
-              options: FilterOptions.depthOptions,
-              selectedOption: filterState.depth,
-              onOptionSelected: viewModel.updateDepth,
-            ),
-            const SizedBox(height: 24),
-            FilterSection(
-              title: 'Location',
-              options: FilterOptions.locationOptions,
-              selectedOption: filterState.location,
-              onOptionSelected: viewModel.updateLocation,
+            SizedBox(
+              width: context.width * 0.45,
+              child: WayaButton(
+                callback: filteredProducts.isNotEmpty
+                    ? () {
+                        WayaNav.toNamed(ProductSearchResult.route,
+                            arguments: filteredProducts);
+                      }
+                    : null, // Disable if no results
+                text: 'Show ${filteredProducts.length} results',
+              ),
             ),
           ],
         ),
-        bottomNavigationBar: Positioned(
-            left: 0,
-            right: 0,
-            bottom: 0,
-            child: Container(
-              padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: context.width * 0.45,
-                    child: WayaButton(
-                      callback: () {},
-                      text: 'Rest',
-                      color: wayaTheme.colorScheme.greyColor300,
-                      textColor: wayaTheme.colorScheme.customBlack,
-                    ),
-                  ),
-                  SizedBox(
-                    width: context.width * 0.45,
-                    child: WayaButton(
-                      callback: () {},
-                      text: 'Show 3000+ results',
-                    ),
-                  )
-                ],
-              ),
-            )));
+      ),
+    );
   }
 }

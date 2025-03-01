@@ -29,7 +29,6 @@ class _MutualsState extends ConsumerState<Mutuals> with SingleTickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
 

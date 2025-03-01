@@ -53,30 +53,47 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
               search: searchController,
             ),
             const Gap(25),
-          Expanded(child:   PaginatedDataView<Product>(
-                uniqueKey: 'product',
-                emptyState: EmptyState(
-                    assetImage:
-                        WayaAssets.images.wallet.searchDocu.image(scale: 1.5),
-                    message: "No Product Yet"),
-                loadingState: _recommendedProductLoadingState(context: context),
-                fetchData: productDetail.fetchData,
-                result: (data,s) {
-                  final filteredProducts = WayaUtils.search<Product>(
-                      data,
-                      [
-                        'id',
-                        'categoryId',
-                        'deliveryAddress',
-                        'name',
-                        'options',
-                        'condition',
-                        'materialType',
-                        'description'
-                      ],
-                      searchController.text);
-                  return ProductsGrid(products: filteredProducts);
-                }))
+            Expanded(
+                child: PaginatedDataView<Product>(
+                    uniqueKey: 'product',
+                    emptyState: EmptyState(
+                        assetImage: WayaAssets.images.wallet.searchDocu
+                            .image(scale: 1.5),
+                        message: "No Product Yet"),
+                    loadingState:
+                        _recommendedProductLoadingState(context: context),
+                    fetchData: productDetail.fetchData,
+                    result: (data, s) {
+                      final filteredProducts = WayaUtils.search<Product>(
+                          data,
+                          [
+                            'id',
+                            'categoryId',
+                            'deliveryAddress',
+                            'name',
+                            'options',
+                            'condition',
+                            'materialType',
+                            'description'
+                          ],
+                          searchController.text);
+                          
+                      // wayagram deal products
+                      final wayagramProducts = filteredProducts.where((prod) {
+                        return prod.wayagramDealApprove == true;
+                      }).toList();
+
+                      // Non - wayagram products
+                      final otherProducts = filteredProducts.where((prod) {
+                        return prod.wayagramDeal == null ||
+                            prod.wayagramDeal == false;
+                      }).toList();
+
+                      return ProductsGrid(
+                          products: arg == ProductDetailType.wayagramdeal
+                              ? wayagramProducts
+                              : otherProducts);
+                    }))
           ],
         ));
   }

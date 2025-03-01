@@ -40,7 +40,7 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
         children: [
           //? If this is a popup filter.
           SizedBox(
-            width: widget.isPopFilter ? context.width * 0.78 : context.width * 0.9,
+            width: widget.isPopFilter ? context.width * 0.76 : context.width * 0.9,
             child: WayaTextFormField(
               padding: EdgeInsets.all(1),
               prefixIcon: Icon(
@@ -56,8 +56,8 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
           //? This is hidden when  it is a popup filter.
           Visibility(
             visible: widget.isPopFilter,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const Gap(2),
                 WayaButton(
@@ -72,7 +72,7 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
                     ),
                   ),
                   color: wayaTheme.colorScheme.transparent,
-                  height: 50,
+                  height: 46,
                   horizontalPadding: 8,
                   border: Border.all(
                     width: 1,

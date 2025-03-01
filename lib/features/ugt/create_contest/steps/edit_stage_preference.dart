@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -46,6 +47,12 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
     final entryType = useState(model.entryType ?? "");
     final startDate = useState(model.startDate ?? "");
     final endDate = useState(model.endDate ?? "");
+    final priceForWinner = useState(
+        _contestController.contestPrizeWinnerTextController.text.trim().isEmpty
+            ? "No"
+            : _contestController.contestPrizeWinnerTextController.text == "0"
+                ? "No"
+                : "Yes");
     final isSwitched = useState(model.reviewApprovePost ?? false);
     useEffect(() {
       _contestController.contestStageNameTextController.text =
@@ -71,49 +78,51 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Gap(20),
-          FormField<String>(validator: (value) {
-            if (_contestController
-                .contestStageNameTextController.text.isEmpty) {
-              return 'Contest title is required';
-            }
-
-            return null;
-          }, builder: (formState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Form(
+            key: _formKey,
+            child: Column(
               children: [
-                WayaTextFormField(
-                  controller: _contestController.contestStageNameTextController,
-                  hintText: "Qualification Stage",
-                  label: "Stage Name ",
-                  borderColor:
-                      formState.hasError && viewModel.amountPerVote.text.isEmpty
-                          ? wayaTheme.colorScheme.error
-                          : null,
-                ),
-                if (formState.hasError && viewModel.title.text.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      formState.errorText!,
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
-                    ),
-                  ),
-              ],
-            );
-          }),
+                FormField<String>(validator: (value) {
+                  if (_contestController
+                      .contestStageNameTextController.text.isEmpty) {
+                    return 'Contest title is required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaTextFormField(
+                        controller:
+                            _contestController.contestStageNameTextController,
+                        hintText: "Qualification Stage",
+                        label: "Stage Name ",
+                        borderColor: formState.hasError &&
+                                viewModel.amountPerVote.text.isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
+                      ),
+                      if (formState.hasError && viewModel.title.text.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
 
 /*           WayaTextFormField(
             controller: TextEditingController(),
             hintText: "Qualification Stage",
             label: "Stage Name ",
           ), */
-          const Gap(15),
-          Form(
-            key: _formKey,
-            child: Column(
-              children: [
+                const Gap(15),
                 FormField<String>(validator: (value) {
                   if (entryType.value.isEmpty) {
                     return 'Entry type is required';
@@ -124,7 +133,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                         height: 0.3,
                         value: entryType.value,
                         label: "Entry Type ",
@@ -133,10 +142,10 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             .read(contestNotifierProvider.notifier)
                             .ugtPaymentType(),
                         onSelected: (value) {
-                          if (value.label == "Free") {
+                          if (value.first.label == "Free") {
                             _contestController.entryAmountController.text = "0";
                           }
-                          entryType.value = value.label;
+                          entryType.value = value.first.label;
                         },
                         uniqueKey: 'entry-type',
                       ),
@@ -154,46 +163,48 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                     ],
                   );
                 }),
-                FormField<String>(validator: (value) {
-                  if (_contestController.entryAmountController.text.isEmpty) {
-                    return 'Entry Amount is required';
-                  }
+                if (entryType.value != "Free")
+                  FormField<String>(validator: (value) {
+                    if (_contestController.entryAmountController.text.isEmpty) {
+                      return 'Entry Amount is required';
+                    }
 
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaTextFormField(
-                        controller: _contestController.entryAmountController,
-                        keyboardType: TextInputType.number,
-                        hintText: "0 NGN",
-                        isReadOnly: entryType.value == "Free",
-                        label: "Entry Amount",
-                        inputFormatters: [
-                          CurrencyTextInputFormatter.currency(
-                              name: 'NGN', symbol: 'NGN', locale: 'en_NG')
-                        ],
-                        borderColor: formState.hasError &&
-                                _contestController
-                                    .entryAmountController.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
-                      ),
-                      if (formState.hasError &&
-                          _contestController.entryAmountController.text.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
-                          ),
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          controller: _contestController.entryAmountController,
+                          keyboardType: TextInputType.number,
+                          hintText: "0 NGN",
+                          isReadOnly: entryType.value == "Free",
+                          label: "Entry Amount",
+                          inputFormatters: [
+                            CurrencyTextInputFormatter.currency(
+                                name: 'NGN', symbol: 'NGN', locale: 'en_NG')
+                          ],
+                          borderColor: formState.hasError &&
+                                  _contestController
+                                      .entryAmountController.text.isEmpty
+                              ? wayaTheme.colorScheme.error
+                              : null,
                         ),
-                    ],
-                  );
-                }),
+                        if (formState.hasError &&
+                            _contestController
+                                .entryAmountController.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
                 const Gap(15),
                 FormField<String>(validator: (value) {
                   if (startDate.value.isEmpty) {
@@ -213,7 +224,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                               "";
                         },
                         child: AbsorbPointer(
-                          child: WayaSelectField(
+                          child: WayaSelectField<String>(
                             height: 0.3,
                             value: startDate.value.isEmpty
                                 ? 'DD/MM/YYYY'
@@ -225,7 +236,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                                 .ugtDurationType(),
                             onSelected: (value) => ref
                                 .read(contestNotifierProvider.notifier)
-                                .updateDurationType(value.label),
+                                .updateDurationType(value.first.label),
                             uniqueKey: 'contest-state',
                           ),
                         ),
@@ -262,7 +273,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                               "";
                         },
                         child: AbsorbPointer(
-                          child: WayaSelectField(
+                          child: WayaSelectField<String>(
                             height: 0.3,
                             value: endDate.value.isEmpty
                                 ? 'DD/MM/YYYY'
@@ -274,7 +285,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                                 .ugtDurationType(),
                             onSelected: (value) => ref
                                 .read(contestNotifierProvider.notifier)
-                                .updateDurationType(value.label),
+                                .updateDurationType(value.first.label),
                             uniqueKey: 'End Date',
                           ),
                         ),
@@ -337,9 +348,8 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                 }),
                 const Gap(15),
                 FormField<String>(validator: (value) {
-                  if (_contestController
-                      .contestPrizeWinnerTextController.text.isEmpty) {
-                    return 'Winner Price is required';
+                  if (priceForWinner.value.isEmpty) {
+                    return 'Field is required';
                   }
 
                   return null;
@@ -347,23 +357,29 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaTextFormField(
-                        keyboardType: TextInputType.number,
-                        controller:
-                            _contestController.contestPrizeWinnerTextController,
-                        hintText: "Enter Winners price",
-                        label: "Prize for the Winner? ",
-                        borderColor: formState.hasError &&
-                                _contestController
-                                    .contestPrizeWinnerTextController
-                                    .text
-                                    .isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
+                      WayaSelectField<String>(
+                        height: 0.3,
+                        value: priceForWinner.value,
+                        label: "Is there price for the winner",
+                        hintText: 'Choose',
+                        items: [
+                          Select(label: "Yes", value: "1"),
+                          Select(label: "No", value: "0")
+                        ],
+                        onSelected: (value) {
+                          print(" i am poo ${value.first.label}");
+                          if (value.first.label == "Free") {
+                            _contestController
+                                .contestPrizeWinnerTextController.text = "0";
+                          }
+                          priceForWinner.value = value.first.label;
+                          ref
+                              .read(contestNotifierProvider.notifier)
+                              .updateEntryType(value.first.label);
+                        },
+                        uniqueKey: 'contest-state',
                       ),
-                      if (formState.hasError &&
-                          _contestController
-                              .contestPrizeWinnerTextController.text.isEmpty)
+                      if (formState.hasError && priceForWinner.value.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -376,6 +392,48 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                     ],
                   );
                 }),
+                const Gap(15),
+                if (priceForWinner.value == "Yes")
+                  FormField<String>(validator: (value) {
+                    if (_contestController
+                        .contestPrizeWinnerTextController.text.isEmpty) {
+                      return 'Winner Price is required';
+                    }
+
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          keyboardType: TextInputType.number,
+                          controller: _contestController
+                              .contestPrizeWinnerTextController,
+                          hintText: "Enter Winners price",
+                          label: "Prize for the Winner? ",
+                          borderColor: formState.hasError &&
+                                  _contestController
+                                      .contestPrizeWinnerTextController
+                                      .text
+                                      .isEmpty
+                              ? wayaTheme.colorScheme.error
+                              : null,
+                        ),
+                        if (formState.hasError &&
+                            _contestController
+                                .contestPrizeWinnerTextController.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
                 /*  FormField<String>(validator: (value) {
                   if (priceWinner.value.isEmpty) {
                     return 'Prize for the Winner is required';
@@ -386,7 +444,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                         height: 0.3,
                         value: priceWinner.value,
                         label: "Prize for the Winner?",
@@ -448,26 +506,35 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
           const Gap(40),
           WayaButton(
             callback: () {
-              ref.read(stateContactProvider.notifier).state = ref
-                  .read(stateContactProvider)
-                  .where((i) => _contestController.selectedIndex != i.id)
-                  .toList();
-              ref.read(stateContactProvider.notifier).state.insert(
-                  _contestController.selectedIndex,
-                  StagePrefModel(
-                      id: _contestController.selectedIndex,
-                      endDate: endDate.value,
-                      stageName: _contestController
-                          .contestStageNameTextController.text,
-                      startDate: startDate.value,
-                      priceWinner: _contestController
-                          .contestPrizeWinnerTextController.text,
-                      entryType: entryType.value,
-                      reviewApprovePost: isSwitched.value,
-                      entryAmount:
-                          _contestController.entryAmountController.text,
-                      numPostPerWeek: _contestController
-                          .contestNumberPostsPerWeekTextController.text));
+              if (priceForWinner.value == "No") {
+                _contestController.contestPrizeWinnerTextController.text = "0";
+              }
+              if (entryType.value != "Free") {
+                _contestController.entryAmountController.text = "0";
+              }
+              if (_formKey.currentState!.validate()) {
+                ref.read(stateContactProvider.notifier).state = ref
+                    .read(stateContactProvider)
+                    .where((i) => _contestController.selectedIndex != i.id)
+                    .toList();
+                ref.read(stateContactProvider.notifier).state.insert(
+                    _contestController.selectedIndex,
+                    StagePrefModel(
+                        id: _contestController.selectedIndex,
+                        endDate: endDate.value,
+                        stageName: _contestController
+                            .contestStageNameTextController.text,
+                        startDate: startDate.value,
+                        priceWinner: _contestController
+                            .contestPrizeWinnerTextController.text,
+                        entryType: entryType.value,
+                        reviewApprovePost: isSwitched.value,
+                        entryAmount:
+                            _contestController.entryAmountController.text,
+                        numPostPerWeek: _contestController
+                            .contestNumberPostsPerWeekTextController.text));
+                Navigator.pop(context);
+              }
               /*  if (_formKey.currentState!.validate()) {
                 ref.read(stateContactProvider.notifier).state = ref
                   .read(stateContactProvider)
@@ -489,8 +556,6 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                       numPostPerWeek: _contestController
                           .contestNumberPostsPerWeekTextController.text));
               } */
-
-              Navigator.pop(context);
             },
             text: "Save Stage Changes",
           ),

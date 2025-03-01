@@ -7,8 +7,9 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/views/seller_dispute/dialogs/dispute_evidence.dart';
+import 'package:wayagram/features/shop/seller/views/seller_dispute/views/add_evidence.dart';
+import 'package:wayagram/features/shop/seller/views/seller_dispute/views/dispute_chat/dispute_chat.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
-import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class SellerDisputeDetail extends ConsumerWidget {
   static const route = '/seller-dispute-details';
@@ -16,8 +17,9 @@ class SellerDisputeDetail extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
+
+    //? Then the actual widget.
     return WayaScaffold(
         isLoading: false,
         isScrollable: true,
@@ -34,12 +36,13 @@ class SellerDisputeDetail extends ConsumerWidget {
             ),
             const Gap(30),
             ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: 2,
-                itemBuilder: (context, index) {
-                  return Container(); //OrderedProductCard();
-                }),
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: 2,
+              itemBuilder: (context, index) {
+                return Container(); //OrderedProductCard();
+              },
+            ),
             const Gap(15),
             WayaButton(
               centerWidget: Row(
@@ -55,14 +58,12 @@ class SellerDisputeDetail extends ConsumerWidget {
                   Text(
                     "Send Message",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16),
+                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
                   ),
                 ],
               ),
               callback: () {
-                WayaNav.toNamed('/dispute-chat');
+                WayaNav.toNamed(DisputeChat.route);
               },
               color: wayaTheme.colorScheme.primar50,
             ),
@@ -114,55 +115,88 @@ class SellerDisputeDetail extends ConsumerWidget {
                 TextButton(
                   onPressed: () async {
                     await showDialog(
-                        context: context,
-                        builder: (context) => DisputeEvidence(
-                            disputeImage:
-                                "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374175/product1_owvv1d.png"));
+                      context: context,
+                      builder: (context) => DisputeEvidence(
+                        disputeImage:
+                            "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1735374175/product1_owvv1d.png",
+                      ),
+                    );
                   },
                   child: Text(
                     "View Evidence",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500),
+                      color: wayaTheme.colorScheme.customPrimary,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 )
               ],
             ),
+
+            // Some space.
             const Gap(15),
+
+            //? The reason for the dispute.
+            AboutProduct(title: 'Reason for Dispute', content: 'Item not as described'),
+
+            // Some space.
+            const Gap(15),
+
             AboutProduct(
-                title: 'Reason for Dispute', content: 'Item not as described'),
+              title: 'Dispute Description',
+              content: "I recently purchased Dr Teal's Ultra Moisturizing Body Wash,"
+                  "expecting a luxurious experience based on the product description."
+                  "However, upon using it, I found that it did not deliver the hydration"
+                  "and revitalization promised. The scent was less citrusy than advertised,"
+                  "and I did not notice any uplifting effects on my mood. Additionally, the"
+                  "texture felt different from what I anticipated, lacking the creamy"
+                  "consistency that was highlighted. Overall, this product did not meet"
+                  "my expectations based on its description.",
+            ),
+
+            // Some space.
             const Gap(15),
-            AboutProduct(
-                title: 'Dispute Description',
-                content:
-                    'I recently purchased Dr Teal’s Ultra Moisturizing Body Wash, expecting a luxurious experience based on the product description. However, upon using it, I found that it did not deliver the hydration and revitalization promised. The scent was less citrusy than advertised, and I did not notice any uplifting effects on my mood. Additionally, the texture felt different from what I anticipated, lacking the creamy consistency that was highlighted. Overall, this product did not meet my expectations based on its description.'),
-            const Gap(15),
+
+            //? Additional information about the timelines of the dispute.
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: AboutProduct(
-                      title: 'Date Submitted', content: 'Aug 11, 12:35PM'),
+                    title: 'Date Submitted',
+                    content: 'Aug 11, 12:35PM',
+                  ),
                 ),
                 Expanded(
-                  child: AboutProduct(title: 'Status', content: 'pending'),
+                  child: AboutProduct(
+                    title: 'Status',
+                    content: 'pending',
+                  ),
                 )
               ],
             ),
+
+            // Some space.
             const Gap(30),
+
+            //? Add evidence to the dispute to support my own claim.
             WayaButton(
-                text: 'Add Evidence',
-                callback: () {
-                  WayaNav.toNamed('/add-evidence');
-                }),
+              text: 'Add Evidence',
+              callback: () {
+                WayaNav.toNamed(AddEvidence.route);
+              },
+            ),
+
+            // Some space.
             const Gap(8),
+
+            //? Escalate this to a mediator.
             WayaButton(
                 text: 'Escalate to Mediator',
                 color: wayaTheme.colorScheme.transparent,
                 textColor: wayaTheme.colorScheme.customPrimary,
-                border: Border.all(
-                    width: 1, color: wayaTheme.colorScheme.customPrimary),
+                border: Border.all(width: 1, color: wayaTheme.colorScheme.customPrimary),
                 callback: () {
                   // to be removed
                   WayaUtils.showNotice(

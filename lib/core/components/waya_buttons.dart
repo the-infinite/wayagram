@@ -35,7 +35,8 @@ class WayaBackButton extends StatelessWidget {
                     HapticFeedback.lightImpact();
                   } catch (_) {}
                 },
-            child: SvgPicture.asset('assets/icons/arrow-back.svg', fit: BoxFit.none),
+            child: SvgPicture.asset('assets/icons/arrow-back.svg',
+                fit: BoxFit.none),
           ),
         )
       ],
@@ -61,6 +62,7 @@ class WayaButton extends StatelessWidget {
     this.verticalPadding = 0,
     this.height = 48,
     this.isDisabled,
+    this.fontSize,
     this.shape = BoxShape.rectangle,
     this.alignment = Alignment.center,
   });
@@ -81,6 +83,7 @@ class WayaButton extends StatelessWidget {
   final double horizontalPadding;
   final double verticalPadding;
   final double? height;
+  final double? fontSize;
 
   @override
   Widget build(BuildContext context) {
@@ -100,19 +103,24 @@ class WayaButton extends StatelessWidget {
             },
       child: Container(
         height: height,
-        padding: EdgeInsets.symmetric(horizontal: horizontalPadding, vertical: verticalPadding),
+        padding: EdgeInsets.symmetric(
+            horizontal: horizontalPadding, vertical: verticalPadding),
         decoration: BoxDecoration(
           shape: shape,
           color: isButtonDisabled || isLoading
               ? wayaTheme.colorScheme.greyColor300
               : (color ?? wayaTheme.colorScheme.customPrimary),
           border: border,
-          borderRadius: shape == BoxShape.rectangle ? BorderRadius.circular(radius ?? 8) : null,
+          borderRadius: shape == BoxShape.rectangle
+              ? BorderRadius.circular(radius ?? 8)
+              : null,
         ),
         alignment: alignment,
         child: leadingIcon != null
             ? Row(
-                mainAxisAlignment: alignment == Alignment.center ? MainAxisAlignment.center : MainAxisAlignment.start,
+                mainAxisAlignment: alignment == Alignment.center
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.start,
                 children: [
                   leadingIcon ?? SizedBox.shrink(),
                   if (leadingIcon != null)
@@ -122,11 +130,15 @@ class WayaButton extends StatelessWidget {
                   Text(
                     text,
                     style: textStyle?.copyWith(
-                          color: textColor ?? wayaTheme.colorScheme.scaffoldColor2,
+                          fontSize: fontSize,
+                          color:
+                              textColor ?? wayaTheme.colorScheme.scaffoldColor2,
                         ) ??
                         wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                           fontWeight: FontWeight.w600,
-                          color: textColor ?? wayaTheme.colorScheme.scaffoldColor2,
+                          fontSize: fontSize,
+                          color:
+                              textColor ?? wayaTheme.colorScheme.scaffoldColor2,
                         ),
                   ),
                   Gap(10),
@@ -145,11 +157,15 @@ class WayaButton extends StatelessWidget {
                     : Text(
                         text,
                         style: textStyle?.copyWith(
-                              color: textColor ?? wayaTheme.colorScheme.scaffoldColor2,
+                              fontSize: fontSize,
+                              color: textColor ??
+                                  wayaTheme.colorScheme.scaffoldColor2,
                             ) ??
                             wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                               fontWeight: FontWeight.w600,
-                              color: textColor ?? wayaTheme.colorScheme.scaffoldColor2,
+                              fontSize: fontSize,
+                              color: textColor ??
+                                  wayaTheme.colorScheme.scaffoldColor2,
                             ),
                       )),
       ),
@@ -201,8 +217,10 @@ class WayaActionNav extends StatelessWidget {
 
 class WayaTabButton extends StatelessWidget {
   final bool isSelected;
+  final bool isLongerTab;
   final String text;
   final VoidCallback onTap;
+
   final double? width;
   final Widget? end;
 
@@ -212,6 +230,7 @@ class WayaTabButton extends StatelessWidget {
     required this.text,
     required this.onTap,
     this.width,
+    this.isLongerTab = false,
     this.end,
   });
 
@@ -219,7 +238,12 @@ class WayaTabButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final screenWidth = context.width;
-    final fontSize = screenWidth * 0.040;
+    double fontSize = 0;
+    if (isLongerTab) {
+      fontSize = screenWidth * 0.030;
+    } else {
+      fontSize = screenWidth * 0.038;
+    }
 
     //?
     return Expanded(
@@ -231,7 +255,9 @@ class WayaTabButton extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor300,
+                color: isSelected
+                    ? theme.colorScheme.primary
+                    : theme.colorScheme.greyColor300,
                 width: isSelected ? 2 : 0.9,
               ),
             ),
@@ -248,7 +274,9 @@ class WayaTabButton extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: fontSize,
-                    color: isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor500,
+                    color: isSelected
+                        ? theme.colorScheme.primary
+                        : theme.colorScheme.greyColor500,
                   ),
                 ),
               ),
@@ -320,7 +348,9 @@ class WayaCheckButton extends StatelessWidget {
                 },
               ),
               side: BorderSide(
-                color: isSelected ? theme.colorScheme.greyColor300 : theme.colorScheme.primary,
+                color: isSelected
+                    ? theme.colorScheme.greyColor300
+                    : theme.colorScheme.primary,
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100000),
@@ -424,7 +454,8 @@ class _WayaExpandedTabButtonState extends State<WayaExpandedTabButton> {
               padding: const EdgeInsets.symmetric(vertical: 15),
               decoration: BoxDecoration(
                 color: theme.colorScheme.transparent,
-                border: Border.all(width: 1, color: theme.colorScheme.greyColor300),
+                border:
+                    Border.all(width: 1, color: theme.colorScheme.greyColor300),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
@@ -475,7 +506,9 @@ class _WayaExpandedTabButtonState extends State<WayaExpandedTabButton> {
             decoration: BoxDecoration(
               border: Border(
                 bottom: BorderSide(
-                  color: widget.isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor300,
+                  color: widget.isSelected
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.greyColor300,
                   width: widget.isSelected ? 2 : 0.9,
                 ),
               ),
@@ -492,14 +525,18 @@ class _WayaExpandedTabButtonState extends State<WayaExpandedTabButton> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: fontSize,
-                      color: widget.isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor500,
+                      color: widget.isSelected
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.greyColor500,
                     ),
                   ),
                 ),
 
                 //? Put the thing here if needed.
                 WayaAssets.icons.mChevronDown.svg(
-                  color: widget.isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor500,
+                  color: widget.isSelected
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.greyColor500,
                   height: 18,
                   width: 18,
                 ),
@@ -539,7 +576,8 @@ class WayaActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final accentColor = iconBackground ?? theme.colorScheme.primary.withAlpha(30);
+    final accentColor =
+        iconBackground ?? theme.colorScheme.primary.withAlpha(30);
 
     // This is fine.
     return InkWell(

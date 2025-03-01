@@ -32,7 +32,6 @@ class _MyMomentState extends ConsumerState<MyMoments> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final state = ref.watch(momentVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(

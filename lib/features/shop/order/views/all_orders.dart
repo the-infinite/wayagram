@@ -39,7 +39,6 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     //final state = ref.watch(orderVmProvider);
 
     return Expanded(
@@ -49,15 +48,15 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                    GroupedWidgetHeader(
-            isVisible: false,
+            isVisible: true,
             subTitle: 'View and manage your orders',
             title: 'Orders'),
-        const Gap(25),
+        const Gap(15),
         FilterWidget(
-          hintText: 'Search Orders',
+          hintText: 'Search Orders by ID, name, token, etc.',
           search: searchController,
         ),
-        const Gap(25),
+        const Gap(15),
               ],
             ),
             emptyState: EmptyState(

@@ -29,7 +29,6 @@ class _FollowersPageState extends ConsumerState<FollowersPage> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
 

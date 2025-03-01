@@ -170,7 +170,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        WayaSelectField(
+                        WayaSelectField<String>(
                             height: 0.2,
                             uniqueKey: 'business-type',
                             value: viewModel.businessTypeName,
@@ -179,7 +179,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                             items: viewModel.businessTypes,
                             onSelected: (value) => ref
                                 .read(upgradeToBusinessVmProvider.notifier)
-                                .selectBizType(value)),
+                                .selectBizType(value.first)),
                         if (formState.hasError &&
                             viewModel.businessTypeId.isEmpty)
                           Padding(
@@ -287,7 +287,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        WayaSelectField(
+                        WayaSelectField<String>(
                             uniqueKey: 'country',
                             label: "Country",
                             value: viewModel.country,
@@ -295,7 +295,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                             items: viewModel.countries,
                             onSelected: (value) => ref
                                 .read(upgradeToBusinessVmProvider.notifier)
-                                .selectCountry(value)),
+                                .selectCountry(value.first)),
                         if (formState.hasError && viewModel.country.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
@@ -323,7 +323,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              WayaSelectField(
+                              WayaSelectField<String>(
                                   uniqueKey: 'city',
                                   label: "City",
                                   value: viewModel.city,
@@ -332,7 +332,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                                   onSelected: (value) => ref
                                       .read(
                                           upgradeToBusinessVmProvider.notifier)
-                                      .selectCity(value)),
+                                      .selectCity(value.first)),
                               if (formState.hasError && viewModel.city.isEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5),
@@ -359,7 +359,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            WayaSelectField(
+                            WayaSelectField<String>(
                                 height: 0.2,
                                 uniqueKey: 'state',
                                 label: "State",
@@ -368,7 +368,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                                 items: viewModel.states,
                                 onSelected: (value) => ref
                                     .read(upgradeToBusinessVmProvider.notifier)
-                                    .selectState(value)),
+                                    .selectState(value.first)),
                             if (formState.hasError && viewModel.state.isEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
@@ -395,7 +395,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        WayaSelectField(
+                        WayaSelectField<String>(
                             height: 0.2,
                             uniqueKey: 'lga',
                             label: "LGA",
@@ -404,7 +404,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                             items: viewModel.lgas,
                             onSelected: (value) => ref
                                 .read(upgradeToBusinessVmProvider.notifier)
-                                .selectLGA(value)),
+                                .selectLGA(value.first)),
                         if (formState.hasError && viewModel.lga.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),

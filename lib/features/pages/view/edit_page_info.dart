@@ -11,7 +11,9 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/pages/data/model/all_page_model.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+
 
 class EditPageInfo extends ConsumerStatefulWidget {
   static const route = '/editPageInfo';
@@ -28,7 +30,12 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
   bool sel2 =  false;
   File? _selectedImage; // Holds the selected image
   File? _coverImage; // Holds the selected image
+
+  String? image;
+  String? editCoverImage;
   final ImagePicker _picker = ImagePicker();
+
+
 
   Future<void> _pickImage() async {
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
@@ -52,12 +59,31 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
 
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+      setState(() {
+        image = args['profileImage'];
+        editCoverImage = args['coverImage'];
+
+      });
+      ref.read(createPageProvider.notifier).prefillFunc(args);
+    });
+  }
+
+
+
+  @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPageProvider);
+
     final editPage = ref.watch(createPageProvider.notifier);
 
-    final  id  = ModalRoute.of(context)?.settings.arguments as String;
+    //final  id  = ModalRoute.of(context)?.settings.arguments as String;
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
 
+print('MY ARGS $args');
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       padding: EdgeInsets.zero,
@@ -72,8 +98,12 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
             if (_formKey.currentState!.validate()) {
               await  editPage.editPage(context, viewModel.pageName.text,
              viewModel.pageDescription.text, sel? true: false,
-                  ( _coverImage as File).path,
-                  id);
+                  _coverImage == null ? editCoverImage!:( _coverImage as File).path,
+                  _selectedImage == null? image!: ( _selectedImage as File).path,
+                  args['pageId']
+                  //args.id!
+                  //id
+              );
               WayaNav.toNamed("/pages");
               ref.watch(createPageProvider.notifier).reset();
 
@@ -113,10 +143,17 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                             image: FileImage(_selectedImage!),
                             fit: BoxFit.cover,
                           )
-                              : const DecorationImage(
-                            image: AssetImage("assets/placeholder.jpg"),
+                              : image != null ? DecorationImage(
+                            image: NetworkImage(image!),
                             fit: BoxFit.cover,
-                          ),
+                          )  : DecorationImage(
+                            image: NetworkImage(args['']),
+                            fit: BoxFit.cover,
+                          )
+                          // const DecorationImage(
+                          //   image: AssetImage("assets/placeholder.jpg"),
+                          //   fit: BoxFit.cover,
+                          // ),
                         ),
                       ),
 
@@ -157,7 +194,11 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                           Icons.person,
                           color: wayaTheme.colorScheme.greyColor600,
                         )
-                            : null,
+                            :editCoverImage != null ?CircleAvatar(
+                            radius: 20,
+                            backgroundColor: wayaTheme.colorScheme.greyColor200,
+                            backgroundImage: NetworkImage(editCoverImage!)
+                        ): null,
                       ),
                     ],
                   ),

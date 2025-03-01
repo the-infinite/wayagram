@@ -36,7 +36,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
       required String cartId,
       required String shopId,
       required int amount,
-      String? pickUpAddress}) async {
+      String? pickupAddress}) async {
     try {
       final balanceData = ref.watch(walletVmProvider).data;
 
@@ -76,7 +76,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
       await placOrder(
           cartId: cartId,
           shopId: shopId,
-          pickUpAddress: pickUpAddress,
+          pickupAddress: pickupAddress,
           context: context);
     } catch (e) {
       print(e);
@@ -86,7 +86,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
   Future<void> placOrder(
       {required String cartId,
       required String shopId,
-      String? pickUpAddress,
+      String? pickupAddress,
       required BuildContext context}) async {
     state = state.copyWith(isLoading: true);
     try {
@@ -96,7 +96,8 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
           cartId: cartId,
           shopId: shopId,
           userId: userId!,
-          pickUpAddress: pickUpAddress);
+          pickupAddress: pickupAddress
+         );
       if (response.success && context.mounted) {
         WayaUtils.showNotice(
           context: context,
@@ -104,7 +105,8 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
           onCancel: () => Navigator.pop(context),
           message:
               'Your payment has been processed successfully, you can download your reciept and track your order progress',
-          onPress: () => WayaNav.toNamed(BottomView.route, arguments: 1),
+          onPress: () => WayaNav.toNamed(BottomView.route,
+              arguments: {'index': 1, 'current': 1}),
           icon: Image.asset('assets/images/d-code-valid.png'),
           buttonCenterWidget: Row(
             mainAxisAlignment: MainAxisAlignment.center,

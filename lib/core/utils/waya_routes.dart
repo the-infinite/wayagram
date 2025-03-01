@@ -3,8 +3,12 @@ import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/buyer_dispute/views/detail.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
 import 'package:wayagram/features/donation/view/create_donation.dart';
+import 'package:wayagram/features/donation/view/donation_details.dart';
+import 'package:wayagram/features/donation/view/donation_management.dart';
+import 'package:wayagram/features/donation/view/donations.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
@@ -29,6 +33,7 @@ import 'package:wayagram/features/group/view/members_screen.dart';
 import 'package:wayagram/features/group/view/private_group.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
+import 'package:wayagram/features/group/view/view_full_media.dart';
 import 'package:wayagram/features/moments/views/media_moment.dart';
 import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
@@ -39,6 +44,7 @@ import 'package:wayagram/features/pages/view/confirm_page_details.dart';
 import 'package:wayagram/features/pages/view/create_page.dart';
 import 'package:wayagram/features/pages/view/create_page_post.dart';
 import 'package:wayagram/features/pages/view/pages.dart';
+import 'package:wayagram/features/pages/view/public_page.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
@@ -60,6 +66,7 @@ import 'package:wayagram/features/quotation/seller/views/bids/map_screen.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/see_seller_bids.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
+import 'package:wayagram/features/shop/filter/views/product_search_result.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
 import 'package:wayagram/features/shop/seller/views/delivery_request/delivery_request.dart';
@@ -79,9 +86,18 @@ import 'package:wayagram/features/shop/views/products_view_page.dart';
 import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
 import 'package:wayagram/features/support/views/request.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disqualify.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_application_contest.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_contest.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/view_single_contestant_data.dart';
+import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 import 'package:wayagram/features/ugt/contest_setting/contest_setting_content.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
+import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.dart';
 import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
+import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
@@ -155,6 +171,14 @@ class WayaAppRoutes {
     UgtGetStarted.route: () => UgtGetStarted(),
     UgtHome.route: () => UgtHome(),
     CreateContest.route: () => CreateContest(),
+    CreateContestPost.route: () => CreateContestPost(),
+    ViewSingleContestantData.route: () => ViewSingleContestantData(),
+    ContestActiveDisqualify.route: () => ContestActiveDisqualify(),
+    ContestProfilePage.route: () => ContestProfilePage(),
+    ManageApplicationContest.route: () => ManageApplicationContest(),
+    ManageStateSingleContest.route: () => ManageStateSingleContest(),
+    DashboardContestPage.route: () => DashboardContestPage(),
+    ManageStateContest.route: () => ManageStateContest(),
     ContestSettingContent.route: () => ContestSettingContent(),
     EditStagePreference.route: () => EditStagePreference(),
     CreateRequest.route: () => CreateRequest(),
@@ -169,6 +193,7 @@ class WayaAppRoutes {
     UpcomingContestDetails.route: () => UpcomingContestDetails(),
     CreateProfile.route: () => CreateProfile(),
     RegisterContest.route: () => RegisterContest(),
+    AdminContestDetails.route: () => AdminContestDetails(),
     ShareVotingLink.route: () => ShareVotingLink(),
     DeliveryRequest.route: () => DeliveryRequest(),
     SellerProducts.route: () => SellerProducts(),
@@ -190,6 +215,7 @@ class WayaAppRoutes {
     Suggestion.route: () => Suggestion(),
     GroupSuggestion.route: () => GroupSuggestion(),
     PrivatePage.route: () => PrivatePage(),
+    PublicPage.route: () => PublicPage(),
     MembersScreen.route: () => MembersScreen(),
     CreatePost.route: () => CreatePost(),
     CreateGroupPost.route: () => CreateGroupPost(),
@@ -199,7 +225,8 @@ class WayaAppRoutes {
     EditPageInfo.route: () => EditPageInfo(),
     AddTeamMember.route: () => AddTeamMember(),
     PrivateGroup.route: () => PrivateGroup(),
-    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
+    SingleChatScreen.route: () =>
+        SingleChatScreen(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route: () => DisplayFeed(),
     GroupSetting.route: () => GroupSetting(),
     AllUpcomingEvents.route: () => AllUpcomingEvents(),
@@ -207,31 +234,44 @@ class WayaAppRoutes {
     MyMoments.route: () => MyMoments(),
     ViewMoment.route: () => ViewMoment(),
     VideoTrimmerScreen.route: () => VideoTrimmerScreen(),
+    ViewFullMedia.route: ()=> ViewFullMedia(),
     EditPost.route: () => EditPost(
           initialContent: '',
           initialImageUrl: '',
           title: '',
           postId: '',
         ),
-    EditGroupInfo.route: ()=> EditGroupInfo(),
-    AddGroupMember.route: ()=> AddGroupMember(),
+    EditGroupInfo.route: () => EditGroupInfo(),
+    AddGroupMember.route: () => AddGroupMember(),
     SearchView.route: () => SearchView(),
     //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
-    CreateDonation.route: ()=> CreateDonation(),
-    ChatAndSocial.route:() => ChatAndSocial(),
+    Donations.route: () => Donations(),
+    DonationDetails.route: () => DonationDetails(),
+    CreateDonation.route: () => CreateDonation(),
+    DonationManagement.route: () => DonationManagement(),
+    ChatAndSocial.route: () => ChatAndSocial(),
     SupportRequestScreen.route: () => SupportRequestScreen(),
     SupportDisputeScreen.route: () => SupportDisputeScreen(),
     SupportChatScreen.route: () => SupportChatScreen(),
+    DisputeDetail.route: () =>
+        DisputeDetail(id: WayaNav.search['id'].toString()),
+    ProductSearchResult.route: () => ProductSearchResult()
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getSingleChatRoute(String id) => "${SingleChatScreen.route}?id=$id";
+  static String getSingleChatRoute(String id) =>
+      "${SingleChatScreen.route}?id=$id";
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
   static String getProfileRoute(String id) => "${ProfilePage.route}?id=$id";
+
+  /// Helper function that is used to get the route to the details of a single
+  /// dispute by its ID.
+  static String getDisputeDetailsRoute(String id) =>
+      "${DisputeDetail.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages => routes.entries.map((entry) {

@@ -20,8 +20,9 @@ class EventWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
+
+    print(event.image);
     return Column(
       children: [
         Container(
@@ -35,7 +36,8 @@ class EventWidget extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WayaImage(
-                  imageUrl: event.image,
+                  imageUrl:
+                     event.image,
                   height: 180.h,
                   width: double.infinity,
                   radius: BorderRadius.only(
