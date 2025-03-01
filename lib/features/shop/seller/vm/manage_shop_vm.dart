@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/order/data/repo/order_repository.dart';
@@ -14,6 +15,7 @@ import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.d
 import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/vm/delivery_request_vm.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_products_vm.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
 List<SalesMetric> salesMetrics = [
   SalesMetric(title: "Total Sales", metrics: "0", color: Color(0xffE3EFFC)),
@@ -31,9 +33,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
   ManageShopVm(this._shopRepository, this._orderRepository,
       this._secureDataSource, this.ref)
-      : super(ManageShopState.initial()) {
-    state = state.copyWith(salesMetric: salesMetrics);
-  }
+      : super(ManageShopState.initial());
 
   Future<void> getSellerShops() async {
     final isBusiness = ref.read(successfulSetupVmProvider).business;
@@ -85,13 +85,16 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
   void fetchData() async {
     state = state.copyWith(isLoadingOrder: true);
-    await getOrders(shopId: state.singleShop!.id);
+
     final List<SellerProduct>? products = await ref
         .read(sellerProductsVmProvider.notifier)
         .sellerProducts(shopId: state.singleShop!.id);
-
+    await ref
+        .read(shopVmProvider.notifier)
+        .getShopMetrics(shopId: state.singleShop!.id);
     final List<DeliveryRequestData>? requests =
         await ref.read(deliveryRequestVmProvider.notifier).getRequests();
+
     state = state.copyWith(isLoadingOrder: false);
     updateMetrics(products: products, requests: requests);
   }
@@ -99,61 +102,9 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
   void updateMetrics(
       {required List<SellerProduct>? products,
       required List<DeliveryRequestData>? requests}) {
-    if (products != null && products.isNotEmpty) {
-      List<SellerProduct> wayaProduct =
-          products.where((prod) => prod.wayagramDeal == true).toList();
-
-      state = state.copyWith(
-          numberOfProducts: products.length,
-          numberOfWayaGramDeals: wayaProduct.length);
-      List<SalesMetric> sales = List.from(state.salesMetric);
-
-      sales = sales.map((value) {
-        if (value.title == "Total Products") {
-          return value.copyWith(metrics: "${products.length}");
-        }
-        return value;
-      }).toList();
-
-      state = state.copyWith(salesMetric: sales);
-    }
-
     if (requests != null) {
       state = state.copyWith(numberOfRequests: requests.length);
     }
-  }
-
-  Future<void> getOrders({required String shopId}) async {
-    try {
-      final response = await _orderRepository.getSellerOrders(shopId, 1);
-
-      if (response.success) {
-        OrdersResponse ordersResponse = OrdersResponse.fromJson(response.data);
-        state = state.copyWith(orders: ordersResponse.data.data);
-        if (ordersResponse.data.data.isNotEmpty) {
-          state =
-              state.copyWith(numberOfOrders: ordersResponse.data.data.length);
-          final numberOfPendingOrders = ordersResponse.data.data
-              .where((value) => value.status == 'pending')
-              .toList()
-              .length;
-          // final totalSales = ordersResponse.data.data.where((ord) => ord.status == 'compl')
-          List<SalesMetric> sales = List.from(state.salesMetric);
-          sales = sales.map((value) {
-            if (value.title == "Pending Orders") {
-              return value.copyWith(metrics: "$numberOfPendingOrders");
-            } else if (value.title == 'Total Sales') {
-              return value.copyWith(metrics: "$numberOfPendingOrders");
-            }
-            return value;
-          }).toList();
-
-          state = state.copyWith(salesMetric: sales);
-        }
-      }
-    } catch (e) {
-      print(e);
-    } finally {}
   }
 
   // main endpoint to get seller paginated poduct --others will later be removed

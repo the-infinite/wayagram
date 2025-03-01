@@ -9,7 +9,6 @@ import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
-import 'package:wayagram/features/explore/data/model/default.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/features/explore/widgets/donation_widget.dart';
@@ -17,8 +16,6 @@ import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/explore/widgets/explore_header.dart';
 import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
-import 'package:wayagram/features/explore/widgets/pages_card.dart';
-import 'package:wayagram/features/explore/widgets/polls_card.dart';
 import 'package:wayagram/features/notifications/views/default.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/quotation/widgets/quotation_card.dart';
@@ -32,9 +29,11 @@ import 'package:wayagram/features/ugt/widgets/ugt_card.dart';
 import 'package:wayagram/shared/features/chat/widget/conversation.dart';
 import 'package:wayagram/shared/features/profile/shared_posts.dart';
 import 'package:wayagram/shared/features/moments/shared_moments.dart';
+import 'package:wayagram/shared/features/profile/view/donations.dart';
 import 'package:wayagram/shared/features/profile/view/pages.dart';
 
 import 'package:wayagram/shared/features/profile/view/groups.dart';
+import 'package:wayagram/shared/features/profile/view/polls.dart';
 
 class Explore extends ConsumerStatefulWidget {
   const Explore({super.key});
@@ -191,13 +190,7 @@ class _ExploreState extends ConsumerState<Explore> {
                 subTitle: 'Support a course that matters',
                 title: 'Donations'),
             const Gap(25),
-            ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: 2,
-                itemBuilder: (context, index) {
-                  return DonationWidget();
-                }),
+            DonationsFeedWidget(),
             const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {
@@ -266,18 +259,8 @@ class _ExploreState extends ConsumerState<Explore> {
                 subTitle: 'Join upcoming activities',
                 title: 'Polls & Voting'),
             const Gap(25),
-            Text(
-              "My Polls",
-              style: wayaTheme.textTheme.bodyMedium,
-            ),
-            const Gap(10),
-            ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: pollList.length,
-                itemBuilder: (context, index) {
-                  return PollsCard(poll: pollList[index]);
-                }),
+           
+            PollsFeedWidget(isExplore: true,),
             const Gap(25),
 
             //? I have plugged this in here for you. Gbayii omo iyami

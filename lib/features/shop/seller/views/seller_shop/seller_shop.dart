@@ -24,11 +24,15 @@ class _SellerShopState extends ConsumerState<SellerShop> {
       if (ref.read(manageShopVmProvider).isPersonalNotUpgradedToBusiness) {
         WayaUtils.showNotice(
             context: context,
+            isDismissible: false,
             title: "You don't Have a Shop Yet",
             message: 'Please upgrade to a business account to create a shop',
             onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
             buttonText: 'Ugrade to Business',
-            secondButtonText: 'Cancel',
+            secondButtonText: 'Go Back',
+            onCancel: () {
+              WayaNav.toNamed(BottomView.route, arguments: 0);
+            },
             icon: Image.asset('assets/images/cp-shop.png'));
       }
     });
@@ -96,19 +100,25 @@ Widget buildSellerShopSkeleton({required BuildContext context}) {
       Container(
         width: 80,
         height: 24,
-        decoration: BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: wayaTheme.colorScheme.greyColor100,
+            borderRadius: BorderRadius.circular(8)),
       ),
       const Gap(3),
       Container(
         height: 24,
         width: 120,
-        decoration: BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: wayaTheme.colorScheme.greyColor100,
+            borderRadius: BorderRadius.circular(8)),
       ),
       const Gap(20),
       Container(
         height: 20,
         width: 50,
-        decoration: BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: wayaTheme.colorScheme.greyColor100,
+            borderRadius: BorderRadius.circular(8)),
       ),
       const Gap(3),
       CardLoadingState(),
@@ -116,7 +126,9 @@ Widget buildSellerShopSkeleton({required BuildContext context}) {
       Container(
         height: 20,
         width: 50,
-        decoration: BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+            color: wayaTheme.colorScheme.greyColor100,
+            borderRadius: BorderRadius.circular(8)),
       ),
       const Gap(3),
       CardLoadingState(),

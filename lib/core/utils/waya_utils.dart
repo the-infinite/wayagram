@@ -29,9 +29,11 @@ class WayaUtils {
       String? secondButtonText,
       Widget? buttonCenterWidget,
       Widget? secondButtonCenterWidget,
+      bool isDismissible = true,
       VoidCallback? onCancel}) {
     return showModalSheet(
       context,
+      isDismissible: isDismissible,
       child: WayaNoticeModal(
         title: title,
         onPress: onPress ?? () => {},
@@ -41,7 +43,7 @@ class WayaUtils {
         secondButtonCenterWidget: secondButtonCenterWidget,
         buttonCenterWidget: buttonCenterWidget,
         secondButtonText: secondButtonText,
-        onCancel: onCancel,
+        onCancel: onCancel ??  () => Navigator.pop(context),
       ),
     );
   }
@@ -74,11 +76,12 @@ class WayaUtils {
     WayaSnackBar.showToast('Copied');
   }
 
-  static Future<T?> showModalSheet<T>(BuildContext context, {required Widget child}) {
+  static Future<T?> showModalSheet<T>(BuildContext context, {required Widget child, bool isDismissible =  true}) {
     return showModalBottomSheet<T?>(
       constraints: BoxConstraints(maxHeight: Get.height * 0.8),
       context: context,
       isScrollControlled: true,
+      isDismissible: isDismissible,
       useRootNavigator: true,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
       builder: (context) => child,

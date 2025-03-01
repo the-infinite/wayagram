@@ -8,7 +8,7 @@ class WayaNoticeModal extends StatelessWidget {
   final String title;
   final String message;
   final VoidCallback onPress;
-  final VoidCallback? onCancel;
+  final VoidCallback onCancel;
   final String? buttonText;
   final String? secondButtonText;
   final Widget? buttonCenterWidget;
@@ -24,7 +24,7 @@ class WayaNoticeModal extends StatelessWidget {
       this.secondButtonText = "",
       this.buttonCenterWidget,
       this.secondButtonCenterWidget,
-       this.onCancel,
+      required this.onCancel,
      required this.onPress});
 
   @override

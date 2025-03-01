@@ -9,6 +9,7 @@ import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/seller_metrics_response_model.dart';
 
 class ShopVm extends StateNotifier<ShopState> {
   final ShopRepository _repository;
@@ -118,6 +119,21 @@ class ShopVm extends StateNotifier<ShopState> {
       return null;
     } finally {
       state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> getShopMetrics({required String shopId}) async {
+    try {
+      final response = await _repository.getShopMetrics(shopId: shopId);
+
+      if (response.success) {
+        ShopMetricsResponse shopMetricResponse =
+            ShopMetricsResponse.fromJson(response.data);
+        state = state.copyWith(sellerMetrics: shopMetricResponse.data);
+        print(response.data);
+      }
+    } catch (error) {
+      print(error);
     }
   }
 

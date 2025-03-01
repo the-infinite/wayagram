@@ -95,9 +95,13 @@ class ShopRepository extends BaseRepository {
 
   ///
   Future<WayaRequestResponse> getProductRating({required String productId}) {
-    return get('$serviceUrl/rating/userRatings?productId=$productId');
+  return get('$serviceUrl/rating/userRatings?productId=$productId');
   }
 
+  //
+  Future<WayaRequestResponse> getShopMetrics({required String shopId}) {
+    return get('$serviceUrl/orders/shop-metrics/$shopId');
+  }
   //
 }
 //

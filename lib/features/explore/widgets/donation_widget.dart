@@ -2,20 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
 
 class DonationWidget extends ConsumerWidget {
-  const DonationWidget({super.key});
+  final MyDonationDocs donation;
+  const DonationWidget({super.key, required this.donation});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+    int daysLeft = DateTime.parse('${donation.expirationDate}')
+        .difference(DateTime.parse('${donation.startDate}'))
+        .inDays;
     return Column(
       children: [
         Container(
@@ -28,7 +34,7 @@ class DonationWidget extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WayaImage(
-                  imageUrl: "",
+                  imageUrl: donation.imageURL ?? '',
                   height: 180.h,
                   width: double.infinity,
                   radius: BorderRadius.only(
@@ -49,7 +55,7 @@ class DonationWidget extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Send Micheal to oxford university",
+                                  "${donation.title?.capitalizeFirst}",
                                   overflow: TextOverflow.ellipsis,
                                   style: wayaTheme.textTheme.bodyMedium,
                                 ),
@@ -57,7 +63,7 @@ class DonationWidget extends ConsumerWidget {
                                   height: 3.h,
                                 ),
                                 Text(
-                                  "${WayaHelpers.formatPrice(20000)} raised from ${WayaHelpers.formatPrice(100000)}",
+                                  "${WayaHelpers.formatPrice(double.parse(donation.amountRaised!).toInt())} raised from ${WayaHelpers.formatPrice(double.parse(donation.targetAmount!).toInt())}",
                                   style: wayaTheme.textTheme.hintStyle,
                                   overflow: TextOverflow.ellipsis,
                                 )
@@ -67,16 +73,30 @@ class DonationWidget extends ConsumerWidget {
                           SizedBox(
                             width: 65,
                             child: WayaButton(
-                              callback: () {},
+                              callback: () {
+                                WayaNav.toNamed('/donationManagement',
+                                    arguments: {
+                                      'title':
+                                          '${donation.title?.capitalizeFirst}',
+                                      'image': '${donation.imageURL}',
+                                      'amountRaised':
+                                          '${donation.amountRaised?.replaceAll('.00', '')}',
+                                      'targetAmount':
+                                          '${donation.targetAmount?.replaceAll('.00', '')}',
+                                      'desc': '${donation.description}',
+                                      'solution': '${donation.solution}',
+                                      'impact': '${donation.impact}',
+                                      'url': '${donation.url}',
+                                      'minimumDonationAmount':
+                                          '${donation.minimumDonationAmount}',
+                                      'daysLeft': '$daysLeft',
+                                      'id': '${donation.id}',
+                                    });
+                              },
                               text: "Donate",
                               height: 30,
-                              color: wayaTheme.colorScheme.primar50,
-                              textStyle: wayaTheme.textTheme.hintStyle
-                                  .wayaCopyWith(
-                                      color:
-                                          wayaTheme.colorScheme.customPrimary,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500),
+                              color: wayaTheme.colorScheme.customPrimary,
+                              textColor: wayaTheme.colorScheme.white,
                               radius: 5,
                             ),
                           ),
@@ -87,7 +107,8 @@ class DonationWidget extends ConsumerWidget {
                       ),
                       EngagementRange(
                           bottomLeft: "500 Donators",
-                          bottomRight: "20 days left",
+                          bottomRight:
+                              "$daysLeft ${daysLeft > 0 ? "Days" : "Day"} left",
                           range: 0.4)
                     ],
                   ),

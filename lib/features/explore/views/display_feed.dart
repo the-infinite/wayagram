@@ -73,7 +73,9 @@ class _DisplayFeedState extends ConsumerState<DisplayFeed> {
               isExpanded: true,
             ),
             const Gap(25),
-            PollsFeedWidget(),
+            PollsFeedWidget(
+              isExpanded: true,
+            ),
             const Gap(25),
             SharedEvent()
           ],
