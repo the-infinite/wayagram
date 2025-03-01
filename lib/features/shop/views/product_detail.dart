@@ -9,6 +9,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/shared/engagement/provider/product_engagement_monitor.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
@@ -28,6 +29,7 @@ class ProductDetail extends ConsumerStatefulWidget {
 }
 
 class _ProductDetailState extends ConsumerState<ProductDetail> {
+  bool isLiked = false;
   @override
   void initState() {
     super.initState();
@@ -43,6 +45,8 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
       provider.startViewingProduct();
 
       provider.addCategory(product.categoryId, ProductPoint.viewPoints.value);
+
+      ref.read(shopVmProvider.notifier).getProductViews(productId: product.id);
     });
   }
 
@@ -86,20 +90,30 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                // Container(
-                //   decoration: BoxDecoration(
-                //     color: wayaTheme.colorScheme.secondaryColor2,
-                //     shape: BoxShape.circle,
-                //   ),
-                //   padding: EdgeInsets.all(7),
-                //   child: InkWell(
-                //     onTap: () {
-                //       HapticFeedback.lightImpact();
-                //     },
-                //     child: SvgPicture.asset(WayaAssets.icons.heart.path,
-                //         fit: BoxFit.none),
-                //   ),
-                // ),
+                InkWell(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    setState(() {
+                      isLiked = true;
+                    });
+                    ref.read(productDetailVmProvider.notifier).likeProduct();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.secondaryColor2,
+                      shape: BoxShape.circle,
+                    ),
+                    padding: EdgeInsets.all(7),
+                    child: SvgPicture.asset(
+                      isLiked
+                          ? WayaAssets.icons.mSmallHeart.path
+                          : WayaAssets.icons.heart.path,
+                      fit: BoxFit.none,
+                      width: 24,
+                      height: 24,
+                    ),
+                  ),
+                ),
                 InkWell(
                   onTap: () {
                     Share.share("Share");
@@ -231,7 +245,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      RatingStars(rating: 4),
+                      RatingStars(rating: 0),
                       const Gap(2),
                       Text(
                         "4.0",

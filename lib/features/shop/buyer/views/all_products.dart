@@ -36,7 +36,7 @@ class _AllProductsState extends ConsumerState<AllProducts> {
 
   @override
   Widget build(BuildContext context) {
-    final notifier = ref.watch(shopVmProvider.notifier);
+   
     final state = ref.watch(shopVmProvider);
 
     final allProducts = state.products;
@@ -66,7 +66,7 @@ class _AllProductsState extends ConsumerState<AllProducts> {
 
     // wayagram deal products
     final wayagramProducts = categoriesFilteredProducts.where((prod) {
-      return prod.wayagramDeal == true;
+      return prod.wayagramDealApprove == true;
     }).toList();
 
     // Non - wayagram products
@@ -98,7 +98,7 @@ class _AllProductsState extends ConsumerState<AllProducts> {
                     uniqueKey: 'all-product',
                   ),
                   const Gap(20),
-                  Text("${ref.watch(addProductProvider('filter')).allDiscountTypes.length}"),
+                
                   GroupedWidgetHeader(
                     onTap: () {
                       WayaNav.toNamed(ProductsViewPage.route,
