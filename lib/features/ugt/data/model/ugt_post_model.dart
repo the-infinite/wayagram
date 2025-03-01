@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ContestResponse {
   final String message;
   final bool status;
