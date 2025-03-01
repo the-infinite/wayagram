@@ -18,7 +18,9 @@ class DonationState{
     final DocType? donationImage;
     final MultipartFile? image;
     final String? kycStatus;
+    final String kycMessage;
     final String privacyOption;
+    final Object? accountType;
     final String startDate;
     final String endDate;
     final String startDateString;
@@ -45,7 +47,9 @@ class DonationState{
       this.donationImage,
       this.image,
       this.startDate = '',
+      this.accountType,
       this.kycStatus = '',
+      this.kycMessage = '',
       this.privacyOption = '',
       this.endDate = '',
       this.startDateString = '',
@@ -82,6 +86,8 @@ class DonationState{
       String? endDate,
       String? startDateString,
       String? kycStatus,
+      String? kycMessage,
+      String? accountType,
       String? endDateString,
       bool? isLoading,
       bool? isPublic,
@@ -98,12 +104,14 @@ class DonationState{
       statement: statement ?? this.statement,
       amount: amount ?? this.amount,
       kycStatus: kycStatus ?? this.kycStatus,
+      kycMessage: kycMessage ?? this.kycMessage,
       targetAmount: targetAmount?? this.targetAmount,
       minimumDonationAmount: minimumDonationAmount ?? this.minimumDonationAmount,
       details: details ?? this.details,
       donationImage: donationImage ?? this.donationImage,
       image: image ?? this.image,
       privacyOption: privacyOption ?? this.privacyOption,
+      accountType: accountType ?? this.accountType,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
       startDateString: startDateString ?? this.startDateString,

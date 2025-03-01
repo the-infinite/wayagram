@@ -17,6 +17,7 @@ import 'package:wayagram/features/donation/donation_modal/donation_modal.dart';
 import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/model/create_donation_response.dart';
 import 'package:wayagram/features/donation/model/kyc_model.dart';
+import 'package:wayagram/features/donation/model/login_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/state/donation_state.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
@@ -291,7 +292,10 @@ class DonationVm extends StateNotifier<DonationState> {
 
       if (response.success) {
         KycModel responseModel = KycModel.fromJson(response.data);
-        state = state.copyWith(kycStatus: responseModel.data?.status);
+        LoginResponse loginResponse = LoginResponse.fromJson(response.data);
+        state = state.copyWith(kycStatus: responseModel.data?.status,
+        accountType: loginResponse.data?.userdata?.business,
+        kycMessage: responseModel.message);
       } else {}
     } catch (e) {
       print(e);

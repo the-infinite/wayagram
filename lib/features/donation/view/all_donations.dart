@@ -94,8 +94,20 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             ],
           ),
           callback: () {
-            if (userType == "PERSONAL") {
-              print('MY POLLING');
+            print('DIALA ACCOUNT TYPE ${viewModel.accountType}');
+             if(viewModel.kycStatus != 'APPROVED'){
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    'You must complete KYC verification before creating a donation post',
+                    style:
+                    TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                  ),
+                  backgroundColor: WayaColors.primary,
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            }else if (viewModel.accountType == null) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 WayaUtils.showNotice(
                     context: context,
@@ -106,21 +118,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                     secondButtonText: 'Cancel',
                     icon: Image.asset('assets/images/cp-shop.png'));
               });
-            } else
-              if(viewModel.kycStatus != 'APPROVED'){
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'You must complete KYC verification before creating a campaign',
-                    style:
-                    TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
-                  ),
-                  backgroundColor: WayaColors.primary,
-                  duration: Duration(seconds: 2),
-                ),
-              );
-            }
-            else{
+            } else{
               WayaNav.toNamed('/createDonation');
             }
 

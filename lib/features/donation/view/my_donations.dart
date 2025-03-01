@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -11,6 +10,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
@@ -28,7 +28,6 @@ class MyDonations extends ConsumerStatefulWidget {
 }
 
 class _MyDonationsState extends ConsumerState<MyDonations> {
-
   late TextEditingController searchController;
 
   @override
@@ -51,24 +50,25 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
   }
 
   String userType = "PERSONAL";
-  
+
   @override
   Widget build(BuildContext context) {
-    final  viewModel = ref.watch(donationVmProvider);
+    final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
-    final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
     // Filter the myDonations
     final filteredMyDonations = WayaUtils.search<MyDonationDocs>(
       viewModel.myDonationDocs!,
-      ['title', ],
+      [
+        'title',
+      ],
       searchController.text,
     );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         WayaButton(
           centerWidget: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -83,13 +83,15 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
               Text(
                 "Create a Donation Post",
                 style: TextStyle().wayaCopyWith(
-                    color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                    color: wayaTheme.colorScheme.customPrimary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16),
               ),
             ],
           ),
           callback: () {
-            if (userType == "PERSONAL") {
-              print('MY POLLING');
+            print('BUSINESS MESSAGE ${viewModel.kycMessage}');
+            if (viewModel.kycMessage == 'Business not found') {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 WayaUtils.showNotice(
                     context: context,
@@ -100,76 +102,75 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
                     secondButtonText: 'Cancel',
                     icon: Image.asset('assets/images/cp-shop.png'));
               });
-            }else if(viewModel.kycStatus != 'APPROVED'){
+            }else if (viewModel.kycStatus != 'APPROVED') {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
-                    'You must complete KYC verification before creating a campaign',
-                    style:
-                    TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                    'You must complete KYC verification before creating a donation post',
+                    style: TextStyle(
+                        fontFamily: WayaConstants.fontFamily, fontSize: 12),
                   ),
                   backgroundColor: WayaColors.primary,
                   duration: Duration(seconds: 2),
                 ),
               );
-            }else{
+            } else {
               WayaNav.toNamed('/createDonation');
             }
           },
           color: wayaTheme.colorScheme.primar50,
         ),
-
         Gap(20),
-        FilterWidget(search: TextEditingController(), hintText: 'Search Donations'),
+        FilterWidget(
+            search: TextEditingController(), hintText: 'Search Donations'),
         Gap(20),
-        Text("My Donations",
-            style: wayaTheme.textTheme.titleLarge),
+        Text("My Donations", style: wayaTheme.textTheme.titleLarge),
         Text(
           "See and manage all your created donations",
           style: WayaTextStyles.bodySmall.copyWith(
               fontSize: 12,
               fontWeight: FontWeight.w400,
-              color: Theme.of(context).colorScheme.greyColor500 ),),
+              color: Theme.of(context).colorScheme.greyColor500),
+        ),
         const Gap(30),
-
-     ListView.builder(
+        ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: filteredMyDonations.length,
-            itemBuilder: (context, index){
+            itemBuilder: (context, index) {
               final donation = filteredMyDonations[index];
-              int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
+              int daysLeft = DateTime.parse('${donation.expirationDate}')
+                  .difference(DateTime.parse('${donation.startDate}'))
+                  .inDays;
               return ManageDonationWidget(
                 text: "Manage Donation",
-                amountRaised:  WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
+                amountRaised: WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
                 targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
                 title: donation.title?.capitalizeFirst,
                 image: donation.imageURL,
-                dayLeft: daysLeft < 0  ? '0' : '$daysLeft',
+                dayLeft: daysLeft < 0 ? '0' : '$daysLeft',
                 donationCount: donation.donationCount!,
-                onTap: (){
-                  WayaNav.toNamed('/donationManagement',
-                  arguments: {
-                    'title':'${donation.title?.capitalizeFirst}',
-                    'image':'${donation.imageURL}',
+                onTap: () {
+                  WayaNav.toNamed('/donationManagement', arguments: {
+                    'title': '${donation.title?.capitalizeFirst}',
+                    'image': '${donation.imageURL}',
                     'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
                     'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
                     'desc': '${donation.description}',
                     'solution': '${donation.solution}',
                     'impact': '${donation.impact}',
                     'url': '${donation.url}',
-                    'minimumDonationAmount':'${donation.minimumDonationAmount}',
-                    'daysLeft':'$daysLeft',
-                    'id':'${donation.id}',
+                    'minimumDonationAmount': '${donation.minimumDonationAmount}',
+                    'daysLeft': '$daysLeft',
+                    'id': '${donation.id}',
                   });
                 },
                 buttonWidth: 120.0,
               );
-            }
-        ),
+            }),
       ],
     );
-     /* Expanded(
+    /* Expanded(
       child: PaginatedDataView<MyDonationDocs>(
         uniqueKey: 'My-donations',
         loadingState: SizedBox(
@@ -203,7 +204,6 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
           );
         },),
     );*/
-
   }
 }
 
@@ -223,8 +223,8 @@ class DonationEmptyState extends StatelessWidget {
             },
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter:
-              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,
