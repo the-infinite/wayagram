@@ -21,6 +21,7 @@ import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_lead
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_stages_section.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/video_player.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
@@ -398,7 +399,3 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
   }
 }
 
-String formatMoney(String value) {
-  final oCcy = NumberFormat("#,##0.00", "en_US");
-  return oCcy.format(double.parse(value));
-}

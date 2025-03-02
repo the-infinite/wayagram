@@ -48,7 +48,7 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
             color: wayaTheme.colorScheme.greyColor400,
           ),
           onChanged: (value) {
-            //notifier.searchList(value);
+            notifier.searchList(value);
           },
           controller: searchController,
           hintText: "search by name, univerisity , stage, category",
