@@ -245,7 +245,8 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                   const Gap(20),
                   UpcomingWidget(
                       title: "Prize",
-                      content: "₦${formatMoney(model.winnerPrize ?? "0")}"),
+                      content:
+                          "₦${formatMoney(model.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
                   const Gap(20),
                   UpcomingWidget(title: "Host", content: "Host"),
                 ],
