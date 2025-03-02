@@ -13,6 +13,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disqualify.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_contestants.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_gallery.dart.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_leaderboard.dart';
@@ -20,6 +21,7 @@ import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/for_you_contest.dart';
 import 'package:wayagram/features/ugt/my_contest_details/my_contest_details.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
@@ -242,7 +244,8 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                       title: "Category", content: model.categoryName ?? ""),
                   const Gap(20),
                   UpcomingWidget(
-                      title: "Prize", content: model.winnerPrize ?? ""),
+                      title: "Prize",
+                      content: "₦${formatMoney(model.winnerPrize ?? "0")}"),
                   const Gap(20),
                   UpcomingWidget(title: "Host", content: "Host"),
                 ],
@@ -419,9 +422,4 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
       return isText ? Color(0xff865503) : Color(0xffFEF6E7);
     } */
   }
-}
-
-String formatMoney(String value) {
-  final oCcy = NumberFormat("#,##0.00", "en_US");
-  return oCcy.format(double.parse(value));
 }
