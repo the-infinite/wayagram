@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
@@ -87,12 +88,14 @@ class _UpcomingContestDetailsState
                 child: model.uploadCoverImages == null
                     ? Image.asset(
                         'assets/images/frameuni.png',
+                        width: context.width,
                         height: 200,
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
                       )
                     : Image.network(
                         model.uploadCoverImages ?? "",
+                        width: context.width,
                         height: 200,
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
@@ -121,7 +124,9 @@ class _UpcomingContestDetailsState
                       title: "Entry Type", content: model.entryType ?? ""),
                   const Gap(20),
                   UpcomingWidget(
-                      title: "Duration", content: model.durationType ?? ""),
+                      title: "Duration",
+                      content: getRealDateDiffBtwDate(
+                          model.startDate ?? "", model.endDate ?? "")),
                 ],
               ),
               const Gap(10),

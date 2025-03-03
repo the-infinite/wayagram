@@ -158,6 +158,7 @@ class ContestCard extends ConsumerWidget {
                 child: post.uploadCoverImages != null
                     ? Image.network(
                         post.uploadCoverImages!,
+                        width: context.width,
                         height: 200,
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
@@ -226,7 +227,13 @@ class ContestCard extends ConsumerWidget {
               const Gap(20),
               WayaButton(
                 callback: () {
-                  if (isDateInFuture(post.startDate ?? "")) {
+                  ref.read(registerFormProvider.notifier).addDefault(
+                      post.contestSettings?.formRequirements ?? [], post);
+                  //  WayaNav.toNamed("/register-contest1");
+                  ref.read(selectedContestProvider.notifier).state = post;
+                  WayaNav.toNamed("/upcoming-contest-details");
+
+                  /*    if (isDateInFuture(post.startDate ?? "")) {
                     ref.read(registerFormProvider.notifier).addDefault(
                         post.contestSettings?.formRequirements ?? [], post);
                     //  WayaNav.toNamed("/register-contest1");
@@ -235,7 +242,7 @@ class ContestCard extends ConsumerWidget {
                   } else {
                     ref.read(selectedContestProvider.notifier).state = post;
                     WayaNav.toNamed('/upcoming-manage-contest-details');
-                  }
+                  } */
                 },
                 text: "View Details",
               ),
@@ -365,4 +372,18 @@ String getRealDateDiffBtwDate(String realStartDate, String realEndDate) {
     }
   }
   // int months = getMonthsDifference(startDate, endDate);
+}
+
+bool isCurrentDateBetween(
+    String startDateStr, String endDateStr, String format) {
+  try {
+    DateTime startDate = DateFormat(format).parse(startDateStr);
+    DateTime endDate = DateFormat(format).parse(endDateStr);
+    DateTime currentDate = DateTime.now();
+
+    return currentDate.isAfter(startDate) && currentDate.isBefore(endDate);
+  } catch (e) {
+    print("Invalid date format: $e");
+    return false;
+  }
 }

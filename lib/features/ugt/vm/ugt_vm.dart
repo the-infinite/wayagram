@@ -175,8 +175,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
                 .replaceAll(",", "")
             : state.amount.text,
 
-      //  "durationType": state.entrySelectType.toUpperCase(),
-       // "numberOfDuration": state.numberOfDuration.text,
+        //  "durationType": state.entrySelectType.toUpperCase(),
+        // "numberOfDuration": state.numberOfDuration.text,
         "descriptionOfAwards": state.descriptionOfAwards.text,
         "amountPerVote": amountPerVote.text.contains("NGN")
             ? amountPerVote.text
@@ -185,20 +185,21 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
                 .substring(3)
                 .replaceAll(",", "")
             : amountPerVote.text,
-        "type": state.contestFreePaid.toUpperCase(),
+        //   "type": state.contestFreePaid.toUpperCase(),
         "overallResult": state.overallResult == true ? "YES" : "NO",
         "multipleStages": state.contestTimelineMultipleStage.toUpperCase(),
         "publicity": state.contestPrivatePublic.toUpperCase(),
         "status": "ACTIVE",
         "howItWorks": state.howItWorks.text,
-      //  "numberOfWeeks": numberOfWeeks.text,
+        //  "numberOfWeeks": numberOfWeeks.text,
         "currentStage": state.contestTimelineCurrentStage,
         "participationStartDate": _convertToISO(state.startDate),
         "startDate": _convertToISO(state.contestTimelineStartDate),
         "uploadCoverImages": profileImageUrl,
         "endDate": _convertToISO(state.contestTimelineEndDate),
 
-        "entryType": state.entrySelectType.toUpperCase(),
+        // "entryType": state.entrySelectType.toUpperCase(),
+        "entryType": state.contestFreePaid.toUpperCase(),
         "contestSettings": {
           "stages": mapStageList,
           "formRequirements": mapRequireList
