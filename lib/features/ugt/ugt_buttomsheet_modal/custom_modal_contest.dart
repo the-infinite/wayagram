@@ -8,10 +8,12 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 class AvailableBalanceModal extends StatefulHookConsumerWidget {
@@ -21,6 +23,7 @@ class AvailableBalanceModal extends StatefulHookConsumerWidget {
 
   final String candidateName;
   final String votingLink;
+  final VoidCallback onTap;
 
   //String amount;
   const AvailableBalanceModal(
@@ -28,6 +31,7 @@ class AvailableBalanceModal extends StatefulHookConsumerWidget {
       required this.voteFee,
       required this.voteCount,
       required this.candidateName,
+      required this.onTap,
       required this.votingLink});
 
   @override
@@ -39,10 +43,20 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
   final WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      //  ref.read(contestNotifierProvider.notifier).allCategories();
+      ref.read(votersContestNotifier.notifier).getUserWallet();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(votersContestNotifier);
     final isLoading = useState(false);
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
       child: SingleChildScrollView(
@@ -50,7 +64,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Vote Contestant',
+              'Pay for contest',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 24,
                   fontWeight: FontWeight.w700,
@@ -62,22 +76,23 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
               text: TextSpan(
                 children: [
                   TextSpan(
-                    text: 'Are you sure you want to cast ',
+                    text:
+                        'Are you sure you want to pay for the contest that will cost ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  TextSpan(
+                  /*  TextSpan(
                     text: '${widget.voteCount} Votes ',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
-                  ),
-                  TextSpan(
+                  ), */
+                  /*  TextSpan(
                     text: 'For ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
@@ -92,18 +107,17 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
-                  ),
-                  TextSpan(
+                  ), */
+                  /*   TextSpan(
                     text: 'this would cost  ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),
-                  ),
+                  ), */
                   TextSpan(
-                    text:
-                        '₦${formatMoney('${num.parse(widget.voteCount) * num.parse(widget.voteFee)}')}?',
+                    text: '₦${formatMoney(' ${num.parse(widget.voteFee)}')}?',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
                       fontSize: 14,
@@ -195,6 +209,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                           child: PinEntryBottomSheet(
                             candidateName: widget.candidateName,
                             link: widget.votingLink,
+                            onTap: widget.onTap,
                             amount:
                                 '${num.parse(widget.voteCount) * num.parse(widget.voteFee)}',
                             numOfVote: widget.voteCount,
@@ -217,7 +232,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                     }
                   : null,
               centerWidget:
-                  LoadingState(loading: isLoading.value, text: 'Yes, Vote'),
+                  LoadingState(loading: isLoading.value, text: 'Yes, Pay'),
             ),
             SizedBox(height: 17.h),
             WayaButton(
@@ -241,12 +256,14 @@ class PinEntryBottomSheet extends StatefulHookConsumerWidget {
   final String link;
   final String amount;
   final String numOfVote;
+  final VoidCallback onTap;
 
   const PinEntryBottomSheet(
       {required this.link,
       required this.amount,
       required this.numOfVote,
       required this.candidateName,
+      required this.onTap,
       super.key});
 
   @override
@@ -275,6 +292,9 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
 
   void _submitPin(ValueNotifier<bool> isLoading) async {
     if (_pin.length == _pinLength) {
+      print("i dey here ee");
+      widget.onTap();
+
       /*  if (isPass) {
        
         Navigator.of(context).pop();
@@ -379,8 +399,9 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                             print(" i am so here");
                           }
                         : () {
+                            widget.onTap();
                             print(" i am so noooooooot here");
-                            _submitPin(isLoading);
+                            //  _submitPin(isLoading);
                           },
                   );
                 } else {

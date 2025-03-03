@@ -11,6 +11,8 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
@@ -182,6 +184,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                     Navigator.pop(context);
                     WayaNav.toNamed("/create-profile-contest1");
                   } else {
+                    Navigator.pop(context);
                     WayaUtils.showModalSheet(
                       context,
                       child: AvailableBalanceModal(
@@ -190,6 +193,25 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                             widget.post?.contest?.amount?.toString() ?? "0",
                         // model: widget.model,
                         votingLink: "",
+                        onTap: () {
+                          WayaUtils.showModalSheetUgt(
+                            context,
+                            child: SuccessfulModal(
+                              "Contest Payment Made Successfully",
+                              "Congrats you are now a contestant in this contest, just proceed by creating your contest profile",
+                              true,
+                              null,
+                              () {
+                                ref
+                                    .read(
+                                        selectedAppliedContestProvider.notifier)
+                                    .state = widget.post;
+                                Navigator.pop(context);
+                                WayaNav.toNamed("/create-profile-contest1");
+                              },
+                            ),
+                          );
+                        },
                         candidateName: "",
                       ),
                     );
@@ -199,7 +221,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
               text: widget.post?.status?.toLowerCase() == "approved"
                   ? widget.post?.contest?.entryType?.toLowerCase() == "free"
                       ? "Create Contest Profile"
-                      : "Pay NGN${widget.post?.contest?.amount} to continue"
+                      : "Pay NGN${formatMoney(widget.post?.contest?.amount?.toString() ?? "0")} to continue"
                   : "View Contest Details",
             ),
             const Gap(10),
