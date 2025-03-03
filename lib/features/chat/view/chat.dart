@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -316,7 +317,10 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                 controller: inputController,
                 notifier: notifier,
                 createChat: _startConversation,
-              )
+              ),
+
+              // Some space for apple devices only
+              if (GetPlatform.isIOS) const Gap(20),
             ],
           ),
         ),
