@@ -1,19 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/group/widget/group_widget.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 
@@ -31,7 +25,8 @@ class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerPr
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
-      ref.read(createGroupProvider.notifier).getAllGroups();
+      //ref.read(createGroupProvider.notifier).getAllGroups();
+      ref.read(createGroupProvider.notifier).getMyGroups();
       // ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
       // print('THE PUBLIC GROUP ID is $id');
     });
@@ -48,14 +43,14 @@ class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerPr
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        viewModel.getAllGroups!.isEmpty ? GroupEmptyState():
+        viewModel.myGroups!.isEmpty ? GroupEmptyState():
         ListView.builder(
             padding: EdgeInsets.only(bottom: 40),
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: viewModel.getAllGroups?.length,
+            itemCount: viewModel.myGroups?.length,
             itemBuilder: (_, index){
-             final group = viewModel.getAllGroups?[index];
+             final group = viewModel.myGroups?[index];
               return GroupWidget(
                   name: '${group?.name?.capitalizeFirst}',
                   desc: '${group?.description?.capitalizeFirst}',
@@ -63,7 +58,6 @@ class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerPr
                   buttonText: '',
                   chk: false,
                   onTap: (){
-
                     print('DARLINGTON===>> ${group?.isPrivate}');
                     group?.isPrivate == true?
                     WayaNav.toNamed('/privateGroup',

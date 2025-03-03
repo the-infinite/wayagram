@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -7,38 +6,50 @@ import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
 
 class ManageDonationWidget extends ConsumerWidget {
   final VoidCallback? onTap;
   final String text;
+  final int? donationCount;
+  final String? title;
+  final String? image;
+  final String? targetAmount;
+  final String? amountRaised;
+  final String? dayLeft;
   final double buttonWidth;
-  const ManageDonationWidget({super.key, required this.onTap,
-    required this.text, required this.buttonWidth });
+  const ManageDonationWidget({
+    super.key,
+    required this.onTap,
+    required this.text,
+    required this.donationCount,
+    required this.title,
+    required this.image,
+    required this.targetAmount,
+    required this.amountRaised,
+    required this.dayLeft,
+    required this.buttonWidth,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
         Container(
             decoration: BoxDecoration(
               color: wayaTheme.colorScheme.white,
-              border: Border.all(
-                  color: wayaTheme.colorScheme.greyColor200, width: 1),
+              border: Border.all(color: wayaTheme.colorScheme.greyColor200, width: 1),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WayaImage(
-                  imageUrl: "",
+                  imageUrl: '$image',
                   height: 180.h,
                   width: double.infinity,
-                  radius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12)),
+                  radius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
                 ),
                 Container(
                   padding: EdgeInsets.all(10),
@@ -54,7 +65,7 @@ class ManageDonationWidget extends ConsumerWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Send Micheal to oxford university",
+                                  '$title',
                                   overflow: TextOverflow.ellipsis,
                                   style: wayaTheme.textTheme.bodyMedium,
                                 ),
@@ -62,7 +73,7 @@ class ManageDonationWidget extends ConsumerWidget {
                                   height: 3.h,
                                 ),
                                 Text(
-                                  "${WayaHelpers.formatPrice(20000)} raised from ${WayaHelpers.formatPrice(100000)}",
+                                  '$amountRaised raised from $targetAmount',
                                   style: wayaTheme.textTheme.hintStyle,
                                   overflow: TextOverflow.ellipsis,
                                 )
@@ -76,7 +87,8 @@ class ManageDonationWidget extends ConsumerWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  Text(text,
+                                  Text(
+                                    text,
                                     style: TextStyle().wayaCopyWith(
                                         color: wayaTheme.colorScheme.customPrimary,
                                         fontSize: 12,
@@ -96,9 +108,10 @@ class ManageDonationWidget extends ConsumerWidget {
                         height: 6.h,
                       ),
                       EngagementRange(
-                          bottomLeft: "500 Donators",
-                          bottomRight: "20 days left",
-                          range: 0.4)
+                          bottomLeft:
+                              '$donationCount ${donationCount == 0 || donationCount == 1 ? 'Donation' : 'Donations'}',
+                          bottomRight: "$dayLeft ${dayLeft == '1' ? 'day' : 'days'} left",
+                          range: donationCount == 0 ? 0.0 : 0.4)
                     ],
                   ),
                 )

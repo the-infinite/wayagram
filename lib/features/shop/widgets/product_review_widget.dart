@@ -3,14 +3,14 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 
 class ProductReviewWidget extends StatelessWidget {
- // final Review review;
+  // final Review review;
   const ProductReviewWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
 
     return Column(
@@ -60,20 +60,35 @@ class ProductReviewWidget extends StatelessWidget {
   }
 }
 
-class RatingStars extends StatelessWidget {
+class RatingStars extends StatefulWidget {
   final int rating;
-  const RatingStars({super.key, required this.rating});
+  final double starSize;
+  final Color initialColor;
+  final Function(int rating)? onTap;
+  const RatingStars(
+      {super.key, required this.rating, this.starSize = 18, this.onTap, this.initialColor = WayaColors.customPrimary});
 
   @override
+  State<StatefulWidget> createState() => _RatingStarState();
+}
+
+class _RatingStarState extends State<RatingStars> {
+  @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Row(
       children: List.generate(5, (index) {
-        return Icon(
-          size: 18,
-          index < rating ? Icons.star : Icons.star_border,
-          color: wayaTheme.colorScheme.customPrimary,
+        return GestureDetector(
+          onTap: widget.onTap == null
+              ? null
+              : () {
+                  widget.onTap?.call(index+1);
+                },
+          child: Icon(
+            size: widget.starSize,
+            index + 1 < widget.rating ? Icons.star : Icons.star_border,
+            color: index + 1 < widget.rating ?  wayaTheme.colorScheme.customPrimary: widget.initialColor,
+          ),
         );
       }),
     );

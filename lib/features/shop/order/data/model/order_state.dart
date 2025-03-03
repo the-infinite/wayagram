@@ -3,14 +3,21 @@ import 'package:wayagram/features/shop/order/data/model/order_response_model.dar
 
 class OrderState {
   final bool isLoading;
+  final bool isRejecting;
   final TextEditingController search;
 
-  OrderState({this.isLoading = false, TextEditingController? search})
-      : search = search ?? TextEditingController();
+  OrderState({
+    this.isLoading = false,
+    this.isRejecting = false,
+    TextEditingController? search,
+  }) : search = search ?? TextEditingController();
 
-  OrderState copyWith({TextEditingController? search, bool? isLoading}) {
+  OrderState copyWith(
+      {TextEditingController? search, bool? isRejecting, bool? isLoading}) {
     return OrderState(
-        isLoading: isLoading ?? this.isLoading, search: search ?? this.search);
+        isLoading: isLoading ?? this.isLoading,
+        isRejecting: isRejecting ?? this.isRejecting,
+        search: search ?? this.search);
   }
 }
 
@@ -21,7 +28,7 @@ class OrderDetailArg {
   OrderDetailArg({required this.type, required this.order});
 }
 
- const deliveryStatus = ['pending', 'processing', 'onTransit', 'completed'];
+const deliveryStatus = ['pending', 'processing', 'onTransit', 'completed'];
 const pickupStatus = [
   'pending',
   'readyForPickUp',

@@ -39,7 +39,6 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     //final state = ref.watch(orderVmProvider);
 
     return Expanded(
@@ -54,7 +53,7 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
             title: 'Orders'),
         const Gap(15),
         FilterWidget(
-          hintText: 'Search Orders',
+          hintText: 'Search Orders by ID, name, token, etc.',
           search: searchController,
         ),
         const Gap(15),

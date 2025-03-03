@@ -3,24 +3,20 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
-import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 import '../../auth/account_creation/vm/successful_setup_vm.dart';
@@ -41,8 +37,6 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
 
   String userType = "PERSONAL";
 
-  Map<String, dynamic> formData = {};
-
   @override
   Widget build(BuildContext context) {
 
@@ -52,14 +46,11 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     final setUp = ref.watch(successfulSetupVmProvider);
 
     String startDate = viewModel.startDate;
-    print('START DATE ==>>>$startDate');
     String endDate = viewModel.endDate;
-    print('END DATE ==>> ${viewModel.endDate}');
     DateFormat format = DateFormat("yyyy-M-d");
     DateTime parsedDate = format.parse(startDate);
     DateTime parsedDate2 = format.parse(endDate);
     num daysLeft = parsedDate2.difference(parsedDate).inDays;
-print('THE POLLTYPE IS ===> ${viewModel.pollType.toLowerCase()}');
     return WayaScaffold(
         title: "Polls Summary",
         isLoading: viewModel.isLoading,

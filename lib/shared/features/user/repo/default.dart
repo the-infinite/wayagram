@@ -36,6 +36,14 @@ class UserRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getAllUsers({int? limit = 500}) {
-    return get("$serviceUrl//client/users?limit=$limit");
+    return get("$serviceUrl/client/users?limit=$limit");
+  }
+
+  Future<WayaRequestResponse> getUserByEmail(String email) {
+    return get("$serviceUrl/client/users/all/user-by-email?email=$email");
+  }
+
+  Future<WayaRequestResponse> getUserByPhone(String phone) {
+    return get("$serviceUrl/client/users/all/user-by-phone?phoneNumber=$phone");
   }
 }

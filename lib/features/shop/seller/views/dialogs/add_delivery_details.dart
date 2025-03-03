@@ -30,7 +30,7 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
     String address = widget.data.items[0].deliveryAddress;
     String shopId = widget.data.items[0].shopId;
     return Container(
-        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+        padding: EdgeInsets.symmetric(vertical: 16, horizontal: 14),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.horizontal(
               left: Radius.circular(16), right: Radius.circular(16)),
@@ -233,6 +233,8 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                                             deliveryAddress: address,
                                             userId: widget.data.userId,
                                             shopId: shopId);
+                                    WayaSnackBar.showToast(
+                                        "Delivery detail updated");
 
                                     WayaNav.offNamed(ManageShop.route);
                                   }

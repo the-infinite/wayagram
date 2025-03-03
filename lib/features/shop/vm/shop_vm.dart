@@ -1,9 +1,15 @@
+import 'package:flutter/widgets.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
+import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/seller_metrics_response_model.dart';
 
 class ShopVm extends StateNotifier<ShopState> {
   final ShopRepository _repository;
@@ -49,7 +55,52 @@ class ShopVm extends StateNotifier<ShopState> {
     state = state.copyWith(searchQuery: query);
   }
 
-  Future<PaginatedResult<Product>?> getAllProducts({ required int page, int limit = 20}) async {
+  Future<void> reviewProduct(
+      {required String raterId,
+      String? productId,
+      String? shopId,
+      required int score,
+      required String review,
+      required BuildContext context}) async {
+    try {
+      state = state.copyWith(isReviewing: true);
+      final response = await _repository.createRating(
+          raterId: raterId, score: score, review: review, type: "Product");
+      Navigator.pop(context);
+      if (response.success && context.mounted) {
+        print(response.data);
+        WayaUtils.showNotice(
+            context: context,
+            title: 'Handover Successful!',
+            message:
+                'The confirmation code has been verified. The product is now officially handed over to the buyer',
+            onPress: () {
+              WayaNav.replaceNamed(BottomView.route, arguments: 1);
+            },
+            icon: Image.asset(WayaAssets.images.dCodeValid.path),
+            buttonText: 'Go To Shop');
+      }
+    } catch (error) {
+      print(error);
+    } finally {
+      state = state.copyWith(isReviewing: false);
+    }
+  }
+
+  Future<void> getProductViews({required String productId}) async {
+    try {
+      final response = await _repository.getProductRating(productId: productId);
+
+      if (response.success) {
+        print(response.data);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<PaginatedResult<Product>?> getAllProducts(
+      {required int page, int limit = 20}) async {
     state = state.copyWith(isLoading: true);
     try {
       final response = await _repository.getProducts(page: page, limit: limit);
@@ -71,6 +122,21 @@ class ShopVm extends StateNotifier<ShopState> {
     }
   }
 
+  Future<void> getShopMetrics({required String shopId}) async {
+    try {
+      final response = await _repository.getShopMetrics(shopId: shopId);
+
+      if (response.success) {
+        ShopMetricsResponse shopMetricResponse =
+            ShopMetricsResponse.fromJson(response.data);
+        state = state.copyWith(sellerMetrics: shopMetricResponse.data);
+        print(response.data);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
   List<Product> get filteredProducts {
     if (state.products.isEmpty) return [];
     return state.products.where((product) {
@@ -88,7 +154,7 @@ class ShopVm extends StateNotifier<ShopState> {
             product.description.toLowerCase().contains(query);
       }
 
-      return product.wayagramDeal == null||product.wayagramDeal == false;
+      return product.wayagramDeal == null || product.wayagramDeal == false;
     }).toList();
   }
 
@@ -109,7 +175,7 @@ class ShopVm extends StateNotifier<ShopState> {
             product.description.toLowerCase().contains(query);
       }
 
-      return product.wayagramDeal ==  true;
+      return product.wayagramDeal == true;
     }).toList();
   }
 }

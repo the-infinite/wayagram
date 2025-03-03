@@ -45,7 +45,6 @@ class _MyEventState extends ConsumerState<MyEvents> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final state = ref.watch(eventVmProvider);
 

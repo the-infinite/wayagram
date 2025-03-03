@@ -57,7 +57,7 @@ class OrderedProductCard extends StatelessWidget {
                       SizedBox(
                         width: context.width * 0.3,
                         child: Text(
-                        "Quantity: ${orders.quantity} x ${WayaHelpers.formatPrice(orders.price)}",
+                        "Quantity: ${orders.quantity} x ${WayaHelpers.formatPrice(double.parse(orders.unitPrice).toInt())}",
                         style: wayaTheme.textTheme.hintStyle,
                       ),
                       )

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:wayagram/features/pages/data/model/all_page_model.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
+import 'package:wayagram/features/pages/data/model/page_popular_post_model.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
@@ -19,17 +20,20 @@ class PageState {
   final List<Docs>? fetchAllPostData;
   final List<GetAllPostDocs>? getAllPost;
   final List<Comments>? comments;
+  final num? postCount;
   List<PagesUsersFollowDocs>? pagesUsersFollow;
   List<PagesUsersFollowDocs>? myPages;
   List<PagesUsersFollowDocs>? recommendedPages;
   List<AllPageModelDocs>? allPageModelDocs;
   List<GetPageMemberDocs>? getPageMemberDocs;
+  List<PagePopularPostDocs>? pagePopularPostDocs;
   final MediaUploadData? data;
   List<dynamic>? docs;
   final ShareModelData? shareModelData;
 
   final bool isFocused;
   final bool isLoading;
+  final bool isReportingPage;
 
   PageState({
     TextEditingController? pageName,
@@ -37,9 +41,12 @@ class PageState {
     TextEditingController? content,
     this.isFocused = false,
     this.isLoading = false,
+    this.isReportingPage = false,
+    this.postCount,
     this.images = const [],
     this.fetchAllPostData = const [],
     this.comments = const [],
+    this.pagePopularPostDocs = const [],
     this.getAllPost = const [],
     this.docs = const [],
     this.pagesUsersFollow = const [],
@@ -65,12 +72,15 @@ class PageState {
     List<PagesUsersFollowDocs>? recommendedPages,
     List<AllPageModelDocs>? allPageModelDocs,
     List<GetPageMemberDocs>? getPageMemberDocs,
+    List<PagePopularPostDocs>? pagePopularPostDocs,
     List<Comments>? comments,
     List<dynamic>? docs,
     MediaUploadData? data,
+    num? postCount,
     ShareModelData? shareModelData,
     bool? isFocused,
     bool? isLoading,
+    bool? isReportingPage,
   }) {
     return PageState(
       pageName: pageName ?? this.pageName,
@@ -79,17 +89,20 @@ class PageState {
       content: content ?? this.content,
       images: images ?? this.images,
       data: data ?? this.data,
+      postCount: postCount ?? this.postCount,
       recommendedPages: recommendedPages ?? this.recommendedPages,
       shareModelData: shareModelData ?? this.shareModelData,
       fetchAllPostData: fetchAllPostData ?? this.fetchAllPostData,
       getAllPost: getAllPost ?? this.getAllPost,
       allPageModelDocs: allPageModelDocs ?? this.allPageModelDocs,
       comments: comments ?? this.comments,
+      pagePopularPostDocs: pagePopularPostDocs ?? this.pagePopularPostDocs,
       docs: docs ?? this.docs,
       pagesUsersFollow: pagesUsersFollow ?? this.pagesUsersFollow,
       getPageMemberDocs: getPageMemberDocs ?? this.getPageMemberDocs,
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
+      isReportingPage: isReportingPage ?? this.isReportingPage
     );
   }
 }
@@ -103,3 +116,11 @@ class PostImage {
     return PostImage(image: image ?? this.image);
   }
 }
+
+const pageReport = [
+  "Spam or misleading content",
+  "Inappropriate_Content",
+  "Fraudulent_activity",
+  "Violates_terms_and_conditions",
+  "other"
+];

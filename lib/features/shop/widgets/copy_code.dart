@@ -21,7 +21,6 @@ class _CopyCodeState extends ConsumerState<CopyCode> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    // TODO: implement build
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(

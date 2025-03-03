@@ -11,7 +11,6 @@ class OrderInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Container(
       width: double.infinity,
@@ -26,7 +25,7 @@ class OrderInfoWidget extends StatelessWidget {
           Text(
             title,
             style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.greyColor500, fontSize: 10),
+                color: wayaTheme.colorScheme.greyColor500, fontSize: 11),
           ),
         
          Container(

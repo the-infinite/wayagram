@@ -5,6 +5,10 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
+import 'package:wayagram/features/logs_and_audit/view/logs_and_audit.dart';
+import 'package:wayagram/features/support/views/chat.dart';
+import 'package:wayagram/features/support/views/dispute.dart';
+import 'package:wayagram/features/support/views/request.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
 import '../data/model/model.dart';
@@ -46,7 +50,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                   title: 'Wallet', iconPath: 'wallet', onTap: () => WayaNav.toNamed(WalletPage.route)),
               GeneralSettingsOptionModel(title: 'Referrals & Rewards', iconPath: 'confetti'),
               GeneralSettingsOptionModel(title: 'Roles & Access', iconPath: 'users'),
-              GeneralSettingsOptionModel(title: 'Logs & Audit Trails', iconPath: 'history'),
+              GeneralSettingsOptionModel(title: 'Logs & Audit Trails', iconPath: 'history', onTap: ()=> WayaNav.toNamed(LogsAndAuditTrials.route)),
             ],
           ),
           GeneralSettingsOptionTile(
@@ -114,9 +118,21 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
-              GeneralSettingsOptionModel(title: 'Livechat support', iconPath: 'chat'),
-              GeneralSettingsOptionModel(title: 'Support Request Form', iconPath: 'paper'),
-              GeneralSettingsOptionModel(title: 'Dispute Management', iconPath: 'info'),
+              GeneralSettingsOptionModel(
+                title: 'Livechat support',
+                iconPath: 'chat',
+                onTap: () => WayaNav.toNamed(SupportChatScreen.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Support Request Form',
+                iconPath: 'paper',
+                onTap: () => WayaNav.toNamed(SupportRequestScreen.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Dispute Management',
+                iconPath: 'info',
+                onTap: () => WayaNav.toNamed(SupportDisputeScreen.route),
+              ),
             ],
           ),
         ],

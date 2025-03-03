@@ -11,7 +11,6 @@ class ChangedPasswordSuccess extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     return WayaScaffold(
       removeAppBar: true,
       body: Center(

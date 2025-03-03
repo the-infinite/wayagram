@@ -27,7 +27,6 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final viewModel = ref.watch(addProductProvider(widget.uniqueKey));
     final wayaTheme = Theme.of(context);
     return Column(

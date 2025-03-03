@@ -4,9 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/get_core.dart';
-import 'package:get/get_navigation/get_navigation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -14,12 +11,12 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/view/events.dart';
 import 'package:wayagram/features/group/view/group_post.dart';
 import 'package:wayagram/features/group/view/mediaPost.dart';
+import 'package:wayagram/features/group/view/report_group.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/pages/view/pages_for_you.dart';
-import 'package:wayagram/features/pages/view/team_page.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 class PublicGroup extends ConsumerStatefulWidget {
@@ -62,7 +59,6 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
     final viewModel2 = ref.watch(createGroupProvider.notifier);
@@ -87,7 +83,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
         children: [
           WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
           InkWell(
-            onTap: ()=> Share.share('${args['url']}'),
+            onTap: ()=> Share.share('${args['url']}', subject: 'Share Options'),
             child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
           ),
 
@@ -116,7 +112,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                     child: _buildActionNav(
                         context: context,
                         onTap: () {
-                          Share.share('${args['url']}');
+                          Share.share('${args['url']}', subject: 'Share Options');
                         },
                         asset:WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
                         text: "  Share Group link",
@@ -126,8 +122,13 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                     value: 2,
                     child: _buildActionNav(
                         context: context,
-                        onTap: () {
+                        onTap: () async{
                           Navigator.pop(context);
+                          await WayaUtils.showModalSheet(context,
+                              child: ReportGroup(
+                                  statuses: groupReport,
+                                  currentStatus: "",
+                                  groupId: '${args['groupId']}'));
 
                         },
                         asset: SvgPicture.asset('assets/images/pages/flag.svg'),
@@ -151,7 +152,6 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                 ];
               },
               child: WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none)),
-          //WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
           Gap(8)
         ],
       ),
@@ -254,7 +254,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                       onPressed: ()=> WayaNav.toNamed('/membersScreen',
                       arguments: '${args['groupId']}')),
                   const Gap(10),
-                  actionType('0', 'Posts'),
+                  actionType('${ ref.read(createPageProvider).postCount}', 'Posts'),
                 ],
               ),
               const Gap(10),

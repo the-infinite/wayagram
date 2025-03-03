@@ -11,7 +11,6 @@ import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -25,7 +24,6 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:wayagram/features/post/vm/comment.dart';
 
 import '../../../assetsgen/assets.gen.dart';
-import '../../explore/widgets/grouped_widget_header.dart';
 import '../../post/view/create_post.dart';
 import '../../shop/widgets/empty_state.dart';
 
@@ -51,14 +49,12 @@ class _GroupPostState extends ConsumerState<GroupPost>
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       print('GROUP IDIDIDID===>> ${widget.groupId}');
-      //ref.read(createGroupProvider.notifier).getGroupSinglePosts(widget.groupId);
       ref.read(createGroupProvider.notifier).getGroupPosts(widget.groupId);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider.notifier);
     //final viewModel2 = ref.watch(createPageProvider);

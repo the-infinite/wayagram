@@ -6,8 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:get_thumbnail_video/index.dart';
-import 'package:get_thumbnail_video/video_thumbnail.dart';
+// import 'package:get_thumbnail_video/index.dart';
+// import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -79,18 +79,18 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
 
       //  File tempVideo = File("${tempDir.path}/assets/my_video_thumb.png");
       _videoFile = File(pickedFile.path);
-      var myDat = await VideoThumbnail.thumbnailData(
+    /*  var myDat = await VideoThumbnail.thumbnailData(
         video: pickedFile.path,
         imageFormat: ImageFormat.JPEG,
         maxHeight: 200,
         maxWidth:
             200, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
         quality: 25,
-      );
-      var file = await uint8ListToFile(myDat, "my_video_thumb.jpeg");
+      );*/
+      //var file = await uint8ListToFile(myDat, "my_video_thumb.jpeg");
       _selectedImages.removeWhere((e) => e.type == true);
       setState(() {
-        _selectedImages.add(MyMediaType(path: file.path, type: true));
+        //_selectedImages.add(MyMediaType(path: file.path, type: true));
       });
       // });
     }

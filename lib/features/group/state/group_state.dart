@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/fetch_all_event_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
+import 'package:wayagram/features/group/data/model/group_popular_post_model.dart';
 import 'package:wayagram/features/group/data/model/group_post_model.dart';
 import 'package:wayagram/features/group/data/model/joined_group_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
@@ -23,15 +25,17 @@ class GroupState {
   String? desc;
   List<JoinRequestDocs>? docs;
   List<GetAllGroupDocs>? getAllGroups;
-  List<FetchAllEventDocs>? fetchAllEventDocs;
+  List<EventDoc>? fetchAllEventDocs;
   List<AllGroupMemberDocs>? allGroupMemberDocs;
   List<JoinedGroupDocs>? joinedGroup;
   List<GetAllGroupDocs>? myGroups;
   List<RecommendedGroupDocs>? recommendedGroupDocs;
   List<GetAllPostDocs>? getAllPost;
   List<GroupPostDocs>? groupPostdocs;
-  
+  List<GroupPopularPostDocs>? groupPopularPostdocs;
+  num? postCount;
 
+  final bool isReportingGroup;
   final bool isFocused;
   final bool isLoading;
   final bool openToEveryone;
@@ -47,11 +51,14 @@ class GroupState {
     this.isLoading = false,
     this.openToEveryone = false,
     this.requireApproval = false,
+    this.isReportingGroup = false,
+    this.postCount,
     this.roleType = '',
     this.profileImage = '',
     this.coverImage = '',
     this.name = '',
     this.desc = '',
+    this.groupPopularPostdocs = const [],
     this.docs = const [],
     this.groupPostdocs = const [],
     this.allGroupMemberDocs = const [],
@@ -75,12 +82,15 @@ class GroupState {
     List<JoinRequestDocs>? docs,
     List<GetAllGroupDocs>? getAllGroups,
     List<GetAllGroupDocs>? myGroups,
-    List<FetchAllEventDocs>? fetchAllEventDocs,
+    List<EventDoc>? fetchAllEventDocs,
+    List<GroupPopularPostDocs>? groupPopularPostdocs,
     List<AllGroupMemberDocs>? allGroupMemberDocs,
     List<JoinedGroupDocs>? joinedGroup,
     List<RecommendedGroupDocs>? recommendedGroupDocs,
     List<GroupPostDocs>? groupPostdocs,
+    num? postCount,
     List<GetAllPostDocs>? getAllPost,
+    bool? isReportingGroup,
     bool? isFocused,
     bool? isLoading,
     bool? openToEveryone,
@@ -97,7 +107,9 @@ class GroupState {
       groupDescription: groupDescription ?? this.groupDescription,
       username: username ?? this.username,
       content: content ?? this.content,
+      postCount: postCount ?? this.postCount,
       docs: docs ?? this.docs,
+      groupPopularPostdocs: groupPopularPostdocs ?? this.groupPopularPostdocs,
       getAllPost: getAllPost ?? this.getAllPost,
       getAllGroups: getAllGroups ?? this.getAllGroups,
       fetchAllEventDocs: fetchAllEventDocs ?? this.fetchAllEventDocs,
@@ -108,6 +120,7 @@ class GroupState {
       joinedGroup: joinedGroup ?? this.joinedGroup,
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
+      isReportingGroup: isReportingGroup ?? this.isReportingGroup,
       openToEveryone: openToEveryone ?? this.openToEveryone,
       requireApproval: requireApproval ?? this.requireApproval,
       roleType: roleType ?? this.roleType,
@@ -119,3 +132,12 @@ class GroupState {
     );
   }
 }
+
+const groupReport = [
+  "Spam or misleading content",
+  "Inappropriate_Content",
+  "Fraudulent_activity",
+  "Violates_terms_and_conditions",
+  "other"
+];
+

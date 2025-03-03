@@ -23,8 +23,10 @@ class ShopRepository extends BaseRepository {
 
   Future<WayaRequestResponse> createProduct(
       {required AddProductModel payload, required String id}) {
-    return post("$serviceUrl/products/create/$id", payload.toJson(),
-       );
+    return post(
+      "$serviceUrl/products/create/$id",
+      payload.toJson(),
+    );
   }
 
   Future<WayaRequestResponse> getAllDiscounts(int page) {
@@ -54,11 +56,52 @@ class ShopRepository extends BaseRepository {
 
   Future<WayaRequestResponse> editShop(
       CreateShopModel payload, String vendorId) {
-  
-    return patch("$serviceUrl/shops/edit/$vendorId", payload.toJson(),
-       );
+    return patch(
+      "$serviceUrl/shops/edit/$vendorId",
+      payload.toJson(),
+    );
   }
 
+  Future<WayaRequestResponse> addToFavorite(
+      {required String productId, required String shopId}) {
+    return post("$serviceUrl/favorites/add/$shopId", {"productId": productId});
+  }
+
+  ///
+  Future<WayaRequestResponse> addToken({required String deliveryToken}) {
+    return post(
+        "$serviceUrl/orders/complete-order", {"deliveryToken": deliveryToken});
+  }
+
+  Future<WayaRequestResponse> createRating(
+      {required String raterId,
+      String? productId,
+      String? shopId,
+      required int score,
+      required String review,
+      required String type}) {
+    final payload = {
+      'raterId': raterId,
+      'score': score,
+      'review': review,
+      'type': type
+    };
+
+    if (productId != null) payload['productId'];
+    if (shopId != null) payload['shopId'];
+
+    return post("$serviceUrl/rating/create", payload);
+  }
+
+  ///
+  Future<WayaRequestResponse> getProductRating({required String productId}) {
+  return get('$serviceUrl/rating/userRatings?productId=$productId');
+  }
+
+  //
+  Future<WayaRequestResponse> getShopMetrics({required String shopId}) {
+    return get('$serviceUrl/orders/shop-metrics/$shopId');
+  }
   //
 }
 //

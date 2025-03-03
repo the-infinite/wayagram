@@ -13,13 +13,15 @@ class UpdateStatus extends StatefulWidget {
   final String subTtile;
   final String cta;
   final String currentStatus;
-  const UpdateStatus(
-      {super.key,
-      required this.title,
-      required this.subTtile,
-      required this.statuses,
-      required this.currentStatus,
-      required this.cta});
+
+  const UpdateStatus({
+    super.key,
+    required this.title,
+    required this.subTtile,
+    required this.statuses,
+    required this.currentStatus,
+    required this.cta,
+  });
 
   @override
   State<UpdateStatus> createState() => _UpdateStatusState();
@@ -27,128 +29,128 @@ class UpdateStatus extends StatefulWidget {
 
 class _UpdateStatusState extends State<UpdateStatus> {
   late String selectedStatus;
+  late int currentIndex;
 
   @override
   void initState() {
     super.initState();
     selectedStatus = widget.currentStatus;
+    currentIndex = widget.statuses.indexOf(widget.currentStatus);
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 16, horizontal: 14),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.horizontal(
+            left: Radius.circular(16), right: Radius.circular(16)),
       ),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      child: Container(
-          width: context.width,
-          height: context.height * 0.6,
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
-          decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.white,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              // mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.title,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const Gap(12),
+            Text(
+              widget.subTtile,
+              style: wayaTheme.textTheme.descriptionStyle,
+            ),
+            const Gap(24),
+            Row(
               children: [
+                Expanded(
+                  child: Divider(color: wayaTheme.colorScheme.greyColor200),
+                ),
+                const Gap(10),
                 Text(
-                  widget.title,
-                  textAlign: TextAlign.start,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                  widget.cta,
+                  style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                    color: wayaTheme.colorScheme.greyColor600,
                   ),
                 ),
-                const Gap(12),
-                Text(
-                  widget.subTtile,
-                  textAlign: TextAlign.start,
-                  style: wayaTheme.textTheme.descriptionStyle,
-                ),
-                const Gap(24),
-                const Gap(24),
-                Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        color: wayaTheme.colorScheme.greyColor200,
-                        thickness: 1,
-                      ),
-                    ),
-                    Gap(10),
-                    Text(
-                      widget.cta,
-                      style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                        color: wayaTheme.colorScheme.greyColor600,
-                      ),
-                    ),
-                    Gap(10),
-                    Expanded(
-                      child: Divider(
-                        color: wayaTheme.colorScheme.greyColor200,
-                        thickness: 1,
-                      ),
-                    ),
-                  ],
-                ),
-                ListView.builder(
-                    itemCount: widget.statuses.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                        return Column(
-                        children: [
-                          ListTile(
-                          minTileHeight: 30,
-                          selectedTileColor: selectedStatus == widget.statuses[index]
-                            ? wayaTheme.colorScheme.scaffoldColor
-                            : null,
-                          trailing: selectedStatus == widget.statuses[index]
-                            ? Icon(
-                              Icons.check_circle,
-                              size: 20,
-                              color: wayaTheme.colorScheme.customPrimary,
-                              )
-                            : null,
-                          contentPadding:
-                            EdgeInsets.symmetric(vertical: 1, horizontal: 1),
-                          title: Text(WayaHelpers.removeCamelCaseAndUnderscore(widget.statuses[index]), style:TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),),
-                          onTap: () {
-                            setState(() {
-                            selectedStatus = widget.statuses[index];
-                            });
-                          },
-                          ),
-                          if (index < widget.statuses.length - 1) const Gap(0), // Adjust the gap as needed
-                        ],
-                        );
-                    }),
-                const Gap(24),
-                WayaButton(
-                    callback: () {
-                      Navigator.of(context).pop(selectedStatus);
-                    },
-                    text: "Confirm"),
                 const Gap(10),
-                WayaButton(
-                    callback: () {
-                      Navigator.of(context).pop();
-                    },
-                    textColor: wayaTheme.colorScheme.greyColor500,
-                    color: wayaTheme.colorScheme.transparent,
-                    border: Border.all(
-                        color: wayaTheme.colorScheme.greyColor500, width: 1),
-                    text: 'Cancel')
+                Expanded(
+                  child: Divider(color: wayaTheme.colorScheme.greyColor200),
+                ),
               ],
             ),
-          )),
+            ListView.builder(
+              itemCount: widget.statuses.length,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                bool isDisabled = currentIndex > 0 && index < currentIndex;
+                return Column(
+                  children: [
+                    ListTile(
+                      minTileHeight: 30,
+                      selectedTileColor:
+                          selectedStatus == widget.statuses[index]
+                              ? wayaTheme.colorScheme.scaffoldColor
+                              : null,
+                      trailing:
+                          selectedStatus == widget.statuses[index] || isDisabled
+                              ? Icon(
+                                  Icons.check_circle,
+                                  size: 20,
+                                  color: isDisabled
+                                      ? wayaTheme.colorScheme.greyColor400
+                                      : wayaTheme.colorScheme.customPrimary,
+                                )
+                              : null,
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 1, horizontal: 1),
+                      title: Text(
+                        WayaHelpers.removeCamelCaseAndUnderscore(
+                            widget.statuses[index]),
+                        style: TextStyle().wayaCopyWith(
+                          color: isDisabled
+                              ? wayaTheme.colorScheme.greyColor400
+                              : wayaTheme.colorScheme.customBlack,
+                          fontSize: 14,
+                        ),
+                      ),
+                      onTap: isDisabled
+                          ? null
+                          : () {
+                              setState(() {
+                                selectedStatus = widget.statuses[index];
+                              });
+                            },
+                    ),
+                    if (index < widget.statuses.length - 1) const Gap(0),
+                  ],
+                );
+              },
+            ),
+            const Gap(24),
+            WayaButton(
+              callback: () {
+                Navigator.of(context).pop(selectedStatus);
+              },
+              text: "Confirm",
+            ),
+            const Gap(10),
+            WayaButton(
+              callback: () {
+                Navigator.of(context).pop();
+              },
+              textColor: wayaTheme.colorScheme.greyColor500,
+              color: wayaTheme.colorScheme.transparent,
+              border: Border.all(color: wayaTheme.colorScheme.greyColor500),
+              text: 'Cancel',
+            )
+          ],
+        ),
+      ),
     );
   }
 }

@@ -6,6 +6,7 @@ import 'package:wayagram/features/shop/order/data/repo/order_repository.dart';
 import 'package:wayagram/features/shop/seller/views/dialogs/update_status.dart';
 import 'package:wayagram/features/shop/order/data/model/order_state.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
+import 'package:wayagram/features/shop/seller/views/dialogs/rejection_reason.dart';
 
 class SellerOrderDetailVm extends ChangeNotifier {
   final Ref ref;
@@ -40,7 +41,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
 
       if (response.success) {
         WayaSnackBar.showToast("Delivery status updated");
-         WayaNav.toNamed(ManageShop.route);
+        WayaNav.toNamed(ManageShop.route);
       }
     } catch (e) {
       print(e);
@@ -59,7 +60,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
         icon: Image.asset('assets/images/d-code-valid.png'));
   }
 
-  Future<void> rejectOrder(BuildContext context) async {
+  Future<void> rejectOrder(BuildContext context, String orderId) async {
     WayaUtils.showNotice(
         context: context,
         buttonText: 'Reject Order',
@@ -67,39 +68,43 @@ class SellerOrderDetailVm extends ChangeNotifier {
         title: 'Confirm your Action',
         message:
             'Please confirm whether you’d like to reject. This will update the order status for the buyer.',
-        onPress: () {},
+        onPress: () async {
+          Navigator.pop(context);
+          await WayaUtils.showModalSheet(context,
+              child: RejectionReason(
+                orderId: orderId,
+              ));
+        },
+        onCancel: () {
+          Navigator.pop(context);
+        },
         icon: Image.asset('assets/images/d-code-invalid.png'));
   }
 
   Future<void> updateOrderStatus(
       {required BuildContext context, required String orderId}) async {
-    final response = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return UpdateStatus(
-              currentStatus: orderStatus,
-              title: "Update Pickup Status",
-              subTtile:
-                  "Choose the new pickup status you want this order to display for both you and the buyer",
-              statuses: pickupStatus,
-              cta: "Choose new order status");
-        });
+    final response = await WayaUtils.showModalSheet(context,
+        child: UpdateStatus(
+            currentStatus: orderStatus,
+            title: "Update Pickup Status",
+            subTtile:
+                "Choose the new pickup status you want this order to display for both you and the buyer",
+            statuses: pickupStatus,
+            cta: "Choose new order status"));
     updateOrder(response, orderId);
   }
 
   Future<void> updateDeliveryStatus(
       {required BuildContext context, required String orderId}) async {
-    final response = await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return UpdateStatus(
-              currentStatus: delivery,
-              title: "Update Delivery Status",
-              subTtile:
-                  "Choose the new delivery status you want this order to display for both you and the buyer",
-              statuses: deliveryStatus,
-              cta: "Choose new delivery status");
-        });
+    final response = await WayaUtils.showModalSheet(context,
+        child: UpdateStatus(
+            currentStatus: delivery,
+            title: "Update Delivery Status",
+            subTtile:
+                "Choose the new delivery status you want this order to display for both you and the buyer",
+            statuses: deliveryStatus,
+            cta: "Choose new delivery status"));
+
     updateDelivery(response, orderId);
   }
 }
