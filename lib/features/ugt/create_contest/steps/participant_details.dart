@@ -95,7 +95,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               children: [
                 WayaSelectField<String>(
                   height: 0.3,
-                  value: viewModel2.entrySelectType,
+                  value: viewModel2.entrySelectType ,
                   label: "Entry Type",
                   hintText: 'Choose entry type',
                   items: ref

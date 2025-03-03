@@ -8,8 +8,8 @@ class VoterDetailState {
   final String createPostId;
   final String? contestId;
   final Wallet? data;
-  final List<MyContestContestantModel>? myContestList;
-  final List<MyContestContestantModel>? myContestListCopy;
+  final List<MyContestContestantModel> myContestList;
+  final List<MyContestContestantModel> myContestListCopy;
   final List<ExternalWalletModel>? externalWallets;
   VoterDetailState({
     this.isLoading = false,
@@ -18,8 +18,8 @@ class VoterDetailState {
     this.createPostId = "",
     this.contestId = "",
     
-    this.myContestList,
-    this.myContestListCopy,
+    this.myContestList = const[],
+    this.myContestListCopy = const[],
     this.externalWallets,
   });
 

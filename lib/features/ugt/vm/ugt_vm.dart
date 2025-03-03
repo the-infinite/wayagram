@@ -175,8 +175,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
                 .replaceAll(",", "")
             : state.amount.text,
 
-        "durationType": state.durationSelectType.toUpperCase(),
-        "numberOfDuration": state.numberOfDuration.text,
+      //  "durationType": state.entrySelectType.toUpperCase(),
+       // "numberOfDuration": state.numberOfDuration.text,
         "descriptionOfAwards": state.descriptionOfAwards.text,
         "amountPerVote": amountPerVote.text.contains("NGN")
             ? amountPerVote.text

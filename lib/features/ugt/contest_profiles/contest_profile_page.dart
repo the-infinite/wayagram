@@ -23,6 +23,7 @@ import 'package:wayagram/features/ugt/contest_profiles/contest_profile_stages_se
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/video_player.dart';
+import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/admin_card.dart';
@@ -64,8 +65,13 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     final wayaTheme = Theme.of(context);
     //var model = ref.watch(selectedContestProvider.notifier).state;
     var model = ref.watch(selectedContestantProfile.notifier).state;
+    print("profile id ${model?.id}");
     final imageUrl = useState(model!.profilePhoto ?? "");
     useEffect(() {
+      ref
+          .watch(ugtContestantProfileVm.notifier)
+          .fetchSingleContestantPosts(model.id ?? "");
+
       getImageUrl(model.introVideo ?? "").then((value) {
         imageUrl.value = value;
       });
@@ -183,7 +189,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
               ],
             ),
             const Gap(10),
-            if (selectedViewIndex.value == 0) UgtDetailsPost(),
+            if (selectedViewIndex.value == 0) UgtDetailsPost(model),
             if (selectedViewIndex.value == 1) ContestProfileStagesSection([]),
           ],
         ),
@@ -398,4 +404,3 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     );
   }
 }
-

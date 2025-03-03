@@ -78,6 +78,11 @@ class ContestRepo extends BaseRepository {
   }
 
 
+    Future<WayaRequestResponse> fetchSingleContestantGallery(String contestantProfileId) {
+    return get(
+        '$serviceUrl2/gallery/$contestantProfileId/gallery');
+  }
+
 
   /*Future<WayaRequestResponse> createContestController({
     required final String contestStatus,

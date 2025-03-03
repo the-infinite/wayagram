@@ -265,69 +265,69 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  if (viewModel.myContestList!.length >= 2)
+                  if (viewModel.myContestList.length >= 2)
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
-                              viewModel.myContestList?[1];
+                              viewModel.myContestList[1];
                           viewModelNotifier.updateContestId(model.id);
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
                         },
                         child: AdminCard(
-                          imageUrl: viewModel.myContestList?[1].profilePhoto ??
+                          imageUrl: viewModel.myContestList[1].profilePhoto ??
                               "", // Change to your image path
                           rank: "2",
-                          name: viewModel.myContestList?[1].contestApplicant
+                          name: viewModel.myContestList[1].contestApplicant
                                   ?.fullName ??
                               "",
-                          votes: "${viewModel.myContestList?[1].votes} Votes",
+                          votes: "${viewModel.myContestList[1].votes} Votes",
                         ),
                       ),
                     ),
-                  if (viewModel.myContestList!.isNotEmpty)
+                  if (viewModel.myContestList.isNotEmpty)
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
-                              viewModel.myContestList?[0];
+                              viewModel.myContestList[0];
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
                         },
                         child: AdminCard(
-                          imageUrl: viewModel.myContestList?[0].profilePhoto ??
+                          imageUrl: viewModel.myContestList[0].profilePhoto ??
                               "", // Change to your image path
                           rank: "1",
                           isCenter: true,
                           radius: 40,
-                          name: viewModel.myContestList?[0].contestApplicant
+                          name: viewModel.myContestList[0].contestApplicant
                                   ?.fullName ??
                               "",
-                          votes: "${viewModel.myContestList?[0].votes} Votes",
+                          votes: "${viewModel.myContestList[0].votes} Votes",
                         ),
                       ),
                     ),
-                  if (viewModel.myContestList!.length >= 3)
+                  if (viewModel.myContestList.length >= 3)
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
-                              viewModel.myContestList?[2];
+                              viewModel.myContestList[2];
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
                         },
                         child: AdminCard(
                           imageUrl:
-                              viewModel.myContestList?[2].profilePhoto ?? "",
+                              viewModel.myContestList[2].profilePhoto ?? "",
                           rank: "3",
-                          name: viewModel.myContestList?[2].contestApplicant
+                          name: viewModel.myContestList[2].contestApplicant
                                   ?.fullName ??
                               "",
-                          votes: "${viewModel.myContestList?[2].votes} Votes",
+                          votes: "${viewModel.myContestList[2].votes} Votes",
                         ),
                       ),
                     ),
@@ -363,7 +363,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 ],
               ),
               const Gap(10),
-              if (selectedViewIndex.value == 0) UgtDetailsPost(),
+              if (selectedViewIndex.value == 0) UgtDetailsPost(null),
               if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(model),
               if (selectedViewIndex.value == 2) UgtDetailsContestants(model),
               if (selectedViewIndex.value == 3) UgtDetailsGallery(model),
