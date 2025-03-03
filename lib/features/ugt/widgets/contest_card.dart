@@ -334,3 +334,35 @@ String getDaySuffix(int day) {
       return "th";
   }
 }
+
+Duration getDateDifference(DateTime startDate, DateTime endDate) {
+  return endDate.difference(startDate);
+}
+
+int getWeeksDifference(DateTime startDate, DateTime endDate) {
+  return endDate.difference(startDate).inDays ~/ 7;
+}
+
+int getMonthsDifference(DateTime startDate, DateTime endDate) {
+  int yearsDiff = endDate.year - startDate.year;
+  int monthsDiff = endDate.month - startDate.month;
+  return (yearsDiff * 12) + monthsDiff;
+}
+
+String getRealDateDiffBtwDate(String realStartDate, String realEndDate) {
+  DateTime startDate = DateTime.parse(realStartDate);
+  DateTime endDate = DateTime.parse(realEndDate);
+
+  Duration difference = getDateDifference(startDate, endDate);
+  int weeks = getWeeksDifference(startDate, endDate);
+  if (weeks < 1) {
+    return "${difference.inDays} days";
+  } else {
+    if (weeks == 1) {
+      return "$weeks Week";
+    } else {
+      return "$weeks Weeks";
+    }
+  }
+  // int months = getMonthsDifference(startDate, endDate);
+}

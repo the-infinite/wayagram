@@ -52,6 +52,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
       return null;
     }, []);
     var viewModel = ref.watch(votersContestNotifier);
+    var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
     var model = ref.watch(selectedContestProvider.notifier).state;
     final selectedViewIndex = useState(0);
     return WayaScaffold(
@@ -228,7 +229,9 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                       title: "Entry Type", content: model.entryType ?? ""),
                   const Gap(20),
                   UpcomingWidget(
-                      title: "Duration", content: model.durationType ?? ""),
+                      title: "Duration",
+                      content: getRealDateDiffBtwDate(
+                          model.startDate ?? "", model.endDate ?? "")),
                 ],
               ),
               const Gap(10),
@@ -268,6 +271,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
                               viewModel.myContestList?[1];
+                          viewModelNotifier.updateContestId(model.id);
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
@@ -373,6 +377,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
               width: 50,
               child: WayaButton(
                 callback: () {
+                  viewModelNotifier.updateContestId(model.id);
                   WayaNav.toNamed('/create-contest-post');
                 },
                 height: 50,

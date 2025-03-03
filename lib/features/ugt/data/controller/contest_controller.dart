@@ -99,6 +99,8 @@ class ContestController extends GetxController {
   TextEditingController contestPrizeWinnerTextController =
       TextEditingController();
   TextEditingController entryAmountController = TextEditingController();
+  TextEditingController contestvoteCountToQualifyTextController =
+      TextEditingController();
 
   // true missing
 

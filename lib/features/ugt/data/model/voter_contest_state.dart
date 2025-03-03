@@ -6,6 +6,7 @@ class VoterDetailState {
   final bool? isLoading;
   final bool? ismakePaymentLoading;
   final String createPostId;
+  final String? contestId;
   final Wallet? data;
   final List<MyContestContestantModel>? myContestList;
   final List<MyContestContestantModel>? myContestListCopy;
@@ -15,6 +16,8 @@ class VoterDetailState {
     this.ismakePaymentLoading = false,
     this.data,
     this.createPostId = "",
+    this.contestId = "",
+    
     this.myContestList,
     this.myContestListCopy,
     this.externalWallets,
@@ -24,6 +27,7 @@ class VoterDetailState {
     bool? isLoading,
     Wallet? data,
     String? createPostId, 
+    String? contestId, 
     List<ExternalWalletModel>? externalWallets,
     List<MyContestContestantModel>? myContestList,
     List<MyContestContestantModel>? myContestListCopy,
@@ -32,6 +36,7 @@ class VoterDetailState {
         isLoading: isLoading ?? this.isLoading,
         data: data ?? this.data,
         createPostId:createPostId??this.createPostId,
+        contestId:contestId??this.contestId,
         myContestList: myContestList ?? this.myContestList,
         myContestListCopy: myContestListCopy ?? this.myContestListCopy,
         externalWallets: externalWallets ?? this.externalWallets,

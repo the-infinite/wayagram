@@ -37,6 +37,7 @@ class AppliedContestModel {
     required this.updatedAt,
     required this.contest,
     required this.categoryName,
+    required this.applicantCount,
   });
 
   final String? id;
@@ -53,6 +54,7 @@ class AppliedContestModel {
   final String? updatedAt;
   final Contest? contest;
   final String? categoryName;
+  final String? applicantCount;
 
   factory AppliedContestModel.fromJson(Map<String, dynamic> json) =>
       _$AppliedContestModelFromJson(json);
@@ -115,6 +117,7 @@ class Contest {
     required this.createdAt,
     required this.updatedAt,
     required this.deletedAt,
+    required this.applicantCount,
   });
 
   final String? id;
@@ -150,6 +153,7 @@ class Contest {
   final String? createdAt;
   final String? updatedAt;
   final String? deletedAt;
+  final String? applicantCount;
 
   factory Contest.fromJson(Map<String, dynamic> json) =>
       _$ContestFromJson(json);

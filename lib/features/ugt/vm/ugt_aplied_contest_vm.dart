@@ -91,6 +91,7 @@ final selectedAppliedContestProvider =
       rejectionReason: null,
       createdAt: null,
       updatedAt: "",
+      applicantCount: "0",
       contest: null,
       categoryName: "");
 });

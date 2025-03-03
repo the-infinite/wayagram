@@ -98,7 +98,7 @@ class ContestAppliedCard extends StatelessWidget {
                             ),
                             const Gap(8),
                             Text(
-                              '20 Participants',
+                              '${post.contest?.applicantCount} Participants',
                               style: wayaTheme.textTheme.hintStyle,
                             ),
                           ],
@@ -157,17 +157,17 @@ class ContestAppliedCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  
-                 if(post.contest?.status?.toLowerCase() == "pending" ||post.contest?.status?.toLowerCase() == "closed") StatusWidget(
-                   
-                    title: "Application",
-                    content: post.contest?.status ?? "Pending",
-                  ),
-                  if(post.contest?.status?.toLowerCase() == "ongoing" ) StatusOngoing(
-                   
-                    title: "Application",
-                    content: post.contest?.status ?? "Pending",
-                  ),
+                  if (post.contest?.status?.toLowerCase() == "pending" ||
+                      post.contest?.status?.toLowerCase() == "closed")
+                    StatusWidget(
+                      title: "Application",
+                      content: post.contest?.status ?? "Pending",
+                    ),
+                  if (post.contest?.status?.toLowerCase() == "ongoing")
+                    StatusOngoing(
+                      title: "Application",
+                      content: post.contest?.status ?? "Pending",
+                    ),
                   const Gap(30),
                   AboutUgtWidget(
                       title: "Prize",

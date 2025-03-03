@@ -140,6 +140,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
                   .substring(3)
                   .replaceAll(",", "")
               : model.entryAmount,
+          "voteCountToQualify": model.voteCountToQualify ?? "",
           "numberOfPostPerWeek": model.numPostPerWeek,
           "priceOfTheWinner": model.priceWinner,
           "startDate": _convertToISO(model.startDate!), // model.startDate,
@@ -165,7 +166,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         //  "numberOfWeeks":numberOfWeeks.text,
         "winnerPrize": winnerPrize.text,
         "description": description.text,
-        "voteCountToQualify": voteCountToQualify.text,
+        //  "voteCountToQualify": voteCountToQualify.text,
         "amount": state.amount.text.contains("NGN")
             ? state.amount.text
                 .split(".")
@@ -190,7 +191,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "publicity": state.contestPrivatePublic.toUpperCase(),
         "status": "ACTIVE",
         "howItWorks": state.howItWorks.text,
-        "numberOfWeeks": numberOfWeeks.text,
+      //  "numberOfWeeks": numberOfWeeks.text,
         "currentStage": state.contestTimelineCurrentStage,
         "participationStartDate": _convertToISO(state.startDate),
         "startDate": _convertToISO(state.contestTimelineStartDate),
@@ -210,8 +211,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
       if (response.success) {
         ref.read(postProvider.notifier).fetchPosts();
-      //  ref.read(postProvider.notifier).fetchPosts();
-       // ref.read(postProvider.notifier).fetchPosts();
+        //  ref.read(postProvider.notifier).fetchPosts();
+        // ref.read(postProvider.notifier).fetchPosts();
         WayaUtils.showModalSheetUgt(
           context,
           child: SuccessfulModal(

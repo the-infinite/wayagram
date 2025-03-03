@@ -157,6 +157,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
     var map = {
       "contestantProfileId": state.createPostId,
+      "contestId": state.contestId,
       "description": text,
       "mediaContent": listMap
     };
@@ -173,6 +174,10 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     } else {
       WayaSnackBar.showToast("Unable to create Post, Please try again later");
     }
+  }
+
+  void updateContestId(String? id) {
+    state = state.copyWith(contestId: id);
   }
 }
 
