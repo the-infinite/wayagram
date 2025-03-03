@@ -20,7 +20,13 @@ class MyMomentWidget extends ConsumerWidget {
   final MomentData moment;
   final List<MomentData> allMoments;
   final int index;
-  const MyMomentWidget({super.key, required this.moment, required this.allMoments, required this.index});
+  final bool isMine;
+  const MyMomentWidget(
+      {super.key,
+      required this.moment,
+      required this.allMoments,
+      this.isMine = true,
+      required this.index});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +35,7 @@ class MyMomentWidget extends ConsumerWidget {
       onTap: () async {
         Navigator.pushReplacementNamed(context, ViewMoment.route, arguments: {
           "moments": allMoments,
-          "isMine": true,
+          "isMine": isMine,
           'index': index
         });
       },
