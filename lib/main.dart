@@ -25,25 +25,27 @@ void main() async {
 
   //? Second, setup the error handlers for synchronous errors here and asynchronous
   //? errors here.
-  FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  };
+  if (!kDebugMode) {
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
 
-  //* For async errors.
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
+    //* For async errors.
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
 
-  //* For errors outside of flutter...
-  Isolate.current.addErrorListener(RawReceivePort((pair) async {
-    final List<dynamic> errorAndStacktrace = pair;
-    await FirebaseCrashlytics.instance.recordError(
-      errorAndStacktrace.first,
-      errorAndStacktrace.last,
-      fatal: true,
-    );
-  }).sendPort);
+    //* For errors outside of flutter...
+    Isolate.current.addErrorListener(RawReceivePort((pair) async {
+      final List<dynamic> errorAndStacktrace = pair;
+      await FirebaseCrashlytics.instance.recordError(
+        errorAndStacktrace.first,
+        errorAndStacktrace.last,
+        fatal: true,
+      );
+    }).sendPort);
+  }
 
   //? Third, initialize everything that should be initialized.
   await GetStorage.init();
@@ -75,7 +77,7 @@ class Wayagram extends ConsumerWidget {
         theme: WayaTheme.lightTheme,
         darkTheme: WayaTheme.darkTheme,
         themeMode: themeMode,
-        debugShowCheckedModeBanner: WayaConstants.baseUrl != 'https://services.wayagram.ng',
+        debugShowCheckedModeBanner: !WayaConstants.isProduction,
         getPages: WayaAppRoutes.getPages,
       ),
     );

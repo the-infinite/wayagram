@@ -1,5 +1,6 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
@@ -54,7 +55,7 @@ class ConversationState {
     ConversationState._profile ??= profile;
 
     //? If this is not undefined.
-    if (self != null) {
+    if (self != null && !kDebugMode) {
       //? First for crashlytics.
       await FirebaseCrashlytics.instance.setUserIdentifier(self.id);
       await FirebaseCrashlytics.instance.setCustomKey("fullname", self.fullname);

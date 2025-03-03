@@ -11,7 +11,6 @@ import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
-import 'package:wayagram/features/explore/widgets/donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/explore/widgets/explore_header.dart';
 import 'package:wayagram/features/explore/widgets/explore_our_services.dart';
@@ -185,7 +184,7 @@ class _ExploreState extends ConsumerState<Explore> {
                         ? notifier.filteredProducts.sublist(0, 2)
                         : notifier.filteredProducts),
             const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Support a course that matters', title: 'Donations'),
+            GroupedWidgetHeader(onTap: () {}, subTitle: 'Support a cause that matters', title: 'Donations'),
             const Gap(25),
             DonationsFeedWidget(),
             const Gap(25),
@@ -256,8 +255,10 @@ class _ExploreState extends ConsumerState<Explore> {
                 subTitle: 'Join upcoming activities',
                 title: 'Polls & Voting'),
             const Gap(25),
-           
-            PollsFeedWidget(isExplore: true,),
+
+            PollsFeedWidget(
+              isExplore: true,
+            ),
             const Gap(25),
 
             //? I have plugged this in here for you. Gbayii omo iyami
