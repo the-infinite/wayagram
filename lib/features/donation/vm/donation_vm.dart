@@ -16,6 +16,8 @@ import 'package:wayagram/features/donation/data/repo/donation_repository.dart';
 import 'package:wayagram/features/donation/donation_modal/donation_modal.dart';
 import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/model/create_donation_response.dart';
+import 'package:wayagram/features/donation/model/kyc_model.dart';
+import 'package:wayagram/features/donation/model/login_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/state/donation_state.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
@@ -273,6 +275,27 @@ class DonationVm extends StateNotifier<DonationState> {
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
         state = state.copyWith(myDonationDocs: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      print(e);
+    } finally {}
+  }
+
+  Future<void> getMyKYC() async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _donationRepository.getMyKYC(ConversationState.self.id);
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        KycModel responseModel = KycModel.fromJson(response.data);
+        LoginResponse loginResponse = LoginResponse.fromJson(response.data);
+        state = state.copyWith(kycStatus: responseModel.data?.status,
+        accountType: loginResponse.data?.userdata?.business,
+        kycMessage: responseModel.message);
       } else {}
     } catch (e) {
       print(e);
