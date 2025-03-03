@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg_flutter.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class ActivityImageWidget extends StatelessWidget {
   final String title;
@@ -24,6 +25,7 @@ class ActivityImageWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
+              fontFamily: WayaConstants.fontFamily,
               color: Colors.black,
             )),
         subtitle: Text(
@@ -31,6 +33,7 @@ class ActivityImageWidget extends StatelessWidget {
             style: TextStyle(
               fontSize: 12.sp,
               fontWeight: FontWeight.w400,
+              fontFamily: WayaConstants.fontFamily,
               color: Color(0xff6B7280),
             )),
       ),
