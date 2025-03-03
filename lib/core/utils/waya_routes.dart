@@ -34,6 +34,14 @@ import 'package:wayagram/features/group/view/private_group.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
 import 'package:wayagram/features/group/view/view_full_media.dart';
+import 'package:wayagram/features/logs_and_audit/view/cms_clicks.dart';
+import 'package:wayagram/features/logs_and_audit/view/login_activity.dart';
+import 'package:wayagram/features/logs_and_audit/view/logs_and_audit.dart';
+import 'package:wayagram/features/logs_and_audit/view/payment_activity.dart';
+import 'package:wayagram/features/logs_and_audit/view/search_log.dart';
+import 'package:wayagram/features/logs_and_audit/view/user_action.dart';
+import 'package:wayagram/features/logs_and_audit/view/user_interaction.dart';
+import 'package:wayagram/features/logs_and_audit/view/visited_page.dart';
 import 'package:wayagram/features/moments/views/media_moment.dart';
 import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
@@ -256,7 +264,15 @@ class WayaAppRoutes {
     SupportChatScreen.route: () => SupportChatScreen(),
     DisputeDetail.route: () =>
         DisputeDetail(id: WayaNav.search['id'].toString()),
-    ProductSearchResult.route: () => ProductSearchResult()
+    ProductSearchResult.route: () => ProductSearchResult(),
+    LogsAndAuditTrials.route: ()=> LogsAndAuditTrials(),
+    LoginActivity.route: ()=> LoginActivity(),
+    VisitedPage.route: ()=> VisitedPage(),
+    UserAction.route: ()=> UserAction(),
+    CmsClicks.route: ()=> CmsClicks(),
+    UserInteraction.route: ()=> UserInteraction(),
+    PaymentActivity.route: ()=> PaymentActivity(),
+    SearchLog.route: ()=> SearchLog(),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
