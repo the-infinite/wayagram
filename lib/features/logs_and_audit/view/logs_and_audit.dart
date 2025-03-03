@@ -87,6 +87,7 @@ class _LogsAndAuditTrialsState extends ConsumerState<LogsAndAuditTrials> {
             style: TextStyle(
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
+              fontFamily: WayaConstants.fontFamily,
               color: Colors.black,
             )),
         subtitle: Text(
@@ -94,6 +95,7 @@ class _LogsAndAuditTrialsState extends ConsumerState<LogsAndAuditTrials> {
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w400,
+              fontFamily: WayaConstants.fontFamily,
               color: Color(0xff6B7280),
             )),
         trailing: SvgPicture.asset('assets/images/forward.svg'),
