@@ -62,6 +62,9 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
           model.numPostPerWeek ?? "";
       _contestController.contestPrizeWinnerTextController.text =
           model.priceWinner ?? "";
+
+      _contestController.contestvoteCountToQualifyTextController.text =
+          model.priceWinner ?? "";
       return null;
     }, []);
     //  final priceWinner = useState(model.priceWinner ?? "");
@@ -348,6 +351,49 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                 }),
                 const Gap(15),
                 FormField<String>(validator: (value) {
+                  if (_contestController
+                      .contestvoteCountToQualifyTextController.text.isEmpty) {
+                    return 'Vote Counts to Qualify is required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaTextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: _contestController
+                            .contestvoteCountToQualifyTextController,
+                        hintText: "Enter Vote Counts to Qualify",
+                        label: "Vote Counts to Qualify",
+                        borderColor: formState.hasError &&
+                                _contestController
+                                    .contestvoteCountToQualifyTextController
+                                    .text
+                                    .isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
+                      ),
+                      if (formState.hasError &&
+                          _contestController
+                              .contestvoteCountToQualifyTextController
+                              .text
+                              .isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText ?? "",
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(15),
+                FormField<String>(validator: (value) {
                   if (priceForWinner.value.isEmpty) {
                     return 'Field is required';
                   }
@@ -529,6 +575,8 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             .contestPrizeWinnerTextController.text,
                         entryType: entryType.value,
                         reviewApprovePost: isSwitched.value,
+                        voteCountToQualify: _contestController
+                            .contestvoteCountToQualifyTextController.text,
                         entryAmount:
                             _contestController.entryAmountController.text,
                         numPostPerWeek: _contestController

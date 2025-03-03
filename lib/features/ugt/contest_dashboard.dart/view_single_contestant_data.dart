@@ -116,7 +116,7 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
                   child: SuccessfulModal(
                       "Submission approved",
                       "You have approved the submission for this contestant. Contestant will receive a notification on their application status",
-                      false, () {
+                      false, null,() {
                     WayaNav.removeUntilNamed('/manage-application-contest');
                   }),
                 );
@@ -178,7 +178,4 @@ Color getColor(bool isText, String text) {
     } */
 }
 
-String formatMoney(String value) {
-  final oCcy = NumberFormat("#,##0.00", "en_US");
-  return oCcy.format(double.parse(value));
-}
+
