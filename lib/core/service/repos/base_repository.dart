@@ -8,9 +8,8 @@ abstract class BaseRepository {
 
   BaseRepository() : httpClient = DioHttpClient();
 
-  Future<WayaRequestResponse> get(String route, {Map<String, dynamic>? params}) {
-    print(' route ${route}');
-    return httpClient.getHttp(route, params: params);
+  Future<WayaRequestResponse> get(String route, {Map<String, dynamic>? params, bool useBase = true}) {
+    return httpClient.getHttp(route, params: params, useBase: useBase);
   }
 
   Future<WayaRequestResponse> post(

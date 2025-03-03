@@ -11,7 +11,8 @@ import 'package:wayagram/features/quotation/widgets/single_see_bid_widget.dart';
 
 class SeeSellerBids extends ConsumerStatefulWidget {
   static const route = '/quotation/seller/bids';
-  const SeeSellerBids({super.key});
+  final String id;
+  const SeeSellerBids({super.key, required this.id});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SeeSellerBidsState();
@@ -29,7 +30,10 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
         body: Stack(
           clipBehavior: Clip.none,
           children: [
-            Image.asset('assets/images/bid/map.png', fit: BoxFit.contain,),
+            Image.asset(
+              'assets/images/bid/map.png',
+              fit: BoxFit.contain,
+            ),
             const Gap(10),
             ListView.builder(
                 padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
@@ -59,68 +63,66 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
                             isSeller: true,
                             color: Colors.white,
                           ),
-                          showTrailingIcon:  false,
+                          showTrailingIcon: false,
                           children: [
                             Column(
                               children: [
-                                Row(children: [
-                                  selectAmount('₦20,500', wayaTheme.colorScheme.primar50, wayaTheme.colorScheme.customPrimary),
-                                  const Gap(10),
-                                  selectAmount('₦21,000', wayaTheme.colorScheme.primar50, wayaTheme.colorScheme.customPrimary),
-                                  const Gap(10),
-                                  selectAmount('₦21,500', wayaTheme.colorScheme.primar50, wayaTheme.colorScheme.customPrimary),
-
-                                ],),
+                                Row(
+                                  children: [
+                                    selectAmount(
+                                        '₦20,500', wayaTheme.colorScheme.primar50, wayaTheme.colorScheme.customPrimary),
+                                    const Gap(10),
+                                    selectAmount(
+                                        '₦21,000', wayaTheme.colorScheme.primar50, wayaTheme.colorScheme.customPrimary),
+                                    const Gap(10),
+                                    selectAmount(
+                                        '₦21,500', wayaTheme.colorScheme.primar50, wayaTheme.colorScheme.customPrimary),
+                                  ],
+                                ),
                                 const Gap(10),
-
-                                Row(children: [
-                                  SizedBox(
-                                    width: context.width * 0.35,
-                                    child: WayaButton(callback: (){
-
-                                    },
-                                      text: 'Cancel Bid',
-                                      color: WayaColors.error500,
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: context.width * 0.35,
+                                      child: WayaButton(
+                                        callback: () {},
+                                        text: 'Cancel Bid',
+                                        color: WayaColors.error500,
+                                      ),
                                     ),
-                                  ),
-                                  const Gap(15),
-                                  SizedBox(
-                                    width: context.width * 0.35,
-                                    child: WayaButton(callback: (){
-
-                                    },
-                                      text: 'Send Offer',
+                                    const Gap(15),
+                                    SizedBox(
+                                      width: context.width * 0.35,
+                                      child: WayaButton(
+                                        callback: () {},
+                                        text: 'Send Offer',
+                                      ),
                                     ),
-                                  ),
-                                ],)
+                                  ],
+                                )
                               ],
                             ),
                           ],
-
                         ),
                       ),
                     ),
                   );
                 }),
-          ],));
+          ],
+        ));
   }
 
-  selectAmount(amt, color, color2){
+  selectAmount(amt, color, color2) {
     return Container(
-      decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(6)
-      ),
+      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(6)),
       height: 36.h,
       width: 80.w,
-      child:Center(
+      child: Center(
         child: Text(
           amt,
-          style: TextStyle().wayaCopyWith(
-              color: color2, fontWeight: FontWeight.w600, fontSize: 16),
+          style: TextStyle().wayaCopyWith(color: color2, fontWeight: FontWeight.w600, fontSize: 16),
         ),
       ),
     );
   }
 }
-

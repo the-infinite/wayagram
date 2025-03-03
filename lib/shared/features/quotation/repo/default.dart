@@ -38,10 +38,9 @@ class QuotationRepository extends BaseRepository {
   Future<WayaRequestResponse> updateCancelRequest({
     required String id,
   }) {
-    final payload = {
+    return patch('$serviceUrl/buyer/request/cancel', {
       "id": id,
-    };
-    return patch('$serviceUrl/buyer/request/cancel', payload);
+    });
   }
 
   Future<WayaRequestResponse> extendBidTime({required String id, required String time}) {

@@ -12,8 +12,7 @@ import 'package:wayagram/features/polls_and_voting/widgets/poll_widget.dart';
 class PollsFeedWidget extends ConsumerStatefulWidget {
   final bool isExpanded;
   final bool isExplore;
-  const PollsFeedWidget(
-      {super.key, this.isExpanded = false, this.isExplore = false});
+  const PollsFeedWidget({super.key, this.isExpanded = false, this.isExplore = false});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PollsFeedWidget();
@@ -33,15 +32,13 @@ class _PollsFeedWidget extends ConsumerState<PollsFeedWidget> {
   @override
   Widget build(BuildContext context) {
     final pollState = ref.watch(createPollVotingProvider);
-     final wayaTheme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
     // TODO: implement build
     // followed pages
-    List<Docs>? polls = widget.isExpanded
-        ? pollState.feedPolls
-        : pollState.feedPolls.sublist(0, min(pollState.feedPolls.length, 2));
+    List<Docs>? polls =
+        widget.isExpanded ? pollState.feedPolls : pollState.feedPolls.sublist(0, min(pollState.feedPolls.length, 2));
 
-    List<Docs>? myPolls =
-        pollState.fetchAllPols.sublist(0, min(pollState.feedPolls.length, 3));
+    List<Docs>? myPolls = pollState.fetchAllPols.sublist(0, min(pollState.fetchAllPols.length, 3));
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,11 +57,11 @@ class _PollsFeedWidget extends ConsumerState<PollsFeedWidget> {
         ],
 
         if (pollState.fetchAllPols.isNotEmpty && widget.isExplore) ...[
-           Text(
-              "My Polls",
-              style: wayaTheme.textTheme.bodyMedium,
-            ),
-            const Gap(10),
+          Text(
+            "My Polls",
+            style: wayaTheme.textTheme.bodyMedium,
+          ),
+          const Gap(10),
           //> Looks Good
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
@@ -72,9 +69,7 @@ class _PollsFeedWidget extends ConsumerState<PollsFeedWidget> {
               itemCount: myPolls.length,
               itemBuilder: (context, index) {
                 final poll = myPolls[index];
-                return poll.voteCount != null && poll.voteCount! > 0
-                    ? PollsCard(poll: poll)
-                    : PollWidget(poll: poll);
+                return poll.voteCount != null && poll.voteCount! > 0 ? PollsCard(poll: poll) : PollWidget(poll: poll);
               }),
         ]
       ],
