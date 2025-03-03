@@ -164,7 +164,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               );
             }),
           const Gap(15),
-          Row(
+          /*   Row(
             children: [
               Expanded(
                 child: FormField<String>(validator: (value) {
@@ -244,7 +244,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               )
             ],
           ),
-          const Gap(15),
+          const Gap(15), */
           FormField<String>(validator: (value) {
             if (viewModel2.startDate.isEmpty) {
               return 'Duration type is required';

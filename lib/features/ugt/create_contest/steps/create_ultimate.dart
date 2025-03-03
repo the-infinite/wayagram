@@ -215,7 +215,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
             );
           }),
           const Gap(15),
-          FormField<String>(validator: (value) {
+          /*   FormField<String>(validator: (value) {
             if (notifier.voteCountToQualify.text.isEmpty) {
               return 'Vote Counts to Qualify is required';
             }
@@ -248,7 +248,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               ],
             );
           }),
-          const Gap(15),
+          const Gap(15), */
           FormField<String>(validator: (value) {
             if (notifier.winnerPrize.text.isEmpty) {
               return 'Winner`s Award is required';
@@ -373,7 +373,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                       }),
             ],
           ),
-          const Gap(15),
+          /*   const Gap(15),
           Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -435,66 +435,67 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
             ],
           ),
           const Gap(15),
-          if (selectedValue2 == "Paid")
-            FormField<String>(validator: (value) {
-              if (notifier.amountPerVote.text.isEmpty) {
-                return 'Amount is required';
-              }
+          if (selectedValue2 == "Paid") */
+          const Gap(15),
+          FormField<String>(validator: (value) {
+            if (notifier.amountPerVote.text.isEmpty) {
+              return 'Amount is required';
+            }
 
-              return null;
-            }, builder: (formState) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  WayaTextFormField(
-                    keyboardType: TextInputType.number,
-                    controller: notifier.amountPerVote,
-                    hintText: "Enter Amount per Vote",
-                    label: "Amount per Vote",
-                    inputFormatters: [
-                      CurrencyTextInputFormatter.currency(
-                          name: 'NGN', symbol: 'NGN', locale: 'en_NG')
-                    ],
-                    onChanged: (value) {
-                      print(
-                          "Amount in word${value.replaceAll(",", "").substring(3)}");
-                      if (value.trim().isNotEmpty) {
-                        if (double.parse(
-                                value.replaceAll(",", "").substring(3).trim()) >
-                            0) {
-                          setState(() {
-                            selectedValue2 = "Paid";
-                          });
-                        } else {
-                          setState(() {
-                            selectedValue2 = "Free";
-                          });
-                        }
+            return null;
+          }, builder: (formState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                WayaTextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: notifier.amountPerVote,
+                  hintText: "Enter Amount per Vote",
+                  label: "Amount per Vote",
+                  inputFormatters: [
+                    CurrencyTextInputFormatter.currency(
+                        name: 'NGN', symbol: 'NGN', locale: 'en_NG')
+                  ],
+                  onChanged: (value) {
+                    print(
+                        "Amount in word${value.replaceAll(",", "").substring(3)}");
+                    if (value.trim().isNotEmpty) {
+                      if (double.parse(
+                              value.replaceAll(",", "").substring(3).trim()) >
+                          0) {
+                        setState(() {
+                          selectedValue2 = "Paid";
+                        });
                       } else {
                         setState(() {
                           selectedValue2 = "Free";
                         });
                       }
-                    },
-                    borderColor: formState.hasError &&
-                            notifier.amountPerVote.text.isEmpty
-                        ? wayaTheme.colorScheme.error
-                        : null,
-                  ),
-                  if (formState.hasError && notifier.amountPerVote.text.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Text(
-                        formState.errorText ?? "",
-                        style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12),
-                      ),
+                    } else {
+                      setState(() {
+                        selectedValue2 = "Free";
+                      });
+                    }
+                  },
+                  borderColor:
+                      formState.hasError && notifier.amountPerVote.text.isEmpty
+                          ? wayaTheme.colorScheme.error
+                          : null,
+                ),
+                if (formState.hasError && notifier.amountPerVote.text.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      formState.errorText ?? "",
+                      style: TextStyle(
+                          color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
-                ],
-              );
-            }),
+                  ),
+              ],
+            );
+          }),
           const Gap(15),
-          FormField<String>(validator: (value) {
+          /*   FormField<String>(validator: (value) {
             if (notifier.numberOfWeeks.text.isEmpty) {
               return 'Number of Weeks is required';
             }
@@ -526,7 +527,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               ],
             );
           }),
-          const Gap(20),
+          const Gap(20), */
           Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -611,9 +612,9 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           WayaButton(
             callback: () async {
               // widget.goToNextTab();
-              if (selectedValue2 == "Free") {
+              /*   if (selectedValue2 == "Free") {
                 notifier.amountPerVote.text = "0";
-              }
+              } */
               if (_formKey.currentState!.validate()) {
                 //check for image null
                 if (ref
