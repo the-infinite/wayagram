@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get_thumbnail_video/index.dart';
-import 'package:get_thumbnail_video/video_thumbnail.dart';
+// import 'package:get_thumbnail_video/index.dart';
+// import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -46,16 +46,17 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
   }
 
   Future<String> getImageUrl(String videoLink) async {
-    XFile thumbnailFile = await VideoThumbnail.thumbnailFile(
-      video: videoLink,
-      thumbnailPath: (await getTemporaryDirectory()).path,
-      imageFormat: ImageFormat.WEBP,
-      maxHeight:
-          200, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
-      quality: 70,
-    );
-
-    return thumbnailFile.path;
+    return '';
+    // XFile thumbnailFile = await VideoThumbnail.thumbnailFile(
+    //   video: videoLink,
+    //   thumbnailPath: (await getTemporaryDirectory()).path,
+    //   imageFormat: ImageFormat.WEBP,
+    //   maxHeight:
+    //       200, // specify the height of the thumbnail, let the width auto-scaled to keep the source aspect ratio
+    //   quality: 70,
+    // );
+    //
+    // return thumbnailFile.path;
   }
 
   @override

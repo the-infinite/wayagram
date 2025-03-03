@@ -2,7 +2,7 @@ name: wayagram
 description: The codebase for the entire WayaGram application
 homepage: https://wayagram.ng
 publish_to: "none" # NEVER PUBLISH TO pub.dev!
-version: 1.91.9-staging+139
+version: 1.91.10+142
 
 environment:
   sdk: ^3.6.0
@@ -74,7 +74,7 @@ dependencies:
   flutter_hooks: ^0.20.5
   syncfusion_flutter_sliders: ^28.2.6
   video_trimmer: ^3.0.1-LTS
-  get_thumbnail_video: ^0.7.2
+  #get_thumbnail_video: ^0.7.2
 
 
 
