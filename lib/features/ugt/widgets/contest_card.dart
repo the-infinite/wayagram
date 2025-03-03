@@ -318,12 +318,16 @@ class ContestCard extends ConsumerWidget {
 }
 
 String formatDate(String isoDate) {
-  DateTime date = DateTime.parse(isoDate);
-  String day = DateFormat('d').format(date);
-  String suffix = getDaySuffix(int.parse(day));
-  String month = DateFormat('MMM').format(date);
-  String year = DateFormat('y').format(date);
-  return "$day$suffix $month $year";
+  try {
+    DateTime date = DateTime.parse(isoDate);
+    String day = DateFormat('d').format(date);
+    String suffix = getDaySuffix(int.parse(day));
+    String month = DateFormat('MMM').format(date);
+    String year = DateFormat('y').format(date);
+    return "$day$suffix $month $year";
+  } catch (e) {
+    return "No Date";
+  }
 }
 
 String getDaySuffix(int day) {

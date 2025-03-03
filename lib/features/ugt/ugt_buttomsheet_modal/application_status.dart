@@ -9,14 +9,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/utils/waya_navigation.dart';
 import '../widgets/upcoming_widgets/upcoming_widget.dart';
+import 'custom_modal_contest.dart';
 
 class ApplicationStatus extends StatefulHookConsumerWidget {
   AppliedContestModel? post;
@@ -140,7 +142,9 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                       const Gap(20),
                       UpcomingWidget(
                           title: "Duration",
-                          content: widget.post?.contest?.durationType ?? ""),
+                          content: getRealDateDiffBtwDate(
+                              widget.post?.contest?.startDate ?? "",
+                              widget.post?.contest?.endDate ?? "")),
                     ],
                   ),
                   const Gap(10),
@@ -170,16 +174,32 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
             SizedBox(height: 17.h),
             WayaButton(
               callback: () async {
-                ref.read(selectedAppliedContestProvider.notifier).state = widget.post;
-                Navigator.pop(context);
-                WayaNav.toNamed("/create-profile-contest1");
                 if (widget.post?.status?.toLowerCase() == "approved") {
-                  /*  Navigator.pop(context);
-                  WayaNav.toNamed("/create-profile-contest1"); */
+                  if (widget.post?.contest?.entryType?.toLowerCase() ==
+                      "free") {
+                    ref.read(selectedAppliedContestProvider.notifier).state =
+                        widget.post;
+                    Navigator.pop(context);
+                    WayaNav.toNamed("/create-profile-contest1");
+                  } else {
+                    WayaUtils.showModalSheet(
+                      context,
+                      child: AvailableBalanceModal(
+                        voteCount: "0",
+                        voteFee:
+                            widget.post?.contest?.amount?.toString() ?? "0",
+                        // model: widget.model,
+                        votingLink: "",
+                        candidateName: "",
+                      ),
+                    );
+                  }
                 } else {}
               },
               text: widget.post?.status?.toLowerCase() == "approved"
-                  ? "Create Contest Profile"
+                  ? widget.post?.contest?.entryType?.toLowerCase() == "free"
+                      ? "Create Contest Profile"
+                      : "Pay NGN${widget.post?.contest?.amount} to continue"
                   : "View Contest Details",
             ),
             const Gap(10),

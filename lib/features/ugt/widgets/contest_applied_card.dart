@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -61,13 +62,22 @@ class ContestAppliedCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(
                               45), // Adjust the radius as needed
                           child: post.contest?.uploadCoverImages != null
-                              ? Image.network(
+                              ? WayaImage(
+                                  imageUrl:
+                                      post.contest?.uploadCoverImages ?? "",
+                                  height: 45,
+                                  width: 45,
+                                  fit: BoxFit.cover,
+                                  radius: BorderRadius.circular(45),
+                                )
+
+                              /*  Image.network(
                                   post.contest?.uploadCoverImages ?? "",
                                   height: 45,
                                   width: 45,
                                   fit: BoxFit
                                       .cover, // Ensures the image covers the area properly
-                                )
+                                ) */
                               : Image.asset(
                                   'assets/images/frameuni.png',
                                   height: 45,
@@ -98,7 +108,7 @@ class ContestAppliedCard extends StatelessWidget {
                             ),
                             const Gap(8),
                             Text(
-                              '${post.contest?.applicantCount} Participants',
+                              '${post.applicantCount} Participants',
                               style: wayaTheme.textTheme.hintStyle,
                             ),
                           ],
@@ -113,12 +123,20 @@ class ContestAppliedCard extends StatelessWidget {
                 borderRadius:
                     BorderRadius.circular(16), // Adjust the radius as needed
                 child: post.contest?.uploadCoverImages != null
-                    ? Image.network(
+                    ? WayaImage(
+                        imageUrl: post.contest?.uploadCoverImages ?? "",
+                        height: 200,
+                        width: context.width,
+                        fit: BoxFit.cover,
+                        radius: BorderRadius.circular(45),
+                      )
+
+                    /*  Image.network(
                         post.contest?.uploadCoverImages ?? "",
                         height: 200,
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
-                      )
+                      ) */
                     : Image.asset(
                         'assets/images/frameuni.png',
                         height: 200,
