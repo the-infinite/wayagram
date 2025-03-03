@@ -39,23 +39,27 @@
 		<key>UIMainStoryboardFile</key>
 		<string>Main</string>
 		<key>NSAppleMusicUsageDescription</key>
-        	<string>Play using while you are hiking</string>
-        	<key>NSBluetoothAlwaysUsageDescription</key>
-        	<string>So we can connect to wireless audio devices for your calls when you choose to use them</string>
-        	<key>NSCalendarsUsageDescription</key>
-        	<string>Wayagram would like to access your calender</string>
+		<string>Play using while you are hiking</string>
+		<key>NSBluetoothAlwaysUsageDescription</key>
+		<string>So we can connect to wireless audio devices for your calls when you choose to use
+			them</string>
+		<key>NSCalendarsUsageDescription</key>
+		<string>Wayagram would like to access your calender</string>
 		<key>ITSAppUsesNonExemptEncryption</key>
-                <false/>
-                <key>NSPhotoLibraryAddUsageDescription</key>
-                <string> photos add description.</string>
-                <key>NSPhotoLibraryUsageDescription</key>
-                <string> photos description.</string>
-                <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-                <string>This app requires access to your location to provide personalized services and content even when the app is in the background.</string>
-                <key>NSLocationWhenInUseUsageDescription</key>
-                <string>This app requires access to your location to provide personalized services and content while you are using the app.</string>
-            	<key>NSLocationAlwaysUsageDescription</key>
-                <string>This app requires access to your location to provide personalized services and content even when the app is in the background.</string>
+		<false />
+		<key>NSPhotoLibraryAddUsageDescription</key>
+		<string> photos add description.</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string> photos description.</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>This app requires access to your location to provide personalized services and
+			content even when the app is in the background.</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>This app requires access to your location to provide personalized services and
+			content while you are using the app.</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>This app requires access to your location to provide personalized services and
+			content even when the app is in the background.</string>
 		<key>UISupportedInterfaceOrientations</key>
 		<array>
 			<string>UIInterfaceOrientationPortrait</string>
@@ -69,5 +73,9 @@
 			<string>UIInterfaceOrientationLandscapeLeft</string>
 			<string>UIInterfaceOrientationLandscapeRight</string>
 		</array>
+
+		<!-- For Firebase crashlytics. -->
+		<key>FirebaseCrashlyticsCollectionEnabled</key>
+		<true />
 	</dict>
 </plist>
