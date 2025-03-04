@@ -43,10 +43,15 @@ UserAccountData _$UserAccountDataFromJson(Map<String, dynamic> json) =>
           ? null
           : SocialProfileModel.fromJson(
               json['profile'] as Map<String, dynamic>),
+      business: json['business'] == null
+          ? null
+          : BusinessDetailsModel.fromJson(
+              json['business'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$UserAccountDataToJson(UserAccountData instance) =>
     <String, dynamic>{
       'user': instance.user,
       'profile': instance.profile,
+      'business': instance.business,
     };

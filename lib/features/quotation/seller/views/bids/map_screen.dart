@@ -148,12 +148,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     ),
                   ),
                   const Gap(20),
-                  SingleSeeBidWidget(
-                    color: wayaTheme.colorScheme.scaffoldColor,
-                  ),
-                  SingleSeeBidWidget(
-                    color: wayaTheme.colorScheme.scaffoldColor,
-                  ),
+                //   SingleSeeBidWidget(
+                //     color: wayaTheme.colorScheme.scaffoldColor,
+                //   ),
+                //   SingleSeeBidWidget(
+                //     color: wayaTheme.colorScheme.scaffoldColor,
+                //   ),
                 ],
               ),
             ),
