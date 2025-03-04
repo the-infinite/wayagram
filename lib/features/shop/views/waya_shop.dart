@@ -73,7 +73,7 @@ class _WayaShopState extends ConsumerState<WayaShop>
         ],
       ),
       floatingActionButton: Visibility(
-        visible: ref.read(successfulSetupVmProvider).user!.user!.role!.name !=
+        visible: ref.read(successfulSetupVmProvider).user!.user!.role !=
                 'PERSONAL' &&
             _selectedIndex == 2,
         child: SizedBox(

@@ -8,6 +8,7 @@ import 'package:wayagram/shared/features/user/models/default.dart';
 class ConversationState {
   static UserDetailsModel? _self;
   static SocialProfileModel? _profile;
+  static BusinessDetailsModel? _business;
   final bool isLoading;
   final String searchFilter;
   final List<ChatModel> conversations;
@@ -50,9 +51,10 @@ class ConversationState {
   });
 
   // This is fine.
-  static void setSelf(UserDetailsModel? self, SocialProfileModel? profile) async {
+  static void setSelf(UserDetailsModel? self, SocialProfileModel? profile, [BusinessDetailsModel? business]) async {
     ConversationState._self ??= self;
     ConversationState._profile ??= profile;
+    ConversationState._business ??= business;
 
     //? If this is not undefined.
     if (self != null && !kDebugMode) {
@@ -64,7 +66,8 @@ class ConversationState {
       //? Next for analytics.
       await FirebaseAnalytics.instance.setUserId(id: self.id);
       await FirebaseAnalytics.instance.setUserProperty(name: "fullname", value: self.fullname);
-      await FirebaseAnalytics.instance.setUserProperty(name: "environment", value: WayaConstants.isProduction ? 'live' : 'test');
+      await FirebaseAnalytics.instance
+          .setUserProperty(name: "environment", value: WayaConstants.isProduction ? 'live' : 'test');
     }
   }
 
@@ -73,6 +76,9 @@ class ConversationState {
 
   /// The social media profile of the currently logged in user.
   static SocialProfileModel get profile => _profile!;
+
+  /// The business profile of this user.
+  static BusinessDetailsModel get business => _business!;
 
   /// When this was done.
   static final initial = ConversationState(

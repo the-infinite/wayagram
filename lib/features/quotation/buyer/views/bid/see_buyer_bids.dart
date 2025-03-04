@@ -11,7 +11,9 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
+import 'package:wayagram/features/quotation/widgets/single_negotiation_bid.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 
@@ -65,6 +67,7 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final _ = ref.watch(userQuotationsProvider);
+    debugPrint(ConversationState.self.accountType.toString());
 
     //? This is fine too.
     return WayaScaffold(
@@ -85,7 +88,13 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                   itemCount: request?.bids?.length ?? 0,
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    return const SizedBox();
+                    final bid = request!.bids![index];
+
+                    //? Return this one.
+                    return SingleNegotiationBidWidget(
+                      request: request,
+                      bid: bid,
+                    );
                   },
                 ),
               ),
@@ -141,7 +150,10 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                     Text(
                       "Your Offer",
                       style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.greyColor500, fontWeight: FontWeight.normal, fontSize: 14),
+                        color: wayaTheme.colorScheme.greyColor500,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 14,
+                      ),
                     ),
 
                     // Some space.

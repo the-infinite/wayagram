@@ -8,14 +8,19 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart';
 import 'package:wayagram/features/quotation/buyer/vm/reject_bid_vm.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
+import 'package:wayagram/shared/features/quotation/model/default.dart';
 
 class SingleNegotiationBidWidget extends ConsumerWidget {
-  final bool isSeller;
-  final BuyerRequests product;
-  const SingleNegotiationBidWidget({super.key, required this.product, this.isSeller = false});
+  final BuyRequestModel request;
+  final QuotationBidModel bid;
+
+  const SingleNegotiationBidWidget({
+    super.key,
+    required this.request,
+    required this.bid,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,8 +61,7 @@ class SingleNegotiationBidWidget extends ConsumerWidget {
                                 ),
                                 child: Row(
                                   children: [
-                                    Image.asset('assets/images/bid/down.png',
-                                        height: 10.h),
+                                    Image.asset('assets/images/bid/down.png', height: 10.h),
                                     //Image.asset('assets/images/bid/check.png', height: 9.h, width: 9.w,),
                                     const Gap(5),
                                     Text(
@@ -66,7 +70,6 @@ class SingleNegotiationBidWidget extends ConsumerWidget {
                                         color: wayaTheme.colorScheme.white,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 11,
-
                                       ),
                                     ),
                                   ],
@@ -229,8 +232,7 @@ class SingleNegotiationBidWidgetViewModel extends ChangeNotifier {
         buttonText: 'Add Delivery Details',
         secondButtonText: 'See your Order Details',
         title: 'Populate Delivery Details',
-        message:
-            "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
+        message: "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
         onPress: () async {
           await addDeliveryDetail(context);
         },
@@ -242,5 +244,4 @@ class SingleNegotiationBidWidgetViewModel extends ChangeNotifier {
 }
 
 final singleSettlementWidgetViewModelProvider =
-    ChangeNotifierProvider<SingleNegotiationBidWidgetViewModel>(
-        (ref) => SingleNegotiationBidWidgetViewModel(ref));
+    ChangeNotifierProvider<SingleNegotiationBidWidgetViewModel>((ref) => SingleNegotiationBidWidgetViewModel(ref));
