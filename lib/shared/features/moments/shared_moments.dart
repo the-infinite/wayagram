@@ -112,6 +112,7 @@ class PopModal extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () {
+                Navigator.pop(context);
                 create();
               },
               child: Text(
@@ -126,14 +127,17 @@ class PopModal extends StatelessWidget {
             SizedBox(height: 10),
             TextButton(
               onPressed: () {
+                   Navigator.pop(context);
                 view();
               },
-              child: Text("View Moment",
-              textAlign: TextAlign.start,
-               style: TextStyle(
+              child: Text(
+                "View Moment",
+                textAlign: TextAlign.start,
+                style: TextStyle(
                   color: wayaTheme.colorScheme.customBlack,
                   fontSize: 14,
-                ),),
+                ),
+              ),
             ),
           ],
         ),
