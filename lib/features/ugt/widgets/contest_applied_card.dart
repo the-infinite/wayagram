@@ -127,7 +127,7 @@ class ContestAppliedCard extends StatelessWidget {
                         height: 200,
                         width: context.width,
                         fit: BoxFit.cover,
-                        radius: BorderRadius.circular(45),
+                        radius: BorderRadius.circular(10),
                       )
 
                     /*  Image.network(
@@ -174,13 +174,12 @@ class ContestAppliedCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (post.contest?.status?.toLowerCase() == "pending" ||
-                      post.contest?.status?.toLowerCase() == "closed")
+                  if (post.contest?.status?.toLowerCase() != "active")
                     StatusWidget(
                       title: "Application",
                       content: post.contest?.status ?? "Pending",
                     ),
-                  if (post.contest?.status?.toLowerCase() == "ongoing")
+                  if (post.contest?.status?.toLowerCase() == "active")
                     StatusOngoing(
                       title: "Application",
                       content: post.contest?.status ?? "Pending",

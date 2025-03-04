@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
@@ -18,6 +19,7 @@ import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_cont
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_gallery.dart.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_leaderboard.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
+import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_post_all.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/for_you_contest.dart';
 import 'package:wayagram/features/ugt/my_contest_details/my_contest_details.dart';
@@ -47,8 +49,16 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     useEffect(() {
-      ref.read(votersContestNotifier.notifier).getContestantProfileVoteDetails(
-          ref.read(selectedContestProvider.notifier).state.id ?? "");
+      String contestId =
+          ref.read(selectedContestProvider.notifier).state.id ?? "";
+      ref
+          .read(votersContestNotifier.notifier)
+          .getContestantProfileVoteDetails(contestId);
+
+      ref.read(votersContestNotifier.notifier).fetchAllContestPosts(contestId);
+      ref
+          .read(votersContestNotifier.notifier)
+          .fetchAllContestApplicant(contestId);
       return null;
     }, []);
     var viewModel = ref.watch(votersContestNotifier);
@@ -65,14 +75,14 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           PopupMenuButton(
             onSelected: (value) {},
             position: PopupMenuPosition.under,
-            itemBuilder: (context) {
+            itemBuilder: (context1) {
               return [
                 PopupMenuItem<int>(
                   value: 0,
                   child: _buildActionNav(
                       context: context,
                       onTap: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context1);
                         WayaNav.toNamed('/contest-mydashboard-profile-page');
                       },
                       asset: SvgPicture.asset('assets/images/pages/flag.svg'),
@@ -201,6 +211,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                       )
                     : Image.network(
                         model.uploadCoverImages ?? "",
+                        width: context.width,
                         height: 200,
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
@@ -354,19 +365,19 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                     text: 'Contestants',
                     onTap: () => selectedViewIndex.value = 2,
                   ),
-                  WayaTabButton(
+                  /*  WayaTabButton(
                     isSelected: selectedViewIndex.value == 3,
                     isLongerTab: true,
                     text: 'Gallery',
                     onTap: () => selectedViewIndex.value = 3,
-                  ),
+                  ), */
                 ],
               ),
               const Gap(10),
-              if (selectedViewIndex.value == 0) UgtDetailsPost(null),
+              if (selectedViewIndex.value == 0) UgtPostAllContestant(),
               if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(model),
               if (selectedViewIndex.value == 2) UgtDetailsContestants(model),
-              if (selectedViewIndex.value == 3) UgtDetailsGallery(model),
+              //  if (selectedViewIndex.value == 3) UgtDetailsGallery(model),
             ],
           ),
         ),
