@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/get_utils.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
@@ -42,11 +43,15 @@ class SingleNegotiationBidWidget extends ConsumerWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.asset(
-                      'assets/images/bid/store.png',
+                    //? Something like this.
+                    WayaAssets.images.bid.store.image(
                       height: 48,
                     ),
+
+                    // Some space.
                     const Gap(10),
+
+                    //?
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,9 +66,14 @@ class SingleNegotiationBidWidget extends ConsumerWidget {
                                 ),
                                 child: Row(
                                   children: [
-                                    Image.asset('assets/images/bid/down.png', height: 10.h),
-                                    //Image.asset('assets/images/bid/check.png', height: 9.h, width: 9.w,),
+                                    WayaAssets.images.bid.down.image(
+                                      height: 10,
+                                    ),
+
+                                    // Some space.
                                     const Gap(5),
+
+                                    //? Title.
                                     Text(
                                       "New Bid",
                                       style: TextStyle().wayaCopyWith(
