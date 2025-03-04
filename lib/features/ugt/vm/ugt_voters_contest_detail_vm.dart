@@ -44,16 +44,17 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     if (response.success) {
       print(map);
       map["profileId"] = _localDataSource.getUserId().toString();
-      return await voteContestant(isLoading,map);
+      return await voteContestant(isLoading, map);
     } else {
-       isLoading.value = false;
+      isLoading.value = false;
       return false;
     }
   }
 
-  Future<bool> voteContestant(ValueNotifier<bool> isLoading,Map<String, String> map) async {
+  Future<bool> voteContestant(
+      ValueNotifier<bool> isLoading, Map<String, String> map) async {
     final response = await _contestRepository.voteContestant(map);
-     isLoading.value = false;
+    isLoading.value = false;
     if (response.success) {
       return true;
     } else {
@@ -109,14 +110,17 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   void searchList(String value) {
     if (value.trim().isEmpty) {
+      print("i am here $value");
       state = state.copyWith(myContestList: state.myContestListCopy);
     } else {
+      print("i am yyyyyy $value");
       var myList = state.myContestListCopy ?? [];
       state = state.copyWith(
           myContestList: myList.where((e) {
         String name = e.contestApplicant?.fullName ?? "";
         return name.toLowerCase().contains(value.toLowerCase());
       }).toList());
+      print("i am rrrrrr $value");
     }
   }
 
@@ -153,6 +157,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
     var map = {
       "contestantProfileId": state.createPostId,
+      "contestId": state.contestId,
       "description": text,
       "mediaContent": listMap
     };
@@ -169,6 +174,10 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     } else {
       WayaSnackBar.showToast("Unable to create Post, Please try again later");
     }
+  }
+
+  void updateContestId(String? id) {
+    state = state.copyWith(contestId: id);
   }
 }
 

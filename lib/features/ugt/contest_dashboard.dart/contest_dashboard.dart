@@ -575,7 +575,3 @@ Color getColor(bool isText, String text) {
     } */
 }
 
-String formatMoney(String value) {
-  final oCcy = NumberFormat("#,##0.00", "en_US");
-  return oCcy.format(double.parse(value));
-}

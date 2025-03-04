@@ -1,3 +1,5 @@
+import 'package:wayagram/shared/model/base_model.dart';
+
 class MomentResponseModel {
   final String message;
   final bool status;
@@ -88,7 +90,7 @@ class ResponseData {
   }
 }
 
-class MomentData {
+class MomentData extends BaseModel<MomentData> {
   final String id;
   final String userId;
   final String name;
@@ -163,7 +165,7 @@ class MomentData {
       'caption': caption,
       'totalViews': totalViews,
       'color': color,
-      'fontType':fontType,
+      'fontType': fontType,
       'totalLikes': totalLikes,
       'totalComments': totalComments,
       'active': active,
@@ -174,4 +176,7 @@ class MomentData {
       'updatedAt': updatedAt.toIso8601String(),
     };
   }
+
+  @override
+  Map<String, dynamic> toMap() => {'caption': caption};
 }

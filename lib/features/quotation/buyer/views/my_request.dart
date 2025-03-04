@@ -55,7 +55,11 @@ class _MyRequestsState extends ConsumerState<MyRequests> {
         const Gap(25),
 
         //? Then we can look at te buyer requests that a here.
-        GroupedWidgetHeader(onTap: () {}, subTitle: 'Explore Categories & Best Offers', title: 'Recommended Products'),
+        GroupedWidgetHeader(
+          onTap: () {},
+          subTitle: 'Explore Categories & Best Offers',
+          title: 'Recommended Products',
+        ),
 
         // Some space.
         const Gap(25),

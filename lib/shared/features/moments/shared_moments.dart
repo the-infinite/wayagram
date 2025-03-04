@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/widgets/moments_widget.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
@@ -19,6 +20,7 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(momentVmProvider.notifier).getUserMoments(1);
       ref.read(momentVmProvider.notifier).getAllMoments();
     });
     super.initState();
@@ -26,7 +28,12 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
 
   @override
   Widget build(BuildContext context) {
-     final momentState = ref.watch(momentVmProvider);
+    final momentState = ref.watch(momentVmProvider);
+
+    if (momentState.isLoadingUserMoment) {
+      return SizedBox.shrink();
+    }
+
     return SizedBox(
       height: 80,
       child: ListView.builder(
@@ -40,7 +47,23 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                 const Gap(6),
                 MomentsWidget(
                   isCreate: true,
-                  onTap: () => WayaNav.toNamed(MyMoments.route),
+                  hasMoment: momentState.myMoments.isNotEmpty,
+                  onTap: () async {
+                    if (momentState.myMoments.isNotEmpty) {
+                      return await showDialog(
+                          context: context,
+                          builder: (context) {
+                            return PopModal(
+                                create: () => WayaNav.toNamed(MyMoments.route),
+                                view: () => WayaNav.toNamed(ViewMoment.route,
+                                        arguments: {
+                                          "moments": momentState.myMoments,
+                                          "isMine": false
+                                        }));
+                          });
+                    }
+                    WayaNav.toNamed(MyMoments.route);
+                  },
                 ),
                 const Gap(6),
               ],
@@ -64,6 +87,60 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
             );
           }
         },
+      ),
+    );
+  }
+}
+
+class PopModal extends StatelessWidget {
+  final Function() create;
+  final Function() view;
+  const PopModal({super.key, required this.create, required this.view});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                create();
+              },
+              child: Text(
+                textAlign: TextAlign.start,
+                "Create New Moment",
+                style: TextStyle(
+                  color: wayaTheme.colorScheme.customBlack,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+            SizedBox(height: 10),
+            TextButton(
+              onPressed: () {
+                   Navigator.pop(context);
+                view();
+              },
+              child: Text(
+                "View Moment",
+                textAlign: TextAlign.start,
+                style: TextStyle(
+                  color: wayaTheme.colorScheme.customBlack,
+                  fontSize: 14,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

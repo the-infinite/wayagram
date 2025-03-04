@@ -53,6 +53,7 @@ class BuyRequestModel {
   final bool isDeleted;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final List<QuotationBidModel>? bids;
 
   BuyRequestModel({
     required this.id,
@@ -81,6 +82,7 @@ class BuyRequestModel {
     this.deliveryAddress,
     this.deliveryState,
     this.deliveryLga,
+    this.bids,
   });
 
   String get fullname => '${brand.isNotEmpty ? '${brand.capitalize} ' : ''}${productName.capitalize}';
@@ -88,6 +90,64 @@ class BuyRequestModel {
   factory BuyRequestModel.fromJson(Map<String, dynamic> json) => _$BuyRequestModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$BuyRequestModelToJson(this);
+
+  BuyRequestModel copyWith({
+    String? id,
+    String? buyerId,
+    String? productName,
+    String? brand,
+    String? category,
+    String? condition,
+    String? description,
+    int? quantity,
+    DateTime? bidStart,
+    DateTime? bidEnd,
+    String? deliveryDetails,
+    int? minDistance,
+    int? maxDistance,
+    String? stateOfPurchase,
+    String? lga,
+    bool? vendorsCanSeeBidFromAnyDistance,
+    BuyRequestDeliveryType? deliveryType,
+    String? deliveryAddress,
+    String? deliveryState,
+    String? deliveryLga,
+    double? maxBidAmount,
+    double? bidStartingAmount,
+    BuyRequestStatus? status,
+    bool? isDeleted,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return BuyRequestModel(
+      id: id ?? this.id,
+      buyerId: buyerId ?? this.buyerId,
+      productName: productName ?? this.productName,
+      brand: brand ?? this.brand,
+      category: category ?? this.category,
+      condition: condition ?? this.condition,
+      description: description ?? this.description,
+      quantity: quantity ?? this.quantity,
+      bidStart: bidStart ?? this.bidStart,
+      bidEnd: bidEnd ?? this.bidEnd,
+      deliveryDetails: deliveryDetails ?? this.deliveryDetails,
+      minDistance: minDistance ?? this.minDistance,
+      maxDistance: maxDistance ?? this.maxDistance,
+      stateOfPurchase: stateOfPurchase ?? this.stateOfPurchase,
+      lga: lga ?? this.lga,
+      vendorsCanSeeBidFromAnyDistance: vendorsCanSeeBidFromAnyDistance ?? this.vendorsCanSeeBidFromAnyDistance,
+      deliveryType: deliveryType ?? this.deliveryType,
+      deliveryAddress: deliveryAddress ?? this.deliveryAddress,
+      deliveryState: deliveryState ?? this.deliveryState,
+      deliveryLga: deliveryLga ?? this.deliveryLga,
+      maxBidAmount: maxBidAmount ?? this.maxBidAmount,
+      bidStartingAmount: bidStartingAmount ?? this.bidStartingAmount,
+      status: status ?? this.status,
+      isDeleted: isDeleted ?? this.isDeleted,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
 }
 
 @JsonSerializable()

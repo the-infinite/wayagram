@@ -14,10 +14,11 @@ import '../../../core/utils/waya_navigation.dart';
 class SuccessfulModal extends StatefulWidget {
   final String title;
   final String subtitle;
+  final String? buttonText;
   final bool showCopyLink;
   final VoidCallback onTap;
   const SuccessfulModal(
-      this.title, this.subtitle, this.showCopyLink, this.onTap,
+      this.title, this.subtitle, this.showCopyLink, this.buttonText, this.onTap,
       {super.key});
 
   @override
@@ -48,7 +49,7 @@ class _SuccessfulModalState extends State<SuccessfulModal> {
             SizedBox(height: 17.h),
             WayaButton(
               callback: widget.onTap,
-              text: "Manage Contest",
+              text: widget.buttonText?? "Manage Contest",
             ),
             const Gap(10),
             if (widget.showCopyLink)

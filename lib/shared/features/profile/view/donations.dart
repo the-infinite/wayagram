@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
@@ -18,9 +17,9 @@ class DonationsFeedWidget extends ConsumerStatefulWidget {
 class _DonationsFeedWidget extends ConsumerState<DonationsFeedWidget> {
   @override
   void initState() {
-    // TODO: implement initState
-    ref.read(donationVmProvider.notifier).getMyDonation();
-    WidgetsBinding.instance.addPostFrameCallback((_) {});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(donationVmProvider.notifier).getMyDonation();
+    });
     super.initState();
   }
 
@@ -33,17 +32,19 @@ class _DonationsFeedWidget extends ConsumerState<DonationsFeedWidget> {
         : state.myDonationDocs!.sublist(0, min(state.myDonationDocs!.length, 2));
     // TODO: implement build
     return Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-           ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: myDonations!.length,
-              itemBuilder: (context, index) {
-                final donation = myDonations[index];
-                return DonationWidget(donation: donation);
-              }),
-        ]);
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: myDonations!.length,
+          itemBuilder: (context, index) {
+            final donation = myDonations[index];
+            return DonationWidget(donation: donation);
+          },
+        ),
+      ],
+    );
   }
 }

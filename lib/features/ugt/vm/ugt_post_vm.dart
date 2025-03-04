@@ -20,7 +20,7 @@ class ContestForYou extends StateNotifier<List<Contest>> {
     isLoading = true;
 
     try {
-      final response = await _contestRepository.getContestForYou(_page);
+      final response = await _contestRepository.getContestForYou(1);
       List<Contest> contestList = [];
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);

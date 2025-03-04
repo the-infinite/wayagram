@@ -207,8 +207,8 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
 
                 /// Applied Contests
                 // const Gap(10),
-                if (host.isEmpty) emptyWidget(),
-                if (host.isNotEmpty)
+                if (applied.isEmpty) emptyWidget(),
+                if (applied.isNotEmpty)
                   ListView.builder(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,

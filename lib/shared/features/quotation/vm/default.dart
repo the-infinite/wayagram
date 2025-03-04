@@ -89,7 +89,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         final previous = state.requests;
         previous[index] = doc;
         state = state.copyWith(
-          requests: previous,
+          requests: [...previous],
         );
       }
 
@@ -99,6 +99,41 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
     //? Since it failed.
     return null;
+  }
+
+  /// Helper function used to cancel a single buy request.
+  Future<bool> cancelRequest(String id) async {
+    try {
+      final response = await repo.updateCancelRequest(id: id);
+
+      //? If it was fine...
+      if (response.success) {
+        final found = state.requests.indexWhere((request) => request.id == id);
+
+        //? If this is in this place.
+        if (found != -1) {
+          final current = state.requests[found];
+          final copy = state.requests;
+
+          // This is fine.
+          copy[found] = current.copyWith(
+            status: BuyRequestStatus.cancelled,
+          );
+
+          //? This is fine.
+          state = state.copyWith(
+            requests: copy,
+          );
+        }
+      }
+
+      //? Return this value if it was fine.
+      return response.success;
+    } catch (e) {
+      // TODO: Actual error handling.
+    }
+
+    return false;
   }
 
   /// Helper function used to reset the state of this quotations notifier back
