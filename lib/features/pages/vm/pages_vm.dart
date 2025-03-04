@@ -28,6 +28,7 @@ import 'package:http/http.dart' as http;
 
 import '../../../shared/features/file/repo/default.dart';
 import '../../group/data/model/group_post_model.dart';
+import '../../group/view/groups.dart';
 import '../../post/model/fetch_comment.dart';
 
 class UploadedImage {
@@ -338,6 +339,82 @@ class PageVm extends StateNotifier<PageState> {
       state = state.copyWith(isReportingPage: false);
     }
   }
+
+  Future<void> reportPost(
+      {required String postId,
+        required String reason,
+        String? comment,
+        required BuildContext context}) async {
+    try {
+      state = state.copyWith(isReportingPost: true);
+      final response = await _pageRepository.reportPost(
+          postId, reason);
+
+      if (response.success && context.mounted) {
+        WayaUtils.showNotice(
+            context: context,
+            title: "Thank you for reporting",
+            onPress: () {
+              WayaNav.replaceNamed(Pages.route);
+            },
+            icon: Image.asset(
+              WayaAssets.images.eCheckEvent.path,
+              scale: 1.5,
+            ),
+            message:
+            'Your report has been submitted. Our team will review the issue and take appropriate action.',
+            buttonText: 'Go to Page Dashboard');
+        // show success modal
+        //Navigator.of(context).pop();
+
+        print(response.data);
+      }
+    } catch (error) {
+      print(error);
+    } finally {
+      state = state.copyWith(isReportingPost: false);
+    }
+  }
+
+  
+  Future<void> reportGroupPost(
+      {required String groupId,
+        required String reason,
+        String? comment,
+        required BuildContext context}) async {
+    try {
+      state = state.copyWith(isReportingPost: true);
+      final response = await _pageRepository.reportPost(
+          groupId, reason);
+
+      if (response.success && context.mounted) {
+        // show success modal
+        Navigator.of(context).pop();
+
+        if (context.mounted) {
+          await WayaUtils.showNotice(
+              context: context,
+              title: "Thank you for reporting",
+              onPress: () {
+                WayaNav.replaceNamed(Groups.route);
+              },
+              icon: Image.asset(
+                WayaAssets.images.eCheckEvent.path,
+                scale: 1.5,
+              ),
+              message:
+              'Your report has been submitted. Our team will review the issue and take appropriate action.',
+              buttonText: 'Go to Group Dashboard');
+        }
+        print(response.data);
+      }
+    } catch (error) {
+      print(error);
+    } finally {
+      state = state.copyWith(isReportingPost: false);
+    }
+  }
+
 
   Future<void> createPage(ctx, pageName, pageDesc, pageType, String coverImage, String profileImage) async {
     final coverImageUrl = await WayaFileRepository.instance.uploadFile(
