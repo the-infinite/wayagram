@@ -12,6 +12,9 @@ import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.da
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_state.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_contest_aplicant_model.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/ugt/data/model/voter_contest_state.dart';
 
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
@@ -49,10 +52,55 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
+  Future<bool> verifyAndPayForPaidContest(ValueNotifier<bool> isLoading,
+      String pin, Map<String, String> map) async {
+    isLoading.value = true;
+    final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(
+        userId: _localDataSource.getUserId().toString(), pin: pin));
+
+    print(map);
+    if (response.success) {
+     // map[] =  _localDataSource.getUserId().toString();
+      return await payForPaidContest(isLoading, map);
+    } else {
+      isLoading.value = false;
+      return false;
+    }
+  }
+
   Future<bool> voteContestant(ValueNotifier<bool> isLoading, Map<String, String> map) async {
     final response = await _contestRepository.voteContestant(map);
     isLoading.value = false;
     if (response.success) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> payForPaidContest(
+      ValueNotifier<bool> isLoading, Map<String, String> map) async {
+    final response = await _contestRepository.payForPaidContest(map);
+    isLoading.value = false;
+    if (response.success) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> acceptRejectContestant(
+      ValueNotifier<bool> isLoading,
+      String contestApplicationId,
+      String contestId,
+      Map<String, String> map) async {
+    isLoading.value = true;
+    final response = await _contestRepository.acceptRejectContestants(
+        contestApplicationId, map);
+
+    isLoading.value = false;
+    if (response.success) {
+      fetchAllContestApplicant(contestId);
       return true;
     } else {
       return false;
@@ -94,6 +142,38 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     } finally {
       // isLoading = false;
     }
+  }
+
+  Future<void> fetchAllContestPosts(String id) async {
+    try {
+      final response = await _contestRepository.fetchAllContestGallery(id);
+      List<UgtAllPostContestModel> contestList = [];
+      if (response.success) {
+        UgtAllPostContestModelBase responseModel =
+            UgtAllPostContestModelBase.fromJson(response.data);
+        contestList = responseModel.data?.docs ?? [];
+
+        state = state.copyWith(myPostList: contestList);
+      }
+    } catch (e) {
+      //print(e);
+    } finally {}
+  }
+
+  Future<void> fetchAllContestApplicant(String id) async {
+    try {
+      final response = await _contestRepository.fetchAllContestApplicant(id);
+      List<ApplicantContestModel> contestList = [];
+      if (response.success) {
+        ApplicantContestModelBase responseModel =
+            ApplicantContestModelBase.fromJson(response.data);
+        contestList = responseModel.data ?? [];
+
+        state = state.copyWith(myContestApplicantList: contestList);
+      }
+    } catch (e) {
+      //print(e);
+    } finally {}
   }
 
   void searchList(String value) {
@@ -235,6 +315,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
  */
 final selectedContestantProfile = StateProvider<MyContestContestantModel?>((ref) => null);
+
+final selectedApplicantProfile =
+    StateProvider<ApplicantContestModel?>((ref) => null);
 
 final authRepositoryProvider = Provider((ref) => ContestRepo());
 

@@ -189,28 +189,14 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                       context,
                       child: AvailableBalanceModal(
                         voteCount: "0",
+                        model:widget.post,
                         voteFee:
                             widget.post?.contest?.amount?.toString() ?? "0",
                         // model: widget.model,
                         votingLink: "",
                         onTap: () {
-                          WayaUtils.showModalSheetUgt(
-                            context,
-                            child: SuccessfulModal(
-                              "Contest Payment Made Successfully",
-                              "Congrats you are now a contestant in this contest, just proceed by creating your contest profile",
-                              true,
-                              null,
-                              () {
-                                ref
-                                    .read(
-                                        selectedAppliedContestProvider.notifier)
-                                    .state = widget.post;
-                                Navigator.pop(context);
-                                WayaNav.toNamed("/create-profile-contest1");
-                              },
-                            ),
-                          );
+                          print("i am on the verge");
+                         
                         },
                         candidateName: "",
                       ),

@@ -16,17 +16,22 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/group/view/report_group.dart';
+import 'package:wayagram/features/group/view/report_group_post.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/data/model/feeds.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:wayagram/features/post/view/report_post.dart';
 import 'package:wayagram/features/post/vm/comment.dart';
 
 import '../../../assetsgen/assets.gen.dart';
 import '../../explore/widgets/grouped_widget_header.dart';
 import '../../pages/component/extras.dart';
+import '../../pages/state/page_state.dart';
 import '../../post/view/create_post.dart';
 import '../../shop/widgets/empty_state.dart';
+import '../state/group_state.dart';
 
 
 class GroupsForYou extends ConsumerStatefulWidget {
@@ -60,8 +65,8 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider.notifier);
-    final viewModel2 = ref.watch(createPageProvider);
-    //final viewModel2 = ref.watch(createGroupProvider);
+    //final viewModel2 = ref.watch(createPageProvider);
+    final viewModel2 = ref.watch(createGroupProvider);
     final recommended = ref.watch(createGroupProvider);
     final group = ref.watch(createGroupProvider.notifier);
     final viewGroup = ref.watch(createGroupProvider);
@@ -172,14 +177,18 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                                     value: 0,
                                     child: _buildActionNav(
                                         context: context,
-                                        onTap: () {
-                                          viewModel.repost(context,
-                                              postId: '${post.id}');
+                                        onTap: () async{
+                                          //viewModel.repost(context,postId: '${post.id}');
+                                          await WayaUtils.showModalSheet(context,
+                                              child: ReportGroupPost(
+                                                  statuses: pageReport,
+                                                  currentStatus: "",
+                                                  postId: '${post.id}'));
                                           Navigator.pop(context);
                                         },
                                         asset: SvgPicture.asset(
                                             'assets/images/pages/flag.svg'),
-                                        text: "Repost",
+                                        text: "Report",
                                         color:
                                         wayaTheme.colorScheme.customBlack),
                                   ),
@@ -372,7 +381,6 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
         SizedBox(
           height: 190,
           child: ListView.builder(
-              //physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               scrollDirection: Axis.horizontal,
               itemCount: recommended.recommendedGroupDocs?.length,
@@ -384,8 +392,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                   height: 180.h,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                        color: Theme.of(context).colorScheme.greyColor200),
+                    border: Border.all(color: Theme.of(context).colorScheme.greyColor200),
                   ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -417,21 +424,40 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                             Theme.of(context).colorScheme.greyColor500),
                       ),
                       const Gap(3),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: WayaButton(
-                          callback: () async{
+                      SizedBox(
+                        width: 80.w,
+                        child:WayaButton(
+                          callback: !viewModel2.isLoading
+                              ?()async{
                             await group.joinGroup(context, '${recommendedGroup?.id}');
-                          },
+                          }: null,
                           text: 'Join Group',
+                          textStyle: TextStyle().wayaCopyWith(
+                            color: wayaTheme.colorScheme.primary,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 12,
+                          ),
                           isLoading: viewModel2.isLoading,
-                          height: 30,
-                          textStyle: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).colorScheme.white ),
+                          height: 28.h,
+                          color:wayaTheme.colorScheme.primary,
+                          textColor: wayaTheme.colorScheme.white,
                         ),
-                      )
+                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(horizontal: 20),
+                      //   child: WayaButton(
+                      //     callback: !viewModel2.isLoading ? () async{
+                      //       await group.joinGroup(context, '${recommendedGroup?.id}');
+                      //     }: null,
+                      //     text: 'Join Group',
+                      //     isLoading: viewModel2.isLoading,
+                      //     height: 30,
+                      //     textStyle: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                      //         fontSize: 12,
+                      //         fontWeight: FontWeight.w600,
+                      //         color: Theme.of(context).colorScheme.white ),
+                      //   ),
+                      // )
                     ],
                   ),
                 );
@@ -482,7 +508,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                             GestureDetector(
                               onTap: () {
                                 if (post is Post) {
-                                  //showProfilePage(post.author.id);
+
                                 }
                               },
                               child: Row(
@@ -540,14 +566,18 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                                     value: 0,
                                     child: _buildActionNav(
                                         context: context,
-                                        onTap: () {
-                                          viewModel.repost(context,
-                                              postId: '${post.id}');
+                                        onTap: () async{
+                                          //viewModel.repost(context, postId: '${post.id}');
+                                          await WayaUtils.showModalSheet(context,
+                                              child: ReportGroupPost(
+                                                  statuses: pageReport,
+                                                  currentStatus: "",
+                                                  postId: '${post.id}'));
                                           Navigator.pop(context);
                                         },
                                         asset: SvgPicture.asset(
                                             'assets/images/pages/flag.svg'),
-                                        text: "Repost",
+                                        text: "Report",
                                         color:
                                         wayaTheme.colorScheme.customBlack),
                                   ),

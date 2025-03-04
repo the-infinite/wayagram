@@ -119,7 +119,7 @@ class GroupRepository extends BaseRepository {
   Future<WayaRequestResponse> joinRequest(groupId) {
     return get("$serviceUrl/groups/join-requests/$groupId?rstatus=pending");
   }
-  // groups i joinrd
+
   Future<WayaRequestResponse> getJoinedGroup() {
     return get("$serviceUrl/groups/joined-groups");
   }

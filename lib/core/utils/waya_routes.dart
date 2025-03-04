@@ -34,6 +34,7 @@ import 'package:wayagram/features/group/view/private_group.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
 import 'package:wayagram/features/group/view/view_full_media.dart';
+import 'package:wayagram/features/kyc/view/kyc_update.dart';
 import 'package:wayagram/features/logs_and_audit/view/cms_clicks.dart';
 import 'package:wayagram/features/logs_and_audit/view/login_activity.dart';
 import 'package:wayagram/features/logs_and_audit/view/logs_and_audit.dart';
@@ -252,7 +253,6 @@ class WayaAppRoutes {
     EditGroupInfo.route: () => EditGroupInfo(),
     AddGroupMember.route: () => AddGroupMember(),
     SearchView.route: () => SearchView(),
-    //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
     DonationDetails.route: () => DonationDetails(),
@@ -272,6 +272,7 @@ class WayaAppRoutes {
     UserInteraction.route: () => UserInteraction(),
     PaymentActivity.route: () => PaymentActivity(),
     SearchLog.route: () => SearchLog(),
+    KycUpdate.route: ()=> KycUpdate(),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and

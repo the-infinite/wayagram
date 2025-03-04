@@ -83,11 +83,11 @@ class _ContestSignupRequirementState
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Switch(
+            /*   Switch(
                 value: isSwitched,
                 onChanged: (value) {},
                 activeColor: Colors.white,
-                activeTrackColor: wayaTheme.colorScheme.customPrimary),
+                activeTrackColor: wayaTheme.colorScheme.customPrimary), */
             const SizedBox(width: 10),
             Text(
               "Mark as Required",
@@ -98,7 +98,7 @@ class _ContestSignupRequirementState
             ),
           ],
         ),
-        const Gap(15),
+        Gap(20),
         _mygrayInput("Email Address"),
 
         /*   WayaTextFormField(
@@ -110,11 +110,11 @@ class _ContestSignupRequirementState
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Switch(
+            /*  Switch(
                 value: isSwitched,
                 onChanged: (value) {},
                 activeColor: Colors.white,
-                activeTrackColor: wayaTheme.colorScheme.customPrimary),
+                activeTrackColor: wayaTheme.colorScheme.customPrimary), */
             const SizedBox(width: 10),
             Text(
               "Mark as Required",
@@ -125,7 +125,7 @@ class _ContestSignupRequirementState
             ),
           ],
         ),
-        const Gap(15),
+        Gap(20),
         _mygrayInput("Phone number"),
 
         /*  WayaTextFormField(
@@ -137,11 +137,11 @@ class _ContestSignupRequirementState
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Switch(
+            /*   Switch(
                 value: isSwitched,
                 onChanged: (value) {},
                 activeColor: Colors.white,
-                activeTrackColor: wayaTheme.colorScheme.customPrimary),
+                activeTrackColor: wayaTheme.colorScheme.customPrimary), */
             const SizedBox(width: 10),
             Text(
               "Mark as Required",
@@ -152,7 +152,7 @@ class _ContestSignupRequirementState
             ),
           ],
         ),
-        const Gap(15),
+        Gap(20),
         _mygrayInput("Address"),
         /*   WayaTextFormField(
           controller: TextEditingController(),
@@ -163,12 +163,12 @@ class _ContestSignupRequirementState
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Switch(
+            /*  Switch(
                 value: isSwitched,
                 onChanged: (value) {},
                 activeColor: Colors.white,
-                activeTrackColor: wayaTheme.colorScheme.customPrimary),
-            const SizedBox(width: 10),
+                activeTrackColor: wayaTheme.colorScheme.customPrimary), */
+            Gap(20),
             Text(
               "Mark as Required",
               style: TextStyle(
