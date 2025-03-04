@@ -446,206 +446,210 @@ class _MediaPostState extends ConsumerState<MediaPost>
                   children: [
 
                     // Post header with author details
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 25.h, 15.w, 15.w),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  if (post is Post) {
-                                    //showProfilePage(post.author.id);
-                                  }
-                                },
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    WayaDp(
-                                      image: post?.user?.profilePicture,
-                                      radius: 20,
-                                    ),
-                                    SizedBox(width: 10.w),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              '${post?.user?.firstName} ${post?.user?.lastName}',
-                                              style: TextStyle(
-                                                fontFamily:
-                                                WayaConstants.fontFamily,
-                                                fontSize: 16.sp,
-                                                fontWeight: FontWeight.bold,
-                                              ),
-                                            ),
-                                            const Gap(5),
-                                            Text(
-                                              '• ${formatTimeAgo('${post?.createdAt}')}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium!
-                                                  .wayaCopyWith(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .greyColor500),
-                                            ),
-                                          ],
-                                        ),
-                                        SizedBox(
-                                          height: 5.h,
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Spacer(),
-                              PopupMenuButton(
-                                onSelected: (value) {},
-                                position: PopupMenuPosition.under,
-                                itemBuilder: (context) {
-                                  return [
+                    InkWell(
+                      onTap: (){
 
-                                    PopupMenuItem<int>(
-                                      value: 0,
-                                      child: _buildActionNav(
-                                          context: context,
-                                          onTap: () {
-                                            viewModel.repost(context,
-                                                postId: '${post?.id}');
-                                            Navigator.pop(context);
-                                          },
-                                          asset: SvgPicture.asset(
-                                              'assets/images/pages/flag.svg'),
-                                          text: "Repost",
-                                          color:
-                                          wayaTheme.colorScheme.customBlack),
-                                    ),
-                                    PopupMenuItem<int>(
-                                      value: 1,
-                                      child: _buildActionNav(
-                                          context: context,
-                                          onTap: () {
-                                            viewModel.deletePost(context,
-                                                postId: '${post?.id}', userId: '${ConversationState.self.id}');
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(
-                                              const SnackBar(
-                                                content: Text(
-                                                    'Post deleted successfully!'),
-                                                backgroundColor:
-                                                WayaColors.primary,
-                                                duration: Duration(seconds: 2),
-                                              ),
-                                            );
-                                            Navigator.pop(context);
-                                            WayaNav.toNamed('/pages');
-                                          },
-                                          asset: SvgPicture.asset(
-                                            'assets/images/pages/delete.svg',
-                                            color: wayaTheme.colorScheme.error500,
-                                            height: 20,
-                                          ),
-                                          text: "Delete Post",
-                                          color: wayaTheme.colorScheme.error500),
-                                    )
-                                  ];
-                                },
-                                child: Image.asset(
-                                  'assets/images/polls/menu.png',
-                                  height: 32.h,
-                                ),
-                              ),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 15.h,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              //viewFull!();
-                            },
-                            child: ReadMoreText(
-                              removeHashtags('${post?.content?.capitalizeFirst}'),
-                              style: TextStyle(
-                                fontFamily: WayaConstants.fontFamily,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14.sp,
-                              ),
-                              trimLines: 2,
-                              annotations: [
-                                Annotation(
-                                  regExp: RegExp(
-                                      r'((https?:\/\/)?([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(\/[^\s]*)?)'),
-                                  spanBuilder: (
-                                      {required String text,
-                                        TextStyle? textStyle}) =>
-                                      TextSpan(
-                                        text: text,
-                                        style: TextStyle(
-                                            fontSize: 15.sp,
-                                            color: Colors.blue,
-                                            decoration: TextDecoration.underline,
-                                            decorationColor: Colors.blue),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () async {
-                                            final String fullUrl =
-                                            text.startsWith('http')
-                                                ? text
-                                                : 'https://$text';
-                                            _launchUrl(fullUrl);
-                                          },
-                                      ),
-                                ),
-                              ],
-                              colorClickableText: Colors.blue,
-                              trimMode: TrimMode.Line,
-                              trimCollapsedText: "read more",
-                              trimExpandedText: "show less",
-                              moreStyle: const TextStyle(color: Colors.blue),
-                              lessStyle:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                color: WayaColors.primary,
-                                fontFamily: WayaConstants.fontFamily,
-                                fontWeight: FontWeight.w400,
-                                fontSize: 14.sp,
-                              ),
-                            ),
-                          ),
-                          // PostContent(content: post.content),
-                          SizedBox(
-                            height: 5.h,
-                          ),
-                          if (post?.hashtags != null)
-                            ...?post?.hashtags!.map((e) => Row(
+                     //   WayaNav.toNamed('/viewFullMedia', arguments: '${post?.id}');
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.fromLTRB(0, 25.h, 15.w, 15.w),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  '$e',
-                                  style: TextStyle(
-                                    color: WayaColors.primary,
-                                    fontFamily: WayaConstants.fontFamily,
-                                    fontWeight: FontWeight.w400,
-                                    fontSize: 14.sp,
+                                GestureDetector(
+                                  onTap: () {
+
+                                  },
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      WayaDp(
+                                        image: post?.user?.profilePicture,
+                                        radius: 20,
+                                      ),
+                                      SizedBox(width: 10.w),
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                '${post?.user?.firstName} ${post?.user?.lastName}',
+                                                style: TextStyle(
+                                                  fontFamily:
+                                                  WayaConstants.fontFamily,
+                                                  fontSize: 16.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              const Gap(5),
+                                              Text(
+                                                '• ${formatTimeAgo('${post?.createdAt}')}',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .bodyMedium!
+                                                    .wayaCopyWith(
+                                                    fontSize: 14,
+                                                    fontWeight: FontWeight.w400,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .greyColor500),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(
+                                            height: 5.h,
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const Spacer(),
+                                PopupMenuButton(
+                                  onSelected: (value) {},
+                                  position: PopupMenuPosition.under,
+                                  itemBuilder: (context) {
+                                    return [
+
+                                      PopupMenuItem<int>(
+                                        value: 0,
+                                        child: _buildActionNav(
+                                            context: context,
+                                            onTap: () {
+                                              viewModel.repost(context,
+                                                  postId: '${post?.id}');
+                                              Navigator.pop(context);
+                                            },
+                                            asset: SvgPicture.asset(
+                                                'assets/images/pages/flag.svg'),
+                                            text: "Repost",
+                                            color:
+                                            wayaTheme.colorScheme.customBlack),
+                                      ),
+                                      PopupMenuItem<int>(
+                                        value: 1,
+                                        child: _buildActionNav(
+                                            context: context,
+                                            onTap: () {
+                                              viewModel.deletePost(context,
+                                                  postId: '${post?.id}', userId: '${ConversationState.self.id}');
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                      'Post deleted successfully!'),
+                                                  backgroundColor:
+                                                  WayaColors.primary,
+                                                  duration: Duration(seconds: 2),
+                                                ),
+                                              );
+                                              Navigator.pop(context);
+                                              WayaNav.toNamed('/pages');
+                                            },
+                                            asset: SvgPicture.asset(
+                                              'assets/images/pages/delete.svg',
+                                              color: wayaTheme.colorScheme.error500,
+                                              height: 20,
+                                            ),
+                                            text: "Delete Post",
+                                            color: wayaTheme.colorScheme.error500),
+                                      )
+                                    ];
+                                  },
+                                  child: Image.asset(
+                                    'assets/images/polls/menu.png',
+                                    height: 32.h,
                                   ),
                                 ),
                               ],
-                            )),
-                          /* if(post.media != null)
-                          ...post.media!.map((e)=>
-                              Row(
-                                children: [
-                                 Image.network('$e', fit: BoxFit.fitWidth,)
+                            ),
+                            SizedBox(
+                              height: 15.h,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                //viewFull!();
+                              },
+                              child: ReadMoreText(
+                                removeHashtags('${post?.content?.capitalizeFirst}'),
+                                style: TextStyle(
+                                  fontFamily: WayaConstants.fontFamily,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14.sp,
+                                ),
+                                trimLines: 2,
+                                annotations: [
+                                  Annotation(
+                                    regExp: RegExp(
+                                        r'((https?:\/\/)?([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(\/[^\s]*)?)'),
+                                    spanBuilder: (
+                                        {required String text,
+                                          TextStyle? textStyle}) =>
+                                        TextSpan(
+                                          text: text,
+                                          style: TextStyle(
+                                              fontSize: 15.sp,
+                                              color: Colors.blue,
+                                              decoration: TextDecoration.underline,
+                                              decorationColor: Colors.blue),
+                                          recognizer: TapGestureRecognizer()
+                                            ..onTap = () async {
+                                              final String fullUrl =
+                                              text.startsWith('http')
+                                                  ? text
+                                                  : 'https://$text';
+                                              _launchUrl(fullUrl);
+                                            },
+                                        ),
+                                  ),
                                 ],
-                              )),*/
+                                colorClickableText: Colors.blue,
+                                trimMode: TrimMode.Line,
+                                trimCollapsedText: "read more",
+                                trimExpandedText: "show less",
+                                moreStyle: const TextStyle(color: Colors.blue),
+                                lessStyle:
+                                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                  color: WayaColors.primary,
+                                  fontFamily: WayaConstants.fontFamily,
+                                  fontWeight: FontWeight.w400,
+                                  fontSize: 14.sp,
+                                ),
+                              ),
+                            ),
+                            // PostContent(content: post.content),
+                            SizedBox(
+                              height: 5.h,
+                            ),
+                            if (post?.hashtags != null)
+                              ...?post?.hashtags!.map((e) => Row(
+                                children: [
+                                  Text(
+                                    '$e',
+                                    style: TextStyle(
+                                      color: WayaColors.primary,
+                                      fontFamily: WayaConstants.fontFamily,
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                                ],
+                              )),
+                            /* if(post.media != null)
+                            ...post.media!.map((e)=>
+                                Row(
+                                  children: [
+                                   Image.network('$e', fit: BoxFit.fitWidth,)
+                                  ],
+                                )),*/
 
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     post?.media == null || post!.media!.contains("cat.jpg")? Container():

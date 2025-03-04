@@ -34,6 +34,7 @@ class PageState {
   final bool isFocused;
   final bool isLoading;
   final bool isReportingPage;
+  final bool isReportingPost;
 
   PageState({
     TextEditingController? pageName,
@@ -42,6 +43,7 @@ class PageState {
     this.isFocused = false,
     this.isLoading = false,
     this.isReportingPage = false,
+    this.isReportingPost = false,
     this.postCount,
     this.images = const [],
     this.fetchAllPostData = const [],
@@ -81,6 +83,7 @@ class PageState {
     bool? isFocused,
     bool? isLoading,
     bool? isReportingPage,
+    bool? isReportingPost,
   }) {
     return PageState(
       pageName: pageName ?? this.pageName,
@@ -102,7 +105,8 @@ class PageState {
       getPageMemberDocs: getPageMemberDocs ?? this.getPageMemberDocs,
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
-      isReportingPage: isReportingPage ?? this.isReportingPage
+      isReportingPage: isReportingPage ?? this.isReportingPage,
+      isReportingPost: isReportingPost ?? this.isReportingPost
     );
   }
 }
