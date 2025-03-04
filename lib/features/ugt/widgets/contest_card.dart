@@ -70,13 +70,21 @@ class ContestCard extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(
                                 45), // Adjust the radius as needed
                             child: post.uploadCoverImages != null
-                                ? Image.network(
+                                ? WayaImage(
+                                    imageUrl: post.uploadCoverImages!,
+                                    height: 45,
+                                    width: 45,
+                                    fit: BoxFit.cover,
+                                    radius: BorderRadius.circular(45),
+                                  )
+
+                                /*  Image.network(
                                     post.uploadCoverImages!,
                                     height: 45,
                                     width: 45,
                                     fit: BoxFit
                                         .cover, // Ensures the image covers the area properly
-                                  )
+                                  ) */
                                 : Image.asset(
                                     'assets/images/frameuni.png',
                                     height: 45,
@@ -154,15 +162,23 @@ class ContestCard extends ConsumerWidget {
               const Gap(20),
               ClipRRect(
                 borderRadius:
-                    BorderRadius.circular(16), // Adjust the radius as needed
+                    BorderRadius.circular(10), // Adjust the radius as needed
                 child: post.uploadCoverImages != null
-                    ? Image.network(
+                    ? WayaImage(
+                        imageUrl: post.uploadCoverImages ?? "",
+                        height: 200,
+                        width: context.width,
+                        fit: BoxFit.cover,
+                        radius: BorderRadius.circular(10),
+                      )
+
+                    /*   Image.network(
                         post.uploadCoverImages!,
                         width: context.width,
                         height: 200,
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
-                      )
+                      ) */
                     : Image.asset(
                         'assets/images/frameuni.png',
                         height: 200,
@@ -201,13 +217,12 @@ class ContestCard extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (post.status?.toLowerCase() == "pending" ||
-                      post.status?.toLowerCase() == "closed")
+                  if (post.status?.toLowerCase() != "active")
                     StatusWidget(
                       title: "Application",
                       content: post.status ?? "Pending",
                     ),
-                  if (post.status?.toLowerCase() == "ongoing")
+                  if (post.status?.toLowerCase() == "active")
                     StatusOngoing(
                       title: "Application",
                       content: post.status ?? "Pending",
@@ -227,11 +242,14 @@ class ContestCard extends ConsumerWidget {
               const Gap(20),
               WayaButton(
                 callback: () {
-                  ref.read(registerFormProvider.notifier).addDefault(
+                  ref.read(selectedContestProvider.notifier).state = post;
+                  WayaNav.toNamed('/upcoming-manage-contest-details');
+
+                  /*   ref.read(registerFormProvider.notifier).addDefault(
                       post.contestSettings?.formRequirements ?? [], post);
                   //  WayaNav.toNamed("/register-contest1");
                   ref.read(selectedContestProvider.notifier).state = post;
-                  WayaNav.toNamed("/upcoming-contest-details");
+                  WayaNav.toNamed("/upcoming-contest-details"); */
 
                   /*    if (isDateInFuture(post.startDate ?? "")) {
                     ref.read(registerFormProvider.notifier).addDefault(

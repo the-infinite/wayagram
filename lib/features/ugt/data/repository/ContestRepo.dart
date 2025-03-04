@@ -33,25 +33,24 @@ class ContestRepo extends BaseRepository {
         '$serviceUrl2/contests/hostedContests-by-profile?profileId=$userId&page=$page');
   }
 
-    Future<WayaRequestResponse> fetchAppliedContest(String userId) {
-    return get(
-        '$serviceUrl2/application/$userId/appliedContest');
+  Future<WayaRequestResponse> fetchAppliedContest(String userId) {
+    return get('$serviceUrl2/application/$userId/appliedContest');
   }
 
-   Future<WayaRequestResponse> fetchFollowedVoteContest(String userId) {
-    return get(
-        '$serviceUrl2/contests/contest-follow-vote/$userId');
+  Future<WayaRequestResponse> fetchFollowedVoteContest(String userId) {
+    return get('$serviceUrl2/contests/contest-follow-vote/$userId');
   }
-     Future<WayaRequestResponse> getContestantProfileVoteDetails(String userId) {
-    return get(
-        '$serviceUrl2/profile/votes/$userId');
+
+  Future<WayaRequestResponse> getContestantProfileVoteDetails(String userId) {
+    return get('$serviceUrl2/profile/votes/$userId');
   }
 
   Future<WayaRequestResponse> likeContest(payLoad) {
     return post('$serviceUrl2/contestInteraction/like', payLoad,
         formdata: false);
   }
-    Future<WayaRequestResponse> followContest(payLoad) {
+
+  Future<WayaRequestResponse> followContest(payLoad) {
     return post('$serviceUrl2/contestInteraction/follow', payLoad,
         formdata: false);
   }
@@ -61,28 +60,41 @@ class ContestRepo extends BaseRepository {
         formdata: false);
   }
 
-  
   Future<WayaRequestResponse> createProfile(payLoad) {
-    return post('$serviceUrl2/profile/create', payLoad,
+    return post('$serviceUrl2/profile/create', payLoad, formdata: false);
+  }
+
+  Future<WayaRequestResponse> createContestPost(payLoad) {
+    return post('$serviceUrl2/gallery/upload', payLoad, formdata: false);
+  }
+
+  Future<WayaRequestResponse> voteContestant(payLoad) {
+    return post('$serviceUrl2/vote', payLoad, formdata: false);
+  }
+
+  Future<WayaRequestResponse> fetchSingleContestantGallery(
+      String contestantProfileId) {
+    return get('$serviceUrl2/gallery/$contestantProfileId/gallery');
+  }
+
+  Future<WayaRequestResponse> fetchAllContestGallery(String contestId) {
+    return get('$serviceUrl2/gallery/$contestId');
+  }
+
+  Future<WayaRequestResponse> fetchAllContestApplicant(String contestId) {
+    return get('$serviceUrl2/application/applicants/$contestId');
+  }
+
+  Future<WayaRequestResponse> acceptRejectContestants(
+      String contestId, Map<String, dynamic> payLoad) {
+    return patch('$serviceUrl2/application/$contestId/status', payLoad,
         formdata: false);
   }
 
-    Future<WayaRequestResponse> createContestPost(payLoad) {
-    return post('$serviceUrl2/gallery/upload', payLoad,
-        formdata: false);
+  
+  Future<WayaRequestResponse> payForPaidContest(payLoad) {
+    return post('$serviceUrl2/profile/pay-for-contest', payLoad, formdata: false);
   }
-
-   Future<WayaRequestResponse> voteContestant(payLoad) {
-    return post('$serviceUrl2/vote', payLoad,
-        formdata: false);
-  }
-
-
-    Future<WayaRequestResponse> fetchSingleContestantGallery(String contestantProfileId) {
-    return get(
-        '$serviceUrl2/gallery/$contestantProfileId/gallery');
-  }
-
 
   /*Future<WayaRequestResponse> createContestController({
     required final String contestStatus,

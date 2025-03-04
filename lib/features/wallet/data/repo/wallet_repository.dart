@@ -9,7 +9,8 @@ class WalletRepository extends BaseRepository {
         '$serviceUrl/api/v2/client/wallet-pin/create', payload.toJson());
   }
 
-  Future<WayaRequestResponse> confirmWalletPin(ConfirmWalletPin payload) {
+  Future<WayaRequestResponse> confirmWalletPin( payload) {
+    print("wert ${payload.toJson()}");
     return post('wayagram-wallet/api/v2/client/wallet-pin/confirm-pin',
         payload.toJson());
   }
