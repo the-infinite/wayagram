@@ -252,7 +252,6 @@ class WayaAppRoutes {
     EditGroupInfo.route: () => EditGroupInfo(),
     AddGroupMember.route: () => AddGroupMember(),
     SearchView.route: () => SearchView(),
-    //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
     DonationDetails.route: () => DonationDetails(),
