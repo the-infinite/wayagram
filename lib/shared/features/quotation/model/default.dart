@@ -152,7 +152,34 @@ class BuyRequestModel {
 
 @JsonSerializable()
 class QuotationBidModel {
-  QuotationBidModel();
+  final String id;
+  final bool isFinal;
+  final String status;
+  final String lastCounterSentBy;
+  final bool isDeleted;
+  final String requestId;
+  final String vendorId;
+  final String bidAmount;
+  final String shopId;
+  final DateTime updatedAt;
+  final DateTime createdAt;
+  final double? counterAmount;
+
+  QuotationBidModel({
+    required this.id,
+    required this.isFinal,
+    required this.status,
+    required this.lastCounterSentBy,
+    required this.isDeleted,
+    required this.requestId,
+    required this.vendorId,
+    required this.bidAmount,
+    required this.shopId,
+    required this.updatedAt,
+    required this.createdAt,
+    this.counterAmount,
+  });
+
   factory QuotationBidModel.fromJson(Map<String, dynamic> json) => _$QuotationBidModelFromJson(json);
   Map<String, dynamic> toJson() => _$QuotationBidModelToJson(this);
 }

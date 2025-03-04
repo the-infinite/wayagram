@@ -52,6 +52,7 @@ class UserDetailsModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final UserRole? role;
+  final String? accountType;
 
   UserDetailsModel({
     required this.id,
@@ -84,6 +85,7 @@ class UserDetailsModel {
     required this.createdAt,
     required this.updatedAt,
     required this.role,
+    required this.accountType,
     required this.lga,
     required this.postalCode,
   });
