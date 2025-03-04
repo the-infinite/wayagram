@@ -1,36 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/get_utils.dart';
-import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details.dart';
 
 class SingleSeeBidWidget extends ConsumerWidget {
   final bool isSeller;
-  Color color;
-  SingleSeeBidWidget({super.key, this.isSeller = false, required this.color});
+  final Color color;
+
+  // Construct.
+  const SingleSeeBidWidget({
+    super.key,
+    required this.color,
+    this.isSeller = false,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     return GestureDetector(
-        onTap: () {
-          // if (isSeller) {
-          //   WayaNav.toNamed('/seller-bid-details', arguments: "id");
-          //   //viewModel.sellerBidAction(context);
-          // } else {
-          //   WayaNav.toNamed('/seller-bid-details', arguments: "id");
-          // }
-        },
+        onTap: () {},
         child: Column(
           children: [
             Container(
@@ -45,11 +38,15 @@ class SingleSeeBidWidget extends ConsumerWidget {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset(
-                        'assets/images/bid/store.png',
+                      //? The store image.
+                      WayaAssets.images.bid.store.image(
                         height: 48,
                       ),
+
+                      // Some space.
                       const Gap(10),
+
+                      //? The
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,20 +54,25 @@ class SingleSeeBidWidget extends ConsumerWidget {
                             Row(
                               children: [
                                 Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(4, 1, 4, 1),
+                                  padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
                                   decoration: BoxDecoration(
                                     color: wayaTheme.colorScheme.success,
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                   child: Row(
                                     children: [
-                                      Image.asset('assets/images/bid/down.png',
-                                          height: 10),
+                                      // Down.
+                                      WayaAssets.images.bid.down.image(
+                                        height: 10,
+                                      ),
+
+                                      // Some space.
                                       const Gap(5),
+
+                                      // Text
                                       Text(
                                         "Open Bid",
-                                        style: TextStyle().wayaCopyWith(
+                                        style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                           color: wayaTheme.colorScheme.white,
                                           fontWeight: FontWeight.w500,
                                           fontSize: 11,
@@ -79,23 +81,30 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                     ],
                                   ),
                                 ),
+
+                                // Boundless space.
                                 const Spacer(),
+
+                                //? Then we
                                 Container(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(4, 1, 4, 1),
+                                  padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
                                   decoration: BoxDecoration(
                                     color: wayaTheme.colorScheme.primar50,
                                     borderRadius: BorderRadius.circular(6),
                                   ),
                                   child: Row(
                                     children: [
-                                      Image.asset('assets/images/bid/clock.png',
-                                          height: 16),
+                                      //? Clock icon.
+                                      WayaAssets.images.bid.clock.image(
+                                        height: 16,
+                                      ),
+
+                                      //? Our text that shows the time left until
+                                      //? a bid is valid.
                                       Text(
                                         "12m:00s",
-                                        style: TextStyle().wayaCopyWith(
-                                          color:
-                                              wayaTheme.colorScheme.primary600,
+                                        style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                          color: wayaTheme.colorScheme.primary600,
                                           fontWeight: FontWeight.w500,
                                           fontSize: 11,
                                         ),
@@ -105,10 +114,12 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                 ),
                               ],
                             ),
+
+                            //? This is good.
                             const Gap(8),
                             Text(
                               "Samsung S24 Ultra",
-                              style: TextStyle().wayaCopyWith(
+                              style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                 color: wayaTheme.colorScheme.customBlack,
                                 fontSize: 14,
                               ),
@@ -119,7 +130,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                 children: [
                                   TextSpan(
                                     text: 'Rufai Maleek ',
-                                    style: TextStyle().wayaCopyWith(
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                       color: wayaTheme.colorScheme.black,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w400,
@@ -127,7 +138,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                   ),
                                   TextSpan(
                                     text: 'Fairly Used ',
-                                    style: TextStyle().wayaCopyWith(
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                       color: WayaColors.greyColor400,
                                       fontSize: 10,
                                       fontWeight: FontWeight.w400,
@@ -139,7 +150,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                   // ),
                                   TextSpan(
                                     text: '2Km Away',
-                                    style: TextStyle().wayaCopyWith(
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                       color: WayaColors.greyColor400,
                                       fontSize: 10,
                                       fontWeight: FontWeight.w400,
@@ -159,32 +170,31 @@ class SingleSeeBidWidget extends ConsumerWidget {
                     color: WayaColors.greyColor100,
                   ),
                   const Gap(10),
+
+                  //? This 
                   Row(
                     children: [
                       Text(
                         "₦ 19,000.00",
-                        style: TextStyle().wayaCopyWith(
+                        style: wayaTheme.textTheme.bodyMedium?.copyWith(
                           color: wayaTheme.colorScheme.customBlack,
                           fontSize: 20,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
+
+                      // Boundless space.
                       const Spacer(),
-                      //const Gap(2),
+
+                      //? The button to place the bid.
                       SizedBox(
                         width: context.width * 0.35,
-                        // width: context.width * 0.45,
                         child: WayaButton(
                           callback: () {},
                           text: 'Place Bid',
                           height: 38,
                         ),
                       ),
-                      // WayaButton(
-                      //   callback: () {},
-                      //   text: 'Place Bid',
-                      //   height: 36,
-                      // ),
                     ],
                   ),
                 ],
@@ -233,7 +243,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                             const Gap(5),
                                             Text(
                                               "Open Bid",
-                                              style: TextStyle().wayaCopyWith(
+                                              style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                                   color: wayaTheme.colorScheme.white,
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 11),
@@ -252,7 +262,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                             Image.asset('assets/images/bid/clock.png', height: 16.h,),
                                             Text(
                                               "12m:00s",
-                                              style: TextStyle().wayaCopyWith(
+                                              style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                                   color: wayaTheme.colorScheme.primary600,
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 11),
@@ -264,7 +274,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                   ),
                                   Text(
                                     "Samsung S24 Ultra",
-                                    style: TextStyle().wayaCopyWith(
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                         color: wayaTheme.colorScheme.customBlack,
                                         fontSize: 14),
                                   ),
@@ -278,7 +288,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                 text: TextSpan(children: [
                                   TextSpan(
                                       text: 'Rufai Maleek ',
-                                      style: TextStyle().wayaCopyWith(
+                                      style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                           color: wayaTheme.colorScheme.black,
                                           fontSize: 12,
                                           fontWeight: FontWeight.w400)),
@@ -288,7 +298,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                       style: wayaTheme.textTheme.hintStyle),
                                   TextSpan(
                                       text: '2Km Away',
-                                      style: TextStyle().wayaCopyWith(
+                                      style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                           color: WayaColors.greyColor400,
                                           fontSize: 10,
                                           fontWeight: FontWeight.w400)),
@@ -302,7 +312,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                             child: Row(children: [
                               Text(
                                 "₦ 19,000.00",
-                                style: TextStyle().wayaCopyWith(
+                                style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                     color: wayaTheme.colorScheme.customBlack,
                                     fontSize: 20, fontWeight: FontWeight.w700),
                               ),
@@ -351,8 +361,7 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
         buttonText: 'Add Delivery Details',
         secondButtonText: 'See your Order Details',
         title: 'Populate Delivery Details',
-        message:
-            "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
+        message: "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
         onPress: () async {
           await addDeliveryDetail(context);
         },
@@ -364,5 +373,4 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
 }
 
 final singleSettlementWidgetViewModelProvider =
-    ChangeNotifierProvider<SingleBidWidgetViewModel>(
-        (ref) => SingleBidWidgetViewModel(ref));
+    ChangeNotifierProvider<SingleBidWidgetViewModel>((ref) => SingleBidWidgetViewModel(ref));
