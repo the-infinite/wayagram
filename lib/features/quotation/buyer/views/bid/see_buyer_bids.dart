@@ -69,7 +69,7 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
     //? This is fine too.
     return WayaScaffold(
       isLoading: false,
-      isScrollable: true,
+      isScrollable: false,
       padding: EdgeInsets.zero,
       backgroundColor: WayaColors.greyColor200,
       body: ValueListenableBuilder(
