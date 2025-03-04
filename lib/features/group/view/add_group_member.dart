@@ -110,42 +110,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                /*  FormField<String>(validator: (value) {
-                    if (viewModel.username.text.isEmpty) {
-                      return 'Username/Email is required';
-                    }
 
-                    return null;
-                  }, builder: (formState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        WayaTextFormField(
-                          keyboardType: TextInputType.text,
-                          controller: viewModel.username,
-                          hintText: 'Enter username/ Email address',
-                          borderColor: formState.hasError &&
-                              viewModel.username.text.isEmpty
-                              ? wayaTheme.colorScheme.error
-                              : null,
-                          label: 'Username/Email address',
-                        ),
-                        if (formState.hasError &&
-                            viewModel.username.text.isEmpty
-                        )
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
-                            ),
-                          ),
-                      ],
-                    );
-                  }),
-                  const Gap(20),*/
                   WayaConfirmationView(
                     debounceTimer: const Duration(milliseconds: 20),
                     getResult: ref.read(userSearchProvider.notifier).getUserByEmail,

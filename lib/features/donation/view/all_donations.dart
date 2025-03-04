@@ -94,6 +94,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             ],
           ),
           callback: () {
+
             print('DIALA ACCOUNT TYPE ${viewModel.accountType}');
              if(viewModel.kycStatus != 'APPROVED'){
               ScaffoldMessenger.of(context).showSnackBar(
@@ -223,7 +224,6 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   itemBuilder: (context, index){
                     final donation = viewModel.allDonationDocs?[index];
                     int daysLeft = DateTime.parse('${donation?.expirationDate}').difference(DateTime.parse('${donation?.startDate}')).inDays;
-                    //int daysLeft = DateTime.parse('${donation?.expirationDate}').day;
                     return ManageDonationWidget(
                       text: "Donate",
                       amountRaised: donation?.amountRaised,

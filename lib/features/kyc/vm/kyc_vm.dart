@@ -20,6 +20,7 @@ import 'package:wayagram/features/donation/model/kyc_model.dart';
 import 'package:wayagram/features/donation/model/login_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/state/donation_state.dart';
+import 'package:wayagram/features/kyc/data/repo/repo.dart';
 import 'package:wayagram/features/kyc/state/kyc_state.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
@@ -28,7 +29,7 @@ import '../../auth/transaction_pin/vm/transaction_pin_vm.dart';
 
 class KycVm extends StateNotifier<KycState> {
   final Ref ref;
-  final DonationRepository _kycRepository;
+  final KycRepository _kycRepository;
   final WayaSecureDataSource _secureDataSource;
   final UploadFileRepository _uploadFileRepository;
   final SuccessfulSetUpState _setupState;
@@ -45,13 +46,19 @@ class KycVm extends StateNotifier<KycState> {
 
 
   void addFile(File file) {
-    state = state.copyWith(
-        kycImage: DocType(
-            file: file, type: "donation-image", name: file.path.split('/').last));
+    state = state.copyWith(kycImage: [
+      DocType(file: file, type: "kyc-image", name: file.path.split('/').last)
+    ]);
   }
 
+
   void removeFile() {
-    state = state.copyWith(kycImage: null);
+    List<DocType> e = List.from(state.kycImage);
+    e = e.where((i) => i.type != 'kyc-image').toList();
+    state = state.copyWith(kycImage: e);
+
+    print("efwefw");
+    print(state);
   }
 
 
@@ -64,5 +71,5 @@ class KycVm extends StateNotifier<KycState> {
 
 final kycVmProvider =
 StateNotifierProvider<KycVm, KycState>((ref) {
-  return KycVm(WayaSecureDataSource(), DonationRepository(), ref, UploadFileRepository(), SuccessfulSetUpState());
+  return KycVm(WayaSecureDataSource(), KycRepository(), ref, UploadFileRepository(), SuccessfulSetUpState());
 });
