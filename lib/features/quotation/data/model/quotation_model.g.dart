@@ -10,7 +10,7 @@ CreateBuyerRequest _$CreateBuyerRequestFromJson(Map<String, dynamic> json) =>
     CreateBuyerRequest(
       buyerId: json['buyerId'] as String,
       productName: json['productName'] as String,
-      brand: json['brand'] as String,
+      brand: json['brand'] as String?,
       category: json['category'] as String,
       condition: json['condition'] as String,
       description: json['description'] as String,

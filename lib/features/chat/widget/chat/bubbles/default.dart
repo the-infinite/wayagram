@@ -901,7 +901,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
       () {
         VisibilityDetectorController.instance.notifyNow();
       },
-      key: "visibility-detector-chat",
+      key: "vd-msg-${widget.data.id}",
       delay: const Duration(
         milliseconds: 400,
       ),

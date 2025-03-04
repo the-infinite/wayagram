@@ -148,7 +148,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
 
       //? Since this can be fine.
       if (response.success) {
-        return response.data['data'];
+        return BuyRequestModel.fromJson(response.data['data']);
       }
 
       //? Return this one as is.
@@ -174,6 +174,14 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
     } else {
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  void setRangeStart(double value) {
+    state = state.copyWith(rangeStart: value);
+  }
+
+  void setRangeEnd(double value) {
+    state = state.copyWith(rangeEnd: value);
   }
 }
 
