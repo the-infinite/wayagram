@@ -15,9 +15,11 @@ import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/view/my_donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/explore/widgets/donation_widget.dart';
+import 'package:wayagram/features/kyc/view/kyc_update.dart';
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
 import '../../chat/state/default.dart';
@@ -91,28 +93,28 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             ],
           ),
           callback: () {
-            print('DARLINGTON ACCOUNT TYPE ${ConversationState.self.accountType}');
-
-             if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == 'BUSINESS'){
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'You must complete KYC verification before creating a donation post',
-                    style:
-                    TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
-                  ),
-                  backgroundColor: WayaColors.primary,
-                  duration: Duration(seconds: 2),
-                ),
-              );
-              WayaNav.toNamed('/createDonation');
-            } else if (ConversationState.self.accountType == 'PERSONAL') {
+             if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
+               WayaUtils.showNotice(
+                   context: context,
+                   title: "Update KYC Information ",
+                   message: 'You must complete KYC verification before creating a donation post',
+                   onPress: () {
+                     Navigator.pop(context);
+                     WayaNav.toNamed(KycUpdate.route);
+                   },
+                   buttonText: 'Update KYC',
+                   secondButtonText: 'Cancel',
+                   icon: Image.asset('assets/images/cp-shop.png'));
+            } else if (ConversationState.self.accountType == UserAccountType.personal) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 WayaUtils.showNotice(
                     context: context,
                     title: "You don't have a Business Account",
                     message: 'Please upgrade to a business account to create a donation post',
-                    onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
+                    onPress: () {
+                      Navigator.pop(context);
+                      WayaNav.toNamed(UpgradeToBusiness.route);
+                    },
                     buttonText: 'Upgrade to Business',
                     secondButtonText: 'Cancel',
                     icon: Image.asset('assets/images/cp-shop.png'));
@@ -120,7 +122,6 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             } else{
               WayaNav.toNamed('/createDonation');
             }
-
           },
           color: wayaTheme.colorScheme.primar50,
         ),

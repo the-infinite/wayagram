@@ -25,6 +25,7 @@ import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 import '../../../shared/features/user/vm/search.dart';
+import '../../../shared/features/wallet/vm/default.dart';
 import '../../pages/component/extras.dart';
 import '../../wallet/view/fund_wallet_options_screen.dart';
 
@@ -78,7 +79,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
 
                   FormField<String>(validator: (value) {
                     if (viewModel.accountNumber.text.isEmpty) {
-                      return 'Account Number is required';
+                      return null;
                     }
 
                     return null;
@@ -87,15 +88,18 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WayaTextFormField(
-                          keyboardType: TextInputType.text,
-                          controller: viewModel.accountNumber,
-                          //maxLength: 10,
-                          hintText: 'Enter Bank Account Number',
+                          keyboardType: TextInputType.none,
+                          //controller: viewModel.accountNumber,
+                          isReadOnly: true,
+                          fillColor: WayaColors.greyColor100,
+                          showFocusedBorder: false,
+                          showBorder: false,
+                          hintText: 'Wayabank',
                           borderColor: formState.hasError &&
                               viewModel.accountNumber.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
-                          label: 'Account Number',
+                          label: 'Bank Name',
 
                         ),
                         if (formState.hasError &&
@@ -112,7 +116,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                       ],
                     );
                   }),
-                  const Gap(10),
+                  const Gap(15),
                   Text(
                     "Account Number",
                     style: WayaTextStyles.bodySmall.copyWith(
@@ -122,8 +126,9 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                   WayaConfirmationView(
                     hintText: 'Enter Bank Account Number',
                     debounceTimer: const Duration(milliseconds: 20),
-                    getResult: ref.read(userSearchProvider.notifier).getUserByEmail,
-                    getText: (user) => user?.fullname ?? "User not found",
+                    getResult: WalletResource.instance.getUserWallet,
+                    //ref.read(userSearchProvider.notifier).getUserByEmail,
+                    getText: (user) => user?.accountName ?? "Account not found",
                     backgroundColor: wayaTheme.colorScheme.primar50,
                     searchController: viewModel.accountNumber,
                     buttonTextStyle: wayaTheme.textTheme.bodyBold.copyWith(
@@ -142,7 +147,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WayaTextFormField(
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.number,
                           controller: viewModel.bvn,
                           hintText: 'Enter your BVN Number',
                           borderColor: formState.hasError &&

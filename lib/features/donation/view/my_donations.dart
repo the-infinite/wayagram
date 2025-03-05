@@ -20,6 +20,9 @@ import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
+import '../../../shared/features/user/models/default.dart';
+import '../../kyc/view/kyc_update.dart';
+
 class MyDonations extends ConsumerStatefulWidget {
   const MyDonations({super.key});
 
@@ -90,31 +93,33 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
             ],
           ),
           callback: () {
-            print('BUSINESS MESSAGE ${viewModel.kycMessage}');
-            if (viewModel.kycMessage == 'Business not found') {
+            if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
+              WayaUtils.showNotice(
+                  context: context,
+                  title: "Update KYC Information ",
+                  message: 'You must complete KYC verification before creating a donation post',
+                  onPress: () {
+              Navigator.pop(context);
+              WayaNav.toNamed(KycUpdate.route);
+              },
+                  buttonText: 'Update KYC',
+                  secondButtonText: 'Cancel',
+                  icon: Image.asset('assets/images/cp-shop.png'));
+            } else if (ConversationState.self.accountType == UserAccountType.personal) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 WayaUtils.showNotice(
                     context: context,
                     title: "You don't have a Business Account",
                     message: 'Please upgrade to a business account to create a donation post',
-                    onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
+                    onPress:  () {
+                Navigator.pop(context);
+                WayaNav.toNamed(UpgradeToBusiness.route);
+                },
                     buttonText: 'Upgrade to Business',
                     secondButtonText: 'Cancel',
                     icon: Image.asset('assets/images/cp-shop.png'));
               });
-            }else if (viewModel.kycStatus != 'APPROVED') {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'You must complete KYC verification before creating a donation post',
-                    style: TextStyle(
-                        fontFamily: WayaConstants.fontFamily, fontSize: 12),
-                  ),
-                  backgroundColor: WayaColors.primary,
-                  duration: Duration(seconds: 2),
-                ),
-              );
-            } else {
+            } else{
               WayaNav.toNamed('/createDonation');
             }
           },

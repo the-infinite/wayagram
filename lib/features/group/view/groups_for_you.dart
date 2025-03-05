@@ -379,23 +379,6 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
             subTitle: 'Connect with friends and communities',
             title: 'Suggestions'),
         const Gap(25),
-        // ///
-        // WayaButton(
-        //   callback: (){
-        //   WayaNav.toNamed('/kycUpdate');
-        //
-        //   },
-        //   text: 'Kyc',
-        //   textStyle: TextStyle().wayaCopyWith(
-        //     color: wayaTheme.colorScheme.primary,
-        //     fontWeight: FontWeight.w600,
-        //     fontSize: 12,
-        //   ),
-        //   height: 28.h,
-        //   color:wayaTheme.colorScheme.primary,
-        //   textColor: wayaTheme.colorScheme.white,
-        // ),
-        // ///
         SizedBox(
           height: 190,
           child: ListView.builder(
