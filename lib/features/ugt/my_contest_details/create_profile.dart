@@ -152,7 +152,7 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
                               : ClipRRect(
                                   borderRadius: BorderRadius.circular(135),
                                   child: Image.file(
-                                    _imgFile!,
+                                    _imgFile??File(""),
                                     fit: BoxFit.cover,
                                   ),
                                 )),
@@ -325,7 +325,7 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
                                   ],
                                 )
                               : Image.file(
-                                  File(_selectedImage!.path),
+                                  File(_selectedImage?.path??""),
                                   height: 100,
                                 ),
                         ],

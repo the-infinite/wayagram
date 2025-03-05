@@ -47,7 +47,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
           Text("Participation Details", style: wayaTheme.textTheme.titleLarge),
           const Gap(5),
           Text(
-              "Bring your talent contest vision to life. Customize details,\n set stages, and make it unforgettable",
+              "Bring your talent contest vision to life. Customize details, set stages, and make it unforgettable",
               style: wayaTheme.textTheme.hintStyle),
           const Gap(30),
           FormField<String>(validator: (value) {
@@ -164,7 +164,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               );
             }),
           const Gap(15),
-          Row(
+          /*   Row(
             children: [
               Expanded(
                 child: FormField<String>(validator: (value) {
@@ -244,7 +244,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               )
             ],
           ),
-          const Gap(15),
+          const Gap(15), */
           FormField<String>(validator: (value) {
             if (viewModel2.startDate.isEmpty) {
               return 'Duration type is required';

@@ -40,7 +40,7 @@ class AppliedContestNotifier extends StateNotifier<List<AppliedContestModel>> {
       List<AppliedContestModel> contestList = [];
       if (response.success) {
         AppliedContest responseModel = AppliedContest.fromJson(response.data);
-        contestList = responseModel.data!;
+        contestList = responseModel.data?.docs??[];
         state = [...state, ...contestList];
         // _page++;
         // isLoading = false;
@@ -86,11 +86,17 @@ final selectedAppliedContestProvider =
       email: "",
       phoneNumber: "phoneNumber",
       address: "address",
+      state: "",
+      likeCount: 0,
+      shareCount: 0,
+      followCount: 0,
+      contestSettings: null,
       applicationData: null,
       status: "status",
-      rejectionReason: null,
+      rejectionReason: "",
       createdAt: null,
       updatedAt: "",
+      applicantCount: 0,
       contest: null,
       categoryName: "");
 });

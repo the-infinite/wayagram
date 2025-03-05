@@ -14,6 +14,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
@@ -35,8 +36,6 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
 
 
   String userType = "PERSONAL";
-
-  Map<String, dynamic> formData = {};
 
   @override
   Widget build(BuildContext context) {
@@ -267,48 +266,48 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     );
   }
 
-  Widget createPoll(ctx,){
-    final wayaTheme = Theme.of(ctx);
-    return GestureDetector(
-      onTap: () {
-        WayaUtils.showModalSheet(
-          context,
-          child: PollsModal(),
-        );
-       // confirmPoll(context);
-      },
-      child: Row(
-        children: [
-          Container(
-            height: 35,
-            padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
-            decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.customPrimary,
-                borderRadius: BorderRadius.circular(10)),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Gap(5),
-                  Text(
-                    "Create",
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14),
-                  ),
-
-
-                ],
-              ),
-            ),
-          ),
-          const Gap(15)
-        ],
-      ),
-    );
-  }
+  // Widget createPoll(ctx,){
+  //   final wayaTheme = Theme.of(ctx);
+  //   return GestureDetector(
+  //     onTap: () {
+  //       WayaUtils.showModalSheet(
+  //         context,
+  //         child: PollsModal(url: '',),
+  //       );
+  //      // confirmPoll(context);
+  //     },
+  //     child: Row(
+  //       children: [
+  //         Container(
+  //           height: 35,
+  //           padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
+  //           decoration: BoxDecoration(
+  //               color: wayaTheme.colorScheme.customPrimary,
+  //               borderRadius: BorderRadius.circular(10)),
+  //           child: Center(
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               crossAxisAlignment: CrossAxisAlignment.center,
+  //               children: [
+  //                 const Gap(5),
+  //                 Text(
+  //                   "Create",
+  //                   style: TextStyle().wayaCopyWith(
+  //                       color: wayaTheme.colorScheme.white,
+  //                       fontWeight: FontWeight.w600,
+  //                       fontSize: 14),
+  //                 ),
+  //
+  //
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //         const Gap(15)
+  //       ],
+  //     ),
+  //   );
+  // }
   confirmPoll(BuildContext context) {
     WayaUtils.showNotice(
         context: context,
@@ -326,7 +325,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                 Navigator.of(context).pop();
                 WayaUtils.showModalSheet(
                   context,
-                  child: PollsModal(),
+                  child: PollsModal(url: '',),
                 );
               },
               child: Text(

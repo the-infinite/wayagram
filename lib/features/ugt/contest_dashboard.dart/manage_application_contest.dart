@@ -12,6 +12,7 @@ import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 import '../../../core/components/waya_scaffold.dart';
 
@@ -28,6 +29,8 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final viewModel = ref.read(votersContestNotifier);
+
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -81,7 +84,31 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
               padding: EdgeInsets.all(10),
               child: Column(
                 children: [
-                  GestureDetector(
+                    ListView.builder(
+                    // controller: _scrollController,
+                    shrinkWrap: true,
+                    itemCount: viewModel.myContestApplicantList.length > 6
+                        ? 6
+                        : viewModel.myContestApplicantList.length,
+                    itemBuilder: (context, index) {
+                      if (viewModel.isLoading!) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      final post = viewModel.myContestApplicantList[index];
+                      return GestureDetector(
+                        onTap: () {
+                          ref.read(selectedApplicantProfile.notifier).state =
+                              post;
+
+                          WayaNav.toNamed('/view-contestant-single-data');
+                        },
+                        child: _buildStateItem(
+                            context, post.fullName ?? "", "View application"),
+                      );
+                    },
+                  ),
+                  /* GestureDetector(
                     onTap: () {
                       WayaNav.toNamed('/view-contestant-single-data');
                     },
@@ -91,7 +118,7 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
                   Gap(20),
                   _buildStateItem(context, "Oluchi Obiano", "View application"),
                   Gap(20),
-                  _buildStateItem(context, "Sadiya Wakili", "View application"),
+                  _buildStateItem(context, "Sadiya Wakili", "View application"), */
                 ],
               ),
             ),
@@ -182,9 +209,4 @@ Color getColor(bool isText, String text) {
     } else {
       return isText ? Color(0xff865503) : Color(0xffFEF6E7);
     } */
-}
-
-String formatMoney(String value) {
-  final oCcy = NumberFormat("#,##0.00", "en_US");
-  return oCcy.format(double.parse(value));
 }

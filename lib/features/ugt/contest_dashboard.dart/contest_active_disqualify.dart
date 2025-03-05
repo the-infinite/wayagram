@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 import '../../../core/components/waya_scaffold.dart';
 
@@ -78,6 +79,9 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+
+    final viewModel = ref.read(votersContestNotifier);
+
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -87,6 +91,7 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
         scrollDirection: Axis.horizontal,
         child: DataTable(
           columnSpacing: 20.0,
+          dividerThickness: 0.2,
           headingRowColor:
               WidgetStateColor.resolveWith((states) => Colors.white),
           columns: [
@@ -106,26 +111,26 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                 label: Text("Action",
                     style: TextStyle(fontWeight: FontWeight.bold))),
           ],
-          rows: data.map((item) {
+          rows: viewModel.myContestList.map((item) {
             return DataRow(cells: [
-              DataCell(Text(item["name"]!)),
-              DataCell(Text(item["state"]!)),
-              DataCell(Text(item["votes"]!)),
+              DataCell(Text(item.contestApplicant?.fullName ?? "")),
+              DataCell(Text(item.contestApplicant?.phoneNumber ?? "")),
+              DataCell(Text(item.votes.toString() ?? "")),
               DataCell(
                 Container(
                   padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: item["status"] == "Active"
+                    color: item.status?.toLowerCase() == "active"
                         ? Colors.green[100]
                         : Colors.red[100],
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    item["status"]!,
+                    item.status ?? "",
                     style: TextStyle(
-                      color: item["status"] == "Active"
+                      color: item.status?.toLowerCase() == "active"
                           ? Colors.green
-                          : Colors.red,
+                          : Theme.of(context).colorScheme.error700,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -229,9 +234,4 @@ Color getColor(bool isText, String text) {
     } else {
       return isText ? Color(0xff865503) : Color(0xffFEF6E7);
     } */
-}
-
-String formatMoney(String value) {
-  final oCcy = NumberFormat("#,##0.00", "en_US");
-  return oCcy.format(double.parse(value));
 }

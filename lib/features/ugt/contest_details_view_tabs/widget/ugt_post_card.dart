@@ -8,9 +8,13 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 
 class UgtPostCard extends ConsumerWidget {
-  const UgtPostCard({super.key});
+  final SingleContestantPosts post;
+  final MyContestContestantModel? contestApplicant;
+  const UgtPostCard(this.post, this.contestApplicant, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,7 +49,7 @@ class UgtPostCard extends ConsumerWidget {
                         colorFilter: ColorFilter.mode(
                             wayaTheme.colorScheme.success, BlendMode.srcIn),
                       ),*/
-                        ClipRRect(
+                        /*   ClipRRect(
                           borderRadius: BorderRadius.circular(
                               45), // Adjust the radius as needed
                           child: Image.asset(
@@ -55,14 +59,14 @@ class UgtPostCard extends ConsumerWidget {
                             fit: BoxFit
                                 .cover, // Ensures the image covers the area properly
                           ),
+                        ), */
+                        WayaImage(
+                          imageUrl: contestApplicant?.profilePhoto ?? "",
+                          height: 45,
+                          width: 45,
+                          fit: BoxFit.cover,
+                          radius: BorderRadius.circular(45),
                         ),
-                        /*WayaImage(
-                        imageUrl: 'assets/images/destructive.png',
-                        height: 45,
-                        width: 45,
-                        fit:BoxFit.cover ,
-                        radius: BorderRadius.circular(45),
-                      ),*/
                         const Gap(10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,7 +76,8 @@ class UgtPostCard extends ConsumerWidget {
                             SizedBox(
                               width: context.width * 0.4,
                               child: Text(
-                                "Rufai Maleek",
+                                contestApplicant?.contestApplicant?.fullName ??
+                                    "",
                                 overflow: TextOverflow.ellipsis,
                                 style: wayaTheme.textTheme.bodyMedium,
                               ),
@@ -96,16 +101,16 @@ class UgtPostCard extends ConsumerWidget {
                 ],
               ),
               const Gap(10),
-              Text('''Hello everyone, I’m trying to be diligent and sharing with
-the tribe as! 🚀 #TechLife #Productivity''',
+              Text(post.description ?? "",
                   style: wayaTheme.textTheme.bodySmall),
               const Gap(20),
               ClipRRect(
                 borderRadius:
                     BorderRadius.circular(16), // Adjust the radius as needed
-                child: Image.asset(
-                  'assets/images/frameuni.png',
+                child: Image.network(
+                  post.mediaContent?[0].url ?? "",
                   height: 200,
+                  width: context.width,
                   fit: BoxFit
                       .cover, // Ensures the image covers the area properly
                 ),

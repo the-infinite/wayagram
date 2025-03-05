@@ -13,28 +13,20 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
   final WalletRepository _walletRepository;
   final WayaLocalDataSource _localDataSource;
 
-  TransactionVm(this._transactionRepository, this._walletRepository,
-      this._localDataSource)
+  TransactionVm(this._transactionRepository, this._walletRepository, this._localDataSource)
       : super(TransactionHistoryState());
 
-  Future<void> getUserTransactions(
-      {int? page = 1,
-      int? limit = 10,
-      bool? hasNextPage,
-      String? filters}) async {
+  Future<void> getUserTransactions({int? page = 1, int? limit = 10, bool? hasNextPage, String? filters}) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _transactionRepository.getUserTransactions(
-          page: page, limit: limit, filters: filters);
+      final response = await _transactionRepository.getUserTransactions(page: page, limit: limit, filters: filters);
       if (response.success) {
         log("${response.data}");
         final transactions = (response.data["data"]["docs"] as List)
             .map((transaction) => TransactionDetail.fromJson(transaction))
             .toList();
-        final totalCreditTransaction =
-            double.parse(response.data["data"]["totalCreditTransaction"]);
-        final totalDebitTransaction =
-            double.parse(response.data["data"]["totalDebitTransaction"]);
+        final totalCreditTransaction = double.parse(response.data["data"]["totalCreditTransaction"]);
+        final totalDebitTransaction = double.parse(response.data["data"]["totalDebitTransaction"]);
         final hasNextPage = response.data["data"]["hasNextPage"];
         state = state.copyWith(
             isLoading: false,
@@ -53,13 +45,11 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
   Future<void> getSingleTransactions(String transactionId) async {
     try {
       state = state.copyWith(isLoadingSingle: true);
-      final response =
-          await _transactionRepository.getSingleTransactions(transactionId);
+      final response = await _transactionRepository.getSingleTransactions(transactionId);
       if (response.success) {
         final transaction = TransactionDetail.fromJson(response.data["data"]);
         log("${transaction}");
-        state =
-            state.copyWith(isLoadingSingle: false, transaction: transaction);
+        state = state.copyWith(isLoadingSingle: false, transaction: transaction);
       } else {
         state = state.copyWith(isLoadingSingle: false);
       }
@@ -68,18 +58,13 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
     }
   }
 
-  Future<void> verifyTransaction(
-      String transactionId, String fundingOption) async {
-    final fundingOptionCode =
-        fundingOption.toLowerCase() == "paystack" ? "PS002" : "WQ001";
+  Future<void> verifyTransaction(String transactionId, String fundingOption) async {
+    final fundingOptionCode = fundingOption.toLowerCase() == "paystack" ? "PS002" : "WQ001";
     try {
       final userId = _localDataSource.getUserId();
       state = state.copyWith(isVerifying: true);
       final response = await _walletRepository.verifyWalletFunding(
-          VerifyTransaction(
-              transactionId: transactionId,
-              userId: userId ?? "",
-              fundOptionCode: fundingOptionCode));
+          VerifyTransaction(transactionId: transactionId, userId: userId ?? "", fundOptionCode: fundingOptionCode));
       if (response.success) {
         log("${response.data}");
         state = state.copyWith(isVerifying: false, verified: true);
@@ -92,8 +77,6 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
   }
 }
 
-final transactionVmProvider =
-    StateNotifierProvider<TransactionVm, TransactionHistoryState>((ref) {
-  return TransactionVm(
-      TransactionRepository(), WalletRepository(), WayaLocalDataSource());
+final transactionVmProvider = StateNotifierProvider<TransactionVm, TransactionHistoryState>((ref) {
+  return TransactionVm(TransactionRepository(), WalletRepository.instance, WayaLocalDataSource());
 });

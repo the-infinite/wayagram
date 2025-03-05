@@ -10,15 +10,19 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/view/my_donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/explore/widgets/donation_widget.dart';
+import 'package:wayagram/features/kyc/view/kyc_update.dart';
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
+import '../../chat/state/default.dart';
 import '../widget/manage_donation_widget.dart';
 
 class AllDonations extends ConsumerStatefulWidget {
@@ -36,6 +40,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(donationVmProvider.notifier).getAllDonation(page: 1);
+      ref.read(donationVmProvider.notifier).getMyKYC();
     });
     searchController = TextEditingController();
     searchController.addListener(() {
@@ -52,7 +57,6 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
 
   @override
   Widget build(BuildContext context) {
-
    final  viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
@@ -66,7 +70,6 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
    );
 
 
-
     return filteredAllDonations.isEmpty ?DonationEmptyState() :Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -75,6 +78,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+
               SvgPicture.asset(
                 'assets/icons/donation.svg',
                 colorFilter: ColorFilter.mode(
@@ -89,7 +93,35 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             ],
           ),
           callback: () {
-            WayaNav.toNamed('/createDonation');
+             if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
+               WayaUtils.showNotice(
+                   context: context,
+                   title: "Update KYC Information ",
+                   message: 'You must complete KYC verification before creating a donation post',
+                   onPress: () {
+                     Navigator.pop(context);
+                     WayaNav.toNamed(KycUpdate.route);
+                   },
+                   buttonText: 'Update KYC',
+                   secondButtonText: 'Cancel',
+                   icon: Image.asset('assets/images/cp-shop.png'));
+            } else if (ConversationState.self.accountType == UserAccountType.personal) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                WayaUtils.showNotice(
+                    context: context,
+                    title: "You don't have a Business Account",
+                    message: 'Please upgrade to a business account to create a donation post',
+                    onPress: () {
+                      Navigator.pop(context);
+                      WayaNav.toNamed(UpgradeToBusiness.route);
+                    },
+                    buttonText: 'Upgrade to Business',
+                    secondButtonText: 'Cancel',
+                    icon: Image.asset('assets/images/cp-shop.png'));
+              });
+            } else{
+              WayaNav.toNamed('/createDonation');
+            }
           },
           color: wayaTheme.colorScheme.primar50,
         ),
@@ -128,7 +160,14 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
               itemBuilder: (context, index){
                final donation = filteredAllDonations[index];
                int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
-                return ManageDonationWidget(
+
+               int amountRaised = double.parse(donation.amountRaised!).toInt();
+
+               int targetedAmount = double.parse(donation.targetAmount!).toInt();
+
+               double ratioLeft = amountRaised / targetedAmount;
+
+               return ManageDonationWidget(
                   text:  "Donate",
                   amountRaised:  WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
                   targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
@@ -136,6 +175,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   image: donation.imageURL,
                   dayLeft: daysLeft < 0  ? '0' : '$daysLeft',
                   donationCount: donation.donationCount,
+                  rangeRatio: ratioLeft,
                   onTap: (){
                     WayaNav.toNamed('/donationDetails',
                         arguments: {
@@ -191,7 +231,13 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   itemBuilder: (context, index){
                     final donation = viewModel.allDonationDocs?[index];
                     int daysLeft = DateTime.parse('${donation?.expirationDate}').difference(DateTime.parse('${donation?.startDate}')).inDays;
-                    //int daysLeft = DateTime.parse('${donation?.expirationDate}').day;
+
+
+                    int amountRaised = double.parse('${donation?.amountRaised}').toInt();
+
+                    int targetedAmount = double.parse('${donation?.targetAmount}').toInt();
+
+                    double ratioLeft = amountRaised / targetedAmount;
                     return ManageDonationWidget(
                       text: "Donate",
                       amountRaised: donation?.amountRaised,
@@ -200,6 +246,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                       image: donation?.imageURL,
                       dayLeft: '$daysLeft',
                       donationCount: donation?.donationCount!,
+                      rangeRatio: ratioLeft,
                       onTap: (){
                         WayaNav.toNamed('/donationDetails',
                             arguments: {

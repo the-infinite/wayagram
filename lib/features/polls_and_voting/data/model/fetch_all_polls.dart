@@ -265,8 +265,6 @@ class Docs {
     map['categories'] = categories;
     map['createdAt'] = createdAt;
     map['updatedAt'] = updatedAt;
-    map['created_at'] = createdAt;
-    map['updated_at'] = updatedAt;
     if (choices != null) {
       map['choices'] = choices?.map((v) => v.toJson()).toList();
     }

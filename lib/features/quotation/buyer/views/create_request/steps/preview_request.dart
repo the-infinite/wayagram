@@ -8,7 +8,6 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/quotation/buyer/views/bid/see_buyer_bids.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
 import 'package:wayagram/features/quotation/data/model/quotation_model.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
@@ -98,14 +97,17 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           content: viewModel.productName.text,
         ),
 
-        // Some space.
-        const Gap(15),
+        //? If there is no brand name, don't show this.
+        if (viewModel.brandName.text.trim().isNotEmpty) ...[
+          // Some space.
+          const Gap(15),
 
-        //? The brand name of the product.
-        AboutProduct(
-          title: 'Brand Name',
-          content: '${viewModel.brandName.text.capitalizeFirst}',
-        ),
+          //? The brand name of the product.
+          AboutProduct(
+            title: 'Brand Name',
+            content: '${viewModel.brandName.text.capitalizeFirst}',
+          ),
+        ],
 
         // Some more space.
         const Gap(15),
@@ -320,17 +322,17 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
             //? Create a buyer request.
             final createBuyerRequest = CreateBuyerRequest(
               buyerId: buyerId,
-              productName: viewModel.productName.text,
-              brand: viewModel.brandName.text,
+              productName: viewModel.productName.text.trim(),
+              brand: viewModel.brandName.text.trim().isEmpty ? null : viewModel.brandName.text.trim(),
               category: viewModel.productCategory,
               condition: viewModel.productCondition.toLowerCase(),
-              description: viewModel.productDescription.text,
-              quantity: viewModel.quantity.text,
+              description: viewModel.productDescription.text.trim(),
+              quantity: viewModel.quantity.text.trim(),
               bidStart: startTime.toIso8601String(),
               bidEnd: endTime.toIso8601String(),
               deliveryDetails: '----',
-              minDistance: viewModel.minDistance.text,
-              maxDistance: viewModel.maxDistance.text,
+              minDistance: viewModel.minDistance.text.trim(),
+              maxDistance: viewModel.maxDistance.text.trim(),
               stateOfPurchase: viewModel.stateOfPurchase,
               lga: viewModel.lga,
               vendorsCanSeeBidFromAnyDistance: '${viewModel.vendorSeeBuyRequest}',
@@ -338,18 +340,24 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
               deliveryAddress: viewModel.canDeliver ? viewModel.deliveryAddress.text : null,
               deliveryState: viewModel.canDeliver ? viewModel.deliveryState : null,
               deliveryLga: viewModel.canDeliver ? viewModel.deliveryLga : null,
-              maxBidAmount: double.tryParse(viewModel.maxBidAmount.text.replaceAll(',', '')) ?? 0.0,
-              bidStartingAmount: double.tryParse(viewModel.bidStartingAmount.text.replaceAll(',', '')) ?? 0.0,
+              maxBidAmount: double.tryParse(viewModel.maxBidAmount.text.trim().replaceAll(',', '')) ?? 0.0,
+              bidStartingAmount: double.tryParse(viewModel.bidStartingAmount.text.trim().replaceAll(',', '')) ?? 0.0,
             );
 
+            //? The request that has been made.
+            final request = await notifier.createBuyerRequest(createBuyerRequest);
+
             //? Create the buyer request.
-            if (!await notifier.createBuyerRequest(createBuyerRequest)) return;
+            if (request == null) return;
 
             //? Clear all data inside our controllers first.
             disposeControllers();
 
             //? Go to the get quotations bids page.
-            WayaNav.removeUntilNamed(SeeBuyerBids.route, predicate: (_) => WayaNav.currentRoute == BottomView.route);
+            WayaNav.removeUntilNamed(
+              WayaAppRoutes.getBuyerBidsRoute(request.id),
+              predicate: (_) => WayaNav.currentRoute == BottomView.route,
+            );
           },
           text: "Find offers",
           notifier: loadingController,

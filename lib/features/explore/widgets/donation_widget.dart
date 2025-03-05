@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -7,7 +6,6 @@ import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
@@ -20,9 +18,7 @@ class DonationWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    int daysLeft = DateTime.parse(donation.expirationDate!)
-        .difference(DateTime.now())
-        .inDays;
+    int daysLeft = DateTime.parse(donation.expirationDate!).difference(DateTime.now()).inDays;
 
     if (daysLeft < 0) {
       daysLeft = 0;
@@ -39,8 +35,11 @@ class DonationWidget extends ConsumerWidget {
         Container(
             decoration: BoxDecoration(
               color: wayaTheme.colorScheme.white,
-              border: Border.all(
-                  color: wayaTheme.colorScheme.greyColor200, width: 1),
+              border: Border.all(color: wayaTheme.colorScheme.greyColor200, width: 1),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,8 +49,9 @@ class DonationWidget extends ConsumerWidget {
                   height: 180.h,
                   width: double.infinity,
                   radius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12)),
+                    topLeft: Radius.circular(12),
+                    topRight: Radius.circular(12),
+                  ),
                 ),
                 Container(
                   padding: EdgeInsets.all(10),
@@ -120,8 +120,7 @@ class DonationWidget extends ConsumerWidget {
                       ),
                       EngagementRange(
                           bottomLeft: "${donation.donationCount} Donation",
-                          bottomRight:
-                              "$daysLeft ${daysLeft > 0 ? "Days" : "Day"} left",
+                          bottomRight: "$daysLeft ${daysLeft > 0 ? "Days" : "Day"} left",
                           range: ratioLeft)
                     ],
                   ),

@@ -54,9 +54,12 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                 itemCount: viewModel.fetchAllPols.length,
                 itemBuilder: (context, index) {
                   final poll = viewModel.fetchAllPols[index];
-                  int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
-                  //int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
-                  print('URL ===> ${poll.url}');
+                  int hoursLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
+                  int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inDays;
+
+                  DateTime expirationDate = DateTime.parse("${poll.endDate}");
+                  DateTime currentDate = DateTime.now(); // Get current date and time
+
 
                   String formatTimeAgo(String dateString) {
                     DateTime dateTime =
@@ -68,7 +71,12 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-
+                        // InkWell(
+                        //   onTap: (){
+                        //     print('CREATED AT ${poll.createdAt}');
+                        //   },
+                        //   child: Text('CREATEDAT'),
+                        // ),
                         Row(children: [
                           CircleAvatar(
                             backgroundImage: NetworkImage(poll.userData?.profilePicture ?? ''),
@@ -78,8 +86,10 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           const Gap(3),
                           Text('${poll.userData?.firstName?.capitalizeFirst}', style: wayaTheme.textTheme.titleLarge),
                           const Gap(3),
+
                           Text(
-                            ' • ${ WayaHelpers.formatTimeAgo('${poll.startDate}')}',
+                            ' • ${formatTimeAgo('${poll.createdAt}')}',
+                            //' • ${ WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
@@ -133,14 +143,14 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                               ),),
                         const Gap(10),
                         Text(
-                          '${poll.maxVotesPerUser} ${poll.maxVotesPerUser == 0 || poll.maxVotesPerUser == 1 ? 'Vote' : 'Votes'} • $daysLeft hours remaining',
+                          '${poll.maxVotesPerUser} ${poll.maxVotesPerUser == 0 || poll.maxVotesPerUser == 1 ? 'Vote' : 'Votes'} • $hoursLeft hours remaining',
                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).colorScheme.greyColor500 ),
                         ),
                         const Gap(10),
-//[vote(choice)/vote(poll)] * 100
+                        //[vote(choice)/vote(poll)] * 100
                         Column(
                           children: [
                             if(poll.choices != null)
@@ -148,9 +158,30 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                   choiceStatistics('${e.imageUrl}',
                                       '${e.text}', context, true, poll.feePerVote,
                                       e.id, e.pollId,e.text, poll.url,
-                                      '${(((e.voteCount!)/viewModel.fetchAllPols[index].voteCount!)*100)}',
-                                      //'${(viewModel.fetchAllPols[index].voteCount!/(e.voteCount!))*100}',
-                                      '${e.voteCount}', daysLeft))
+                                      (((e.voteCount!)/viewModel.fetchAllPols[index].voteCount!)*100).toStringAsFixed(2),
+                                      '${e.voteCount}', daysLeft, (){
+
+                                            if(currentDate.isAfter(expirationDate)){
+                                              ScaffoldMessenger.of(context).showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                    'The poll has ended.',
+                                                    style:
+                                                    TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                                                  ),
+                                                  backgroundColor: WayaColors.primary,
+                                                  duration: Duration(seconds: 2),
+                                                ),
+                                              );
+                                        }else{
+                                              WayaUtils.showModalSheet(
+                                                context,
+                                                child: VoteOptionModal(voteFee:  '${poll.feePerVote}',choiceId: '${e.id}',
+                                                  pollId: '${poll.id}',candidateName: '${e.text}',
+                                                  votingLink: '${poll.url}',),
+                                              );
+                                            }
+                                      }))
                           ],
                         )
 
@@ -267,21 +298,22 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
   }
 
   choiceStatistics(img, name, ctx, chk, voteFee, choiceId,
-      pollId,candidateName, votingLink, votePercentage, voteCount, dateCheck){
+      pollId,candidateName, votingLink, votePercentage, voteCount, dateCheck, onTap){
     return voteCount == '0'? Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
         splashColor: Colors.transparent,
         splashFactory: NoSplash.splashFactory,
-        onTap: (){
-          print('DIALA CHECKING DATE $dateCheck');
-          WayaUtils.showModalSheet(
-            ctx,
-            child: VoteOptionModal(voteFee:  voteFee,choiceId: choiceId,
-              pollId: pollId,candidateName: candidateName,
-              votingLink:votingLink,),
-          );
-        },
+        onTap: onTap,
+        //     (){
+        //   print('DIALA CHECKING DATE $dateCheck');
+        //   WayaUtils.showModalSheet(
+        //     ctx,
+        //     child: VoteOptionModal(voteFee:  voteFee,choiceId: choiceId,
+        //       pollId: pollId,candidateName: candidateName,
+        //       votingLink:votingLink,),
+        //   );
+        // },
         child: Container(
           padding: EdgeInsets.only(left: 20.w,),
           height: 60.h,
@@ -331,14 +363,15 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
           InkWell(
             splashColor: Colors.transparent,
             splashFactory: NoSplash.splashFactory,
-            onTap: (){
-              WayaUtils.showModalSheet(
-                ctx,
-                child: VoteOptionModal(voteFee:  voteFee,choiceId: choiceId,
-                  pollId: pollId,candidateName: candidateName,
-                  votingLink:votingLink,),
-              );
-            },
+            onTap: onTap,
+            //     (){
+            //   WayaUtils.showModalSheet(
+            //     ctx,
+            //     child: VoteOptionModal(voteFee:  voteFee,choiceId: choiceId,
+            //       pollId: pollId,candidateName: candidateName,
+            //       votingLink:votingLink,),
+            //   );
+            // },
             child: Container(
               padding: EdgeInsets.only(left: 20.w,),
               height: 60.h,
@@ -354,48 +387,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                   width: 59.w,
                   radius: BorderRadius.circular(4),
                 ),
-                               /*     Image.network(
-                  img,
-                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      color: Colors.white,
-                      height:44.h,
-                      width: MediaQuery.of(ctx).size.height /9,
-                      child: Center(
-                        child: Padding(
-                          padding: const EdgeInsets.all(4),
-                          child: CircularProgressIndicator(
-                            color: WayaColors.primary.withOpacity(0.5),
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes!.toInt()
-                                : null,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                  errorBuilder: (context, exception, stackTrace) {
-                    return Container(
-                      decoration: BoxDecoration(
-                          shape: BoxShape.rectangle,
-                          color: WayaColors.greyColor100,
-                          border: Border.all(
-                            color: Colors.white,
-                          )),
-                      //MediaQuery.of(ctx).size.height /12,
-                      height: 44.h,
-                      width: MediaQuery.of(ctx).size.height /12,
-                      child:  Center(
-                        child:
-                        Image.asset('assets/images/pages/image_placeholder.png',height: 66.h, width: 50.w,)
-                      ),
-                    );
-                  },
-                  fit: BoxFit.cover,
-                  height: 44.h,
-                  width: MediaQuery.of(ctx).size.height /8,
-                )*/
+
                 const Gap(30),
                 Text(
                   '$name  ',
@@ -425,7 +417,6 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
             children: [
               Text(
                 '$votePercentage%',
-                //'${(voteCount/100)}%',
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
                     fontSize: 20,
                     fontWeight: FontWeight.w700,

@@ -70,13 +70,21 @@ class ContestCard extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(
                                 45), // Adjust the radius as needed
                             child: post.uploadCoverImages != null
-                                ? Image.network(
+                                ? WayaImage(
+                                    imageUrl: post.uploadCoverImages!,
+                                    height: 45,
+                                    width: 45,
+                                    fit: BoxFit.cover,
+                                    radius: BorderRadius.circular(45),
+                                  )
+
+                                /*  Image.network(
                                     post.uploadCoverImages!,
                                     height: 45,
                                     width: 45,
                                     fit: BoxFit
                                         .cover, // Ensures the image covers the area properly
-                                  )
+                                  ) */
                                 : Image.asset(
                                     'assets/images/frameuni.png',
                                     height: 45,
@@ -154,14 +162,23 @@ class ContestCard extends ConsumerWidget {
               const Gap(20),
               ClipRRect(
                 borderRadius:
-                    BorderRadius.circular(16), // Adjust the radius as needed
+                    BorderRadius.circular(10), // Adjust the radius as needed
                 child: post.uploadCoverImages != null
-                    ? Image.network(
+                    ? WayaImage(
+                        imageUrl: post.uploadCoverImages ?? "",
+                        height: 200,
+                        width: context.width,
+                        fit: BoxFit.cover,
+                        radius: BorderRadius.circular(10),
+                      )
+
+                    /*   Image.network(
                         post.uploadCoverImages!,
+                        width: context.width,
                         height: 200,
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
-                      )
+                      ) */
                     : Image.asset(
                         'assets/images/frameuni.png',
                         height: 200,
@@ -200,13 +217,12 @@ class ContestCard extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (post.status?.toLowerCase() == "pending" ||
-                      post.status?.toLowerCase() == "closed")
+                  if (post.status?.toLowerCase() != "active")
                     StatusWidget(
                       title: "Application",
                       content: post.status ?? "Pending",
                     ),
-                  if (post.status?.toLowerCase() == "ongoing")
+                  if (post.status?.toLowerCase() == "active")
                     StatusOngoing(
                       title: "Application",
                       content: post.status ?? "Pending",
@@ -226,7 +242,16 @@ class ContestCard extends ConsumerWidget {
               const Gap(20),
               WayaButton(
                 callback: () {
-                  if (isDateInFuture(post.startDate ?? "")) {
+                  ref.read(selectedContestProvider.notifier).state = post;
+                  WayaNav.toNamed('/upcoming-manage-contest-details');
+
+                  /*   ref.read(registerFormProvider.notifier).addDefault(
+                      post.contestSettings?.formRequirements ?? [], post);
+                  //  WayaNav.toNamed("/register-contest1");
+                  ref.read(selectedContestProvider.notifier).state = post;
+                  WayaNav.toNamed("/upcoming-contest-details"); */
+
+                  /*    if (isDateInFuture(post.startDate ?? "")) {
                     ref.read(registerFormProvider.notifier).addDefault(
                         post.contestSettings?.formRequirements ?? [], post);
                     //  WayaNav.toNamed("/register-contest1");
@@ -235,7 +260,7 @@ class ContestCard extends ConsumerWidget {
                   } else {
                     ref.read(selectedContestProvider.notifier).state = post;
                     WayaNav.toNamed('/upcoming-manage-contest-details');
-                  }
+                  } */
                 },
                 text: "View Details",
               ),
@@ -311,12 +336,16 @@ class ContestCard extends ConsumerWidget {
 }
 
 String formatDate(String isoDate) {
-  DateTime date = DateTime.parse(isoDate);
-  String day = DateFormat('d').format(date);
-  String suffix = getDaySuffix(int.parse(day));
-  String month = DateFormat('MMM').format(date);
-  String year = DateFormat('y').format(date);
-  return "$day$suffix $month $year";
+  try {
+    DateTime date = DateTime.parse(isoDate);
+    String day = DateFormat('d').format(date);
+    String suffix = getDaySuffix(int.parse(day));
+    String month = DateFormat('MMM').format(date);
+    String year = DateFormat('y').format(date);
+    return "$day$suffix $month $year";
+  } catch (e) {
+    return "No Date";
+  }
 }
 
 String getDaySuffix(int day) {
@@ -332,5 +361,51 @@ String getDaySuffix(int day) {
       return "rd";
     default:
       return "th";
+  }
+}
+
+Duration getDateDifference(DateTime startDate, DateTime endDate) {
+  return endDate.difference(startDate);
+}
+
+int getWeeksDifference(DateTime startDate, DateTime endDate) {
+  return endDate.difference(startDate).inDays ~/ 7;
+}
+
+int getMonthsDifference(DateTime startDate, DateTime endDate) {
+  int yearsDiff = endDate.year - startDate.year;
+  int monthsDiff = endDate.month - startDate.month;
+  return (yearsDiff * 12) + monthsDiff;
+}
+
+String getRealDateDiffBtwDate(String realStartDate, String realEndDate) {
+  DateTime startDate = DateTime.parse(realStartDate);
+  DateTime endDate = DateTime.parse(realEndDate);
+
+  Duration difference = getDateDifference(startDate, endDate);
+  int weeks = getWeeksDifference(startDate, endDate);
+  if (weeks < 1) {
+    return "${difference.inDays} days";
+  } else {
+    if (weeks == 1) {
+      return "$weeks Week";
+    } else {
+      return "$weeks Weeks";
+    }
+  }
+  // int months = getMonthsDifference(startDate, endDate);
+}
+
+bool isCurrentDateBetween(
+    String startDateStr, String endDateStr, String format) {
+  try {
+    DateTime startDate = DateFormat(format).parse(startDateStr);
+    DateTime endDate = DateFormat(format).parse(endDateStr);
+    DateTime currentDate = DateTime.now();
+
+    return currentDate.isAfter(startDate) && currentDate.isBefore(endDate);
+  } catch (e) {
+    print("Invalid date format: $e");
+    return false;
   }
 }

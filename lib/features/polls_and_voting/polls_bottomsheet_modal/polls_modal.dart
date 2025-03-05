@@ -2,6 +2,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -15,6 +16,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/create_poll_response.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
@@ -23,7 +25,8 @@ import '../../../core/components/waya_buttons.dart';
 import '../../../core/utils/waya_navigation.dart';
 
 class PollsModal extends ConsumerStatefulWidget {
-  const PollsModal({super.key});
+  final String url;
+  const PollsModal({super.key, required this.url});
 
   @override
   ConsumerState<PollsModal> createState() => _PollsModalState();
@@ -33,6 +36,7 @@ class _PollsModalState extends ConsumerState<PollsModal> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
       child: SingleChildScrollView(
@@ -60,9 +64,10 @@ class _PollsModalState extends ConsumerState<PollsModal> {
             SizedBox(height: 17.h),
             WayaButton(
               callback: () async {
-                WayaNav.removeUntil(PollAndVoting());
+                WayaNav.toNamed('/poll-and-voting', arguments: {
+                  'poll': 'poll'
+                });
                 ref.read(createPollVotingProvider.notifier).reset();
-               // WayaNav.toNamed("/poll-and-voting");
               },
               text: "View Application Status",
             ),
@@ -71,7 +76,20 @@ class _PollsModalState extends ConsumerState<PollsModal> {
               border: Border.all(color: WayaColors.primary600),
               color: Colors.white,
               callback: () async {
-                //WayaNav.toNamed("/poll-dashboard");
+
+                  Clipboard.setData(ClipboardData(
+                      text: widget.url));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        'Link copied to clipboard',
+                        style:
+                        TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                      ),
+                      backgroundColor: WayaColors.primary,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
               },
               text: "Copy Contest Invite Link",
               textColor: WayaColors.primary600,
@@ -639,7 +657,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
               Navigator.pop(context);
               WayaUtils.showModalSheet(
                 context,
-                child: PollsModal(),
+                child: PollsModal(url: '',),
               );
             },
             child: Text(

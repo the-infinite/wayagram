@@ -140,6 +140,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
                   .substring(3)
                   .replaceAll(",", "")
               : model.entryAmount,
+          "voteCountToQualify": model.voteCountToQualify ?? "",
           "numberOfPostPerWeek": model.numPostPerWeek,
           "priceOfTheWinner": model.priceWinner,
           "startDate": _convertToISO(model.startDate!), // model.startDate,
@@ -165,7 +166,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         //  "numberOfWeeks":numberOfWeeks.text,
         "winnerPrize": winnerPrize.text,
         "description": description.text,
-        "voteCountToQualify": voteCountToQualify.text,
+        //  "voteCountToQualify": voteCountToQualify.text,
         "amount": state.amount.text.contains("NGN")
             ? state.amount.text
                 .split(".")
@@ -174,8 +175,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
                 .replaceAll(",", "")
             : state.amount.text,
 
-        "durationType": state.durationSelectType.toUpperCase(),
-        "numberOfDuration": state.numberOfDuration.text,
+        //  "durationType": state.entrySelectType.toUpperCase(),
+        // "numberOfDuration": state.numberOfDuration.text,
         "descriptionOfAwards": state.descriptionOfAwards.text,
         "amountPerVote": amountPerVote.text.contains("NGN")
             ? amountPerVote.text
@@ -184,20 +185,21 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
                 .substring(3)
                 .replaceAll(",", "")
             : amountPerVote.text,
-        "type": state.contestFreePaid.toUpperCase(),
+        //   "type": state.contestFreePaid.toUpperCase(),
         "overallResult": state.overallResult == true ? "YES" : "NO",
         "multipleStages": state.contestTimelineMultipleStage.toUpperCase(),
         "publicity": state.contestPrivatePublic.toUpperCase(),
         "status": "ACTIVE",
         "howItWorks": state.howItWorks.text,
-        "numberOfWeeks": numberOfWeeks.text,
+        //  "numberOfWeeks": numberOfWeeks.text,
         "currentStage": state.contestTimelineCurrentStage,
         "participationStartDate": _convertToISO(state.startDate),
         "startDate": _convertToISO(state.contestTimelineStartDate),
         "uploadCoverImages": profileImageUrl,
         "endDate": _convertToISO(state.contestTimelineEndDate),
 
-        "entryType": state.entrySelectType.toUpperCase(),
+        // "entryType": state.entrySelectType.toUpperCase(),
+        "entryType": state.contestFreePaid.toUpperCase(),
         "contestSettings": {
           "stages": mapStageList,
           "formRequirements": mapRequireList
@@ -210,14 +212,16 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
       if (response.success) {
         ref.read(postProvider.notifier).fetchPosts();
-      //  ref.read(postProvider.notifier).fetchPosts();
-       // ref.read(postProvider.notifier).fetchPosts();
+        //  ref.read(postProvider.notifier).fetchPosts();
+        // ref.read(postProvider.notifier).fetchPosts();
         WayaUtils.showModalSheetUgt(
           context,
           child: SuccessfulModal(
-              "Contest created Successfully",
-              "Your contest is now live and visible to the public. Manage or share your contest details from your dashboard.",
-              true, () {
+           title:    "Contest created Successfully",
+           subtitle:    "Your contest is now live and visible to the public. Manage or share your contest details from your dashboard.",
+             showCopyLink:  true,
+            buttonText:   null,
+             onTap:  (_,__) {
             WayaNav.removeUntilNamed("/ugt-home");
           }),
         );

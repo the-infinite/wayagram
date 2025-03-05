@@ -9,17 +9,21 @@ import 'package:intl/intl.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disqualify.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_contestants.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_gallery.dart.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_leaderboard.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
+import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_post_all.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/for_you_contest.dart';
 import 'package:wayagram/features/ugt/my_contest_details/my_contest_details.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
@@ -45,11 +49,20 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     useEffect(() {
-      ref.read(votersContestNotifier.notifier).getContestantProfileVoteDetails(
-          ref.read(selectedContestProvider.notifier).state.id ?? "");
+      String contestId =
+          ref.read(selectedContestProvider.notifier).state.id ?? "";
+      ref
+          .read(votersContestNotifier.notifier)
+          .getContestantProfileVoteDetails(contestId);
+
+      ref.read(votersContestNotifier.notifier).fetchAllContestPosts(contestId);
+      ref
+          .read(votersContestNotifier.notifier)
+          .fetchAllContestApplicant(contestId);
       return null;
     }, []);
     var viewModel = ref.watch(votersContestNotifier);
+    var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
     var model = ref.watch(selectedContestProvider.notifier).state;
     final selectedViewIndex = useState(0);
     return WayaScaffold(
@@ -62,14 +75,14 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           PopupMenuButton(
             onSelected: (value) {},
             position: PopupMenuPosition.under,
-            itemBuilder: (context) {
+            itemBuilder: (context1) {
               return [
                 PopupMenuItem<int>(
                   value: 0,
                   child: _buildActionNav(
                       context: context,
                       onTap: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context1);
                         WayaNav.toNamed('/contest-mydashboard-profile-page');
                       },
                       asset: SvgPicture.asset('assets/images/pages/flag.svg'),
@@ -198,6 +211,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                       )
                     : Image.network(
                         model.uploadCoverImages ?? "",
+                        width: context.width,
                         height: 200,
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
@@ -226,7 +240,9 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                       title: "Entry Type", content: model.entryType ?? ""),
                   const Gap(20),
                   UpcomingWidget(
-                      title: "Duration", content: model.durationType ?? ""),
+                      title: "Duration",
+                      content: getRealDateDiffBtwDate(
+                          model.startDate ?? "", model.endDate ?? "")),
                 ],
               ),
               const Gap(10),
@@ -242,7 +258,9 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                       title: "Category", content: model.categoryName ?? ""),
                   const Gap(20),
                   UpcomingWidget(
-                      title: "Prize", content: model.winnerPrize ?? ""),
+                      title: "Prize",
+                      content:
+                          "₦${formatMoney(model.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
                   const Gap(20),
                   UpcomingWidget(title: "Host", content: "Host"),
                 ],
@@ -258,68 +276,69 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  if (viewModel.myContestList!.length >= 2)
+                  if (viewModel.myContestList.length >= 2)
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
-                              viewModel.myContestList?[1];
+                              viewModel.myContestList[1];
+                          viewModelNotifier.updateContestId(model.id);
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
                         },
                         child: AdminCard(
-                          imageUrl: viewModel.myContestList?[1].profilePhoto ??
+                          imageUrl: viewModel.myContestList[1].profilePhoto ??
                               "", // Change to your image path
                           rank: "2",
-                          name: viewModel.myContestList?[1].contestApplicant
+                          name: viewModel.myContestList[1].contestApplicant
                                   ?.fullName ??
                               "",
-                          votes: "${viewModel.myContestList?[1].votes} Votes",
+                          votes: "${viewModel.myContestList[1].votes} Votes",
                         ),
                       ),
                     ),
-                  if (viewModel.myContestList!.isNotEmpty)
+                  if (viewModel.myContestList.isNotEmpty)
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
-                              viewModel.myContestList?[0];
+                              viewModel.myContestList[0];
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
                         },
                         child: AdminCard(
-                          imageUrl: viewModel.myContestList?[0].profilePhoto ??
+                          imageUrl: viewModel.myContestList[0].profilePhoto ??
                               "", // Change to your image path
                           rank: "1",
                           isCenter: true,
                           radius: 40,
-                          name: viewModel.myContestList?[0].contestApplicant
+                          name: viewModel.myContestList[0].contestApplicant
                                   ?.fullName ??
                               "",
-                          votes: "${viewModel.myContestList?[0].votes} Votes",
+                          votes: "${viewModel.myContestList[0].votes} Votes",
                         ),
                       ),
                     ),
-                  if (viewModel.myContestList!.length >= 3)
+                  if (viewModel.myContestList.length >= 3)
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
-                              viewModel.myContestList?[2];
+                              viewModel.myContestList[2];
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
                         },
                         child: AdminCard(
                           imageUrl:
-                              viewModel.myContestList?[2].profilePhoto ?? "",
+                              viewModel.myContestList[2].profilePhoto ?? "",
                           rank: "3",
-                          name: viewModel.myContestList?[2].contestApplicant
+                          name: viewModel.myContestList[2].contestApplicant
                                   ?.fullName ??
                               "",
-                          votes: "${viewModel.myContestList?[2].votes} Votes",
+                          votes: "${viewModel.myContestList[2].votes} Votes",
                         ),
                       ),
                     ),
@@ -346,19 +365,19 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                     text: 'Contestants',
                     onTap: () => selectedViewIndex.value = 2,
                   ),
-                  WayaTabButton(
+                  /*  WayaTabButton(
                     isSelected: selectedViewIndex.value == 3,
                     isLongerTab: true,
                     text: 'Gallery',
                     onTap: () => selectedViewIndex.value = 3,
-                  ),
+                  ), */
                 ],
               ),
               const Gap(10),
-              if (selectedViewIndex.value == 0) UgtDetailsPost(),
+              if (selectedViewIndex.value == 0) UgtPostAllContestant(),
               if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(model),
               if (selectedViewIndex.value == 2) UgtDetailsContestants(model),
-              if (selectedViewIndex.value == 3) UgtDetailsGallery(model),
+              //  if (selectedViewIndex.value == 3) UgtDetailsGallery(model),
             ],
           ),
         ),
@@ -369,6 +388,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
               width: 50,
               child: WayaButton(
                 callback: () {
+                  viewModelNotifier.updateContestId(model.id);
                   WayaNav.toNamed('/create-contest-post');
                 },
                 height: 50,
@@ -419,9 +439,4 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
       return isText ? Color(0xff865503) : Color(0xffFEF6E7);
     } */
   }
-}
-
-String formatMoney(String value) {
-  final oCcy = NumberFormat("#,##0.00", "en_US");
-  return oCcy.format(double.parse(value));
 }

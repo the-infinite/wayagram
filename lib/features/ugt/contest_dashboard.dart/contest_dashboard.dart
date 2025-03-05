@@ -15,8 +15,10 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_leaderboard.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
+import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 
@@ -35,6 +37,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final viewModel = ref.read(votersContestNotifier);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -166,22 +169,49 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               child: Column(
                 children: [
                   _buildSectionTitle("Leaderboard"),
-                  _buildLeaderboardItem(
-                    context,
-                    "240 votes",
-                    "1st",
-                    "Fisayo Oyenuga",
-                    wayaTheme.colorScheme.success50,
-                  ),
-                  _buildLeaderboardItem(
-                    context,
-                    "120 votes",
-                    "2nd",
-                    "Kehinde Oyedika",
-                    Color(0xffFEF6E7),
-                  ),
-                  _buildLeaderboardItem(context, "90 votes", "3rd",
-                      "Ekusupa Keneabebe", Color(0xffF9FAFB)),
+                  /*  ListView.builder(
+                    //  controller: _scrollController,
+                    shrinkWrap: true,
+                    itemCount: viewModel.myContestList.length,
+                    itemBuilder: (context, index) {
+                      if (viewModel.isLoading!) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      final post = viewModel.myContestList[index];
+                      return GestureDetector(
+                        onTap: () {},
+                        child: UgtLeaderboardCard(
+                            model: widget.model,
+                            position: index + 1,
+                            contestantData: post),
+                      );
+                    },
+                  ), */
+                  if (viewModel.myContestList.length > 1)
+                    _buildLeaderboardItem(
+                      context,
+                      "${viewModel.myContestList[0].votes} votes",
+                      "1st",
+                      "${viewModel.myContestList[0].contestApplicant?.fullName}",
+                      wayaTheme.colorScheme.success50,
+                    ),
+                  if (viewModel.myContestList.length > 2)
+                    _buildLeaderboardItem(
+                      context,
+                      "${viewModel.myContestList[1].votes} votes",
+                      "2nd",
+                      "${viewModel.myContestList[1].contestApplicant?.fullName}",
+                      Color(0xffFEF6E7),
+                    ),
+                  if (viewModel.myContestList.length > 3)
+                    _buildLeaderboardItem(
+                      context,
+                      "${viewModel.myContestList[2].votes} votes",
+                      "3rd",
+                      "${viewModel.myContestList[2].contestApplicant?.fullName}",
+                      Color(0xffF9FAFB),
+                    ),
                 ],
               ),
             ),
@@ -231,8 +261,34 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               ),
               child: Column(
                 children: [
-                  _buildSectionTitle("Manage contestants", seeAll: true),
-                  _buildProfileItem(context, "Obubra Imengie", true),
+                  GestureDetector(
+                      onTap: () {
+                        WayaNav.toNamed('/contest-active-disqualify');
+                      },
+                      child: _buildSectionTitle("Manage contestants",
+                          seeAll: true)),
+                  ListView.builder(
+                    // controller: _scrollController,
+                    shrinkWrap: true,
+                    itemCount: viewModel.myContestList.length > 6
+                        ? 6
+                        : viewModel.myContestList.length,
+                    itemBuilder: (context, index) {
+                      if (viewModel.isLoading!) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      final post = viewModel.myContestList[index];
+                      return GestureDetector(
+                        onTap: () {
+                          WayaNav.toNamed('/contest-active-disqualify');
+                        },
+                        child: _buildProfileItem(context,
+                            post.contestApplicant?.fullName ?? "", true),
+                      );
+                    },
+                  ),
+                  /*   _buildProfileItem(context, "Obubra Imengie", true),
                   Gap(10),
                   _buildProfileItem(context, "Oluchi Obiano", true),
                   Gap(10),
@@ -240,7 +296,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   Gap(10),
                   _buildProfileItem(context, "Ibrahim Ahmad", true),
                   Gap(10),
-                  _buildProfileItem(context, "Ibrahim Nasiru", true),
+                  _buildProfileItem(context, "Ibrahim Nasiru", true), */
                 ],
               ),
             ),
@@ -267,7 +323,32 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       child: _buildSectionTitle("Submitted Applications",
                           seeAll: true)),
                   Gap(10),
-                  GestureDetector(
+                  ListView.builder(
+                    // controller: _scrollController,
+                    shrinkWrap: true,
+                    itemCount: viewModel.myContestApplicantList.length > 6
+                        ? 6
+                        : viewModel.myContestApplicantList.length,
+                    itemBuilder: (context, index) {
+                      if (viewModel.isLoading!) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      final post = viewModel.myContestApplicantList[index];
+                      return GestureDetector(
+                        onTap: () {
+                          ref.read(selectedApplicantProfile.notifier).state =
+                              post;
+
+                          WayaNav.toNamed('/view-contestant-single-data');
+                        },
+                        child: _buildProfileItem(
+                            context, post.fullName ?? "", false),
+                      );
+                    },
+                  ),
+
+                  /*   GestureDetector(
                       onTap: () {
                         // WayaNav.toNamed('/manage-application-contest');
                       },
@@ -278,7 +359,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   Gap(10),
                   _buildProfileItem(context, "Sadiya Wakil", false),
                   Gap(10),
-                  _buildProfileItem(context, "Ibrahim Ahmad", false),
+                  _buildProfileItem(context, "Ibrahim Ahmad", false), */
                 ],
               ),
             ),
@@ -573,9 +654,4 @@ Color getColor(bool isText, String text) {
     } else {
       return isText ? Color(0xff865503) : Color(0xffFEF6E7);
     } */
-}
-
-String formatMoney(String value) {
-  final oCcy = NumberFormat("#,##0.00", "en_US");
-  return oCcy.format(double.parse(value));
 }
