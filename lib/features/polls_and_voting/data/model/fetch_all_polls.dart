@@ -164,8 +164,6 @@ class Docs {
     feePerVote = json['feePerVote'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
     if (json['choices'] != null) {
       choices = [];
       json['choices'].forEach((v) {
@@ -239,8 +237,6 @@ Docs copyWith({  String? id,
     map['feePerVote'] = feePerVote;
     map['createdAt'] = createdAt;
     map['updatedAt'] = updatedAt;
-    map['created_at'] = createdAt;
-    map['updated_at'] = updatedAt;
     if (choices != null) {
       map['choices'] = choices?.map((v) => v.toJson()).toList();
     }

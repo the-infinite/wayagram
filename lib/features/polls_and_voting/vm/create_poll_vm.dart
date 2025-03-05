@@ -13,11 +13,9 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/create_poll_response.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard.dart';
-//import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard_model.dart';
 
 import 'package:wayagram/features/polls_and_voting/data/model/single_dashboard_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/vote_url_model.dart';
@@ -542,9 +540,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.createPoll(formdata);
       if (response.success && context.mounted) {
+        CreatePollResponse createPollResponse = CreatePollResponse.fromJson(response.data);
         WayaUtils.showModalSheet(
           context,
-          child: PollsModal(),
+          child: PollsModal(url: '${createPollResponse.data!.url}'),
         );
         // showDialog(
         //     useRootNavigator: false,

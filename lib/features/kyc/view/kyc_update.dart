@@ -12,6 +12,13 @@ import 'package:wayagram/features/auth/add_business_account/widget/add_document_
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/kyc/vm/kyc_vm.dart';
+import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+
+import '../../../shared/features/user/vm/search.dart';
+import '../../../shared/features/wallet/vm/default.dart';
+import '../../pages/component/extras.dart';
+import '../../wallet/view/fund_wallet_options_screen.dart';
 
 class KycUpdate extends ConsumerStatefulWidget {
   static const route = '/kycUpdate';
@@ -26,58 +33,11 @@ class KycUpdate extends ConsumerStatefulWidget {
 class _KycUpdateState extends ConsumerState<KycUpdate> {
   final _formKey = GlobalKey<FormState>();
 
-  bool sel = false;
-  bool sel2 = false;
-
-  String? image;
-  String? editCoverImage;
-
-  File? _selectedImage; // Holds the selected image
-  File? _coverImage; // Holds the selected image
-  final ImagePicker _picker = ImagePicker();
-
-  Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _selectedImage = File(pickedFile.path);
-        print('SELECTED IMAGES $_selectedImage');
-      });
-    }
-  }
-
-  Future<void> _pickCoverImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        _coverImage = File(pickedFile.path);
-      });
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final dynamic args = ModalRoute.of(context)?.settings.arguments;
-      setState(() {
-        image = args['profileImage'];
-        editCoverImage = args['coverImage'];
-      });
-      ref.read(createGroupProvider.notifier).prefillFunc(args);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(kycVmProvider);
     final wayaTheme = Theme.of(context);
-
-    // final  id  = ModalRoute.of(context)?.settings.arguments as String;
-
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
     return WayaScaffold(
-      padding: EdgeInsets.zero,
       title: "Update Profile",
       isLoading: viewModel.isLoading,
       isScrollable: true,
@@ -98,14 +58,16 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                 children: [
                   AddDocumentWidget(
                       addFile: ref.read(kycVmProvider.notifier).addFile,
-                      removeFile: ref.read(donationVmProvider.notifier).removeFile,
-                      title: viewModel.kycImage != null ? viewModel.kycImage!.name : "Upload Event Thumbnail",
-                      isUploaded: viewModel.kycImage != null,
+                      removeFile: ref.read(kycVmProvider.notifier).removeFile,
+                      title: viewModel.kycImage.isNotEmpty
+                          ? viewModel.kycImage[0].name
+                          : "Upload Event Thumbnail",
+                      isUploaded: viewModel.kycImage.isNotEmpty,
                       description: "IMG , JPG Format"),
                   const Gap(10),
                   FormField<String>(validator: (value) {
                     if (viewModel.accountNumber.text.isEmpty) {
-                      return 'Account Number is required';
+                      return null;
                     }
 
                     return null;
@@ -114,13 +76,19 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WayaTextFormField(
-                          keyboardType: TextInputType.text,
-                          controller: viewModel.accountNumber,
-                          hintText: 'Enter Bank Account Number',
-                          borderColor: formState.hasError && viewModel.accountNumber.text.isEmpty
+                          keyboardType: TextInputType.none,
+                          //controller: viewModel.accountNumber,
+                          isReadOnly: true,
+                          fillColor: WayaColors.greyColor100,
+                          showFocusedBorder: false,
+                          showBorder: false,
+                          hintText: 'Wayabank',
+                          borderColor: formState.hasError &&
+                              viewModel.accountNumber.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
-                          label: 'Account Number',
+                          label: 'Bank Name',
+
                         ),
                         if (formState.hasError && viewModel.accountNumber.text.isEmpty)
                           Padding(
@@ -136,6 +104,24 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                       ],
                     );
                   }),
+                  const Gap(15),
+                  Text(
+                    "Account Number",
+                    style: WayaTextStyles.bodySmall.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.black),),
+                  WayaConfirmationView(
+                    hintText: 'Enter Bank Account Number',
+                    debounceTimer: const Duration(milliseconds: 20),
+                    getResult: WalletResource.instance.getUserWallet,
+                    getText: (user) => user?.accountName ?? "Account not found",
+                    backgroundColor: wayaTheme.colorScheme.primar50,
+                    searchController: viewModel.accountNumber,
+                    buttonTextStyle: wayaTheme.textTheme.bodyBold.copyWith(
+                      color: wayaTheme.colorScheme.primary,
+                    ),
+                  ),
                   const Gap(10),
                   FormField<String>(validator: (value) {
                     if (viewModel.bvn.text.isEmpty) {
@@ -148,9 +134,8 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WayaTextFormField(
-                          keyboardType: TextInputType.text,
+                          keyboardType: TextInputType.number,
                           controller: viewModel.bvn,
-                          line: 4,
                           hintText: 'Enter your BVN Number',
                           borderColor:
                               formState.hasError && viewModel.bvn.text.isEmpty ? wayaTheme.colorScheme.error : null,
@@ -181,7 +166,6 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                         WayaTextFormField(
                           keyboardType: TextInputType.text,
                           controller: viewModel.houseAddress,
-                          line: 4,
                           hintText: 'Enter your house address',
                           borderColor: formState.hasError && viewModel.houseAddress.text.isEmpty
                               ? wayaTheme.colorScheme.error
@@ -213,7 +197,6 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                         WayaTextFormField(
                           keyboardType: TextInputType.streetAddress,
                           controller: viewModel.businessAddress,
-                          line: 4,
                           hintText: 'Enter your business address',
                           borderColor: formState.hasError && viewModel.businessAddress.text.isEmpty
                               ? wayaTheme.colorScheme.error
@@ -237,7 +220,9 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                       callback: () async {
                         if (_formKey.currentState!.validate()) {}
                       },
-                      text: 'Confirm Donation Details'),
+                      text: 'Update KYC Information'
+                  ),
+
                 ],
               )),
           const Gap(8),
@@ -245,8 +230,11 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
               text: 'Go Back',
               color: wayaTheme.colorScheme.transparent,
               textColor: wayaTheme.colorScheme.customBlack,
-              border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-              callback: () {})
+              border:
+              Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+              callback: () {
+              Navigator.pop(context);
+              })
         ],
       ),
     );

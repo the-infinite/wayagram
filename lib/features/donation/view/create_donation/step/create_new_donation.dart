@@ -58,10 +58,10 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                 AddDocumentWidget(
                     addFile: ref.read(donationVmProvider.notifier).addFile,
                     removeFile: ref.read(donationVmProvider.notifier).removeFile,
-                    title: viewModel.donationImage != null
-                        ? viewModel.donationImage!.name
+                    title: viewModel.donationImage.isNotEmpty
+                        ? viewModel.donationImage[0].name
                         : "Upload Event Thumbnail",
-                    isUploaded: viewModel.donationImage != null,
+                    isUploaded: viewModel.donationImage.isNotEmpty,
                     description: "IMG , JPG Format"),
                 const Gap(10),
 
@@ -521,7 +521,8 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              widget.gotoPreviousTab();
+              Navigator.pop(context);
+             // widget.gotoPreviousTab();
             })
       ],
     );

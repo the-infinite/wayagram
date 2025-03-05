@@ -19,6 +19,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/view/report_group.dart';
 import 'package:wayagram/features/group/view/report_group_post.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
+import 'package:wayagram/features/group/widget/join_card_widget.dart';
 import 'package:wayagram/features/pages/data/model/feeds.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
@@ -386,80 +387,12 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
               itemCount: recommended.recommendedGroupDocs?.length,
               itemBuilder: (_, index) {
                 final recommendedGroup = recommended.recommendedGroupDocs?[index];
-                return Container(
-                  margin: EdgeInsets.only(right: 10,),
-                  width: 147.w,
-                  height: 180.h,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Theme.of(context).colorScheme.greyColor200),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      WayaImage(
-                        imageUrl:'${recommendedGroup?.coverImage}',
-                        height: 70,
-                        width: 70,
-                        radius: BorderRadius.circular(12),
-                      ),
-                      const Gap(10),
-                      Text(
-                           '${recommendedGroup?.name?.capitalizeFirst}',
-                          style:  wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Theme.of(context).colorScheme.black )),
-                      const Gap(3),
-                      Text(
-                        '${recommendedGroup?.memberCount} Members',
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium!
-                            .wayaCopyWith(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w400,
-                            color:
-                            Theme.of(context).colorScheme.greyColor500),
-                      ),
-                      const Gap(3),
-                      SizedBox(
-                        width: 80.w,
-                        child:WayaButton(
-                          callback: !viewModel2.isLoading
-                              ?()async{
-                            await group.joinGroup(context, '${recommendedGroup?.id}');
-                          }: null,
-                          text: 'Join Group',
-                          textStyle: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.primary,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 12,
-                          ),
-                          isLoading: viewModel2.isLoading,
-                          height: 28.h,
-                          color:wayaTheme.colorScheme.primary,
-                          textColor: wayaTheme.colorScheme.white,
-                        ),
-                      ),
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(horizontal: 20),
-                      //   child: WayaButton(
-                      //     callback: !viewModel2.isLoading ? () async{
-                      //       await group.joinGroup(context, '${recommendedGroup?.id}');
-                      //     }: null,
-                      //     text: 'Join Group',
-                      //     isLoading: viewModel2.isLoading,
-                      //     height: 30,
-                      //     textStyle: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                      //         fontSize: 12,
-                      //         fontWeight: FontWeight.w600,
-                      //         color: Theme.of(context).colorScheme.white ),
-                      //   ),
-                      // )
-                    ],
-                  ),
+                return JoinCardWidget(
+                    memberCount: '${recommendedGroup?.memberCount}',
+                    groupName: '${recommendedGroup?.name}',
+                    image: '${recommendedGroup?.coverImage}',
+                    onTap: group.joinGroup,
+                    id: '${recommendedGroup?.id}',
                 );
               }),
         ),
