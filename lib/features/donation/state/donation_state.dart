@@ -15,7 +15,7 @@ class DonationState{
     final TextEditingController amount;
     final TextEditingController minimumDonationAmount;
     final TextEditingController details;
-    final DocType? donationImage;
+    final List<DocType> donationImage;
     final MultipartFile? image;
     final String? kycStatus;
     final String kycMessage;
@@ -44,7 +44,7 @@ class DonationState{
     TextEditingController? details,
       this.allDonationDocs = const [],
       this.myDonationDocs = const [],
-      this.donationImage,
+      this.donationImage = const [],
       this.image,
       this.startDate = '',
       this.accountType,
@@ -79,7 +79,7 @@ class DonationState{
     TextEditingController? details,
       List<AllDonationDocs>? allDonationDocs,
       List<MyDonationDocs>? myDonationDocs,
-      DocType? donationImage,
+      List<DocType>? donationImage,
       MultipartFile? image,
       String? privacyOption,
       String? startDate,

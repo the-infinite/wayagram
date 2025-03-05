@@ -57,10 +57,10 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
         const Gap(15),
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: viewModel.donationImage != null
-              ? viewModel.donationImage!.file != null
+          child: viewModel.donationImage.isNotEmpty
+              ? viewModel.donationImage[0].file != null
               ? Image.file(
-            viewModel.donationImage!.file!,
+            viewModel.donationImage[0].file!,
             fit: BoxFit.cover,
             height: 200,
             width: double.infinity,
@@ -68,7 +68,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
             scale: 1,
           )
               : Image.network(
-            viewModel.donationImage!.url,
+            viewModel.donationImage[0].url,
             fit: BoxFit.cover,
             height: 200,
             width: double.infinity,

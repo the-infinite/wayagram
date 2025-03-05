@@ -61,15 +61,20 @@ class DonationVm extends StateNotifier<DonationState> {
   }
 
 
-
   void addFile(File file) {
-    state = state.copyWith(
-        donationImage: DocType(
-            file: file, type: "donation-image", name: file.path.split('/').last));
+    state = state.copyWith(donationImage: [
+      DocType(file: file, type: "donation-image", name: file.path.split('/').last)
+    ]);
   }
 
+
   void removeFile() {
-    state = state.copyWith(donationImage: null);
+    List<DocType> e = List.from(state.donationImage);
+    e = e.where((i) => i.type != 'donation-image').toList();
+    state = state.copyWith(donationImage: e);
+
+    print("efwefw");
+    print(state);
   }
 
   bool isStartDateAfterEndDate(String startDate, String endDate) {
@@ -206,7 +211,7 @@ class DonationVm extends StateNotifier<DonationState> {
   Future<void> onSubmit(title, description, solution, impact, targetAmount, minimumAmount, privacy, expirationDate, image, startDate, {required BuildContext context}) async {
     try {
       // validate image
-      if (state.donationImage == null) {
+      if (state.donationImage.isEmpty) {
         WayaSnackBar.showToast("Add an Image");
         return;
       }
@@ -234,10 +239,10 @@ class DonationVm extends StateNotifier<DonationState> {
       // }
 
       state = state.copyWith(isLoading: true);
-      final image =  state.donationImage!.file == null
-          ? state.donationImage!.url
+      final image =  state.donationImage[0].file == null
+          ? state.donationImage[0].url
           : await WayaUtils.uploadFile(
-          file: state.donationImage!.file!, repository: _uploadFileRepository);
+          file: state.donationImage[0].file!, repository: _uploadFileRepository);
 
       final response = await _donationRepository.createCampaign(title, description,
           solution, impact,

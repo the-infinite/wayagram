@@ -11,7 +11,7 @@ class KycState{
   final TextEditingController bvn;
   final TextEditingController houseAddress;
   final TextEditingController businessAddress;
-  final DocType? kycImage;
+  final List<DocType> kycImage;
 
   final bool isLoading;
 
@@ -21,7 +21,7 @@ class KycState{
     TextEditingController? houseAddress,
     TextEditingController? businessAddress,
     this.isLoading = false,
-    this.kycImage,
+    this.kycImage = const [],
 
 
   }):
@@ -37,7 +37,7 @@ class KycState{
     TextEditingController? houseAddress,
     TextEditingController? businessAddress,
     bool? isLoading,
-    DocType? kycImage,
+    List<DocType>? kycImage,
 
   }){
     return KycState(

@@ -15,9 +15,11 @@ import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/view/my_donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/explore/widgets/donation_widget.dart';
+import 'package:wayagram/features/kyc/view/kyc_update.dart';
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
 import '../../chat/state/default.dart';
@@ -53,11 +55,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
     super.dispose();
   }
 
-  String userType = "PERSONAL";
-
   @override
   Widget build(BuildContext context) {
-
    final  viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
@@ -94,26 +93,28 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             ],
           ),
           callback: () {
-            print('DIALA ACCOUNT TYPE ${viewModel.accountType}');
-             if(viewModel.kycStatus != 'APPROVED'){
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text(
-                    'You must complete KYC verification before creating a donation post',
-                    style:
-                    TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
-                  ),
-                  backgroundColor: WayaColors.primary,
-                  duration: Duration(seconds: 2),
-                ),
-              );
-            }else if (viewModel.accountType == null) {
+             if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
+               WayaUtils.showNotice(
+                   context: context,
+                   title: "Update KYC Information ",
+                   message: 'You must complete KYC verification before creating a donation post',
+                   onPress: () {
+                     Navigator.pop(context);
+                     WayaNav.toNamed(KycUpdate.route);
+                   },
+                   buttonText: 'Update KYC',
+                   secondButtonText: 'Cancel',
+                   icon: Image.asset('assets/images/cp-shop.png'));
+            } else if (ConversationState.self.accountType == UserAccountType.personal) {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 WayaUtils.showNotice(
                     context: context,
                     title: "You don't have a Business Account",
                     message: 'Please upgrade to a business account to create a donation post',
-                    onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
+                    onPress: () {
+                      Navigator.pop(context);
+                      WayaNav.toNamed(UpgradeToBusiness.route);
+                    },
                     buttonText: 'Upgrade to Business',
                     secondButtonText: 'Cancel',
                     icon: Image.asset('assets/images/cp-shop.png'));
@@ -121,7 +122,6 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             } else{
               WayaNav.toNamed('/createDonation');
             }
-
           },
           color: wayaTheme.colorScheme.primar50,
         ),
@@ -160,7 +160,14 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
               itemBuilder: (context, index){
                final donation = filteredAllDonations[index];
                int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
-                return ManageDonationWidget(
+
+               int amountRaised = double.parse(donation.amountRaised!).toInt();
+
+               int targetedAmount = double.parse(donation.targetAmount!).toInt();
+
+               double ratioLeft = amountRaised / targetedAmount;
+
+               return ManageDonationWidget(
                   text:  "Donate",
                   amountRaised:  WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
                   targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
@@ -168,6 +175,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   image: donation.imageURL,
                   dayLeft: daysLeft < 0  ? '0' : '$daysLeft',
                   donationCount: donation.donationCount,
+                  rangeRatio: ratioLeft,
                   onTap: (){
                     WayaNav.toNamed('/donationDetails',
                         arguments: {
@@ -223,7 +231,13 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   itemBuilder: (context, index){
                     final donation = viewModel.allDonationDocs?[index];
                     int daysLeft = DateTime.parse('${donation?.expirationDate}').difference(DateTime.parse('${donation?.startDate}')).inDays;
-                    //int daysLeft = DateTime.parse('${donation?.expirationDate}').day;
+
+
+                    int amountRaised = double.parse('${donation?.amountRaised}').toInt();
+
+                    int targetedAmount = double.parse('${donation?.targetAmount}').toInt();
+
+                    double ratioLeft = amountRaised / targetedAmount;
                     return ManageDonationWidget(
                       text: "Donate",
                       amountRaised: donation?.amountRaised,
@@ -232,6 +246,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                       image: donation?.imageURL,
                       dayLeft: '$daysLeft',
                       donationCount: donation?.donationCount!,
+                      rangeRatio: ratioLeft,
                       onTap: (){
                         WayaNav.toNamed('/donationDetails',
                             arguments: {
