@@ -5,16 +5,18 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/shared/features/quotation/model/default.dart';
 
 class SingleBidWidget extends ConsumerWidget {
-  
   final bool isSeller;
-  const SingleBidWidget({super.key, this.isSeller = false});
+  final QuotationBidModel bid;
+
+  // Construct.
+  const SingleBidWidget({super.key, required this.bid, this.isSeller = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(singleBidWidgetViewModelProvider);
 
     //? This is our component.
     return GestureDetector(
@@ -52,7 +54,7 @@ class SingleBidWidget extends ConsumerWidget {
                       children: [
                         //? The ID of this buy request.
                         Text(
-                          "Quote #43435353",
+                          "Quote #${bid.requestId}",
                           style: wayaTheme.textTheme.bodyMedium?.copyWith(
                             color: wayaTheme.colorScheme.customBlack,
                             fontSize: 14,
@@ -110,7 +112,7 @@ class SingleBidWidget extends ConsumerWidget {
 
                     //? When this was made.
                     Text(
-                      "Aug 11, 2024",
+                      WayaDateHelper.getDailyTimestamp(bid.createdAt),
                       style: wayaTheme.textTheme.bodyMedium?.copyWith(
                         color: wayaTheme.colorScheme.greyColor400,
                         fontSize: 13,

@@ -181,5 +181,5 @@ class ShopVm extends StateNotifier<ShopState> {
 }
 
 final shopVmProvider = StateNotifierProvider<ShopVm, ShopState>((ref) {
-  return ShopVm(ShopRepository(), ref);
+  return ShopVm(ShopRepository.instance, ref);
 });

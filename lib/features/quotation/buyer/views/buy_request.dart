@@ -5,10 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:gap/gap.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:wayagram/shared/features/quotation/view/all_buy_request.dart';
 import 'package:wayagram/shared/features/quotation/view/buy_request.dart';
 
 class BuyRequests extends ConsumerStatefulWidget {
@@ -56,7 +58,13 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
         const Gap(25),
 
         //? The wayagram deals
-        GroupedWidgetHeader(onTap: () {}, subTitle: 'Explore Categories & Best Offers', title: 'Wayagram Deals'),
+        GroupedWidgetHeader(
+          onTap: () {
+            WayaNav.toNamed(SellerBuyRequestsScreen.route);
+          },
+          subTitle: 'Explore Categories & Best Offers',
+          title: 'Wayagram Deals',
+        ),
 
         // Some space.
         const Gap(25),
@@ -116,7 +124,13 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
         const Gap(25),
 
         //? Explore the recommended bids.
-        GroupedWidgetHeader(onTap: () {}, subTitle: 'Explore Categories & Best Offers', title: 'Recommended Bids'),
+        GroupedWidgetHeader(
+          onTap: () {
+            WayaNav.toNamed(SellerBuyRequestsScreen.route);
+          },
+          subTitle: 'Explore Categories & Best Offers',
+          title: 'Recommended Bids',
+        ),
 
         // Some space.
         const Gap(25),

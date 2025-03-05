@@ -25,6 +25,25 @@ enum BuyRequestDeliveryType {
   delivery,
 }
 
+enum BidActionType {
+  @JsonValue("countered")
+  negotiate,
+
+  @JsonValue("accepted")
+  accept,
+
+  @JsonValue("rejected")
+  reject,
+
+  @JsonValue("pending")
+  noop,
+}
+
+enum BidActionAuthor {
+  buyer,
+  vendor,
+}
+
 @JsonSerializable()
 class BuyRequestModel {
   final String id;
@@ -154,8 +173,8 @@ class BuyRequestModel {
 class QuotationBidModel {
   final String id;
   final bool isFinal;
-  final String status;
-  final String lastCounterSentBy;
+  final BidActionType status;
+  final BidActionAuthor lastCounterSentBy;
   final bool isDeleted;
   final String requestId;
   final String vendorId;
@@ -163,7 +182,7 @@ class QuotationBidModel {
   final String shopId;
   final DateTime updatedAt;
   final DateTime createdAt;
-  final double? counterAmount;
+  final String? counterAmount;
 
   QuotationBidModel({
     required this.id,
@@ -182,4 +201,46 @@ class QuotationBidModel {
 
   factory QuotationBidModel.fromJson(Map<String, dynamic> json) => _$QuotationBidModelFromJson(json);
   Map<String, dynamic> toJson() => _$QuotationBidModelToJson(this);
+}
+
+@JsonSerializable(createFactory: false)
+class BidActionModel {
+  final BidActionType action;
+  final BidActionAuthor lastCounterSentBy;
+  final String bidId;
+  final String? counterAmount;
+
+  /// Helper constructor used to create the bid action model for requests that
+  /// are supposed to be used to accept a bid.
+  const BidActionModel.accept({
+    required this.bidId,
+    required this.lastCounterSentBy,
+    this.action = BidActionType.accept,
+    this.counterAmount,
+  });
+
+  /// Helper constructor used to create the bid action model for rejecting bids
+  /// by the buyer.
+  const BidActionModel.reject({
+    required this.bidId,
+    required this.lastCounterSentBy,
+    this.action = BidActionType.reject,
+    this.counterAmount,
+  });
+
+  /// Helper constructor used to create the bid action that is used for initiating
+  /// a negotiation. It can be done by either the buyer or the seller. All is fair
+  /// in purchase and bargaining.
+  const BidActionModel.negotiate({
+    required this.bidId,
+    required this.lastCounterSentBy,
+    required this.counterAmount,
+    this.action = BidActionType.negotiate,
+  });
+
+  Map<String, dynamic> toJson() {
+    final result = _$BidActionModelToJson(this);
+    result.removeWhere((key, value) => value == null);
+    return result;
+  }
 }

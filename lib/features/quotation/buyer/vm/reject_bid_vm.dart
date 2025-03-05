@@ -14,13 +14,12 @@ class RejectBidVm extends ChangeNotifier {
       context: context,
       title: 'Are you sure you want to\nreject this bid?',
       message: 'Are you sure you want to reject this bid? Once confirmed this can’t\nbe undone',
-      onPress: () => Navigator.of(context).pop(),
+      onPress: () => WayaNav.goBack(),
       icon: Image.asset('assets/images/d-code-invalid.png'),
       buttonCenterWidget: WayaButton(
         text: 'Yes, Reject Bid',
         callback: () {
-          Navigator.of(context).pop();
-          //widget.gotoPreviousTab();
+          WayaNav.goBack();
         },
         color: WayaColors.error500,
       ),
