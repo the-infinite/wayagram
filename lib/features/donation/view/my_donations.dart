@@ -165,7 +165,7 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
                     'title': '${donation.title?.capitalizeFirst}',
                     'image': '${donation.imageURL}',
                     'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
-                  'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
+                    'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
                     'desc': '${donation.description}',
                     'solution': '${donation.solution}',
                     'impact': '${donation.impact}',
@@ -173,6 +173,8 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
                     'minimumDonationAmount': '${donation.minimumDonationAmount}',
                     'daysLeft': '$daysLeft',
                     'id': '${donation.id}',
+                    'range':ratioLeft,
+                    'donationCount': '${donation.donationCount}'
                   });
                 },
                 buttonWidth: 120.0,

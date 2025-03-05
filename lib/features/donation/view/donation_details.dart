@@ -47,8 +47,8 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
     final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
-    print('MY Donation ARGS $args');
-    print('MY Donation Count==>>${args['donationCount']}');
+
+
     return WayaScaffold(
         title: "Donation Details",
         isLoading: viewModel.isLoading,
