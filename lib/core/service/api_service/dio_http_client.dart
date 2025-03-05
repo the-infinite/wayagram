@@ -247,6 +247,7 @@ class DioHttpClient implements WayaHttpClientInterface {
   Future<WayaRequestResponse> _makeRequest(
     Future<Response> future, [
     bool showErrors = true,
+    int depth = 3,
   ]) async {
     try {
       print("vv");
@@ -266,6 +267,13 @@ class DioHttpClient implements WayaHttpClientInterface {
       _logger.e('statusCode: ${e.response}');
       if (e.response != null) {
         var message = 'An unknown error occurred';
+
+        if (e.response?.statusCode == 401) {
+          // TODO: @sekani50 Call the refresh token thing here. When that is
+          // todo| then successful, call the code in the commented line below.
+          //? If we have tried up to 3 times.
+          // if (depth > 0) return _makeRequest(future, showErrors, depth - 1);
+        }
 
         try {
           message = e.response?.data['errors'] != null ? e.response?.data['errors'][0] : e.response?.data['message'];
