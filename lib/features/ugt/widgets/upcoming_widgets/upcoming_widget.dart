@@ -10,13 +10,13 @@ class UpcomingWidget extends StatelessWidget {
   final String content;
   final bool status;
   final bool isFromDetailsPage;
-  const UpcomingWidget(
-      {super.key,
-      required this.title,
-      required this.content,
-      this.status = false,
-      this.isFromDetailsPage = false,
-      });
+  const UpcomingWidget({
+    super.key,
+    required this.title,
+    required this.content,
+    this.status = false,
+    this.isFromDetailsPage = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,18 +26,19 @@ class UpcomingWidget extends StatelessWidget {
       children: [
         Text(title,
             style: TextStyle().wayaCopyWith(
-              color: Theme.of(context).colorScheme.greyColor300,
-              fontSize: 13,
+              color: Theme.of(context).colorScheme.greyColor600,
+              fontSize: 12,
             )),
         const Gap(5),
         if (!status)
           SizedBox(
-            width: isFromDetailsPage?null :context.width * 0.15,
+            width: isFromDetailsPage ? null : context.width * 0.15,
             child: Text(content,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle().wayaCopyWith(
-                  color: Theme.of(context).colorScheme.customBlack,
-                  fontSize: 10,
+                  color: Theme.of(context).colorScheme.greyColor900,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
                 )),
           ),
         if (status)

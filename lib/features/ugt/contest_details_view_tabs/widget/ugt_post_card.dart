@@ -8,18 +8,27 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
+import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
+import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
+
+import '../../data/model/ugt_post_model.dart';
+import '../../ugt_buttomsheet_modal/contest_vote_modal.dart';
 
 class UgtPostCard extends ConsumerWidget {
   final SingleContestantPosts post;
+  final Contest contestModel;
   final MyContestContestantModel? contestApplicant;
-  const UgtPostCard(this.post, this.contestApplicant, {super.key});
+  const UgtPostCard(this.post, this.contestApplicant, this.contestModel,
+      {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-
+    var notifier = ref.watch(ugtContestantProfileVm.notifier);
+    var contestModel2 = ref.watch(selectedContestProvider);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -107,13 +116,21 @@ class UgtPostCard extends ConsumerWidget {
               ClipRRect(
                 borderRadius:
                     BorderRadius.circular(16), // Adjust the radius as needed
-                child: Image.network(
+                child: WayaImage(
+                  imageUrl: post.mediaContent?[0].url ?? "",
+                  height: 200,
+                  width: context.width,
+                  fit: BoxFit.cover, // Ensur
+                  //  radius: BorderRadius.circular(45),
+                ),
+
+                /*  Image.network(
                   post.mediaContent?[0].url ?? "",
                   height: 200,
                   width: context.width,
                   fit: BoxFit
                       .cover, // Ensures the image covers the area properly
-                ),
+                ), */
               ),
               const Gap(20),
               Row(
@@ -123,7 +140,9 @@ class UgtPostCard extends ConsumerWidget {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          notifier.toggleLike(post.id!);
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -140,7 +159,7 @@ class UgtPostCard extends ConsumerWidget {
                             ),
                             const Gap(3),
                             Text(
-                              "0 Likes",
+                              "${post.likes} Likes",
                               style: TextStyle().wayaCopyWith(
                                   color: wayaTheme.colorScheme.customBlack,
                                   fontSize: 12,
@@ -151,7 +170,9 @@ class UgtPostCard extends ConsumerWidget {
                       ),
                       const Gap(30),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          notifier.toggleShare(post.id!);
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -168,7 +189,7 @@ class UgtPostCard extends ConsumerWidget {
                             ),
                             const Gap(3),
                             Text(
-                              "0 Shares",
+                              "${post.shares} Shares",
                               style: TextStyle().wayaCopyWith(
                                   color: wayaTheme.colorScheme.customBlack,
                                   fontSize: 12,
@@ -181,7 +202,29 @@ class UgtPostCard extends ConsumerWidget {
                   ),
                   WayaButton(
                     fontSize: 14,
-                    callback: () {},
+                    callback: () {
+                      WayaUtils.showModalSheet(
+                        context,
+                        child: VoteOptionModal(
+                          voteFee:
+                              contestModel2.amountPerVote?.toString() ?? "0",
+                          //   amountPaid: "89",
+                          model: ContestVoteModel(
+                              contestId: post.contestId ?? "",
+                              contestantId: post.id ?? "",
+                              hostUserId: post.contestantProfileId ?? "",
+                              amount: "0",
+                              numberOfVotes: "0",
+                              profileId: "",
+                              type: contestModel.type ?? ""),
+
+                          candidateName:
+                              contestApplicant?.contestApplicant?.fullName ??
+                                  "Name",
+                          votingLink: "votingLink",
+                        ),
+                      );
+                    },
                     text: "Vote Candidate",
                   ),
                 ],

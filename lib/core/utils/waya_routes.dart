@@ -107,6 +107,7 @@ import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference
 import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.dart';
 import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
 import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
+import 'package:wayagram/features/ugt/my_contest_details/edit_contestant_profile.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
@@ -183,6 +184,7 @@ class WayaAppRoutes {
     UgtHome.route: () => UgtHome(),
     CreateContest.route: () => CreateContest(),
     CreateContestPost.route: () => CreateContestPost(),
+    EditContestantProfile.route: () => EditContestantProfile(),
     ViewSingleContestantData.route: () => ViewSingleContestantData(),
     ContestActiveDisqualify.route: () => ContestActiveDisqualify(),
     ContestProfilePage.route: () => ContestProfilePage(),

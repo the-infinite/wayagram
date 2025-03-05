@@ -2,15 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart';
+import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
+import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 
 class ContestProfileStagesSection extends ConsumerStatefulWidget {
-  final List<Stages>? stages;
+  final List<Stage>? stages;
   const ContestProfileStagesSection(this.stages, {super.key});
 
   @override
@@ -42,48 +45,80 @@ class _ContestProfileStagesSectionState
     );
   }
 
-  Widget _buildStages(Stages model) {
+  Widget _buildStages(Stage model) {
     final wayaTheme = Theme.of(context);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
+        Align(
+          alignment: Alignment.topLeft,
+          child: Text(model.stageName ?? "",
+              style: TextStyle().wayaCopyWith(
+                color: Colors.black,
+                fontSize: 16,
+              )),
+        ),
+        const Gap(10),
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            UpcomingWidget(
-                title: "Start Date",
-                isFromDetailsPage: true,
-                content: formatDate(model.startDate ?? "")),
-            const Gap(20),
-            UpcomingWidget(
-                isFromDetailsPage: true,
-                title: "End Date",
-                content: formatDate(model.endDate ?? "")),
-            const Gap(20),
-            UpcomingWidget(
-                isFromDetailsPage: true,
-                title: "Entry Type",
-                content: model.entryType ?? ""),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                UpcomingWidget(
+                    title: "Start Date",
+                    isFromDetailsPage: true,
+                    content: formatDate(model.startDate ?? "")),
+                const Gap(20),
+                UpcomingWidget(
+                    isFromDetailsPage: true,
+                    title: "No of Posts",
+                    content:
+                        "${model.numberOfPostPerWeek?.toString()} of Duration"),
+              ],
+            ),
+            //  const Gap(20),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                UpcomingWidget(
+                    isFromDetailsPage: true,
+                    title: "End Date",
+                    content: formatDate(model.endDate ?? "")),
+                const Gap(20),
+                UpcomingWidget(
+                    isFromDetailsPage: true,
+                    title: "Prize for Winner",
+                    content:
+                        "NGN${formatMoney(model.amountEarned.toString())}"),
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                UpcomingWidget(
+                    isFromDetailsPage: true,
+                    title: "Entry Type",
+                    content: model.entryType ?? ""),
+                const Gap(20),
+                StatusOngoing(
+                  title: "Qualification Status",
+                  content: "Qualified",
+                ),
+              ],
+            ),
           ],
         ),
         const Gap(10),
         Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(
-                isFromDetailsPage: true,
-                title: "No of Posts",
-                content:
-                    "${model.numberOfPostPerWeek?.toString()} of Duration"),
-            const Gap(20),
-            UpcomingWidget(
-                isFromDetailsPage: true,
-                title: "Prize for Winner",
-                content:
-                    "NGN${formatMoney(model.priceOfTheWinner.toString())}"),
-            const Gap(20),
-          ],
+          children: [],
         ),
         const Gap(20),
       ],
