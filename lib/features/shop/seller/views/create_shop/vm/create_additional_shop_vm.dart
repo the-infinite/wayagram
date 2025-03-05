@@ -155,6 +155,6 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
 
 final createAdditionalShopVmProvider = StateNotifierProvider.family<
     CreateAdditionalShopVm, CreateShopState, String>((ref, uniqueKey) {
-  return CreateAdditionalShopVm(ShopRepository(), AuthRepository(),
+  return CreateAdditionalShopVm(ShopRepository.instance, AuthRepository(),
       ImagePicker(), WayaSecureDataSource(), ref);
 });

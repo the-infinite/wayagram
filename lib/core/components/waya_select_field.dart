@@ -30,25 +30,32 @@ class WayaSelectField<T> extends ConsumerWidget {
     this.multi = false,
   });
 
+  Select? _getPair(String value) {
+    return items.where((item) => item.value == value).firstOrNull;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(wayaSelectFieldViewModelProvider(uniqueKey));
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         if (label != null)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Text(label!,
-                style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                    fontSize: 14, color: wayaTheme.colorScheme.greyColor900)),
+            child: Text(
+              label!,
+              style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                fontSize: 14,
+                color: wayaTheme.colorScheme.greyColor900,
+              ),
+            ),
           ),
         AppTextField(
           textFieldType: TextFieldType.NAME,
-          onTap: () => viewModel.selectValue(
-              context, hintText, items, onSelected, multi),
+          onTap: () => viewModel.selectValue(context, hintText, items, onSelected, multi),
           readOnly: true,
           decoration: inputDecoration(
             wayaTheme: wayaTheme,
@@ -58,18 +65,20 @@ class WayaSelectField<T> extends ConsumerWidget {
                 ? hintText
                 : value is List<Select>
                     ? (value as List<Select>).map((e) => e.label).join(',')
-                    : value as String,
+                    : _getPair(value.toString())?.label ?? value as String,
             hintStyle: wayaTheme.textTheme.bodyMedium?.copyWith(
               fontSize: 14,
               color: (value == null ||
-                    value.toString().isEmpty ||
-                    (value is List<Select> && (value as List<Select>).isEmpty))
+                      value.toString().isEmpty ||
+                      (value is List<Select> && (value as List<Select>).isEmpty))
                   ? wayaTheme.colorScheme.greyColor300
                   : wayaTheme.colorScheme.customBlack,
             ),
           ),
-          suffix: Icon(Icons.arrow_drop_down,
-              color: wayaTheme.colorScheme.greyColor300),
+          suffix: Icon(
+            Icons.arrow_drop_down,
+            color: wayaTheme.colorScheme.greyColor300,
+          ),
         ),
       ],
     );
@@ -82,8 +91,8 @@ class WayaSelectFieldViewModel extends ChangeNotifier {
 
   WayaSelectFieldViewModel(this.ref);
 
-  Future<void> selectValue(BuildContext context, String title,
-      List<Select> items, Function(List<Select>) onSelected, bool multi) async {
+  Future<void> selectValue(
+      BuildContext context, String title, List<Select> items, Function(List<Select>) onSelected, bool multi) async {
     final result = await WayaUtils.showSelectModal(
       context: context,
       title: title,
@@ -100,7 +109,6 @@ class WayaSelectFieldViewModel extends ChangeNotifier {
 }
 
 final wayaSelectFieldViewModelProvider =
-    ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>(
-        (ref, uniqueKey) {
+    ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>((ref, uniqueKey) {
   return WayaSelectFieldViewModel(ref);
 });

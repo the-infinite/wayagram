@@ -67,5 +67,5 @@ class SellerProductsVm extends StateNotifier<SellerProductState> {
 
 final sellerProductsVmProvider =
     StateNotifierProvider<SellerProductsVm, SellerProductState>((ref) {
-  return SellerProductsVm(ShopRepository(), WayaSecureDataSource(), ref);
+  return SellerProductsVm(ShopRepository.instance, WayaSecureDataSource(), ref);
 });

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/shared/features/quotation/view/all_buy_request.dart';
 import 'package:wayagram/shared/features/quotation/view/buy_request.dart';
 
 class MyRequests extends ConsumerStatefulWidget {
@@ -32,7 +34,9 @@ class _MyRequestsState extends ConsumerState<MyRequests> {
 
         //? Second, a widget to
         GroupedWidgetHeader(
-          onTap: () {},
+          onTap: () {
+            WayaNav.toNamed(BuyerBuyRequestsScreen.route);
+          },
           subTitle: 'Explore Categories & Best Offers',
           title: 'Wayagram Deals',
         ),
@@ -56,7 +60,9 @@ class _MyRequestsState extends ConsumerState<MyRequests> {
 
         //? Then we can look at te buyer requests that a here.
         GroupedWidgetHeader(
-          onTap: () {},
+          onTap: () {
+            WayaNav.toNamed(BuyerBuyRequestsScreen.route);
+          },
           subTitle: 'Explore Categories & Best Offers',
           title: 'Recommended Products',
         ),

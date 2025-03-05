@@ -32,6 +32,7 @@ class SingleChatScreen extends ConsumerStatefulWidget {
 
 class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   late final notifier = ref.watch(chatProvider.notifier);
+  final handler = WayaObservableScrollController();
 
   @override
   void initState() {
@@ -283,6 +284,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
               else
                 Expanded(
                   child: WayaPaginatedListView<MessageModel>(
+                    handler: handler,
                     nextPage: state.page,
                     itemCount: state.messages.length,
                     isAtEnd: !state.hasNextPage,

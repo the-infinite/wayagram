@@ -25,6 +25,7 @@ class SupportChatScreen extends ConsumerStatefulWidget {
 
 class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
   late final notifier = ref.read(supportChatProvider.notifier);
+  final handler = WayaObservableScrollController();
   final inputController = ChatInputController.instance;
   ChatModel? _currentChat;
 
@@ -135,6 +136,7 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
             else
               Expanded(
                 child: WayaPaginatedListView<MessageModel>(
+                  handler: handler,
                   nextPage: state.page,
                   itemCount: state.messages.length,
                   isAtEnd: !state.hasNextPage,
