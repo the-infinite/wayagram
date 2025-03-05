@@ -1,7 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
+import 'package:wayagram/features/polls_and_voting/data/repo/poll_and_voting_repository.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
 import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
@@ -43,6 +47,7 @@ class States {
   final List<Post> topPosts;
   final List<CategorizedPost> categorizedPosts;
   final List<UserDetails> usersDetails;
+  final List<Docs> feedPolls;
 
   States(
       {this.events = const [],
@@ -50,6 +55,7 @@ class States {
       this.topEvents = const [],
       this.categorizedPosts = const [],
       this.usersDetails = const [],
+      this.feedPolls = const [],
       this.posts = const [],
       this.topPosts = const []});
 
@@ -60,6 +66,7 @@ class States {
       List<CategorizedPost>? categorizedPosts,
       List<UserDetails>? usersDetails,
       List<Post>? posts,
+      List<Docs>? feedPolls,
       List<Post>? topPosts}) {
     return States(
         events: events ?? this.events,
@@ -67,6 +74,7 @@ class States {
         topEvents: topEvents ?? this.topEvents,
         usersDetails: usersDetails ?? this.usersDetails,
         posts: posts ?? this.posts,
+        feedPolls: feedPolls ?? this.feedPolls,
         categorizedPosts: categorizedPosts ?? this.categorizedPosts,
         topPosts: topPosts ?? this.topPosts);
   }
@@ -76,10 +84,12 @@ class ServicesProvider extends StateNotifier<States> {
   final Ref ref;
   final EventRepository _eventRepository;
   final PageRepository _pageRepository;
+  final PollAndVotingRepository _pollAndVotingRepository;
   final WayaSecureDataSource _secureDataSource;
+  final _logger = getLogger("ServicesProvider");
 
-  ServicesProvider(this._pageRepository, this._secureDataSource,
-      this._eventRepository, this.ref)
+  ServicesProvider(this._pollAndVotingRepository, this._pageRepository,
+      this._secureDataSource, this._eventRepository, this.ref)
       : super(States());
 
   Future<void> getEvents() async {
@@ -195,19 +205,68 @@ class ServicesProvider extends StateNotifier<States> {
   }
 
   //// Posts
-  Future<void> getPosts() async {
-    try {
-      final response = await _pageRepository.getAllPosts();
-      if (response.success) {
-        PostReponseModel reponseModel =
-            PostReponseModel.fromJson(response.data);
-        state = state.copyWith(topPosts: reponseModel.data.docs);
-      }
-    } catch (error) {
-      print(error);
-    }
-  }
+Future<void> getPosts() async {
+  try {
+    final response = await _pageRepository.getAllPosts();
+    if (response.success) {
+      PostReponseModel responseModel = PostReponseModel.fromJson(response.data);
+      final userInterests = ref.watch(selectInterestProvider).userInterests;
+      final List<Post> allPosts = responseModel.data.docs;
 
+      // Map user interests to categories and scores
+      Map<String, int> interestMap = {
+        for (var interest in userInterests) interest.category: interest.score
+      };
+
+      // Filter posts that match user interests, handling null categories
+      List<Post> matchingPosts = allPosts
+          .where((post) =>
+              (post.categories?.isNotEmpty ?? false) &&
+              post.categories!.any((category) => interestMap.containsKey(category)))
+          .toList();
+
+      // Sort posts by highest matching interest score
+      matchingPosts.sort((a, b) {
+        int aMaxScore = (a.categories ?? [])
+            .map((c) => interestMap[c] ?? 0)
+            .fold(0, (prev, score) => score > prev ? score : prev);
+        int bMaxScore = (b.categories ?? [])
+            .map((c) => interestMap[c] ?? 0)
+            .fold(0, (prev, score) => score > prev ? score : prev);
+        return bMaxScore.compareTo(aMaxScore); // Higher scores first
+      });
+
+      // Get score distribution and select top posts
+      List<int> scoreDistribution = _getScoreDistribution(userInterests.length, 5);
+      List<Post> topPosts = [];
+      int index = 0;
+
+      for (int slots in scoreDistribution) {
+        for (int i = 0; i < slots && index < matchingPosts.length; i++) {
+          topPosts.add(matchingPosts[index++]);
+        }
+      }
+
+      // If fewer than 5 posts, add random non-matching posts
+      if (topPosts.length < 5) {
+        final remainingPosts = allPosts
+            .where((post) => !topPosts.contains(post) && (post.categories?.isNotEmpty ?? false))
+            .toList();
+        remainingPosts.shuffle();
+        topPosts.addAll(remainingPosts.take(5 - topPosts.length));
+      }
+
+      // Update state
+      state = state.copyWith(topPosts: topPosts);
+    }
+  } catch (error) {
+    print(error);
+  }
+}
+
+
+  //> No more in use for now
+  @Deprecated("No more in use for now")
   Future<void> getEngagedPost() async {
     try {
       final response = await _pageRepository.getAllPosts();
@@ -274,6 +333,69 @@ class ServicesProvider extends StateNotifier<States> {
 
         // Ensure we don't exceed 10 posts
         state = state.copyWith(posts: finalPosts.take(10).toList());
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<void> getFeedPolls() async {
+    try {
+      final response = await _pollAndVotingRepository.getAllFeedPolls();
+
+      if (response.success) {
+        FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
+        final List<Docs> allPolls = responseModel.data?.docs ?? [];
+        final userInterests = ref.watch(selectInterestProvider).userInterests;
+
+        // Map user interests to categories and scores
+        Map<String, int> interestMap = {
+          for (var interest in userInterests) interest.category: interest.score
+        };
+
+        // Filter polls that match user interests, ignoring empty categories
+        List<Docs> matchingPolls = allPolls
+            .where((poll) =>
+                poll.categories!.isNotEmpty &&
+                poll.categories!
+                    .any((category) => interestMap.containsKey(category)))
+            .toList();
+
+        // Sort polls by highest matching interest score
+        matchingPolls.sort((a, b) {
+          int aMaxScore = a.categories!
+              .map((c) => interestMap[c] ?? 0)
+              .fold(0, (prev, score) => score > prev ? score : prev);
+          int bMaxScore = b.categories!
+              .map((c) => interestMap[c] ?? 0)
+              .fold(0, (prev, score) => score > prev ? score : prev);
+          return bMaxScore.compareTo(aMaxScore); // Higher scores first
+        });
+
+        // Get score distribution and select top polls
+        List<int> scoreDistribution =
+            _getScoreDistribution(userInterests.length, 5);
+        List<Docs> feedPolls = [];
+        int index = 0;
+
+        for (int slots in scoreDistribution) {
+          for (int i = 0; i < slots && index < matchingPolls.length; i++) {
+            feedPolls.add(matchingPolls[index++]);
+          }
+        }
+
+        // If fewer than 5 polls, add random non-matching polls
+        if (feedPolls.length < 5) {
+          final remainingPolls = allPolls
+              .where((poll) =>
+                  !feedPolls.contains(poll) && poll.categories!.isNotEmpty)
+              .toList();
+          remainingPolls.shuffle();
+          feedPolls.addAll(remainingPolls.take(5 - feedPolls.length));
+        }
+
+        // Update state
+        state = state.copyWith(feedPolls: feedPolls);
       }
     } catch (error) {
       print(error);
@@ -408,6 +530,6 @@ class ServicesProvider extends StateNotifier<States> {
 }
 
 final servicesProvider = StateNotifierProvider<ServicesProvider, States>((ref) {
-  return ServicesProvider(
-      PageRepository(), WayaSecureDataSource(), EventRepository(), ref);
+  return ServicesProvider(PollAndVotingRepository(), PageRepository(),
+      WayaSecureDataSource(), EventRepository(), ref);
 });

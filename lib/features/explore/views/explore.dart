@@ -7,6 +7,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
@@ -48,10 +49,11 @@ class _ExploreState extends ConsumerState<Explore> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(regionsProvider.notifier).getCurrentCountry();
+     ref.read(selectInterestProvider.notifier).getUserInterest();
       ref.read(shopVmProvider.notifier).allCategories(1);
       ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 1000);
       ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1);
-      ref.read(cartVmProvider.notifier).loadCart();
+     ref.read(cartVmProvider.notifier).loadCart();
     });
     super.initState();
   }
@@ -127,7 +129,9 @@ class _ExploreState extends ConsumerState<Explore> {
             SharedMoments(),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {}, subTitle: 'Have a buy request, just create a quote', title: 'Get Quotation'),
+                onTap: () {},
+                subTitle: 'Have a buy request, just create a quote',
+                title: 'Get Quotation'),
             const Gap(20),
             WayaButton(
               centerWidget: Row(
@@ -173,7 +177,9 @@ class _ExploreState extends ConsumerState<Explore> {
             CategoriesFilterWidget(setCategory: (value) {
               ref.read(shopVmProvider.notifier).setCategory(value);
               for (String categoryId in value) {
-                ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
+                ref
+                    .read(productEngagementProvider.notifier)
+                    .addCategory(categoryId, ProductPoint.searchPoint.value);
               }
             }),
             const Gap(25),
@@ -184,7 +190,10 @@ class _ExploreState extends ConsumerState<Explore> {
                         ? notifier.filteredProducts.sublist(0, 2)
                         : notifier.filteredProducts),
             const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Support a cause that matters', title: 'Donations'),
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Support a course that matters',
+                title: 'Donations'),
             const Gap(25),
             DonationsFeedWidget(),
             const Gap(25),
@@ -273,7 +282,10 @@ class _ExploreState extends ConsumerState<Explore> {
             const ConversationFeedWidget(isExpanded: false),
 
             const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
+            GroupedWidgetHeader(
+                onTap: () {},
+                subTitle: 'Join Upcoming Activities',
+                title: 'University Got Talent'),
             const Gap(25),
             ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
