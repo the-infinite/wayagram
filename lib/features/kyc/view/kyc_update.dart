@@ -8,17 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget.dart';
-import 'package:wayagram/features/donation/vm/donation_vm.dart';
-import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/kyc/vm/kyc_vm.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-
-import '../../../shared/features/user/vm/search.dart';
-import '../../../shared/features/wallet/vm/default.dart';
-import '../../pages/component/extras.dart';
-import '../../wallet/view/fund_wallet_options_screen.dart';
+import 'package:wayagram/shared/features/wallet/resource/default.dart';
 
 class KycUpdate extends ConsumerStatefulWidget {
   static const route = '/kycUpdate';
@@ -77,7 +70,6 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                       children: [
                         WayaTextFormField(
                           keyboardType: TextInputType.none,
-                          //controller: viewModel.accountNumber,
                           isReadOnly: true,
                           fillColor: WayaColors.greyColor100,
                           showFocusedBorder: false,
