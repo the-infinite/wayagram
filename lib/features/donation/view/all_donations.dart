@@ -53,11 +53,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
     super.dispose();
   }
 
-  String userType = "PERSONAL";
-
   @override
   Widget build(BuildContext context) {
-
    final  viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
@@ -94,9 +91,9 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             ],
           ),
           callback: () {
+            print('DARLINGTON ACCOUNT TYPE ${ConversationState.self.accountType}');
 
-            print('DIALA ACCOUNT TYPE ${viewModel.accountType}');
-             if(viewModel.kycStatus != 'APPROVED'){
+             if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == 'BUSINESS'){
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
@@ -108,7 +105,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   duration: Duration(seconds: 2),
                 ),
               );
-            }else if (viewModel.accountType == null) {
+              WayaNav.toNamed('/createDonation');
+            } else if (ConversationState.self.accountType == 'PERSONAL') {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 WayaUtils.showNotice(
                     context: context,

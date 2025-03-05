@@ -113,7 +113,12 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                     );
                   }),
                   const Gap(10),
-
+                  Text(
+                    "Account Number",
+                    style: WayaTextStyles.bodySmall.copyWith(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.black),),
                   WayaConfirmationView(
                     hintText: 'Enter Bank Account Number',
                     debounceTimer: const Duration(milliseconds: 20),
