@@ -52,8 +52,9 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                 itemBuilder: (context, index) {
                   final poll = viewModel.fetchAllPols[index];
                   int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
-                  //int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
-                  print('URL ===> ${poll.url}');
+
+                  DateTime expirationDate = DateTime.parse("${poll.endDate}");
+                  DateTime currentDate = DateTime.now(); // Get current date and time
 
                   String formatTimeAgo(String dateString) {
                     DateTime dateTime =
@@ -75,7 +76,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                           const Gap(3),
                           Text('${poll.userData?.firstName} ${poll.userData?.lastName}', style: wayaTheme.textTheme.titleLarge),
                           const Gap(3),
-                          Text(' • ${ WayaHelpers.formatTimeAgo('${poll.startDate}')}',
+                          Text(' • ${ WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
@@ -116,7 +117,30 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                               ...poll.choices!.map((e)=>
                                   presImage('${e.imageUrl}',
                                       '${e.text?.toLowerCase().capitalizeFirst}', context, true,
-                                      '${poll.feePerVote}', e.id, e.pollId, e.text, poll.url))
+                                      '${poll.feePerVote}', e.id, e.pollId, e.text, poll.url,
+                                          (){
+
+                                        if(currentDate.isAfter(expirationDate)){
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(
+                                              content: Text(
+                                                'The poll has ended.',
+                                                style:
+                                                TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                                              ),
+                                              backgroundColor: WayaColors.primary,
+                                              duration: Duration(seconds: 2),
+                                            ),
+                                          );
+                                        }else{
+                                          WayaUtils.showModalSheet(
+                                            context,
+                                            child: VoteOptionModal(voteFee:  '${poll.feePerVote}',choiceId: '${e.id}',
+                                              pollId: '${poll.id}',candidateName: '${e.text}',
+                                              votingLink: '${poll.url}',),
+                                          );
+                                        }
+                                      }))
                           ],
                         ),
                         const Gap(10),
@@ -200,19 +224,20 @@ class _MyPollsState extends ConsumerState<MyPolls> {
     ]);
   }
 
-  presImage(img, name, ctx, chk, voteFee, choiceId, pollId,candidateName, votingLink){
+  presImage(img, name, ctx, chk, voteFee, choiceId, pollId,candidateName, votingLink, onTap){
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: InkWell(
         splashColor: Colors.transparent,
         splashFactory: NoSplash.splashFactory,
-        onTap: (){
-          WayaUtils.showModalSheet(
-            ctx,
-            child: VoteOptionModal(voteFee: voteFee,choiceId: choiceId, pollId: pollId,candidateName: candidateName,
-            votingLink:votingLink ,),
-          );
-        },
+        onTap: onTap,
+        //     (){
+        //   WayaUtils.showModalSheet(
+        //     ctx,
+        //     child: VoteOptionModal(voteFee: voteFee,choiceId: choiceId, pollId: pollId,candidateName: candidateName,
+        //     votingLink:votingLink ,),
+        //   );
+        // },
         child: Container(
           padding: EdgeInsets.only(left: 20.w, bottom: 0),
           height: 60.h,

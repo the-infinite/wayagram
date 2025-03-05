@@ -8,6 +8,8 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
 
+import '../model/my_donation_model.dart';
+
 class ManageDonationWidget extends ConsumerWidget {
   final VoidCallback? onTap;
   final String text;
@@ -18,8 +20,10 @@ class ManageDonationWidget extends ConsumerWidget {
   final String? amountRaised;
   final String? dayLeft;
   final double buttonWidth;
+  final double rangeRatio;
   const ManageDonationWidget({
     super.key,
+
     required this.onTap,
     required this.text,
     required this.donationCount,
@@ -29,11 +33,13 @@ class ManageDonationWidget extends ConsumerWidget {
     required this.amountRaised,
     required this.dayLeft,
     required this.buttonWidth,
+    required this.rangeRatio,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+
     return Column(
       children: [
         Container(
@@ -111,7 +117,9 @@ class ManageDonationWidget extends ConsumerWidget {
                           bottomLeft:
                               '$donationCount ${donationCount == 0 || donationCount == 1 ? 'Donation' : 'Donations'}',
                           bottomRight: "$dayLeft ${dayLeft == '1' ? 'day' : 'days'} left",
-                          range: donationCount == 0 ? 0.0 : 0.4)
+                          range: rangeRatio
+                          //donationCount == 0 ? 0.0 : 0.4
+                      )
                     ],
                   ),
                 )

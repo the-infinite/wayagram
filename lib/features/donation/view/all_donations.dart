@@ -160,7 +160,14 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
               itemBuilder: (context, index){
                final donation = filteredAllDonations[index];
                int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
-                return ManageDonationWidget(
+
+               int amountRaised = double.parse(donation.amountRaised!).toInt();
+
+               int targetedAmount = double.parse(donation.targetAmount!).toInt();
+
+               double ratioLeft = amountRaised / targetedAmount;
+
+               return ManageDonationWidget(
                   text:  "Donate",
                   amountRaised:  WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
                   targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
@@ -168,6 +175,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   image: donation.imageURL,
                   dayLeft: daysLeft < 0  ? '0' : '$daysLeft',
                   donationCount: donation.donationCount,
+                  rangeRatio: ratioLeft,
                   onTap: (){
                     WayaNav.toNamed('/donationDetails',
                         arguments: {
@@ -223,6 +231,13 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   itemBuilder: (context, index){
                     final donation = viewModel.allDonationDocs?[index];
                     int daysLeft = DateTime.parse('${donation?.expirationDate}').difference(DateTime.parse('${donation?.startDate}')).inDays;
+
+
+                    int amountRaised = double.parse('${donation?.amountRaised}').toInt();
+
+                    int targetedAmount = double.parse('${donation?.targetAmount}').toInt();
+
+                    double ratioLeft = amountRaised / targetedAmount;
                     return ManageDonationWidget(
                       text: "Donate",
                       amountRaised: donation?.amountRaised,
@@ -231,6 +246,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                       image: donation?.imageURL,
                       dayLeft: '$daysLeft',
                       donationCount: donation?.donationCount!,
+                      rangeRatio: ratioLeft,
                       onTap: (){
                         WayaNav.toNamed('/donationDetails',
                             arguments: {

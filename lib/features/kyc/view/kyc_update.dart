@@ -127,7 +127,6 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                     hintText: 'Enter Bank Account Number',
                     debounceTimer: const Duration(milliseconds: 20),
                     getResult: WalletResource.instance.getUserWallet,
-                    //ref.read(userSearchProvider.notifier).getUserByEmail,
                     getText: (user) => user?.accountName ?? "Account not found",
                     backgroundColor: wayaTheme.colorScheme.primar50,
                     searchController: viewModel.accountNumber,
@@ -266,7 +265,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
               border:
               Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-Navigator.pop(context);
+              Navigator.pop(context);
               })
         ],
       ),

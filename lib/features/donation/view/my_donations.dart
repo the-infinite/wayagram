@@ -144,9 +144,13 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
             itemCount: filteredMyDonations.length,
             itemBuilder: (context, index) {
               final donation = filteredMyDonations[index];
-              int daysLeft = DateTime.parse('${donation.expirationDate}')
-                  .difference(DateTime.parse('${donation.startDate}'))
-                  .inDays;
+              int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
+
+              int amountRaised = double.parse('${donation.amountRaised}').toInt();
+
+              int targetedAmount = double.parse('${donation.targetAmount}').toInt();
+
+              double ratioLeft = amountRaised / targetedAmount;
               return ManageDonationWidget(
                 text: "Manage Donation",
                 amountRaised: WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
@@ -155,6 +159,7 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
                 image: donation.imageURL,
                 dayLeft: daysLeft < 0 ? '0' : '$daysLeft',
                 donationCount: donation.donationCount!,
+                rangeRatio: ratioLeft,
                 onTap: () {
                   WayaNav.toNamed('/donationManagement', arguments: {
                     'title': '${donation.title?.capitalizeFirst}',
