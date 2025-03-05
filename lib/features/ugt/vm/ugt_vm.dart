@@ -14,10 +14,13 @@ import 'package:wayagram/features/ugt/data/model/category_response.dart';
 import 'package:wayagram/features/ugt/data/model/contest_state.dart';
 import 'package:wayagram/features/ugt/data/model/create_contest.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/ugt_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
 import '../../../core/data/local_data_source.dart';
 import '../../../core/data/model/model.dart';
@@ -217,13 +220,14 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         WayaUtils.showModalSheetUgt(
           context,
           child: SuccessfulModal(
-           title:    "Contest created Successfully",
-           subtitle:    "Your contest is now live and visible to the public. Manage or share your contest details from your dashboard.",
-             showCopyLink:  true,
-            buttonText:   null,
-             onTap:  (_,__) {
-            WayaNav.removeUntilNamed("/ugt-home");
-          }),
+              title: "Contest created Successfully",
+              subtitle:
+                  "Your contest is now live and visible to the public. Manage or share your contest details from your dashboard.",
+              showCopyLink: true,
+              buttonText: null,
+              onTap: (_, __) {
+                WayaNav.removeUntilNamed("/ugt-home");
+              }),
         );
       }
     } catch (e) {
@@ -263,6 +267,63 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     isLoading.value = false;
     if (response.success) {
       Navigator.pop(context);
+    }
+  }
+
+  void editContestProfile(
+    BuildContext context,
+    ValueNotifier<bool> isLoading,
+    WidgetRef ref,
+    String imagePath,
+    String videoPath,
+    String bio,
+    String expectationFromVoters,
+    String id,
+    bool pickAnotherImage,
+    bool pickAnotherVideo,
+      String oldImagePath,
+    String oldVideoPath,
+  ) async {
+    isLoading.value = true;
+    String? imageUrl = oldImagePath;
+    String? videoUrl = oldVideoPath;
+
+    if (pickAnotherImage) {
+       imageUrl = await WayaFileRepository.instance
+          .uploadFile(File(imagePath), "ugt-image-${Uuid().v4()}");
+    }
+
+    if (pickAnotherVideo) {
+       videoUrl = await WayaFileRepository.instance
+          .uploadFile(File(videoPath), "ugt-video-${Uuid().v4()}");
+    }
+
+    var model = ref.read(selectedAppliedContestProvider.notifier).state;
+    var map = {
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": model!.contestId,
+      "bio": bio,
+      "expectationFromVoters": expectationFromVoters,
+      "contestApplicationId": model.id,
+      "introVideo": videoUrl,
+      "profilePhoto": imageUrl
+    };
+
+    final response = await _contestRepository.editProfile(id, map);
+
+    isLoading.value = false;
+    if (response.success) {
+      ref
+          .read(votersContestNotifier.notifier)
+          .getContestantProfileVoteDetails(model.contestId ?? "");
+
+      ref
+          .read(votersContestNotifier.notifier)
+          .fetchAllContestPosts(model.contestId ?? "");
+      ref
+          .read(votersContestNotifier.notifier)
+          .fetchAllContestApplicant(model.contestId ?? "");
+      WayaNav.removeUntilNamed(AdminContestDetails.route);
     }
   }
 

@@ -11,14 +11,14 @@ class SingleContestantPostsBase {
     message = json['message'];
     status = json['status'];
     statusCode = json['statusCode'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    data['status'] = this.status;
-    data['statusCode'] = this.statusCode;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
+    data['status'] = status;
+    data['statusCode'] = statusCode;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -38,7 +38,7 @@ class Data {
     if (json['docs'] != null) {
       docs = <SingleContestantPosts>[];
       json['docs'].forEach((v) {
-        docs!.add(new SingleContestantPosts.fromJson(v));
+        docs!.add(SingleContestantPosts.fromJson(v));
       });
     }
     totalDocs = json['totalDocs'];
@@ -47,13 +47,13 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.docs != null) {
-      data['docs'] = this.docs!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (docs != null) {
+      data['docs'] = docs!.map((v) => v.toJson()).toList();
     }
-    data['totalDocs'] = this.totalDocs;
-    data['totalPages'] = this.totalPages;
-    data['currentPage'] = this.currentPage;
+    data['totalDocs'] = totalDocs;
+    data['totalPages'] = totalPages;
+    data['currentPage'] = currentPage;
     return data;
   }
 }
@@ -67,6 +67,7 @@ class SingleContestantPosts {
   int? likes;
   int? shares;
   bool? isDeleted;
+  bool? isLiked;
   String? createdAt;
   String? updatedAt;
 
@@ -78,6 +79,7 @@ class SingleContestantPosts {
       this.description,
       this.likes,
       this.shares,
+      this.isLiked = false,
       this.isDeleted,
       this.createdAt,
       this.updatedAt});
@@ -89,7 +91,7 @@ class SingleContestantPosts {
     if (json['mediaContent'] != null) {
       mediaContent = <MediaContent>[];
       json['mediaContent'].forEach((v) {
-        mediaContent!.add(new MediaContent.fromJson(v));
+        mediaContent!.add(MediaContent.fromJson(v));
       });
     }
     description = json['description'];
@@ -99,21 +101,48 @@ class SingleContestantPosts {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
   }
+  SingleContestantPosts copyWith({
+    String? id,
+    String? contestantProfileId,
+    String? contestId,
+    List<MediaContent>? mediaContent,
+    String? description,
+    int? likes,
+    int? shares,
+    bool? isLiked,
+    bool? isDeleted,
+    String? createdAt,
+    String? updatedAt,
+  }) {
+    return SingleContestantPosts(
+      id: id ?? this.id,
+      contestantProfileId: contestantProfileId ?? this.contestantProfileId,
+      contestId: contestId ?? this.contestId,
+      mediaContent: mediaContent ?? this.mediaContent,
+      description: description ?? this.description,
+      likes: likes ?? this.likes,
+      isLiked: isLiked ?? this.isLiked,
+      shares: shares ?? this.shares,
+      isDeleted: isDeleted ?? isDeleted,
+      createdAt: createdAt ?? createdAt,
+      updatedAt: updatedAt ?? updatedAt,
+    );
+  }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['contestantProfileId'] = this.contestantProfileId;
-    data['contestId'] = this.contestId;
-    if (this.mediaContent != null) {
-      data['mediaContent'] = this.mediaContent!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['contestantProfileId'] = contestantProfileId;
+    data['contestId'] = contestId;
+    if (mediaContent != null) {
+      data['mediaContent'] = mediaContent!.map((v) => v.toJson()).toList();
     }
-    data['description'] = this.description;
-    data['likes'] = this.likes;
-    data['shares'] = this.shares;
-    data['isDeleted'] = this.isDeleted;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    data['description'] = description;
+    data['likes'] = likes;
+    data['shares'] = shares;
+    data['isDeleted'] = isDeleted;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
     return data;
   }
 }
@@ -130,9 +159,9 @@ class MediaContent {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    data['url'] = this.url;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['type'] = type;
+    data['url'] = url;
     return data;
   }
 }
