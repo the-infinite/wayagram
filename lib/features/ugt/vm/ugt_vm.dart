@@ -217,9 +217,11 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         WayaUtils.showModalSheetUgt(
           context,
           child: SuccessfulModal(
-              "Contest created Successfully",
-              "Your contest is now live and visible to the public. Manage or share your contest details from your dashboard.",
-              true,null, () {
+           title:    "Contest created Successfully",
+           subtitle:    "Your contest is now live and visible to the public. Manage or share your contest details from your dashboard.",
+             showCopyLink:  true,
+            buttonText:   null,
+             onTap:  (_,__) {
             WayaNav.removeUntilNamed("/ugt-home");
           }),
         );

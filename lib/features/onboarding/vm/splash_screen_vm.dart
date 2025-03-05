@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -12,8 +11,7 @@ class SplashScreenVm extends StateNotifier<void> {
   final WayaSecureDataSource _secureDataSource;
   final SuccessfulSetupVm _setupVm;
 
-  SplashScreenVm(this._profileRepo, this._secureDataSource, this._setupVm)
-      : super(null);
+  SplashScreenVm(this._profileRepo, this._secureDataSource, this._setupVm) : super(null);
 
   void getUserData() async {
     try {
@@ -21,31 +19,24 @@ class SplashScreenVm extends StateNotifier<void> {
       String? authToken = await _secureDataSource.getToken();
 
       if (authToken == null || authToken.isEmpty) return WayaNav.toNamed("/onboarding");
-  print("token $authToken");
+
       // check if user has an ID
       final userId = await _secureDataSource.getUserId();
 
       if (userId == null || userId.isEmpty) return WayaNav.toNamed('/login-cover-page');
 
-      print("userId $userId");
-
       final response = await _profileRepo.getUserDataRepo(userId: userId);
 
       if (response.success) {
-        UserAccountModel userAccountModel =
-            UserAccountModel.fromJson(response.data);
+        UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
 
-        _setupVm.state =
-            _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
+        _setupVm.state = _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
 
-        if (userAccountModel.data != null &&
-            userAccountModel.data!.userdata!.user!.role!.name != 'PERSONAL') {
-          final bizResponse =
-              await _profileRepo.getBusinessDataRepo(userId: userId);
+        if (userAccountModel.data != null && userAccountModel.data!.userdata!.user!.role != 'PERSONAL') {
+          final bizResponse = await _profileRepo.getBusinessDataRepo(userId: userId);
 
           if (bizResponse.success) {
-            BusinessAccountData bizData =
-                BusinessAccountData.fromJson(bizResponse.data["data"]);
+            BusinessAccountData bizData = BusinessAccountData.fromJson(bizResponse.data["data"]);
             _setupVm.state = _setupVm.state.copyWith(business: bizData);
             await _secureDataSource.saveBusinessId(bizData.businessId);
           }
@@ -67,6 +58,5 @@ class SplashScreenVm extends StateNotifier<void> {
 
 final splashScreenVmProvider = StateNotifierProvider((ref) {
   final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
-  return SplashScreenVm(
-      ProfileRepo(), WayaSecureDataSource(), successfulSetupVm);
+  return SplashScreenVm(ProfileRepo(), WayaSecureDataSource(), successfulSetupVm);
 });

@@ -56,9 +56,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
 
         //? Update this guy in the list.
         if (eval.isNegative) {
-          await widget.notifier.getBuyRequest(widget.data.id).then((_) {
-            timer.cancel();
-          });
+          await widget.notifier.getBuyRequest(widget.data.id);
           return;
         }
 

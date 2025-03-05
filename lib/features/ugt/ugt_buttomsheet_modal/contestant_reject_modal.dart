@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,11 +12,12 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
-class ContestantRejectModal extends ConsumerStatefulWidget {
+class ContestantRejectModal extends StatefulHookConsumerWidget {
   //final String quantity;
-
+  final Function(ValueNotifier<bool>, String) onTap;
   //String amount;
   const ContestantRejectModal({
+    required this.onTap,
     super.key,
   });
 
@@ -26,13 +28,14 @@ class ContestantRejectModal extends ConsumerStatefulWidget {
 
 class _ConfirmVoteOptionModalState
     extends ConsumerState<ContestantRejectModal> {
- // final WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
+  // final WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
   final rejectionReasonController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createPollVotingProvider);
+    // final viewModel = ref.watch(createPollVotingProvider);
+    final isLoading = useState(false);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
       child: SingleChildScrollView(
@@ -87,9 +90,13 @@ class _ConfirmVoteOptionModalState
             ),
             SizedBox(height: 3.h),
             WayaButton(
-              callback: !viewModel.isLoading ? () async {} : null,
+              callback: !isLoading.value
+                  ? () async {
+                      widget.onTap(isLoading,rejectionReasonController.text);
+                    }
+                  : null,
               centerWidget:
-                  LoadingState(loading: viewModel.isLoading, text: 'Send'),
+                  LoadingState(loading: isLoading.value, text: 'Send'),
             ),
             SizedBox(height: 17.h),
             WayaButton(

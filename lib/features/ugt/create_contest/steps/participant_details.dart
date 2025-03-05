@@ -47,7 +47,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
           Text("Participation Details", style: wayaTheme.textTheme.titleLarge),
           const Gap(5),
           Text(
-              "Bring your talent contest vision to life. Customize details,\n set stages, and make it unforgettable",
+              "Bring your talent contest vision to life. Customize details, set stages, and make it unforgettable",
               style: wayaTheme.textTheme.hintStyle),
           const Gap(30),
           FormField<String>(validator: (value) {
@@ -95,7 +95,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               children: [
                 WayaSelectField<String>(
                   height: 0.3,
-                  value: viewModel2.entrySelectType ,
+                  value: viewModel2.entrySelectType,
                   label: "Entry Type",
                   hintText: 'Choose entry type',
                   items: ref

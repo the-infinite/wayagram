@@ -11,9 +11,11 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
+import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 class AvailableBalanceModal extends StatefulHookConsumerWidget {
@@ -23,7 +25,8 @@ class AvailableBalanceModal extends StatefulHookConsumerWidget {
 
   final String candidateName;
   final String votingLink;
-  final VoidCallback onTap;
+  final Function() onTap;
+  final AppliedContestModel? model;
 
   //String amount;
   const AvailableBalanceModal(
@@ -31,6 +34,7 @@ class AvailableBalanceModal extends StatefulHookConsumerWidget {
       required this.voteFee,
       required this.voteCount,
       required this.candidateName,
+      this.model,
       required this.onTap,
       required this.votingLink});
 
@@ -204,11 +208,12 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
             WayaButton(
               callback: !isLoading.value
                   ? () async {
-                      Navigator.of(context).pop();
+                      Navigator.pop(context);
                       WayaUtils.showModalSheet(context,
                           child: PinEntryBottomSheet(
                             candidateName: widget.candidateName,
                             link: widget.votingLink,
+                            model: widget.model,
                             onTap: widget.onTap,
                             amount:
                                 '${num.parse(widget.voteCount) * num.parse(widget.voteFee)}',
@@ -256,13 +261,16 @@ class PinEntryBottomSheet extends StatefulHookConsumerWidget {
   final String link;
   final String amount;
   final String numOfVote;
-  final VoidCallback onTap;
+  final AppliedContestModel? model;
+
+  final Function() onTap;
 
   const PinEntryBottomSheet(
       {required this.link,
       required this.amount,
       required this.numOfVote,
       required this.candidateName,
+      this.model,
       required this.onTap,
       super.key});
 
@@ -290,26 +298,46 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
     }
   }
 
-  void _submitPin(ValueNotifier<bool> isLoading) async {
+  void _submitPin(BuildContext context1, ValueNotifier<bool> isLoading) async {
     if (_pin.length == _pinLength) {
-      print("i dey here ee");
-      widget.onTap();
+      print("i dey here ee $_pin");
+      //  Navigator.pop(context);
 
-      /*  if (isPass) {
-       
+      var isPass = await ref
+          .read(votersContestNotifier.notifier)
+          .verifyAndPayForPaidContest(isLoading, _pin, {
+        "profileId": widget.model?.userId ?? "",
+        "contestId": widget.model?.contestId ?? ""
+      });
+      if (isPass) {
         Navigator.of(context).pop();
-        WayaUtils.showModalSheet(context,
-            child: VoteSuccessModal(
-              candidateName: widget.candidateName,
-              votingLink: "link",
-            ));
-      } else {
-        /* WayaUtils.showModalSheet(context,
-            child: VoteSuccessModal(
-              candidateName: widget.candidateName,
-              votingLink: "link",
-            )); */
-      } */
+        /*  Future.delayed(Duration(seconds: 1), () {
+          Navigator.pop(context1);
+        }); */
+        if (Navigator.canPop(context)) {
+          Navigator.pop(context);
+        }
+
+        WayaUtils.showModalSheetUgt(
+          context,
+          child: SuccessfulModal(
+            title: "Contest Payment Made Successfully",
+            subtitle:
+                "Congrats you are now a contestant in this contest, just proceed by creating your contest profile",
+            showCopyLink: false,
+            buttonText: "Create Contest Profile",
+            onTap: (myContext, myRef) {
+              //  Navigator.pop(context);
+              print("i am cooking");
+              myRef.read(selectedAppliedContestProvider.notifier).state =
+                  widget.model;
+
+              Navigator.pop(myContext);
+              WayaNav.toNamed("/create-profile-contest1");
+            },
+          ),
+        );
+      } else {}
     }
   }
 
@@ -399,9 +427,9 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                             print(" i am so here");
                           }
                         : () {
-                            widget.onTap();
                             print(" i am so noooooooot here");
-                            //  _submitPin(isLoading);
+                            //   widget.onTap();
+                            _submitPin(context, isLoading);
                           },
                   );
                 } else {

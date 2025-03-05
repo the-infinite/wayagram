@@ -92,30 +92,36 @@ class LoginVm extends StateNotifier<LoginState> {
       // _logger.d(" result ${response.data['message']}");
       if (response.success) {
         // clearStorage();
-        final remmoteUserData = UserModel.fromJson(response.data);
-        state = state.copyWith(userData: remmoteUserData);
+        final remoteUserData = UserModel.fromJson(response.data);
+        state = state.copyWith(userData: remoteUserData);
 
-        _localDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
-        await _secureDataSource.saveUserId(remmoteUserData.data?.userdata?.user?.id as String);
-        await _secureDataSource.saveToken(remmoteUserData.data?.token?.token as String);
-        await _secureDataSource.saveRefreshToken(remmoteUserData.data?.token?.refreshToken as String);
+        _localDataSource.saveUserId(remoteUserData.data?.userdata?.user?.id as String);
+        await _secureDataSource.saveUserId(remoteUserData.data?.userdata?.user?.id as String);
+        await _secureDataSource.saveToken(remoteUserData.data?.token?.token as String);
+        await _secureDataSource.saveRefreshToken(remoteUserData.data?.token?.refreshToken as String);
+
+        //? Now, it is time to save this one.
+        ConversationState.setSelf(
+          remoteUserData.data?.userdata?.user,
+          remoteUserData.data?.userdata?.profile,
+          remoteUserData.data?.userdata?.business,
+        );
 
         //
-
-        if (remmoteUserData.data != null) {
+        if (remoteUserData.data != null) {
           final response =
-              await _profileRepo.getUserDataRepo(userId: remmoteUserData.data?.userdata?.user?.id as String);
+              await _profileRepo.getUserDataRepo(userId: remoteUserData.data?.userdata?.user?.id as String);
 
           if (response.success) {
             UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
             _setupVm.state = _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
-            ConversationState.setSelf(userAccountModel.data?.userdata?.user, userAccountModel.data?.userdata?.profile);
 
-            if (userAccountModel.data != null && userAccountModel.data!.userdata!.user!.role!.name != "PERSONAL") {
+            if (userAccountModel.data != null && userAccountModel.data!.userdata!.user!.role != "PERSONAL") {
               final bizResponse =
-                  await _profileRepo.getBusinessDataRepo(userId: remmoteUserData.data?.userdata?.user?.id as String);
+                  await _profileRepo.getBusinessDataRepo(userId: remoteUserData.data?.userdata?.user?.id as String);
               BusinessAccountData bizData = BusinessAccountData.fromJson(bizResponse.data["data"]);
               _setupVm.state = _setupVm.state.copyWith(business: bizData);
+
               await _secureDataSource.saveBusinessId(bizData.businessId);
             }
           }
@@ -128,7 +134,7 @@ class LoginVm extends StateNotifier<LoginState> {
         if (!WayaLocalDataSource().getIsFcmTokenFine()) {
           final result = await notificationVm.sendDeviceToken();
 
-          // If this was fine...
+          // If this was fine...b
           if (result) WayaLocalDataSource().saveDeviceToken("TDNOINSO");
         }
 

@@ -41,10 +41,12 @@ class UserAccountData {
   UserAccountData({
     required this.user,
     required this.profile,
+    required this.business,
   });
 
   final UserDetailsModel? user;
   final SocialProfileModel? profile;
+  final BusinessDetailsModel? business;
 
   factory UserAccountData.fromJson(Map<String, dynamic> json) => _$UserAccountDataFromJson(json);
 
