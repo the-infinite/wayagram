@@ -88,21 +88,18 @@ class DonationWidget extends ConsumerWidget {
                               callback: () {
                                 WayaNav.toNamed('/donationDetails',
                                     arguments: {
-                                      'title':
-                                          '${donation.title?.capitalizeFirst}',
-                                      'image': '${donation.imageURL}',
-                                      'amountRaised':
-                                          '${donation.amountRaised?.replaceAll('.00', '')}',
-                                      'targetAmount':
-                                          '${donation.targetAmount?.replaceAll('.00', '')}',
-                                      'desc': '${donation.description}',
-                                      'solution': '${donation.solution}',
-                                      'impact': '${donation.impact}',
-                                      'url': '${donation.url}',
-                                      'minimumDonationAmount':
-                                          '${donation.minimumDonationAmount}',
-                                      'daysLeft': '$daysLeft',
-                                      'id': '${donation.id}',
+                                        'title':'${donation.title?.capitalizeFirst}',
+                              'image':'${donation.imageURL}',
+                              'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
+                              'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
+                              'desc': '${donation.description}',
+                              'solution': '${donation.solution}',
+                              'impact': '${donation.impact}',
+                              'url': '${donation.url}',
+                              'minimumDonationAmount':'${donation.minimumDonationAmount}',
+                              'daysLeft':'$daysLeft',
+                              'privacy':'${donation.privacy}',
+                              'id': '${donation.id}'
                                     });
                               },
                               text: "Donate",

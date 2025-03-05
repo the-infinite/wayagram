@@ -95,8 +95,10 @@ class LoginVm extends StateNotifier<LoginState> {
 
       // _logger.d(" result ${response.data['message']}");
       if (response.success) {
-        final remmoteUserData = UserModel.fromJson(response.data);
-        state = state.copyWith(userData: remmoteUserData);
+
+        // clearStorage();
+        final remoteUserData = UserModel.fromJson(response.data);
+        state = state.copyWith(userData: remoteUserData);
 
         _localDataSource.saveUserId(remoteUserData.data?.userdata?.user?.id as String);
         await _secureDataSource.saveUserId(remoteUserData.data?.userdata?.user?.id as String);
@@ -123,6 +125,7 @@ class LoginVm extends StateNotifier<LoginState> {
               final bizResponse =
                   await _profileRepo.getBusinessDataRepo(userId: remoteUserData.data?.userdata?.user?.id as String);
               BusinessAccountData bizData = BusinessAccountData.fromJson(bizResponse.data["data"]);
+
               _setupVm.state = _setupVm.state.copyWith(business: bizData);
 
               await _secureDataSource.saveBusinessId(bizData.businessId);
