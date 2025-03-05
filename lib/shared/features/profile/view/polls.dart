@@ -8,6 +8,7 @@ import 'package:wayagram/features/explore/widgets/polls_card.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/polls_and_voting/widgets/poll_widget.dart';
+import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 
 class PollsFeedWidget extends ConsumerStatefulWidget {
   final bool isExpanded;
@@ -24,7 +25,7 @@ class _PollsFeedWidget extends ConsumerState<PollsFeedWidget> {
   void initState() {
     // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(createPollVotingProvider.notifier).getFeedPolls();
+      ref.read(servicesProvider.notifier).getFeedPolls();
       ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
     });
     super.initState();
@@ -33,12 +34,13 @@ class _PollsFeedWidget extends ConsumerState<PollsFeedWidget> {
   @override
   Widget build(BuildContext context) {
     final pollState = ref.watch(createPollVotingProvider);
-     final wayaTheme = Theme.of(context);
+    final service = ref.watch(servicesProvider);
+    final wayaTheme = Theme.of(context);
     // TODO: implement build
     // followed pages
     List<Docs>? polls = widget.isExpanded
-        ? pollState.feedPolls
-        : pollState.feedPolls.sublist(0, min(pollState.feedPolls.length, 2));
+        ? service.feedPolls
+        : service.feedPolls.sublist(0, min(service.feedPolls.length, 2));
 
     List<Docs>? myPolls =
         pollState.fetchAllPols.sublist(0, min(pollState.feedPolls.length, 3));
@@ -47,7 +49,7 @@ class _PollsFeedWidget extends ConsumerState<PollsFeedWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         //> recommened polls
-        if (pollState.feedPolls.isNotEmpty && !widget.isExplore) ...[
+        if (service.feedPolls.isNotEmpty && !widget.isExplore) ...[
           //> Looks Good
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
@@ -60,11 +62,11 @@ class _PollsFeedWidget extends ConsumerState<PollsFeedWidget> {
         ],
 
         if (pollState.fetchAllPols.isNotEmpty && widget.isExplore) ...[
-           Text(
-              "My Polls",
-              style: wayaTheme.textTheme.bodyMedium,
-            ),
-            const Gap(10),
+          Text(
+            "My Polls",
+            style: wayaTheme.textTheme.bodyMedium,
+          ),
+          const Gap(10),
           //> Looks Good
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),

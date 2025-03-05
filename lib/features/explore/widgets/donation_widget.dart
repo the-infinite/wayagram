@@ -86,7 +86,7 @@ class DonationWidget extends ConsumerWidget {
                             width: 65,
                             child: WayaButton(
                               callback: () {
-                                WayaNav.toNamed('/donationManagement',
+                                WayaNav.toNamed('/donationDetails',
                                     arguments: {
                                       'title':
                                           '${donation.title?.capitalizeFirst}',
@@ -108,6 +108,7 @@ class DonationWidget extends ConsumerWidget {
                               text: "Donate",
                               height: 30,
                               color: wayaTheme.colorScheme.primar50,
+                              textStyle: TextStyle(fontSize: 12, color:  wayaTheme.colorScheme.customPrimary),
                               textColor: wayaTheme.colorScheme.customPrimary,
                               radius: 5,
                             ),
