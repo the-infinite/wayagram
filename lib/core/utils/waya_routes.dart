@@ -122,6 +122,7 @@ import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
 import 'package:wayagram/features/event/views/all_upcoming_events.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/explore/search/search.dart';
+import 'package:wayagram/shared/features/quotation/view/all_buy_request.dart';
 
 class WayaAppRoutes {
   WayaAppRoutes._();
@@ -148,7 +149,7 @@ class WayaAppRoutes {
     SellerOrderDetails.route: () => SellerOrderDetails(),
     SellerBidDetails.route: () => SellerBidDetails(),
     SellerSettlement.route: () => SellerSettlement(),
-    SeeSellerBids.route: () => SeeSellerBids(id:  WayaNav.search['id'].toString()),
+    SeeSellerBids.route: () => SeeSellerBids(id: WayaNav.search['id'].toString()),
     SeeBuyerBids.route: () => SeeBuyerBids(id: WayaNav.search['id'].toString()),
     Checkout.route: () => Checkout(),
     BuyerCheckout.route: () => BuyerCheckout(),
@@ -272,7 +273,9 @@ class WayaAppRoutes {
     UserInteraction.route: () => UserInteraction(),
     PaymentActivity.route: () => PaymentActivity(),
     SearchLog.route: () => SearchLog(),
-    KycUpdate.route: ()=> KycUpdate(),
+    KycUpdate.route: () => KycUpdate(),
+    SellerBuyRequestsScreen.route: () => SellerBuyRequestsScreen(),
+    BuyerBuyRequestsScreen.route: () => BuyerBuyRequestsScreen(),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and

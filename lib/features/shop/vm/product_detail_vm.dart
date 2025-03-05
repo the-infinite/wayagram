@@ -3,13 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
-import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
-import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
 class ProductDetailState {
   final Product? product;
@@ -100,4 +98,4 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
 
 final productDetailVmProvider =
     StateNotifierProvider<ProductDetailVm, ProductDetailState>(
-        (ref) => ProductDetailVm(ShopRepository(), ref));
+        (ref) => ProductDetailVm(ShopRepository.instance, ref));

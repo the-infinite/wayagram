@@ -7,6 +7,7 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
+import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/auth/login/model/user_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
@@ -46,7 +47,8 @@ class LoginState {
         userData: userData ?? this.userData,
         emailController: emailController ?? this.emailController,
         passwordController: passwordController ?? this.passwordController,
-        businessIdController: businessIdController ?? this.businessIdController);
+        businessIdController:
+            businessIdController ?? this.businessIdController);
   }
 }
 
@@ -58,7 +60,8 @@ class LoginVm extends StateNotifier<LoginState> {
   final ProfileRepo _profileRepo;
   final _logger = getLogger("LoginVm");
 
-  LoginVm(this._authRepository, this._localDataSource, this._secureDataSource, this._setupVm, this._profileRepo)
+  LoginVm(this._authRepository, this._localDataSource, this._secureDataSource,
+      this._setupVm, this._profileRepo)
       : super(LoginState(
             emailController: TextEditingController(),
             passwordController: TextEditingController(),
@@ -80,7 +83,8 @@ class LoginVm extends StateNotifier<LoginState> {
     super.dispose();
   }
 
-  Future<void> onSubmit(WidgetRef ref, {String? email, bool? isBusinessLogin}) async {
+  Future<void> onSubmit(WidgetRef ref,
+      {String? email, bool? isBusinessLogin}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _authRepository.login(
@@ -91,6 +95,7 @@ class LoginVm extends StateNotifier<LoginState> {
 
       // _logger.d(" result ${response.data['message']}");
       if (response.success) {
+
         // clearStorage();
         final remoteUserData = UserModel.fromJson(response.data);
         state = state.copyWith(userData: remoteUserData);
@@ -120,6 +125,7 @@ class LoginVm extends StateNotifier<LoginState> {
               final bizResponse =
                   await _profileRepo.getBusinessDataRepo(userId: remoteUserData.data?.userdata?.user?.id as String);
               BusinessAccountData bizData = BusinessAccountData.fromJson(bizResponse.data["data"]);
+
               _setupVm.state = _setupVm.state.copyWith(business: bizData);
 
               await _secureDataSource.saveBusinessId(bizData.businessId);
@@ -150,17 +156,10 @@ class LoginVm extends StateNotifier<LoginState> {
       state = state.copyWith(isLoading: false);
     }
   }
-
-  void clearStorage() async {
-    await _secureDataSource.saveToken("");
-    await _secureDataSource.saveRefreshToken("");
-    await _secureDataSource.saveBusinessId("");
-    _localDataSource.saveUserId("");
-    await _secureDataSource.saveUserId("");
-  }
 }
 
 final loginVmProvider = StateNotifierProvider<LoginVm, LoginState>((ref) {
   final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
-  return LoginVm(AuthRepository(), WayaLocalDataSource(), WayaSecureDataSource(), successfulSetupVm, ProfileRepo());
+  return LoginVm(AuthRepository(), WayaLocalDataSource(),
+      WayaSecureDataSource(), successfulSetupVm, ProfileRepo());
 });

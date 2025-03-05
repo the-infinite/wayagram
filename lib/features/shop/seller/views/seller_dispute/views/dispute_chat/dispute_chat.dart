@@ -29,6 +29,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
   late final notifier = ref.read(sellerDisputeChatProvider.notifier);
   late final conversationNotifier = ref.read(conversationProvider.notifier);
   late final state = ref.watch(sellerDisputeChatProvider);
+  final handler = WayaObservableScrollController();
 
   Future<ChatModel?> _startConversation() async {
     return conversationNotifier.startChat(ChatType.dispute, []);
@@ -96,6 +97,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
           else
             Expanded(
               child: WayaPaginatedListView<MessageModel>(
+                handler: handler,
                 nextPage: state.page,
                 itemCount: state.messages.length,
                 isAtEnd: !state.hasNextPage,

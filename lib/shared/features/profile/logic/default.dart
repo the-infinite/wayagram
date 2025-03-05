@@ -13,11 +13,11 @@ String formatTimeAgo(String dateString) {
 
 void postEngagement(PostEngagementMonitor provider, Post post, int point) {
   //add tag point
-  if (post.hashtags.isNotEmpty) {
-    for (String tag in post.hashtags) {
-      provider.addTag(tag, point);
-    }
-  }
+  // if (post.hashtags.isNotEmpty) {
+  //   for (String tag in post.hashtags) {
+  //     provider.addTag(tag, point);
+  //   }
+  // }
 
   // add cat point
   if (post.categories != null && post.categories!.isNotEmpty) {
