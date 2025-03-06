@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -227,9 +228,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
               showCopyLink: true,
               buttonText: null,
               onTap: (_, __) {
-                
-               // WayaNav.removeUntilNamed("/ugt-home");
-                 WayaNav.removeAllUntil(UgtHome(), '/ugt-home');
+                // WayaNav.removeUntilNamed("/ugt-home");
+                WayaNav.removeAllUntil(UgtHome(), '/ugt-home');
               }),
         );
       }
@@ -284,7 +284,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     String id,
     bool pickAnotherImage,
     bool pickAnotherVideo,
-      String oldImagePath,
+    String oldImagePath,
     String oldVideoPath,
   ) async {
     isLoading.value = true;
@@ -292,12 +292,12 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     String? videoUrl = oldVideoPath;
 
     if (pickAnotherImage) {
-       imageUrl = await WayaFileRepository.instance
+      imageUrl = await WayaFileRepository.instance
           .uploadFile(File(imagePath), "ugt-image-${Uuid().v4()}");
     }
 
     if (pickAnotherVideo) {
-       videoUrl = await WayaFileRepository.instance
+      videoUrl = await WayaFileRepository.instance
           .uploadFile(File(videoPath), "ugt-video-${Uuid().v4()}");
     }
 
@@ -440,6 +440,24 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     print('were ${state.categoryId}');
   }
 
+  updateEdit(String value) {
+    var returnedState = state.category
+        .asMap()
+        .entries
+        .firstWhere((entries) => entries.value.label == value);
+
+    state = state.copyWith(categorys: returnedState.value.label);
+    state = state.copyWith(categoryId: returnedState.value.value.toString());
+    state = state.copyWith(
+        selectedCategory: Select(
+            label: returnedState.value.value.toString(),
+            value: returnedState.value.label));
+    /*    .map((entries) {
+      return Select(
+          value: entries.value.value.toString(), label: entries.value.label);
+    }).toList(); */
+  }
+
   List<Select> ugtDurationType() {
     return durationTypes.asMap().entries.map((entries) {
       return Select(
@@ -481,6 +499,15 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     } */
 
     await allCategories();
+  }
+     selectStateEdit(String value) {
+   var selectedState = states.asMap().entries.firstWhere((entries) => entries.value.state == value);
+    state = state.copyWith(state: selectedState.value.state??"");
+    
+   /*  .map((entries) {
+      return Select(
+          value: entries.value.id.toString(), label: entries.value.state);
+    }).toList(); */
   }
 
   List<Select> ugtRequirementType() {
@@ -525,6 +552,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   void updateDurationType(String name) {
     state = state.copyWith(durationSelectType: name);
+  }
+   void updateParticipationDate(String name) {
+    state = state.copyWith(startDate: name);
   }
 
   //Contest timeline
@@ -632,6 +662,8 @@ final stateContactProvider = StateProvider<List<StagePrefModel>>((ref) => [
       StagePrefModel(id: 4, stageName: "Contest Stage"),
     ]);
 
+final stateIsEditingContestProvider = StateProvider<bool>((ref) => false);
+
 final stateRequirementProvider =
     StateProvider<List<NewRequirementModel>>((ref) => []);
 final categoryData = Provider((ref) => ContestResponse());
@@ -656,6 +688,7 @@ ivalidateUGTVM(WidgetRef ref) {
   ref.invalidate(contestNotifierProvider);
   ref.invalidate(stateRequirementProvider);
   ref.invalidate(stateContactProvider);
+  ref.read(stateIsEditingContestProvider.notifier).state = false;
 }
 
 bool isDateInFuture(String dateString) {

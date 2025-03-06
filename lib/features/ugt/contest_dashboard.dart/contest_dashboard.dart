@@ -13,11 +13,13 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_leaderboard.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
@@ -38,6 +40,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(votersContestNotifier);
+    var model = ref.watch(selectedContestProvider.notifier).state;
+    print("my title ${model.title}");
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -61,14 +65,21 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                SizedBox(
+               if (ConversationState.self.role?.name == "BUSINESS")   SizedBox(
                   width: context.width / 2.5,
                   child: WayaButton(
                       horizontalPadding: 10,
                       fontSize: 14.sp,
                       height: 42,
                       text: "Edit contest details",
-                      callback: () async {}),
+                      callback: () async {
+                        ivalidateUGTVM(ref);
+                        ref.read(stateIsEditingContestProvider.notifier).state =
+                            true;
+                        ref.watch(selectedContestProvider.notifier).state =
+                            model;
+                        WayaNav.toNamed('/create-contest');
+                      }),
                 ),
                 Gap(10),
                 GestureDetector(

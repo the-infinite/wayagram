@@ -20,6 +20,7 @@ import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contestant_reject_mo
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/video_player.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 
@@ -39,7 +40,7 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     var model = ref.read(selectedApplicantProfile);
-    var selectedContestModel = ref.watch(selectedContestProvider);
+    var selectedContestModel = ref.watch(selectedContestProvider.notifier).state;
     var viewModel = ref.watch(votersContestNotifier.notifier);
     var isLoading = useState(false);
     return WayaScaffold(
@@ -92,9 +93,9 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _singleWidget(context, "Talent Category",
-                    selectedContestModel.categoryName ?? ""),
+                    selectedContestModel?.categoryName ?? ""),
                 _singleWidget(context, "Description of Talent",
-                    selectedContestModel.description ?? "",
+                    selectedContestModel?.description ?? "",
                     longer: true),
               ],
             ),

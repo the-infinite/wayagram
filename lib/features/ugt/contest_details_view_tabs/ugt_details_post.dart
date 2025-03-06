@@ -5,6 +5,7 @@ import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_post_
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 class UgtDetailsPost extends ConsumerStatefulWidget {
@@ -51,7 +52,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtDetailsPost> {
               final post = posts[index];
               return GestureDetector(
                   onTap: () {},
-                  child: UgtPostCard(post, widget.contestApplicant, contestModel));
+                  child: UgtPostCard(post, widget.contestApplicant, contestModel!));
             },
           ),
       ],

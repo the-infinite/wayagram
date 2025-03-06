@@ -242,6 +242,7 @@ class ContestCard extends ConsumerWidget {
               const Gap(20),
               WayaButton(
                 callback: () {
+                  
                   ref.read(selectedContestProvider.notifier).state = post;
                   WayaNav.toNamed('/upcoming-manage-contest-details');
 

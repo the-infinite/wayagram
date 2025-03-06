@@ -30,9 +30,12 @@ import '../widgets/upcoming_widgets/upcoming_widget.dart';
 class ContestDetailsStageModal extends StatefulHookConsumerWidget {
   Stage? post;
   MyContestContestantModel? model;
+  // String stageName;
   // final Function( BuildContext,WidgetRef) onTap;
   ContestDetailsStageModal(
-      {required this.post, required this.model, super.key});
+      {required this.post,
+      required this.model,
+      /*  required this.stageName, */ super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -123,6 +126,7 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
                       model: widget.model,
                       voteFee: widget.post?.entryAmount?.toString() ?? "0",
                       // model: widget.model,
+                      stageName: widget.post?.stageName ?? "",
                       votingLink: "",
                       onTap: () {
                         print("i am on the verge");
@@ -194,6 +198,7 @@ class AvailableBalanceModal extends StatefulHookConsumerWidget {
   final String voteFee;
 
   final String candidateName;
+  final String stageName;
   final String votingLink;
   final Function() onTap;
   final MyContestContestantModel? model;
@@ -203,6 +208,7 @@ class AvailableBalanceModal extends StatefulHookConsumerWidget {
       {super.key,
       required this.voteFee,
       required this.voteCount,
+      required this.stageName,
       required this.candidateName,
       this.model,
       required this.onTap,
@@ -384,6 +390,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                             candidateName: widget.candidateName,
                             link: widget.votingLink,
                             model: widget.model,
+                            stageName: widget.stageName,
                             onTap: widget.onTap,
                             amount:
                                 '${num.parse(widget.voteCount) * num.parse(widget.voteFee)}',
@@ -431,6 +438,7 @@ class PinEntryBottomSheet extends StatefulHookConsumerWidget {
   final String link;
   final String amount;
   final String numOfVote;
+  final String stageName;
   final MyContestContestantModel? model;
 
   final Function() onTap;
@@ -440,6 +448,7 @@ class PinEntryBottomSheet extends StatefulHookConsumerWidget {
       required this.amount,
       required this.numOfVote,
       required this.candidateName,
+      required this.stageName,
       this.model,
       required this.onTap,
       super.key});
@@ -477,7 +486,8 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
           .read(votersContestNotifier.notifier)
           .verifyAndPayForPaidStageContest(isLoading, _pin, {
         "profileId": widget.model?.profileId ?? "",
-        "contestId": widget.model?.contestId ?? ""
+        "contestId": widget.model?.contestId ?? "",
+        "stageName": widget.stageName,
       });
       if (isPass) {
         // Navigator.of(context).pop();
