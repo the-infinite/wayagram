@@ -6,10 +6,11 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/auth/account_creation/data/select_account_data.dart';
 import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 
 class SelectAccount extends ConsumerWidget {
-  final Function(String type) goToNextTab;
+  final Function(SelectAccountData type) goToNextTab;
   const SelectAccount({super.key, required this.goToNextTab});
 
   @override
@@ -43,11 +44,11 @@ class SelectAccount extends ConsumerWidget {
                           width: double.infinity,
                           padding: EdgeInsets.all(10.0),
                           decoration: BoxDecoration(
-                              color: accounts[index].type == type
+                              color: type != null && accounts[index].type == type.type
                                   ? wayaTheme.colorScheme.primary75
                                   : wayaTheme.colorScheme.greyColor100,
                               border: Border.all(
-                                  color: accounts[index].type == type
+                                  color: type != null && accounts[index].type == type.type
                                       ? wayaTheme.colorScheme.customPrimary
                                       : wayaTheme.colorScheme.greyColor100),
                               borderRadius: BorderRadius.all(Radius.circular(12))),
@@ -79,7 +80,7 @@ class SelectAccount extends ConsumerWidget {
             loading: () => _buildAccountLoadingState(context: context)),
         const Gap(50),
         WayaButton(
-            callback: type.isNotEmpty
+            callback: type != null
                 ? () async {
                     goToNextTab(type);
                   }

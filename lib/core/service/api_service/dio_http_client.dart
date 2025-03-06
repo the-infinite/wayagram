@@ -108,7 +108,8 @@ class DioHttpClient implements WayaHttpClientInterface {
           ? Options(
               headers: {
                 Headers.acceptHeader: "*/*",
-                Headers.contentTypeHeader: "multipart/form-data; boundary=${(body as FormData).boundary}"
+                Headers.contentTypeHeader:
+                    "multipart/form-data; boundary=${(body as FormData).boundary}"
               },
             )
           : null,
@@ -129,7 +130,8 @@ class DioHttpClient implements WayaHttpClientInterface {
     ));
   }
 
-  Future<WayaRequestResponse> downloadHttp(String url, String outputPath, WayaDownloadListener onData) async {
+  Future<WayaRequestResponse> downloadHttp(
+      String url, String outputPath, WayaDownloadListener onData) async {
     await _setHeader(isAuth: false);
 
     // Make the download request.
@@ -247,10 +249,10 @@ class DioHttpClient implements WayaHttpClientInterface {
   Future<WayaRequestResponse> _makeRequest(
     Future<Response> future, [
     bool showErrors = true,
-    int depth = 3,
+    int depth  = 3
   ]) async {
     try {
-      print("vv");
+  
       final response = await future;
       _logger.i('data: ${response.data}');
 
@@ -268,21 +270,36 @@ class DioHttpClient implements WayaHttpClientInterface {
       if (e.response != null) {
         var message = 'An unknown error occurred';
 
-        if (e.response?.statusCode == 401) {
+     
+
+        if (e.response?.data['statusCode'] == 401 || e.response?.statusCode == 401) {
           // TODO: @sekani50 Call the refresh token thing here. When that is
           // todo| then successful, call the code in the commented line below.
           //? If we have tried up to 3 times.
           // if (depth > 0) return _makeRequest(future, showErrors, depth - 1);
+         
+          //> use refresh token to generate a new auth token
+          bool success = await refreshToken();
+          if (success) {  
+            //> recall the function if success
+             return _makeRequest(future, showErrors, depth - 1);
+          }
+          else {
+            //> return error if not successful
+            return WayaHttpException.handleDioError(e);
+          }
         }
 
         try {
-          message = e.response?.data['errors'] != null ? e.response?.data['errors'][0] : e.response?.data['message'];
+          message = e.response?.data['errors'] != null
+              ? e.response?.data['errors'][0]
+              : e.response?.data['message'];
           _logger.e('errors: ${e.response?.data['errors']}');
         } catch (_) {}
         _logger.e('message: $message, ${e.response?.data}');
 
         // This is fine
-        if (showErrors) {
+        if (showErrors && !WayaConstants.isProduction) {
           _snackBarService.showCustomSnackbar(
             message: message,
             variant: SnackbarType.failure,
@@ -293,6 +310,34 @@ class DioHttpClient implements WayaHttpClientInterface {
       return WayaHttpException.handleDioError(e);
     }
   }
+
+  //> Function to refresh token
+Future<bool> refreshToken() async {
+  final refreshToken = await secureDataSource.getRefreshToken();
+
+  //> if there no refresh token --- return false
+  if (refreshToken == null) return false;
+
+  try {
+    final response = await dio.post(
+      "${baseURL}wayagram-profile/api/v2/client/auth/refresh-token",
+      data: {"token": refreshToken},
+    );
+
+    //> access the token from the response
+    final newToken = response.data['data']['token']['token'];
+    final newRefreshToken = response.data['data']['token']['refreshToken'];
+    _logger.i("New token acquired");
+
+  //> persit the tokens
+    await secureDataSource.saveToken(newToken);
+    await secureDataSource.saveRefreshToken(newRefreshToken);
+    return true;
+  } catch (e) {
+    _logger.e("Token refresh failed: $e");
+    return false;
+  }
+} 
 
   Future<void> _setHeader({
     bool formdata = false,
@@ -312,7 +357,8 @@ class DioHttpClient implements WayaHttpClientInterface {
                   : 'application/json'),
       'accept': '*/*',
       'connection': 'keep-alive',
-      if (isAuth) 'Authorization': 'Bearer ${await secureDataSource.getToken()}',
+      if (isAuth)
+        'Authorization': 'Bearer ${await secureDataSource.getToken()}',
     };
   }
 

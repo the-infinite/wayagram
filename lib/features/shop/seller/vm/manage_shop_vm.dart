@@ -30,9 +30,9 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
   ManageShopVm(this._shopRepository, this.ref) : super(ManageShopState.initial());
 
   Future<void> getSellerShops() async {
-    final isBusiness = ref.read(successfulSetupVmProvider).business;
+    final isBusiness = ref.watch(successfulSetupVmProvider).business;
 
-    //? This is fine.
+
     if (isBusiness == null) {
       // account is most likely a personal account
       state = state.copyWith(isPersonalNotUpgradedToBusiness: true);

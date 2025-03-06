@@ -54,7 +54,7 @@ class DeliveryCostRequest extends ConsumerWidget {
               ),
               const Gap(12),
               Text(
-                "Add delivery address this order so the seller can review and send the delivery cost for it.",
+                "Add delivery address this to order so the seller can review and send the delivery cost for it.",
                 textAlign: TextAlign.start,
                 style: WayaTextStyles.descriptionStyle,
               ),
@@ -75,7 +75,7 @@ class DeliveryCostRequest extends ConsumerWidget {
                     ),
                     const Gap(6),
                     Text(
-                      shopName,
+                      shopName.capitalizeFirst!,
                       style: wayaTheme.textTheme.labelMedium,
                     )
                   ],

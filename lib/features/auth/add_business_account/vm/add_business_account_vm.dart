@@ -184,9 +184,9 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
         if (context.mounted) {
           WayaUtils.showNotice(
               context: context,
-              title: 'KYC Documents Submitted \n Successfully',
+              title: 'KYC Documents Submitted Successfully',
               message:
-                  'Your documents are under review. We’ll notify you once the \n verification process is complete',
+                  'Your documents are under review. We’ll notify you once the verification process is complete',
               onPress: () => WayaNav.toNamed("/explore"),
               icon: Image.asset('assets/images/auth/doc-success.png'),
               buttonText: 'Go To HomePage');
