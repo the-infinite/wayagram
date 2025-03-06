@@ -30,6 +30,7 @@ class _SellerShopState extends ConsumerState<SellerShop> {
   @override
   Widget build(BuildContext context) {
     final manageShop = ref.watch(manageShopVmProvider);
+    
 
     final wayaTheme = Theme.of(context);
 
