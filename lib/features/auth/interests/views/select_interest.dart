@@ -8,6 +8,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/view/successful_setup.dart';
+import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/auth/interests/widget/select_interest_widget.dart';
 
@@ -72,8 +73,7 @@ class _SelectInterestState extends ConsumerState<SelectInterest> {
             callback: selectedInterests.isEmpty
                 ? null
                 : () async {
-                  ref.read(selectInterestProvider.notifier).addInterest();
-                   
+                    ref.read(selectInterestProvider.notifier).addInterest();
                   },
             text: "Save Interests",
           ),
@@ -81,14 +81,13 @@ class _SelectInterestState extends ConsumerState<SelectInterest> {
           Align(
               child: GestureDetector(
             onTap: () async {
-               final WayaLocalDataSource localDataSource =
-                        WayaLocalDataSource();
+              final accountState = ref.read(selectAccountProvider);
 
-                    if (localDataSource.getUserType().type == 'BUSINESS') {
-                      WayaNav.toNamed('/add-business-account');
-                    } else {
-                      WayaNav.to(const SuccessfulSetup());
-                    }
+              if (accountState.selectedType!.type == 'BUSINESS') {
+                WayaNav.toNamed('/add-business-account');
+              } else {
+                WayaNav.to(const SuccessfulSetup());
+              }
             },
             child: Text(
               "Skip for now",

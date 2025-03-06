@@ -1,15 +1,15 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
-import 'package:wayagram/core/utils/utils.dart';
 
-class SetNotificationVm extends ChangeNotifier {
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
+
+class SetNotificationVm extends StateNotifier<void> {
   final Ref ref;
-  SetNotificationVm(this.ref);
-  final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
+  SetNotificationVm(this.ref) : super(null);
 
   Future<void> setNotification() async {
-    if (_localDataSource.getUserType().type == "PERSONAL") {
+    final accountTypeState = ref.watch(selectAccountProvider);
+    if (accountTypeState.selectedType!.type == "PERSONAL") {
       WayaNav.toNamed('/account-setup-success');
     } else {
       WayaNav.toNamed('/add-business-account');
@@ -18,6 +18,6 @@ class SetNotificationVm extends ChangeNotifier {
 }
 
 final setNotificationVmProvider =
-    ChangeNotifierProvider<SetNotificationVm>((ref) {
+    StateNotifierProvider<SetNotificationVm, void>((ref) {
   return SetNotificationVm(ref);
 });

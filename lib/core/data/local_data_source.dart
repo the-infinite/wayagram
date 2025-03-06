@@ -18,13 +18,8 @@ class WayaLocalDataSource {
     return wayaFastStorageService.read<bool?>(key: 'isDark');
   }
 
-  saveUserType(SelectAccountData type) {
-    wayaFastStorageService.write(key: 'userType', value: type.toJson());
-  }
 
-  SelectAccountData getUserType() {
-    return SelectAccountData.fromJson(wayaFastStorageService.read(key: 'userType'));
-  }
+  
 
   saveUser(UserAccountData user) {
     return wayaFastStorageService.write(key: 'user', value: user);
