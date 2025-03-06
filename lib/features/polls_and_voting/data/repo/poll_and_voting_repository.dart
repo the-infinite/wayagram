@@ -22,6 +22,10 @@ class PollAndVotingRepository extends BaseRepository {
     return post("$serviceUrl/client/polls/$pollId/votes", payload);
   }
 
+  Future<WayaRequestResponse> deletePoll(pollId) {
+    return delete("$serviceUrl/client/polls/$pollId");
+  }
+
   Future<WayaRequestResponse> getAllPolls(int page) {
     return get(
         "$serviceUrl/client/polls?page=$page&orderBy=createdAt&orderDirection=DESC");
@@ -40,6 +44,7 @@ class PollAndVotingRepository extends BaseRepository {
     return get(
         "$serviceUrl/client/polls?orderBy=createdAt&orderDirection=DESC&id=$pollId");
   }
+
 
   Future<WayaRequestResponse> getAllPollsById(String id) {
     return get("$serviceUrl/client/polls/$id");

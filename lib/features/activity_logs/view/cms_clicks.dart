@@ -6,8 +6,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/logs_and_audit/widget/activity_card_widget.dart';
 
+import '../widget/activity_card_widget.dart';
 class CmsClicks extends ConsumerStatefulWidget {
   static const route = '/cmsClicks';
   const CmsClicks({super.key,});

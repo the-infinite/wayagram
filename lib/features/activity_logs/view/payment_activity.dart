@@ -6,18 +6,18 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/logs_and_audit/widget/activity_card_widget.dart';
-import 'package:wayagram/features/logs_and_audit/widget/activity_image_widget.dart';
 
-class SearchLog extends ConsumerStatefulWidget {
-  static const route = '/searchLog';
-  const SearchLog({super.key,});
+import '../widget/activity_card_widget.dart';
+
+class PaymentActivity extends ConsumerStatefulWidget {
+  static const route = '/paymentActivity';
+  const PaymentActivity({super.key,});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SearchLogState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PaymentActivityState();
 }
 
-class _SearchLogState extends ConsumerState<SearchLog> {
+class _PaymentActivityState extends ConsumerState<PaymentActivity> {
 
 
   @override
@@ -26,7 +26,7 @@ class _SearchLogState extends ConsumerState<SearchLog> {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       backgroundColor: WayaColors.greyColor50,
-      title: "Search Logs    ",
+      title: "Payment Activity    ",
       isLoading: false,
       isScrollable: false,
       body: Column(
@@ -70,8 +70,7 @@ class _SearchLogState extends ConsumerState<SearchLog> {
                 padding: EdgeInsets.only(bottom: 0),
                 itemCount: 3,
                 itemBuilder: (_, index){
-                  return ActivityImageWidget(title: "#Manchester United",
-                    subTitle: 'Nov 9, 2024, 9:00 AM ',  image: 'assets/icons/search.svg');
+                  return ActivityCardWidget(title: "Paid NGN 15,000 for 'Votes' via Wallet", subTitle: 'Nov 9, 2024, 9:00 AM ',);
                 }),
           ),
           Gap(10),
@@ -89,8 +88,7 @@ class _SearchLogState extends ConsumerState<SearchLog> {
             child: ListView.builder(
                 itemCount: 4,
                 itemBuilder: (_, index){
-                  return ActivityImageWidget(title: "Developers Group", subTitle:
-                  'Nov 9, 2024, 9:00 AM ', image: 'assets/icons/search.svg',);
+                  return ActivityCardWidget(title: "Added NGN 100,000 to Wallet via Bank Transfer", subTitle: 'Nov 9, 2024, 9:00 AM ',);
                 }),
           )
 

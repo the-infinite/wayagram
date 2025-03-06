@@ -6,18 +6,18 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/logs_and_audit/widget/activity_card_widget.dart';
-import 'package:wayagram/features/logs_and_audit/widget/activity_image_widget.dart';
 
-class UserInteraction extends ConsumerStatefulWidget {
-  static const route = '/userInteraction';
-  const UserInteraction ({super.key,});
+import '../widget/activity_image_widget.dart';
+
+class SearchLog extends ConsumerStatefulWidget {
+  static const route = '/searchLog';
+  const SearchLog({super.key,});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _UserInteractionState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _SearchLogState();
 }
 
-class _UserInteractionState extends ConsumerState<UserInteraction > {
+class _SearchLogState extends ConsumerState<SearchLog> {
 
 
   @override
@@ -26,7 +26,7 @@ class _UserInteractionState extends ConsumerState<UserInteraction > {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       backgroundColor: WayaColors.greyColor50,
-      title: "User Interactions    ",
+      title: "Search Logs    ",
       isLoading: false,
       isScrollable: false,
       body: Column(
@@ -58,7 +58,7 @@ class _UserInteractionState extends ConsumerState<UserInteraction > {
           ),
           Gap(10),
           Text(
-              'Yesterday',
+              'Today',
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w600,
@@ -67,12 +67,11 @@ class _UserInteractionState extends ConsumerState<UserInteraction > {
 
           Expanded(
             child: ListView.builder(
-                padding: EdgeInsets.only(bottom: 20),
+                padding: EdgeInsets.only(bottom: 0),
                 itemCount: 3,
                 itemBuilder: (_, index){
-                  return ActivityImageWidget(title:index == 0? "Liked 'Post #New Manager in Feed": index == 1 ?
-                  "Commented 'Post #New Manager in Feed":"Shared 'Post #43120 in Feed",
-                    subTitle: 'Nov 9, 2024, 9:00 AM ', image: index==0?'assets/icons/like.svg': index==1? 'assets/icons/comment.svg': 'assets/icons/share.svg',);
+                  return ActivityImageWidget(title: "#Manchester United",
+                    subTitle: 'Nov 9, 2024, 9:00 AM ',  image: 'assets/icons/search.svg');
                 }),
           ),
           Gap(10),
@@ -88,12 +87,10 @@ class _UserInteractionState extends ConsumerState<UserInteraction > {
           Expanded(
             flex: 2,
             child: ListView.builder(
-                padding: EdgeInsets.zero,
                 itemCount: 4,
                 itemBuilder: (_, index){
-                  return ActivityImageWidget(title:index == 0? "Liked 'Post #New Manager in Feed": index == 1 ?
-                  "Commented 'Post #New Manager in Feed":"Shared 'Post #43120 in Feed",
-                    subTitle: 'Nov 9, 2024, 9:00 AM ', image: index==0?'assets/icons/like.svg': index==1? 'assets/icons/comment.svg': 'assets/icons/share.svg',);
+                  return ActivityImageWidget(title: "Developers Group", subTitle:
+                  'Nov 9, 2024, 9:00 AM ', image: 'assets/icons/search.svg',);
                 }),
           )
 

@@ -6,17 +6,18 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/logs_and_audit/widget/activity_card_widget.dart';
 
-class VisitedPage extends ConsumerStatefulWidget {
-  static const route = '/visitedPage';
-  const VisitedPage({super.key,});
+import '../widget/activity_image_widget.dart';
+
+class UserInteraction extends ConsumerStatefulWidget {
+  static const route = '/userInteraction';
+  const UserInteraction ({super.key,});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _VisitedPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _UserInteractionState();
 }
 
-class _VisitedPageState extends ConsumerState<VisitedPage> {
+class _UserInteractionState extends ConsumerState<UserInteraction > {
 
 
   @override
@@ -25,7 +26,7 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       backgroundColor: WayaColors.greyColor50,
-      title: "Visited Pages    ",
+      title: "User Interactions    ",
       isLoading: false,
       isScrollable: false,
       body: Column(
@@ -66,16 +67,18 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
 
           Expanded(
             child: ListView.builder(
-              padding: EdgeInsets.only(bottom: 0),
+                padding: EdgeInsets.only(bottom: 20),
                 itemCount: 3,
                 itemBuilder: (_, index){
-                  return ActivityCardWidget(title: "Visited 'Dashboard' page", subTitle: 'Nov 9, 2024, 9:00 AM ',);
+                  return ActivityImageWidget(title:index == 0? "Liked 'Post #New Manager in Feed": index == 1 ?
+                  "Commented 'Post #New Manager in Feed":"Shared 'Post #43120 in Feed",
+                    subTitle: 'Nov 9, 2024, 9:00 AM ', image: index==0?'assets/icons/like.svg': index==1? 'assets/icons/comment.svg': 'assets/icons/share.svg',);
                 }),
           ),
           Gap(10),
 
           Text(
-              'November 9',
+              'Yesterday',
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w600,
@@ -85,9 +88,12 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
           Expanded(
             flex: 2,
             child: ListView.builder(
+                padding: EdgeInsets.zero,
                 itemCount: 4,
                 itemBuilder: (_, index){
-                  return ActivityCardWidget(title: "Visited 'Dashboard' page", subTitle: 'Nov 9, 2024, 9:00 AM ',);
+                  return ActivityImageWidget(title:index == 0? "Liked 'Post #New Manager in Feed": index == 1 ?
+                  "Commented 'Post #New Manager in Feed":"Shared 'Post #43120 in Feed",
+                    subTitle: 'Nov 9, 2024, 9:00 AM ', image: index==0?'assets/icons/like.svg': index==1? 'assets/icons/comment.svg': 'assets/icons/share.svg',);
                 }),
           )
 

@@ -6,17 +6,18 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/logs_and_audit/widget/activity_card_widget.dart';
 
-class PaymentActivity extends ConsumerStatefulWidget {
-  static const route = '/paymentActivity';
-  const PaymentActivity({super.key,});
+import '../widget/activity_card_widget.dart';
+
+class UserAction extends ConsumerStatefulWidget {
+  static const route = '/userAction';
+  const UserAction({super.key,});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PaymentActivityState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _UserActionState();
 }
 
-class _PaymentActivityState extends ConsumerState<PaymentActivity> {
+class _UserActionState extends ConsumerState<UserAction> {
 
 
   @override
@@ -25,7 +26,7 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       backgroundColor: WayaColors.greyColor50,
-      title: "Payment Activity    ",
+      title: "User Actions    ",
       isLoading: false,
       isScrollable: false,
       body: Column(
@@ -57,7 +58,7 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
           ),
           Gap(10),
           Text(
-              'Today',
+              'Yesterday',
               style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w600,
@@ -69,7 +70,7 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
                 padding: EdgeInsets.only(bottom: 0),
                 itemCount: 3,
                 itemBuilder: (_, index){
-                  return ActivityCardWidget(title: "Paid NGN 15,000 for 'Votes' via Wallet", subTitle: 'Nov 9, 2024, 9:00 AM ',);
+                  return ActivityCardWidget(title: "Added 'Headphones' to Cart", subTitle: 'Nov 9, 2024, 9:00 AM ',);
                 }),
           ),
           Gap(10),
@@ -87,7 +88,7 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
             child: ListView.builder(
                 itemCount: 4,
                 itemBuilder: (_, index){
-                  return ActivityCardWidget(title: "Added NGN 100,000 to Wallet via Bank Transfer", subTitle: 'Nov 9, 2024, 9:00 AM ',);
+                  return ActivityCardWidget(title: "Clicked on ‘ Vote Now’ button under - UGT", subTitle: 'Nov 9, 2024, 9:00 AM ',);
                 }),
           )
 

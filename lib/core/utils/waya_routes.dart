@@ -35,14 +35,6 @@ import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
 import 'package:wayagram/features/group/view/view_full_media.dart';
 import 'package:wayagram/features/kyc/view/kyc_update.dart';
-import 'package:wayagram/features/logs_and_audit/view/cms_clicks.dart';
-import 'package:wayagram/features/logs_and_audit/view/login_activity.dart';
-import 'package:wayagram/features/logs_and_audit/view/logs_and_audit.dart';
-import 'package:wayagram/features/logs_and_audit/view/payment_activity.dart';
-import 'package:wayagram/features/logs_and_audit/view/search_log.dart';
-import 'package:wayagram/features/logs_and_audit/view/user_action.dart';
-import 'package:wayagram/features/logs_and_audit/view/user_interaction.dart';
-import 'package:wayagram/features/logs_and_audit/view/visited_page.dart';
 import 'package:wayagram/features/moments/views/media_moment.dart';
 import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
@@ -123,6 +115,15 @@ import 'package:wayagram/features/event/views/all_upcoming_events.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/explore/search/search.dart';
 import 'package:wayagram/shared/features/quotation/view/all_buy_request.dart';
+
+import '../../features/activity_logs/view/cms_clicks.dart';
+import '../../features/activity_logs/view/login_activity.dart';
+import '../../features/activity_logs/view/logs_and_audit.dart';
+import '../../features/activity_logs/view/payment_activity.dart';
+import '../../features/activity_logs/view/search_log.dart';
+import '../../features/activity_logs/view/user_action.dart';
+import '../../features/activity_logs/view/user_interaction.dart';
+import '../../features/activity_logs/view/visited_page.dart';
 
 class WayaAppRoutes {
   WayaAppRoutes._();

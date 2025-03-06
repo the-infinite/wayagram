@@ -61,22 +61,16 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                   DateTime currentDate = DateTime.now(); // Get current date and time
 
 
-                  String formatTimeAgo(String dateString) {
-                    DateTime dateTime =
-                    DateTime.parse(dateString); // Convert string to DateTime
-                    return timeago.format(dateTime); // Convert to "time ago" format
-                  }
+                  // String formatTimeAgo(String dateString) {
+                  //   DateTime dateTime =
+                  //   DateTime.parse(dateString); // Convert string to DateTime
+                  //   return timeago.format(dateTime); // Convert to "time ago" format
+                  // }
                   return Container(
                     margin: EdgeInsets.only(bottom: 40.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // InkWell(
-                        //   onTap: (){
-                        //     print('CREATED AT ${poll.createdAt}');
-                        //   },
-                        //   child: Text('CREATEDAT'),
-                        // ),
                         Row(children: [
                           CircleAvatar(
                             backgroundImage: NetworkImage(poll.userData?.profilePicture ?? ''),
@@ -88,8 +82,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           const Gap(3),
 
                           Text(
-                            ' • ${formatTimeAgo('${poll.createdAt}')}',
-                            //' • ${ WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
+                            //' • ${formatTimeAgo('${poll.createdAt}')}',
+                            ' • ${ WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w400,
@@ -97,35 +91,29 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           ),
 
                           Spacer(),
-                          Image.asset('assets/images/polls/menu.png', height: 32.h,),
-                         /* InkWell(
-                              onTap: (){
-                                PopupMenuButton(
-                                  onSelected: (value) {},
-                                  iconColor: wayaTheme.colorScheme.greyColor400,
-                                  position: PopupMenuPosition.under,
-                                  itemBuilder: (context) {
-                                    return [
 
-                                      PopupMenuItem<int>(
-                                        value: 0,
-                                        child: _buildActionNav(
-                                          context: context,
-                                          onTap: () {
-                                            Share.share('${poll.url}');
-                                          },
-                                          asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
-                                          text: "Share Group link",
-                                          color: wayaTheme.colorScheme.customBlack,
-                                        ),
-                                      ),
-
-                                    ];
+                          PopupMenuButton(
+                            onSelected: (value) {},
+                            iconColor: wayaTheme.colorScheme.greyColor400,
+                            position: PopupMenuPosition.under,
+                            itemBuilder: (context) {
+                              return [PopupMenuItem<int>(
+                                value: 0,
+                                child: _buildActionNav(
+                                  context: context,
+                                  onTap: () {
+                                     Share.share('${poll.url}');
                                   },
-                                );
-                              },
-                              //child: Image.asset('assets/images/polls/menu.png', height: 32.h,)
-                          ),*/
+                                  asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none, height: 20, color: WayaColors.greyColor600),
+                                  text: "Share Poll link",
+                                  color: wayaTheme.colorScheme.customBlack,
+                                ),
+                              ),
+
+                              ];
+                            },
+                            child: Image.asset('assets/images/polls/menu.png', height: 32.h,),
+                          ),
 
                         ],),
                         const Gap(10),
@@ -456,8 +444,9 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
             text,
             style: TextStyle().wayaCopyWith(
               color: color,
-              fontWeight: FontWeight.w500,
-              fontSize: 12,
+              fontFamily: WayaConstants.fontFamily,
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
             ),
           )
         ],

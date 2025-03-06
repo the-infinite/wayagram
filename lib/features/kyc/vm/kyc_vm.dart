@@ -20,7 +20,7 @@ import 'package:wayagram/features/donation/model/kyc_model.dart';
 import 'package:wayagram/features/donation/model/login_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/state/donation_state.dart';
-import 'package:wayagram/features/kyc/data/repo/repo.dart';
+import 'package:wayagram/features/kyc/data/repo/kyc_repository.dart';
 import 'package:wayagram/features/kyc/state/kyc_state.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
