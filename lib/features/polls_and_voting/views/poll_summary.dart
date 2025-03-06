@@ -20,6 +20,7 @@ import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 import '../../auth/account_creation/vm/successful_setup_vm.dart';
+import '../../general_settings/profile/data/model/user_account_model.dart';
 import 'polls_for_you.dart';
 
 class PollSummary extends ConsumerStatefulWidget {
@@ -60,8 +61,8 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-              if (viewModel.pollType == 'paid' && userType == "PERSONAL") {
-          print('MY POLLING');
+              if (viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.personal) {
+
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   WayaUtils.showNotice(
                       context: context,
@@ -72,7 +73,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                       secondButtonText: 'Cancel',
                       icon: Image.asset('assets/images/cp-shop.png'));
                 });
-              } if(viewModel.pollType == 'paid' && userType != "PERSONAL"){
+              } if(viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.business){
                await ref.read(createPollVotingProvider.notifier).createPoll(
                   context,
                   viewModel.pollTitle.text,
@@ -82,10 +83,10 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                   viewModel.pollDescription.text,
                   viewModel.firstChoiceDescription.text,
                   viewModel.votePrice.text,
-                 viewModel.pollType.toLowerCase()
+                  viewModel.pollType.toLowerCase()
                 );
                //poll.reset();
-              }if(viewModel.pollType == 'free' ){
+              }if(viewModel.pollType == 'free' &&  ConversationState.self.accountType == UserAccountType.personal){
                 await ref.read(createPollVotingProvider.notifier).createFreePoll(
                     context,
                     viewModel.pollTitle.text,
@@ -138,15 +139,13 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                     '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.startDate)}\n',
                     'Host', setUp.user?.user?.firstName?.capitalizeFirst ?? ''),
                 summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
-                summary('Poll Type', '${viewModel.pollType.capitalizeFirst}\n', 'Prize per vote', '₦${viewModel.votePrice.text}'
-                ),
+                summary('Poll Type', '${viewModel.pollType.capitalizeFirst}\n', 'Prize per vote', '₦${viewModel.votePrice.text}'),
                 summary('Duration', '$daysLeft Weeks\n' , '', ''),
               ],
             ),
             const Gap(40),
 
-            Text(
-              'Choices',
+            Text('Choices',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
