@@ -11,7 +11,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
 import 'package:wayagram/features/quotation/widgets/single_negotiation_bid.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
@@ -67,7 +66,6 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final _ = ref.watch(userQuotationsProvider);
-    debugPrint(ConversationState.self.accountType.toString());
 
     //? This is fine too.
     return WayaScaffold(
@@ -133,7 +131,9 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                           onTap: () {
                             WayaUtils.showModalSheet(
                               context,
-                              child: EditOfferModal(),
+                              child: EditOfferModal(
+                                delta: 100,
+                              ),
                             );
                           },
                           child: WayaAssets.images.bid.edit.image(

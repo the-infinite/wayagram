@@ -1,8 +1,4 @@
 import 'dart:io';
-import 'package:http/http.dart' as http;
-import 'package:dio/dio.dart';
-import 'package:http_parser/http_parser.dart';
-import 'package:mime/mime.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -88,5 +84,5 @@ final createShopVmProvider =
     StateNotifierProvider<CreateShopVm, CreateShopState>((ref) {
   final setUp = ref.watch(successfulSetupVmProvider);
   return CreateShopVm(
-      ShopRepository(), ImagePicker(), WayaSecureDataSource(), setUp, ref);
+      ShopRepository.instance, ImagePicker(), WayaSecureDataSource(), setUp, ref);
 });

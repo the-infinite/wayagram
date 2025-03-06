@@ -85,5 +85,5 @@ class ConfirmOrderDeliveryVm extends StateNotifier<States> {
 
 final confirmOrderDeliveryVmProvider =
     StateNotifierProvider<ConfirmOrderDeliveryVm, States>((ref) {
-  return ConfirmOrderDeliveryVm(ShopRepository(), ref);
+  return ConfirmOrderDeliveryVm(ShopRepository.instance, ref);
 });

@@ -60,7 +60,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
     print(map);
     if (response.success) {
-     // map[] =  _localDataSource.getUserId().toString();
+      // map[] =  _localDataSource.getUserId().toString();
       return await payForPaidContest(isLoading, map);
     } else {
       isLoading.value = false;
@@ -121,7 +121,12 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
+  String getLoggedInUserId() {
+    return _localDataSource.getUserId().toString();
+  }
+
   Future<void> getContestantProfileVoteDetails(String contestId) async {
+    print("i am here333  $contestId");
     try {
       final response = await _contestRepository.getContestantProfileVoteDetails(contestId);
       List<MyContestContestantModel> contestList = [];
@@ -237,6 +242,115 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   void updateContestId(String? id) {
     state = state.copyWith(contestId: id);
+  }
+
+  void toggleLike(String postId) {
+    // Contest? contestPost = null;
+    print("Contest for you");
+    //state.copyWith(myPostList: contestList)
+    var list = state.myPostList.map((post) {
+      print("i dey here 11");
+      if (post.id == postId) {
+        print("i dey here 2");
+        //  bool isMyLiked = post.isLiked ?? false;
+        // if (isMyLiked) {
+        doOnLikeLike(postId);
+        //  }
+        return post.copyWith(
+          isLiked: true,
+          likes: post.likes! + 1,
+        );
+      }
+      return post;
+    }).toList();
+    state = state.copyWith(myPostList: [...list]);
+  }
+
+  void doOnLikeLike(String postId) async {
+    // print("do like stuff");
+    final response = await _contestRepository.likeContest({
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": postId
+    });
+
+    if (!response.success) {
+      //  print("do like stuff Fail");
+      var list = state.myPostList.map((post) {
+        print("i dey here 3");
+        if (post.id == postId) {
+          print("i dey here 3");
+          return post.copyWith(
+            isLiked: !post.isLiked!,
+            likes: post.likes! - 1,
+          );
+        }
+        return post;
+      }).toList();
+      state = state.copyWith(myPostList: [...list]);
+      //  WayaSnackBar.showToast("Unable to like, Please try again");
+    } else {
+      print("do like stuff Success");
+    }
+  }
+
+  void toggleShare(String postId) {
+    // Contest? contestPost = null;
+
+    var list = state.myPostList.map((post) {
+      print("i dey here wwww");
+      if (post.id == postId) {
+        print("i dey here pppppp");
+        return post.copyWith(
+          // isLiked: true,
+          shares: post.shares! + 1,
+        );
+      }
+      return post;
+    }).toList();
+    print("i dey here pppppp");
+    state = state.copyWith(myPostList: [...list]);
+    doshare(postId);
+  }
+
+  void doshare(String postId) async {
+    // print("do like stuff");
+    final response = await _contestRepository.shareContest({
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": postId
+    });
+
+    if (!response.success) {
+      //  print("do like stuff Fail");
+
+      var list = state.myPostList.map((post) {
+        if (post.id == postId) {
+          return post.copyWith(
+            shares: post.shares! + 1,
+          );
+        }
+        return post;
+      }).toList();
+      state = state.copyWith(myPostList: [...list]);
+      //  WayaSnackBar.showToast("Unable to like, Please try again");
+    } else {
+      print("do like stuff Success");
+    }
+  }
+
+  void doFollow(String postId) async {
+    // print("do like stuff");
+    final response = await _contestRepository.followContest({
+      "profileId": _localDataSource.getUserId().toString(),
+      "contestId": postId
+    });
+
+    if (response.success) {
+      //  print("do like stuff Fail");
+
+      WayaSnackBar.showToast("Contest liked");
+    } else {
+      print("do like stuff Success");
+    }
   }
 }
 

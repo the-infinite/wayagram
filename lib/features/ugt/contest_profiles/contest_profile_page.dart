@@ -66,6 +66,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     final wayaTheme = Theme.of(context);
     //var model = ref.watch(selectedContestProvider.notifier).state;
     var model = ref.watch(selectedContestantProfile.notifier).state;
+    var viewModel = ref.watch(votersContestNotifier.notifier);
     print("profile id ${model?.id}");
     final imageUrl = useState(model!.profilePhoto ?? "");
     useEffect(() {
@@ -101,12 +102,44 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
             Stack(
               clipBehavior: Clip.none,
               children: [
-                VideoThumbnailPlayer(
-                  imageUrl: imageUrl.value,
-                  videoUrl: model.introVideo ?? "",
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    VideoThumbnailPlayer(
+                      imageUrl: imageUrl.value,
+                      videoUrl: model.introVideo ?? "",
+                    ),
+                    const Gap(20),
+                    Container(
+                      margin: EdgeInsets.only(right: 20.w),
+                      padding: REdgeInsets.symmetric(
+                          vertical: 8.dg, horizontal: 12.dg),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: wayaTheme.colorScheme.primary600,
+                          width: 1.5,
+                        ),
+                        color: wayaTheme.colorScheme.white,
+                        borderRadius: BorderRadius.circular(5.r),
+                      ),
+                      child: GestureDetector(
+                        onTap: () {
+                          print("Edit Profile");
+                          WayaNav.toNamed('/edit-profile-contest');
+                        },
+                        child: Text(
+                          'Edit Profile',
+                          style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                            color: wayaTheme.colorScheme.primary600,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 Positioned(
-                  bottom: -45,
+                  bottom: 10,
                   left: 20,
                   child: Container(
                     padding: const EdgeInsets.all(0),
@@ -123,37 +156,17 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                     ),
                   ),
                 ),
-                Positioned(
-                    bottom: -50,
-                    right: 0,
-                    child: GestureDetector(
-                      onTap: () {},
-                      child: Container(
-                        margin: EdgeInsets.only(right: 20.w),
-                        padding: REdgeInsets.symmetric(
-                            vertical: 8.dg, horizontal: 12.dg),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: wayaTheme.colorScheme.primary600,
-                            width: 1.5,
-                          ),
-                          color: wayaTheme.colorScheme.white,
-                          borderRadius: BorderRadius.circular(5.r),
-                        ),
-                        child: Text(
-                          'Edit Profile',
-                          style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
-                            color: wayaTheme.colorScheme.primary600,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ))
               ],
             ),
-            const Gap(50),
-            Text(model.contestApplicant?.fullName ?? "",
-                style: wayaTheme.textTheme.bodyMedium),
+            //const Gap(10),
+            GestureDetector(
+              onTap: () {
+                print("Edit Profile");
+                WayaNav.toNamed('/edit-profile-contest');
+              },
+              child: Text(model.contestApplicant?.fullName ?? "",
+                  style: wayaTheme.textTheme.bodyMedium),
+            ),
             const Gap(5),
             Row(
               children: [
@@ -191,10 +204,31 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
             ),
             const Gap(10),
             if (selectedViewIndex.value == 0) UgtDetailsPost(model),
-            if (selectedViewIndex.value == 1) ContestProfileStagesSection([]),
+            if (selectedViewIndex.value == 1)
+              ContestProfileStagesSection(model.stages),
           ],
         ),
       ),
+      floatingActionButton: model.profileId == viewModel.getLoggedInUserId()
+          ? SizedBox(
+              height: 50,
+              width: 50,
+              child: WayaButton(
+                callback: () {
+                  viewModel.updateContestId(model.id);
+                  WayaNav.toNamed('/create-contest-post');
+                },
+                height: 50,
+                centerWidget: Center(
+                  child: Icon(
+                    Icons.add,
+                    color: wayaTheme.colorScheme.white,
+                    size: 40,
+                  ),
+                ),
+              ),
+            )
+          : null,
     );
   }
 

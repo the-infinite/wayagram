@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -8,6 +10,9 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
+import 'package:wayagram/features/quotation/seller/views/bids/see_seller_bids.dart';
+import 'package:wayagram/shared/features/quotation/modal/choose_shop.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 
@@ -30,6 +35,7 @@ class QuotationBuyRequestWidget extends StatefulWidget {
 
 class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
   final timeNotifier = ValueNotifier(Duration.zero);
+  final loadingController = ValueNotifier(false);
   Timer? timer;
   late final isClosed = [BuyRequestStatus.cancelled, BuyRequestStatus.closed].contains(widget.data.status);
 
@@ -74,7 +80,36 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
     super.dispose();
   }
 
-  Future<void> _placeBid() async {}
+  Future<void> _placeBid() async {
+    final amount = await WayaUtils.showModalSheet<double>(
+      context,
+      child: EditOfferModal(
+        delta: widget.data.bidStartingAmount >= 3000000
+            ? 25000
+            : widget.data.bidStartingAmount >= 200000
+                ? 5000
+                : 1000,
+      ),
+    );
+
+    //! If this was dismissed before an amount was even calculated...
+    if (amount == null) return;
+
+    //? Which shop is the user sending the bid as?
+    final shopId = await WayaUtils.showModalSheet(context, child: ChooseShopModal());
+
+    //! If the shop was not selected.
+    if (shopId == null) return;
+
+    //? Now, send the bid.
+    final result = await widget.notifier.sendBid(widget.data.id, amount, shopId);
+
+    //! Since bidding failed, you can leave.
+    if (result == null) return;
+
+    //* Okay, since bidding was fine, we throw a pizza party.
+    WayaNav.toNamed(SeeSellerBids.route);
+  }
 
   Future<void> _viewBids() async {
     WayaNav.toNamed(WayaAppRoutes.getBuyerBidsRoute(widget.data.id));
@@ -242,11 +277,12 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
               const Gap(20),
 
               //? The button that we use to place a bid.
-              WayaButton(
+              WayaProgressiveButton(
                 callback: widget.data.buyerId == ConversationState.self.id ? _viewBids : _placeBid,
                 text: widget.data.buyerId == ConversationState.self.id ? 'View Bids' : 'Place Bid',
                 height: 48,
                 isDisabled: widget.data.status != BuyRequestStatus.active,
+                notifier: loadingController,
               ),
             ],
           ),

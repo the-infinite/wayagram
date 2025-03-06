@@ -270,6 +270,8 @@ class DioHttpClient implements WayaHttpClientInterface {
       if (e.response != null) {
         var message = 'An unknown error occurred';
 
+     
+
         if (e.response?.data['statusCode'] == 401 || e.response?.statusCode == 401) {
           // TODO: @sekani50 Call the refresh token thing here. When that is
           // todo| then successful, call the code in the commented line below.

@@ -107,6 +107,7 @@ import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference
 import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.dart';
 import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
 import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
+import 'package:wayagram/features/ugt/my_contest_details/edit_contestant_profile.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
@@ -122,6 +123,7 @@ import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
 import 'package:wayagram/features/event/views/all_upcoming_events.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/explore/search/search.dart';
+import 'package:wayagram/shared/features/quotation/view/all_buy_request.dart';
 
 class WayaAppRoutes {
   WayaAppRoutes._();
@@ -148,7 +150,7 @@ class WayaAppRoutes {
     SellerOrderDetails.route: () => SellerOrderDetails(),
     SellerBidDetails.route: () => SellerBidDetails(),
     SellerSettlement.route: () => SellerSettlement(),
-    SeeSellerBids.route: () => SeeSellerBids(id:  WayaNav.search['id'].toString()),
+    SeeSellerBids.route: () => SeeSellerBids(id: WayaNav.search['id'].toString()),
     SeeBuyerBids.route: () => SeeBuyerBids(id: WayaNav.search['id'].toString()),
     Checkout.route: () => Checkout(),
     BuyerCheckout.route: () => BuyerCheckout(),
@@ -182,6 +184,7 @@ class WayaAppRoutes {
     UgtHome.route: () => UgtHome(),
     CreateContest.route: () => CreateContest(),
     CreateContestPost.route: () => CreateContestPost(),
+    EditContestantProfile.route: () => EditContestantProfile(),
     ViewSingleContestantData.route: () => ViewSingleContestantData(),
     ContestActiveDisqualify.route: () => ContestActiveDisqualify(),
     ContestProfilePage.route: () => ContestProfilePage(),
@@ -272,7 +275,9 @@ class WayaAppRoutes {
     UserInteraction.route: () => UserInteraction(),
     PaymentActivity.route: () => PaymentActivity(),
     SearchLog.route: () => SearchLog(),
-    KycUpdate.route: ()=> KycUpdate(),
+    KycUpdate.route: () => KycUpdate(),
+    SellerBuyRequestsScreen.route: () => SellerBuyRequestsScreen(),
+    BuyerBuyRequestsScreen.route: () => BuyerBuyRequestsScreen(),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and

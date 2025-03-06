@@ -65,9 +65,9 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
           Gap(10),
           EngagementRange(
               topLeft: "${WayaHelpers.formatPrice(int.parse('${args['amountRaised']}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount']}'))}",
-              bottomLeft: "0 Donations",
+              bottomLeft: "${args['donationCount']} Donations",
               bottomRight: "${args['daysLeft']} days left",
-              range: 0.4),
+              range: 0.0,),
           Gap(10),
           Row(children: [
             Expanded(child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['amountRaised']}')), 'Amount Raised', wayaTheme.colorScheme.success50),),
@@ -86,7 +86,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
           Gap(20),
           _reviewText('Cause Title', '${args['title']}'),
           Gap(10),
-          _reviewText('Cause  Description', '${args['desc']}'),
+          _reviewText('Cause Description', '${args['desc']}'),
           Gap(10),
           _reviewText('Proposed Solution', '${args['solution']}'),
           Gap(10),

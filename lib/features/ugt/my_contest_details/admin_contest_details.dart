@@ -20,20 +20,15 @@ import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_gall
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_leaderboard.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_post_all.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/for_you_contest.dart';
-import 'package:wayagram/features/ugt/my_contest_details/my_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
-import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/admin_card.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 
 import '../../../core/components/waya_scaffold.dart';
-import '../widgets/about_ugt_widget.dart';
-import '../widgets/status_ongoing.dart';
+
 
 class AdminContestDetails extends StatefulHookConsumerWidget {
   static const route = '/upcoming-manage-contest-details';
@@ -283,6 +278,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                           ref.read(selectedContestantProfile.notifier).state =
                               viewModel.myContestList[1];
                           viewModelNotifier.updateContestId(model.id);
+                           ref.read(selectedContestProvider.notifier).state = model;
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
@@ -304,6 +300,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
                               viewModel.myContestList[0];
+                                ref.read(selectedContestProvider.notifier).state = model;
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
@@ -327,6 +324,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
                               viewModel.myContestList[2];
+                               ref.read(selectedContestProvider.notifier).state = model;
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
@@ -374,7 +372,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 ],
               ),
               const Gap(10),
-              if (selectedViewIndex.value == 0) UgtPostAllContestant(),
+              if (selectedViewIndex.value == 0) UgtPostAllContestant(model),
               if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(model),
               if (selectedViewIndex.value == 2) UgtDetailsContestants(model),
               //  if (selectedViewIndex.value == 3) UgtDetailsGallery(model),
