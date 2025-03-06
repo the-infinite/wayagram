@@ -136,6 +136,7 @@ Data copyWith({  List<PaymentActivityDocs>? docs,
 
 }
 
+/*
 Metadata metadataFromJson(String str) => Metadata.fromJson(json.decode(str));
 String metadataToJson(Metadata data) => json.encode(data.toJson());
 class Metadata {
@@ -149,12 +150,15 @@ class Metadata {
     offset = json['offset'];
     searchApplied = json['searchApplied'];
     searchFields = json['searchFields'];
-   /* if (json['searchFields'] != null) {
+   */
+/* if (json['searchFields'] != null) {
       searchFields = [];
       json['searchFields'].forEach((v) {
         searchFields?.add(Dynamic.fromJson(v));
       });
     }*/
+/*
+
     appliedFilters = json['appliedFilters'] != null ? AppliedFilters.fromJson(json['appliedFilters']) : null;
   }
   num? offset;
@@ -184,6 +188,7 @@ Metadata copyWith({  num? offset,
   }
 
 }
+*/
 
 AppliedFilters appliedFiltersFromJson(String str) => AppliedFilters.fromJson(json.decode(str));
 String appliedFiltersToJson(AppliedFilters data) => json.encode(data.toJson());
@@ -277,7 +282,6 @@ class PaymentActivityDocs {
 
 }
 
-/*
 Metadata metadataFromJson(String str) => Metadata.fromJson(json.decode(str));
 String metadataToJson(Metadata data) => json.encode(data.toJson());
 class Metadata {
@@ -315,4 +319,4 @@ Metadata copyWith({  num? amount,
     return map;
   }
 
-}*/
+}

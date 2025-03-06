@@ -136,7 +136,7 @@ Data copyWith({  List<SearchLogDocs>? docs,
 
 }
 
-Metadata metadataFromJson(String str) => Metadata.fromJson(json.decode(str));
+/*Metadata metadataFromJson(String str) => Metadata.fromJson(json.decode(str));
 String metadataToJson(Metadata data) => json.encode(data.toJson());
 class Metadata {
   Metadata({
@@ -183,7 +183,7 @@ Metadata copyWith({  num? offset,
     return map;
   }
 
-}
+}*/
 
 AppliedFilters appliedFiltersFromJson(String str) => AppliedFilters.fromJson(json.decode(str));
 String appliedFiltersToJson(AppliedFilters data) => json.encode(data.toJson());
@@ -277,7 +277,6 @@ class SearchLogDocs {
 
 }
 
-/*
 Metadata metadataFromJson(String str) => Metadata.fromJson(json.decode(str));
 String metadataToJson(Metadata data) => json.encode(data.toJson());
 class Metadata {
@@ -309,4 +308,4 @@ Metadata copyWith({  String? query,
     return map;
   }
 
-}*/
+}

@@ -4,8 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
+import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
+import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
+import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
+import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
 import '../widget/activity_card_widget.dart';
 
@@ -23,7 +30,7 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
   @override
   Widget build(BuildContext context) {
 
-    final wayaTheme = Theme.of(context);
+    final viewModel = ref.watch(activityLogsVmProvider);
     return WayaScaffold(
       backgroundColor: WayaColors.greyColor50,
       title: "Payment Activity    ",
@@ -57,15 +64,36 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
             ),
           ),
           Gap(10),
-          Text(
-              'Today',
-              style: TextStyle(
-                fontSize: 20.sp,
-                fontWeight: FontWeight.w600,
-                color: Colors.black,
-              )),
 
           Expanded(
+            child: PaginatedDataView<PaymentActivityDocs>(
+                uniqueKey: 'payment-activity',
+                loadingState: SizedBox(
+                    height: context.height * 0.4,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    )),
+                emptyState:ActivityLogsEmptyState(text: 'You don\'t have payment activity yet',),
+                fetchData: ref.read(activityLogsVmProvider.notifier).getPaymentActivity,
+                result: (data, s) {
+                  return ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: viewModel.paymentActivityDocs.length,
+                      itemBuilder: (context, index) {
+                        final paymentActivity = viewModel.paymentActivityDocs[index];
+                        String dateTimeString = "${paymentActivity.createdAt}";
+                        DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
+                        return ActivityCardWidget(
+                          title: '${paymentActivity.description}',
+                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(paymentActivity.createdAt)}, '
+                              '${DateFormat.jm().format(dateTime)}'
+                          ,);
+                      });
+                }),
+          ),
+
+        /*  Expanded(
             child: ListView.builder(
                 padding: EdgeInsets.only(bottom: 0),
                 itemCount: 3,
@@ -90,7 +118,7 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
                 itemBuilder: (_, index){
                   return ActivityCardWidget(title: "Added NGN 100,000 to Wallet via Bank Transfer", subTitle: 'Nov 9, 2024, 9:00 AM ',);
                 }),
-          )
+          )*/
 
 
 

@@ -26,6 +26,10 @@ class VisitedPage extends ConsumerStatefulWidget {
 
 class _VisitedPageState extends ConsumerState<VisitedPage> {
 
+  List<String> dates = [];
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,19 +68,7 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
             ),
           ),
           Gap(10),
-
-          Expanded(
-            child: PaginatedDataView<VisitedPagesDocs>(
-                uniqueKey: 'login-activity',
-                loadingState: SizedBox(
-                    height: context.height * 0.4,
-                    child: Center(
-                      child: CircularProgressIndicator(),
-                    )),
-                emptyState:ActivityLogsEmptyState(text: 'You haven\'t visited any page yet',),
-                fetchData: ref.read(activityLogsVmProvider.notifier).getVisitedPages,
-                result: (data, s) {
-                  return ListView.builder(
+           ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       itemCount: viewModel.visitedPagesDocs.length,
@@ -89,35 +81,49 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
                           subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(visitedPage.createdAt)}, '
                               '${DateFormat.jm().format(dateTime)}'
                           ,);
-                      });
-                    /*SingleChildScrollView(
+                      }),
+          /*Expanded(
+            child: PaginatedDataView<VisitedPagesDocs>(
+                uniqueKey: 'visited-page',
+                loadingState: SizedBox(
+                    height: context.height * 0.4,
+                    child: Center(
+                      child: CircularProgressIndicator(),
+                    )),
+                emptyState:ActivityLogsEmptyState(text: 'You haven\'t visited any page yet',),
+                fetchData: ref.read(activityLogsVmProvider.notifier).getVisitedPages,
+                result: (data, s) {
+                  return SingleChildScrollView(
                     child: ListView.builder(
                         padding: EdgeInsets.only(bottom: 80.h, top: 0),
                         physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: viewModel.visitedPagesDocs.length,
                         itemBuilder: (context, i){
-                          for(int s = 0; s < viewModel.visitedPagesDocs.length; s++){
-                            // if(viewModel.visitedPagesDocs[s].contains(viewModel.visitedPagesDocs[s].createdAt.toString().split('T')[0])){
-                            //   viewModel.visitedPagesDocs.add(viewModel.visitedPagesDocs[s]);
-                            //   //viewModel.visitedPagesDocs[i].createdAt.toString().split('T')[0]
-                            // }
 
-                            if(viewModel.visitedPagesDocs[i].createdAt.toString().split('T')[0] == viewModel.visitedPagesDocs[s].createdAt.toString().split('T')[0]){
-                              viewModel.visitedPagesDocs.add(viewModel.visitedPagesDocs[s]);
-                            }
-
-                          }
+                          // for(int s = 0; s < viewModel.visitedPagesDocs.length; s++){
+                          //   // if(viewModel.visitedPagesDocs[s].contains(viewModel.visitedPagesDocs[s].createdAt.toString().split('T')[0])){
+                          //   //   viewModel.visitedPagesDocs.add(viewModel.visitedPagesDocs[s]);
+                          //   //   //viewModel.visitedPagesDocs[i].createdAt.toString().split('T')[0]
+                          //   // }
+                          //
+                          //   if(viewModel.visitedPagesDocs[i].createdAt.toString().split('T')[0] == viewModel.visitedPagesDocs[s].createdAt.toString().split('T')[0]){
+                          //     viewModel.visitedPagesDocs.add(viewModel.visitedPagesDocs[s]);
+                          //   }
+                          //
+                          // }
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                          Text(
-                              '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.visitedPagesDocs[i])}',
-                              style: TextStyle(
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.black,
-                              )),
+                             Text('kg'),
+                             *//* Text(
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.visitedPagesDocs[i])}',
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),*/
+          /*
                               Gap(10),
                               ListView.builder(
                                 shrinkWrap: true,
@@ -142,10 +148,11 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
                             ],
                           );
                         }),
-                  );*/
+                  );
+
 
                 }),
-          ),
+          ),*/
           Gap(10),
         ],
       ),

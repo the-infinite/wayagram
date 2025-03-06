@@ -71,7 +71,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }
   }
 
-  Future<PaginatedResult<VisitedPagesDocs>?> getVisitedPages({required int page}) async {
+  Future<PaginatedResult<VisitedPagesDocs>?>  getVisitedPages({required int page}) async {
 
     try{
       state = state.copyWith(isLoading: true);
