@@ -15,6 +15,7 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contestant_reject_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/video_player.dart';
@@ -172,8 +173,10 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
                         showCopyLink: false,
                         buttonText: null,
                         onTap: (_, __) {
-                          WayaNav.removeUntilNamed(
-                              '/contest-mydashboard-profile-page');
+                          WayaNav.removeAllUntil(AdminContestDetails(),
+                              '/upcoming-manage-contest-details');
+                          /*  WayaNav.removeUntilNamed(
+                              '/contest-mydashboard-profile-page'); */
                         }),
                   );
                 } else {
@@ -205,8 +208,10 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
                         WayaSnackBar.showToast("Rejected sent successfully!");
                         /*  viewModel
                             .fetchAllContestApplicant(model?.contestId ?? ""); */
-                        WayaNav.removeUntilNamed(
-                            '/contest-mydashboard-profile-page');
+                        /*  WayaNav.removeUntilNamed(
+                            '/contest-mydashboard-profile-page'); */
+                        WayaNav.removeAllUntil(AdminContestDetails(),
+                            '/upcoming-manage-contest-details');
                       } else {
                         WayaSnackBar.showToast(
                             "Please try again, unable to send request");

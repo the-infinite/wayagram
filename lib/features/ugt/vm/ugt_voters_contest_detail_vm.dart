@@ -70,9 +70,35 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
+    Future<bool> verifyAndPayForPaidStageContest(ValueNotifier<bool> isLoading,
+      String pin, Map<String, String> map) async {
+    isLoading.value = true;
+    final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(
+        userId: _localDataSource.getUserId().toString(), pin: pin));
+
+    print(map);
+    if (response.success) {
+      // map[] =  _localDataSource.getUserId().toString();
+      return await payForPaidStageContest(isLoading, map);
+    } else {
+      isLoading.value = false;
+      return false;
+    }
+  }
+
   Future<bool> voteContestant(
       ValueNotifier<bool> isLoading, Map<String, String> map) async {
     final response = await _contestRepository.voteContestant(map);
+    isLoading.value = false;
+    if (response.success) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+    Future<bool> payForPaidStageContest(
+      ValueNotifier<bool> isLoading, Map<String, String> map) async {
+    final response = await _contestRepository.payForPaidStageContest(map);
     isLoading.value = false;
     if (response.success) {
       return true;

@@ -17,6 +17,7 @@ import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/ugt_modal.dart';
+import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -226,7 +227,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
               showCopyLink: true,
               buttonText: null,
               onTap: (_, __) {
-                WayaNav.removeUntilNamed("/ugt-home");
+                
+               // WayaNav.removeUntilNamed("/ugt-home");
+                 WayaNav.removeAllUntil(UgtHome(), '/ugt-home');
               }),
         );
       }

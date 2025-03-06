@@ -99,6 +99,9 @@ class ContestRepo extends BaseRepository {
   Future<WayaRequestResponse> payForPaidContest(payLoad) {
     return post('$serviceUrl2/profile/pay-for-contest', payLoad, formdata: false);
   }
+    Future<WayaRequestResponse> payForPaidStageContest(payLoad) {
+    return post('$serviceUrl2/profile/pay-for-contest', payLoad, formdata: false);
+  }
 
   /*Future<WayaRequestResponse> createContestController({
     required final String contestStatus,

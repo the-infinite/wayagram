@@ -20,8 +20,11 @@ import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_gall
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_leaderboard.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_stages_section.dart';
+import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_details_stage_modal.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/video_player.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -41,6 +44,7 @@ class ContestProfilePage extends StatefulHookConsumerWidget {
 }
 
 class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
+  Stage? selectedStage;
   @override
   void initState() {
     // getImageUrl();
@@ -69,7 +73,38 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     var viewModel = ref.watch(votersContestNotifier.notifier);
     print("profile id ${model?.id}");
     final imageUrl = useState(model!.profilePhoto ?? "");
+
     useEffect(() {
+      model.stages?.forEach((element) {
+        print("i am looping");
+        if (element.isActive == true && element.hasPaid != true) {
+          print("looping and have picked one");
+          selectedStage = element;
+          Future.delayed(Duration(seconds: 2), () {
+            WayaUtils.showModalSheetUgt(
+              context,
+              child: SuccessfulModal(
+                  title: "You’re Moving On to the Next Stage! ",
+                  subtitle:
+                      "Your talent is shining! Get ready for the next round. Complete the next steps to continue.",
+                  showCopyLink: false,
+                  buttonText: "Continue",
+                  onTap: (_, __) {
+                     WayaUtils.showModalSheetUgt(
+              context,
+              child: ContestDetailsStageModal(
+                  post: element,
+                  model: model,
+               ),
+            );
+                    //  WayaNav.removeUntilNamed("/ugt-home");
+                  }),
+            );
+          });
+
+          return;
+        }
+      });
       ref
           .watch(ugtContestantProfileVm.notifier)
           .fetchSingleContestantPosts(model.id ?? "");
