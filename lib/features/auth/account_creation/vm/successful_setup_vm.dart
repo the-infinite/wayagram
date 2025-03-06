@@ -25,7 +25,7 @@ class SuccessfulSetupVm extends StateNotifier<SuccessfulSetUpState> {
 
   SuccessfulSetupVm(this._profileRepo, this._secureDataSource) : super(SuccessfulSetUpState());
 
-  void getUserData() async {
+  Future<void> getUserData() async {
     try {
       state = state.copyWith(isloading: true);
       // check if user has an ID
@@ -53,7 +53,7 @@ class SuccessfulSetupVm extends StateNotifier<SuccessfulSetUpState> {
           }
         }
 
-        WayaNav.toNamed('/explore');
+        
       }
     } catch (e) {
       print(e);

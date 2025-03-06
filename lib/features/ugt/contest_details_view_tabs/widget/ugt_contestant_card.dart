@@ -13,8 +13,8 @@ import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
+import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
-
 
 class UgtContestantCard extends ConsumerWidget {
   final Contest model;
@@ -40,8 +40,9 @@ class UgtContestantCard extends ConsumerWidget {
           ),
           title: GestureDetector(
             onTap: () {
-               ref.read(selectedContestantProfile.notifier).state =
-                            contestantData;
+              ref.read(selectedContestantProfile.notifier).state =
+                  contestantData;
+              ref.read(selectedContestProvider.notifier).state = model;
               WayaNav.toNamed(
                 '/contest-profile-page',
               );

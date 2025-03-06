@@ -7,6 +7,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
@@ -48,12 +49,16 @@ class _ExploreState extends ConsumerState<Explore> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      //> need to fetch user data
+      ref.read(successfulSetupVmProvider.notifier).getUserData();
+      //> 
+
       ref.read(regionsProvider.notifier).getCurrentCountry();
-     ref.read(selectInterestProvider.notifier).getUserInterest();
+      ref.read(selectInterestProvider.notifier).getUserInterest();
       ref.read(shopVmProvider.notifier).allCategories(1);
       ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 1000);
       ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1);
-     ref.read(cartVmProvider.notifier).loadCart();
+      ref.read(cartVmProvider.notifier).loadCart();
     });
     super.initState();
   }

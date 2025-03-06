@@ -2,12 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_post_all_card.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 class UgtPostAllContestant extends ConsumerStatefulWidget {
   //final  MyContestContestantModel? contestApplicant;
-  const UgtPostAllContestant({super.key});
+    final Contest model;
+  const UgtPostAllContestant( this.model, {super.key});
 
   @override
   _UgtDetailsPostState createState() => _UgtDetailsPostState();
@@ -27,10 +29,12 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
 
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(votersContestNotifier);
+    
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        
         // UgtPostCard(),
         //  UgtPostCard(),
         //  if (posts.isEmpty) emptyWidget(),
@@ -45,7 +49,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
               }
  */
             final post = viewModel.myPostList[index];
-            return GestureDetector(onTap: () {}, child: UgtPostAllCard(post));
+            return GestureDetector(onTap: () {}, child: UgtPostAllCard(post, widget.model));
           },
         ),
       ],

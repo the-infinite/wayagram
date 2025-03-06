@@ -311,7 +311,43 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                   }),
                   const Gap(10),
                   Row(
+                    
                     children: [
+                       Expanded(
+                          child: FormField<String>(validator: (value) {
+                        if (viewModel.state.isEmpty) {
+                          return 'State is required';
+                        }
+
+                        return null;
+                      }, builder: (formState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            WayaSelectField<String>(
+                                height: 0.2,
+                                uniqueKey: 'state',
+                                label: "State",
+                                value: viewModel.state,
+                                hintText: 'Select State',
+                                items: viewModel.states,
+                                onSelected: (value) => ref
+                                    .read(upgradeToBusinessVmProvider.notifier)
+                                    .selectState(value.first)),
+                            if (formState.hasError && viewModel.state.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  formState.errorText!,
+                                  style: TextStyle(
+                                      color: wayaTheme.colorScheme.error,
+                                      fontSize: 12),
+                                ),
+                              ),
+                          ],
+                        );
+                      })),
+                       const Gap(10),
                       Expanded(
                         child: FormField<String>(validator: (value) {
                           if (viewModel.city.isEmpty) {
@@ -347,41 +383,8 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                           );
                         }),
                       ),
-                      const Gap(10),
-                      Expanded(
-                          child: FormField<String>(validator: (value) {
-                        if (viewModel.state.isEmpty) {
-                          return 'State is required';
-                        }
-
-                        return null;
-                      }, builder: (formState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            WayaSelectField<String>(
-                                height: 0.2,
-                                uniqueKey: 'state',
-                                label: "State",
-                                value: viewModel.state,
-                                hintText: 'Select State',
-                                items: viewModel.states,
-                                onSelected: (value) => ref
-                                    .read(upgradeToBusinessVmProvider.notifier)
-                                    .selectState(value.first)),
-                            if (formState.hasError && viewModel.state.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
-                                ),
-                              ),
-                          ],
-                        );
-                      }))
+                     
+                     
                     ],
                   ),
                   const Gap(10),

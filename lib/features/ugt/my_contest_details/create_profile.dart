@@ -9,6 +9,7 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:video_player/video_player.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -71,7 +72,40 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
     // Format DateTime to "3:09PM"
     return DateFormat('h:mm a').format(dateTime).replaceAll(' ', '');
   }
+    Future<void> _pickVideo() async {
+    final XFile? pickedFile =
+        await picker.pickVideo(source: ImageSource.gallery);
 
+    if (pickedFile != null) {
+      File videoFile = File(pickedFile.path);
+      int fileSize = await videoFile.length(); // Get file size in bytes
+      DateTime creationDate =
+          await _getFileCreationDate(videoFile); // Get creation date
+
+      if (fileSize > maxFileSize) {
+        // Show an error message if the file is too large
+        WayaSnackBar.showToast("Video size should be less than 25MB.");
+      } else {
+        VideoPlayerController controller =
+            VideoPlayerController.file(File(videoFile.path));
+        await controller.initialize();
+
+        // Check video duration
+        if (controller.value.duration.inSeconds > 120) {
+          WayaSnackBar.showToast("Please select a video under 2 minutes!");
+        } else {
+          setState(() {
+            _videoFile = videoFile;
+            videoSize =
+                "${(fileSize / (1024 * 1024)).toStringAsFixed(2)} MB"; // Convert to MB
+            videoDate = creationDate.toString(); // Format date
+          });
+        }
+        controller.dispose();
+      }
+    }
+  }
+/* 
   Future<void> _pickVideo() async {
     final XFile? pickedFile =
         await picker.pickVideo(source: ImageSource.gallery);
@@ -94,7 +128,7 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
         });
       }
     }
-  }
+  } */
 
   Future<DateTime> _getFileCreationDate(File file) async {
     return file

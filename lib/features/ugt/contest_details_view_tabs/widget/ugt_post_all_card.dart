@@ -8,18 +8,25 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
+import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 class UgtPostAllCard extends ConsumerWidget {
   final UgtAllPostContestModel post;
+  final Contest model;
 
-  const UgtPostAllCard(this.post, {super.key});
+  const UgtPostAllCard(this.post, this.model, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+    final viewModel = ref.read(votersContestNotifier.notifier);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,7 +130,9 @@ class UgtPostAllCard extends ConsumerWidget {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          viewModel.toggleLike(post.id ?? "");
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -140,7 +149,7 @@ class UgtPostAllCard extends ConsumerWidget {
                             ),
                             const Gap(3),
                             Text(
-                              "0 Likes",
+                              "${post.likes} Likes",
                               style: TextStyle().wayaCopyWith(
                                   color: wayaTheme.colorScheme.customBlack,
                                   fontSize: 12,
@@ -151,7 +160,9 @@ class UgtPostAllCard extends ConsumerWidget {
                       ),
                       const Gap(30),
                       GestureDetector(
-                        onTap: () {},
+                        onTap: () {
+                          viewModel.toggleShare(post.id ?? "");
+                        },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -168,7 +179,7 @@ class UgtPostAllCard extends ConsumerWidget {
                             ),
                             const Gap(3),
                             Text(
-                              "0 Shares",
+                              "${post.shares} Shares",
                               style: TextStyle().wayaCopyWith(
                                   color: wayaTheme.colorScheme.customBlack,
                                   fontSize: 12,
@@ -181,7 +192,27 @@ class UgtPostAllCard extends ConsumerWidget {
                   ),
                   WayaButton(
                     fontSize: 14,
-                    callback: () {},
+                    callback: () {
+                      WayaUtils.showModalSheet(
+                        context,
+                        child: VoteOptionModal(
+                          voteFee: model.amountPerVote?.toString() ?? "0",
+                          //   amountPaid: "89",
+                          model: ContestVoteModel(
+                              contestId: post.contestId ?? "",
+                              contestantId: post.id ?? "",
+                              hostUserId: post.contestantProfileId ?? "",
+                              amount: "0",
+                              numberOfVotes: "0",
+                              profileId: "",
+                              type: model.type ?? ""),
+
+                          candidateName:
+                              post.contestApplication?.fullName ?? "Name",
+                          votingLink: "votingLink",
+                        ),
+                      );
+                    },
                     text: "Vote Candidate",
                   ),
                 ],

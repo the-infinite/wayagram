@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/view/successful_setup.dart';
+import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/auth/interests/data/model/interests_response_model.dart';
 import 'package:wayagram/features/auth/interests/data/model/selected_interests_response_model.dart';
@@ -100,9 +100,9 @@ class SelectInterestVm extends StateNotifier<States> {
       state = state.copyWith(isPostingInterest: true);
       final response = await _repository.selectInterest(data);
       if (response.success) {
-        final WayaLocalDataSource localDataSource = WayaLocalDataSource();
+         final accountState = ref.read(selectAccountProvider);
 
-        if (localDataSource.getUserType().type == 'BUSINESS') {
+        if (accountState.selectedType!.type == 'BUSINESS') {
           WayaNav.toNamed('/add-business-account');
         } else {
           WayaNav.to(const SuccessfulSetup());

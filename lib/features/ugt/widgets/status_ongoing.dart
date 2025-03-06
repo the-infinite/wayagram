@@ -7,7 +7,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 class StatusOngoing extends StatelessWidget {
   final String title;
   final String content;
-  const  StatusOngoing({super.key, required this.title, required this.content});
+  const StatusOngoing({super.key, required this.title, required this.content});
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +17,8 @@ class StatusOngoing extends StatelessWidget {
       children: [
         Text(title,
             style: TextStyle().wayaCopyWith(
-              color: Theme.of(context).colorScheme.greyColor300,
-              fontSize: 13,
+              color: Theme.of(context).colorScheme.greyColor600,
+              fontSize: 12,
             )),
         const Gap(5),
         Container(
@@ -33,7 +33,6 @@ class StatusOngoing extends StatelessWidget {
                 fontSize: 12,
               )),
         ),
-
       ],
     );
   }
