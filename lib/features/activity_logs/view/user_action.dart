@@ -57,6 +57,7 @@ class _UserActionState extends ConsumerState<UserAction> {
                 Text('All Time',
                     style: TextStyle(
                       fontSize: 14.sp,
+                      fontFamily: WayaConstants.fontFamily,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     )),

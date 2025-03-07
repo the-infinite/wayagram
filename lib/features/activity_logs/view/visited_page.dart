@@ -57,6 +57,7 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
                     'All Time',
                     style: TextStyle(
                       fontSize: 14.sp,
+                      fontFamily: WayaConstants.fontFamily,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     )),

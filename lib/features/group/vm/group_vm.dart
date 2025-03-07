@@ -198,14 +198,14 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<void> deleteGroup(ctx, String postId, String userId) async {
+  Future<void> deleteGroup(ctx, String postId) async {
     try {
       final response = await _groupRepository.deleteGroup(postId);
       if (response.success && ctx.mounted) {
         //getAllGroups();
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
-            content: Text('Post deleted successfully!'),
+            content: Text('Group deleted successfully!'),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),

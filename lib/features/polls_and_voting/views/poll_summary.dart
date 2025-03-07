@@ -21,7 +21,6 @@ import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 import '../../../shared/features/user/models/default.dart';
 import '../../auth/account_creation/vm/successful_setup_vm.dart';
-import 'polls_for_you.dart';
 
 class PollSummary extends ConsumerStatefulWidget {
   static const route = '/poll-summary';
@@ -159,7 +158,6 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               child: ListView.builder(
                   itemCount: viewModel.choices.length,
                   itemBuilder: (context, index){
-                    print('IMAGE PRINTING ==>> ${viewModel.choices[index].image?.absolute}');
                     return presImage('${viewModel.choices[index].image?.absolute.path}',
                       viewModel.choices[index].text.text.capitalizeFirst, context, viewModel.choices[index].image?.absolute.path == null);
                   }),

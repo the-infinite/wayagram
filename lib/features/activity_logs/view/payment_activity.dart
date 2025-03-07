@@ -57,6 +57,7 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
                     'All Time',
                     style: TextStyle(
                       fontSize: 14.sp,
+                      fontFamily: WayaConstants.fontFamily,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     )),

@@ -57,6 +57,7 @@ class _SearchLogState extends ConsumerState<SearchLog> {
                     'All Time',
                     style: TextStyle(
                       fontSize: 14.sp,
+                      fontFamily: WayaConstants.fontFamily,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
                     )),

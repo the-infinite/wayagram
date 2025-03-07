@@ -140,13 +140,16 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                     child: _buildActionNav(
                         context: context,
                         onTap: () {
-                          viewModel2.leaveGroup(context, groupId: '${args['groupId']}',);
+                          //viewModel2.leaveGroup(context, groupId: '${args['groupId']}',);
+                          viewModel2.deleteGroup(context, '${args['groupId']}',);
                           Navigator.pop(context);
 
                         },
-                        asset: SvgPicture.asset('assets/images/pages/door_open.svg',
+                        asset: SvgPicture.asset(
+                          'assets/images/pages/delete.svg',
+                          //'assets/images/pages/door_open.svg',
                           color: wayaTheme.colorScheme.error500, height: 20,),
-                        text: "  Leave Group",
+                        text: "  Delete Group",
                         color: wayaTheme.colorScheme.error500),
                   )
                 ];
