@@ -25,6 +25,7 @@ import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 import '../../../core/components/waya_scaffold.dart';
 
@@ -105,7 +106,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (ConversationState.self.role?.name == "BUSINESS")
+                if (ConversationState.self.accountType ==
+                    UserAccountType.business)
                   SizedBox(
                     width: context.width / 2.5,
                     child: WayaButton(
@@ -124,8 +126,31 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         }),
                   ),
                 Gap(10),
-                GestureDetector(
-                  onTap: () {},
+                PopupMenuButton(
+                  onSelected: (value) {},
+                  position: PopupMenuPosition.under,
+                  itemBuilder: (context) {
+                    return [
+                      ...filterList.map((e) {
+                        return PopupMenuItem<int>(
+                          value: 1,
+                          child: _buildActionNav(
+                              context: context,
+                              onTap: () {
+                                Navigator.pop(context);
+                                selectPresentTap(e);
+                              },
+                              asset: WayaAssets.icons.mComments.svg(
+                                color: wayaTheme.colorScheme.customBlack,
+                                height: 20,
+                              ),
+                              text: e.text,
+                              isActive: e.isActive,
+                              color: wayaTheme.colorScheme.customBlack),
+                        );
+                      })
+                    ];
+                  },
                   child: Container(
                     //  margin: EdgeInsets.only(right: 20.w),
                     padding: REdgeInsets.symmetric(
@@ -154,10 +179,12 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       ],
                     ),
                   ),
-                ),
+                )
               ],
             ),
             const Gap(20),
+            _buildStatCard2(context, "Revenue Generated", "₦200,000"),
+            const Gap(10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -507,6 +534,79 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
     );
   }
 
+  InkWell _buildActionNav(
+      {required BuildContext context,
+      required VoidCallback onTap,
+      required Widget asset,
+      required String text,
+      required bool isActive,
+      required Color color}) {
+    final wayaTheme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      splashFactory: NoSplash.splashFactory,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // asset,
+          //const Gap(4),
+          Text(
+            text,
+            style: TextStyle().wayaCopyWith(
+                color: color, fontWeight: FontWeight.w500, fontSize: 12),
+          ),
+          if (isActive)
+            Container(
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: Colors.orange, // Background color for the checkmark
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.check,
+                color: Colors.white,
+                size: 16,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildStatCard2(BuildContext context, String title, String value) {
+    final wayaTheme = Theme.of(context);
+    return Container(
+      margin: EdgeInsets.symmetric(horizontal: 4),
+      padding: EdgeInsets.all(12),
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: Colors.orange[50],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(title,
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+          Gap(5),
+          Row(
+            children: [
+              Text(value,
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              Text(".00",
+                  style: TextStyle(
+                      color: wayaTheme.colorScheme.greyColor300, fontSize: 16)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildSectionTitle(String title,
       {bool seeAll = false, seeStatistic = false}) {
     return Padding(
@@ -657,6 +757,19 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
       ],
     );
   }
+
+  void selectPresentTap(MyFilterModel e) {
+    var list = filterList.map((user) {
+      if (user.isActive) {
+        return MyFilterModel(
+            text: user.text, isActive: true); // Change isActive to false
+      }
+      return MyFilterModel(text: user.text, isActive: false);
+    }).toList();
+    setState(() {
+      filterList = list;
+    });
+  }
 }
 /*   @override
   Widget build(BuildContext context) {
@@ -745,4 +858,18 @@ Color getColor(bool isText, String text) {
     } else {
       return isText ? Color(0xff865503) : Color(0xffFEF6E7);
     } */
+}
+
+var filterList = [
+  MyFilterModel(text: "All Time Stats", isActive: true),
+  MyFilterModel(text: '''Today’s Stats''', isActive: false),
+  MyFilterModel(text: '''This Week’s Stats''', isActive: false),
+  MyFilterModel(text: '''This Month’s Stats''', isActive: false),
+];
+
+class MyFilterModel {
+  final String text;
+  final bool isActive;
+
+  MyFilterModel({required this.text, required this.isActive});
 }

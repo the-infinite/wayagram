@@ -250,7 +250,9 @@ class ContestCard extends ConsumerWidget {
               // const Gap(20),
               WayaButton(
                 callback: () {
-                  if (isDateBefore(post.startDate ?? "")) {
+                  print("Start Date: ${post.startDate}");
+                  print("End Date: ${post.endDate}");
+                  if (isDateInFuture(post.startDate ?? "")) {
                     ref.read(registerFormProvider.notifier).addDefault(
                         post.contestSettings?.formRequirements ?? [], post);
                     //  WayaNav.toNamed("/register-contest1");

@@ -714,15 +714,20 @@ ivalidateUGTVM(WidgetRef ref) {
 }
 
 bool isDateInFuture(String dateString) {
-  DateTime givenDate = DateTime.parse(dateString);
-  DateTime now = DateTime.now();
+  DateTime givenDate = DateTime.parse(dateString).toUtc(); // Convert to UTC
+
+  DateTime now = DateTime.now().toUtc();
 
   return givenDate.isAfter(now);
 }
 
 bool isDateBefore(String dateString) {
-  DateTime givenDate = DateTime.parse(dateString);
-  DateTime now = DateTime.now();
+  DateTime givenDate = DateTime.parse(dateString).toUtc(); // Convert to UTC
+
+  DateTime now = DateTime.now().toUtc();
+  print("Given Date: $givenDate");
+  print("Now: $now");
+  print("Now: ${givenDate.isBefore(now)}");
 
   return givenDate.isBefore(now);
 }

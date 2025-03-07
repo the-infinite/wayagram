@@ -14,6 +14,7 @@ import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 /* class ForYouContest extends ConsumerWidget {
   const ForYouContest({super.key});
@@ -97,7 +98,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                 "See contests which are active for you to \n participate in",
             title: "Active Contests"),
         const Gap(10),
-        if (ConversationState.self.role?.name == "BUSINESS")
+       if (ConversationState.self.accountType == UserAccountType.business)
           WayaButton(
             callback: () {
               ivalidateUGTVM(ref);
@@ -108,7 +109,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
             text: "Host a Contest",
             textColor: wayaTheme.colorScheme.customPrimary,
           ),
-        if (ConversationState.self.role?.name == "BUSINESS") const Gap(10),
+       if (ConversationState.self.accountType == UserAccountType.business) const Gap(10),
         if (posts.isEmpty) emptyWidget(),
         if (posts.isNotEmpty)
           ListView.builder(
@@ -139,7 +140,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc: ConversationState.self.role?.name == "BUSINESS"
+        desc:  ConversationState.self.accountType == UserAccountType.business
             ? "You don’t have any active contest here. Create a \n contest and have different participant"
             : "You don’t have any active contest here. Create a \n Business account to access more features",
         title: "No Contest Created",

@@ -54,7 +54,6 @@ class UserDetailsModel {
   final String? deletedAt;
   final String? roleId;
   final String? accountTypeId;
-  final String? accountType;
 
   @JsonKey(name: '_v')
   final String? v;
@@ -90,7 +89,6 @@ class UserDetailsModel {
     required this.deletedAt,
     required this.roleId,
     required this.accountTypeId,
-    required this.accountType,
     required this.v,
     required this.createdAt,
     required this.updatedAt,

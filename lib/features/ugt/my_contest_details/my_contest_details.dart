@@ -9,6 +9,7 @@ import 'package:wayagram/features/ugt/vm/ugt_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_followed_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/utils/waya_navigation.dart';
 import '../widgets/contest_applied_card.dart';
@@ -122,7 +123,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (ConversationState.self.role?.name == "BUSINESS")
+                    if (ConversationState.self.accountType == UserAccountType.business)
                       WayaButton(
                         callback: () {
                           ivalidateUGTVM(ref);
@@ -231,13 +232,13 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc: ConversationState.self.role?.name == "BUSINESS"
+        desc:  ConversationState.self.accountType == UserAccountType.business
             ? "You don’t have any active contest here. Create a \n contest and have different participant"
             : "You don’t have any active contest here. Create a \n Business account to access more features",
         title: "No Contest Created",
         buttonText: "Host a Contest",
         hideButton:
-            ConversationState.self.role?.name == "BUSINESS" ? true : false,
+            ConversationState.self.accountType == UserAccountType.business ? true : false,
         onTap: () {
           ivalidateUGTVM(ref);
           WayaNav.toNamed("/create-contest");
