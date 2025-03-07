@@ -157,44 +157,50 @@ class ContestAppliedCard extends StatelessWidget {
               ),
               const Gap(20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AboutUgtWidget(
-                      title: "Start Date",
-                      content: formatDate(post.contest?.startDate ?? "")),
-                  const Gap(30),
-                  AboutUgtWidget(
-                      title: "End Date",
-                      content: formatDate(post.contest?.endDate ?? "")),
-                ],
-              ),
-              const Gap(10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (post.contest?.status?.toLowerCase() != "active")
-                    StatusWidget(
-                      title: "Application",
-                      content: post.contest?.status ?? "Pending",
-                    ),
-                  if (post.contest?.status?.toLowerCase() == "active")
-                    StatusOngoing(
-                      title: "Application",
-                      content: post.contest?.status ?? "Pending",
-                    ),
-                  const Gap(30),
-                  AboutUgtWidget(
-                      title: "Prize",
-                      content:
-                          "NGN ${formatMoney(post.contest?.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
-                  const Gap(30),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AboutUgtWidget(
+                          title: "Start Date",
+                          content: formatDate(post.contest?.startDate ?? "")),
+                      const Gap(20),
+                      AboutUgtWidget(
+                          title: "Prize",
+                          content:
+                              "NGN ${formatMoney(post.contest?.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AboutUgtWidget(
+                          title: "End Date",
+                          content: formatDate(post.contest?.endDate ?? "")),
+                      const Gap(20),
+                      if (post.contest?.status?.toLowerCase() != "active")
+                        StatusWidget(
+                          title: "Application",
+                          content: post.contest?.status ?? "Pending",
+                        ),
+                      if (post.contest?.status?.toLowerCase() == "active")
+                        StatusOngoing(
+                          title: "Application",
+                          content: post.contest?.status ?? "Pending",
+                        ),
+                      const Gap(30),
+                    ],
+                  ),
                   AboutUgtWidget(
                       title: "Category", content: post.categoryName ?? ""),
                 ],
               ),
-              const Gap(25),
+              const Gap(10),
+              // const Gap(25),
               WayaButton(
                 callback: () {
                   WayaUtils.showModalSheetUgt(

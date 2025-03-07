@@ -24,17 +24,20 @@ class UpcomingWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: TextStyle().wayaCopyWith(
-              color: Theme.of(context).colorScheme.greyColor600,
-              fontSize: 12,
-            )),
+        SizedBox(
+          width: isFromDetailsPage ? null : context.width * 0.15,
+          child: Text(title,
+              style: TextStyle().wayaCopyWith(
+                color: Theme.of(context).colorScheme.greyColor600,
+                fontSize: 12,
+              )),
+        ),
         const Gap(5),
         if (!status)
           SizedBox(
             width: isFromDetailsPage ? null : context.width * 0.15,
             child: Text(content,
-                overflow: TextOverflow.ellipsis,
+                // overflow: TextOverflow.ellipsis,
                 style: TextStyle().wayaCopyWith(
                   color: Theme.of(context).colorScheme.greyColor900,
                   fontWeight: FontWeight.w500,

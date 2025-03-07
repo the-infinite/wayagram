@@ -1,10 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
@@ -16,7 +19,7 @@ import '../../../wallet/view/components/modal_content.dart';
 import '../../ugt_buttomsheet_modal/ugt_modal.dart';
 import '../../vm/ugt_vm.dart';
 
-class ContestTimeline extends ConsumerStatefulWidget {
+class ContestTimeline extends StatefulHookConsumerWidget {
   const ContestTimeline({super.key});
 
   @override
@@ -30,7 +33,30 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
     final viewModel2 = ref.watch(contestNotifierProvider);
+    var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
     final wayaTheme = Theme.of(context);
+
+    var isEditing = ref.watch(stateIsEditingContestProvider);
+    useEffect(() {
+      if (isEditing) {
+        Future.delayed(Duration(seconds: 1), () {
+          ref.read(contestNotifierProvider.notifier).updateContestTimeStartDate(
+              contestViewModel.startDate?.split("T").first ?? "");
+          ref.read(contestNotifierProvider.notifier).updateContestTimeEndDate(
+              contestViewModel.endDate?.split("T").first ?? "");
+          ref
+              .read(contestNotifierProvider.notifier)
+              .updateContestTimeMultipleStage(
+                  contestViewModel.multipleStages ?? '');
+
+          ref
+              .read(contestNotifierProvider.notifier)
+              .updateContestTimeCurrentStage(
+                  contestViewModel.currentStage ?? '');
+        });
+      }
+      return null;
+    }, []);
     return Form(
       key: _formKey,
       child: Column(

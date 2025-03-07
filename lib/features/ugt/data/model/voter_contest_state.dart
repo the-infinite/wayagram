@@ -1,6 +1,8 @@
+import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_contest_aplicant_model.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
@@ -12,8 +14,10 @@ class VoterDetailState {
   final String? contestId;
   final Wallet? data;
   final List<MyContestContestantModel> myContestList;
+  final List<Stages> stageList;
   final List<ApplicantContestModel> myContestApplicantList;
   final List<MyContestContestantModel> myContestListCopy;
+  final List<MyFilterModel> filterList;
   final List<UgtAllPostContestModel> myPostList;
   final List<ExternalWalletModel>? externalWallets;
   VoterDetailState({
@@ -24,6 +28,11 @@ class VoterDetailState {
     this.contestId = "",
     this.myPostList = const[],
     this.myContestApplicantList = const[],
+    this.stageList = const[],
+    this.filterList = const[
+     
+
+    ],
     this.myContestList = const[],
     this.myContestListCopy = const[],
     this.externalWallets,
@@ -35,6 +44,8 @@ class VoterDetailState {
     String? createPostId, 
     String? contestId, 
     List<UgtAllPostContestModel>? myPostList,
+    List<Stages>? stageList,
+    List<MyFilterModel>? filterList,
     List<ApplicantContestModel>? myContestApplicantList,
     List<ExternalWalletModel>? externalWallets,
     List<MyContestContestantModel>? myContestList,
@@ -44,6 +55,8 @@ class VoterDetailState {
         isLoading: isLoading ?? this.isLoading,
         data: data ?? this.data,
         myPostList: myPostList ?? this.myPostList,
+        stageList: stageList ?? this.stageList,
+        filterList: filterList ?? this.filterList,
         myContestApplicantList: myContestApplicantList ?? this.myContestApplicantList,
         createPostId:createPostId??this.createPostId,
         contestId:contestId??this.contestId,
