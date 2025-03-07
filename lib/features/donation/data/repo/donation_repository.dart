@@ -20,7 +20,7 @@ class DonationRepository extends BaseRepository {
 
   Future<WayaRequestResponse> updateDonation(
       String amount, String campaignId) {
-    final payload = { "minimumDonationAmount": amount};
+    final payload = {"minimumDonationAmount": amount};
 
     return patch("$serviceUrl/client/campaigns/$campaignId", payload);
   }
@@ -53,6 +53,14 @@ class DonationRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getMyCampaigns(String organizerId,) {
     return get("$serviceUrl/client/campaigns?organizerId=$organizerId");
+  }
+
+  Future<WayaRequestResponse> getHostedDonation(String organizerId,) {
+    return get("$serviceUrl/client/campaigns?organizerId=$organizerId&status=approved");
+  }
+
+  Future<WayaRequestResponse> getAppliedDonation(String organizerId,) {
+    return get("$serviceUrl/client/campaigns?organizerId=$organizerId&status=pending_approval");
   }
 
   Future<WayaRequestResponse> getSingleCampaign(String campaignId) {

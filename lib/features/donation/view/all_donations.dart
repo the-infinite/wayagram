@@ -100,7 +100,9 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                    message: 'You must complete KYC verification before creating a donation post',
                    onPress: () {
                      Navigator.pop(context);
-                     WayaNav.toNamed(KycUpdate.route);
+                     WayaNav.toNamed('/kycUpdate', arguments: {
+                       'kyc': '${viewModel.kycStatus}'
+                     });
                    },
                    buttonText: 'Update KYC',
                    secondButtonText: 'Cancel',

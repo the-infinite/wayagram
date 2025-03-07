@@ -56,6 +56,7 @@ List<String> dates = [];
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
+                      fontFamily: WayaConstants.fontFamily,
                       color: Colors.black,
                     )),
                 Gap(10),
@@ -75,7 +76,6 @@ List<String> dates = [];
                 emptyState:ActivityLogsEmptyState(text: 'You don\'t have Cms clicks yet',),
                 fetchData: ref.read(activityLogsVmProvider.notifier).getCmsClicks,
                 result: (data, s) {
-
                   for(int i = 0; i < viewModel.cmsDocs.length; i++){
                     if(!dates.contains(viewModel.cmsDocs[i].createdAt.toString().split('T')[0])){
                       dates.add(viewModel.cmsDocs[i].createdAt.toString().split('T')[0]);
