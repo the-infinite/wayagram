@@ -39,8 +39,9 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    var model = ref.read(selectedApplicantProfile);
-    var selectedContestModel = ref.watch(selectedContestProvider.notifier).state;
+    var model = ref.watch(selectedApplicantProfile);
+    var selectedContestModel =
+        ref.watch(selectedContestProvider.notifier).state;
     var viewModel = ref.watch(votersContestNotifier.notifier);
     var isLoading = useState(false);
     return WayaScaffold(
@@ -93,9 +94,9 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _singleWidget(context, "Talent Category",
-                    selectedContestModel?.categoryName ?? ""),
+                    selectedContestModel.categoryName ?? ""),
                 _singleWidget(context, "Description of Talent",
-                    selectedContestModel?.description ?? "",
+                    selectedContestModel.description ?? "",
                     longer: true),
               ],
             ),

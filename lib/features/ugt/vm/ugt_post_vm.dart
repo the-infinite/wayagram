@@ -25,7 +25,12 @@ class ContestForYou extends StateNotifier<List<Contest>> {
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);
         contestList = responseModel.data.docs;
-        state = [...state, ...contestList];
+        state = [...contestList];
+        /*  if (_page == 1) {
+        } else {
+          state = [...state, ...contestList];
+        } */
+
         _page++;
         isLoading = false;
       }

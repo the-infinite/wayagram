@@ -200,59 +200,57 @@ class ContestCard extends ConsumerWidget {
               ),
               const Gap(20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AboutUgtWidget(
-                      title: "Start Date",
-                      content: formatDate(post.startDate ?? "Date")),
-                  const Gap(30),
-                  AboutUgtWidget(
-                      title: "End Date",
-                      content: formatDate(post.endDate ?? "")),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AboutUgtWidget(
+                          title: "Start Date",
+                          content: formatDate(post.startDate ?? "Date")),
+                      const Gap(30),
+                      if (post.status?.toLowerCase() != "active")
+                        StatusWidget(
+                          title: "Application",
+                          content: post.status ?? "Pending",
+                        ),
+                      if (post.status?.toLowerCase() == "active")
+                        StatusOngoing(
+                          title: "Application",
+                          content: post.status ?? "Pending",
+                        ),
+                    ],
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      AboutUgtWidget(
+                          title: "End Date",
+                          content: formatDate(post.endDate ?? "")),
+                      //  AboutUgtWidget(title: "Status", content: "Ongoing", ),
+                      const Gap(30),
+                      AboutUgtWidget(
+                          title: "Prize",
+                          content:
+                              "NGN ${formatMoney(post.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
+                      const Gap(30),
+                    ],
+                  ),
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: AboutUgtWidget(
+                        title: "Category",
+                        content: post.categoryName ?? "Category"),
+                  )
                 ],
               ),
-              const Gap(10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (post.status?.toLowerCase() != "active")
-                    StatusWidget(
-                      title: "Application",
-                      content: post.status ?? "Pending",
-                    ),
-                  if (post.status?.toLowerCase() == "active")
-                    StatusOngoing(
-                      title: "Application",
-                      content: post.status ?? "Pending",
-                    ),
-                  //  AboutUgtWidget(title: "Status", content: "Ongoing", ),
-                  const Gap(30),
-                  AboutUgtWidget(
-                      title: "Prize",
-                      content:
-                          "NGN ${formatMoney(post.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
-                  const Gap(30),
-                  AboutUgtWidget(
-                      title: "Category",
-                      content: post.categoryName ?? "Category"),
-                ],
-              ),
-              const Gap(20),
+              // const Gap(20),
               WayaButton(
                 callback: () {
-                  
-                  ref.read(selectedContestProvider.notifier).state = post;
-                  WayaNav.toNamed('/upcoming-manage-contest-details');
-
-                  /*   ref.read(registerFormProvider.notifier).addDefault(
-                      post.contestSettings?.formRequirements ?? [], post);
-                  //  WayaNav.toNamed("/register-contest1");
-                  ref.read(selectedContestProvider.notifier).state = post;
-                  WayaNav.toNamed("/upcoming-contest-details"); */
-
-                  /*    if (isDateInFuture(post.startDate ?? "")) {
+                  if (isDateBefore(post.startDate ?? "")) {
                     ref.read(registerFormProvider.notifier).addDefault(
                         post.contestSettings?.formRequirements ?? [], post);
                     //  WayaNav.toNamed("/register-contest1");
@@ -261,7 +259,7 @@ class ContestCard extends ConsumerWidget {
                   } else {
                     ref.read(selectedContestProvider.notifier).state = post;
                     WayaNav.toNamed('/upcoming-manage-contest-details');
-                  } */
+                  }
                 },
                 text: "View Details",
               ),

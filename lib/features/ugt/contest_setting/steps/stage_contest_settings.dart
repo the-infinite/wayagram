@@ -1,16 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
@@ -18,7 +21,7 @@ import '../../../../core/utils/waya_navigation.dart';
 import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
 import '../../data/controller/contest_controller.dart';
 
-class StageContestSettings extends ConsumerStatefulWidget {
+class StageContestSettings extends StatefulHookConsumerWidget {
   final VoidCallback goToNextTab;
   const StageContestSettings({super.key, required this.goToNextTab});
 
@@ -64,6 +67,38 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
     // final viewModel2 = ref.watch(contestNotifierProvider);
     final viewModel3 = ref.watch(stateContactProvider);
     final wayaTheme = Theme.of(context);
+    var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
+
+    var isEditing = ref.watch(stateIsEditingContestProvider);
+    useEffect(() {
+      if (isEditing) {
+        Future.delayed(Duration(seconds: 1), () {
+          int index = 0;
+          ref.read(stateContactProvider.notifier).state = [
+            ...contestViewModel.contestSettings?.stages
+                    ?.map((e) => StagePrefModel(
+                          id: index++,
+                          stageName: e.stageName,
+                          entryType: e.entryType,
+                          entryAmount: e.entryAmount.toString() ?? '0',
+                          numPostPerWeek:
+                              e.numberOfPostPerWeek.toString() ?? '0',
+                          startDate: e.startDate?.split("T").first ?? "",
+                          endDate: e.endDate?.split("T").first ?? "",
+                          priceWinner: e.priceOfTheWinner.toString() ?? '0',
+                          voteCountToQualify:
+                              e.voteCountToQualify.toString() ?? '0',
+                          reviewApprovePost: e.approveBeforeLive ?? false,
+
+                
+                        ))
+                    .toList() ??
+                []
+          ];
+        });
+      }
+      return null;
+    }, []);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,

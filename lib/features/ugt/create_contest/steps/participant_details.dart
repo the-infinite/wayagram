@@ -42,7 +42,9 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
     final viewModel2 = ref.watch(contestNotifierProvider);
     var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
     final wayaTheme = Theme.of(context);
+      var isEditing = ref.watch(stateIsEditingContestProvider);
     useEffect(() {
+        if (isEditing) {
       Future.delayed(Duration(seconds: 1), () {
         viewModel2.howItWorks.text = contestViewModel.howItWorks ?? "";
 
@@ -61,7 +63,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
         viewModel2.descriptionOfAwards.text =
             contestViewModel.descriptionOfAwards ?? "";
       });
-
+    }
       return null;
     }, []);
     return Form(

@@ -135,7 +135,14 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
                     ),
                   );
                 } else {
-                  Navigator.pop(context);
+                 
+                  viewModel.acceptFreeStageContest(
+                            widget.model?.contestId ?? "", {
+                          "contestId": widget.model?.contestId ?? "",
+                          "stageName": widget.post?.stageName ?? "",
+                          "profileId": widget.model?.profileId ?? "",
+                        });
+                         Navigator.pop(context);
                   WayaUtils.showModalSheetUgt(
                     context,
                     child: SuccessfulModal(
@@ -149,6 +156,7 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
                         print("i am cooking");
 
                         // Navigator.pop(myContext);
+                        
                         viewModel.fetchAllContestApplicant(
                             widget.model?.contestId ?? "");
 

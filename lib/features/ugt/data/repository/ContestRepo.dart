@@ -20,6 +20,10 @@ class ContestRepo extends BaseRepository {
     return post('$serviceUrl2/contests/create', payLoad, formdata: false);
   }
 
+    Future<WayaRequestResponse> editContest(String contestId,payLoad) {
+    return patch('$serviceUrl2/contests/edit-contest/$contestId', payLoad, formdata: false);
+  }
+
   Future<WayaRequestResponse> registerContest(payLoad) {
     return post('$serviceUrl2/application/', payLoad, formdata: false);
   }
@@ -102,6 +106,19 @@ class ContestRepo extends BaseRepository {
     Future<WayaRequestResponse> payForPaidStageContest(payLoad) {
     return post('$serviceUrl2/profile/pay-for-contest', payLoad, formdata: false);
   }
+
+   Future<WayaRequestResponse> startStage(payLoad) {
+    return patch('$serviceUrl2/contests/start-stage', payLoad, formdata: false);
+  }
+
+     Future<WayaRequestResponse> qualifyDisqualify(payLoad) {
+    return put('$serviceUrl2/profile/status', payLoad, formdata: false);
+  }
+
+       Future<WayaRequestResponse> acceptFreeStageContest(payLoad) {
+    return patch('$serviceUrl2/profile/accept-stage', payLoad, formdata: false);
+  }
+
 
   /*Future<WayaRequestResponse> createContestController({
     required final String contestStatus,

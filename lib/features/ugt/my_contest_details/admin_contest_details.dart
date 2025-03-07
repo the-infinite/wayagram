@@ -29,7 +29,6 @@ import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.d
 
 import '../../../core/components/waya_scaffold.dart';
 
-
 class AdminContestDetails extends StatefulHookConsumerWidget {
   static const route = '/upcoming-manage-contest-details';
   const AdminContestDetails({super.key});
@@ -67,7 +66,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
       appBarTrailing: Row(
         children: [
           //  Image.asset("assets/images/vector.png"),
-          PopupMenuButton(
+          /*    PopupMenuButton(
             onSelected: (value) {},
             position: PopupMenuPosition.under,
             itemBuilder: (context1) {
@@ -111,7 +110,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
             },
             child: Image.asset("assets/images/vector.png"),
           ),
-
+ */
           const Gap(20),
           ClipRRect(
             borderRadius: BorderRadius.circular(45),
@@ -261,9 +260,19 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 ],
               ),
               const Gap(20),
-              Text("View Full Details",
+              if (viewModelNotifier.getLoggedInUserId() == model.profileId)
+                WayaButton(
+                  callback: () {
+                    WayaNav.toNamed('/contest-mydashboard-profile-page');
+                  },
+                  color: wayaTheme.colorScheme.primar50,
+                  text: "View Contest Dashboard",
+                  textColor: wayaTheme.colorScheme.customPrimary,
+                ),
+              /*  Text("View Full Details",
                   style: wayaTheme.textTheme.bodyMedium
                       ?.wayaCopyWith(color: wayaTheme.colorScheme.primary500)),
+              const Gap(15), */
               const Gap(15),
               Text("Top Contestants", style: wayaTheme.textTheme.bodyMedium),
               const Gap(15),
@@ -278,7 +287,8 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                           ref.read(selectedContestantProfile.notifier).state =
                               viewModel.myContestList[1];
                           viewModelNotifier.updateContestId(model.id);
-                           ref.read(selectedContestProvider.notifier).state = model;
+                          ref.read(selectedContestProvider.notifier).state =
+                              model;
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
@@ -300,7 +310,8 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
                               viewModel.myContestList[0];
-                                ref.read(selectedContestProvider.notifier).state = model;
+                          ref.read(selectedContestProvider.notifier).state =
+                              model;
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
@@ -324,7 +335,8 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
                               viewModel.myContestList[2];
-                               ref.read(selectedContestProvider.notifier).state = model;
+                          ref.read(selectedContestProvider.notifier).state =
+                              model;
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );

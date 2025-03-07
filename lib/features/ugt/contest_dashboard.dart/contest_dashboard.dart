@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -36,12 +38,50 @@ class DashboardContestPage extends StatefulHookConsumerWidget {
 }
 
 class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
+  DateTime targetDate = DateTime(2026, 1, 1, 0, 0, 0); // Example: New Year 2025
+  Duration remainingTime = Duration();
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _startCountdown();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Prevent memory leaks
+    super.dispose();
+  }
+
+  void _startCountdown() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      final now = DateTime.now();
+      final difference = targetDate.difference(now);
+
+      if (difference.isNegative) {
+        timer.cancel(); // Stop timer when target date is reached
+      }
+
+      setState(() {
+        remainingTime = difference;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(votersContestNotifier);
-    var model = ref.watch(selectedContestProvider.notifier).state;
-    print("my title ${model.title}");
+    final notifier = ref.read(votersContestNotifier.notifier);
+    var model = ref.watch(selectedContestProvider);
+    useEffect(() {
+      Future.delayed(Duration(seconds: 1), () {
+        notifier.addStages(model.contestSettings?.stages ?? []);
+      });
+      targetDate = DateTime.parse(model.endDate ?? "2026-01-01T00:00:00.000Z");
+      return null;
+    }, []);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -65,22 +105,24 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-               if (ConversationState.self.role?.name == "BUSINESS")   SizedBox(
-                  width: context.width / 2.5,
-                  child: WayaButton(
-                      horizontalPadding: 10,
-                      fontSize: 14.sp,
-                      height: 42,
-                      text: "Edit contest details",
-                      callback: () async {
-                        ivalidateUGTVM(ref);
-                        ref.read(stateIsEditingContestProvider.notifier).state =
-                            true;
-                        ref.watch(selectedContestProvider.notifier).state =
-                            model;
-                        WayaNav.toNamed('/create-contest');
-                      }),
-                ),
+                if (ConversationState.self.role?.name == "BUSINESS")
+                  SizedBox(
+                    width: context.width / 2.5,
+                    child: WayaButton(
+                        horizontalPadding: 10,
+                        fontSize: 14.sp,
+                        height: 42,
+                        text: "Edit contest details",
+                        callback: () async {
+                          /*   ivalidateUGTVM(ref);
+                          ref
+                              .read(stateIsEditingContestProvider.notifier)
+                              .state = true;
+                          ref.watch(selectedContestProvider.notifier).state =
+                              model;
+                          WayaNav.toNamed('/create-contest'); */
+                        }),
+                  ),
                 Gap(10),
                 GestureDetector(
                   onTap: () {},
@@ -121,7 +163,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               children: [
                 _buildStatCard("Number of participants", "240"),
                 _buildStatCard("Votes per contestant", "120"),
-                _buildStatCard("Contest Age\n", "2"),
+                _buildStatCard("Contest Age\n",
+                    model.contestSettings?.stages?.length.toString() ?? "0"),
               ],
             ),
 
@@ -156,7 +199,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   ),
                   Gap(10),
                   Text(
-                    "12 days: 45hrs: 55min: 12sec",
+                    "${remainingTime.inDays}days  :   ${remainingTime.inHours.remainder(24)}hrs  :  ${remainingTime.inMinutes.remainder(60)}mins  :  ${remainingTime.inSeconds.remainder(60)}sec",
                     style: TextStyle(
                         color: Colors.orange, fontWeight: FontWeight.bold),
                   ),
@@ -199,7 +242,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       );
                     },
                   ), */
-                  if (viewModel.myContestList.length > 1)
+                  if (viewModel.myContestList.isNotEmpty)
                     _buildLeaderboardItem(
                       context,
                       "${viewModel.myContestList[0].votes} votes",
@@ -207,7 +250,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       "${viewModel.myContestList[0].contestApplicant?.fullName}",
                       wayaTheme.colorScheme.success50,
                     ),
-                  if (viewModel.myContestList.length > 2)
+                  if (viewModel.myContestList.length > 1)
                     _buildLeaderboardItem(
                       context,
                       "${viewModel.myContestList[1].votes} votes",
@@ -215,7 +258,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       "${viewModel.myContestList[1].contestApplicant?.fullName}",
                       Color(0xffFEF6E7),
                     ),
-                  if (viewModel.myContestList.length > 3)
+                  if (viewModel.myContestList.length > 1)
                     _buildLeaderboardItem(
                       context,
                       "${viewModel.myContestList[2].votes} votes",
@@ -229,7 +272,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
 
             SizedBox(height: 20),
 
-            // Manage States
+            /*   // Manage States
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               decoration: BoxDecoration(
@@ -257,7 +300,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               ),
             ),
 
-            SizedBox(height: 20),
+            SizedBox(height: 20), */
 
             // Manage Contestants
             Container(
@@ -280,6 +323,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                           seeAll: true)),
                   ListView.builder(
                     // controller: _scrollController,
+                    physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: viewModel.myContestList.length > 6
                         ? 6
@@ -336,6 +380,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   Gap(10),
                   ListView.builder(
                     // controller: _scrollController,
+                    physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: viewModel.myContestApplicantList.length > 6
                         ? 6
@@ -391,9 +436,27 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               child: Column(
                 children: [
                   _buildSectionTitle("Contest stage", seeStatistic: true),
-                  _buildStageItem("Stage 1: General Level", true),
+                  ...viewModel.stageList.map((e) {
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(e.stageName ?? "",
+                            style: TextStyle(fontWeight: FontWeight.bold)),
+                        Switch(
+                            value: e.isActive ?? false,
+                            onChanged: (bool value) {
+                              notifier.startStageContest(e.stageName ?? "", {
+                                "contestId": model.id ?? "",
+                                "stageName": e.stageName ?? ""
+                              });
+                            }),
+                      ],
+                    );
+                  })
+
+                  /*  _buildStageItem("Stage 1: General Level", true),
                   _buildStageItem("Stage 2: State Level", false),
-                  _buildStageItem("Stage 3: National Level", false),
+                  _buildStageItem("Stage 3: National Level", false), */
                 ],
               ),
             ),
@@ -402,6 +465,23 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
       ),
     );
   }
+/*      Widget _buildStageItemStages(Stages stage, bool isActive) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(stage.stageName??"", style: TextStyle(fontWeight: FontWeight.bold)),
+        Switch(value: isActive, onChanged: (bool value) {
+
+           notifier.startStageContest(e.stageName ?? "", {
+                          "contestId": model.id ?? "",
+                          "stageName": e.stageName ?? ""
+                        });
+
+         
+        }),
+      ],
+    );
+  } */
 
   Widget _buildStatCard(String title, String value) {
     return Expanded(

@@ -67,36 +67,59 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     final imageUrl = useState(model!.profilePhoto ?? "");
 
     useEffect(() {
-      model.stages?.forEach((element) {
-        print("i am looping");
-        if (element.isActive == true && element.hasPaid != true) {
-          print("looping and have picked one");
-          selectedStage = element;
-          Future.delayed(Duration(seconds: 2), () {
-            WayaUtils.showModalSheetUgt(
-              context,
-              child: SuccessfulModal(
-                  title: "You’re Moving On to the Next Stage! ",
-                  subtitle:
-                      "Your talent is shining! Get ready for the next round. Complete the next steps to continue.",
-                  showCopyLink: false,
-                  buttonText: "Continue",
-                  onTap: (_, __) {
-                     WayaUtils.showModalSheetUgt(
-              context,
-              child: ContestDetailsStageModal(
-                  post: element,
-                  model: model,
-               ),
-            );
-                    //  WayaNav.removeUntilNamed("/ugt-home");
-                  }),
-            );
-          });
+      if (viewModel.getLoggedInUserId() == model.profileId) {
+        model.stages?.forEach((element) {
+          print("i am looping");
+          if (element.entryType?.toLowerCase() != "free" &&
+              element.isActive == true &&
+              element.hasPaid != true) {
+            print("looping and have picked one");
+            selectedStage = element;
+            Future.delayed(Duration(seconds: 2), () {
+              WayaUtils.showModalSheetUgt(
+                context,
+                child: SuccessfulModal(
+                    title: "You’re Moving On to the Next Stage! ",
+                    subtitle:
+                        "Your talent is shining! Get ready for the next round. Complete the next steps to continue.",
+                    showCopyLink: false,
+                    buttonText: "Continue",
+                    onTap: (_, __) {
+                      WayaUtils.showModalSheetUgt(
+                        context,
+                        child: ContestDetailsStageModal(
+                          post: element,
+                          model: model,
+                        ),
+                      );
+                      //  WayaNav.removeUntilNamed("/ugt-home");
+                    }),
+              );
+            });
 
-          return;
-        }
-      });
+            return;
+          }
+          if (element.entryType?.toLowerCase() == "free" &&
+              element.hasAccepted == false) {
+            SuccessfulModal(
+                title: "You’re Moving On to the Next Stage! ",
+                subtitle:
+                    "Your talent is shining! Get ready for the next round. Complete the next steps to continue.",
+                showCopyLink: false,
+                buttonText: "Continue",
+                onTap: (_, __) {
+                  WayaUtils.showModalSheetUgt(
+                    context,
+                    child: ContestDetailsStageModal(
+                      post: element,
+                      model: model,
+                    ),
+                  );
+                  //  WayaNav.removeUntilNamed("/ugt-home");
+                });
+          }
+        });
+      }
       ref
           .watch(ugtContestantProfileVm.notifier)
           .fetchSingleContestantPosts(model.id ?? "");

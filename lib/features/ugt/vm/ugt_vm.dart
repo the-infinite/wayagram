@@ -8,6 +8,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
+import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
@@ -111,7 +112,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       BuildContext context,
       ValueNotifier<bool> isLoading,
       List<NewRequirementModel> newRequirementList,
-      List<StagePrefModel> stageList) async {
+      List<StagePrefModel> stageList,
+      bool isEditing) async {
     //  print(' sss ${_localDataSource.getUserId().toString()}');
     //final userTypeProvider = ref.watch(localDataSourceProvider);
     /* 
@@ -120,6 +122,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "textDescription": "Participant's full name",
         "required": true
      */
+    var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
     isLoading.value = true;
     state = state.copyWith(isLoading: true);
 
@@ -154,10 +157,18 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         };
       },
     ).toList();
+    String? profileImageUrl = "";
+    if (isEditing) {
+      if (state.image.trim().isEmpty) {
+        // use the defualt url
+        profileImageUrl = contestViewModel.uploadCoverImages;
+      }
+    } else {
+      profileImageUrl = await WayaFileRepository.instance.uploadFile(
+        File(state.image),
+      );
+    }
 
-    final profileImageUrl = await WayaFileRepository.instance.uploadFile(
-      File(state.image),
-    );
     //NGN8.00
     try {
       //  print("wwwww ${amountPerVote.text}");
@@ -211,8 +222,14 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         }
       };
       print(map.toString());
-
-      final response = await _contestRepository.createContest(map);
+      WayaRequestResponse? response;
+      if (isEditing) {
+        response =
+            await _contestRepository.editContest(contestViewModel.id!, map);
+      } else {
+        response = await _contestRepository.createContest(map);
+      }
+      // response = await _contestRepository.createContest(map);
       isLoading.value = false;
 
       if (response.success) {
@@ -500,11 +517,15 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
     await allCategories();
   }
-     selectStateEdit(String value) {
-   var selectedState = states.asMap().entries.firstWhere((entries) => entries.value.state == value);
-    state = state.copyWith(state: selectedState.value.state??"");
-    
-   /*  .map((entries) {
+
+  selectStateEdit(String value) {
+    var selectedState = states
+        .asMap()
+        .entries
+        .firstWhere((entries) => entries.value.state == value);
+    state = state.copyWith(state: selectedState.value.state ?? "");
+
+    /*  .map((entries) {
       return Select(
           value: entries.value.id.toString(), label: entries.value.state);
     }).toList(); */
@@ -553,7 +574,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   void updateDurationType(String name) {
     state = state.copyWith(durationSelectType: name);
   }
-   void updateParticipationDate(String name) {
+
+  void updateParticipationDate(String name) {
     state = state.copyWith(startDate: name);
   }
 
