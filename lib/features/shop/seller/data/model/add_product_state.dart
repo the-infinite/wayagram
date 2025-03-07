@@ -179,6 +179,7 @@ class AddProductState {
         height: productHeight.text,
         width: productWidth.text,
         depth: productDepth.text,
+        color: selectedColor,
         pickupAddress: pickUpAddress.text,
         deliveryCharge: includeDeliveryFee,
         materialType: materialType.text,
