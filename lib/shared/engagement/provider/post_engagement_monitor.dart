@@ -3,6 +3,7 @@
 // - categories
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/shared/engagement/model/default.dart';
 import 'package:wayagram/shared/engagement/provider/default.dart';
 
@@ -41,5 +42,5 @@ class PostEngagementMonitor extends StateNotifier<void> {
 
 final postEngagementProvider =
     StateNotifierProvider<PostEngagementMonitor, void>((ref) {
-  return PostEngagementMonitor(EngagementNotifier());
+  return PostEngagementMonitor(EngagementNotifier(WayaLocalDataSource()));
 });

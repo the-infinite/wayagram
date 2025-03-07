@@ -34,14 +34,7 @@ import 'package:wayagram/features/group/view/private_group.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
 import 'package:wayagram/features/group/view/view_full_media.dart';
-import 'package:wayagram/features/logs_and_audit/view/cms_clicks.dart';
-import 'package:wayagram/features/logs_and_audit/view/login_activity.dart';
-import 'package:wayagram/features/logs_and_audit/view/logs_and_audit.dart';
-import 'package:wayagram/features/logs_and_audit/view/payment_activity.dart';
-import 'package:wayagram/features/logs_and_audit/view/search_log.dart';
-import 'package:wayagram/features/logs_and_audit/view/user_action.dart';
-import 'package:wayagram/features/logs_and_audit/view/user_interaction.dart';
-import 'package:wayagram/features/logs_and_audit/view/visited_page.dart';
+import 'package:wayagram/features/kyc/view/kyc_update.dart';
 import 'package:wayagram/features/moments/views/media_moment.dart';
 import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
@@ -122,8 +115,20 @@ import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
 import 'package:wayagram/features/event/views/all_upcoming_events.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/explore/search/search.dart';
+import 'package:wayagram/shared/features/quotation/view/all_buy_request.dart';
+
+import '../../features/activity_logs/data/repo/logs_and_audit_repository.dart';
+import '../../features/activity_logs/view/cms_clicks.dart';
+import '../../features/activity_logs/view/login_activity.dart';
+import '../../features/activity_logs/view/logs_and_audit.dart';
+import '../../features/activity_logs/view/payment_activity.dart';
+import '../../features/activity_logs/view/search_log.dart';
+import '../../features/activity_logs/view/user_action.dart';
+import '../../features/activity_logs/view/user_interaction.dart';
+import '../../features/activity_logs/view/visited_page.dart';
 
 class WayaAppRoutes {
+  WayaAppRoutes._();
   static final routes = <String, Widget Function()>{
     '/': () => SplashScreen(),
     LoginCoverPage.route: () => LoginCoverPage(),
@@ -147,8 +152,8 @@ class WayaAppRoutes {
     SellerOrderDetails.route: () => SellerOrderDetails(),
     SellerBidDetails.route: () => SellerBidDetails(),
     SellerSettlement.route: () => SellerSettlement(),
-    SeeSellerBids.route: () => SeeSellerBids(),
-    SeeBuyerBids.route: () => SeeBuyerBids(),
+    SeeSellerBids.route: () => SeeSellerBids(id: WayaNav.search['id'].toString()),
+    SeeBuyerBids.route: () => SeeBuyerBids(id: WayaNav.search['id'].toString()),
     Checkout.route: () => Checkout(),
     BuyerCheckout.route: () => BuyerCheckout(),
     FilterView.route: () => FilterView(),
@@ -235,8 +240,7 @@ class WayaAppRoutes {
     EditPageInfo.route: () => EditPageInfo(),
     AddTeamMember.route: () => AddTeamMember(),
     PrivateGroup.route: () => PrivateGroup(),
-    SingleChatScreen.route: () =>
-        SingleChatScreen(chatId: WayaNav.search['id'].toString()),
+    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route: () => DisplayFeed(),
     GroupSetting.route: () => GroupSetting(),
     AllUpcomingEvents.route: () => AllUpcomingEvents(),
@@ -244,7 +248,7 @@ class WayaAppRoutes {
     MyMoments.route: () => MyMoments(),
     ViewMoment.route: () => ViewMoment(),
     VideoTrimmerScreen.route: () => VideoTrimmerScreen(),
-    ViewFullMedia.route: ()=> ViewFullMedia(),
+    ViewFullMedia.route: () => ViewFullMedia(),
     EditPost.route: () => EditPost(
           initialContent: '',
           initialImageUrl: '',
@@ -254,7 +258,6 @@ class WayaAppRoutes {
     EditGroupInfo.route: () => EditGroupInfo(),
     AddGroupMember.route: () => AddGroupMember(),
     SearchView.route: () => SearchView(),
-    //FullPostDetailsScreen.route: ()=> FullPostDetailsScreen(post: ,),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
     DonationDetails.route: () => DonationDetails(),
@@ -264,23 +267,24 @@ class WayaAppRoutes {
     SupportRequestScreen.route: () => SupportRequestScreen(),
     SupportDisputeScreen.route: () => SupportDisputeScreen(),
     SupportChatScreen.route: () => SupportChatScreen(),
-    DisputeDetail.route: () =>
-        DisputeDetail(id: WayaNav.search['id'].toString()),
+    DisputeDetail.route: () => DisputeDetail(id: WayaNav.search['id'].toString()),
     ProductSearchResult.route: () => ProductSearchResult(),
-    LogsAndAuditTrials.route: ()=> LogsAndAuditTrials(),
-    LoginActivity.route: ()=> LoginActivity(),
-    VisitedPage.route: ()=> VisitedPage(),
-    UserAction.route: ()=> UserAction(),
-    CmsClicks.route: ()=> CmsClicks(),
-    UserInteraction.route: ()=> UserInteraction(),
-    PaymentActivity.route: ()=> PaymentActivity(),
-    SearchLog.route: ()=> SearchLog(),
+    LogsAndAuditTrials.route: () => LogsAndAuditTrials(),
+    LoginActivity.route: () => LoginActivity(),
+    VisitedPage.route: () => VisitedPage(),
+    UserAction.route: () => UserAction(),
+    CmsClicks.route: () => CmsClicks(),
+    UserInteraction.route: () => UserInteraction(),
+    PaymentActivity.route: () => PaymentActivity(),
+    SearchLog.route: () => SearchLog(),
+    KycUpdate.route: () => KycUpdate(),
+    SellerBuyRequestsScreen.route: () => SellerBuyRequestsScreen(),
+    BuyerBuyRequestsScreen.route: () => BuyerBuyRequestsScreen(),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getSingleChatRoute(String id) =>
-      "${SingleChatScreen.route}?id=$id";
+  static String getSingleChatRoute(String id) => "${SingleChatScreen.route}?id=$id";
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
@@ -288,15 +292,26 @@ class WayaAppRoutes {
 
   /// Helper function that is used to get the route to the details of a single
   /// dispute by its ID.
-  static String getDisputeDetailsRoute(String id) =>
-      "${DisputeDetail.route}?id=$id";
+  static String getDisputeDetailsRoute(String id) => "${DisputeDetail.route}?id=$id";
+
+  /// Helper function that is used to navigate to the route that contains all
+  /// the bids of sellers
+  static String getBuyerBidsRoute(String id) => "${SeeBuyerBids.route}?id=$id";
+
+  /// Helper function that is used to navigate to the route that contains all
+  /// the bids of sellers
+  static String getSellerBidsRoute(String id) => "${SeeSellerBids.route}?id=$id";
 
   /// This is fine.
-  static List<GetPage> get getPages => routes.entries.map((entry) {
+  static List<GetPage> get getPages {
+    return routes.entries.map(
+      (entry) {
         return GetPage(
           name: entry.key,
           page: entry.value,
           transition: Transition.cupertino,
         );
-      }).toList();
+      },
+    ).toList();
+  }
 }

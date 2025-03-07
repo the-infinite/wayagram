@@ -313,8 +313,20 @@ class ConversationWidget extends StatelessWidget {
                       ),
                     ),
                   )
-                else if (isMine)
+                else if (isMine && chat.lastMessage?.readAt != null)
                   WayaAssets.icons.cRead.svg(
+                    color: WayaColors.primary,
+                    height: 16,
+                    width: 16,
+                  )
+                else if (isMine && chat.lastMessage?.deliveredAt != null)
+                  WayaAssets.icons.cRead.svg(
+                    color: WayaColors.greyColor400,
+                    height: 16,
+                    width: 16,
+                  )
+                else if (isMine && chat.lastMessage?.createdAt != null)
+                  WayaAssets.icons.cSent.svg(
                     color: WayaColors.greyColor400,
                     height: 16,
                     width: 16,

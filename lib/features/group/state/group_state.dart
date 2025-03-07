@@ -38,6 +38,7 @@ class GroupState {
   final bool isReportingGroup;
   final bool isFocused;
   final bool isLoading;
+  final bool joinGroupLoading;
   final bool openToEveryone;
   final bool requireApproval;
   final String roleType;
@@ -52,6 +53,7 @@ class GroupState {
     this.openToEveryone = false,
     this.requireApproval = false,
     this.isReportingGroup = false,
+    this.joinGroupLoading = false,
     this.postCount,
     this.roleType = '',
     this.profileImage = '',
@@ -93,6 +95,7 @@ class GroupState {
     bool? isReportingGroup,
     bool? isFocused,
     bool? isLoading,
+    bool? joinGroupLoading,
     bool? openToEveryone,
     bool? requireApproval,
     String? roleType,
@@ -120,6 +123,7 @@ class GroupState {
       joinedGroup: joinedGroup ?? this.joinedGroup,
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
+      joinGroupLoading: joinGroupLoading ?? this.joinGroupLoading,
       isReportingGroup: isReportingGroup ?? this.isReportingGroup,
       openToEveryone: openToEveryone ?? this.openToEveryone,
       requireApproval: requireApproval ?? this.requireApproval,

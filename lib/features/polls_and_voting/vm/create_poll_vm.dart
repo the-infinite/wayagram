@@ -12,12 +12,11 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/create_poll_response.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard.dart';
-//import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard_model.dart';
 
 import 'package:wayagram/features/polls_and_voting/data/model/single_dashboard_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/vote_url_model.dart';
@@ -370,6 +369,27 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return dt;
   }
 
+  formatDt2(j) {
+    String dt = '';
+    if (j != null) {
+      if (j.toString().contains('T')) {
+        String x = j.toString().split('T')[0];
+        if (x.contains('-')) {
+          String a = x.split('-')[0];
+          String b = x.split('-')[1];
+          String c = x.split('-')[2];
+
+          dt = '${getMonthNameMini(b)} ${getDayAbbreviation(c)}, $a';
+        } else {
+          dt = x;
+        }
+      } else {
+        dt = j;
+      }
+    }
+    return dt;
+  }
+
   formatAm(j) {
     String am = '';
     if (j != '' && j != null) {
@@ -542,9 +562,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.createPoll(formdata);
       if (response.success && context.mounted) {
+        CreatePollResponse createPollResponse = CreatePollResponse.fromJson(response.data);
         WayaUtils.showModalSheet(
           context,
-          child: PollsModal(),
+          child: PollsModal(url: '${createPollResponse.data!.url}'),
         );
         // showDialog(
         //     useRootNavigator: false,
@@ -668,6 +689,28 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  Future<void> deletePoll(ctx, {required String postId}) async {
+    try {
+      final response = await _pollAndVotingRepository.deletePoll(postId);
+      if (response.success && ctx.mounted) {
+        getMyPolls(page: 1,);
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Poll deleted successfully!',
+              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      print(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
 
   Future<PaginatedResult<Docs>?> getMyPolls({required int page}) async {
     try {

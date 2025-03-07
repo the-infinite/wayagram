@@ -20,7 +20,7 @@ class ActivityImageWidget extends StatelessWidget {
       child: ListTile(
         contentPadding: EdgeInsets.only(left: 10, right: 10,),
         leading: SvgPicture.asset(image),
-        title:  Text(
+        title: Text(
             title,
             style: TextStyle(
               fontSize: 14.sp,

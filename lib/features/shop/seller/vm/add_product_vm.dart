@@ -6,9 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
-import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/shop/filter/constants/filter_options.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
@@ -17,13 +15,12 @@ import 'package:wayagram/features/shop/seller/data/model/discount_type_response_
 import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
-import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 final addProductProvider =
     StateNotifierProvider.family<AddProductVm, AddProductState, String>(
         (ref, uniqueKey) =>
-            AddProductVm(UploadFileRepository(), ShopRepository(), ref));
+            AddProductVm(UploadFileRepository(), ShopRepository.instance, ref));
 
 class AddProductVm extends StateNotifier<AddProductState> {
   final ShopRepository _shopRepository;
@@ -297,9 +294,11 @@ class AddProductVm extends StateNotifier<AddProductState> {
       if (product.color.isNotEmpty) {
         bool isHasComma = product.color.contains(',');
         if (isHasComma) {
-          List<Select> colors = FilterOptions.colorOptions
-              .where((c) => [product.color].contains(c.value))
-              .toList();
+          List<String> colorList = product.color.split(",");
+          List<Select> colors = FilterOptions.colorOptions.where((c) {
+            return colorList.contains(c.value);
+          }).toList();
+
           state = state.copyWith(productColor: colors);
         } else {
           List<Select> color = FilterOptions.colorOptions

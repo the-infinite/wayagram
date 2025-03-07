@@ -113,6 +113,14 @@ class PageRepository extends BaseRepository {
     return post("$serviceUrl/moderation", payload);
   }
 
+  Future<WayaRequestResponse> reportPost(String postId, String reason) {
+    final payload = {
+      "postId": postId,
+      "reason": reason
+    };
+    return post("$serviceUrl/posts/report", payload);
+  }
+
   // Future<WayaRequestResponse> likePost(postId) {
   //   return post("$serviceUrl/posts/$postId/likes");
   // }

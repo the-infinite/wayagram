@@ -3,7 +3,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
 class WayaObservableScrollController {
-  bool _hasScrolled = false;
+  bool hasScrolled = false;
 }
 
 class WayaObservableScrollView extends StatefulWidget {
@@ -78,7 +78,7 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
             final current = _scrollController.offset;
 
             //? Stop if this is at the end.
-            if (widget.isAtEnd || !widget.shouldFetch || widget.handler._hasScrolled) return;
+            if (widget.isAtEnd || !widget.shouldFetch || widget.handler.hasScrolled) return;
 
             //? If we should scroll.
             if (current >= target) {
@@ -98,7 +98,7 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
     /// Skip this.
     try {
       //? We are currently loading this up.
-      widget.handler._hasScrolled = true;
+      widget.handler.hasScrolled = true;
       _loadingController.value = true;
 
       //? Get the items on the current page.
@@ -106,7 +106,7 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
         widget.onReachEnd,
         key: "observable-scroll-${widget.handler.hashCode}",
         onFinish: (_) {
-          widget.handler._hasScrolled = false;
+          widget.handler.hasScrolled = false;
           _loadingController.value = false;
         },
       )();

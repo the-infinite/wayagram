@@ -1,6 +1,7 @@
 import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/features/quotation/data/model/quotation_model.dart';
+import 'package:wayagram/shared/features/quotation/model/default.dart';
 
 class QuotationRepository extends BaseRepository {
   static const serviceUrl = "wayagram-shop/api/v2/quotation";
@@ -38,10 +39,9 @@ class QuotationRepository extends BaseRepository {
   Future<WayaRequestResponse> updateCancelRequest({
     required String id,
   }) {
-    final payload = {
+    return patch('$serviceUrl/buyer/request/cancel', {
       "id": id,
-    };
-    return patch('$serviceUrl/buyer/request/cancel', payload);
+    });
   }
 
   Future<WayaRequestResponse> extendBidTime({required String id, required String time}) {
@@ -52,7 +52,7 @@ class QuotationRepository extends BaseRepository {
   Future<WayaRequestResponse> placeBid({
     required String requestId,
     required String vendorId,
-    required String amount,
+    required double amount,
     required String shopId,
   }) {
     final payload = {
@@ -64,39 +64,31 @@ class QuotationRepository extends BaseRepository {
     return post('$serviceUrl/vendor/bid', payload);
   }
 
-  Future<WayaRequestResponse> getAllAvailableQuotation() {
-    return get("$serviceUrl/vendor/quotations?limit=10&page=1");
+  Future<WayaRequestResponse> getAllAvailableQuotation([
+    int limit = 10,
+    int page = 1,
+  ]) {
+    return get("$serviceUrl/vendor/quotations?limit=$limit&page=$page");
   }
 
-  Future<WayaRequestResponse> getVendorQuotation(String shopId, String category, String status) {
-    return get("$serviceUrl/vendor/my-quotations?shopId=$shopId&limit=10&page=1&status=$status");
+  Future<WayaRequestResponse> getVendorQuotation(
+    String shopId, [
+    int limit = 10,
+    int page = 1,
+    String? category,
+    String? status,
+  ]) {
+    return get(
+      "$serviceUrl/vendor/my-quotations?shopId=$shopId&limit=$limit&page=$page${status != null ? '&status=$status' : ''}${category != null ? '&category=$category' : ''}",
+    );
   }
 
   Future<WayaRequestResponse> getBidDashboard({required String shopId}) {
     return get("$serviceUrl/vendor/overview?shopId=$shopId");
   }
 
-  Future<WayaRequestResponse> counterBidResponse({required String bidId, required String amount}) {
-    final payload = {"bidId": bidId, "action": "countered", "counterAmount": amount, "lastCounterSentBy": "vendor"};
-    return patch('$serviceUrl/vendor/bid-response', payload);
-  }
-
-  Future<WayaRequestResponse> acceptBidResponse({required String bidId}) {
-    final payload = {
-      "bidId": bidId,
-      "action": "accepted",
-      "lastCounterSentBy": "buyer" //
-    };
-    return patch('$serviceUrl/vendor/bid-response', payload);
-  }
-
-  Future<WayaRequestResponse> rejectBidResponse({required String bidId}) {
-    final payload = {
-      "bidId": bidId,
-      "action": "rejected",
-      "lastCounterSentBy": "buyer" //
-    };
-    return patch('$serviceUrl/vendor/bid-response', payload);
+  Future<WayaRequestResponse> sendBidAction(BidActionModel action) {
+    return patch('$serviceUrl/vendor/bid-response', action.toJson());
   }
 
   Future<WayaRequestResponse> retrieveOrder({required String requestId}) {

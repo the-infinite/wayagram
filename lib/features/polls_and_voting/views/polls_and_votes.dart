@@ -32,10 +32,15 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
+
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
     return WayaScaffold(
         title: "Polls and Votes",
         isLoading: false,
         isScrollable: false,
+        onTapBackButton: (){
+          args == 'poll'?  WayaNav.offNamed(BottomView.route, arguments: 0): WayaNav.offNamed(BottomView.route, arguments: 0);
+        },
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

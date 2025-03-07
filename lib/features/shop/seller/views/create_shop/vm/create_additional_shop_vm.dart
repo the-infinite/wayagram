@@ -65,7 +65,7 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
 
       final response = state.isEditingMode
           ? await _shopRepository.editShop(
-              state.createShopModel, state.vendorId)
+              state.createShopModel, state.shopId)
           : await _shopRepository.createShop(state.createShopModel);
 
       _logger.i(response.data);
@@ -147,6 +147,9 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
         email: TextEditingController(text: singleShop.email),
         description: TextEditingController(text: singleShop.description),
         name: TextEditingController(text: singleShop.name),
+        lga: singleShop.lga,
+        shopId: singleShop.id,
+        state: singleShop.state,
         url: singleShop.logo,
         logo: singleShop.logo,
         address: TextEditingController(text: singleShop.address));
@@ -155,6 +158,6 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
 
 final createAdditionalShopVmProvider = StateNotifierProvider.family<
     CreateAdditionalShopVm, CreateShopState, String>((ref, uniqueKey) {
-  return CreateAdditionalShopVm(ShopRepository(), AuthRepository(),
+  return CreateAdditionalShopVm(ShopRepository.instance, AuthRepository(),
       ImagePicker(), WayaSecureDataSource(), ref);
 });

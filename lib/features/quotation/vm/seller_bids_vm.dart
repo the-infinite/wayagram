@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+class DashboardMetric {
+  final String title;
+  final Color color;
+  final String key;
+
+  DashboardMetric({
+    required this.title,
+    required this.color,
+      required this.key,
+  });
+}
+
 class SellerBidsVm extends ChangeNotifier {
   final Ref ref;
   SellerBidsVm(this.ref);

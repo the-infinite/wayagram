@@ -11,10 +11,14 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/donation/donation_modal/donation_modal.dart';
 import 'package:wayagram/features/donation/view/all_donations.dart';
 import 'package:wayagram/features/donation/view/my_donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
+import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
+import 'package:wayagram/features/kyc/view/kyc_update.dart';
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
@@ -43,8 +47,8 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
     final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
-    print('MY Donation ARGS $args');
-    print('MY Donation Count==>>${args['donationCount']}');
+
+
     return WayaScaffold(
         title: "Donation Details",
         isLoading: viewModel.isLoading,
@@ -144,19 +148,48 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
               color: wayaTheme.colorScheme.primary500,
               textStyle: TextStyle(color: wayaTheme.colorScheme.white),
               callback: () {
-                WayaUtils.showModalSheet(
-                  context,
-                  child: DonationModal(
-                    amountRaised: '${args['amountRaised']}',
-                    targetAmount: '${args['targetAmount']}',
-                    title: '${args['title']}',
-                    minimumDonationAmount: '${args['minimumDonationAmount']}',
-                    campaignId: '${args['id']}',
-                    privacy: '${args['privacy']}',
-                    daysLeft: '${args['daysLeft']}',
-                    donationCount: '${args['donationCount']}'
-                  ),
-                );
+                if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
+                  WayaUtils.showNotice(
+                      context: context,
+                      title: "Update KYC Information ",
+                      message: 'You must complete KYC verification before you can donate.',
+                      onPress: () {
+                        Navigator.pop(context);
+                        WayaNav.toNamed(KycUpdate.route);
+                      },
+                      buttonText: 'Update KYC',
+                      secondButtonText: 'Cancel',
+                      icon: Image.asset('assets/images/cp-shop.png'));
+                } else if (ConversationState.self.accountType == UserAccountType.personal) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    WayaUtils.showNotice(
+                        context: context,
+                        title: "You don't have a Business Account",
+                        message: 'Please upgrade to a business account to create a donation post',
+                        onPress: () {
+                          Navigator.pop(context);
+                          WayaNav.toNamed(UpgradeToBusiness.route);
+                        },
+                        buttonText: 'Upgrade to Business',
+                        secondButtonText: 'Cancel',
+                        icon: Image.asset('assets/images/cp-shop.png'));
+                  });
+                } else{
+                  WayaUtils.showModalSheet(
+                    context,
+                    child: DonationModal(
+                        amountRaised: '${args['amountRaised']}',
+                        targetAmount: '${args['targetAmount']}',
+                        title: '${args['title']}',
+                        minimumDonationAmount: '${args['minimumDonationAmount']}',
+                        campaignId: '${args['id']}',
+                        privacy: '${args['privacy']}',
+                        daysLeft: '${args['daysLeft']}',
+                        donationCount: '${args['donationCount']}'
+                    ),
+                  );
+                }
+
               }),
         )
       ],),

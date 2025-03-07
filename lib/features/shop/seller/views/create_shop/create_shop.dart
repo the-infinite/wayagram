@@ -240,6 +240,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                       WayaTextFormField(
                         line: 6,
                         keyboardType: TextInputType.text,
+                        padding: EdgeInsets.all(10),
                         controller: viewModel.description,
                         hintText: 'Enter Shop Description',
                         borderColor: formState.hasError &&

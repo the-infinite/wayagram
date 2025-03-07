@@ -48,7 +48,7 @@ class ProductCard extends ConsumerWidget {
             imageUrl: image,
             height: 180,
             width: double.infinity,
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
             radius: BorderRadius.circular(8),
             color: wayaTheme.colorScheme.transparent,
           ),
@@ -234,7 +234,7 @@ class SellerProductCard extends ConsumerWidget {
             imageUrl: image,
             height: 180,
             width: double.infinity,
-            fit: BoxFit.contain,
+            fit: BoxFit.cover,
             radius: BorderRadius.circular(8),
             color: wayaTheme.colorScheme.transparent,
           ),
@@ -297,7 +297,7 @@ class SellerProductCard extends ConsumerWidget {
                 ],
               )),
           Visibility(
-              visible: true,
+              visible: product.discountPercentage > 0,
               child: Column(
                 children: [
                   SizedBox(height: 3),

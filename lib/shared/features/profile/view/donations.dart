@@ -17,8 +17,10 @@ class DonationsFeedWidget extends ConsumerStatefulWidget {
 class _DonationsFeedWidget extends ConsumerState<DonationsFeedWidget> {
   @override
   void initState() {
+    // TODO: implement initState
+  
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(donationVmProvider.notifier).getMyDonation();
+        ref.read(donationVmProvider.notifier).getMyDonation();
     });
     super.initState();
   }

@@ -20,7 +20,7 @@ class MediaMoment extends ConsumerWidget {
     final status = ref.watch(momentVmProvider);
     final wayaTheme = Theme.of(context);
 
-   //  print("wefwefwef ${status.mediaUrl}");
+    //  print("wefwefwef ${status.mediaUrl}");
 
     return WillPopScope(
       onWillPop: () async {
@@ -133,7 +133,6 @@ Widget mediaPreview({
   required WidgetRef ref,
   required MomentState status,
 }) {
- 
   final wayaTheme = Theme.of(context);
 
   if (status.selectedFile == null && status.mediaUrl == null) {
@@ -208,36 +207,44 @@ Widget mediaPreview({
       // Caption Input Field
       if (status.showCaption)
         Positioned(
-          left: 16,
-          right: 16,
-          bottom: 40,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: wayaTheme.colorScheme.customBlack,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: TextField(
-              style: status.textStyle.copyWith(
-                fontSize: 18,
-                color: wayaTheme.colorScheme.white,
-              ),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Add a caption...',
-                hintStyle: status.textStyle.copyWith(
-                  fontSize: 18,
-                  color: wayaTheme.colorScheme.greyColor300,
+            left: 16,
+            right: 16,
+            bottom: 40,
+            child: GestureDetector(
+              onVerticalDragUpdate: (details) {
+                // detect downward swipe
+                if (details.primaryDelta! > 10) {
+                  FocusScope.of(context).unfocus();
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                decoration: BoxDecoration(
+                  color: wayaTheme.colorScheme.customBlack,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: TextField(
+                  style: status.textStyle.copyWith(
+                    fontSize: 18,
+                    color: wayaTheme.colorScheme.white,
+                  ),
+                  decoration: InputDecoration(
+                    border: InputBorder.none,
+                    hintText: 'Add a caption...',
+                    hintStyle: status.textStyle.copyWith(
+                      fontSize: 18,
+                      color: wayaTheme.colorScheme.greyColor300,
+                    ),
+                  ),
+                  onChanged: (value) {
+                    ref.read(momentVmProvider.notifier).updateCaption(value);
+                  },
+                  controller: TextEditingController(text: status.caption)
+                    ..selection =
+                        TextSelection.collapsed(offset: status.caption.length),
                 ),
               ),
-              onChanged: (value) {
-                ref.read(momentVmProvider.notifier).updateCaption(value);
-              },
-              controller: TextEditingController(text: status.caption )
-          ..selection = TextSelection.collapsed(offset: status.caption.length),
-            ),
-          ),
-        ),
+            )),
     ],
   );
 }

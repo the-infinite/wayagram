@@ -1,5 +1,27 @@
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 
+class BidDashboardModel {
+  final num opened;
+  final num closed;
+  final num won;
+
+  // Construct.
+  BidDashboardModel({
+    required this.opened,
+    required this.closed,
+    required this.won,
+  });
+
+  /// Build the bid dashboard using JSON data.
+  factory BidDashboardModel.fromJson(Map<String, dynamic> json) {
+    return BidDashboardModel(
+      opened: json["opened"],
+      closed: json["closed"],
+      won: json["won"],
+    );
+  }
+}
+
 class QuotationsState {
   final bool hasLoadedBids;
   final bool hasLoadedRequests;
@@ -14,6 +36,7 @@ class QuotationsState {
   final bool hasNextBid;
   final List<QuotationBidModel> bids;
   final String? bidStatus;
+  final BidDashboardModel? overview;
 
   // For requests.
   final bool isLoadingRequests;
@@ -43,6 +66,7 @@ class QuotationsState {
     required this.hasNextRequest,
     required this.requests,
     required this.requestStatus,
+    required this.overview,
   });
 
   static final self = QuotationsState(
@@ -64,6 +88,7 @@ class QuotationsState {
     hasNextRequest: false,
     requests: [],
     requestStatus: null,
+    overview: null,
   );
 
   static final others = QuotationsState(
@@ -85,6 +110,7 @@ class QuotationsState {
     hasNextRequest: false,
     requests: [],
     requestStatus: null,
+    overview: null,
   );
 
   QuotationsState copyWith({
@@ -106,6 +132,7 @@ class QuotationsState {
     bool? hasNextRequest,
     List<BuyRequestModel>? requests,
     String? requestStatus,
+    BidDashboardModel? overview,
   }) {
     return QuotationsState(
       isLoadingBids: isLoadingBids ?? this.isLoadingBids,
@@ -126,6 +153,7 @@ class QuotationsState {
       hasNextRequest: hasNextRequest ?? this.hasNextRequest,
       requests: requests ?? this.requests,
       requestStatus: requestStatus ?? this.requestStatus,
+      overview: overview ?? this.overview,
     );
   }
 }

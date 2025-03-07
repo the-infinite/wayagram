@@ -310,9 +310,9 @@ class GroupVm extends StateNotifier<GroupState> {
 
   Future<void> joinGroup(ctx, String groupId) async {
     try {
-      //state = state.copyWith(isLoading: true);
+      state = state.copyWith(joinGroupLoading: true);
       final response = await _groupRepository.joinGroup(groupId);
-      //state = state.copyWith(isLoading: false);
+      state = state.copyWith(joinGroupLoading: false);
       if (response.success && ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
@@ -325,7 +325,7 @@ class GroupVm extends StateNotifier<GroupState> {
     } catch (e) {
       print(e);
     } finally {
-     // state = state.copyWith(isLoading: false);
+      state = state.copyWith(joinGroupLoading: false);
     }
   }
 
@@ -604,7 +604,6 @@ class GroupVm extends StateNotifier<GroupState> {
         required BuildContext context}) async {
     try {
       state = state.copyWith(isReportingGroup: true);
-      final userId = await _secureDataSource.getUserId();
       final response = await _groupRepository.reportGroup(
           groupId, reason);
 

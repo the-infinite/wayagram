@@ -1,7 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/repo/default.dart';
 import 'package:wayagram/shared/features/quotation/state/default.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 class QuotationsNotifier extends StateNotifier<QuotationsState> {
   final repo = QuotationRepository.instance;
@@ -27,7 +29,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     state = state.copyWith(isLoadingRequests: true);
 
     //? This is fine.
-    final response = await repo.getBuyerRequest(state.limit, state.bidPage, state.requestStatus, state.isUser);
+    final response = !state.isUser && ConversationState.self.accountType == UserAccountType.business
+        ? await repo.getAllAvailableQuotation(state.limit, state.requestPage)
+        : await repo.getBuyerRequest(state.limit, state.requestPage, state.requestStatus, state.isUser);
 
     //? This is fine.
     if (response.success) {
@@ -89,9 +93,165 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         final previous = state.requests;
         previous[index] = doc;
         state = state.copyWith(
-          requests: previous,
+          requests: [...previous],
         );
       }
+
+      //? Return the document.
+      return doc;
+    }
+
+    //? Since it failed.
+    return null;
+  }
+
+  /// Helper function used to cancel a single buy request.
+  Future<bool> cancelRequest(String id) async {
+    try {
+      final response = await repo.updateCancelRequest(id: id);
+
+      //? If it was fine...
+      if (response.success) {
+        final found = state.requests.indexWhere((request) => request.id == id);
+
+        //? If this is in this place.
+        if (found != -1) {
+          final current = state.requests[found];
+          final copy = state.requests;
+
+          // This is fine.
+          copy[found] = current.copyWith(
+            status: BuyRequestStatus.cancelled,
+          );
+
+          //? This is fine.
+          state = state.copyWith(
+            requests: copy,
+          );
+        }
+      }
+
+      //? Return this value if it was fine.
+      return response.success;
+    } catch (e) {
+      // TODO: Actual error handling.
+    }
+
+    return false;
+  }
+
+  /// Helper function used to send a bid action request to the server. We use it
+  /// to simplify some processes.
+  Future<bool> sendBidAction(BidActionModel data) async {
+    try {
+      final response = await repo.sendBidAction(data);
+
+      // This is fine.
+      return response.success;
+    } catch (e) {
+      // TODO: Proper error handling.
+    }
+    return false;
+  }
+
+  /// Helper function used to place a bid so that we can enter a quote auction.
+  Future<QuotationBidModel?> sendBid(String requestId, double amount, String shopId) async {
+    final response = await repo.placeBid(
+      requestId: requestId,
+      amount: amount,
+      shopId: shopId,
+      vendorId: ConversationState.self.id,
+    );
+
+    //? This is fine.
+    if (response.success) {
+      //? The data.
+      final data = response.data['data'];
+
+      //? Parse the single buy request to ensure we are doing things right.
+      final doc = QuotationBidModel.fromJson(data);
+
+      //? STylishly sneak this bid into the list of bids on screen.
+      state = state.copyWith(
+        bids: [
+          doc,
+          ...state.bids,
+        ],
+      );
+
+      //? Return the document.
+      return doc;
+    }
+
+    //? Since it failed.
+    return null;
+  }
+
+  /// Helper function used to get all bids from the server that a given user has
+  /// made since origin and time past.
+  Future<List<QuotationBidModel>> getBids(String shopId) async {
+    final result = <QuotationBidModel>[];
+
+    //? Now, we are loading bro.
+    state = state.copyWith(isLoadingRequests: true);
+
+    //? This is fine.
+    final response = await repo.getVendorQuotation(shopId, state.limit, state.bidPage);
+
+    //? This is fine.
+    if (response.success) {
+      //? If the previous page had a next page, offload them onto this place.
+      if (state.hasNextRequest) {
+        result.addAll(state.bids);
+      }
+
+      //? The data.
+      final data = response.data['data'];
+
+      //? Parse the conversations as they are in the response object...
+      final docs = (data['docs'] as List).map((doc) => QuotationBidModel.fromJson(doc)).toList();
+
+      //? This is fine.
+      result.addAll(docs);
+
+      //? Update state.
+      state = state.copyWith(
+        hasLoadedBids: true,
+        bids: result,
+        totalBids: data['totalDocs'],
+        bidPages: data['totalPages'],
+        hasNextBid: data['hasNextPage'],
+        bidPage: int.tryParse(data['nextPage'].toString()) ?? 1,
+        isLoadingBids: false,
+      );
+    }
+
+    //? Since it failed.
+    else {
+      state = state.copyWith(isLoadingBids: false);
+    }
+
+    //? Return our compounded result.
+    return result;
+  }
+
+  /// Helper function used to get the overview/summary of the bids the user
+  /// has made with his or her account.
+  Future<BidDashboardModel?> getBidsOverview(String shopId) async {
+    final response = await repo.getBidDashboard(shopId: shopId);
+
+    //? This is fine.
+    if (response.success) {
+      //? The data.
+      final data = response.data['data'];
+
+      //? Parse the single buy request to ensure we are doing things right.
+      final doc = BidDashboardModel.fromJson(data);
+
+      //? Update the bid dashboard state with this.
+      state = state.copyWith(
+        overview: doc,
+      );
 
       //? Return the document.
       return doc;

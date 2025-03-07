@@ -10,6 +10,7 @@ import 'package:wayagram/core/utils/waya_validators.dart';
 import 'package:wayagram/features/auth/account_creation/data/gender_data.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
+import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 
 class PersonalFirstStepView extends ConsumerStatefulWidget {
   final Function goToNextTab;
@@ -36,13 +37,13 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
     final wayaTheme = Theme.of(context);
-    final userTypeProvider = ref.watch(localDataSourceProvider);
+    final selectAccountState = ref.watch(selectAccountProvider);
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (userTypeProvider.getUserType().type == "BUSINESS")
+          if (selectAccountState.selectedType!.type == "BUSINESS")
             Text("Tell us About Your Business",
                 style: wayaTheme.textTheme.titleLarge)
           else
@@ -175,7 +176,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                 const Gap(10),
                 //*    business section*/ */
                 Visibility(
-                    visible: userTypeProvider.getUserType().type == "BUSINESS",
+                    visible: selectAccountState.selectedType!.type == "BUSINESS",
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -469,7 +470,6 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               uniqueKey: 'state',
                               label: "State",
                               value: viewModel.state,
-                              
                               hintText: 'Select State',
                               items: viewModel.states,
                               onSelected: (value) => ref

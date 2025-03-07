@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -31,6 +32,7 @@ class SingleChatScreen extends ConsumerStatefulWidget {
 
 class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   late final notifier = ref.watch(chatProvider.notifier);
+  final handler = WayaObservableScrollController();
 
   @override
   void initState() {
@@ -282,6 +284,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
               else
                 Expanded(
                   child: WayaPaginatedListView<MessageModel>(
+                    handler: handler,
                     nextPage: state.page,
                     itemCount: state.messages.length,
                     isAtEnd: !state.hasNextPage,
@@ -316,7 +319,10 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                 controller: inputController,
                 notifier: notifier,
                 createChat: _startConversation,
-              )
+              ),
+
+              // Some space for apple devices only
+              if (GetPlatform.isIOS) const Gap(20),
             ],
           ),
         ),

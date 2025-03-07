@@ -16,11 +16,14 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/group/view/report_group_post.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/component/extras.dart';
 import 'package:wayagram/features/pages/data/model/feeds.dart';
+import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:wayagram/features/post/view/report_post.dart';
 import 'package:wayagram/features/post/vm/comment.dart';
 
 import '../../../assetsgen/assets.gen.dart';
@@ -169,14 +172,18 @@ class _GroupPostState extends ConsumerState<GroupPost>
                                       value: 0,
                                       child: _buildActionNav(
                                           context: context,
-                                          onTap: () {
-                                            viewModel.repost(context,
-                                                postId: '${post?.id}');
+                                          onTap: () async{
+                                           // viewModel.repost(context, postId: '${post?.id}');
+                                            await WayaUtils.showModalSheet(context,
+                                                child: ReportGroupPost(
+                                                    statuses: pageReport,
+                                                    currentStatus: "",
+                                                    postId: '${post?.id}'));
                                             Navigator.pop(context);
                                           },
                                           asset: SvgPicture.asset(
                                               'assets/images/pages/flag.svg'),
-                                          text: "Repost",
+                                          text: "Report",
                                           color:
                                           wayaTheme.colorScheme.customBlack),
                                     ),
@@ -186,7 +193,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
                                           context: context,
                                           onTap: () {
                                             viewModel.deletePost(context,
-                                                postId: '${post?.id}', userId: '${ConversationState.self.id}');
+                                                postId: '${post?.id}', userId: ConversationState.self.id);
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(
                                               const SnackBar(

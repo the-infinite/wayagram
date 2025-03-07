@@ -351,7 +351,7 @@ class ChatInputWidget extends StatelessWidget {
     //? If there is actual data here and it is a file...
     if (result.type != MessageType.contact) {
       //? Change this to file.
-      controller._currentType.value = MessageType.file;
+      controller._currentType.value = result.type;
 
       //? Add all of the files that need to be added.
       controller._files.value.addAll(result.files?.map((file) => File(file)) ?? []);

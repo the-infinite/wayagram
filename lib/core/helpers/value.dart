@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:intl/intl.dart';
 
 class WayaValueHelper {
   WayaValueHelper._();
@@ -42,5 +43,10 @@ class WayaValueHelper {
 
     //? Return a match for our unit.
     return '${value.toStringAsFixed(2).replaceAll(RegExp(r'\.?0+$'), '')}${units[exp]}';
+  }
+
+  static String formatPrice(num number, [int decimalDigits = 2]) {
+    final format = NumberFormat.currency(decimalDigits: decimalDigits, symbol: "₦");
+    return format.format(number);
   }
 }

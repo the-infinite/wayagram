@@ -29,6 +29,28 @@ class EngagementData {
         postCategory = postCategory ?? {},
         eventLocationType = eventLocationType ?? {};
 
+  Map<String, dynamic> toJson() => {
+        'timeSpent': timeSpent,
+        'pointsEarned': pointsEarned,
+        'productCategories': productCategories,
+        'eventLocationType': eventLocationType,
+        'eventType': eventType,
+        'postHashTags': postHashTags,
+        'postCategory': postCategory,
+      };
+
+  factory EngagementData.fromJson(Map<String, dynamic> json) {
+    return EngagementData(
+      timeSpent: json['timeSpent'] ?? 0,
+      pointsEarned: json['pointsEarned'] ?? 0,
+      productCategories: Map<String, int>.from(json['productCategories'] ?? {}),
+      eventLocationType: Map<String, int>.from(json['eventLocationType'] ?? {}),
+      eventType: Map<String, int>.from(json['eventType'] ?? {}),
+      postHashTags: Map<String, int>.from(json['postHashTags'] ?? {}),
+      postCategory: Map<String, int>.from(json['postCategory'] ?? {}),
+    );
+  }
+
   void addTime(int seconds) {
     timeSpent += seconds;
   }

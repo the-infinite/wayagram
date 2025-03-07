@@ -5,12 +5,12 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
-import 'package:wayagram/features/logs_and_audit/view/logs_and_audit.dart';
 import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
 import 'package:wayagram/features/support/views/request.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
+import '../../activity_logs/view/logs_and_audit.dart';
 import '../data/model/model.dart';
 import 'components/components.dart';
 
