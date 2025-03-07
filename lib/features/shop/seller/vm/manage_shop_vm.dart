@@ -27,13 +27,15 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
   final _logger = getLogger('ManageShopVm');
 
-  ManageShopVm(this._shopRepository, this.ref) : super(ManageShopState.initial());
+  ManageShopVm(this._shopRepository, this.ref)
+      : super(ManageShopState.initial());
 
   Future<void> getSellerShops() async {
-    final isBusiness = ref.watch(successfulSetupVmProvider).business;
+    final userState = ref.read(successfulSetupVmProvider);
+   
 
-
-    if (isBusiness == null) {
+  
+    if (userState.business == null) {
       // account is most likely a personal account
       state = state.copyWith(isPersonalNotUpgradedToBusiness: true);
       return;
@@ -43,16 +45,20 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _shopRepository.getShopBySellerId(ConversationState.self.id);
+      final response =
+          await _shopRepository.getShopBySellerId(ConversationState.self.id);
 
       if (response.success) {
-        ShopResponseModel responseModel = ShopResponseModel.fromJson(response.data);
+        ShopResponseModel responseModel =
+            ShopResponseModel.fromJson(response.data);
 
         state = state.copyWith(hasShop: responseModel.data.shops.isNotEmpty);
         // state = state.copyWith(shop: responseModel.data);
 
         if (responseModel.data.shops.isEmpty) {
-          await ref.read(createShopVmProvider.notifier).createSellerShop(hasNoShop: true);
+          await ref
+              .read(createShopVmProvider.notifier)
+              .createSellerShop(hasNoShop: true);
           return;
         } else {
           state = state.copyWith(shop: responseModel.data.shops);
@@ -76,16 +82,22 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
   void fetchData() async {
     state = state.copyWith(isLoadingOrder: true);
 
-    final List<SellerProduct>? products =
-        await ref.read(sellerProductsVmProvider.notifier).sellerProducts(shopId: state.singleShop!.id);
-    await ref.read(shopVmProvider.notifier).getShopMetrics(shopId: state.singleShop!.id);
-    final List<DeliveryRequestData>? requests = await ref.read(deliveryRequestVmProvider.notifier).getRequests();
+    final List<SellerProduct>? products = await ref
+        .read(sellerProductsVmProvider.notifier)
+        .sellerProducts(shopId: state.singleShop!.id);
+    await ref
+        .read(shopVmProvider.notifier)
+        .getShopMetrics(shopId: state.singleShop!.id);
+    final List<DeliveryRequestData>? requests =
+        await ref.read(deliveryRequestVmProvider.notifier).getRequests();
 
     state = state.copyWith(isLoadingOrder: false);
     updateMetrics(products: products, requests: requests);
   }
 
-  void updateMetrics({required List<SellerProduct>? products, required List<DeliveryRequestData>? requests}) {
+  void updateMetrics(
+      {required List<SellerProduct>? products,
+      required List<DeliveryRequestData>? requests}) {
     if (requests != null) {
       state = state.copyWith(numberOfRequests: requests.length);
     }
@@ -93,15 +105,20 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
   // main endpoint to get seller paginated poduct --others will later be removed
 
-  Future<PaginatedResult<SellerProduct>?> approvedWayaDeals({required int page}) async {
+  Future<PaginatedResult<SellerProduct>?> approvedWayaDeals(
+      {required int page}) async {
     state = state.copyWith(isLoading: true);
     try {
-      final response = await _shopRepository.getSellerProducts(shopId: state.singleShop!.id, page: page);
+      final response = await _shopRepository.getSellerProducts(
+          shopId: state.singleShop!.id, page: page);
       List<SellerProduct> sellerProducts = [];
       bool hasNextPage = false;
       if (response.success) {
-        SellerProductResponseModel responseModel = SellerProductResponseModel.fromJson(response.data);
-        sellerProducts = responseModel.data.products.where((c) => c.wayagramDealApprove == true).toList();
+        SellerProductResponseModel responseModel =
+            SellerProductResponseModel.fromJson(response.data);
+        sellerProducts = responseModel.data.products
+            .where((c) => c.wayagramDealApprove == true)
+            .toList();
         hasNextPage = responseModel.data.pagination.hasNextPage;
       }
       return PaginatedResult(hasNextPage: hasNextPage, items: sellerProducts);
@@ -113,15 +130,20 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
     }
   }
 
-  Future<PaginatedResult<SellerProduct>?> appliedWayaDeals({required int page}) async {
+  Future<PaginatedResult<SellerProduct>?> appliedWayaDeals(
+      {required int page}) async {
     state = state.copyWith(isLoading: true);
     try {
-      final response = await _shopRepository.getSellerProducts(shopId: state.singleShop!.id, page: page);
+      final response = await _shopRepository.getSellerProducts(
+          shopId: state.singleShop!.id, page: page);
       List<SellerProduct> sellerProducts = [];
       bool hasNextPage = false;
       if (response.success) {
-        SellerProductResponseModel responseModel = SellerProductResponseModel.fromJson(response.data);
-        sellerProducts = responseModel.data.products.where((c) => c.wayagramDeal != null).toList();
+        SellerProductResponseModel responseModel =
+            SellerProductResponseModel.fromJson(response.data);
+        sellerProducts = responseModel.data.products
+            .where((c) => c.wayagramDeal != null)
+            .toList();
         hasNextPage = responseModel.data.pagination.hasNextPage;
       }
       return PaginatedResult(hasNextPage: hasNextPage, items: sellerProducts);
@@ -134,6 +156,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
   }
 }
 
-final manageShopVmProvider = StateNotifierProvider.autoDispose<ManageShopVm, ManageShopState>((ref) {
+final manageShopVmProvider =
+    StateNotifierProvider.autoDispose<ManageShopVm, ManageShopState>((ref) {
   return ManageShopVm(ShopRepository.instance, ref);
 });
