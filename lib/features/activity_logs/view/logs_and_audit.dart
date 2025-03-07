@@ -33,7 +33,6 @@ class _LogsAndAuditTrialsState extends ConsumerState<LogsAndAuditTrials> {
   @override
   Widget build(BuildContext context) {
 
-    final wayaTheme = Theme.of(context);
     return WayaScaffold(
       backgroundColor: WayaColors.greyColor50,
       title: "Logs & Audit Trails    ",

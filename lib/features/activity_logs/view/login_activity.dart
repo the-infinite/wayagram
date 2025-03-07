@@ -44,7 +44,7 @@ class _LoginActivityState extends ConsumerState<LoginActivity> {
         spacing:10,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Gap(10),
+
           Expanded(
             child: PaginatedDataView<LoginHistoryDocs>(
                 uniqueKey: 'login-activity',
@@ -65,7 +65,7 @@ class _LoginActivityState extends ConsumerState<LoginActivity> {
                         String dateTimeString = "${loginActivity.metadata?.timestamp}";
                         DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
                         return ActivityCardWidget(
-                          title: '${loginActivity.metadata?.location} (${loginActivity.metadata?.device?.capitalizeFirst})',
+                          title: '${loginActivity.description} ${loginActivity.metadata?.location} (${loginActivity.metadata?.device?.capitalizeFirst})',
                           subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(loginActivity.metadata?.timestamp)}, '
                               '${DateFormat.jm().format(dateTime)}'
                           ,);

@@ -71,12 +71,13 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }
   }
 
-  Future<PaginatedResult<VisitedPagesDocs>?> getVisitedPages({required int page}) async {
+  Future<PaginatedResult<VisitedPagesDocs>?>  getVisitedPages({required int page}) async {
 
     try{
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getVisitedPages(page);
       List<VisitedPagesDocs>? fetchVisitedPagesDocs = [];
+
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
