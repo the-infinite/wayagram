@@ -294,9 +294,11 @@ class AddProductVm extends StateNotifier<AddProductState> {
       if (product.color.isNotEmpty) {
         bool isHasComma = product.color.contains(',');
         if (isHasComma) {
-          List<Select> colors = FilterOptions.colorOptions
-              .where((c) => [product.color].contains(c.value))
-              .toList();
+          List<String> colorList = product.color.split(",");
+          List<Select> colors = FilterOptions.colorOptions.where((c) {
+            return colorList.contains(c.value);
+          }).toList();
+
           state = state.copyWith(productColor: colors);
         } else {
           List<Select> color = FilterOptions.colorOptions

@@ -32,8 +32,6 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
   Future<void> getSellerShops() async {
     final userState = ref.read(successfulSetupVmProvider);
-   
-
   
     if (userState.business == null) {
       // account is most likely a personal account

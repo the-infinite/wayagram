@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/waya_dummy_input.dart';
 import 'package:wayagram/core/components/waya_input_decorator.dart';
 import 'package:wayagram/core/data/model/model.dart';
@@ -37,7 +38,7 @@ class WayaSelectField<T> extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(wayaSelectFieldViewModelProvider(uniqueKey));
+    final viewModel = ref.watch(wayaSelectFieldViewModelProvider(Uuid().v4()));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
