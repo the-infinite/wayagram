@@ -77,6 +77,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getVisitedPages(page);
       List<VisitedPagesDocs>? fetchVisitedPagesDocs = [];
+
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {

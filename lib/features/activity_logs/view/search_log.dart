@@ -8,6 +8,7 @@ import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_card_widget.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
@@ -27,7 +28,7 @@ class SearchLog extends ConsumerStatefulWidget {
 
 class _SearchLogState extends ConsumerState<SearchLog> {
 
-
+  List<String> dates = [];
   @override
   Widget build(BuildContext context) {
 
@@ -65,7 +66,6 @@ class _SearchLogState extends ConsumerState<SearchLog> {
             ),
           ),
           Gap(10),
-
           Expanded(
             child: PaginatedDataView<SearchLogDocs>(
                 uniqueKey: 'search-logs',
@@ -77,24 +77,58 @@ class _SearchLogState extends ConsumerState<SearchLog> {
                 emptyState:ActivityLogsEmptyState(text: 'You don\'t have search logs yet',),
                 fetchData: ref.read(activityLogsVmProvider.notifier).getSearchLog,
                 result: (data, s) {
-                  return ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: viewModel.searchLogDocs.length,
-                      itemBuilder: (context, index) {
-                        final searchLogDocs = viewModel.searchLogDocs[index];
-                        String dateTimeString = "${searchLogDocs.createdAt}";
-                        DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                        return ActivityImageWidget(
-                          title: '${searchLogDocs.description}',
-                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(searchLogDocs.createdAt)}, '
-                              '${DateFormat.jm().format(dateTime)}', image: 'assets/icons/search.svg'
-                          ,);
-                      });
+
+                  for(int i = 0; i < viewModel.searchLogDocs.length; i++){
+                    if(!dates.contains(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])){
+                      dates.add(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0]);
+                      viewModel.searchLogDocs.add(viewModel.searchLogDocs[i]);
+                    }
+                  }
+                  return SingleChildScrollView(
+                    child: ListView.builder(
+                        padding: EdgeInsets.only(bottom: 80.h, top: 0),
+                        physics: const ClampingScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: dates.length,
+                        itemBuilder: (context, i){
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])}',
+                                  style: TextStyle(
+                                    fontSize: 20.sp,
+                                    fontFamily: WayaConstants.fontFamily,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black,
+                                  )),
+                              Gap(10),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: const ClampingScrollPhysics(),
+                                padding: EdgeInsets.only(bottom: 20.h, top: 0),
+                                itemCount: viewModel.searchLogDocs.length,
+                                itemBuilder: (context, index){
+                                  final searchLog = viewModel.searchLogDocs[index];
+                                  String dateTimeString = "${searchLog.createdAt}";
+                                  DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
+                                  if(viewModel.searchLogDocs[index].createdAt.toString().split('T')[0] == dates[i]){
+                                    return ActivityImageWidget(
+                                      title: '${searchLog.description}',
+                                      subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(searchLog.createdAt)}, '
+                                          '${DateFormat.jm().format(dateTime)}', image: 'assets/icons/search.svg'
+                                      ,);
+                                  }else{
+                                    return Container();
+                                  }
+                                },
+                              )
+                            ],
+                          );
+                        }),
+                  );
                 }),
           ),
-
-
 
 
         ],

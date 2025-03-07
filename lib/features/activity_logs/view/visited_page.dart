@@ -8,6 +8,7 @@ import 'package:get/get_utils/src/extensions/context_extensions.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/visited_pages_model.dart';
 import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
@@ -27,9 +28,6 @@ class VisitedPage extends ConsumerStatefulWidget {
 class _VisitedPageState extends ConsumerState<VisitedPage> {
 
   List<String> dates = [];
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -68,21 +66,7 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
             ),
           ),
           Gap(10),
-           ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: viewModel.visitedPagesDocs.length,
-                      itemBuilder: (context, index) {
-                        final visitedPage = viewModel.visitedPagesDocs[index];
-                        String dateTimeString = "${visitedPage.createdAt}";
-                        DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                        return ActivityCardWidget(
-                          title: '${visitedPage.description}',
-                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(visitedPage.createdAt)}, '
-                              '${DateFormat.jm().format(dateTime)}'
-                          ,);
-                      }),
-          /*Expanded(
+          Expanded(
             child: PaginatedDataView<VisitedPagesDocs>(
                 uniqueKey: 'visited-page',
                 loadingState: SizedBox(
@@ -93,37 +77,31 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
                 emptyState:ActivityLogsEmptyState(text: 'You haven\'t visited any page yet',),
                 fetchData: ref.read(activityLogsVmProvider.notifier).getVisitedPages,
                 result: (data, s) {
+
+                  for(int i = 0; i < viewModel.visitedPagesDocs.length; i++){
+                    if(!dates.contains(viewModel.visitedPagesDocs[i].createdAt.toString().split('T')[0])){
+                      dates.add(viewModel.visitedPagesDocs[i].createdAt.toString().split('T')[0]);
+                      viewModel.visitedPagesDocs.add(viewModel.visitedPagesDocs[i]);
+                    }
+                  }
                   return SingleChildScrollView(
                     child: ListView.builder(
                         padding: EdgeInsets.only(bottom: 80.h, top: 0),
                         physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: viewModel.visitedPagesDocs.length,
+                        itemCount: dates.length,
                         itemBuilder: (context, i){
-
-                          // for(int s = 0; s < viewModel.visitedPagesDocs.length; s++){
-                          //   // if(viewModel.visitedPagesDocs[s].contains(viewModel.visitedPagesDocs[s].createdAt.toString().split('T')[0])){
-                          //   //   viewModel.visitedPagesDocs.add(viewModel.visitedPagesDocs[s]);
-                          //   //   //viewModel.visitedPagesDocs[i].createdAt.toString().split('T')[0]
-                          //   // }
-                          //
-                          //   if(viewModel.visitedPagesDocs[i].createdAt.toString().split('T')[0] == viewModel.visitedPagesDocs[s].createdAt.toString().split('T')[0]){
-                          //     viewModel.visitedPagesDocs.add(viewModel.visitedPagesDocs[s]);
-                          //   }
-                          //
-                          // }
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                             Text('kg'),
-                             *//* Text(
-                                  '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.visitedPagesDocs[i])}',
+                             Text(
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.visitedPagesDocs[i].createdAt.toString().split('T')[0])}',
                                   style: TextStyle(
                                     fontSize: 20.sp,
+                                    fontFamily: WayaConstants.fontFamily,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.black,
-                                  )),*/
-          /*
+                                  )),
                               Gap(10),
                               ListView.builder(
                                 shrinkWrap: true,
@@ -134,7 +112,7 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
                                   final visitedPage = viewModel.visitedPagesDocs[index];
                                   String dateTimeString = "${visitedPage.createdAt}";
                                   DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                  if(viewModel.visitedPagesDocs[index].createdAt.toString().split('T')[0] == viewModel.visitedPagesDocs[i]){
+                                  if(viewModel.visitedPagesDocs[index].createdAt.toString().split('T')[0] == dates[i]){
                                     return ActivityCardWidget(
                                       title: '${visitedPage.description}',
                                       subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(visitedPage.createdAt)}, '
@@ -149,10 +127,8 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
                           );
                         }),
                   );
-
-
                 }),
-          ),*/
+          ),
           Gap(10),
         ],
       ),
