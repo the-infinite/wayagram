@@ -66,7 +66,9 @@ class AppliedDonationWidget extends ConsumerWidget {
                         overflow: TextOverflow.ellipsis,
                         style: wayaTheme.textTheme.bodyMedium,
                       ),
-                   Gap(10),
+
+
+
                     ],
                   ),
                 )
