@@ -90,6 +90,7 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
 
                     //? Return this one.
                     return SingleNegotiationBidWidget(
+                      negotiator: BidActionAuthor.buyer,
                       request: request,
                       bid: bid,
                     );
