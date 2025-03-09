@@ -1,9 +1,9 @@
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 
 class BidDashboardModel {
-  final num opened;
-  final num closed;
-  final num won;
+  final int opened;
+  final int closed;
+  final int won;
 
   // Construct.
   BidDashboardModel({
