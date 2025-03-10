@@ -25,6 +25,7 @@ class _DonationsState extends ConsumerState<Donations> with SingleTickerProvider
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
+      resizeToAvoidBottomInset: false,
         title: "Donations",
         isLoading: viewModel.isLoading,
         isScrollable: false,

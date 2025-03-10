@@ -1,25 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/view/application_details.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/donation/widget/applied_donationi_widget.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
-import 'package:wayagram/features/shop/widgets/filter_widget.dart';
-
-import '../../../shared/features/user/models/default.dart';
 
 class AppliedDonations extends ConsumerStatefulWidget {
   const AppliedDonations({super.key});
@@ -114,40 +106,6 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
         ),
       ],
     );
-    /* Expanded(
-      child: PaginatedDataView<MyDonationDocs>(
-        uniqueKey: 'My-donations',
-        loadingState: SizedBox(
-            height: context.height * 0.4,
-            child: Center(
-              child: CircularProgressIndicator(),
-            )),
-        emptyState:DonationEmptyState(),
-        fetchData: ref.read(donationVmProvider.notifier).getMyDonation,
-        result: (data, s ) {
-          return ListView.builder(
-              //physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: viewModel.myDonationDocs?.length,
-              itemBuilder: (context, index){
-                final donation = viewModel.myDonationDocs?[index];
-                int daysLeft = DateTime.parse('${donation?.expirationDate}').day;
-                return ManageDonationWidget(
-                  text:  "Donate",
-                  amountRaised: donation?.amountRaised,
-                  targetAmount: donation?.targetAmount,
-                  title: donation?.title?.capitalizeFirst,
-                  image: donation?.imageURL,
-                  dayLeft: '$daysLeft',
-                  onTap: (){
-                    WayaNav.toNamed('/donationDetails');
-                  },
-                  buttonWidth: 60.0,
-                );
-              }
-          );
-        },),
-    );*/
   }
 }
 

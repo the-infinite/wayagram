@@ -33,7 +33,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(donationVmProvider.notifier).getMyDonation();
+      ref.read(donationVmProvider.notifier).getHostedDonation();
       ref.read(donationVmProvider.notifier).getMyKYC();
     });
     searchController = TextEditingController();
@@ -47,8 +47,6 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
     searchController.dispose();
     super.dispose();
   }
-
-  String userType = "PERSONAL";
 
   @override
   Widget build(BuildContext context) {

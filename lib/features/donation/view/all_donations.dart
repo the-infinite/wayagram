@@ -6,7 +6,6 @@ import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -14,14 +13,8 @@ import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_busi
 import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/view/my_donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
-import 'package:wayagram/features/donation/widget/applied_donationi_widget.dart';
-import 'package:wayagram/features/explore/widgets/donation_widget.dart';
-import 'package:wayagram/features/kyc/view/kyc_update.dart';
-import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
-import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
-import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
 import '../../chat/state/default.dart';
 import '../widget/manage_donation_widget.dart';
