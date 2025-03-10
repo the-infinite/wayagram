@@ -46,7 +46,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
-    final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
 
 
     return WayaScaffold(

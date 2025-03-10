@@ -60,12 +60,6 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                   DateTime expirationDate = DateTime.parse("${poll.endDate}");
                   DateTime currentDate = DateTime.now(); // Get current date and time
 
-
-                  // String formatTimeAgo(String dateString) {
-                  //   DateTime dateTime =
-                  //   DateTime.parse(dateString); // Convert string to DateTime
-                  //   return timeago.format(dateTime); // Convert to "time ago" format
-                  // }
                   return Container(
                     margin: EdgeInsets.only(bottom: 40.h),
                     child: Column(
@@ -131,7 +125,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                               ),),
                         const Gap(10),
                         Text(
-                          '${poll.maxVotesPerUser} ${poll.maxVotesPerUser == 0 || poll.maxVotesPerUser == 1 ? 'Vote' : 'Votes'} • $hoursLeft hours remaining',
+                          '${poll.voteCount} ${poll.voteCount == 0 || poll.voteCount == 1 ? 'Vote' : 'Votes'} • $hoursLeft hours remaining',
                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,

@@ -134,7 +134,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
 
                         const Gap(10),
                         Text(
-                          '${poll.maxVotesPerUser} ${poll.maxVotesPerUser == 0 || poll.maxVotesPerUser == 1 ? 'Vote' : 'Votes'} •  $daysLeft hours remaining',
+                          '${poll.voteCount} ${poll.voteCount == 0 || poll.voteCount == 1 ? 'Vote' : 'Votes'} •  $daysLeft hours remaining',
                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                               fontSize: 12,
                               fontWeight: FontWeight.w400,
