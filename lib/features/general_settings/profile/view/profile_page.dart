@@ -44,7 +44,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   late final eventNotifier = ref.watch(userEventsProvider.notifier);
   late final groupsNotifier = ref.watch(userGroupsProvider.notifier);
   late final pagesNotifier = ref.watch(userPagesProvider.notifier);
-  late final followNotifier = ref.watch(followProvider.notifier);
+  late final followNotifier = ref.watch(userFollowProvider.notifier);
   final scrollHandler = WayaObservableScrollController();
   final _pageController = ValueNotifier(0);
   final _tabController = ExpandedTabController();
@@ -136,7 +136,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final eventState = ref.watch(userEventsProvider);
     final groupsState = ref.watch(userGroupsProvider);
     final pagesState = ref.watch(userPagesProvider);
-    final followState = ref.watch(followProvider);
+    final followState = ref.watch(userFollowProvider);
 
     //? Return the component.
     return WayaScaffold(
