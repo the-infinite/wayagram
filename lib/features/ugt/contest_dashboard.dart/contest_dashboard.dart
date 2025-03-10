@@ -116,13 +116,13 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         height: 42,
                         text: "Edit contest details",
                         callback: () async {
-                          /*   ivalidateUGTVM(ref);
+                          ivalidateUGTVM(ref);
                           ref
                               .read(stateIsEditingContestProvider.notifier)
                               .state = true;
                           ref.watch(selectedContestProvider.notifier).state =
                               model;
-                          WayaNav.toNamed('/create-contest'); */
+                          WayaNav.toNamed('/create-contest');
                         }),
                   ),
                 Gap(10),

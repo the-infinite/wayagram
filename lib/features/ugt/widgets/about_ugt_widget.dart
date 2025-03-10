@@ -16,7 +16,7 @@ class AboutUgtWidget extends StatelessWidget {
       children: [
         Text(title,
             style: TextStyle().wayaCopyWith(
-              color: Theme.of(context).colorScheme.greyColor300,
+              color: Theme.of(context).colorScheme.greyColor500,
               fontSize: 13,
             )),
         const Gap(5),

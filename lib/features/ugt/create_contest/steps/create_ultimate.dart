@@ -127,8 +127,10 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               style: wayaTheme.textTheme.titleLarge),
           const Gap(5),
           Text(
-              "Bring your talent contest vision to life. Customize \n details, set stages, and make it unforgettable",
-              style: wayaTheme.textTheme.hintStyle),
+              "Bring your talent contest vision to life. Customize \ndetails, set stages, and make it unforgettable",
+              style: wayaTheme.textTheme.hintStyle.copyWith(
+                  color: wayaTheme.colorScheme.greyColor500,
+                  fontWeight: FontWeight.w500)),
           const Gap(30),
           FormField<String>(validator: (value) {
             if (notifier.title.text.isEmpty) {
@@ -320,6 +322,10 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   keyboardType: TextInputType.number,
                   controller: notifier.winnerPrize,
                   hintText: "Enter Winner's Award",
+                  inputFormatters: [
+                    CurrencyTextInputFormatter.currency(
+                        name: 'NGN', symbol: 'NGN', locale: 'en_NG')
+                  ],
                   label: "Winner's Award",
                   borderColor:
                       formState.hasError && notifier.winnerPrize.text.isEmpty

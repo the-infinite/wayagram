@@ -39,7 +39,7 @@ class UpcomingWidget extends StatelessWidget {
             child: Text(content,
                 // overflow: TextOverflow.ellipsis,
                 style: TextStyle().wayaCopyWith(
-                  color: Theme.of(context).colorScheme.greyColor900,
+                  color: Theme.of(context).colorScheme.black,
                   fontWeight: FontWeight.w500,
                   fontSize: 12,
                 )),

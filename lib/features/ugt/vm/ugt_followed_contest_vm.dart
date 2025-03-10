@@ -76,7 +76,8 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
       }).toList();
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
-      print("do like stuff Success");
+      // WayaSnackBar.showToast("Contest already liked");
+      print("Contest already liked");
     }
   }
 
@@ -128,7 +129,7 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
     if (response.success) {
       //  print("do like stuff Fail");
 
-      WayaSnackBar.showToast("Contest liked");
+      WayaSnackBar.showToast("Contest Followed", showSuccess: true);
     } else {
       print("do like stuff Success");
     }

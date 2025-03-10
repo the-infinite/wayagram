@@ -42,7 +42,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final postNotifier = ref.read(postProvider.notifier);
-      final hasClickedLiked = useState(false);
+    final hasClickedLiked = useState(false);
     final hasClickedShared = useState(false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,9 +126,10 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                             ),
                             const Gap(8),
                             Text(
-                              '${widget.post.applicantCount ?? 0} Participants',
-                              style: wayaTheme.textTheme.hintStyle,
-                            ),
+                                '${widget.post.applicantCount ?? 0} Participants',
+                                style: wayaTheme.textTheme.hintStyle.copyWith(
+                                    color: wayaTheme.colorScheme.greyColor500,
+                                    fontWeight: FontWeight.w500)),
                           ],
                         ),
                         // Spacer(),
@@ -137,7 +138,8 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                         ),
                         //  post.isFollowing!
                         WayaButton(
-                          callback: () => widget.onFollowPressed(widget.post.id!),
+                          callback: () =>
+                              widget.onFollowPressed(widget.post.id!),
                           height: 40,
                           text: "Follow",
                         )
@@ -203,7 +205,9 @@ class _ContestCardState extends ConsumerState<ContestCard> {
               const Gap(20),
               Text(
                 widget.post.description ?? "Description",
-                style: wayaTheme.textTheme.hintStyle,
+                style: wayaTheme.textTheme.hintStyle.copyWith(
+                    color: wayaTheme.colorScheme.greyColor500,
+                    fontWeight: FontWeight.w500),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -263,12 +267,15 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   print("End Date: ${widget.post.endDate}");
                   if (isDateInFuture(widget.post.startDate ?? "")) {
                     ref.read(registerFormProvider.notifier).addDefault(
-                        widget.post.contestSettings?.formRequirements ?? [], widget.post);
+                        widget.post.contestSettings?.formRequirements ?? [],
+                        widget.post);
                     //  WayaNav.toNamed("/register-contest1");
-                    ref.read(selectedContestProvider.notifier).state = widget.post;
+                    ref.read(selectedContestProvider.notifier).state =
+                        widget.post;
                     WayaNav.toNamed("/upcoming-contest-details");
                   } else {
-                    ref.read(selectedContestProvider.notifier).state = widget.post;
+                    ref.read(selectedContestProvider.notifier).state =
+                        widget.post;
                     WayaNav.toNamed('/upcoming-manage-contest-details');
                   }
                 },
@@ -281,14 +288,12 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                     
-                       if (hasClickedLiked.value == false) {
-                            widget.onLikePressed(widget.post.id!);
-                          }
-                          Future.delayed(Duration(seconds: 2), () {
-                            hasClickedLiked.value = false;
-                          });
-
+                      if (hasClickedLiked.value == false) {
+                        widget.onLikePressed(widget.post.id!);
+                      }
+                      Future.delayed(Duration(seconds: 2), () {
+                        hasClickedLiked.value = false;
+                      });
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -318,13 +323,12 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   const Gap(30),
                   GestureDetector(
                     onTap: () {
-                    
-                        if (hasClickedShared.value == false) {
-                              widget.onSharePressed(widget.post.id!);
-                          }
-                          Future.delayed(Duration(seconds: 2), () {
-                            hasClickedShared.value = false;
-                          });
+                      if (hasClickedShared.value == false) {
+                        widget.onSharePressed(widget.post.id!);
+                      }
+                      Future.delayed(Duration(seconds: 2), () {
+                        hasClickedShared.value = false;
+                      });
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
