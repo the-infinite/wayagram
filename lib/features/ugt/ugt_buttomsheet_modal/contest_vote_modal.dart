@@ -4,7 +4,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -17,15 +16,12 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart';
-import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
-
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/utils/waya_navigation.dart';
 
@@ -95,12 +91,14 @@ class PinEntryBottomSheet extends StatefulHookConsumerWidget {
   final String candidateName;
   final String link;
   final String amount;
+  final bool isFree;
   final String numOfVote;
 
   const PinEntryBottomSheet(
       {required this.model,
       required this.link,
       required this.amount,
+      required this.isFree,
       required this.numOfVote,
       required this.candidateName,
       super.key});
@@ -134,6 +132,8 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
       // TODO: Submit PIN
       // log('PIN submitted: $_pin');
       // Navigator.of(context).pop();
+      print(" i am so here ${widget.amount}");
+      print(" i am so here ${widget.numOfVote}");
       var isPass = await ref
           .read(votersContestNotifier.notifier)
           .verifyWalletPin(isLoading, _pin, {
@@ -143,7 +143,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
         "amount": widget.amount,
         "numberOfVotes": widget.numOfVote,
         "profileId": widget.model.profileId ?? "",
-        "type": widget.model.type ?? ""
+        "type": widget.isFree ? "FREE" : "PAID"
       });
 
       if (isPass) {
@@ -298,12 +298,14 @@ class VoteOptionModal extends ConsumerStatefulWidget {
 
   final String candidateName;
   final String votingLink;
+  final bool isFree;
   final ContestVoteModel model;
 
   const VoteOptionModal(
       {super.key,
       required this.voteFee,
       required this.model,
+      required this.isFree,
       required this.candidateName,
       required this.votingLink});
 
@@ -368,6 +370,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
         child: ConfirmVoteOptionModal(
           amount: amount,
           voteFee: widget.voteFee,
+          isFree: widget.isFree,
           model: widget.model,
           candidateName: widget.candidateName,
           votingLink: widget.votingLink,
@@ -520,6 +523,7 @@ class ConfirmVoteOptionModal extends ConsumerStatefulWidget {
   final String voteFee;
 
   final String candidateName;
+  final bool isFree;
   final String votingLink;
   final ContestVoteModel model;
 
@@ -529,6 +533,7 @@ class ConfirmVoteOptionModal extends ConsumerStatefulWidget {
       required this.amount,
       required this.voteFee,
       required this.model,
+      required this.isFree,
       required this.candidateName,
       required this.votingLink});
 
@@ -613,6 +618,7 @@ class _ConfirmVoteOptionModalState
                           voteCount: widget.amount,
                           voteFee: widget.voteFee,
                           model: widget.model,
+                          isFree: widget.isFree,
                           votingLink: widget.votingLink,
                           candidateName: widget.candidateName,
                         ),
@@ -652,7 +658,7 @@ class AvailableBalanceModal extends StatefulHookConsumerWidget {
   //final String quantity;
   final String voteCount;
   final String voteFee;
-
+  final bool isFree;
   final String candidateName;
   final String votingLink;
   final ContestVoteModel model;
@@ -663,6 +669,7 @@ class AvailableBalanceModal extends StatefulHookConsumerWidget {
       required this.voteFee,
       required this.voteCount,
       required this.model,
+      required this.isFree,
       required this.candidateName,
       required this.votingLink});
 
@@ -831,6 +838,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                           child: PinEntryBottomSheet(
                             model: widget.model,
                             candidateName: widget.candidateName,
+                            isFree: widget.isFree,
                             link: widget.votingLink,
                             amount:
                                 '${num.parse(widget.voteCount) * num.parse(widget.voteFee)}',
@@ -950,7 +958,9 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
             WayaButton(
               callback: () async {
                 Navigator.of(context).pop();
-                //  WayaNav.toNamed("/poll-and-voting");
+
+                WayaNav.removeAllUntil(
+                    AdminContestDetails(), "/upcoming-manage-contest-details");
               },
               text: "Return to Contest Page",
             ),
@@ -1162,5 +1172,3 @@ class _PaymentDialogState extends State<PaymentDialog> {
         ));
   }
 }
-
-

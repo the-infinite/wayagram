@@ -11,17 +11,19 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
+import 'package:wayagram/shared/features/shop/model/default.dart';
+import 'package:wayagram/shared/features/shop/resource/default.dart';
 
 class SingleNegotiationBidWidget extends ConsumerStatefulWidget {
   final BuyRequestModel request;
   final QuotationBidModel bid;
-  final bool isSeller;
+  final BidActionAuthor negotiator;
 
   const SingleNegotiationBidWidget({
     super.key,
     required this.request,
     required this.bid,
-    this.isSeller = false,
+    this.negotiator = BidActionAuthor.buyer,
   });
 
   @override
@@ -31,6 +33,7 @@ class SingleNegotiationBidWidget extends ConsumerStatefulWidget {
 class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBidWidget> {
   late final userQuotationNotifier = ref.read(userQuotationsProvider.notifier);
   final stateNotifier = ValueNotifier(false);
+  ShopDetailsModel? _shopData;
 
   Future<void> _rejectBid() async {
     await WayaUtils.showNotice(
@@ -45,7 +48,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
           final result = await userQuotationNotifier.sendBidAction(
             BidActionModel.reject(
               bidId: widget.bid.id,
-              lastCounterSentBy: widget.isSeller ? BidActionAuthor.vendor : BidActionAuthor.buyer,
+              lastCounterSentBy: widget.negotiator,
             ),
           );
 
@@ -55,6 +58,21 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
         color: WayaColors.error500,
       ),
     );
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final result = await ShopResource.getShopById(widget.bid.shopId);
+
+      //? If this still in view...
+      if (mounted) {
+        setState(() {
+          _shopData = result;
+        });
+      }
+    });
+    super.initState();
   }
 
   @override
@@ -100,8 +118,12 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                                 Container(
                                   padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
                                   decoration: BoxDecoration(
-                                    color: wayaTheme.colorScheme.success,
-                                    borderRadius: BorderRadius.circular(10),
+                                    color: switch (widget.bid.status) {
+                                      BidActionType.noop || BidActionType.accept => wayaTheme.colorScheme.success,
+                                      BidActionType.reject => wayaTheme.colorScheme.error,
+                                      BidActionType.negotiate => wayaTheme.colorScheme.primary,
+                                    },
+                                    borderRadius: BorderRadius.circular(20000),
                                   ),
                                   child: Row(
                                     children: [
@@ -114,7 +136,14 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
 
                                       //? Title.
                                       Text(
-                                        "New Bid",
+                                        switch (widget.bid.status) {
+                                          BidActionType.noop => "New Bid",
+                                          BidActionType.reject => "Rejected",
+                                          BidActionType.negotiate => widget.bid.lastCounterSentBy != widget.negotiator
+                                              ? "Negotiating"
+                                              : "Counteroffer Sent",
+                                          BidActionType.accept => "Accepted",
+                                        },
                                         style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                           color: wayaTheme.colorScheme.white,
                                           fontWeight: FontWeight.w500,
@@ -132,7 +161,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
 
                             //? The name of the store.
                             Text(
-                              "SURAJ STORES",
+                              _shopData?.shop.name ?? "Loading",
                               style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                 color: wayaTheme.colorScheme.customBlack,
                                 fontSize: 14,
@@ -183,7 +212,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                                     //? The average rating and the total reviews
                                     //? count.
                                     Text(
-                                      " 4.5 (250 reviews)",
+                                      " ${_shopData?.averageRating ?? '0'} (${_shopData?.ratings.length ?? 0} reviews)",
                                       style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                         color: WayaColors.greyColor400,
                                         fontSize: 12,
@@ -326,5 +355,6 @@ class SingleNegotiationBidWidgetViewModel extends ChangeNotifier {
   }
 }
 
-final singleSettlementWidgetViewModelProvider =
-    ChangeNotifierProvider<SingleNegotiationBidWidgetViewModel>((ref) => SingleNegotiationBidWidgetViewModel(ref));
+final singleSettlementWidgetViewModelProvider = ChangeNotifierProvider<SingleNegotiationBidWidgetViewModel>(
+  (ref) => SingleNegotiationBidWidgetViewModel(ref),
+);

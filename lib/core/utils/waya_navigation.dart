@@ -14,7 +14,7 @@ class WayaNav<T> {
       }
     });
   }
-
+//this remove all screens on the stack leaving just one screen
   static void removeUntil(Widget page) {
     Get.offAll(
       () => page,
@@ -22,6 +22,15 @@ class WayaNav<T> {
     );
   }
 
+  //remove all screens on the stack until the target route
+static void removeAllUntil<T extends Widget>(Widget newScreen, String targetRoute) {
+  Get.offUntil(
+    GetPageRoute(page: () => newScreen), 
+    ModalRoute.withName(targetRoute),
+  );
+}
+
+//this remove all screens on the stack leaving just one screen
   static void removeUntilNamed(String route,
       {dynamic arguments, Function(dynamic)? onResult, RoutePredicate? predicate}) {
     Get.offAllNamed(

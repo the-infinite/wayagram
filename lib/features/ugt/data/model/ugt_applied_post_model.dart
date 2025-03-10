@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart' as post;
+
 part 'ugt_applied_post_model.g.dart';
 
 @JsonSerializable(createToJson: false)
@@ -252,6 +254,7 @@ class Stage {
     required this.numberOfPostPerWeek,
     required this.priceOfTheWinner,
     required this.startDate,
+    required this.isActive,
     required this.endDate,
     required this.approveBeforeLive,
   });
@@ -262,9 +265,75 @@ class Stage {
   final int? voteCountToQualify;
   final int? numberOfPostPerWeek;
   final int? priceOfTheWinner;
+  final bool? isActive;
   final String? startDate;
   final String? endDate;
   final bool? approveBeforeLive;
 
   factory Stage.fromJson(Map<String, dynamic> json) => _$StageFromJson(json);
+}
+
+post.Contest mergeContest(AppliedContestModel model) {
+  return post.Contest(
+      id: model.contest?.id,
+      profileId: model.contest?.profileId,
+      hostId: model.contest?.hostId,
+      title: model.contest?.title,
+      category: model.contest?.category,
+      state: model.state ?? model.contest?.state,
+      description: model.contest?.description,
+      // voteCountToQualify:
+      winnerPrize: model.contest?.winnerPrize,
+      publicity: model.contest?.publicity,
+      overallResult: model.contest?.overallResult,
+      type: model.contest?.entryType,
+      amountPerVote: model.contest?.amountPerVote,
+      uploadCoverImages: model.contest?.uploadCoverImages,
+      howItWorks: model.contest?.howItWorks,
+      entryType: model.contest?.entryType,
+      amount: model.contest?.amount,
+      numberOfDuration: model.contest?.numberOfDuration,
+      participationStartDate: model.contest?.participationStartDate,
+      descriptionOfAwards: model.contest?.descriptionOfAwards,
+      startDate: model.contest?.startDate,
+      endDate: model.contest?.endDate,
+      multipleStages: model.contest?.multipleStages,
+      currentStage: model.contest?.currentStage,
+      contestStatus: model.contest?.contestStatus,
+      rejectedReason: model.contest?.rejectedReason,
+      status: model.contest?.status,
+      isDeleted: model.contest?.isDeleted,
+      createdAt: model.contest?.createdAt,
+      updatedAt: model.contest?.updatedAt,
+      deletedAt: model.contest?.deletedAt,
+      contestSettings: post.ContestSettings(
+        id: model.contestSettings?.id,
+        stages: model.contestSettings?.stages
+            ?.map((e) => post.Stages(
+                  stageName: e.stageName,
+                  entryType: e.entryType,
+                  entryAmount: e.entryAmount,
+                  voteCountToQualify: e.voteCountToQualify,
+                  numberOfPostPerWeek: e.numberOfPostPerWeek,
+                  priceOfTheWinner: e.priceOfTheWinner,
+                  startDate: e.startDate,
+                  isActive: e.isActive,
+                  endDate: e.endDate,
+                  approveBeforeLive: e.approveBeforeLive,
+                ))
+            .toList(),
+        formRequirements: model.contestSettings?.formRequirements
+            ?.map((e) => post.FormRequirements(
+                  requirementType: e.requirementType,
+                  requirementName: e.requirementName,
+                  textDescription: e.textDescription,
+                  required: e.isRequired,
+                ))
+            .toList(),
+        contestId: model.contestSettings?.contestId,
+        isDeleted: model.contestSettings?.isDeleted,
+        createdAt: model.contestSettings?.createdAt,
+        updatedAt: model.contestSettings?.updatedAt,
+        // deletedAt: model.contestSettings!.deletedAt,
+      ));
 }

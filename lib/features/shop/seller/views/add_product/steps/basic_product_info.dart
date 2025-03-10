@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -158,7 +159,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                     children: [
                       WayaPaginatedSelectField(
                           height: 0.3,
-                          uniqueKey: 'product-category',
+                          uniqueKey: Uuid().v4(),
                           displayText: viewModel.selectedCategory,
                           fetchData:
                               ref.watch(shopVmProvider.notifier).allCategories,
@@ -264,7 +265,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                     children: [
                       WayaSelectField<List<Select>>(
                           height: 0.3,
-                          uniqueKey: 'product-color',
+                          uniqueKey: Uuid().v4(),
                           label: "Product Color (Optional)",
                           value: viewModel.productColor,
                           hintText: 'Select Product Color',

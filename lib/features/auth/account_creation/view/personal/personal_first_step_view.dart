@@ -43,7 +43,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (selectAccountState.selectedType == "BUSINESS")
+          if (selectAccountState.selectedType!.type == "BUSINESS")
             Text("Tell us About Your Business",
                 style: wayaTheme.textTheme.titleLarge)
           else
@@ -176,7 +176,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                 const Gap(10),
                 //*    business section*/ */
                 Visibility(
-                    visible: selectAccountState.selectedType == "BUSINESS",
+                    visible: selectAccountState.selectedType!.type == "BUSINESS",
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,

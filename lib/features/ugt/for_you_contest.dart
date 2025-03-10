@@ -5,6 +5,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -13,6 +14,7 @@ import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 /* class ForYouContest extends ConsumerWidget {
   const ForYouContest({super.key});
@@ -96,17 +98,18 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                 "See contests which are active for you to \n participate in",
             title: "Active Contests"),
         const Gap(10),
-        WayaButton(
-          callback: () {
-            ivalidateUGTVM(ref);
-            //WayaNav.toNamed('/create-profile-contest1');
-            WayaNav.toNamed('/create-contest');
-          },
-          color: wayaTheme.colorScheme.primar50,
-          text: "Host a Contest",
-          textColor: wayaTheme.colorScheme.customPrimary,
-        ),
-        const Gap(10),
+       if (ConversationState.self.accountType == UserAccountType.business)
+          WayaButton(
+            callback: () {
+              ivalidateUGTVM(ref);
+              //WayaNav.toNamed('/create-profile-contest1');
+              WayaNav.toNamed('/create-contest');
+            },
+            color: wayaTheme.colorScheme.primar50,
+            text: "Host a Contest",
+            textColor: wayaTheme.colorScheme.customPrimary,
+          ),
+       if (ConversationState.self.accountType == UserAccountType.business) const Gap(10),
         if (posts.isEmpty) emptyWidget(),
         if (posts.isNotEmpty)
           ListView.builder(
@@ -120,9 +123,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
 
               final post = posts[index];
               return GestureDetector(
-                onTap: () {
-                 
-                },
+                onTap: () {},
                 child: ContestCard(
                   post,
                   postNotifier.toggleLike,
@@ -139,10 +140,12 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc:
-            "You don’t have any active contest here. Create a \n contest and have different participant",
+        desc:  ConversationState.self.accountType == UserAccountType.business
+            ? "You don’t have any active contest here. Create a \n contest and have different participant"
+            : "You don’t have any active contest here. Create a \n Business account to access more features",
         title: "No Contest Created",
         buttonText: "Host a Contest",
+        hideButton: true,
         onTap: () {
           ivalidateUGTVM(ref);
           WayaNav.toNamed("/create-contest");

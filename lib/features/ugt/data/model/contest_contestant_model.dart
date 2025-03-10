@@ -221,6 +221,7 @@ class Stage {
     required this.approveBeforeLive,
     required this.isActive,
     required this.hasPaid,
+    required this.hasAccepted,
     required this.noOfVotes,
     required this.amountEarned,
     required this.position,
@@ -237,6 +238,7 @@ class Stage {
   final bool? approveBeforeLive;
   final bool? isActive;
   final bool? hasPaid;
+  final bool? hasAccepted;
   final int? noOfVotes;
   final int? amountEarned;
   final int? position;
@@ -253,6 +255,7 @@ class Stage {
     bool? approveBeforeLive,
     bool? isActive,
     bool? hasPaid,
+    bool? hasAccepted,
     int? noOfVotes,
     int? amountEarned,
     int? position,
@@ -266,6 +269,7 @@ class Stage {
       priceOfTheWinner: priceOfTheWinner ?? this.priceOfTheWinner,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
+      hasAccepted: hasAccepted ?? this.hasAccepted,
       approveBeforeLive: approveBeforeLive ?? this.approveBeforeLive,
       isActive: isActive ?? this.isActive,
       hasPaid: hasPaid ?? this.hasPaid,

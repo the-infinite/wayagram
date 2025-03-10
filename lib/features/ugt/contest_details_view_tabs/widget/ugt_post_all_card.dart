@@ -114,13 +114,20 @@ class UgtPostAllCard extends ConsumerWidget {
               ClipRRect(
                 borderRadius:
                     BorderRadius.circular(16), // Adjust the radius as needed
-                child: Image.network(
+                child: WayaImage(
+                  imageUrl: post.mediaContent?[0].url ?? "",
+                  height: 200,
+                  width: context.width,
+                  fit: BoxFit.cover, // Ensur
+                ),
+
+/*                 Image.network(
                   post.mediaContent?[0].url ?? "",
                   height: 200,
                   width: context.width,
                   fit: BoxFit
                       .cover, // Ensures the image covers the area properly
-                ),
+                ), */
               ),
               const Gap(20),
               Row(
@@ -197,11 +204,19 @@ class UgtPostAllCard extends ConsumerWidget {
                         context,
                         child: VoteOptionModal(
                           voteFee: model.amountPerVote?.toString() ?? "0",
+                        isFree: model.entryType?.toLowerCase() =="free"?true: false,
                           //   amountPaid: "89",
+                          /* 
+                           contestId: contestantData.contestId ?? "",
+                        contestantId: contestantData.id ?? "",
+                        hostUserId: contestantData.profileId ?? "",
+                        amount: "0",
+                          
+                           */
                           model: ContestVoteModel(
                               contestId: post.contestId ?? "",
-                              contestantId: post.id ?? "",
-                              hostUserId: post.contestantProfileId ?? "",
+                              contestantId: post.contestantProfileId ?? "",
+                              hostUserId: model.profileId ?? "",
                               amount: "0",
                               numberOfVotes: "0",
                               profileId: "",

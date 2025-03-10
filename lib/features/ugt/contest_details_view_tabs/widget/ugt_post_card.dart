@@ -13,6 +13,7 @@ import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 
 import '../../data/model/ugt_post_model.dart';
 import '../../ugt_buttomsheet_modal/contest_vote_modal.dart';
@@ -28,7 +29,7 @@ class UgtPostCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     var notifier = ref.watch(ugtContestantProfileVm.notifier);
-    var contestModel2 = ref.watch(selectedContestProvider);
+    var contestModel2 = ref.watch(selectedContestProvider.notifier).state;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -206,17 +207,28 @@ class UgtPostCard extends ConsumerWidget {
                       WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(
+                          isFree: contestModel2.entryType?.toLowerCase() =="free"?true: false,
                           voteFee:
                               contestModel2.amountPerVote?.toString() ?? "0",
+
                           //   amountPaid: "89",
+
+/* 
+ contestId: post.contestId ?? "",
+                              contestantId: post.contestantProfileId ?? "",
+                              hostUserId: model.profileId ?? "",
+
+
+ */
+
                           model: ContestVoteModel(
                               contestId: post.contestId ?? "",
-                              contestantId: post.id ?? "",
-                              hostUserId: post.contestantProfileId ?? "",
+                              contestantId: post.contestantProfileId ?? "",
+                              hostUserId: contestModel2.profileId ?? "",
                               amount: "0",
                               numberOfVotes: "0",
                               profileId: "",
-                              type: contestModel.type ?? ""),
+                              type: "PAID"),
 
                           candidateName:
                               contestApplicant?.contestApplicant?.fullName ??

@@ -14,6 +14,7 @@ import 'package:wayagram/features/ugt/data/model/contest_state.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_contest_aplicant_model.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/ugt/data/model/voter_contest_state.dart';
 
@@ -43,8 +44,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     final response = await _walletRepository!
         .confirmWalletPin(ConfirmWalletPin(userId: _localDataSource.getUserId().toString(), pin: pin));
     if (response.success) {
-      print(map);
       map["profileId"] = _localDataSource.getUserId().toString();
+      print(map);
       return await voteContestant(isLoading, map);
     } else {
       isLoading.value = false;
@@ -68,8 +69,37 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
+
+  Future<bool> verifyAndPayForPaidStageContest(ValueNotifier<bool> isLoading,
+      String pin, Map<String, String> map) async {
+    isLoading.value = true;
+    final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(
+        userId: _localDataSource.getUserId().toString(), pin: pin));
+
+    print(map);
+    if (response.success) {
+      // map[] =  _localDataSource.getUserId().toString();
+      return await payForPaidStageContest(isLoading, map);
+    } else {
+      isLoading.value = false;
+      return false;
+    }
+  }
+
   Future<bool> voteContestant(ValueNotifier<bool> isLoading, Map<String, String> map) async {
+
     final response = await _contestRepository.voteContestant(map);
+    isLoading.value = false;
+    if (response.success) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> payForPaidStageContest(
+      ValueNotifier<bool> isLoading, Map<String, String> map) async {
+    final response = await _contestRepository.payForPaidStageContest(map);
     isLoading.value = false;
     if (response.success) {
       return true;
@@ -83,6 +113,56 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     final response = await _contestRepository.payForPaidContest(map);
     isLoading.value = false;
     if (response.success) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> startStageContest(
+      String stageName, Map<String, String> map) async {
+    final response = await _contestRepository.startStage(map);
+
+    //  isLoading.value = false;
+    if (response.success) {
+      var list = state.stageList.map((stage) {
+        if (stage.stageName == stageName) {
+          stage.isActive = true; // Change isActive to false
+        } else {
+          stage.isActive = false;
+        }
+        return stage;
+      }).toList();
+
+      state = state.copyWith(stageList: [...list]);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  Future<bool> qualifyDisqualify(
+      String contestId, Map<String, String> map) async {
+    final response = await _contestRepository.qualifyDisqualify(map);
+    // isLoading.value = false;
+    if (response.success) {
+      fetchAllContestApplicant(contestId);
+      getContestantProfileVoteDetails(contestId);
+      //getContestantProfileVoteDetails(contestId);
+
+      return true;
+    } else {
+      return false;
+    }
+  }
+   Future<bool> acceptFreeStageContest(
+      String contestId, Map<String, String> map) async {
+    final response = await _contestRepository.acceptFreeStageContest(map);
+    // isLoading.value = false;
+    if (response.success) {
+      fetchAllContestApplicant(contestId);
+      getContestantProfileVoteDetails(contestId);
+
       return true;
     } else {
       return false;
@@ -335,6 +415,10 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     } else {
       print("do like stuff Success");
     }
+  }
+
+  void addStages(List<Stages> stages) {
+    state = state.copyWith(stageList: stages);
   }
 
   void doFollow(String postId) async {
