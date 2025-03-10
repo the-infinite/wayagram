@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/interface/waya_http_client_interface.dart';
@@ -19,7 +20,8 @@ class DioHttpClient implements WayaHttpClientInterface {
   final _logger = getLogger('DioHttpClient');
 
   final WayaSecureDataSource secureDataSource = WayaSecureDataSource();
-  final SnackbarService _snackBarService = SnackbarService();
+  //removing the snackbar
+  //final SnackbarService _snackBarService = SnackbarService();
 
   static final DioHttpClient _instance = DioHttpClient._internal();
 
@@ -246,13 +248,9 @@ class DioHttpClient implements WayaHttpClientInterface {
     ));
   }
 
-  Future<WayaRequestResponse> _makeRequest(
-    Future<Response> future, [
-    bool showErrors = true,
-    int depth  = 3
-  ]) async {
+  Future<WayaRequestResponse> _makeRequest(Future<Response> future,
+      [bool showErrors = true, int depth = 3]) async {
     try {
-  
       final response = await future;
       _logger.i('data: ${response.data}');
 
@@ -270,21 +268,19 @@ class DioHttpClient implements WayaHttpClientInterface {
       if (e.response != null) {
         var message = 'An unknown error occurred';
 
-     
-
-        if (e.response?.data['statusCode'] == 401 || e.response?.statusCode == 401) {
+        if (e.response?.data['statusCode'] == 401 ||
+            e.response?.statusCode == 401) {
           // TODO: @sekani50 Call the refresh token thing here. When that is
           // todo| then successful, call the code in the commented line below.
           //? If we have tried up to 3 times.
           // if (depth > 0) return _makeRequest(future, showErrors, depth - 1);
-         
+
           //> use refresh token to generate a new auth token
           bool success = await refreshToken();
-          if (success) {  
+          if (success) {
             //> recall the function if success
-             return _makeRequest(future, showErrors, depth - 1);
-          }
-          else {
+            return _makeRequest(future, showErrors, depth - 1);
+          } else {
             //> return error if not successful
             return WayaHttpException.handleDioError(e);
           }
@@ -300,10 +296,11 @@ class DioHttpClient implements WayaHttpClientInterface {
 
         // This is fine
         if (showErrors && !WayaConstants.isProduction) {
-          _snackBarService.showCustomSnackbar(
+          debugPrint(message);
+          /*   _snackBarService.showCustomSnackbar(
             message: message,
             variant: SnackbarType.failure,
-          );
+          ); */
         }
       }
 
@@ -312,32 +309,32 @@ class DioHttpClient implements WayaHttpClientInterface {
   }
 
   //> Function to refresh token
-Future<bool> refreshToken() async {
-  final refreshToken = await secureDataSource.getRefreshToken();
+  Future<bool> refreshToken() async {
+    final refreshToken = await secureDataSource.getRefreshToken();
 
-  //> if there no refresh token --- return false
-  if (refreshToken == null) return false;
+    //> if there no refresh token --- return false
+    if (refreshToken == null) return false;
 
-  try {
-    final response = await dio.post(
-      "${baseURL}wayagram-profile/api/v2/client/auth/refresh-token",
-      data: {"token": refreshToken},
-    );
+    try {
+      final response = await dio.post(
+        "${baseURL}wayagram-profile/api/v2/client/auth/refresh-token",
+        data: {"token": refreshToken},
+      );
 
-    //> access the token from the response
-    final newToken = response.data['data']['token']['token'];
-    final newRefreshToken = response.data['data']['token']['refreshToken'];
-    _logger.i("New token acquired");
+      //> access the token from the response
+      final newToken = response.data['data']['token']['token'];
+      final newRefreshToken = response.data['data']['token']['refreshToken'];
+      _logger.i("New token acquired");
 
-  //> persit the tokens
-    await secureDataSource.saveToken(newToken);
-    await secureDataSource.saveRefreshToken(newRefreshToken);
-    return true;
-  } catch (e) {
-    _logger.e("Token refresh failed: $e");
-    return false;
+      //> persit the tokens
+      await secureDataSource.saveToken(newToken);
+      await secureDataSource.saveRefreshToken(newRefreshToken);
+      return true;
+    } catch (e) {
+      _logger.e("Token refresh failed: $e");
+      return false;
+    }
   }
-} 
 
   Future<void> _setHeader({
     bool formdata = false,

@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
@@ -17,8 +16,6 @@ import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
 import 'package:wayagram/features/ugt/widgets/status_widget.dart';
 
 import '../../../core/components/waya_buttons.dart';
-import '../../../core/utils/waya_helpers.dart';
-import '../data/model/ugt_model.dart';
 import 'about_ugt_widget.dart';
 
 class ContestAppliedCard extends StatelessWidget {

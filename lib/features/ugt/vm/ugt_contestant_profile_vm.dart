@@ -87,7 +87,8 @@ class UgtContestantProfileVm extends StateNotifier<List<SingleContestantPosts>> 
      // state = state.copyWith(myPostList: [...list]);
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
-      print("do like stuff Success");
+      // WayaSnackBar.showToast("Contest already liked");
+      print("Contest already liked");
     }
   }
 

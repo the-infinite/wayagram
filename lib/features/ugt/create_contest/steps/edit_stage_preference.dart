@@ -455,6 +455,10 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           keyboardType: TextInputType.number,
                           controller: _contestController
                               .contestPrizeWinnerTextController,
+                          inputFormatters: [
+                            CurrencyTextInputFormatter.currency(
+                                name: 'NGN', symbol: 'NGN', locale: 'en_NG')
+                          ],
                           hintText: "Enter Winners price",
                           label: "Prize for the Winner? ",
                           borderColor: formState.hasError &&

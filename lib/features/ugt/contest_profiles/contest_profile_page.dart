@@ -124,9 +124,9 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
           .watch(ugtContestantProfileVm.notifier)
           .fetchSingleContestantPosts(model.id ?? "");
 
-      getImageUrl(model.introVideo ?? "").then((value) {
+     /*  getImageUrl(model.introVideo ?? "").then((value) {
         imageUrl.value = value;
-      });
+      }); */
       return null;
     }, []);
     final selectedViewIndex = useState(0);

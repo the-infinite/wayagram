@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -22,7 +24,7 @@ import 'package:wayagram/features/ugt/widgets/status_widget.dart';
 
 import '../../../core/utils/waya_navigation.dart';
 
-class ContestCard extends ConsumerWidget {
+class ContestCard extends StatefulHookConsumerWidget {
   Contest post;
   final Function(String) onLikePressed;
   final Function(String) onSharePressed;
@@ -32,9 +34,16 @@ class ContestCard extends ConsumerWidget {
       {super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ContestCard> createState() => _ContestCardState();
+}
+
+class _ContestCardState extends ConsumerState<ContestCard> {
+  @override
+  Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final postNotifier = ref.read(postProvider.notifier);
+    final hasClickedLiked = useState(false);
+    final hasClickedShared = useState(false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -69,9 +78,9 @@ class ContestCard extends ConsumerWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(
                                 45), // Adjust the radius as needed
-                            child: post.uploadCoverImages != null
+                            child: widget.post.uploadCoverImages != null
                                 ? WayaImage(
-                                    imageUrl: post.uploadCoverImages!,
+                                    imageUrl: widget.post.uploadCoverImages!,
                                     height: 45,
                                     width: 45,
                                     fit: BoxFit.cover,
@@ -110,16 +119,15 @@ class ContestCard extends ConsumerWidget {
                             SizedBox(
                               width: context.width * 0.4,
                               child: Text(
-                                post.title ?? "Title",
+                                widget.post.title ?? "Title",
                                 overflow: TextOverflow.ellipsis,
                                 style: wayaTheme.textTheme.bodyMedium,
                               ),
                             ),
                             const Gap(8),
                             Text(
-                              '${post.applicantCount ?? 0} Participants',
-                              style: wayaTheme.textTheme.hintStyle,
-                            ),
+                                '${widget.post.applicantCount ?? 0} Participants',
+                                style: wayaTheme.textTheme.bodyMedium),
                           ],
                         ),
                         // Spacer(),
@@ -128,7 +136,8 @@ class ContestCard extends ConsumerWidget {
                         ),
                         //  post.isFollowing!
                         WayaButton(
-                          callback: () => onFollowPressed(post.id!),
+                          callback: () =>
+                              widget.onFollowPressed(widget.post.id!),
                           height: 40,
                           text: "Follow",
                         )
@@ -163,9 +172,9 @@ class ContestCard extends ConsumerWidget {
               ClipRRect(
                 borderRadius:
                     BorderRadius.circular(10), // Adjust the radius as needed
-                child: post.uploadCoverImages != null
+                child: widget.post.uploadCoverImages != null
                     ? WayaImage(
-                        imageUrl: post.uploadCoverImages ?? "",
+                        imageUrl: widget.post.uploadCoverImages ?? "",
                         height: 200,
                         width: context.width,
                         fit: BoxFit.cover,
@@ -193,8 +202,8 @@ class ContestCard extends ConsumerWidget {
               ),*/
               const Gap(20),
               Text(
-                post.description ?? "Description",
-                style: wayaTheme.textTheme.hintStyle,
+                widget.post.description ?? "Description",
+                style: wayaTheme.textTheme.bodyMedium,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -209,17 +218,17 @@ class ContestCard extends ConsumerWidget {
                     children: [
                       AboutUgtWidget(
                           title: "Start Date",
-                          content: formatDate(post.startDate ?? "Date")),
+                          content: formatDate(widget.post.startDate ?? "Date")),
                       const Gap(30),
-                      if (post.status?.toLowerCase() != "active")
+                      if (widget.post.status?.toLowerCase() != "active")
                         StatusWidget(
                           title: "Application",
-                          content: post.status ?? "Pending",
+                          content: widget.post.status ?? "Pending",
                         ),
-                      if (post.status?.toLowerCase() == "active")
+                      if (widget.post.status?.toLowerCase() == "active")
                         StatusOngoing(
                           title: "Application",
-                          content: post.status ?? "Pending",
+                          content: widget.post.status ?? "Pending",
                         ),
                     ],
                   ),
@@ -229,13 +238,13 @@ class ContestCard extends ConsumerWidget {
                     children: [
                       AboutUgtWidget(
                           title: "End Date",
-                          content: formatDate(post.endDate ?? "")),
+                          content: formatDate(widget.post.endDate ?? "")),
                       //  AboutUgtWidget(title: "Status", content: "Ongoing", ),
                       const Gap(30),
                       AboutUgtWidget(
                           title: "Prize",
                           content:
-                              "NGN ${formatMoney(post.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
+                              "NGN ${formatMoney(widget.post.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
                       const Gap(30),
                     ],
                   ),
@@ -243,23 +252,26 @@ class ContestCard extends ConsumerWidget {
                     alignment: Alignment.bottomCenter,
                     child: AboutUgtWidget(
                         title: "Category",
-                        content: post.categoryName ?? "Category"),
+                        content: widget.post.categoryName ?? "Category"),
                   )
                 ],
               ),
               // const Gap(20),
               WayaButton(
                 callback: () {
-                  print("Start Date: ${post.startDate}");
-                  print("End Date: ${post.endDate}");
-                  if (isDateInFuture(post.startDate ?? "")) {
+                  print("Start Date: ${widget.post.startDate}");
+                  print("End Date: ${widget.post.endDate}");
+                  if (isDateInFuture(widget.post.startDate ?? "")) {
                     ref.read(registerFormProvider.notifier).addDefault(
-                        post.contestSettings?.formRequirements ?? [], post);
+                        widget.post.contestSettings?.formRequirements ?? [],
+                        widget.post);
                     //  WayaNav.toNamed("/register-contest1");
-                    ref.read(selectedContestProvider.notifier).state = post;
+                    ref.read(selectedContestProvider.notifier).state =
+                        widget.post;
                     WayaNav.toNamed("/upcoming-contest-details");
                   } else {
-                    ref.read(selectedContestProvider.notifier).state = post;
+                    ref.read(selectedContestProvider.notifier).state =
+                        widget.post;
                     WayaNav.toNamed('/upcoming-manage-contest-details');
                   }
                 },
@@ -271,7 +283,14 @@ class ContestCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   GestureDetector(
-                    onTap: () => onLikePressed(post.id!),
+                    onTap: () {
+                      if (hasClickedLiked.value == false) {
+                        widget.onLikePressed(widget.post.id!);
+                      }
+                      Future.delayed(Duration(seconds: 2), () {
+                        hasClickedLiked.value = false;
+                      });
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -288,18 +307,22 @@ class ContestCard extends ConsumerWidget {
                         ),
                         const Gap(3),
                         Text(
-                          "${post.likeCount} Likes",
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
+                          "${widget.post.likeCount} Likes",
+                          style: wayaTheme.textTheme.bodyMedium,
                         )
                       ],
                     ),
                   ),
                   const Gap(30),
                   GestureDetector(
-                    onTap: () => onSharePressed(post.id!),
+                    onTap: () {
+                      if (hasClickedShared.value == false) {
+                        widget.onSharePressed(widget.post.id!);
+                      }
+                      Future.delayed(Duration(seconds: 2), () {
+                        hasClickedShared.value = false;
+                      });
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -316,11 +339,8 @@ class ContestCard extends ConsumerWidget {
                         ),
                         const Gap(3),
                         Text(
-                          "${post.shareCount} Shares",
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
+                          "${widget.post.shareCount} Shares",
+                          style: wayaTheme.textTheme.bodyMedium,
                         )
                       ],
                     ),
