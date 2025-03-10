@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:isolate';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -17,6 +18,7 @@ import 'package:wayagram/core/utils/task.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
 import 'firebase_options.dart';
+import 'package:app_links/app_links.dart';
 
 void main() async {
   //? First, set up all Firebase services so we can report all crashes to firebase,
@@ -58,32 +60,61 @@ void main() async {
   // TODO: Switch to native splash screens when possible.
 
   //? Fifth, configure our visibility detector.
-  VisibilityDetectorController.instance.notifyNow(); 
+  VisibilityDetectorController.instance.notifyNow();
+
 
   //? Finally, run the app.
   runApp(ProviderScope(child: const Wayagram()));
 }
 
-class Wayagram extends ConsumerWidget {
+class Wayagram extends ConsumerStatefulWidget {
   const Wayagram({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final themeMode = ref.watch(themeProvider);
-    var size = MediaQuery.of(context).size;
-    return ScreenUtilInit(
-      designSize: Size(size.width, size.height),
-      minTextAdapt: true,
-      splitScreenMode: true,
-      child: GetMaterialApp(
-        initialRoute: '/',
-        title: WayaConstants.appName,
-        theme: WayaTheme.lightTheme,
-        darkTheme: WayaTheme.darkTheme,
-        themeMode: themeMode,
-        debugShowCheckedModeBanner: !WayaConstants.isProduction,
-        getPages: WayaAppRoutes.getPages,
-      ),
-    );
-  }
+  ConsumerState<Wayagram> createState() => _WayagramState();
 }
+
+class _WayagramState extends ConsumerState<Wayagram> {
+  StreamSubscription<Uri>? _linkSubscription;
+  @override
+  void initState() {
+    super.initState();
+
+    initDeepLinks();
+  }
+
+  @override
+  void dispose() {
+    _linkSubscription?.cancel();
+
+    super.dispose();
+  }
+
+  Future<void> initDeepLinks() async {
+    // Handle links
+    _linkSubscription = AppLinks().uriLinkStream.listen((uri) {
+      debugPrint('MyOnAppLink: $uri');
+     
+    });
+  }
+    @override
+    Widget build(BuildContext context) {
+      final themeMode = ref.watch(themeProvider);
+      var size = MediaQuery.of(context).size;
+      return ScreenUtilInit(
+        designSize: Size(size.width, size.height),
+        minTextAdapt: true,
+        splitScreenMode: true,
+        child: GetMaterialApp(
+          initialRoute: '/',
+          title: WayaConstants.appName,
+          theme: WayaTheme.lightTheme,
+          darkTheme: WayaTheme.darkTheme,
+          themeMode: themeMode,
+          debugShowCheckedModeBanner: !WayaConstants.isProduction,
+          getPages: WayaAppRoutes.getPages,
+        ),
+      );
+    }
+  }
+

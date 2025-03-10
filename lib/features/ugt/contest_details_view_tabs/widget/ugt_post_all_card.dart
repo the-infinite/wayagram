@@ -148,7 +148,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                         onTap: () {
                          
                             if (hasClickedLiked.value == false) {
-                            viewModel.toggleLike(widget.post.id ?? "");
+                            viewModel.toggleLike(widget.post.contestId ?? "", widget.post.id??"");
                           }
                           Future.delayed(Duration(seconds: 2), () {
                             hasClickedLiked.value = false;
@@ -184,7 +184,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                         onTap: () {
                         
                            if (hasClickedShared.value == false) {
-                             viewModel.toggleShare(widget.post.id ?? "");
+                             viewModel.toggleShare(widget.post.contestId ?? "", widget.post.id??"");
                           }
                           Future.delayed(Duration(seconds: 2), () {
                             hasClickedShared.value = false;

@@ -151,12 +151,12 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
           "voteCountToQualify": model.voteCountToQualify ?? "",
           "numberOfPostPerWeek": model.numPostPerWeek,
           "priceOfTheWinner": model.priceWinner!.contains("NGN")
-              ? model.priceWinner!
+              ? int.parse(model.priceWinner!
                   .split(".")
                   .first
                   .substring(3)
-                  .replaceAll(",", "")
-              : model.priceWinner,
+                  .replaceAll(",", ""))
+              : int.parse(model.priceWinner ?? "0"),
           "startDate": _convertToISO(model.startDate!), // model.startDate,
           "endDate": _convertToISO(model.endDate!), // model.endDate,
           "approveBeforeLive": model.reviewApprovePost
@@ -187,11 +187,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "state": state.state,
         //  "numberOfWeeks":numberOfWeeks.text,
         "winnerPrize": winnerPrize.text.contains("NGN")
-            ? winnerPrize.text
-                .split(".")
-                .first
-                .substring(3)
-                .replaceAll(",", "")
+            ? winnerPrize.text.split(".").first.substring(3).replaceAll(",", "")
             : winnerPrize.text,
         "description": description.text,
         //  "voteCountToQualify": voteCountToQualify.text,

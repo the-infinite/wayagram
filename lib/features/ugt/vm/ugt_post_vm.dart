@@ -81,7 +81,7 @@ class ContestForYou extends StateNotifier<List<Contest>> {
       }).toList();
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
-       //WayaSnackBar.showToast("Contest already liked");
+      //WayaSnackBar.showToast("Contest already liked");
       debugPrint("Contest already liked");
     }
   }

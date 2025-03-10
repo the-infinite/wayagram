@@ -344,7 +344,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     state = state.copyWith(contestId: id);
   }
 
-  void toggleLike(String postId) {
+  void toggleLike(String postId, String galleryId) {
     // Contest? contestPost = null;
     print("Contest for you");
     //state.copyWith(myPostList: contestList)
@@ -354,7 +354,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         print("i dey here 2");
         //  bool isMyLiked = post.isLiked ?? false;
         // if (isMyLiked) {
-        doOnLikeLike(postId);
+        doOnLikeLike(postId,galleryId);
         //  }
         return post.copyWith(
           isLiked: true,
@@ -366,11 +366,12 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     state = state.copyWith(myPostList: [...list]);
   }
 
-  void doOnLikeLike(String postId) async {
+  void doOnLikeLike(String postId, String galleryId) async {
     // print("do like stuff");
     final response = await _contestRepository.likeContest({
       "profileId": _localDataSource.getUserId().toString(),
-      "contestId": postId
+      "contestId": postId,
+      "galleryId":galleryId
     });
 
     if (!response.success) {
@@ -394,7 +395,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  void toggleShare(String postId) {
+  void toggleShare(String postId, String galleryId) {
     // Contest? contestPost = null;
 
     var list = state.myPostList.map((post) {
@@ -410,14 +411,15 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }).toList();
     print("i dey here pppppp");
     state = state.copyWith(myPostList: [...list]);
-    doshare(postId);
+    doshare(postId, galleryId);
   }
 
-  void doshare(String postId) async {
+  void doshare(String postId, String galleryId ) async {
     // print("do like stuff");
     final response = await _contestRepository.shareContest({
       "profileId": _localDataSource.getUserId().toString(),
-      "contestId": postId
+      "contestId": postId,
+       "galleryId":galleryId
     });
 
     if (!response.success) {
