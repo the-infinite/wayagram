@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/group/widget/group_widget.dart';
@@ -34,7 +35,9 @@ class _PagesFeedWidgetState extends ConsumerState<PagesFeedWidget> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(createPageProvider.notifier).getPagesUserFollows();
       ref.read(createPageProvider.notifier).getRecommendedPages();
-      ref.read(createPageProvider.notifier).getAllPages(ConversationState.self.id);
+      ref
+          .read(createPageProvider.notifier)
+          .getAllPages(ConversationState.self.id);
     });
   }
 
@@ -68,7 +71,9 @@ class _PagesFeedWidgetState extends ConsumerState<PagesFeedWidget> {
         if (widget.isManaged && myPages!.isNotEmpty) ...[
           Text(
             "My Pages",
-            style: wayaTheme.textTheme.bodyMedium,
+            style: widget.isExpanded
+                ? wayaTheme.textTheme.descriptionStyle
+                : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
 
@@ -81,7 +86,7 @@ class _PagesFeedWidgetState extends ConsumerState<PagesFeedWidget> {
                 final page = myPages[index];
                 return GroupWidget(
                   isWhite: true,
-                 name: '${page.name?.capitalizeFirst}',
+                  name: '${page.name?.capitalizeFirst}',
                   desc: '${page.description?.capitalizeFirst}',
                   image: '${page.coverImage}',
                   count:
@@ -96,7 +101,9 @@ class _PagesFeedWidgetState extends ConsumerState<PagesFeedWidget> {
         if (widget.isFollow && followedPages!.isNotEmpty) ...[
           Text(
             "Pages you follow",
-            style: wayaTheme.textTheme.bodyMedium,
+            style: widget.isExpanded
+                ? wayaTheme.textTheme.descriptionStyle
+                : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
 
@@ -108,7 +115,7 @@ class _PagesFeedWidgetState extends ConsumerState<PagesFeedWidget> {
               itemBuilder: (context, index) {
                 final page = followedPages[index];
                 return GroupWidget(
-                   isWhite: true,
+                  isWhite: true,
                   name: '${page.name?.capitalizeFirst}',
                   desc: '${page.description?.capitalizeFirst}',
                   image: '${page.coverImage}',
@@ -124,7 +131,9 @@ class _PagesFeedWidgetState extends ConsumerState<PagesFeedWidget> {
         if (widget.isRecommended && recommendedPages!.isNotEmpty) ...[
           Text(
             "Recommended for you",
-            style: wayaTheme.textTheme.bodyMedium,
+            style: widget.isExpanded
+                ? wayaTheme.textTheme.descriptionStyle
+                : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
 
@@ -136,8 +145,8 @@ class _PagesFeedWidgetState extends ConsumerState<PagesFeedWidget> {
               itemBuilder: (context, index) {
                 final page = recommendedPages[index];
                 return GroupWidget(
-                   isWhite: true,
-                    name: '${page.name?.capitalizeFirst}',
+                  isWhite: true,
+                  name: '${page.name?.capitalizeFirst}',
                   desc: '${page.description?.capitalizeFirst}',
                   image: '${page.coverImage}',
                   count:

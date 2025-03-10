@@ -25,7 +25,7 @@ class _UserActionState extends ConsumerState<UserAction> {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       backgroundColor: WayaColors.greyColor50,
-      title: "User Actions    ",
+      title: "User Actions",
       isLoading: false,
       isScrollable: false,
       body: Column(

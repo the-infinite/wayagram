@@ -6,6 +6,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/shared/features/events/shared_event.dart';
@@ -64,7 +65,7 @@ class _DisplayFeedState extends ConsumerState<DisplayFeed> {
             const Gap(10),
             Text(
               "Based on your follows",
-              style: wayaTheme.textTheme.bodyMedium,
+              style: wayaTheme.textTheme.descriptionStyle,
             ),
             const Gap(10),
             SharedMoments(),

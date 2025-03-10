@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:gap/gap.dart';
@@ -47,7 +48,9 @@ class _SharedEventState extends ConsumerState<SharedEvent> {
         if (myEvents.isNotEmpty && widget.isChatAndSocial) ...[
           Text(
             "My Events",
-            style: wayaTheme.textTheme.bodyMedium,
+            style: widget.isExpanded
+                ? wayaTheme.textTheme.descriptionStyle
+                : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
           ListView.builder(
@@ -61,7 +64,7 @@ class _SharedEventState extends ConsumerState<SharedEvent> {
         if (eventState.joinedEvents.isNotEmpty && widget.isChatAndSocial) ...[
           Text(
             "Event you joined",
-            style: wayaTheme.textTheme.bodyMedium,
+            style: wayaTheme.textTheme.descriptionStyle,
           ),
           const Gap(10),
           ListView.builder(
@@ -77,7 +80,7 @@ class _SharedEventState extends ConsumerState<SharedEvent> {
         if (state.events.isNotEmpty) ...[
           Text(
             "Based on your interest",
-            style: wayaTheme.textTheme.bodyMedium,
+            style: wayaTheme.textTheme.descriptionStyle,
           ),
           const Gap(10),
           ListView.builder(
@@ -92,7 +95,7 @@ class _SharedEventState extends ConsumerState<SharedEvent> {
         if (state.topEvents.isNotEmpty) ...[
           Text(
             "Recommended for you",
-            style: wayaTheme.textTheme.bodyMedium,
+            style: wayaTheme.textTheme.descriptionStyle,
           ),
           const Gap(10),
           ListView.builder(

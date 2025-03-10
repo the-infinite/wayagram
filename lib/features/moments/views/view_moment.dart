@@ -85,7 +85,6 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
         } else {
           Navigator.pop(context);
         }
-        ;
       } else {
         debugPrint("No more pages, and cannot pop.");
       }
@@ -164,7 +163,6 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
               children: [
                 PageView.builder(
                   controller: _pageController,
-                  
                   onPageChanged: (index) {
                     _onPageChanged(index);
                   },
@@ -281,7 +279,9 @@ Widget mediaPreview({
     children: [
       // Media Preview
       moment.contentType == "video"
-          ? SizedBox.shrink()
+          ? VideoPreview(
+              content: moment.content,
+            )
           : Image.network(
               moment.content,
               fit: BoxFit.cover,

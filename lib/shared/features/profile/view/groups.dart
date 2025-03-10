@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
 import 'package:wayagram/features/group/data/model/joined_group_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
@@ -68,7 +69,9 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
         if (widget.isMyGroups && myGroups!.isNotEmpty) ...[
           Text(
             "My Groups",
-            style: wayaTheme.textTheme.bodyMedium,
+            style: widget.isExpanded
+                ? wayaTheme.textTheme.descriptionStyle
+                : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
 
@@ -80,7 +83,7 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
               itemBuilder: (context, index) {
                 final group = myGroups[index];
                 return GroupWidget(
-                   isWhite: true,
+                  isWhite: true,
                   name: '${group.name?.capitalizeFirst}',
                   desc: '${group.description?.capitalizeFirst}',
                   image: '${group.coverImage}',
@@ -95,7 +98,9 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
         if (widget.isGroupIJoined && joinedGroups!.isNotEmpty) ...[
           Text(
             "Groups you joined",
-            style: wayaTheme.textTheme.bodyMedium,
+            style: widget.isExpanded
+                ? wayaTheme.textTheme.descriptionStyle
+                : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
 
@@ -107,7 +112,7 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
               itemBuilder: (context, index) {
                 final group = joinedGroups[index];
                 return GroupWidget(
-                   isWhite: true,
+                  isWhite: true,
                   name: '${group.name?.capitalizeFirst}',
                   desc: '${group.description?.capitalizeFirst}',
                   image: '${group.coverImage}',
@@ -122,7 +127,9 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
         if (widget.isRecommended && recommendedGroups!.isNotEmpty) ...[
           Text(
             "Recommended groups",
-            style: wayaTheme.textTheme.bodyMedium,
+            style: widget.isExpanded
+                ? wayaTheme.textTheme.descriptionStyle
+                : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
 
@@ -134,7 +141,7 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
               itemBuilder: (context, index) {
                 final group = recommendedGroups[index];
                 return GroupWidget(
-                   isWhite: true,
+                  isWhite: true,
                   name: '${group.name?.capitalizeFirst}',
                   desc: '${group.description?.capitalizeFirst}',
                   image: '${group.coverImage}',
