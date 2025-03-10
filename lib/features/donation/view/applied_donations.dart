@@ -83,9 +83,7 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
                 int targetedAmount = double.parse('${donation.targetAmount}').toInt();
 
                 double ratioLeft = amountRaised / targetedAmount;
-                return
-
-                  AppliedDonationWidget(
+                return AppliedDonationWidget(
                     onTap: ()async{
                       await WayaUtils.showModalSheet(context,
                           child: ApplicationStatus(
