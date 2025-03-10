@@ -137,7 +137,8 @@ class EventVm extends StateNotifier<EventState> {
       provider.addLocation(event.location, EventPoint.joinEvent.value);
       provider.addEventType(event.eventType, EventPoint.joinEvent.value);
       if (response.success && context.mounted) {
-        Navigator.of(context).pop();
+         WayaNav.goBack();
+     
         if (context.mounted) {
           WayaUtils.showNotice(
               context: context,
@@ -180,7 +181,8 @@ class EventVm extends StateNotifier<EventState> {
 
       if (response.success && context.mounted) {
         // show success modal
-        Navigator.of(context).pop();
+         WayaNav.goBack();
+       // Navigator.of(context).pop();
 
         if (context.mounted) {
           await WayaUtils.showNotice(

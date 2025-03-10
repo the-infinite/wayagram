@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
@@ -47,10 +48,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
               padding: const EdgeInsets.only(top: 12.0, bottom: 6.0),
               child: Text(
                 category.categoryName,
-                style: TextStyle(
-                    color: wayaTheme.colorScheme.greyColor600,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold),
+                style: wayaTheme.textTheme.descriptionStyle,
               ),
             ),
             ListView.builder(
@@ -85,7 +83,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
         if (state.topPosts.isNotEmpty) ...[
           Text(
             "Recommended For You",
-            style: wayaTheme.textTheme.bodyMedium,
+            style: widget.isExpanded ? wayaTheme.textTheme.descriptionStyle : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
           ListView.builder(
