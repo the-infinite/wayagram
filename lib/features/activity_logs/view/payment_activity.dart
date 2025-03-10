@@ -10,6 +10,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/activity_logs.dart';
 import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_image_widget.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
@@ -29,6 +30,17 @@ class PaymentActivity extends ConsumerStatefulWidget {
 class _PaymentActivityState extends ConsumerState<PaymentActivity> {
 
   List<String> dates = [];
+
+  // List<ActivityLogs> activityLogs = [];
+  // List<ActivityLogs> activityLogs1 = [];
+  List<PaymentActivityDocs> activityLogs = [];
+  List<PaymentActivityDocs> activityLogs1 = [];
+
+  int transLength = 0;
+
+  String selTransact = 'All Time';
+  var lsTransact = ['All Time', 'This week', 'This month', 'This Year'];
+
   @override
   Widget build(BuildContext context) {
 
@@ -44,26 +56,40 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
         children: [
           Gap(10),
           Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: WayaColors.greyColor300),
-              borderRadius: BorderRadius.circular(6),
-            ),
+            alignment: Alignment.center,
             width: 102.w,
             height: 36.h ,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                    'All Time',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontFamily: WayaConstants.fontFamily,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    )),
-                Gap(10),
-                SvgPicture.asset('assets/icons/down_arrow.svg')
-              ],
+            padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: WayaColors.greyColor300)),
+            child: DropdownButton(
+                underline: Container(),
+                borderRadius: BorderRadius.circular(8),
+                elevation: 4,
+                padding: EdgeInsets.zero,
+                iconSize: 12,
+                icon: SvgPicture.asset('assets/icons/down_arrow.svg'),
+                isDense: true,
+                isExpanded: false,
+                value: selTransact,
+                items: lsTransact.map((String ls){
+                  return DropdownMenuItem(
+                      value: ls,
+                      child: Text(ls,
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            fontFamily: WayaConstants.fontFamily,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                          )),
+                  );
+                }).toList(),
+                onChanged: (String? value){
+                  setState(() {
+                    selTransact = value!;
+                    sortList(selTransact.toLowerCase());
+                  });
+                }
             ),
           ),
           Gap(10),
@@ -137,5 +163,18 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
     );
   }
 
-
+  sortList(s) {
+    activityLogs = [];
+    setState(() {
+      if(s == 'All Time'){
+        activityLogs = activityLogs1;
+      } else {
+        for (int i = 0; i < transLength; i++) {
+          if (s.toString().trim() == activityLogs1[i].createdAt.toString()) {
+            activityLogs.add(activityLogs1[i]);
+          }
+        }
+      }
+    });
+  }
 }

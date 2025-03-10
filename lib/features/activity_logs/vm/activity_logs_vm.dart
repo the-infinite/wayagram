@@ -45,7 +45,6 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       this.ref,)
       : super(ActivityLogsState());
 
-
   Future<PaginatedResult<LoginHistoryDocs>?> getLoginActivity({required int page}) async {
 
     try{
