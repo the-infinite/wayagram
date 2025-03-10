@@ -109,7 +109,7 @@ class _UpcomingContestDetailsState
                   style: wayaTheme.textTheme.hintStyle),
               const Gap(20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   UpcomingWidget(
@@ -122,16 +122,16 @@ class _UpcomingContestDetailsState
                   const Gap(20),
                   UpcomingWidget(
                       title: "Entry Type", content: model.entryType ?? ""),
-                  const Gap(20),
+                  /*  const Gap(20),
                   UpcomingWidget(
                       title: "Duration",
                       content: getRealDateDiffBtwDate(
-                          model.startDate ?? "", model.endDate ?? "")),
+                          model.startDate ?? "", model.endDate ?? "")), */
                 ],
               ),
               const Gap(10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   UpcomingWidget(
@@ -143,8 +143,8 @@ class _UpcomingContestDetailsState
                   const Gap(20),
                   UpcomingWidget(
                       title: "Prize", content: model.winnerPrize ?? ""),
-                  const Gap(20),
-                  UpcomingWidget(title: "Host", content: "Host"),
+                  /*   const Gap(20),
+                  UpcomingWidget(title: "Host", content: "Host"), */
                 ],
               ),
               const Gap(20),

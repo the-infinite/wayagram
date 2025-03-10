@@ -100,7 +100,9 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                    message: 'You must complete KYC verification before creating a donation post',
                    onPress: () {
                      Navigator.pop(context);
-                     WayaNav.toNamed(KycUpdate.route);
+                     WayaNav.toNamed('/kycUpdate', arguments: {
+                       'kyc': '${viewModel.kycStatus}'
+                     });
                    },
                    buttonText: 'Update KYC',
                    secondButtonText: 'Cancel',
@@ -160,7 +162,6 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
               itemBuilder: (context, index){
                final donation = filteredAllDonations[index];
                int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
-
                int amountRaised = double.parse(donation.amountRaised!).toInt();
 
                int targetedAmount = double.parse(donation.targetAmount!).toInt();
@@ -231,7 +232,6 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   itemBuilder: (context, index){
                     final donation = viewModel.allDonationDocs?[index];
                     int daysLeft = DateTime.parse('${donation?.expirationDate}').difference(DateTime.parse('${donation?.startDate}')).inDays;
-
 
                     int amountRaised = double.parse('${donation?.amountRaised}').toInt();
 

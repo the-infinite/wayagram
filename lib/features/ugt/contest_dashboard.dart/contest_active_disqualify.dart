@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 import '../../../core/components/waya_scaffold.dart';
@@ -80,7 +81,9 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    final viewModel = ref.read(votersContestNotifier);
+    final viewModel = ref.watch(votersContestNotifier);
+    final notifier = ref.watch(votersContestNotifier.notifier);
+    var model = ref.watch(selectedContestProvider);
 
     return WayaScaffold(
       isLoading: false,
@@ -99,8 +102,8 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                 label: Text("Name",
                     style: TextStyle(fontWeight: FontWeight.bold))),
             DataColumn(
-                label: Text("State",
-                    style: TextStyle(fontWeight: FontWeight.bold))),
+                label:
+                    Text("No.", style: TextStyle(fontWeight: FontWeight.bold))),
             DataColumn(
                 label: Text("No of Votes",
                     style: TextStyle(fontWeight: FontWeight.bold))),
@@ -164,7 +167,14 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                             context: context,
                             onTap: () {
                               Navigator.pop(context);
-                              // WayaNav.toNamed('/pages');
+                              ref
+                                  .read(selectedContestantProfile.notifier)
+                                  .state = item;
+                              ref.read(selectedContestProvider.notifier).state =
+                                  model;
+                              WayaNav.toNamed(
+                                '/contest-profile-page',
+                              );
                             },
                             asset: WayaAssets.icons.mComments.svg(
                               color: wayaTheme.colorScheme.customBlack,
@@ -180,13 +190,26 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                             onTap: () {
                               Navigator.pop(context);
                               // WayaNav.toNamed('/pages');
+                              notifier.qualifyDisqualify(model.id ?? "", {
+                                "contestId": model.id ?? "",
+                                "profileId": item.profileId ?? "",
+                                "status": item.status?.toLowerCase() == "active"
+                                    ? "DISQUALIFIED"
+                                    : "ACTIVE",
+                              });
                             },
                             asset: WayaAssets.images.pages.flag.svg(
-                              color: wayaTheme.colorScheme.error500,
+                              color: item.status?.toLowerCase() == "active"
+                                  ? wayaTheme.colorScheme.primary
+                                  : wayaTheme.colorScheme.error500,
                               height: 20,
                             ),
-                            text: "Disqualify",
-                            color: wayaTheme.colorScheme.error500),
+                            text: item.status?.toLowerCase() == "active"
+                                ? "Disqualify"
+                                : "Activate",
+                            color: item.status?.toLowerCase() == "active"
+                                ? wayaTheme.colorScheme.primary
+                                : wayaTheme.colorScheme.error500),
                       )
                     ];
                   },

@@ -100,13 +100,13 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                     context: context,
                     onTap: () {
                       viewGroupModel.deleteGroup(
-                          context, '', ConversationState.self.id);
-                      Navigator.pop(context);
+                          context, '${args['groupId']}');
+                      WayaNav.toNamed('/groups');
                     },
                     asset: SvgPicture.asset(
                       'assets/images/pages/delete.svg',
                       color: wayaTheme.colorScheme.error500,
-                      height: 2,
+                      height: 16,
                     ),
                     text: "Delete Group",
                     color: wayaTheme.colorScheme.error500,

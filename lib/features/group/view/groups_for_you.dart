@@ -63,6 +63,18 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
 
 
   @override
+  void reassemble() {
+    super.reassemble();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+      ref.read(createGroupProvider.notifier).getRecommendedGroups();
+      //ref.read(createGroupProvider.notifier).getGroupPosts();
+      ref.read(createPageProvider.notifier).getAllPosts(ConversationState.self.id);
+      ref.read(createGroupProvider.notifier).getPopularPosts();
+    });
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider.notifier);

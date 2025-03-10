@@ -178,9 +178,8 @@ class Docs {
     feePerVote = json['feePerVote'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
-    createdAt = json['created_at'];
-   
-    updatedAt = json['updated_at'];
+    //createdAt = json['created_at'];
+    //updatedAt = json['updated_at'];
     if (json['choices'] != null) {
       choices = [];
       json['choices'].forEach((v) {

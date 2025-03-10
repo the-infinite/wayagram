@@ -2,20 +2,24 @@ import 'dart:io';
 
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 
 import '../../data/controller/contest_controller.dart';
 
 import '../../vm/ugt_vm.dart';
 
-class CreateUltimate extends ConsumerStatefulWidget {
+class CreateUltimate extends StatefulHookConsumerWidget {
   final VoidCallback goToNextTab;
   const CreateUltimate({super.key, required this.goToNextTab});
 
@@ -57,17 +61,69 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
 
   @override
   Widget build(BuildContext context) {
+    var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
     final viewModel = ref.watch(contestNotifierProvider);
     // final viewModel2 = ref.watch(upgradeToBusinessVmProvider);
     final notifier = ref.read(contestNotifierProvider.notifier);
+    var isEditing = ref.watch(stateIsEditingContestProvider);
+
     final wayaTheme = Theme.of(context);
+    useEffect(() {
+      if (isEditing) {
+        Future.delayed(Duration(seconds: 1), () {
+          //  print("my title ${contestViewModel?.toJson()}");
+          notifier.title.text = contestViewModel.title ?? "";
+          notifier.description.text = contestViewModel.description ?? "";
+          notifier.winnerPrize.text = contestViewModel.winnerPrize ?? "";
+          notifier.amountPerVote.text =
+              contestViewModel.amountPerVote?.toString() ?? "";
+          notifier.voteCountToQualify.text =
+              contestViewModel.voteCountToQualify ?? "";
+
+          ref
+              .read(contestNotifierProvider.notifier)
+              .updateEdit(contestViewModel.categoryName ?? "");
+
+          ref
+              .read(contestNotifierProvider.notifier)
+              .selectStateEdit(contestViewModel.state ?? "");
+
+          //make public or private
+          String pubPrivate =
+              contestViewModel.publicity == "PUBLIC" ? "Public" : "Private";
+          ref
+              .read(contestNotifierProvider.notifier)
+              .updatePrivatePublic(pubPrivate);
+          selectedValue = pubPrivate;
+
+          //show overall result
+          bool mySwitched =
+              contestViewModel.overallResult == "YES" ? true : false;
+          isSwitched = mySwitched;
+          ref
+              .read(contestNotifierProvider.notifier)
+              .updateOverAllResult(mySwitched);
+
+          //  viewModel.categorys
+          //  notifier.numberOfWeeks.text = contestViewModel.numberOfWeeks??"";
+          //  notifier.image = contestViewModel.image;
+          // notifier.state = contestViewModel.state;
+          // notifier.categorys = contestViewModel.categorys;
+          //  notifier.privatePublic = contestViewModel.privatePublic;
+          // notifier.overAllResult = contestViewModel.overAllResult;
+        });
+      }
+      return null;
+    }, []);
+
     return Form(
       key: _formKey,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Create Your Ultimate Talent \n Contest!",
+          Text(
+              " ${isEditing ? "Edit" : "Create"} Your Ultimate Talent \n Contest!",
               style: wayaTheme.textTheme.titleLarge),
           const Gap(5),
           Text(
@@ -90,6 +146,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   controller: notifier.title,
                   hintText: "Enter Contest Title",
                   label: "Contest Title",
+                  //label: contestViewModel?.title,
                   borderColor: formState.hasError && notifier.title.text.isEmpty
                       ? wayaTheme.colorScheme.error
                       : null,
@@ -545,7 +602,15 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Image.asset("assets/images/upload.png"),
+                    if (!isEditing) Image.asset("assets/images/upload.png"),
+                    if (isEditing)
+                      Image.network(
+                        contestViewModel.uploadCoverImages ?? "",
+                        height: 100,
+                        // width: 45,
+                        fit: BoxFit.cover,
+                        // radius: BorderRadius.circular(45),
+                      ),
                   ],
                 ),
               ),
@@ -617,15 +682,19 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               } */
               if (_formKey.currentState!.validate()) {
                 //check for image null
-                if (ref
-                    .read(contestNotifierProvider.notifier)
-                    .getImage()
-                    .trim()
-                    .isEmpty) {
-                  WayaSnackBar.showToast('Please pick image  to continue');
+                if (isEditing) {
+                } else {
+                  if (ref
+                      .read(contestNotifierProvider.notifier)
+                      .getImage()
+                      .trim()
+                      .isEmpty) {
+                    WayaSnackBar.showToast('Please pick image  to continue');
 
-                  return;
+                    return;
+                  }
                 }
+
                 widget.goToNextTab();
               }
             },

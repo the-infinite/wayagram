@@ -10,15 +10,15 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/activity_logs/view/payment_activity.dart';
+import 'package:wayagram/features/activity_logs/view/search_log.dart';
+import 'package:wayagram/features/activity_logs/view/user_action.dart';
+import 'package:wayagram/features/activity_logs/view/user_interaction.dart';
+import 'package:wayagram/features/activity_logs/view/visited_page.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/logs_and_audit/view/cms_clicks.dart';
-import 'package:wayagram/features/logs_and_audit/view/login_activity.dart';
-import 'package:wayagram/features/logs_and_audit/view/payment_activity.dart';
-import 'package:wayagram/features/logs_and_audit/view/search_log.dart';
-import 'package:wayagram/features/logs_and_audit/view/user_action.dart';
-import 'package:wayagram/features/logs_and_audit/view/user_interaction.dart';
-import 'package:wayagram/features/logs_and_audit/view/visited_page.dart';
 
+import 'cms_clicks.dart';
+import 'login_activity.dart';
 class LogsAndAuditTrials extends ConsumerStatefulWidget {
   static const route = '/logsAndAuditTrials';
   const LogsAndAuditTrials({super.key,});
@@ -33,7 +33,6 @@ class _LogsAndAuditTrialsState extends ConsumerState<LogsAndAuditTrials> {
   @override
   Widget build(BuildContext context) {
 
-    final wayaTheme = Theme.of(context);
     return WayaScaffold(
       backgroundColor: WayaColors.greyColor50,
       title: "Logs & Audit Trails    ",

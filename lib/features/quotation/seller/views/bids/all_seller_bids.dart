@@ -10,13 +10,12 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/seller/views/bid_dashboard/widgets/inventory_widget.dart';
-import 'package:wayagram/features/quotation/vm/seller_bids_vm.dart';
 import 'package:wayagram/features/quotation/widgets/single_bid_widget.dart';
-import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
+import 'package:wayagram/shared/features/shop/resource/default.dart';
 
 class AllSellerBids extends ConsumerStatefulWidget {
   static const route = '/seller-bids';
@@ -28,21 +27,12 @@ class AllSellerBids extends ConsumerStatefulWidget {
 
 class _AllSellerBidsState extends ConsumerState<AllSellerBids> {
   late final notifier = ref.read(userQuotationsProvider.notifier);
-  late final shopsNotifier = ref.read(manageShopVmProvider.notifier);
   final handler = WayaObservableScrollController();
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      //? First, get all shops belonging to this individual.
-      await shopsNotifier.getSellerShops();
-
-      //? Now, read and update the current shop to this first shop.
-      final shop = ref.read(manageShopVmProvider);
-      shopsNotifier.getCurrentShop(shop.shop.first);
-
-      //? Get the bid overview with that shop.
-      await notifier.getBidsOverview(shop.shop.first.id);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifier.getBidsOverview(ShopResource.currentShop.id);
     });
     super.initState();
   }
@@ -50,9 +40,7 @@ class _AllSellerBidsState extends ConsumerState<AllSellerBids> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(sellerBidsVmProvider);
     final state = ref.watch(userQuotationsProvider);
-    final shopState = ref.watch(manageShopVmProvider);
 
     //? This is fine.
     return WayaScaffold(
@@ -64,12 +52,15 @@ class _AllSellerBidsState extends ConsumerState<AllSellerBids> {
         handler: handler,
         shouldFetch: !state.isLoadingBids,
         isAtEnd: !state.hasNextBid,
-        onReachEnd: () async => await notifier.getBids(shopState.singleShop!.id),
+        onReachEnd: () async => await notifier.getBids(ShopResource.currentShop.id),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Bids", style: wayaTheme.textTheme.titleLarge),
+            Text(
+              "Bids",
+              style: wayaTheme.textTheme.titleLarge,
+            ),
 
             // Some space.
             const Gap(3),
@@ -93,23 +84,35 @@ class _AllSellerBidsState extends ConsumerState<AllSellerBids> {
             const Gap(15),
 
             //? Where we keep the inventory widget.
-            GridView.builder(
-              itemCount: 3,
+            GridView.count(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: viewModel.orderMetrics.length,
-                mainAxisSpacing: 0,
-                childAspectRatio: 1.22,
-                crossAxisSpacing: 8,
-              ),
-              itemBuilder: (context, index) {
-                return InventoryWidget(
-                  metrics: viewModel.orderMetrics[index]["metrics"],
-                  color: viewModel.orderMetrics[index]['color'],
-                  title: viewModel.orderMetrics[index]['title'],
-                );
-              },
+              crossAxisCount: 3,
+              mainAxisSpacing: 0,
+              childAspectRatio: 1.22,
+              crossAxisSpacing: 8,
+              children: [
+                //? First, the open bids.
+                InventoryWidget(
+                  title: "Open Bids",
+                  metrics: state.overview?.opened.toString() ?? "0",
+                  color: Color(0xFFFEF6E7),
+                ),
+
+                //? Second, the won  bids.
+                InventoryWidget(
+                  title: "Won Bids",
+                  metrics: state.overview?.won.toString() ?? "0",
+                  color: Color(0xFFE7F6EC),
+                ),
+
+                //? Third, the closed bids.
+                InventoryWidget(
+                  title: "Closed Bids",
+                  metrics: state.overview?.closed.toString() ?? "0",
+                  color: Color(0xFFE3EFFC),
+                )
+              ],
             ),
 
             // Some space.

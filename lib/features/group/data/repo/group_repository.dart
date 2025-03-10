@@ -11,7 +11,7 @@ class GroupRepository extends BaseRepository {
       String coverImage, String profileImage ) {
     final payload = {
       "name": groupName,
-      "description": groupName,
+      "description": groupDesc,
       "isPrivate": groupType, //Optional field, if you leave it blank it defaults to false
       //"isOpen": false, // this defaults to true if it is not inserted
       "coverImage":  coverImage,
@@ -90,9 +90,8 @@ class GroupRepository extends BaseRepository {
     return get("$serviceUrl/posts?groupId=$groupId&status=active");
   }
 
-  // all the group filter by id
   Future<WayaRequestResponse> getMyGroups() {
-    return get("$serviceUrl/groups/user-groups?limit=100");
+    return get("$serviceUrl/groups/user-groups?limit=100&orderBy=createdAt&orderDirection=DESC");
   }
 
 
@@ -121,7 +120,7 @@ class GroupRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getJoinedGroup() {
-    return get("$serviceUrl/groups/joined-groups");
+    return get("$serviceUrl/groups/joined-groups&orderBy=createdAt&orderDirection=DESC&limit=50");
   }
 
   Future<WayaRequestResponse> reportGroup(String groupId, String reason) {
