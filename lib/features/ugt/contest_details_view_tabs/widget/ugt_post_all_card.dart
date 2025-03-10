@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
@@ -101,7 +102,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                             ),
                             const Gap(8),
                             Text(
-                              'Today',
+                              WayaHelpers.formatTimeAgo('${widget.post.createdAt}'),
                               style: wayaTheme.textTheme.hintStyle,
                             ),
                           ],
