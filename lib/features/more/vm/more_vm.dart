@@ -101,7 +101,7 @@ class MoreVm {
         content: "Manage your following, followers in one place.",
         title: "Followers & Following",
         onTap: () {
-          WayaNav.toNamed('/mutualPage', arguments: 'more');
+          WayaNav.toNamed('/follow/relationships?tab=mutual&self=true', arguments: 'more');
         },
       ),
       MoreOptionModel(
