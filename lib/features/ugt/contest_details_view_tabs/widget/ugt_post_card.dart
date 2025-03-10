@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -9,16 +11,18 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
+
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
+import 'package:wayagram/features/ugt/media_card.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 
 import '../../data/model/ugt_post_model.dart';
 import '../../ugt_buttomsheet_modal/contest_vote_modal.dart';
 
-class UgtPostCard extends ConsumerWidget {
+class UgtPostCard extends StatefulHookConsumerWidget {
   final SingleContestantPosts post;
   final Contest contestModel;
   final MyContestContestantModel? contestApplicant;
@@ -26,10 +30,17 @@ class UgtPostCard extends ConsumerWidget {
       {super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<UgtPostCard> createState() => _UgtPostCardState();
+}
+
+class _UgtPostCardState extends ConsumerState<UgtPostCard> {
+  @override
+  Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     var notifier = ref.watch(ugtContestantProfileVm.notifier);
     var contestModel2 = ref.watch(selectedContestProvider.notifier).state;
+    final hasClickedLiked = useState(false);
+    final hasClickedShared = useState(false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -70,8 +81,9 @@ class UgtPostCard extends ConsumerWidget {
                                 .cover, // Ensures the image covers the area properly
                           ),
                         ), */
+
                         WayaImage(
-                          imageUrl: contestApplicant?.profilePhoto ?? "",
+                          imageUrl: widget.contestApplicant?.profilePhoto ?? "",
                           height: 45,
                           width: 45,
                           fit: BoxFit.cover,
@@ -86,7 +98,8 @@ class UgtPostCard extends ConsumerWidget {
                             SizedBox(
                               width: context.width * 0.4,
                               child: Text(
-                                contestApplicant?.contestApplicant?.fullName ??
+                                widget.contestApplicant?.contestApplicant
+                                        ?.fullName ??
                                     "",
                                 overflow: TextOverflow.ellipsis,
                                 style: wayaTheme.textTheme.bodyMedium,
@@ -111,10 +124,10 @@ class UgtPostCard extends ConsumerWidget {
                 ],
               ),
               const Gap(10),
-              Text(post.description ?? "",
+              Text(widget.post.description ?? "",
                   style: wayaTheme.textTheme.bodySmall),
               const Gap(20),
-              ClipRRect(
+              /*   ClipRRect(
                 borderRadius:
                     BorderRadius.circular(16), // Adjust the radius as needed
                 child: WayaImage(
@@ -132,7 +145,17 @@ class UgtPostCard extends ConsumerWidget {
                   fit: BoxFit
                       .cover, // Ensures the image covers the area properly
                 ), */
-              ),
+              ), */
+
+              MediaCard(
+                  //just a random id
+
+                  mediaUrls: [
+                    // post.mediaContent![0].url!,
+                    ...widget.post.mediaContent!.map((e) =>
+                        CardMediaContent(type: e.type ?? "", url: e.url ?? ""))
+                  ] // post.mediaContent![0].url!,
+                  ),
               const Gap(20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -142,7 +165,12 @@ class UgtPostCard extends ConsumerWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          notifier.toggleLike(post.id!);
+                          if (hasClickedLiked.value == false) {
+                            notifier.toggleLike(widget.post.id!);
+                          }
+                          Future.delayed(Duration(seconds: 2), () {
+                            hasClickedLiked.value = false;
+                          });
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -160,7 +188,7 @@ class UgtPostCard extends ConsumerWidget {
                             ),
                             const Gap(3),
                             Text(
-                              "${post.likes} Likes",
+                              "${widget.post.likes} Likes",
                               style: TextStyle().wayaCopyWith(
                                   color: wayaTheme.colorScheme.customBlack,
                                   fontSize: 12,
@@ -172,7 +200,12 @@ class UgtPostCard extends ConsumerWidget {
                       const Gap(30),
                       GestureDetector(
                         onTap: () {
-                          notifier.toggleShare(post.id!);
+                          if (hasClickedShared.value == false) {
+                            notifier.toggleShare(widget.post.id!);
+                          }
+                          Future.delayed(Duration(seconds: 2), () {
+                            hasClickedShared.value = false;
+                          });
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -190,7 +223,7 @@ class UgtPostCard extends ConsumerWidget {
                             ),
                             const Gap(3),
                             Text(
-                              "${post.shares} Shares",
+                              "${widget.post.shares} Shares",
                               style: TextStyle().wayaCopyWith(
                                   color: wayaTheme.colorScheme.customBlack,
                                   fontSize: 12,
@@ -207,7 +240,10 @@ class UgtPostCard extends ConsumerWidget {
                       WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(
-                          isFree: contestModel2.entryType?.toLowerCase() =="free"?true: false,
+                          isFree:
+                              contestModel2.entryType?.toLowerCase() == "free"
+                                  ? true
+                                  : false,
                           voteFee:
                               contestModel2.amountPerVote?.toString() ?? "0",
 
@@ -222,17 +258,18 @@ class UgtPostCard extends ConsumerWidget {
  */
 
                           model: ContestVoteModel(
-                              contestId: post.contestId ?? "",
-                              contestantId: post.contestantProfileId ?? "",
+                              contestId: widget.post.contestId ?? "",
+                              contestantId:
+                                  widget.post.contestantProfileId ?? "",
                               hostUserId: contestModel2.profileId ?? "",
                               amount: "0",
                               numberOfVotes: "0",
                               profileId: "",
                               type: "PAID"),
 
-                          candidateName:
-                              contestApplicant?.contestApplicant?.fullName ??
-                                  "Name",
+                          candidateName: widget.contestApplicant
+                                  ?.contestApplicant?.fullName ??
+                              "Name",
                           votingLink: "votingLink",
                         ),
                       );
