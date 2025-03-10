@@ -190,10 +190,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                             const Gap(3),
                             Text(
                               "${widget.post.likes} Likes",
-                              style: TextStyle().wayaCopyWith(
-                                  color: wayaTheme.colorScheme.customBlack,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500),
+                              style: wayaTheme.textTheme.bodyMedium,
                             )
                           ],
                         ),
@@ -225,10 +222,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                             const Gap(3),
                             Text(
                               "${widget.post.shares} Shares",
-                              style: TextStyle().wayaCopyWith(
-                                  color: wayaTheme.colorScheme.customBlack,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500),
+                              style:wayaTheme.textTheme.bodyMedium,
                             )
                           ],
                         ),

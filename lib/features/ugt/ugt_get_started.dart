@@ -13,7 +13,6 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/ugt/vm/ugt_restructed/provider_notify/provider_notifyer.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 
-
 import '../../core/data/secure_data_source.dart';
 
 class UgtGetStarted extends ConsumerWidget {
@@ -22,7 +21,6 @@ class UgtGetStarted extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         removeAppBar: true,
@@ -31,9 +29,8 @@ class UgtGetStarted extends ConsumerWidget {
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
-        
           children: [
-             Gap(context.height * 0.1),
+            Gap(context.height * 0.1),
             Image.asset('assets/images/u-start.png'),
             const Gap(30),
             Text("Welcome to University Got Talent \n (UGT)! 🎓✨",
@@ -46,10 +43,7 @@ class UgtGetStarted extends ConsumerWidget {
             const Gap(10),
             Text(
               "How it Works?",
-              style: TextStyle().wayaCopyWith(
-                  color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600),
+              style: wayaTheme.textTheme.bodyMedium,
             ),
             const Gap(10),
             AdList(
@@ -83,8 +77,7 @@ class UgtGetStarted extends ConsumerWidget {
             ),
             const Gap(30),
             WayaButton(
-              callback: () async{
-
+              callback: () async {
                 WayaNav.toNamed("/ugt-home");
                 WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                   ref.read(contestNotifierProvider.notifier).allCategories();
@@ -119,10 +112,7 @@ class AdList extends StatelessWidget {
             const Gap(6),
             Text(
               title,
-              style: TextStyle().wayaCopyWith(
-                  color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500),
+              style: wayaTheme.textTheme.bodyMedium,
             ),
           ],
         ),

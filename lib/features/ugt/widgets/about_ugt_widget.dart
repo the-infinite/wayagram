@@ -10,21 +10,16 @@ class AboutUgtWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style: TextStyle().wayaCopyWith(
-              color: Theme.of(context).colorScheme.greyColor500,
-              fontSize: 13,
-            )),
+            style:wayaTheme.textTheme.bodyMedium),
         const Gap(5),
         Text(content,
-            style: TextStyle().wayaCopyWith(
-              color: Theme.of(context).colorScheme.customBlack,
-              fontSize: 14,
-            )),
+            style:wayaTheme.textTheme.bodyMedium),
       ],
     );
   }

@@ -127,9 +127,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                             const Gap(8),
                             Text(
                                 '${widget.post.applicantCount ?? 0} Participants',
-                                style: wayaTheme.textTheme.hintStyle.copyWith(
-                                    color: wayaTheme.colorScheme.greyColor500,
-                                    fontWeight: FontWeight.w500)),
+                                style: wayaTheme.textTheme.bodyMedium),
                           ],
                         ),
                         // Spacer(),
@@ -205,9 +203,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
               const Gap(20),
               Text(
                 widget.post.description ?? "Description",
-                style: wayaTheme.textTheme.hintStyle.copyWith(
-                    color: wayaTheme.colorScheme.greyColor500,
-                    fontWeight: FontWeight.w500),
+                style: wayaTheme.textTheme.bodyMedium,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -312,10 +308,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                         const Gap(3),
                         Text(
                           "${widget.post.likeCount} Likes",
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
+                          style: wayaTheme.textTheme.bodyMedium,
                         )
                       ],
                     ),
@@ -347,10 +340,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                         const Gap(3),
                         Text(
                           "${widget.post.shareCount} Shares",
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
+                          style: wayaTheme.textTheme.bodyMedium,
                         )
                       ],
                     ),
