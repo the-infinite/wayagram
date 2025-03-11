@@ -21,7 +21,10 @@ class InventoryWidget extends StatelessWidget {
     //? Return this one.
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 17),
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(10),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -43,12 +46,16 @@ class InventoryWidget extends StatelessWidget {
           const Gap(10),
 
           //? For the metrics here.
-          Text(
-            metrics,
-            style: wayaTheme.textTheme.bodyMedium?.copyWith(
-              color: wayaTheme.colorScheme.customBlack,
-              fontWeight: FontWeight.w600,
-              fontSize: 20,
+          Expanded(
+            child: Text(
+              metrics,
+              maxLines: 1,
+              overflow: TextOverflow.fade,
+              style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                color: wayaTheme.colorScheme.customBlack,
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+              ),
             ),
           ),
         ],

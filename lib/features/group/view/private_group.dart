@@ -100,8 +100,8 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                     context: context,
                     onTap: () {
                       viewGroupModel.deleteGroup(
-                          context, '', ConversationState.self.id);
-                      Navigator.pop(context);
+                          context, '${args['groupId']}');
+                      WayaNav.toNamed('/groups');
                     },
                     asset: SvgPicture.asset(
                       'assets/images/pages/delete.svg',

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -10,17 +11,23 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
+import 'package:wayagram/features/shop/widgets/products_grid.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
 import 'package:wayagram/shared/features/follow/vm/default.dart';
+import 'package:wayagram/shared/features/profile/vm/donation.dart';
+import 'package:wayagram/shared/features/profile/vm/poll.dart';
+import 'package:wayagram/shared/features/profile/vm/product.dart';
 import 'package:wayagram/shared/features/profile/widget/group.dart';
 import 'package:wayagram/shared/features/profile/vm/default.dart';
 import 'package:wayagram/shared/features/profile/vm/event.dart';
 import 'package:wayagram/shared/features/profile/vm/groups.dart';
 import 'package:wayagram/shared/features/profile/vm/pages.dart';
 import 'package:wayagram/shared/features/profile/widget/page.dart';
+import 'package:wayagram/shared/features/profile/widget/poll.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
@@ -44,7 +51,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   late final eventNotifier = ref.watch(userEventsProvider.notifier);
   late final groupsNotifier = ref.watch(userGroupsProvider.notifier);
   late final pagesNotifier = ref.watch(userPagesProvider.notifier);
-  late final followNotifier = ref.watch(followProvider.notifier);
+  late final followNotifier = ref.watch(userFollowProvider.notifier);
+  late final pollsNotifier = ref.watch(userPollsProvider.notifier);
+  late final donationsNotifier = ref.watch(userDonationsProvider.notifier);
+  late final productsNotifier = ref.watch(userProductsProvider.notifier);
   final scrollHandler = WayaObservableScrollController();
   final _pageController = ValueNotifier(0);
   final _tabController = ExpandedTabController();
@@ -53,7 +63,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   void _getFollowState() async {
     if (widget.id == ConversationState.self.id) return;
     final result = await followNotifier.getFollowStatus(widget.id);
-    
+
     //? Update this value if it works fine.
     if (mounted) {
       setState(() {
@@ -79,6 +89,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     postNotifier.reset();
     eventNotifier.reset();
     followNotifier.reset();
+    pollsNotifier.reset();
+    donationsNotifier.reset();
 
     // This is fine.
     WidgetsBinding.instance.addPostFrameCallback(
@@ -104,6 +116,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       await postNotifier.getPostsForUser(widget.id);
     }
 
+    //? If this is for polls.
+    if (_pageController.value == 2) {
+      await pollsNotifier.getPollsByUser(widget.id);
+    }
+
+    //? If this is for donations.
+    if (_pageController.value == 3) {
+      await donationsNotifier.getDonationsByUser(widget.id);
+    }
+
     //? If this is for groups.
     if (_pageController.value == 4) {
       await groupsNotifier.getGroupsForUser(widget.id);
@@ -117,6 +139,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     //? If this is for events..
     if (_pageController.value == 6) {
       await eventNotifier.getEventsForUser(widget.id);
+    }
+
+    //? If this is for products.
+    if (_pageController.value == 7) {
+      await productsNotifier.getProductsByUser(widget.id);
     }
   }
 
@@ -136,7 +163,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final eventState = ref.watch(userEventsProvider);
     final groupsState = ref.watch(userGroupsProvider);
     final pagesState = ref.watch(userPagesProvider);
-    final followState = ref.watch(followProvider);
+    final followState = ref.watch(userFollowProvider);
+    final pollsState = ref.watch(userPollsProvider);
+    final donationsState = ref.watch(userDonationsProvider);
+    final productsState = ref.watch(userProductsProvider);
 
     //? Return the component.
     return WayaScaffold(
@@ -205,6 +235,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           groupsNotifier.reset();
           pagesNotifier.reset();
           followNotifier.reset();
+          pollsNotifier.reset();
+          donationsNotifier.reset();
+          productsNotifier.reset();
         },
         child: ValueListenableBuilder(
             valueListenable: _pageController,
@@ -212,27 +245,36 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               //? Is this empty?
               final isEmpty = switch (selectedPage) {
                 0 => postState.posts.isEmpty && postState.hasLoaded,
+                2 => pollsState.polls.isEmpty && pollsState.hasLoaded,
+                3 => donationsState.donations.isEmpty && donationsState.hasLoaded,
                 4 => groupsState.groups.isEmpty && groupsState.hasLoaded,
                 5 => pagesState.pages.isEmpty && pagesState.hasLoaded,
                 6 => eventState.events.isEmpty && eventState.hasLoaded,
+                7 => productsState.products.isEmpty && productsState.hasLoaded,
                 _ => true,
               };
 
               //? Are we at end.
               final isAtEnd = switch (selectedPage) {
                 0 => !postState.hasNextPage,
+                2 => !pollsState.hasNextPage,
+                3 => !donationsState.hasNextPage,
                 4 => !groupsState.hasNextPage,
                 5 => !pagesState.hasNextPage,
                 6 => !eventState.hasNextPage,
+                7 => !productsState.hasNextPage,
                 _ => true,
               };
 
               //? Should we fetch.
               final shouldFetch = switch (selectedPage) {
                 0 => !postState.isLoading,
+                2 => !pollsState.isLoading,
+                3 => !donationsState.isLoading,
                 4 => !groupsState.isLoading,
                 5 => !pagesState.isLoading,
                 6 => !eventState.isLoading,
+                7 => !productsState.isLoading,
                 _ => true,
               };
 
@@ -419,52 +461,61 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               ],
 
                               //? Fourth the profile overview.
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                spacing: 10.w,
-                                children: [
-                                  //? Users following.
-                                  WayaRichText(
-                                    title1: WayaValueHelper.formatNumber(followState.followingTotalSize),
-                                    title2: ' Following',
-                                    style1: wayaTheme.textTheme.bodySmall?.copyWith(
-                                      color: wayaTheme.colorScheme.black,
-                                      fontSize: 12,
+                              InkWell(
+                                customBorder: const StadiumBorder(),
+                                onTap: () =>
+                                    WayaNav.toNamed(WayaAppRoutes.getFollowersPage(false, 'mutual', widget.id)),
+                                borderRadius: BorderRadius.circular(12.r),
+                                splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
+                                focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+                                highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  spacing: 10.w,
+                                  children: [
+                                    //? Users following.
+                                    WayaRichText(
+                                      title1: WayaValueHelper.formatNumber(followState.followingTotalSize),
+                                      title2: ' Following',
+                                      style1: wayaTheme.textTheme.bodySmall?.copyWith(
+                                        color: wayaTheme.colorScheme.black,
+                                        fontSize: 12,
+                                      ),
+                                      style2: wayaTheme.textTheme.bodySmall?.copyWith(
+                                        color: wayaTheme.colorScheme.greyColor500,
+                                        fontSize: 12,
+                                      ),
                                     ),
-                                    style2: wayaTheme.textTheme.bodySmall?.copyWith(
-                                      color: wayaTheme.colorScheme.greyColor500,
-                                      fontSize: 12,
-                                    ),
-                                  ),
 
-                                  //? Followers.
-                                  WayaRichText(
-                                    title1: WayaValueHelper.formatNumber(followState.followersTotalSize),
-                                    title2: ' Followers',
-                                    style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                      color: wayaTheme.colorScheme.black,
-                                      fontSize: 12,
+                                    //? Followers.
+                                    WayaRichText(
+                                      title1: WayaValueHelper.formatNumber(followState.followersTotalSize),
+                                      title2: ' Followers',
+                                      style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                        color: wayaTheme.colorScheme.black,
+                                        fontSize: 12,
+                                      ),
+                                      style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                        color: wayaTheme.colorScheme.greyColor500,
+                                        fontSize: 12,
+                                      ),
                                     ),
-                                    style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                      color: wayaTheme.colorScheme.greyColor500,
-                                      fontSize: 12,
-                                    ),
-                                  ),
 
-                                  //? Posts.
-                                  WayaRichText(
-                                    title1: WayaValueHelper.formatNumber(postState.totalSize),
-                                    title2: ' Posts',
-                                    style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                      color: wayaTheme.colorScheme.black,
-                                      fontSize: 12,
+                                    //? Posts.
+                                    WayaRichText(
+                                      title1: WayaValueHelper.formatNumber(postState.totalSize),
+                                      title2: ' Posts',
+                                      style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                        color: wayaTheme.colorScheme.black,
+                                        fontSize: 12,
+                                      ),
+                                      style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                        color: wayaTheme.colorScheme.greyColor500,
+                                        fontSize: 12,
+                                      ),
                                     ),
-                                    style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                      color: wayaTheme.colorScheme.greyColor500,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
 
                               // This is fine.
@@ -599,7 +650,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         ),
 
                         // Some space.
-                        const Gap(5),
+                        Gap(5.w),
 
                         // Now our component.
                         if (isEmpty) ...[
@@ -625,11 +676,65 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               padded: true,
                             ),
                           )
+                        else if (selectedPage == 2)
+                          ...List.generate(
+                            pollsState.polls.length,
+                            (index) => SinglePollWidget(
+                              poll: pollsState.polls[index],
+                              user: user,
+                              padded: true,
+                            ),
+                          )
+                        else if (selectedPage == 3)
+                          ...List.generate(
+                            donationsState.donations.length,
+                            (index) {
+                              final donation = donationsState.donations[index];
+                              int daysLeft = donation.expirationDate.difference(donation.startDate).inDays;
+                              int amountRaised = double.parse(donation.amountRaised!).toInt();
+                              int targetedAmount = double.parse(donation.targetAmount!).toInt();
+                              double ratioLeft = amountRaised / targetedAmount;
+
+                              return Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 5.w),
+                                child: ManageDonationWidget(
+                                  text: "Donate",
+                                  amountRaised: WayaHelpers.formatPrice(
+                                      int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
+                                  targetAmount: WayaHelpers.formatPrice(
+                                      int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
+                                  title: donation.title.capitalizeFirst,
+                                  image: donation.imageURL,
+                                  dayLeft: daysLeft < 0 ? '0' : '$daysLeft',
+                                  donationCount: donation.donationCount,
+                                  rangeRatio: ratioLeft,
+                                  onTap: () {
+                                    WayaNav.toNamed('/donationDetails', arguments: {
+                                      'title': '${donation.title.capitalizeFirst}',
+                                      'image': '${donation.imageURL}',
+                                      'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
+                                      'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
+                                      'desc': donation.description,
+                                      'solution': donation.solution,
+                                      'impact': donation.impact,
+                                      'url': '${donation.url}',
+                                      'minimumDonationAmount': '${donation.minimumDonationAmount}',
+                                      'daysLeft': '$daysLeft',
+                                      'privacy': '${donation.privacy}',
+                                      'id': donation.id,
+                                      'donationCount': '${donation.donationCount}'
+                                    });
+                                  },
+                                  buttonWidth: 60.0,
+                                ),
+                              );
+                            },
+                          )
                         else if (selectedPage == 4)
                           ...List.generate(
                             groupsState.groups.length,
                             (index) => Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
                               child: SingleGroupWidget(
                                 group: groupsState.groups[index],
                                 index: index,
@@ -640,7 +745,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           ...List.generate(
                             pagesState.pages.length,
                             (index) => Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 10),
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
                               child: SinglePageWidget(
                                 page: pagesState.pages[index],
                                 index: index,
@@ -653,6 +758,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             (index) => EventCard(
                               event: eventState.events[index],
                               userId: widget.id,
+                            ),
+                          )
+                        else if (selectedPage == 7)
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5.w),
+                            child: ProductsGrid(
+                              products: productsState.products,
                             ),
                           ),
                       ],

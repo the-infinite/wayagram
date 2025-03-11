@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
 import 'package:wayagram/shared/features/follow/repo/default.dart';
 import 'package:wayagram/shared/features/follow/state/default.dart';
@@ -56,7 +58,7 @@ class FollowNotifier extends StateNotifier<FollowState> {
     //? This is wonderful.
     try {
       // This is fine too.
-      final response = await repo.getFollowers(id, state.followingNextPage ?? state.followingPage, state.limit);
+      final response = await repo.getFollowing(id, state.followingNextPage ?? state.followingPage, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -121,6 +123,17 @@ class FollowNotifier extends StateNotifier<FollowState> {
 
       // If this was fine...
       if (response.success) {
+        final user = FollowModel(
+          id: WayaValueHelper.createUid(),
+          followerId: ConversationState.self.id,
+          followingId: id,
+          followedBack: false,
+          status: FollowRelationship.accepted,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        );
+        final list = [...state.following, user];
+        state = state.copyWith(following: list);
         return true;
       }
 
@@ -141,6 +154,16 @@ class FollowNotifier extends StateNotifier<FollowState> {
 
       // If this was fine...
       if (response.success) {
+        final index = state.following.indexWhere((user) => user.followingId == id);
+        final list = state.following;
+
+        //? This is fine.
+        if (index != -1) {
+          list.removeAt(index);
+          state = state.copyWith(following: [...list]);
+        }
+
+        //? Return here.
         return true;
       }
 
@@ -153,9 +176,31 @@ class FollowNotifier extends StateNotifier<FollowState> {
     return false;
   }
 
+  void setUserId(String id) {
+    state = state.copyWith(
+      userId: id,
+    );
+  }
+
+  Future<void> getIfEmpty(String id) async {
+    //? If this user has not loaded followers yet.
+    if (state.followers.isEmpty) await getFollowersOf(id);
+
+    //? If this user has not loaded following yet.
+    if (state.following.isEmpty) await getUsersFollowing(id);
+  }
+
   void reset() {
     state = FollowState.initial;
   }
 }
 
-final followProvider = StateNotifierProvider<FollowNotifier, FollowState>((ref) => FollowNotifier(FollowState.initial));
+typedef FollowProvider = StateNotifierProvider<FollowNotifier, FollowState>;
+
+final userFollowProvider = FollowProvider(
+  (ref) => FollowNotifier(FollowState.initial),
+);
+
+final myFollowProvider = FollowProvider(
+  (ref) => FollowNotifier(FollowState.initial),
+);

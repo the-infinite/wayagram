@@ -134,7 +134,9 @@ class _ExploreState extends ConsumerState<Explore> {
             SharedMoments(),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {},
+                onTap: () {
+                  WayaNav.removeUntilNamed(BottomView.route, arguments: 3);
+                },
                 subTitle: 'Have a buy request, just create a quote',
                 title: 'Get Quotation'),
             const Gap(20),
@@ -182,9 +184,7 @@ class _ExploreState extends ConsumerState<Explore> {
             CategoriesFilterWidget(setCategory: (value) {
               ref.read(shopVmProvider.notifier).setCategory(value);
               for (String categoryId in value) {
-                ref
-                    .read(productEngagementProvider.notifier)
-                    .addCategory(categoryId, ProductPoint.searchPoint.value);
+                ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
               }
             }),
             const Gap(25),
@@ -195,10 +195,7 @@ class _ExploreState extends ConsumerState<Explore> {
                         ? notifier.filteredProducts.sublist(0, 2)
                         : notifier.filteredProducts),
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Support a course that matters',
-                title: 'Donations'),
+            GroupedWidgetHeader(onTap: () {}, subTitle: 'Support a cause that matters', title: 'Donations'),
             const Gap(25),
             DonationsFeedWidget(),
             const Gap(25),
@@ -278,7 +275,7 @@ class _ExploreState extends ConsumerState<Explore> {
             //? I have plugged this in here for you. Gbayii omo iyami
             GroupedWidgetHeader(
               onTap: () {
-                Navigator.pushNamed(context, BottomView.route, arguments: 4);
+                WayaNav.removeUntilNamed(BottomView.route, arguments: 4);
               },
               subTitle: 'Connect with friends and communities',
               title: 'Chats & Calls',
@@ -287,18 +284,16 @@ class _ExploreState extends ConsumerState<Explore> {
             const ConversationFeedWidget(isExpanded: false),
 
             const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Join Upcoming Activities',
-                title: 'University Got Talent'),
+            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
             const Gap(25),
             ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: viewModel.ugtList.length,
-                itemBuilder: (context, index) {
-                  return UgtCard(ugt: viewModel.ugtList[index]);
-                }),
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: viewModel.ugtList.length,
+              itemBuilder: (context, index) {
+                return UgtCard(ugt: viewModel.ugtList[index]);
+              },
+            ),
           ],
         ),
         floatingActionButton: SizedBox(

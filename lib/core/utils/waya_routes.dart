@@ -50,7 +50,7 @@ import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
 import 'package:wayagram/features/pages/view/edit_page_info.dart';
-import 'package:wayagram/features/pages/view/mutual_page.dart';
+import 'package:wayagram/features/follow/view/mutual_page.dart';
 import 'package:wayagram/features/pages/view/private_page.dart';
 import 'package:wayagram/features/polls_and_voting/views/add_choices.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
@@ -118,7 +118,6 @@ import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/explore/search/search.dart';
 import 'package:wayagram/shared/features/quotation/view/all_buy_request.dart';
 
-import '../../features/activity_logs/data/repo/logs_and_audit_repository.dart';
 import '../../features/activity_logs/view/cms_clicks.dart';
 import '../../features/activity_logs/view/login_activity.dart';
 import '../../features/activity_logs/view/logs_and_audit.dart';
@@ -236,7 +235,11 @@ class WayaAppRoutes {
     CreatePost.route: () => CreatePost(),
     CreateGroupPost.route: () => CreateGroupPost(),
     CreatePagePost.route: () => CreatePagePost(),
-    MutualPage.route: () => MutualPage(),
+    MutualPage.route: () => MutualPage(
+          isSelf: bool.tryParse(WayaNav.search['self'].toString()) ?? true,
+          initialTab: WayaNav.search['tab'] ?? 'mutual',
+          userId: WayaNav.search['uid'],
+        ),
     PublicGroup.route: () => PublicGroup(),
     EditPageInfo.route: () => EditPageInfo(),
     AddTeamMember.route: () => AddTeamMember(),
@@ -304,6 +307,12 @@ class WayaAppRoutes {
   /// Helper function that is used to navigate to the route that contains all
   /// the bids of sellers
   static String getSellerBidsRoute(String id) => "${SeeSellerBids.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed to navigate to
+  /// all the followers, followings, and mutuals that one user has with another
+  /// one.
+  static String getFollowersPage(bool isSelf, [String tab = 'mutual', String? uid]) =>
+      "${MutualPage.route}?tab=$tab&self=$isSelf${uid != null ? '&uid=$uid' : ''}";
 
   /// This is fine.
   static List<GetPage> get getPages {

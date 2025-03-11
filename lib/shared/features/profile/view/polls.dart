@@ -65,11 +65,6 @@ class _PollsFeedWidget extends ConsumerState<PollsFeedWidget> {
             style: wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
-          Text(
-            "My Polls",
-            style: wayaTheme.textTheme.bodyMedium,
-          ),
-          const Gap(10),
           //> Looks Good
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),

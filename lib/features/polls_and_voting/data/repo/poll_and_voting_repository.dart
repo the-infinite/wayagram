@@ -1,6 +1,5 @@
 import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/create_poll_model.dart';
 
 class PollAndVotingRepository extends BaseRepository {
   static const serviceUrl = "wayagram-products/api/v1";
@@ -9,8 +8,7 @@ class PollAndVotingRepository extends BaseRepository {
     return post('$serviceUrl/client/polls', data, formdata: true);
   }
 
-  Future<WayaRequestResponse> castVote(
-      dynamic amountPaid, String qty, String choiceId, String pollId) {
+  Future<WayaRequestResponse> castVote(dynamic amountPaid, String qty, String choiceId, String pollId) {
     final payload = {
       "choiceSelections": [
         {"choiceId": choiceId, "quantity": qty}
@@ -26,14 +24,13 @@ class PollAndVotingRepository extends BaseRepository {
     return delete("$serviceUrl/client/polls/$pollId");
   }
 
-  Future<WayaRequestResponse> getAllPolls(int page) {
+  Future<WayaRequestResponse> getAllPolls(int page, [int limit = 15, String? creatorId]) {
     return get(
-        "$serviceUrl/client/polls?page=$page&orderBy=createdAt&orderDirection=DESC");
+        "$serviceUrl/client/polls?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC${creatorId != null ? '&creatorId=$creatorId' : ''}");
   }
 
   Future<WayaRequestResponse> getMyPolls(String creatorId, int page) {
-    return get(
-        "$serviceUrl/client/polls?page=$page&creatorId=$creatorId&orderBy=createdAt&orderDirection=DESC");
+    return get("$serviceUrl/client/polls?page=$page&creatorId=$creatorId&orderBy=createdAt&orderDirection=DESC");
   }
 
   Future<WayaRequestResponse> getDashboardPolls(String pollId) {
@@ -41,10 +38,8 @@ class PollAndVotingRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getDashboard(String pollId) {
-    return get(
-        "$serviceUrl/client/polls?orderBy=createdAt&orderDirection=DESC&id=$pollId");
+    return get("$serviceUrl/client/polls?orderBy=createdAt&orderDirection=DESC&id=$pollId");
   }
-
 
   Future<WayaRequestResponse> getAllPollsById(String id) {
     return get("$serviceUrl/client/polls/$id");

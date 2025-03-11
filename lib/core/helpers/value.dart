@@ -30,7 +30,7 @@ class WayaValueHelper {
   /// - 2700000000 becomes "2.7B"
   ///
   /// Returns a [String] containing the formatted value.
-  static String formatNumber(num number) {
+  static String formatNumber(num number, [bool price = false]) {
     //? If this number is less than 1000, just return it.
     if (number < 1000) return number.toString();
 
@@ -42,7 +42,7 @@ class WayaValueHelper {
     final value = number / pow(1000, exp);
 
     //? Return a match for our unit.
-    return '${value.toStringAsFixed(2).replaceAll(RegExp(r'\.?0+$'), '')}${units[exp]}';
+    return '${price ? '₦' : ''}${value.toStringAsFixed(2).replaceAll(RegExp(r'\.?0+$'), '')}${units[exp]}';
   }
 
   static String formatPrice(num number, [int decimalDigits = 2]) {

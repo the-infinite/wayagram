@@ -41,7 +41,7 @@ class MoreVm {
         content: "Buy and sell product from the convince of your home or store",
         title: "Shop",
         onTap: () {
-          WayaNav.offNamed(BottomView.route, arguments: 1);
+          WayaNav.removeUntilNamed(BottomView.route, arguments: 1);
         },
       ),
       MoreOptionModel(
@@ -49,7 +49,7 @@ class MoreVm {
         content: "Create groups and manage who is following you and who you follow.",
         title: "Get Quotation",
         onTap: () {
-          WayaNav.offNamed(BottomView.route, arguments: 3);
+          WayaNav.removeUntilNamed(BottomView.route, arguments: 3);
         },
       ),
       MoreOptionModel(
@@ -87,7 +87,7 @@ class MoreVm {
         content: "Create Donation Posts and also help people in need",
         title: "Donation",
         onTap: () {
-          WayaNav.offNamed(BottomView.route, arguments: 2);
+          WayaNav.removeUntilNamed(BottomView.route, arguments: 2);
         },
       ),
       MoreOptionModel(
@@ -101,7 +101,7 @@ class MoreVm {
         content: "Manage your following, followers in one place.",
         title: "Followers & Following",
         onTap: () {
-          WayaNav.toNamed('/mutualPage', arguments: 'more');
+          WayaNav.toNamed('/follow/relationships?tab=mutual&self=true', arguments: 'more');
         },
       ),
       MoreOptionModel(
@@ -123,7 +123,7 @@ class MoreVm {
         content: "Chat and call your family and friends",
         title: "Chat & Call",
         onTap: () {
-          WayaNav.offNamed(BottomView.route, arguments: 4);
+          WayaNav.removeUntilNamed(BottomView.route, arguments: 4);
         },
       ),
     ];

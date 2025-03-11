@@ -63,6 +63,18 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
 
 
   @override
+  void reassemble() {
+    super.reassemble();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+      ref.read(createGroupProvider.notifier).getRecommendedGroups();
+      //ref.read(createGroupProvider.notifier).getGroupPosts();
+      ref.read(createPageProvider.notifier).getAllPosts(ConversationState.self.id);
+      ref.read(createGroupProvider.notifier).getPopularPosts();
+    });
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider.notifier);
@@ -977,7 +989,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
           subtitle: InkWell(
             splashFactory: NoSplash.splashFactory,
             splashColor: Colors.transparent,
-            onTap: () => WayaNav.toNamed('/mutualPage'),
+            onTap: () => WayaNav.toNamed('/follow/relationships?tab=mutual&self=true'),
             child: Text(
               '48.6k Followers',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(

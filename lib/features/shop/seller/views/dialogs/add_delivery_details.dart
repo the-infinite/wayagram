@@ -246,7 +246,8 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
               const Gap(10),
               WayaButton(
                   callback: () {
-                    Navigator.of(context).pop();
+                     WayaNav.goBack();
+                
                   },
                   textColor: wayaTheme.colorScheme.greyColor500,
                   color: wayaTheme.colorScheme.transparent,
