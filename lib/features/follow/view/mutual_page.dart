@@ -4,12 +4,11 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/follow/view/mutuals.dart';
 import 'package:wayagram/features/follow/widget/follows.dart';
 import 'package:wayagram/shared/features/follow/vm/default.dart';
+import 'package:wayagram/shared/features/user/resource/default.dart';
 
 class MutualPage extends ConsumerStatefulWidget {
   static const route = '/follow/relationships';
@@ -33,6 +32,7 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
   late final notifier = ref.read(provider.notifier);
   final followersHandler = WayaObservableScrollController();
   final followingHandler = WayaObservableScrollController();
+  CachedUserDataTuple? userData;
   late int _selectedIndex = widget.initialTab == 'mutual' && !widget.isSelf
       ? 0
       : widget.initialTab == 'followers'
@@ -43,7 +43,25 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
   void initState() {
     // This is fine.
     WidgetsBinding.instance.addPostFrameCallback(
-      (_) => notifier.setUserId(widget.isSelf ? ConversationState.self.id : ''),
+      (_) {
+        //? Set the user ID of the
+        notifier.setUserId(widget.isSelf ? ConversationState.self.id : widget.userId ?? '');
+
+        //? If you are not viewing data for yourself and
+        if (!widget.isSelf && widget.userId != null) {
+          UserResource.getUserDetails(widget.userId!).then(
+            (result) {
+              //? If not mounted, leave.
+              if (!mounted) return;
+
+              //? Since this is fine, continue.
+              setState(() {
+                userData = result;
+              });
+            },
+          );
+        }
+      },
     );
 
     // This is fine.
@@ -53,8 +71,6 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final state = ref.watch(myFollowProvider);
-    final type = ModalRoute.of(context)?.settings.arguments as String?;
 
     //? This is fine.
     return PopScope(
@@ -66,13 +82,10 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
         notifier.reset();
       },
       child: WayaScaffold(
-        onTapBackButton: () {
-          type == 'more' ? WayaNav.toNamed(BottomView.route, arguments: 5) : WayaNav.goBack();
-        },
         backgroundColor: wayaTheme.colorScheme.greyColor50,
-        isLoading: _selectedIndex == 1 ? state.isLoadingFollowing : state.isLoadingFollowers,
+        isLoading: false,
         isScrollable: false,
-        title: widget.isSelf ? 'For you' : 'Empire Music',
+        title: widget.isSelf ? 'For you' : 'Followers',
         appBarTrailing: Row(
           spacing: 12,
           children: [
@@ -85,9 +98,12 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
         ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            // Some prefixed
             const Gap(10),
+
+            //? This section for the tabs.
             Row(
               children: [
                 //? Only show this option when this does not belong to the logged
@@ -119,17 +135,19 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
             const Gap(10),
 
             //? This is fine.
-            _selectedIndex == 0
-                ? Mutuals()
-                : _selectedIndex == 1
-                    ? FollowingDataView(
-                        provider: provider,
-                        handler: followingHandler,
-                      )
-                    : FollowersDataView(
-                        provider: provider,
-                        handler: followersHandler,
-                      )
+            Expanded(
+              child: switch (_selectedIndex) {
+                0 => Mutuals(),
+                1 => FollowingDataView(
+                    provider: provider,
+                    handler: followingHandler,
+                  ),
+                _ => FollowersDataView(
+                    provider: provider,
+                    handler: followersHandler,
+                  ),
+              },
+            ),
           ],
         ),
       ),

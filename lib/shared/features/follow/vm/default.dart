@@ -182,6 +182,14 @@ class FollowNotifier extends StateNotifier<FollowState> {
     );
   }
 
+  Future<void> getIfEmpty(String id) async {
+    //? If this user has not loaded followers yet.
+    if (state.followers.isEmpty) await getFollowersOf(id);
+
+    //? If this user has not loaded following yet.
+    if (state.following.isEmpty) await getUsersFollowing(id);
+  }
+
   void reset() {
     state = FollowState.initial;
   }
