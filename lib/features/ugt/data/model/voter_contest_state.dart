@@ -1,5 +1,5 @@
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
-import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
+import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart'as contestant;
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_contest_aplicant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
@@ -13,10 +13,10 @@ class VoterDetailState {
   final String createPostId;
   final String? contestId;
   final Wallet? data;
-  final List<MyContestContestantModel> myContestList;
-  final List<Stages> stageList;
+  final List<contestant.MyContestContestantModel> myContestList;
+  final List<Stage> stageList;
   final List<ApplicantContestModel> myContestApplicantList;
-  final List<MyContestContestantModel> myContestListCopy;
+  final List<contestant.MyContestContestantModel> myContestListCopy;
   final List<MyFilterModel> filterList;
   final List<UgtAllPostContestModel> myPostList;
   final List<ExternalWalletModel>? externalWallets;
@@ -44,12 +44,12 @@ class VoterDetailState {
     String? createPostId, 
     String? contestId, 
     List<UgtAllPostContestModel>? myPostList,
-    List<Stages>? stageList,
+    List<Stage>? stageList,
     List<MyFilterModel>? filterList,
     List<ApplicantContestModel>? myContestApplicantList,
     List<ExternalWalletModel>? externalWallets,
-    List<MyContestContestantModel>? myContestList,
-    List<MyContestContestantModel>? myContestListCopy,
+    List<contestant.MyContestContestantModel>? myContestList,
+    List<contestant.MyContestContestantModel>? myContestListCopy,
   }) =>
       VoterDetailState(
         isLoading: isLoading ?? this.isLoading,

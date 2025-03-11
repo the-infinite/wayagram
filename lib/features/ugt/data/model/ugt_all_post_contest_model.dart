@@ -46,7 +46,7 @@ class UgtAllPostContestModel {
     required this.mediaContent,
     required this.description,
     required this.likes,
-    required this.isLiked,
+    required this.hasLiked,
     required this.shares,
     required this.isDeleted,
     required this.createdAt,
@@ -63,7 +63,7 @@ class UgtAllPostContestModel {
   final int? likes;
   final int? shares;
   final bool? isDeleted;
-  final bool? isLiked;
+  final bool? hasLiked;
   final DateTime? createdAt;
   final DateTime? updatedAt;
   final ContestantProfile? contestantProfile;
@@ -81,7 +81,7 @@ class UgtAllPostContestModel {
     int? likes,
     int? shares,
     bool? isDeleted,
-    bool? isLiked,
+    bool? hasLiked,
     DateTime? createdAt,
     DateTime? updatedAt,
     ContestantProfile? contestantProfile,
@@ -96,7 +96,7 @@ class UgtAllPostContestModel {
       likes: likes ?? this.likes,
       shares: shares ?? this.shares,
       isDeleted: isDeleted ?? this.isDeleted,
-      isLiked: isLiked ?? this.isLiked,
+      hasLiked: hasLiked ?? this.hasLiked,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       contestantProfile: contestantProfile ?? this.contestantProfile,

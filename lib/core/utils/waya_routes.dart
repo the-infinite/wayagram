@@ -100,6 +100,7 @@ import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.da
 import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
 import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/edit_contestant_profile.dart';
+import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
@@ -250,7 +251,9 @@ class WayaAppRoutes {
     MediaMoment.route: () => MediaMoment(),
     MyMoments.route: () => MyMoments(),
     ViewMoment.route: () => ViewMoment(),
+    CandidatePostScreen.route: () => CandidatePostScreen(),
     VideoTrimmerScreen.route: () => VideoTrimmerScreen(),
+
     ViewFullMedia.route: () => ViewFullMedia(),
     EditPost.route: () => EditPost(
           initialContent: '',

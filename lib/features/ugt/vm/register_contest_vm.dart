@@ -56,7 +56,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     ];
   }
 
-  void addDefault(List<FormRequirements> model, Contest post) {
+  void addDefault(List<FormRequirement> model, Contest post) {
     postId = post.id;
     this.post = post;
 

@@ -72,25 +72,25 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
       if (isEditing) {
         Future.delayed(Duration(seconds: 1), () {
           //  print("my title ${contestViewModel?.toJson()}");
-          notifier.title.text = contestViewModel.title ?? "";
-          notifier.description.text = contestViewModel.description ?? "";
-          notifier.winnerPrize.text = contestViewModel.winnerPrize ?? "";
+          notifier.title.text = contestViewModel?.title ?? "";
+          notifier.description.text = contestViewModel?.description ?? "";
+          notifier.winnerPrize.text = contestViewModel?.winnerPrize ?? "";
           notifier.amountPerVote.text =
-              contestViewModel.amountPerVote?.toString() ?? "";
-          notifier.voteCountToQualify.text =
-              contestViewModel.voteCountToQualify ?? "";
+              contestViewModel?.amountPerVote?.toString() ?? "";
+          /* notifier.voteCountToQualify.text =
+              contestViewModel?.voteCountToQualify ?? ""; */
 
           ref
               .read(contestNotifierProvider.notifier)
-              .updateEdit(contestViewModel.categoryName ?? "");
+              .updateEdit(contestViewModel?.categoryName ?? "");
 
           ref
               .read(contestNotifierProvider.notifier)
-              .selectStateEdit(contestViewModel.state ?? "");
+              .selectStateEdit(contestViewModel?.state ?? "");
 
           //make public or private
           String pubPrivate =
-              contestViewModel.publicity == "PUBLIC" ? "Public" : "Private";
+              contestViewModel?.publicity == "PUBLIC" ? "Public" : "Private";
           ref
               .read(contestNotifierProvider.notifier)
               .updatePrivatePublic(pubPrivate);
@@ -98,7 +98,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
 
           //show overall result
           bool mySwitched =
-              contestViewModel.overallResult == "YES" ? true : false;
+              contestViewModel?.overallResult == "YES" ? true : false;
           isSwitched = mySwitched;
           ref
               .read(contestNotifierProvider.notifier)
@@ -611,7 +611,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     if (!isEditing) Image.asset("assets/images/upload.png"),
                     if (isEditing)
                       Image.network(
-                        contestViewModel.uploadCoverImages ?? "",
+                        contestViewModel?.uploadCoverImages ?? "",
                         height: 100,
                         // width: 45,
                         fit: BoxFit.cover,

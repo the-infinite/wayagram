@@ -67,7 +67,7 @@ class SingleContestantPosts {
   int? likes;
   int? shares;
   bool? isDeleted;
-  bool? isLiked;
+  bool? hasLiked;
   String? createdAt;
   String? updatedAt;
 
@@ -79,7 +79,7 @@ class SingleContestantPosts {
       this.description,
       this.likes,
       this.shares,
-      this.isLiked = false,
+      this.hasLiked = false,
       this.isDeleted,
       this.createdAt,
       this.updatedAt});
@@ -99,6 +99,7 @@ class SingleContestantPosts {
     shares = json['shares'];
     isDeleted = json['isDeleted'];
     createdAt = json['createdAt'];
+    hasLiked = json['hasLiked'];
     updatedAt = json['updatedAt'];
   }
   SingleContestantPosts copyWith({
@@ -109,7 +110,7 @@ class SingleContestantPosts {
     String? description,
     int? likes,
     int? shares,
-    bool? isLiked,
+    bool? hasLiked,
     bool? isDeleted,
     String? createdAt,
     String? updatedAt,
@@ -121,7 +122,7 @@ class SingleContestantPosts {
       mediaContent: mediaContent ?? this.mediaContent,
       description: description ?? this.description,
       likes: likes ?? this.likes,
-      isLiked: isLiked ?? this.isLiked,
+      hasLiked: hasLiked ?? this.hasLiked,
       shares: shares ?? this.shares,
       isDeleted: isDeleted ?? isDeleted,
       createdAt: createdAt ?? createdAt,
@@ -142,6 +143,7 @@ class SingleContestantPosts {
     data['shares'] = shares;
     data['isDeleted'] = isDeleted;
     data['createdAt'] = createdAt;
+    data['hasLiked'] = hasLiked;
     data['updatedAt'] = updatedAt;
     return data;
   }

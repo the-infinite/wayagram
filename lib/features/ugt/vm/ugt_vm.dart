@@ -167,7 +167,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     if (isEditing) {
       if (state.image.trim().isEmpty) {
         // use the defualt url
-        profileImageUrl = contestViewModel.uploadCoverImages;
+        profileImageUrl = contestViewModel?.uploadCoverImages??"";
       }
     } else {
       profileImageUrl = await WayaFileRepository.instance.uploadFile(
@@ -233,7 +233,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       WayaRequestResponse? response;
       if (isEditing) {
         response =
-            await _contestRepository.editContest(contestViewModel.id!, map);
+            await _contestRepository.editContest(contestViewModel?.id??"", map);
       } else {
         response = await _contestRepository.createContest(map);
       }

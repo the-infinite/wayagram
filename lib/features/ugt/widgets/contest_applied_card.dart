@@ -6,8 +6,10 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
+import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
@@ -115,30 +117,44 @@ class ContestAppliedCard extends StatelessWidget {
                 ],
               ),
               const Gap(20),
-              ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(16), // Adjust the radius as needed
-                child: post.contest?.uploadCoverImages != null
-                    ? WayaImage(
-                        imageUrl: post.contest?.uploadCoverImages ?? "",
-                        height: 200,
-                        width: context.width,
-                        fit: BoxFit.cover,
-                        radius: BorderRadius.circular(10),
-                      )
-
-                    /*  Image.network(
-                        post.contest?.uploadCoverImages ?? "",
-                        height: 200,
-                        fit: BoxFit
-                            .cover, // Ensures the image covers the area properly
-                      ) */
-                    : Image.asset(
-                        'assets/images/frameuni.png',
-                        height: 200,
-                        fit: BoxFit
-                            .cover, // Ensures the image covers the area properly
-                      ),
+              GestureDetector(
+                onTap: (){
+                   WayaNav.toNamed("/view-media-full-page", arguments: {
+                    "url": post.contest?.uploadCoverImages,
+                    "title":post.contest?.title ?? "Title",
+                    "createdAt": post.contest?.createdAt,
+                    "likeCount": 0,
+                    "isLike":false,
+                    "discription":post.contest?.description,
+                    "shareCount":0,
+                    "type": MyFullMediaType.image
+                  });
+                },
+                child: ClipRRect(
+                  borderRadius:
+                      BorderRadius.circular(16), // Adjust the radius as needed
+                  child: post.contest?.uploadCoverImages != null
+                      ? WayaImage(
+                          imageUrl: post.contest?.uploadCoverImages ?? "",
+                          height: 200,
+                          width: context.width,
+                          fit: BoxFit.cover,
+                          radius: BorderRadius.circular(10),
+                        )
+                
+                      /*  Image.network(
+                          post.contest?.uploadCoverImages ?? "",
+                          height: 200,
+                          fit: BoxFit
+                              .cover, // Ensures the image covers the area properly
+                        ) */
+                      : Image.asset(
+                          'assets/images/frameuni.png',
+                          height: 200,
+                          fit: BoxFit
+                              .cover, // Ensures the image covers the area properly
+                        ),
+                ),
               ),
               /*WayaImage(
                 imageUrl: "assets/images/frameuni.png",

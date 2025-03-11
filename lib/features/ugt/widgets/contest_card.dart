@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -14,6 +16,7 @@ import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -135,12 +138,26 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                           context.width * 0.15,
                         ),
                         //  post.isFollowing!
-                        WayaButton(
-                          callback: () =>
-                              widget.onFollowPressed(widget.post.id!),
-                          height: 40,
-                          text: "Follow",
-                        )
+                        widget.post.isFollowing == true
+                            ? WayaButton(
+                                text: 'UnFollow',
+                                height: 40,
+                                fontSize: 12.sp,
+                                color: wayaTheme.colorScheme.greyColor300,
+                                textColor: wayaTheme.colorScheme.customBlack,
+                                border: Border.all(
+                                    width: 1,
+                                    color: wayaTheme.colorScheme.greyColor300),
+                                callback: () {
+                                  widget.onFollowPressed(widget.post.id!);
+                                })
+                            : WayaButton(
+                                fontSize: 12.sp,
+                                callback: () =>
+                                    widget.onFollowPressed(widget.post.id!),
+                                height: 40,
+                                text: "Follow",
+                              )
                         /*  : SizedBox(
                                 height: 40,
                                 width: 90,
@@ -169,31 +186,45 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                 ],
               ),
               const Gap(20),
-              ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(10), // Adjust the radius as needed
-                child: widget.post.uploadCoverImages != null
-                    ? WayaImage(
-                        imageUrl: widget.post.uploadCoverImages ?? "",
-                        height: 200,
-                        width: context.width,
-                        fit: BoxFit.cover,
-                        radius: BorderRadius.circular(10),
-                      )
+              GestureDetector(
+                onTap: () {
+                  WayaNav.toNamed("/view-media-full-page", arguments: {
+                    "url": widget.post.uploadCoverImages,
+                    "title": widget.post.title ?? "Title",
+                    "createdAt": widget.post.createdAt,
+                    "likeCount": widget.post.likeCount,
+                    "isLike": widget.post.hasLiked,
+                    "discription": widget.post.description,
+                    "shareCount":widget.post.shareCount,
+                    "type": MyFullMediaType.image
+                  });
+                },
+                child: ClipRRect(
+                  borderRadius:
+                      BorderRadius.circular(10), // Adjust the radius as needed
+                  child: widget.post.uploadCoverImages != null
+                      ? WayaImage(
+                          imageUrl: widget.post.uploadCoverImages ?? "",
+                          height: 200,
+                          width: context.width,
+                          fit: BoxFit.cover,
+                          radius: BorderRadius.circular(10),
+                        )
 
-                    /*   Image.network(
-                        post.uploadCoverImages!,
-                        width: context.width,
-                        height: 200,
-                        fit: BoxFit
-                            .cover, // Ensures the image covers the area properly
-                      ) */
-                    : Image.asset(
-                        'assets/images/frameuni.png',
-                        height: 200,
-                        fit: BoxFit
-                            .cover, // Ensures the image covers the area properly
-                      ),
+                      /*   Image.network(
+                          post.uploadCoverImages!,
+                          width: context.width,
+                          height: 200,
+                          fit: BoxFit
+                              .cover, // Ensures the image covers the area properly
+                        ) */
+                      : Image.asset(
+                          'assets/images/frameuni.png',
+                          height: 200,
+                          fit: BoxFit
+                              .cover, // Ensures the image covers the area properly
+                        ),
+                ),
               ),
               /*WayaImage(
                 imageUrl: "assets/images/frameuni.png",
@@ -302,12 +333,16 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                           width: 35,
                           height: 35,
                           child: Center(
-                              child: SvgPicture.asset(
-                                  "assets/icons/thumbsup.svg")),
+                              child: Icon(
+                            Icons.thumb_up_alt,
+                            color: widget.post.hasLiked == true
+                                ? wayaTheme.colorScheme.primary
+                                : null,
+                          )),
                         ),
                         const Gap(3),
                         Text(
-                          "${widget.post.likeCount} Likes",
+                          "${widget.post.likeCount} ${widget.post.likeCount! > 0 ? "Likes" : "Like"}",
                           style: wayaTheme.textTheme.bodyMedium,
                         )
                       ],

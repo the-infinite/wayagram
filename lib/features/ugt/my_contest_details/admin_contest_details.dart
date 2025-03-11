@@ -44,7 +44,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     final wayaTheme = Theme.of(context);
     useEffect(() {
       String contestId =
-          ref.read(selectedContestProvider.notifier).state.id ?? "";
+          ref.read(selectedContestProvider.notifier).state?.id ?? "";
       ref
           .read(votersContestNotifier.notifier)
           .getContestantProfileVoteDetails(contestId);
@@ -115,7 +115,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           ClipRRect(
             borderRadius: BorderRadius.circular(45),
             child: Image.network(
-              model.uploadCoverImages ?? "",
+              model?.uploadCoverImages ?? "",
               height: 45,
               width: 45,
               errorBuilder: (context, error, stackTrace) {
@@ -153,7 +153,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         "You have 5 images and 1 video uploads left today",
                         style: TextStyle(
                             color: getColor(
-                                true, model.status?.toLowerCase() ?? ""),
+                                true, model?.status?.toLowerCase() ?? ""),
                             fontSize: 12),
                         textAlign: TextAlign.center,
                       ),
@@ -165,7 +165,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(model.title ?? "Title",
+                  Text(model?.title ?? "Title",
                       style: wayaTheme.textTheme.titleLarge),
                   Container(
                     decoration: BoxDecoration(
@@ -196,7 +196,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
               ClipRRect(
                 borderRadius:
                     BorderRadius.circular(16), // Adjust the radius as needed
-                child: model.uploadCoverImages == null
+                child: model?.uploadCoverImages == null
                     ? Image.asset(
                         'assets/images/frameuni.png',
                         height: 200,
@@ -204,7 +204,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                             .cover, // Ensures the image covers the area properly
                       )
                     : Image.network(
-                        model.uploadCoverImages ?? "",
+                        model?.uploadCoverImages ?? "",
                         width: context.width,
                         height: 200,
                         fit: BoxFit
@@ -215,7 +215,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
               Text("Contest Description",
                   style: wayaTheme.textTheme.bodyMedium),
               const Gap(5),
-              Text(model.description ?? "Description",
+              Text(model?.description ?? "Description",
                   style: wayaTheme.textTheme.hintStyle),
               const Gap(20),
               Row(
@@ -224,19 +224,19 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 children: [
                   UpcomingWidget(
                       title: "Start Date",
-                      content: formatDate(model.startDate ?? "")),
+                      content: formatDate(model?.startDate ?? "")),
                   const Gap(20),
                   UpcomingWidget(
                       title: "End Date",
-                      content: formatDate(model.endDate ?? "")),
+                      content: formatDate(model?.endDate ?? "")),
                   const Gap(20),
                   UpcomingWidget(
-                      title: "Entry Type", content: model.entryType ?? ""),
+                      title: "Entry Type", content: model?.entryType ?? ""),
                   const Gap(20),
                   UpcomingWidget(
                       title: "Duration",
                       content: getRealDateDiffBtwDate(
-                          model.startDate ?? "", model.endDate ?? "")),
+                          model?.startDate ?? "", model?.endDate ?? "")),
                 ],
               ),
               const Gap(10),
@@ -246,21 +246,21 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 children: [
                   UpcomingWidget(
                       title: "Total Stages",
-                      content: model.multipleStages ?? ""),
+                      content: model?.multipleStages ?? ""),
                   const Gap(20),
                   UpcomingWidget(
-                      title: "Category", content: model.categoryName ?? ""),
+                      title: "Category", content: model?.categoryName ?? ""),
                   const Gap(20),
                   UpcomingWidget(
                       title: "Prize",
                       content:
-                          "₦${formatMoney(model.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
+                          "₦${formatMoney(model?.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
                   const Gap(20),
                   UpcomingWidget(title: "Host", content: "Host"),
                 ],
               ),
               const Gap(20),
-              if (viewModelNotifier.getLoggedInUserId() == model.profileId)
+              if (viewModelNotifier.getLoggedInUserId() == model?.profileId)
                 WayaButton(
                   callback: () {
                     WayaNav.toNamed('/contest-mydashboard-profile-page');
@@ -286,7 +286,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
                               viewModel.myContestList[1];
-                          viewModelNotifier.updateContestId(model.id);
+                          viewModelNotifier.updateContestId(model?.id);
                           ref.read(selectedContestProvider.notifier).state =
                               model;
                           WayaNav.toNamed(
@@ -384,9 +384,9 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 ],
               ),
               const Gap(10),
-              if (selectedViewIndex.value == 0) UgtPostAllContestant(model),
-              if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(model),
-              if (selectedViewIndex.value == 2) UgtDetailsContestants(model),
+              if (selectedViewIndex.value == 0) UgtPostAllContestant(model!),
+              if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(model!),
+              if (selectedViewIndex.value == 2) UgtDetailsContestants(model!),
               //  if (selectedViewIndex.value == 3) UgtDetailsGallery(model),
             ],
           ),
@@ -398,7 +398,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
               width: 50,
               child: WayaButton(
                 callback: () {
-                  viewModelNotifier.updateContestId(model.id);
+                  viewModelNotifier.updateContestId(model?.id);
                   WayaNav.toNamed('/create-contest-post');
                 },
                 height: 50,

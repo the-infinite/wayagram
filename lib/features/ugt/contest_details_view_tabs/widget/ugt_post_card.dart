@@ -108,7 +108,8 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                             ),
                             const Gap(8),
                             Text(
-                               WayaHelpers.formatTimeAgo('${widget.post.createdAt}'),
+                              WayaHelpers.formatTimeAgo(
+                                  '${widget.post.createdAt}'),
                               style: wayaTheme.textTheme.hintStyle,
                             ),
                           ],
@@ -184,18 +185,22 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                               width: 35,
                               height: 35,
                               child: Center(
-                                  child: SvgPicture.asset(
-                                      "assets/icons/thumbsup.svg")),
+                                  child:Icon(
+                            Icons.thumb_up_alt,
+                            color: widget.post.hasLiked == true
+                                ? wayaTheme.colorScheme.primary
+                                : null,
+                          )),
                             ),
                             const Gap(3),
                             Text(
                               "${widget.post.likes} Likes",
-                              style: wayaTheme.textTheme.bodyMedium,
+                              style: wayaTheme.textTheme.bodySmall,
                             )
                           ],
                         ),
                       ),
-                      const Gap(30),
+                      const Gap(10),
                       GestureDetector(
                         onTap: () {
                           if (hasClickedShared.value == false) {
@@ -222,7 +227,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                             const Gap(3),
                             Text(
                               "${widget.post.shares} Shares",
-                              style:wayaTheme.textTheme.bodyMedium,
+                              style: wayaTheme.textTheme.bodySmall,
                             )
                           ],
                         ),
@@ -230,17 +235,17 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                     ],
                   ),
                   WayaButton(
-                    fontSize: 14,
+                    fontSize: 12,
                     callback: () {
                       WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(
                           isFree:
-                              contestModel2.entryType?.toLowerCase() == "free"
+                              contestModel2?.entryType?.toLowerCase() == "free"
                                   ? true
                                   : false,
                           voteFee:
-                              contestModel2.amountPerVote?.toString() ?? "0",
+                              contestModel2?.amountPerVote?.toString() ?? "0",
 
                           //   amountPaid: "89",
 
@@ -256,7 +261,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                               contestId: widget.post.contestId ?? "",
                               contestantId:
                                   widget.post.contestantProfileId ?? "",
-                              hostUserId: contestModel2.profileId ?? "",
+                              hostUserId: contestModel2?.profileId ?? "",
                               amount: "0",
                               numberOfVotes: "0",
                               profileId: "",

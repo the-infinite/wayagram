@@ -75,7 +75,7 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
         Future.delayed(Duration(seconds: 1), () {
           int index = 0;
           ref.read(stateContactProvider.notifier).state = [
-            ...contestViewModel.contestSettings?.stages
+            ...contestViewModel?.contestSettings?.stages
                     ?.map((e) => StagePrefModel(
                           id: index++,
                           stageName: e.stageName,

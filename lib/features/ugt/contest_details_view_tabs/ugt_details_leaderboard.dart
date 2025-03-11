@@ -42,16 +42,17 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
         //  UgtLeaderboardCard(),
 
         if(viewModel.myContestList.isEmpty)emptyWidget(),
+          if (viewModel.isLoading!) 
+               Center(child: CircularProgressIndicator()),
+            
+
 
         ListView.builder(
           controller: _scrollController,
           shrinkWrap: true,
           itemCount: viewModel.myContestList.length,
           itemBuilder: (context, index) {
-            if (viewModel.isLoading!) {
-              return Center(child: CircularProgressIndicator());
-            }
-
+          
             final post = viewModel.myContestList[index];
             return GestureDetector(
               onTap: () {
