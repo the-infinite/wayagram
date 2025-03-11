@@ -36,12 +36,11 @@ class FollowModel {
 
   ///
   bool get isOtherFollowingMe {
-    return (followerId == ConversationState.self.id && followedBack) || followerId != ConversationState.self.id;
+    return (followerId == ConversationState.self.id && followedBack) || followingId == ConversationState.self.id;
   }
 
   ///
   bool get isUserFollowing {
-    print("<following: $followerId==${ConversationState.self.id},$followingId==${ConversationState.self.id}==$followedBack");
     return followerId == ConversationState.self.id || (followingId == ConversationState.self.id && followedBack);
   }
 
