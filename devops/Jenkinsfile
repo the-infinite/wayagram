@@ -1,0 +1,75 @@
+pipeline {
+  agent { label 'worker1' }
+
+  environment {
+      APP_NAME = 'QA test'
+      VERSION = sh(script: 'git rev-parse HEAD', returnStdout: true).trim().take(10)
+      NAMESPACE = "${env.GIT_BRANCH == 'production' ? 'production' : 'staging' }"
+  }
+
+  options {
+    // Stop the build early in case of compile or test failures
+    skipStagesAfterUnstable()
+  }
+
+  stages {
+
+    stage('Sync Repository') {
+        steps {
+          script {
+
+          withCredentials([sshUserPrivateKey(credentialsId: "AutomationRSAKey", keyFileVariable: 'OpsKey')]) {
+            dir('devops') {
+                sh '''
+                  eval `ssh-agent -s`
+                  ssh-add -k ${OpsKey}
+                  chmod +x ./syncrepo.sh
+                  ./syncrepo.sh
+                  '''
+            }
+          }
+        }
+      }
+    }
+
+    stage('Detect build type') {
+      steps {
+        script {
+          if (env.BRANCH_NAME == 'staging' || env.CHANGE_TARGET == 'staging') {
+            env.BUILD_TYPE = 'Debug'
+                  } else if (env.BRANCH_NAME == 'production' || env.CHANGE_TARGET == 'production') {
+            env.BUILD_TYPE = 'Release'
+          }
+        }
+      }
+    }
+
+
+    stage('Build') {
+      steps {
+
+        script {
+          dir('android') {
+            sh './gradlew assembleDebug'
+          }
+        }
+
+      }
+    }
+
+    stage('Publish') {
+      steps {
+
+        script {
+          dir('android') {
+            // Archive the APKs so that they can be downloaded from Jenkins
+            archiveArtifacts 'app/build/outputs/apk/debug/app-debug.apk'
+          }
+        }
+     
+      }
+
+    }
+
+  }
+}
