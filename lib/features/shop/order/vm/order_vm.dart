@@ -59,6 +59,8 @@ class OrderVm extends StateNotifier<OrderState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  
 }
 
 final orderVmProvider = StateNotifierProvider<OrderVm, OrderState>((ref) {
