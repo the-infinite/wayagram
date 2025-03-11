@@ -150,7 +150,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
         ref
             .read(votersContestNotifier.notifier)
             .getContestantProfileVoteDetails(
-                ref.read(selectedContestProvider.notifier).state.id ?? "");
+                ref.read(selectedContestProvider.notifier).state?.id ?? "");
         Navigator.of(context).pop();
         WayaUtils.showModalSheet(context,
             child: VoteSuccessModal(

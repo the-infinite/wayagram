@@ -98,7 +98,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                 "See contests which are active for you to \n participate in",
             title: "Active Contests"),
         const Gap(10),
-       if (ConversationState.self.accountType == UserAccountType.business)
+        if (ConversationState.self.accountType == UserAccountType.business)
           WayaButton(
             callback: () {
               ivalidateUGTVM(ref);
@@ -109,18 +109,16 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
             text: "Host a Contest",
             textColor: wayaTheme.colorScheme.customPrimary,
           ),
-       if (ConversationState.self.accountType == UserAccountType.business) const Gap(10),
+        if (ConversationState.self.accountType == UserAccountType.business)
+          const Gap(10),
         if (posts.isEmpty) emptyWidget(),
+        if (postNotifier.isLoading) Center(child: CircularProgressIndicator()),
         if (posts.isNotEmpty)
           ListView.builder(
             controller: _scrollController,
             shrinkWrap: true,
             itemCount: posts.length,
             itemBuilder: (context, index) {
-              if (postNotifier.isLoading) {
-                return Center(child: CircularProgressIndicator());
-              }
-
               final post = posts[index];
               return GestureDetector(
                 onTap: () {},
@@ -140,7 +138,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc:  ConversationState.self.accountType == UserAccountType.business
+        desc: ConversationState.self.accountType == UserAccountType.business
             ? "You don’t have any active contest here. Create a \n contest and have different participant"
             : "You don’t have any active contest here. Create a \n Business account to access more features",
         title: "No Contest Created",

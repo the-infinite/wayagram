@@ -190,8 +190,8 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                             onTap: () {
                               Navigator.pop(context);
                               // WayaNav.toNamed('/pages');
-                              notifier.qualifyDisqualify(model.id ?? "", {
-                                "contestId": model.id ?? "",
+                              notifier.qualifyDisqualify(model?.id ?? "", {
+                                "contestId": model?.id ?? "",
                                 "profileId": item.profileId ?? "",
                                 "status": item.status?.toLowerCase() == "active"
                                     ? "DISQUALIFIED"

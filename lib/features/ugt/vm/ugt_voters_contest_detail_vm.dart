@@ -14,7 +14,7 @@ import 'package:wayagram/features/ugt/data/model/contest_state.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_contest_aplicant_model.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart' as model;
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/ugt/data/model/voter_contest_state.dart';
 
@@ -218,6 +218,10 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
           await _contestRepository.getContestantProfileVoteDetails(contestId);
       List<MyContestContestantModel> contestList = [];
       if (response.success) {
+        state = state.copyWith(
+          myContestList: [],
+          myContestListCopy: [],
+        );
         ContestContestantModelMean responseModel =
             ContestContestantModelMean.fromJson(response.data);
         contestList = responseModel.data ?? [];
@@ -331,7 +335,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     if (response.success) {
       WayaSnackBar.showToast("Post created successfully!", showSuccess: true);
       getContestantProfileVoteDetails(
-          ref.read(selectedContestProvider.notifier).state.id ?? "");
+          ref.read(selectedContestProvider.notifier).state?.id ?? "");
       Future.delayed(Duration(seconds: 2), () {
         Navigator.pop(context);
       });
@@ -352,13 +356,13 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       print("i dey here 11");
       if (post.id == postId) {
         print("i dey here 2");
-        //  bool isMyLiked = post.isLiked ?? false;
+        bool isMyLiked = post.hasLiked ?? false;
         // if (isMyLiked) {
-        doOnLikeLike(postId,galleryId);
+        doOnLikeLike(postId, galleryId);
         //  }
         return post.copyWith(
-          isLiked: true,
-          likes: post.likes! + 1,
+          hasLiked: !isMyLiked,
+          likes: isMyLiked ? post.likes! - 1 : post.likes! + 1,
         );
       }
       return post;
@@ -371,7 +375,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     final response = await _contestRepository.likeContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId,
-      "galleryId":galleryId
+      "galleryId": galleryId
     });
 
     if (!response.success) {
@@ -380,9 +384,10 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         print("i dey here 3");
         if (post.id == postId) {
           print("i dey here 3");
+          bool isMyLiked = post.hasLiked ?? false;
           return post.copyWith(
-            isLiked: !post.isLiked!,
-            likes: post.likes! - 1,
+            hasLiked: !isMyLiked,
+            likes: isMyLiked ? post.likes! - 1 : post.likes! + 1,
           );
         }
         return post;
@@ -414,12 +419,12 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     doshare(postId, galleryId);
   }
 
-  void doshare(String postId, String galleryId ) async {
+  void doshare(String postId, String galleryId) async {
     // print("do like stuff");
     final response = await _contestRepository.shareContest({
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId,
-       "galleryId":galleryId
+      "galleryId": galleryId
     });
 
     if (!response.success) {
@@ -440,7 +445,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  void addStages(List<Stages> stages) {
+  void addStages(List<model.Stage> stages) {
     state = state.copyWith(stageList: stages);
   }
 

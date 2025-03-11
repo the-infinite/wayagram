@@ -36,7 +36,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(votersContestNotifier.notifier);
-     final hasClickedLiked = useState(false);
+    final hasClickedLiked = useState(false);
     final hasClickedShared = useState(false);
 
     return Column(
@@ -80,7 +80,8 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                           ),
                         ), */
                         WayaImage(
-                          imageUrl: widget.post.contestantProfile?.profilePhoto ?? "",
+                          imageUrl:
+                              widget.post.contestantProfile?.profilePhoto ?? "",
                           height: 45,
                           width: 45,
                           fit: BoxFit.cover,
@@ -102,7 +103,8 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                             ),
                             const Gap(8),
                             Text(
-                              WayaHelpers.formatTimeAgo('${widget.post.createdAt}'),
+                              WayaHelpers.formatTimeAgo(
+                                  '${widget.post.createdAt}'),
                               style: wayaTheme.textTheme.hintStyle,
                             ),
                           ],
@@ -146,9 +148,9 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                         
-                            if (hasClickedLiked.value == false) {
-                            viewModel.toggleLike(widget.post.contestId ?? "", widget.post.id??"");
+                          if (hasClickedLiked.value == false) {
+                            viewModel.toggleLike(widget.post.contestId ?? "",
+                                widget.post.id ?? "");
                           }
                           Future.delayed(Duration(seconds: 2), () {
                             hasClickedLiked.value = false;
@@ -165,23 +167,27 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                               width: 35,
                               height: 35,
                               child: Center(
-                                  child: SvgPicture.asset(
-                                      "assets/icons/thumbsup.svg")),
+                                  child:Icon(
+                            Icons.thumb_up_alt,
+                            color: widget.post.hasLiked == true
+                                ? wayaTheme.colorScheme.primary
+                                : null,
+                          )),
                             ),
                             const Gap(3),
                             Text(
                               "${widget.post.likes} Likes",
-                              style: wayaTheme.textTheme.bodyMedium,
+                              style: wayaTheme.textTheme.bodySmall,
                             )
                           ],
                         ),
                       ),
-                      const Gap(30),
+                      const Gap(20),
                       GestureDetector(
                         onTap: () {
-                        
-                           if (hasClickedShared.value == false) {
-                             viewModel.toggleShare(widget.post.contestId ?? "", widget.post.id??"");
+                          if (hasClickedShared.value == false) {
+                            viewModel.toggleShare(widget.post.contestId ?? "",
+                                widget.post.id ?? "");
                           }
                           Future.delayed(Duration(seconds: 2), () {
                             hasClickedShared.value = false;
@@ -204,7 +210,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                             const Gap(3),
                             Text(
                               "${widget.post.shares} Shares",
-                              style: wayaTheme.textTheme.bodyMedium,
+                              style: wayaTheme.textTheme.bodySmall,
                             )
                           ],
                         ),
@@ -212,15 +218,18 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                     ],
                   ),
                   WayaButton(
-                    fontSize: 14,
+                    fontSize: 12,
+                    height: 40,
                     callback: () {
                       WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(
-                          voteFee: widget.model.amountPerVote?.toString() ?? "0",
-                          isFree: widget.model.entryType?.toLowerCase() == "free"
-                              ? true
-                              : false,
+                          voteFee:
+                              widget.model.amountPerVote?.toString() ?? "0",
+                          isFree:
+                              widget.model.entryType?.toLowerCase() == "free"
+                                  ? true
+                                  : false,
                           //   amountPaid: "89",
                           /* 
                            contestId: contestantData.contestId ?? "",
@@ -231,15 +240,17 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                            */
                           model: ContestVoteModel(
                               contestId: widget.post.contestId ?? "",
-                              contestantId: widget.post.contestantProfileId ?? "",
+                              contestantId:
+                                  widget.post.contestantProfileId ?? "",
                               hostUserId: widget.model.profileId ?? "",
                               amount: "0",
                               numberOfVotes: "0",
                               profileId: "",
-                              type: widget.model.type ?? ""),
+                              type: widget.model.entryType?.toLowerCase()),
 
                           candidateName:
-                              widget.post.contestApplication?.fullName ?? "Name",
+                              widget.post.contestApplication?.fullName ??
+                                  "Name",
                           votingLink: "votingLink",
                         ),
                       );

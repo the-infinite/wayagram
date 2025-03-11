@@ -46,22 +46,22 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
     useEffect(() {
         if (isEditing) {
       Future.delayed(Duration(seconds: 1), () {
-        viewModel2.howItWorks.text = contestViewModel.howItWorks ?? "";
+        viewModel2.howItWorks.text = contestViewModel?.howItWorks ?? "";
 
-        if (contestViewModel.entryType?.toLowerCase() == "free") {
+        if (contestViewModel?.entryType?.toLowerCase() == "free") {
           viewModel2.amount.text = "0";
         }
         ref.read(contestNotifierProvider.notifier).updateEntryType(
-            contestViewModel.entryType?.toLowerCase() == "free"
+            contestViewModel?.entryType?.toLowerCase() == "free"
                 ? "Free"
                 : "Paid");
         // viewModel2.entrySelectType = contestViewModel.entryType??"";
-        viewModel2.amount.text = contestViewModel.amount?.toString() ?? "";
+        viewModel2.amount.text = contestViewModel?.amount?.toString() ?? "";
         ref.read(contestNotifierProvider.notifier).updateParticipationDate(
-            contestViewModel.participationStartDate?.split("T").first ?? "");
+            contestViewModel?.participationStartDate?.split("T").first ?? "");
 
         viewModel2.descriptionOfAwards.text =
-            contestViewModel.descriptionOfAwards ?? "";
+            contestViewModel?.descriptionOfAwards ?? "";
       });
     }
       return null;

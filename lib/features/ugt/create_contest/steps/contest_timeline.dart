@@ -41,18 +41,18 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
       if (isEditing) {
         Future.delayed(Duration(seconds: 1), () {
           ref.read(contestNotifierProvider.notifier).updateContestTimeStartDate(
-              contestViewModel.startDate?.split("T").first ?? "");
+              contestViewModel?.startDate?.split("T").first ?? "");
           ref.read(contestNotifierProvider.notifier).updateContestTimeEndDate(
-              contestViewModel.endDate?.split("T").first ?? "");
+              contestViewModel?.endDate?.split("T").first ?? "");
           ref
               .read(contestNotifierProvider.notifier)
               .updateContestTimeMultipleStage(
-                  contestViewModel.multipleStages ?? '');
+                  contestViewModel?.multipleStages ?? '');
 
           ref
               .read(contestNotifierProvider.notifier)
               .updateContestTimeCurrentStage(
-                  contestViewModel.currentStage ?? '');
+                  contestViewModel?.currentStage ?? '');
         });
       }
       return null;

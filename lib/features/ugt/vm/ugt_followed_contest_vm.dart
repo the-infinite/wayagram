@@ -25,7 +25,7 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
       List<Contest> contestList = [];
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);
-        contestList = responseModel.data.docs;
+        contestList = responseModel.data?.docs??[];
         state = [...state, ...contestList];
          _page++;
         isLoading = false;
@@ -44,11 +44,11 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
      print("Contest followed post");
     state = state.map((post) {
       if (post.id == postId) {
-        if (!post.isLiked!) {
+        if (!post.hasLiked!) {
           doOnLikeLike(postId);
         }
         return post.copyWith(
-          isLiked: true,
+          hasLiked: true,
           likeCount: post.likeCount! + 1,
         );
       }
@@ -68,7 +68,7 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
       state = state.map((post) {
         if (post.id == postId) {
           return post.copyWith(
-            isLiked: !post.isLiked!,
+            hasLiked: !post.hasLiked!,
             likeCount: post.likeCount! - 1,
           );
         }
@@ -107,7 +107,7 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
       state = state.map((post) {
         if (post.id == postId) {
           return post.copyWith(
-            isLiked: !post.isLiked!,
+            hasLiked: !post.hasLiked!,
             likeCount: post.likeCount! - 1,
           );
         }

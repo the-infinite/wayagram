@@ -53,13 +53,13 @@ class _UpcomingContestDetailsState
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(model.title ?? "Title",
+                  Text(model?.title ?? "Title",
                       style: wayaTheme.textTheme.titleLarge),
                   Container(
                     decoration: BoxDecoration(
                       color: getColor(
                           false,
-                          model.status?.toLowerCase() ??
+                          model?.status?.toLowerCase() ??
                               ""), // Background color
                       borderRadius:
                           BorderRadius.circular(20), // Rounded corners
@@ -69,10 +69,10 @@ class _UpcomingContestDetailsState
                         padding: const EdgeInsets.symmetric(
                             vertical: 4, horizontal: 8),
                         child: Text(
-                          model.status ?? "",
+                          model?.status ?? "",
                           style: TextStyle(
                               color: getColor(
-                                  true, model.status?.toLowerCase() ?? ""),
+                                  true, model?.status?.toLowerCase() ?? ""),
                               fontSize: 10),
                           textAlign: TextAlign.center,
                         ),
@@ -85,7 +85,7 @@ class _UpcomingContestDetailsState
               ClipRRect(
                 borderRadius:
                     BorderRadius.circular(16), // Adjust the radius as needed
-                child: model.uploadCoverImages == null
+                child: model?.uploadCoverImages == null
                     ? Image.asset(
                         'assets/images/frameuni.png',
                         width: context.width,
@@ -94,7 +94,7 @@ class _UpcomingContestDetailsState
                             .cover, // Ensures the image covers the area properly
                       )
                     : Image.network(
-                        model.uploadCoverImages ?? "",
+                        model?.uploadCoverImages ?? "",
                         width: context.width,
                         height: 200,
                         fit: BoxFit
@@ -105,7 +105,7 @@ class _UpcomingContestDetailsState
               Text("Contest Description",
                   style: wayaTheme.textTheme.bodyMedium),
               const Gap(5),
-              Text(model.description ?? "Description",
+              Text(model?.description ?? "Description",
                   style: wayaTheme.textTheme.hintStyle),
               const Gap(20),
               Row(
@@ -114,14 +114,14 @@ class _UpcomingContestDetailsState
                 children: [
                   UpcomingWidget(
                       title: "Start Date",
-                      content: formatDate(model.startDate ?? "")),
+                      content: formatDate(model?.startDate ?? "")),
                   const Gap(20),
                   UpcomingWidget(
                       title: "End Date",
-                      content: formatDate(model.endDate ?? "")),
+                      content: formatDate(model?.endDate ?? "")),
                   const Gap(20),
                   UpcomingWidget(
-                      title: "Entry Type", content: model.entryType ?? ""),
+                      title: "Entry Type", content: model?.entryType ?? ""),
                   /*  const Gap(20),
                   UpcomingWidget(
                       title: "Duration",
@@ -136,13 +136,13 @@ class _UpcomingContestDetailsState
                 children: [
                   UpcomingWidget(
                       title: "Total Stages",
-                      content: model.multipleStages ?? ""),
+                      content: model?.multipleStages ?? ""),
                   const Gap(20),
                   UpcomingWidget(
-                      title: "Category", content: model.categoryName ?? ""),
+                      title: "Category", content: model?.categoryName ?? ""),
                   const Gap(20),
                   UpcomingWidget(
-                      title: "Prize", content: model.winnerPrize ?? ""),
+                      title: "Prize", content: model?.winnerPrize ?? ""),
                   /*   const Gap(20),
                   UpcomingWidget(title: "Host", content: "Host"), */
                 ],
@@ -150,7 +150,7 @@ class _UpcomingContestDetailsState
               const Gap(20),
               Text("How it Works", style: wayaTheme.textTheme.bodyMedium),
               const Gap(15),
-              Text(model.howItWorks ?? "",
+              Text(model?.howItWorks ?? "",
                   style: wayaTheme.textTheme.hintStyle),
               const Gap(15),
               Text(
@@ -158,7 +158,7 @@ class _UpcomingContestDetailsState
                 style: wayaTheme.textTheme.bodyMedium,
               ),
               SizedBox(height: 8),
-              ...model.contestSettings!.stages!.map((e) => _buildStages(e)),
+              ...model?.contestSettings!.stages!.map((e) => _buildStages(e))??[],
               /*   SizedBox(height: 8),
               _buildStagesContestLevel1(), */
               /*   SizedBox(height: 8),
@@ -194,7 +194,7 @@ class _UpcomingContestDetailsState
     }
   }
 
-  Widget _buildStages(Stages model) {
+  Widget _buildStages(Stage model) {
     final wayaTheme = Theme.of(context);
     return ExpansionTile(
       shape: Border.all(color: Colors.transparent), // Removes default border

@@ -286,13 +286,19 @@ post.Contest mergeContest(AppliedContestModel model) {
       winnerPrize: model.contest?.winnerPrize,
       publicity: model.contest?.publicity,
       overallResult: model.contest?.overallResult,
-      type: model.contest?.entryType,
+      categoryName: model.categoryName,
       amountPerVote: model.contest?.amountPerVote,
       uploadCoverImages: model.contest?.uploadCoverImages,
       howItWorks: model.contest?.howItWorks,
       entryType: model.contest?.entryType,
       amount: model.contest?.amount,
-      numberOfDuration: model.contest?.numberOfDuration,
+      likeCount: 0,
+      hasLiked: false,
+      isFollowing: false,
+      shareCount: 0,
+      followCount: 0,
+      applicantCount: 0,
+     // numberOfDuration: model.contest?.numberOfDuration,
       participationStartDate: model.contest?.participationStartDate,
       descriptionOfAwards: model.contest?.descriptionOfAwards,
       startDate: model.contest?.startDate,
@@ -308,8 +314,9 @@ post.Contest mergeContest(AppliedContestModel model) {
       deletedAt: model.contest?.deletedAt,
       contestSettings: post.ContestSettings(
         id: model.contestSettings?.id,
+        deletedAt: "",
         stages: model.contestSettings?.stages
-            ?.map((e) => post.Stages(
+            ?.map((e) => post.Stage(
                   stageName: e.stageName,
                   entryType: e.entryType,
                   entryAmount: e.entryAmount,
@@ -317,13 +324,14 @@ post.Contest mergeContest(AppliedContestModel model) {
                   numberOfPostPerWeek: e.numberOfPostPerWeek,
                   priceOfTheWinner: e.priceOfTheWinner,
                   startDate: e.startDate,
+                  
                   isActive: e.isActive,
                   endDate: e.endDate,
                   approveBeforeLive: e.approveBeforeLive,
                 ))
             .toList(),
         formRequirements: model.contestSettings?.formRequirements
-            ?.map((e) => post.FormRequirements(
+            ?.map((e) => post.FormRequirement(
                   requirementType: e.requirementType,
                   requirementName: e.requirementName,
                   textDescription: e.textDescription,

@@ -48,7 +48,7 @@ dependencies:
   mime: ^2.0.0
   image_cropper: ^8.1.0
   http_parser: ^4.1.2
-  #google_maps_flutter: ^2.10.0
+  google_maps_flutter: ^2.10.0
   uuid: ^4.5.1
   smooth_page_indicator: ^1.2.0+3
   percent_indicator: ^4.2.4
@@ -71,6 +71,12 @@ dependencies:
   video_trimmer: ^3.0.1-LTS
   #for deep link
   app_links: ^6.4.0
+  hooks_riverpod: ^2.6.1
+  flutter_hooks: ^0.20.5
+  currency_text_input_formatter: ^2.2.3
+  syncfusion_flutter_sliders: ^28.2.6
+  firebase_analytics: ^11.4.4
+  firebase_crashlytics: ^4.3.4
 
 dev_dependencies:
   flutter_test:

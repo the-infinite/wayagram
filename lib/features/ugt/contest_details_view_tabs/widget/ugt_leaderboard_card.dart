@@ -57,16 +57,24 @@ class UgtLeaderboardCard extends ConsumerWidget {
             title: Row(
               children: [
                 ClipRRect(
-                  borderRadius:
-                      BorderRadius.circular(45), // Adjust the radius as needed
-                  child: Image.network(
+                    borderRadius: BorderRadius.circular(
+                        45), // Adjust the radius as needed
+                    child: WayaImage(
+                      imageUrl: contestantData.profilePhoto ?? "",
+                      height: 45,
+                      width: 45,
+                      fit: BoxFit.cover,
+                      radius: BorderRadius.circular(45),
+                    )
+
+                    /*    Image.network(
                     contestantData.profilePhoto ?? "",
                     height: 45,
                     width: 45,
                     fit: BoxFit
                         .cover, // Ensures the image covers the area properly
-                  ),
-                ),
+                  ), */
+                    ),
                 Gap(10),
                 Text(
                   contestantData.contestApplicant?.fullName ?? "",

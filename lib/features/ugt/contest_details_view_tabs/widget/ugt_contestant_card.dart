@@ -95,7 +95,7 @@ class UgtContestantCard extends ConsumerWidget {
                         
                         numberOfVotes: "0",
                         profileId: "",
-                        type: model.type ?? ""),
+                        type:model.entryType?.toLowerCase()),
 
                     candidateName:
                         contestantData.contestApplicant?.fullName ?? "Name",
