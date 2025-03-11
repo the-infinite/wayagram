@@ -130,6 +130,54 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
 
           ],),
           const Gap(30),
+          widget.status == 'Pending'?  WayaButton(
+            text: 'Go Back',
+            color: wayaTheme.colorScheme.primary500,
+            textColor: wayaTheme.colorScheme.white,
+            border:
+            Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+            callback: (){
+              Navigator.of(context).pop();
+            },
+            height: 40,
+            textStyle: WayaTextStyles.bodySmall.copyWith(
+                fontSize: 14.sp,
+                fontFamily: WayaConstants.fontFamily,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.white ),
+
+          ):
+          widget.status == 'Approved'?WayaButton(
+            text: 'Manage Donation',
+            color: wayaTheme.colorScheme.primary500,
+            textColor: wayaTheme.colorScheme.white,
+            border:
+            Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+            callback: (){
+              WayaNav.toNamed('/donationManagement', arguments: {
+                'title': widget.causeTitle,
+                //'image': '${donation.imageURL}',
+                'amountRaised': widget.amountRaised.replaceAll('.00', ''),
+                'targetAmount': widget.targetAmount.replaceAll('.00', ''),
+                'desc': widget.desc,
+                'solution': widget.solution,
+                // 'impact': '${donation.impact}',
+                // 'url': '${donation.url}',
+                // 'minimumDonationAmount': '${donation.minimumDonationAmount}',
+                // 'daysLeft': '$daysLeft',
+                // 'id': '${donation.id}',
+                // 'range':ratioLeft,
+                // 'donationCount': '${donation.donationCount}'
+              });
+            },
+            height: 40,
+            textStyle: WayaTextStyles.bodySmall.copyWith(
+                fontSize: 14.sp,
+                fontFamily: WayaConstants.fontFamily,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.white ),
+
+          ):
           WayaButton(
             text: 'Go Back',
             color: wayaTheme.colorScheme.primary500,

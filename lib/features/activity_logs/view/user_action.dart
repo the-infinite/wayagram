@@ -7,6 +7,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/context_extensions.dart';
 import 'package:intl/intl.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -67,7 +68,7 @@ class _UserActionState extends ConsumerState<UserAction> {
                 elevation: 4,
                 padding: EdgeInsets.zero,
                 iconSize: 12,
-                icon: SvgPicture.asset('assets/icons/down_arrow.svg'),
+                icon: SvgPicture.asset(WayaAssets.icons.downArrow.path,),
                 isDense: true,
                 isExpanded: false,
                 value: selTransact,

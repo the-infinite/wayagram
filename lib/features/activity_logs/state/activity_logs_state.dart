@@ -17,8 +17,11 @@ class ActivityLogsState{
   final TextEditingController title;
   List<LoginHistoryDocs> loginHistoryDocs;
   List<CmsDocs> cmsDocs;
+  List<CmsDocs> cmsDocs1;
   List<PaymentActivityDocs> paymentActivityDocs;
+  List<PaymentActivityDocs> paymentActivityDocs1;
   List<SearchLogDocs> searchLogDocs;
+  List<SearchLogDocs> searchLogDocs1;
   List<UserActionsDocs> userActionsDocs;
   List<UserInteractionDocs> userInteractionDocs;
   List<VisitedPagesDocs> visitedPagesDocs;
@@ -32,8 +35,11 @@ class ActivityLogsState{
     this.isLoading = false,
     this.loginHistoryDocs = const [],
     this.cmsDocs = const [],
+    this.cmsDocs1 = const [],
     this.paymentActivityDocs = const [],
+    this.paymentActivityDocs1 = const [],
     this.searchLogDocs = const [],
+    this.searchLogDocs1 = const [],
     this.userActionsDocs = const [],
     this.userInteractionDocs = const [],
     this.visitedPagesDocs = const [],
@@ -45,8 +51,11 @@ class ActivityLogsState{
     TextEditingController? title,
     List<LoginHistoryDocs>? loginHistoryDocs,
     List<CmsDocs>? cmsDocs,
+    List<CmsDocs>? cmsDocs1,
     List<PaymentActivityDocs>? paymentActivityDocs,
+    List<PaymentActivityDocs>? paymentActivityDocs1,
     List<SearchLogDocs>? searchLogDocs,
+    List<SearchLogDocs>? searchLogDocs1,
     List<UserActionsDocs>? userActionsDocs,
     List<UserInteractionDocs>? userInteractionDocs,
     List<VisitedPagesDocs>? visitedPagesDocs,
@@ -59,8 +68,11 @@ class ActivityLogsState{
       title: title ?? this.title,
       loginHistoryDocs: loginHistoryDocs ?? this.loginHistoryDocs,
       cmsDocs: cmsDocs ?? this.cmsDocs,
+      cmsDocs1: cmsDocs1 ?? this.cmsDocs1,
       paymentActivityDocs: paymentActivityDocs ?? this.paymentActivityDocs,
+      paymentActivityDocs1: paymentActivityDocs1 ?? this.paymentActivityDocs1,
       searchLogDocs: searchLogDocs ?? this.searchLogDocs,
+      searchLogDocs1: searchLogDocs1 ?? this.searchLogDocs1,
       userActionsDocs: userActionsDocs ?? this.userActionsDocs,
       userInteractionDocs: userInteractionDocs ?? this.userInteractionDocs,
       visitedPagesDocs: visitedPagesDocs ?? this.visitedPagesDocs,
