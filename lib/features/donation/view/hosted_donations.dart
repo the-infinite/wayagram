@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
@@ -18,6 +19,7 @@ import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 
 import '../../../shared/features/user/models/default.dart';
+import 'dart:io' show Platform;
 
 class HostedDonations extends ConsumerStatefulWidget {
   const HostedDonations({super.key});
@@ -41,6 +43,8 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
       setState(() {});
     });
   }
+
+
 
   @override
   void dispose() {
@@ -135,7 +139,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
         ),
         const Gap(30),
         SizedBox(
-          height: 350,
+          height: Platform.isAndroid ? 350 : 250,
           child: ListView.builder(
             padding: EdgeInsets.only(bottom: 40),
               //physics: const NeverScrollableScrollPhysics(),

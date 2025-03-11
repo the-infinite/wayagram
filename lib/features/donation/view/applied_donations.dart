@@ -12,6 +12,7 @@ import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/donation/widget/applied_donationi_widget.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
+import 'dart:io' show Platform;
 
 class AppliedDonations extends ConsumerStatefulWidget {
   const AppliedDonations({super.key});
@@ -61,7 +62,7 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(
-          height: 560,
+          height: Platform.isAndroid ? 560 : 460,
           child: ListView.builder(
               //physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,

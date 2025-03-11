@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,6 +8,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:intl/intl.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -30,13 +33,6 @@ class PaymentActivity extends ConsumerStatefulWidget {
 class _PaymentActivityState extends ConsumerState<PaymentActivity> {
 
   List<String> dates = [];
-
-  // List<ActivityLogs> activityLogs = [];
-  // List<ActivityLogs> activityLogs1 = [];
-  List<PaymentActivityDocs> activityLogs = [];
-  List<PaymentActivityDocs> activityLogs1 = [];
-
-  int transLength = 0;
 
   String selTransact = 'All Time';
   var lsTransact = ['All Time', 'This week', 'This month', 'This Year'];
@@ -68,7 +64,7 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
                 elevation: 4,
                 padding: EdgeInsets.zero,
                 iconSize: 12,
-                icon: SvgPicture.asset('assets/icons/down_arrow.svg'),
+                icon: SvgPicture.asset(WayaAssets.icons.downArrow.path,),
                 isDense: true,
                 isExpanded: false,
                 value: selTransact,
@@ -112,17 +108,20 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
                     }
                   }
                   return SingleChildScrollView(
-                    child: ListView.builder(
+                    child: viewModel.paymentActivityDocs.isEmpty ?
+                    ActivityLogsEmptyState(text: 'You don\'t have payment activity for this week yet',):
+                    ListView.builder(
                         padding: EdgeInsets.only(bottom: 80.h, top: 0),
                         physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: dates.length,
                         itemBuilder: (context, i){
-                          return Column(
+                          return
+                            Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                  '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.paymentActivityDocs[i].createdAt.toString().split('T')[0])}',
+                                  '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.paymentActivityDocs[i].createdAt.toString().split('T')[0])}' ,
                                   style: TextStyle(
                                     fontSize: 20.sp,
                                     fontFamily: WayaConstants.fontFamily,
@@ -164,14 +163,61 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
   }
 
   sortList(s) {
-    activityLogs = [];
+    final viewModel = ref.watch(activityLogsVmProvider);
+    viewModel.paymentActivityDocs = [];
+    print('ACTIVITY End ====> ${s}');
     setState(() {
-      if(s == 'All Time'){
-        activityLogs = activityLogs1;
+      if(s == 'all time'){
+        viewModel.paymentActivityDocs = viewModel.paymentActivityDocs1;
+      }else if(s =='this week'){
+        int w = 7 - DateTime.now().weekday; // counting forward
+
+        int y = 7 - w; // counting backward
+
+        List<String> allWeekDays = [];
+
+        for (int i = 0; i < w; i++) {
+          String a = DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
+          String b = a.split('-')[2];
+          allWeekDays.add(b.padLeft(2,'0'));
+          print('AAAA $b');
+        }
+
+        for (int i = 0; i < y; i++) {
+          String a = DateTime.now().subtract(Duration(days: i +1)).toString().split(' ')[0];
+          String b = a.split('-')[2];
+          allWeekDays.add(b.padLeft(2,'0'));
+          print('AAAABBBBB $b');
+        }
+
+        print('WeekDAY $w');
+        for (int i = 0; i < viewModel.paymentActivityDocs1.length; i++) {
+          String week = viewModel.paymentActivityDocs1[i].createdAt.toString().split('T')[0];
+          if (allWeekDays.contains(week.split('-')[2]) ) {
+            viewModel.paymentActivityDocs.add(viewModel.paymentActivityDocs1[i]);
+          }
+        }
+        print('ACTIVIVBVB ${viewModel.paymentActivityDocs.length}');
+      } else if(s =='this month'){
+        String m =  DateTime.now().month.toString().padLeft(2,'0');
+        for (int i = 0; i < viewModel.paymentActivityDocs1.length; i++) {
+          String month = viewModel.paymentActivityDocs1[i].createdAt.toString().split('T')[0];
+          if (m == month.split('-')[1]) {
+            viewModel.paymentActivityDocs.add(viewModel.paymentActivityDocs1[i]);
+          }
+        }
+      } else if(s =='this year'){
+        String y =  DateTime.now().year.toString();
+        for (int i = 0; i < viewModel.paymentActivityDocs1.length; i++) {
+          String month = viewModel.paymentActivityDocs1[i].createdAt.toString().split('T')[0];
+          if (y == month.split('-')[0]) {
+            viewModel.paymentActivityDocs.add(viewModel.paymentActivityDocs1[i]);
+          }
+        }
       } else {
-        for (int i = 0; i < transLength; i++) {
-          if (s.toString().trim() == activityLogs1[i].createdAt.toString()) {
-            activityLogs.add(activityLogs1[i]);
+        for (int i = 0; i < viewModel.paymentActivityDocs1.length; i++) {
+          if (s.toString().trim() == viewModel.paymentActivityDocs1[i].createdAt.toString()) {
+            viewModel.paymentActivityDocs.add(viewModel.paymentActivityDocs1[i]);
           }
         }
       }

@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:intl/intl.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -66,7 +67,7 @@ class _SearchLogState extends ConsumerState<SearchLog> {
                 elevation: 4,
                 padding: EdgeInsets.zero,
                 iconSize: 12,
-                icon: SvgPicture.asset('assets/icons/down_arrow.svg'),
+                icon: SvgPicture.asset(WayaAssets.icons.downArrow.path,),
                 isDense: true,
                 isExpanded: false,
                 value: selTransact,
@@ -110,7 +111,9 @@ class _SearchLogState extends ConsumerState<SearchLog> {
                     }
                   }
                   return SingleChildScrollView(
-                    child: ListView.builder(
+                    child: viewModel.searchLogDocs.isEmpty ?
+                    ActivityLogsEmptyState(text: 'You don\'t have Search Logs for this week yet',):
+                    ListView.builder(
                         padding: EdgeInsets.only(bottom: 80.h, top: 0),
                         physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
@@ -162,14 +165,61 @@ class _SearchLogState extends ConsumerState<SearchLog> {
   }
 
   sortList(s) {
-    activityLogs = [];
+    final viewModel = ref.watch(activityLogsVmProvider);
+    viewModel.searchLogDocs = [];
+    print('ACTIVITY End ====> ${s}');
     setState(() {
-      if(s == 'All Time'){
-        activityLogs = activityLogs1;
+      if(s == 'all time'){
+        viewModel.searchLogDocs = viewModel.searchLogDocs1;
+      }else if(s =='this week'){
+        int w = 7 - DateTime.now().weekday; // counting forward
+
+        int y = 7 - w; // counting backward
+
+        List<String> allWeekDays = [];
+
+        for (int i = 0; i < w; i++) {
+          String a = DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
+          String b = a.split('-')[2];
+          allWeekDays.add(b.padLeft(2,'0'));
+          print('AAAA $b');
+        }
+
+        for (int i = 0; i < y; i++) {
+          String a = DateTime.now().subtract(Duration(days: i +1)).toString().split(' ')[0];
+          String b = a.split('-')[2];
+          allWeekDays.add(b.padLeft(2,'0'));
+          print('AAAABBBBB $b');
+        }
+
+        print('WeekDAY $w');
+        for (int i = 0; i < viewModel.searchLogDocs1.length; i++) {
+          String week = viewModel.searchLogDocs1[i].createdAt.toString().split('T')[0];
+          if (allWeekDays.contains(week.split('-')[2]) ) {
+            viewModel.searchLogDocs.add(viewModel.searchLogDocs1[i]);
+          }
+        }
+        print('ACTIVIVBVB ${viewModel.searchLogDocs.length}');
+      } else if(s =='this month'){
+        String m =  DateTime.now().month.toString().padLeft(2,'0');
+        for (int i = 0; i < viewModel.searchLogDocs1.length; i++) {
+          String month = viewModel.searchLogDocs1[i].createdAt.toString().split('T')[0];
+          if (m == month.split('-')[1]) {
+            viewModel.searchLogDocs.add(viewModel.searchLogDocs1[i]);
+          }
+        }
+      } else if(s =='this year'){
+        String y =  DateTime.now().year.toString();
+        for (int i = 0; i < viewModel.searchLogDocs1.length; i++) {
+          String month = viewModel.searchLogDocs1[i].createdAt.toString().split('T')[0];
+          if (y == month.split('-')[0]) {
+            viewModel.searchLogDocs.add(viewModel.searchLogDocs1[i]);
+          }
+        }
       } else {
-        for (int i = 0; i < transLength; i++) {
-          if (s.toString().trim() == activityLogs1[i].createdAt.toString()) {
-            activityLogs.add(activityLogs1[i]);
+        for (int i = 0; i < viewModel.searchLogDocs1.length; i++) {
+          if (s.toString().trim() == viewModel.searchLogDocs1[i].createdAt.toString()) {
+            viewModel.searchLogDocs.add(viewModel.searchLogDocs1[i]);
           }
         }
       }
