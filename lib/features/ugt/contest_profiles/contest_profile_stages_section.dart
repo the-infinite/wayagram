@@ -1,18 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 
-class ContestProfileStagesSection extends ConsumerStatefulWidget {
+class ContestProfileStagesSection extends StatefulHookConsumerWidget {
   final List<Stage>? stages;
   const ContestProfileStagesSection(this.stages, {super.key});
 
@@ -24,9 +28,11 @@ class ContestProfileStagesSection extends ConsumerStatefulWidget {
 class _ContestProfileStagesSectionState
     extends ConsumerState<ContestProfileStagesSection> {
   final ScrollController _scrollController = ScrollController();
+ 
 
   @override
   void initState() {
+    print("i am looping  wewe ${widget.stages?.length}");
     super.initState();
   }
 
@@ -34,7 +40,9 @@ class _ContestProfileStagesSectionState
   Widget build(BuildContext context) {
     // final posts = ref.watch(postProvider);
 
+
     final wayaTheme = Theme.of(context);
+
     // final postNotifier = ref.read(postProvider.notifier);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -75,9 +83,10 @@ class _ContestProfileStagesSectionState
                 const Gap(20),
                 UpcomingWidget(
                     isFromDetailsPage: true,
-                    title: "No of Posts",
-                    content:
-                        "${model.numberOfPostPerWeek?.toString()} of Duration"),
+                    title: "Position",
+                    content: model.position?.toString() == "0"
+                        ? "No Position"
+                        : model.position?.toString() ?? ""),
               ],
             ),
             //  const Gap(20),

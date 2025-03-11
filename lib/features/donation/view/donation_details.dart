@@ -46,7 +46,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
-    final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
 
 
     return WayaScaffold(
@@ -155,7 +155,9 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                       message: 'You must complete KYC verification before you can donate.',
                       onPress: () {
                         Navigator.pop(context);
-                        WayaNav.toNamed(KycUpdate.route);
+                        WayaNav.toNamed('/kycUpdate', arguments: {
+                          'kyc': '${viewModel.kycStatus}'
+                        });
                       },
                       buttonText: 'Update KYC',
                       secondButtonText: 'Cancel',

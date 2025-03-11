@@ -5,6 +5,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/shop/order/vm/order_vm.dart';
 
@@ -96,7 +97,8 @@ class RejectionReason extends ConsumerWidget {
               const Gap(10),
               WayaButton(
                   callback: () {
-                    Navigator.of(context).pop();
+                     WayaNav.goBack();
+                
                   },
                   textColor: wayaTheme.colorScheme.greyColor500,
                   color: wayaTheme.colorScheme.transparent,

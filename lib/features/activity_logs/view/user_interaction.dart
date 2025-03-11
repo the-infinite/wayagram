@@ -6,9 +6,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:intl/intl.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
 import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
@@ -28,6 +31,15 @@ class UserInteraction extends ConsumerStatefulWidget {
 class _UserInteractionState extends ConsumerState<UserInteraction > {
 
   List<String> dates = [];
+
+  List<PaymentActivityDocs> activityLogs = [];
+  List<PaymentActivityDocs> activityLogs1 = [];
+
+  int transLength = 0;
+
+  String selTransact = 'All Time';
+  var lsTransact = ['All Time', 'This week', 'This month', 'This Year'];
+
   @override
   Widget build(BuildContext context) {
 
@@ -43,25 +55,40 @@ class _UserInteractionState extends ConsumerState<UserInteraction > {
         children: [
           Gap(10),
           Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: WayaColors.greyColor300),
-              borderRadius: BorderRadius.circular(6),
-            ),
+            alignment: Alignment.center,
             width: 102.w,
             height: 36.h ,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                    'All Time',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    )),
-                Gap(10),
-                SvgPicture.asset('assets/icons/down_arrow.svg')
-              ],
+            padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: WayaColors.greyColor300)),
+            child: DropdownButton(
+                underline: Container(),
+                borderRadius: BorderRadius.circular(8),
+                elevation: 4,
+                padding: EdgeInsets.zero,
+                iconSize: 12,
+                icon: SvgPicture.asset(WayaAssets.icons.downArrow.path,),
+                isDense: true,
+                isExpanded: false,
+                value: selTransact,
+                items: lsTransact.map((String ls){
+                  return DropdownMenuItem(
+                    value: ls,
+                    child: Text(ls,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontFamily: WayaConstants.fontFamily,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        )),
+                  );
+                }).toList(),
+                onChanged: (String? value){
+                  setState(() {
+                    selTransact = value!;
+                    sortList(selTransact.toLowerCase());
+                  });
+                }
             ),
           ),
           Gap(10),
@@ -99,7 +126,8 @@ class _UserInteractionState extends ConsumerState<UserInteraction > {
                                     fontFamily: WayaConstants.fontFamily,
                                     fontWeight: FontWeight.w600,
                                     color: Colors.black,
-                                  )),
+                                  )
+                              ),
                               Gap(10),
                               ListView.builder(
                                 shrinkWrap: true,
@@ -116,7 +144,7 @@ class _UserInteractionState extends ConsumerState<UserInteraction > {
                                       subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(userInteraction.createdAt)}, '
                                           '${DateFormat.jm().format(dateTime)}', image: userInteraction.description!.contains('liked')?
                                     'assets/icons/like.svg':userInteraction.description!.contains('message')?'assets/icons/comment.svg':
-                                    userInteraction.description!.contains('shared')?'assets/icons/share.svg':''
+                                    userInteraction.description!.contains('shared')?'assets/icons/share.svg':'assets/icons/followed.svg'
                                     );
                                   }else{
                                     return Container();
@@ -134,6 +162,19 @@ class _UserInteractionState extends ConsumerState<UserInteraction > {
       ),
     );
   }
-
+  sortList(s) {
+    activityLogs = [];
+    setState(() {
+      if(s == 'All Time'){
+        activityLogs = activityLogs1;
+      } else {
+        for (int i = 0; i < transLength; i++) {
+          if (s.toString().trim() == activityLogs1[i].createdAt.toString()) {
+            activityLogs.add(activityLogs1[i]);
+          }
+        }
+      }
+    });
+  }
 
 }

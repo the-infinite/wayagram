@@ -11,15 +11,13 @@ class StatusWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style: TextStyle().wayaCopyWith(
-              color: Theme.of(context).colorScheme.greyColor300,
-              fontSize: 13,
-            )),
+            style: wayaTheme.textTheme.bodyMedium),
         const Gap(5),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -28,10 +26,7 @@ class StatusWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(content,
-              style: TextStyle().wayaCopyWith(
-                color: Theme.of(context).colorScheme.primary200,
-                fontSize: 12,
-              )),
+              style: wayaTheme.textTheme.bodyMedium),
         ),
 
       ],

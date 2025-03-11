@@ -6,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
@@ -17,8 +16,6 @@ import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
 import 'package:wayagram/features/ugt/widgets/status_widget.dart';
 
 import '../../../core/components/waya_buttons.dart';
-import '../../../core/utils/waya_helpers.dart';
-import '../data/model/ugt_model.dart';
 import 'about_ugt_widget.dart';
 
 class ContestAppliedCard extends StatelessWidget {
@@ -157,44 +154,50 @@ class ContestAppliedCard extends StatelessWidget {
               ),
               const Gap(20),
               Row(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AboutUgtWidget(
-                      title: "Start Date",
-                      content: formatDate(post.contest?.startDate ?? "")),
-                  const Gap(30),
-                  AboutUgtWidget(
-                      title: "End Date",
-                      content: formatDate(post.contest?.endDate ?? "")),
-                ],
-              ),
-              const Gap(10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (post.contest?.status?.toLowerCase() != "active")
-                    StatusWidget(
-                      title: "Application",
-                      content: post.contest?.status ?? "Pending",
-                    ),
-                  if (post.contest?.status?.toLowerCase() == "active")
-                    StatusOngoing(
-                      title: "Application",
-                      content: post.contest?.status ?? "Pending",
-                    ),
-                  const Gap(30),
-                  AboutUgtWidget(
-                      title: "Prize",
-                      content:
-                          "NGN ${formatMoney(post.contest?.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
-                  const Gap(30),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AboutUgtWidget(
+                          title: "Start Date",
+                          content: formatDate(post.contest?.startDate ?? "")),
+                      const Gap(20),
+                      AboutUgtWidget(
+                          title: "Prize",
+                          content:
+                              "NGN ${formatMoney(post.contest?.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      AboutUgtWidget(
+                          title: "End Date",
+                          content: formatDate(post.contest?.endDate ?? "")),
+                      const Gap(20),
+                      if (post.contest?.status?.toLowerCase() != "active")
+                        StatusWidget(
+                          title: "Application",
+                          content: post.contest?.status ?? "Pending",
+                        ),
+                      if (post.contest?.status?.toLowerCase() == "active")
+                        StatusOngoing(
+                          title: "Application",
+                          content: post.contest?.status ?? "Pending",
+                        ),
+                      const Gap(30),
+                    ],
+                  ),
                   AboutUgtWidget(
                       title: "Category", content: post.categoryName ?? ""),
                 ],
               ),
-              const Gap(25),
+              const Gap(10),
+              // const Gap(25),
               WayaButton(
                 callback: () {
                   WayaUtils.showModalSheetUgt(

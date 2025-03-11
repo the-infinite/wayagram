@@ -87,7 +87,8 @@ class UgtContestantProfileVm extends StateNotifier<List<SingleContestantPosts>> 
      // state = state.copyWith(myPostList: [...list]);
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
-      print("do like stuff Success");
+      // WayaSnackBar.showToast("Contest already liked");
+      print("Contest already liked");
     }
   }
 
@@ -144,9 +145,9 @@ class UgtContestantProfileVm extends StateNotifier<List<SingleContestantPosts>> 
 
 }
 
-final selectedContestProvider = StateProvider<Contest>((ref) {
-  return Contest();
-});
+/* final selectedContestProvider = StateProvider<Contest?>((ref) {
+  return null;
+}); */
 // Provider
 final ugtContestantProfileVm = StateNotifierProvider<UgtContestantProfileVm, List<SingleContestantPosts>>((ref) {
   return UgtContestantProfileVm(ContestRepo(), WayaLocalDataSource());

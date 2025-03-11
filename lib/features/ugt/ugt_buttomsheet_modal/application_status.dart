@@ -106,19 +106,12 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                 children: [
                   Text("Reasons for Rejection",
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle().wayaCopyWith(
-                        color: Theme.of(context).colorScheme.customBlack,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      )),
+                      style: wayaTheme.textTheme.bodyMedium),
                   const Gap(10),
                   Text(
                       widget.post?.rejectionReason ??
                           "We regret to inform you that your application for the University Got Talent contest has been rejected due to insufficient originality in your proposed act. We encourage you to explore more unique ideas and reapply in the future!",
-                      style: TextStyle().wayaCopyWith(
-                        color: Theme.of(context).colorScheme.customBlack,
-                        fontSize: 14,
-                      )),
+                      style: wayaTheme.textTheme.bodyMedium),
                 ],
               ),
             if (widget.post?.rejectionReason == null)

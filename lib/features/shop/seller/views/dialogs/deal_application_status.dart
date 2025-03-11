@@ -150,7 +150,8 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
               WayaButton(
                   textColor: wayaTheme.colorScheme.greyColor900,
                   callback: () {
-                    Navigator.of(context).pop();
+                     WayaNav.goBack();
+                 
                   },
                   color: wayaTheme.colorScheme.transparent,
                   border: Border.all(

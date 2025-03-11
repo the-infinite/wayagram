@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/group/view/joined_group.dart';
 import 'package:wayagram/features/group/view/manage_groups.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
@@ -23,10 +25,22 @@ class Groups extends ConsumerStatefulWidget {
 class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
+
+  @override
+  void reassemble() {
+    super.reassemble();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+      // final id  = ModalRoute.of(context)?.settings.arguments as String;
+      // final fetchGroup =  await ref.read(createGroupProvider.notifier).getSingleGroup(id);
+      // ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
+      //print('THE PUBLIC GROUP ID is $id');
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createGroupProvider);
-
+    final wayaTheme = Theme.of(context);
     return WayaScaffold(
       onTapBackButton: () {
         Navigator.pushNamed(context, BottomView.route, arguments: 0);
@@ -72,6 +86,23 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
           _selectedIndex == 0 ? GroupsForYou() : _selectedIndex == 1 ? JoinedGroup() : ManageGroups()
         ],
       ),
+        floatingActionButton: SizedBox(
+          height: 50,
+          width: 50,
+          child: WayaButton(
+            callback: () {
+              WayaNav.toNamed('/createGroup', arguments: 'groupForYou' );
+            },
+            height: 50,
+            centerWidget: Center(
+              child: Icon(
+                Icons.add,
+                color: wayaTheme.colorScheme.white,
+                size: 40,
+              ),
+            ),
+          ),
+        )
     );
   }
 }

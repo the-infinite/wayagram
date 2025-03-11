@@ -469,6 +469,8 @@ class Stages {
   int? entryAmount;
   int? numberOfPostPerWeek;
   int? priceOfTheWinner;
+  int? voteCountToQualify;
+  bool? isActive;
   String? startDate;
   String? endDate;
   bool? approveBeforeLive;
@@ -479,6 +481,8 @@ class Stages {
       this.entryAmount,
       this.numberOfPostPerWeek,
       this.priceOfTheWinner,
+      this.isActive,
+      this.voteCountToQualify,
       this.startDate,
       this.endDate,
       this.approveBeforeLive});
@@ -489,7 +493,9 @@ class Stages {
     entryAmount = json['entryAmount'];
     numberOfPostPerWeek = json['numberOfPostPerWeek'];
     priceOfTheWinner = json['priceOfTheWinner'];
+    isActive = json['isActive'];
     startDate = json['startDate'];
+    voteCountToQualify = json['voteCountToQualify'];
     endDate = json['endDate'];
     approveBeforeLive = json['approveBeforeLive'];
   }
@@ -502,6 +508,8 @@ class Stages {
     data['numberOfPostPerWeek'] = numberOfPostPerWeek;
     data['priceOfTheWinner'] = priceOfTheWinner;
     data['startDate'] = startDate;
+    data['isActive'] = isActive;
+    data['voteCountToQualify'] = voteCountToQualify;
     data['endDate'] = endDate;
     data['approveBeforeLive'] = approveBeforeLive;
     return data;

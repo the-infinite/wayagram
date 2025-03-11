@@ -52,7 +52,10 @@ class ConfirmOrderDeliveryVm extends StateNotifier<States> {
             title: 'Invalid Code Entered!',
             message:
                 'The code you entered is incorrect. Please double-check and try again',
-            onPress: () => Navigator.of(context).pop(),
+            onPress: () {
+               WayaNav.goBack();
+            
+            },
             icon: Image.asset('assets/icons/d-code-invalid.svg'),
             buttonText: 'Try Again');
 

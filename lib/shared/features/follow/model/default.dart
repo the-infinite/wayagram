@@ -1,4 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/features/user/resource/default.dart';
 
 part 'default.g.dart';
 
@@ -31,6 +33,22 @@ class FollowModel {
   Map<String, dynamic> toJson() => _$FollowModelToJson(this);
 
   factory FollowModel.fromJson(Map<String, dynamic> json) => _$FollowModelFromJson(json);
+
+  ///
+  bool get isOtherFollowingMe {
+    return (followerId == ConversationState.self.id && followedBack) || followingId == ConversationState.self.id;
+  }
+
+  ///
+  bool get isUserFollowing {
+    return followerId == ConversationState.self.id || (followingId == ConversationState.self.id && followedBack);
+  }
+
+  Future<CachedUserDataTuple?> getOtherUser() {
+    return ConversationState.self.id == followerId
+        ? UserResource.getUserDetails(followingId)
+        : UserResource.getUserDetails(followerId);
+  }
 }
 
 @JsonSerializable()

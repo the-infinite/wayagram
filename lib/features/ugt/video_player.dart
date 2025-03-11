@@ -33,6 +33,8 @@ class _VideoThumbnailPlayerState extends State<VideoThumbnailPlayer> {
         setState(() {
           _isInitialized = true;
         });
+        //  setState(() {});
+        _controller.seekTo(Duration(milliseconds: 1));
       })
       ..addListener(_checkVideoEnd);
   }
@@ -76,7 +78,7 @@ class _VideoThumbnailPlayerState extends State<VideoThumbnailPlayer> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          if (!_isPlaying)
+          if (!_isInitialized || _isBuffering)
             Image.file(
               File(widget.imageUrl),
               fit: BoxFit.cover,
@@ -96,14 +98,20 @@ class _VideoThumbnailPlayerState extends State<VideoThumbnailPlayer> {
             ),
           if (_isBuffering)
             Center(
-                child: SizedBox( 
+                child: SizedBox(
               width: 50,
               height: 50,
               child: CircularProgressIndicator(
                 color: wayaTheme.colorScheme.primary600,
               ),
             )),
-          if (!_isPlaying)
+          if (_isInitialized && !_isBuffering)
+            SizedBox(
+              width: double.infinity,
+              height: MediaQuery.of(context).size.height / 3.5,
+              child: VideoPlayer(_controller),
+            ),
+          if (!_isPlaying && _isInitialized && !_isBuffering)
             GestureDetector(
                 onTap: () {
                   _isPlaying = true;
@@ -111,12 +119,6 @@ class _VideoThumbnailPlayerState extends State<VideoThumbnailPlayer> {
                 },
                 child: Icon(Icons.play_circle_fill,
                     size: 60, color: Colors.white)),
-          if (_isPlaying && _isInitialized && !_isBuffering)
-            SizedBox(
-              width: double.infinity,
-              height: MediaQuery.of(context).size.height / 3.5,
-              child: VideoPlayer(_controller),
-            ),
         ],
       ),
     );

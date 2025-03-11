@@ -20,26 +20,23 @@ class UpcomingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: TextStyle().wayaCopyWith(
-              color: Theme.of(context).colorScheme.greyColor600,
-              fontSize: 12,
-            )),
+        SizedBox(
+          width: isFromDetailsPage ? null : context.width * 0.15,
+          child: Text(title,
+              style: wayaTheme.textTheme.bodyMedium),
+        ),
         const Gap(5),
         if (!status)
           SizedBox(
             width: isFromDetailsPage ? null : context.width * 0.15,
             child: Text(content,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle().wayaCopyWith(
-                  color: Theme.of(context).colorScheme.greyColor900,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
-                )),
+                // overflow: TextOverflow.ellipsis,
+                style:wayaTheme.textTheme.bodyMedium),
           ),
         if (status)
           Container(

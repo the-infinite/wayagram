@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
@@ -43,16 +44,21 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
           padding: const EdgeInsets.only(right: 20),
           child: WayaButton(
             callback: !viewModel.isLoading
-                ? () async {
-              print('Add cHOICES ==>>>');
-              if (_formKey.currentState!.validate()) {
+                ? () {
 
+              if (_formKey.currentState!.validate()) {
+                print('Add cHOICES ==>>>');
                 WayaNav.toNamed("/poll-summary");
               }
             } : null,
-            centerWidget: LoadingState(
-                loading: viewModel.isLoading, text: 'Create Poll'),
             height: 30,
+            text: 'Create Poll',
+            isLoading: viewModel.isLoading,
+            horizontalPadding: 12,
+            textStyle: WayaTextStyles.bodySmall.copyWith(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.white ),
           ),
         ),*/
         createPoll(context),
@@ -132,7 +138,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                             FormField<String>(validator: (value) {
                               if (viewModel
                                   .choices[index].description.text.isEmpty) {
-                                return '';
+                                return 'Description ${index + 1} is required';
                               }
 
                               return null;

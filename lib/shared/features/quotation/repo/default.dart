@@ -2,6 +2,7 @@ import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/features/quotation/data/model/quotation_model.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
+import 'package:wayagram/shared/features/shop/resource/default.dart';
 
 class QuotationRepository extends BaseRepository {
   static const serviceUrl = "wayagram-shop/api/v2/quotation";
@@ -68,7 +69,7 @@ class QuotationRepository extends BaseRepository {
     int limit = 10,
     int page = 1,
   ]) {
-    return get("$serviceUrl/vendor/quotations?limit=$limit&page=$page");
+    return get("$serviceUrl/vendor/quotations?limit=$limit&page=$page&shopId=${ShopResource.currentShop.id}");
   }
 
   Future<WayaRequestResponse> getVendorQuotation(

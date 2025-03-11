@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
@@ -25,7 +26,12 @@ class ContestForYou extends StateNotifier<List<Contest>> {
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);
         contestList = responseModel.data.docs;
-        state = [...state, ...contestList];
+        state = [...contestList];
+        /*  if (_page == 1) {
+        } else {
+          state = [...state, ...contestList];
+        } */
+
         _page++;
         isLoading = false;
       }
@@ -75,7 +81,8 @@ class ContestForYou extends StateNotifier<List<Contest>> {
       }).toList();
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
-      print("do like stuff Success");
+      //WayaSnackBar.showToast("Contest already liked");
+      debugPrint("Contest already liked");
     }
   }
 
@@ -89,7 +96,7 @@ class ContestForYou extends StateNotifier<List<Contest>> {
     if (response.success) {
       //  print("do like stuff Fail");
 
-      WayaSnackBar.showToast("Contest liked");
+      WayaSnackBar.showToast("Contest followed", showSuccess: true);
     } else {
       print("do like stuff Success");
     }

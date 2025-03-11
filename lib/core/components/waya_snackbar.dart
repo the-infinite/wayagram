@@ -6,13 +6,13 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 class WayaSnackBar {
   WayaSnackBar._();
 
-  static void showToast(String message) {
+  static void showToast(String message,{bool showSuccess=false}) {
     Get.showSnackbar(
       GetSnackBar(
         message: message,
         duration: Duration(seconds: 1),
         snackPosition: SnackPosition.BOTTOM, // Position of the Toast
-        backgroundColor: WayaColors.primary,
+        backgroundColor:showSuccess? WayaColors.success700 : WayaColors.primary,
         isDismissible: true, // Whether the toast can be dismissed by tapping
       ),
     );

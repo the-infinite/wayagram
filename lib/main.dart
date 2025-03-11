@@ -36,7 +36,7 @@ class Wayagram extends ConsumerWidget {
         theme: WayaTheme.lightTheme,
         darkTheme: WayaTheme.darkTheme,
         themeMode: themeMode,
-        debugShowCheckedModeBanner: !WayaConstants.isProduction,
+        debugShowCheckedModeBanner: false,
         getPages: WayaAppRoutes.getPages,
       ),
     );

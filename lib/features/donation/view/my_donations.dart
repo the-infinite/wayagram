@@ -11,17 +11,18 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
+import 'package:wayagram/features/donation/view/application_details.dart';
+import 'package:wayagram/features/donation/view/applied_donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
-import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
-import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
+import 'package:wayagram/features/donation/widget/applied_donationi_widget.dart';
+import 'package:wayagram/features/donation/widget/donation_tab.dart';
+import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
-import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
 import '../../../shared/features/user/models/default.dart';
-import '../../kyc/view/kyc_update.dart';
+import 'hosted_donations.dart';
 
 class MyDonations extends ConsumerStatefulWidget {
   const MyDonations({super.key});
@@ -37,8 +38,10 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(donationVmProvider.notifier).getMyDonation();
+      //ref.read(donationVmProvider.notifier).getMyDonation();
       ref.read(donationVmProvider.notifier).getMyKYC();
+      ref.read(donationVmProvider.notifier).getHostedDonation();
+      ref.read(donationVmProvider.notifier).getAppliedDonation();
     });
     searchController = TextEditingController();
     searchController.addListener(() {
@@ -46,13 +49,13 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
     });
   }
 
+  int _selectedIndex = 0;
+
   @override
   void dispose() {
     searchController.dispose();
     super.dispose();
   }
-
-  String userType = "PERSONAL";
 
   @override
   Widget build(BuildContext context) {
@@ -72,73 +75,96 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        WayaButton(
-          centerWidget: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                'assets/icons/donation.svg',
-                colorFilter: ColorFilter.mode(
-                    wayaTheme.colorScheme.primary300, BlendMode.srcIn),
-              ),
-              const Gap(10),
-              Text(
-                "Create a Donation Post",
-                style: TextStyle().wayaCopyWith(
-                    color: wayaTheme.colorScheme.customPrimary,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16),
-              ),
-            ],
-          ),
-          callback: () {
-            if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
-              WayaUtils.showNotice(
-                  context: context,
-                  title: "Update KYC Information ",
-                  message: 'You must complete KYC verification before creating a donation post',
-                  onPress: () {
-              Navigator.pop(context);
-              WayaNav.toNamed(KycUpdate.route);
-              },
-                  buttonText: 'Update KYC',
-                  secondButtonText: 'Cancel',
-                  icon: Image.asset('assets/images/cp-shop.png'));
-            } else if (ConversationState.self.accountType == UserAccountType.personal) {
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                WayaUtils.showNotice(
-                    context: context,
-                    title: "You don't have a Business Account",
-                    message: 'Please upgrade to a business account to create a donation post',
-                    onPress:  () {
-                Navigator.pop(context);
-                WayaNav.toNamed(UpgradeToBusiness.route);
-                },
-                    buttonText: 'Upgrade to Business',
-                    secondButtonText: 'Cancel',
-                    icon: Image.asset('assets/images/cp-shop.png'));
-              });
-            } else{
-              WayaNav.toNamed('/createDonation');
-            }
-          },
-          color: wayaTheme.colorScheme.primar50,
+        const Gap(10),
+        Row(
+          children: [
+            DonationTabButton(
+              isSelected: _selectedIndex == 0,
+              text: 'Hosted Donations',
+              onTap: () => setState(() => _selectedIndex = 0),
+            ),
+            const Gap(20),
+            DonationTabButton(
+              isSelected: _selectedIndex == 1,
+              text: 'Applied Donations',
+              onTap: () => setState(() => _selectedIndex = 1),
+            ),
+
+          ],
         ),
-        Gap(20),
-        FilterWidget(
-            search: TextEditingController(), hintText: 'Search Donations'),
-        Gap(20),
-        Text("My Donations", style: wayaTheme.textTheme.titleLarge),
-        Text(
-          "See and manage all your created donations",
-          style: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.w400,
-              color: Theme.of(context).colorScheme.greyColor500),
-        ),
-        const Gap(30),
-        ListView.builder(
+        const Gap(20),
+
+        _selectedIndex == 0 ? HostedDonations() : AppliedDonations(),
+
+        // WayaButton(
+        //   centerWidget: Row(
+        //     mainAxisAlignment: MainAxisAlignment.center,
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     children: [
+        //       SvgPicture.asset(
+        //         'assets/icons/donation.svg',
+        //         colorFilter: ColorFilter.mode(
+        //             wayaTheme.colorScheme.primary300, BlendMode.srcIn),
+        //       ),
+        //       const Gap(10),
+        //       Text(
+        //         "Create a Donation Post",
+        //         style: TextStyle().wayaCopyWith(
+        //             color: wayaTheme.colorScheme.customPrimary,
+        //             fontWeight: FontWeight.w600,
+        //             fontSize: 16),
+        //       ),
+        //     ],
+        //   ),
+        //   callback: () {
+        //     if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
+        //       WayaUtils.showNotice(
+        //           context: context,
+        //           title: "Update KYC Information ",
+        //           message: 'You must complete KYC verification before creating a donation post',
+        //           onPress: () {
+        //             Navigator.pop(context);
+        //             WayaNav.toNamed('/kycUpdate', arguments: {
+        //               'kyc': '${viewModel.kycStatus}'
+        //             });
+        //           },
+        //           buttonText: 'Update KYC',
+        //           secondButtonText: 'Cancel',
+        //           icon: Image.asset('assets/images/cp-shop.png'));
+        //     } else if (ConversationState.self.accountType == UserAccountType.personal) {
+        //       WidgetsBinding.instance.addPostFrameCallback((_) {
+        //         WayaUtils.showNotice(
+        //             context: context,
+        //             title: "You don't have a Business Account",
+        //             message: 'Please upgrade to a business account to create a donation post',
+        //             onPress:  () {
+        //               Navigator.pop(context);
+        //               WayaNav.toNamed(UpgradeToBusiness.route);
+        //             },
+        //             buttonText: 'Upgrade to Business',
+        //             secondButtonText: 'Cancel',
+        //             icon: Image.asset('assets/images/cp-shop.png'));
+        //       });
+        //     } else{
+        //       WayaNav.toNamed('/createDonation');
+        //     }
+        //   },
+        //   color: wayaTheme.colorScheme.primar50,
+        // ),
+        // Gap(20),
+        // FilterWidget(
+        //     search: TextEditingController(), hintText: 'Search Donations'),
+        // Gap(20),
+        // Text("My Donations", style: wayaTheme.textTheme.titleLarge),
+        // Text(
+        //   "See and manage all your created donations",
+        //   style: WayaTextStyles.bodySmall.copyWith(
+        //       fontSize: 12,
+        //       fontWeight: FontWeight.w400,
+        //       color: Theme.of(context).colorScheme.greyColor500),
+        // ),
+
+       /* ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: filteredMyDonations.length,
@@ -151,35 +177,33 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
               int targetedAmount = double.parse('${donation.targetAmount}').toInt();
 
               double ratioLeft = amountRaised / targetedAmount;
-              return ManageDonationWidget(
-                text: "Manage Donation",
-                amountRaised: WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
-                targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
-                title: donation.title?.capitalizeFirst,
-                image: donation.imageURL,
-                dayLeft: daysLeft < 0 ? '0' : '$daysLeft',
-                donationCount: donation.donationCount!,
-                rangeRatio: ratioLeft,
-                onTap: () {
-                  WayaNav.toNamed('/donationManagement', arguments: {
-                    'title': '${donation.title?.capitalizeFirst}',
-                    'image': '${donation.imageURL}',
-                    'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
-                    'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
-                    'desc': '${donation.description}',
-                    'solution': '${donation.solution}',
-                    'impact': '${donation.impact}',
-                    'url': '${donation.url}',
-                    'minimumDonationAmount': '${donation.minimumDonationAmount}',
-                    'daysLeft': '$daysLeft',
-                    'id': '${donation.id}',
-                    'range':ratioLeft,
-                    'donationCount': '${donation.donationCount}'
-                  });
-                },
-                buttonWidth: 120.0,
-              );
-            }),
+              return AppliedDonationWidget(
+                  onTap: ()async{
+                    await WayaUtils.showModalSheet(context,
+                          child: ApplicationStatus(
+                          causeTitle: '${donation.title?.capitalizeFirst}',
+                          solution: '${donation.solution}',
+                          desc: '${donation.description}',
+                          startDate: ref.read(createPollVotingProvider.notifier).formatDt1('${donation.startDate}'),
+                          endDate: ref.read(createPollVotingProvider.notifier).formatDt1('${donation.expirationDate}'),
+                          targetAmount:'${donation.targetAmount?.replaceAll('.00', '')}',
+                          amountRaised: '${donation.amountRaised?.replaceAll('.00', '')}',
+                          status: '${donation.status}',
+                          privacy: '${donation.privacy}',
+                            ));
+                  },
+                    privacy: '${donation.privacy}',
+                    title: '${donation.title}',
+                    status: '${donation.status}',
+                    image: '${donation.imageURL}',
+                    targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
+                    startDate: ref.read(createPollVotingProvider.notifier).formatDt1('${donation.startDate}'),
+                    endDate: ref.read(createPollVotingProvider.notifier).formatDt1('${donation.expirationDate}'),
+                    color: WayaColors.primary50,
+                );
+
+              */
+
       ],
     );
     /* Expanded(
@@ -248,47 +272,3 @@ class DonationEmptyState extends StatelessWidget {
   }
 }
 
-/*
-
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            WayaButton(
-              centerWidget: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/icons/donation.svg',
-                    colorFilter: ColorFilter.mode(
-                        wayaTheme.colorScheme.primary300, BlendMode.srcIn),
-                  ),
-                  const Gap(10),
-                  Text(
-                    "Create a Donation Post",
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
-                  ),
-                ],
-              ),
-              callback: () {
-                WayaNav.toNamed('/createDonation');
-              },
-              color: wayaTheme.colorScheme.primar50,
-            ),
-
-            Gap(20),
-            FilterWidget(search: TextEditingController(), hintText: 'Search Donations'),
-            Gap(20),
-            Text("My Donations",
-                style: wayaTheme.textTheme.titleLarge),
-            Text(
-              "See and manage all your created donations",
-              style: WayaTextStyles.bodySmall.copyWith(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w400,
-                  color: Theme.of(context).colorScheme.greyColor500 ),),
-            const Gap(30),
-          ],
-        ),
- */

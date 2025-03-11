@@ -145,7 +145,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             .read(contestNotifierProvider.notifier)
                             .ugtPaymentType(),
                         onSelected: (value) {
-                          if (value.first.label == "Free") {
+                          if (value.first.label.toLowerCase() == "free") {
                             _contestController.entryAmountController.text = "0";
                           }
                           entryType.value = value.first.label;
@@ -166,7 +166,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                     ],
                   );
                 }),
-                if (entryType.value != "Free")
+                if (entryType.value.toLowerCase() != "free")
                   FormField<String>(validator: (value) {
                     if (_contestController.entryAmountController.text.isEmpty) {
                       return 'Entry Amount is required';
@@ -181,7 +181,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           controller: _contestController.entryAmountController,
                           keyboardType: TextInputType.number,
                           hintText: "0 NGN",
-                          isReadOnly: entryType.value == "Free",
+                          isReadOnly: entryType.value.toLowerCase() == "free",
                           label: "Entry Amount",
                           inputFormatters: [
                             CurrencyTextInputFormatter.currency(
@@ -455,6 +455,10 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           keyboardType: TextInputType.number,
                           controller: _contestController
                               .contestPrizeWinnerTextController,
+                          inputFormatters: [
+                            CurrencyTextInputFormatter.currency(
+                                name: 'NGN', symbol: 'NGN', locale: 'en_NG')
+                          ],
                           hintText: "Enter Winners price",
                           label: "Prize for the Winner? ",
                           borderColor: formState.hasError &&
@@ -555,7 +559,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
               if (priceForWinner.value == "No") {
                 _contestController.contestPrizeWinnerTextController.text = "0";
               }
-              if (entryType.value != "Free") {
+              if (entryType.value.toLowerCase() != "free") {
                 _contestController.entryAmountController.text = "0";
               }
               if (_formKey.currentState!.validate()) {

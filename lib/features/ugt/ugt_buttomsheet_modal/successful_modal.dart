@@ -2,15 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 
 import '../../../core/components/waya_buttons.dart';
-import '../../../core/components/waya_select_field.dart';
-import '../../../core/components/waya_text_form_field.dart';
-import '../../../core/utils/waya_navigation.dart';
+
 
 class SuccessfulModal extends StatefulHookConsumerWidget {
   final String title;

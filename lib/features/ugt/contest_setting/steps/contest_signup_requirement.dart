@@ -13,6 +13,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/Add_new_requirement_modal.dart';
 import 'package:wayagram/features/ugt/data/controller/contest_controller.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_text_form_field.dart';
@@ -62,6 +63,35 @@ class _ContestSignupRequirementState
     final viewModel1 = ref.watch(stateRequirementProvider);
     final wayaTheme = Theme.of(context);
     final isLoading = useState(false);
+    var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
+
+    var isEditing = ref.watch(stateIsEditingContestProvider);
+    useEffect(() {
+      if (isEditing) {
+        int index = 0;
+        Future.delayed(Duration(seconds: 1), () {
+          ref.read(stateRequirementProvider.notifier).state = [
+            ...contestViewModel.contestSettings?.formRequirements?.map((e) {
+                  return NewRequirementModel(
+                    requirementName: e.requirementName,
+                    requirementType: e.requirementType,
+                    isRequired: e.required,
+                    id: index++,
+                  );
+                }).toList() ??
+                [],
+            /*   NewRequirementModel(
+                    requirementType: "Select Type",
+                    id: ref
+                        .read(stateRequirementProvider.notifier)
+                        .state
+                        .length,
+                  ) */
+          ];
+        });
+      }
+      return null;
+    }, []);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -339,7 +369,8 @@ class _ContestSignupRequirementState
                         context,
                         isLoading,
                         ref.read(stateRequirementProvider.notifier).state,
-                        ref.read(stateContactProvider.notifier).state);
+                        ref.read(stateContactProvider.notifier).state, isEditing
+                        );
                     //   provider.submit(context, widget.isWayagramDeal);
                   }
                 : null),
