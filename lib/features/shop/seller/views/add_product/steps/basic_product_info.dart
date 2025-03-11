@@ -159,7 +159,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                     children: [
                       WayaPaginatedSelectField(
                           height: 0.3,
-                          uniqueKey: Uuid().v4(),
+                          uniqueKey: "product-category",
                           displayText: viewModel.selectedCategory,
                           fetchData:
                               ref.watch(shopVmProvider.notifier).allCategories,
