@@ -32,11 +32,6 @@ class _SearchLogState extends ConsumerState<SearchLog> {
 
   List<String> dates = [];
 
-  List<PaymentActivityDocs> activityLogs = [];
-  List<PaymentActivityDocs> activityLogs1 = [];
-
-  int transLength = 0;
-
   String selTransact = 'All Time';
   var lsTransact = ['All Time', 'This week', 'This month', 'This Year'];
 

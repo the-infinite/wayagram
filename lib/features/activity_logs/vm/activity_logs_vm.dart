@@ -84,7 +84,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchVisitedPagesDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(visitedPagesDocs: fetchVisitedPagesDocs);
-        state = state.copyWith(visitedPagesDocs: responseModel.data?.docs);
+        state = state.copyWith(visitedPagesDocs: responseModel.data?.docs,
+        visitedPagesDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -135,7 +136,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchUserActionDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(userActionsDocs: fetchUserActionDocs);
-        state = state.copyWith(userActionsDocs: responseModel.data?.docs);
+        state = state.copyWith(userActionsDocs: responseModel.data?.docs,
+        userActionsDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -186,7 +188,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchUserInteractionDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(userInteractionDocs: fetchUserInteractionDocs);
-        state = state.copyWith(userInteractionDocs: responseModel.data?.docs);
+        state = state.copyWith(userInteractionDocs: responseModel.data?.docs,
+        userInteractionDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
