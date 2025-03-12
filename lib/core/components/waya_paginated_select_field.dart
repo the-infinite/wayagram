@@ -65,7 +65,7 @@ class _WayaPaginatedSelectFieldState
           ),
         WayaButton(
           callback: () async {
-             await showModalBottomSheet(
+            await showModalBottomSheet(
               context: context,
               builder: (context) {
                 return PaginatedBottomSheet(
@@ -74,15 +74,12 @@ class _WayaPaginatedSelectFieldState
                   displayText: widget.displayText,
                   uniqueKey: widget.uniqueKey,
                   onSelected: (value) {
-                    
-              widget.onSelected(value);
+                    widget.onSelected(value);
                     Navigator.pop(context);
                   },
                 );
               },
             );
-
-           
           },
           horizontalPadding: 0,
           color: wayaTheme.colorScheme.transparent,
@@ -261,6 +258,7 @@ class WayaPaginatedSelectFieldNotifier
           totalPages: result.totalPages,
           isLoading: false,
         );
+       //   print("itwems hjbjbkjnkjnknkn ${result.items}");
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -285,6 +283,7 @@ class WayaPaginatedSelectFieldNotifier
           totalPages: result.totalPages,
           isLoading: false,
         );
+      
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -297,8 +296,6 @@ class WayaPaginatedSelectFieldNotifier
   void setFocus(bool isFocused) {
     state = state.copyWith(isFocused: isFocused);
   }
-
- 
 }
 
 final paginatedSelectFieldNotifierProvider = StateNotifierProvider.family<
