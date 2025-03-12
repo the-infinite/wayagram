@@ -7,12 +7,9 @@ part 'default.g.dart';
 
 // Chat type enum
 enum ChatType {
-  personal("personal"),
-  group("group"),
-  dispute("dispute");
-
-  const ChatType(this.value);
-  final String value;
+  personal,
+  group,
+  dispute,
 }
 
 @JsonSerializable()
