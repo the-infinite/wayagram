@@ -85,6 +85,14 @@ class Wayagram extends ConsumerWidget {
         themeMode: themeMode,
         debugShowCheckedModeBanner: false,
         getPages: WayaAppRoutes.getPages,
+        builder: (context, child) => Stack(
+          children: [
+            //? First, the widget that is being laid out.
+            child!,
+
+            //? Second, our draggable
+          ],
+        ),
       ),
     );
   }
