@@ -486,6 +486,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       ),
                                       style2: wayaTheme.textTheme.bodySmall?.copyWith(
                                         color: wayaTheme.colorScheme.greyColor500,
+                                        fontWeight: FontWeight.w600,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -500,6 +501,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       ),
                                       style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                         color: wayaTheme.colorScheme.greyColor500,
+                                        fontWeight: FontWeight.w600,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -514,6 +516,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       ),
                                       style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                         color: wayaTheme.colorScheme.greyColor500,
+                                        fontWeight: FontWeight.w600,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -525,19 +528,20 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               Gap(5.w),
 
                               //? Some more space.
-                              if (isSelf)
-                                WayaRichText(
-                                  title1: 'Joined: ',
-                                  title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
-                                  style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                    color: wayaTheme.colorScheme.black,
-                                    fontSize: 12,
-                                  ),
-                                  style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                    color: wayaTheme.colorScheme.greyColor500,
-                                    fontSize: 12,
-                                  ),
+                              //if (isSelf)
+                              WayaRichText(
+                                title1: 'Joined: ',
+                                title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
+                                style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  color: wayaTheme.colorScheme.black,
+                                  fontSize: 12,
                                 ),
+                                style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  color: wayaTheme.colorScheme.greyColor500,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                ),
+                              ),
                             ],
                           ),
                         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 
 import 'profile/dispute.dart';
@@ -29,7 +30,7 @@ class _ChatProfilePageState extends ConsumerState<ChatProfilePage> {
     if (state.chat == null) return const SizedBox();
 
     //? If this is a group chat.
-    if (state.chat!.chatType == 'group') {
+    if (state.chat!.chatType == ChatType.group) {
       return GroupChatProfilePage(
         chat: state.chat!,
         ref: ref,
@@ -37,7 +38,7 @@ class _ChatProfilePageState extends ConsumerState<ChatProfilePage> {
     }
 
     //? If this is a dispute chat.
-    if (state.chat!.chatType == 'dispute') {
+    if (state.chat!.chatType == ChatType.dispute) {
       return DisputeChatProfilePage(
         chat: state.chat!,
         ref: ref,
