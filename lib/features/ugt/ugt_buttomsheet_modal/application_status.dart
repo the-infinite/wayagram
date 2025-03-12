@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
@@ -219,7 +220,9 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                 textColor: wayaTheme.colorScheme.customBlack,
                 border: Border.all(
                     width: 1, color: wayaTheme.colorScheme.greyColor300),
-                callback: () {})
+                callback: () {
+                  WayaNav.goBack();
+                })
           ],
         ),
       ),
@@ -264,7 +267,7 @@ class UpcomingWidget extends StatelessWidget {
         SizedBox(
           width:
               isFromDetailsPage ? context.width * 0.18 : context.width * 0.21,
-          child: Text(title, style: wayaTheme.textTheme.bodyMedium),
+          child: Text(title, style: WayaTextStyles.hintStyleBold),
         ),
         const Gap(5),
         if (!status)

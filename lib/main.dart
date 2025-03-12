@@ -10,6 +10,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
+import 'package:wayagram/core/helpers/deep_linking_listener.dart';
 import 'package:wayagram/core/service/notification_service.dart';
 import 'package:wayagram/core/theme/vm/theme_vm.dart';
 import 'package:wayagram/core/theme/waya_theme.dart';
@@ -58,10 +59,11 @@ void main() async {
   // TODO: Switch to native splash screens when possible.
 
   //? Fifth, configure our visibility detector.
-  VisibilityDetectorController.instance.notifyNow(); 
+  VisibilityDetectorController.instance.notifyNow();
 
   //? Finally, run the app.
-  runApp(ProviderScope(child: const Wayagram()));
+  //? added DeepLinkListener to listen to incoming deepLinking urls
+  runApp(ProviderScope(child: const DeepLinkListener(child: Wayagram())));
 }
 
 class Wayagram extends ConsumerWidget {

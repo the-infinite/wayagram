@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 
 class AdminCard extends StatelessWidget {
   final String imageUrl;
@@ -37,7 +38,7 @@ class AdminCard extends StatelessWidget {
               // padding: const EdgeInsets.all(4),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.orange, width: 2),
+                border: Border.all(color: wayaTheme.primaryColor, width: 2),
               ),
               child: CircleAvatar(
                 radius: radius ?? 35,
@@ -54,9 +55,9 @@ class AdminCard extends StatelessWidget {
               right: 0,
               child: Container(
                 padding: const EdgeInsets.all(6),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.orange,
+                  color: wayaTheme.primaryColor,
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(5.0),
@@ -86,25 +87,13 @@ class AdminCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                name,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
-                ),
-              ),
+              Text(name,
+                  textAlign: TextAlign.center,
+                  style: WayaTextStyles.bodyMedium
+                      .copyWith(fontWeight: FontWeight.bold)),
 
               // Votes
-              Text(
-                votes,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black87,
-                ),
-              ),
+              Text(votes, style: WayaTextStyles.bodyBold),
             ],
           ),
         ),

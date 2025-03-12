@@ -20,7 +20,7 @@ class StatusOngoing extends StatelessWidget {
         Text(title, style: WayaTextStyles.hintStyleBold),
         const Gap(5),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
           decoration: BoxDecoration(
             color: Colors.green.withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),

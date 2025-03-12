@@ -243,6 +243,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
+                //   mainAxisSize: MainAxisSize.min,
                 children: [
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,

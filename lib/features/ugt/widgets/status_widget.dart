@@ -20,7 +20,7 @@ class StatusWidget extends StatelessWidget {
         Text(title, style: WayaTextStyles.hintStyleBold),
         const Gap(5),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 3),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.pendingColor,
             borderRadius: BorderRadius.circular(12),

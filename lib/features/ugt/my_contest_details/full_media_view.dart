@@ -47,7 +47,7 @@ class CandidatePostScreen extends StatelessWidget {
             buttonBackgroundColor: Color(0xff121212),
             arrowColor: Colors.white,
             onTap: () {
-              Navigator.pop(context);
+              WayaNav.goBack();
             },
           ),
           actions: [

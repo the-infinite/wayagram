@@ -5,11 +5,13 @@ import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
@@ -116,7 +118,51 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                           context.width * 0.15,
                         ),
                         //  post.isFollowing!
-                        Image.asset("assets/images/vector.png"),
+                        //  Image.asset("assets/images/vector.png"),
+                        PopupMenuButton(
+                          onSelected: (value) {},
+                          position: PopupMenuPosition.under,
+                          itemBuilder: (context) {
+                            return [
+                              PopupMenuItem<int>(
+                                value: 1,
+                                child: _buildActionNav(
+                                    context: context,
+                                    onTap: () {},
+                                    asset: WayaAssets.icons.genSet.share
+                                        .svg(fit: BoxFit.none),
+                                    text: "Share Post Link",
+                                    color: wayaTheme.colorScheme.customBlack),
+                              ),
+                              /*   if (viewModel.getLoggedInUserId() ==
+                                  widget.post.contestantProfileId) */
+                              PopupMenuItem<int>(
+                                value: 1,
+                                child: _buildActionNav(
+                                    context: context,
+                                    onTap: () {},
+                                    asset: Icon(
+                                      Icons.delete_outline_outlined,
+                                      size: 24,
+                                    ),
+                                    text: "Delete Post",
+                                    color: wayaTheme.colorScheme.customBlack),
+                              )
+                            ];
+                          },
+                          child: Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: wayaTheme.colorScheme
+                                    .greyColor200, // Background color
+                                shape: BoxShape.circle, // Makes it circular
+                              ),
+                              child: Icon(
+                                Icons.more_horiz,
+                                color: Colors.black12,
+                              )),
+                        )
                       ],
                     ),
                   ),
@@ -281,6 +327,31 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
       ],
     );
   }
+}
+
+InkWell _buildActionNav(
+    {required BuildContext context,
+    required VoidCallback onTap,
+    required Widget asset,
+    required String text,
+    required Color color}) {
+  //final wayaTheme = Theme.of(context);
+  return InkWell(
+    onTap: onTap,
+    splashFactory: NoSplash.splashFactory,
+    child: Row(
+      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        asset,
+        const Gap(8),
+        Text(
+          text,
+          style: WayaTextStyles.bodyMedium.copyWith(color: color),
+        ),
+      ],
+    ),
+  );
 }
 
 String formatDate(String isoDate) {

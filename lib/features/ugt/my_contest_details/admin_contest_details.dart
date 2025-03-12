@@ -495,9 +495,9 @@ class UpcomingWidgetAdmin extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                 child: Text(
                   content,
-                  style: TextStyle(
-                      color: getColor(true, content.toLowerCase()),
-                      fontSize: 10),
+                  style: WayaTextStyles.bodySmall.copyWith(
+                    color: getColor(true, content.toLowerCase()),
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ),
