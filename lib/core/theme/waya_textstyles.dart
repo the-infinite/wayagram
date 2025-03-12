@@ -46,7 +46,7 @@ class WayaTextStyles {
    // overflow: TextOverflow.ellipsis,
   );
   static const headlineMedium = TextStyle(
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: FontWeight.w700,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,

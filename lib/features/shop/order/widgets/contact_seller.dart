@@ -25,10 +25,7 @@ class ContactSeller extends StatelessWidget {
           Text(
             "Contact Seller",
             textAlign: TextAlign.start,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: wayaTheme.textTheme.headlineMedium
           ),
           const Gap(12),
           Text(

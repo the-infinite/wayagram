@@ -48,10 +48,7 @@ class DeliveryCostRequest extends ConsumerWidget {
               Text(
                 "Delivery Cost Request",
                 textAlign: TextAlign.start,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: wayaTheme.textTheme.headlineMedium
               ),
               const Gap(12),
               Text(
