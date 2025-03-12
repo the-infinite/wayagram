@@ -33,7 +33,7 @@ class MyMomentWidget extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
     return GestureDetector(
       onTap: () async {
-        Navigator.pushReplacementNamed(context, ViewMoment.route, arguments: {
+        WayaNav.replaceNamed( ViewMoment.route, arguments: {
           "moments": allMoments,
           "isMine": isMine,
           'index': index
@@ -206,7 +206,7 @@ class MyMomentActions extends StatelessWidget {
               child: _buildActionNav(
                   context: context,
                   onTap: () {
-                    Navigator.pop(context);
+                    WayaNav.goBack();
                     WayaNav.toNamed(Moment.route, arguments: moment);
                   },
                   asset: Icon(
@@ -221,7 +221,7 @@ class MyMomentActions extends StatelessWidget {
             //   child: _buildActionNav(
             //       context: context,
             //       onTap: () async {
-            //         Navigator.pop(context);
+            //         WayaNav.goBack();
             //       },
             //       asset: SvgPicture.asset(WayaAssets.icons.mFire.path),
             //       text: "Promote"),
@@ -231,7 +231,7 @@ class MyMomentActions extends StatelessWidget {
               child: _buildActionNav(
                   context: context,
                   onTap: () async {
-                    Navigator.pop(context);
+                    WayaNav.goBack();
                     showDelete();
                   },
                   asset: Icon(

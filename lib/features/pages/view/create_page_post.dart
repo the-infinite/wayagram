@@ -140,7 +140,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
               child: InkWell(
                   onTap: (){
                     ref.watch(createPageProvider.notifier).reset();
-                    Navigator.pop(context);
+                    WayaNav.goBack();
                   },
                   child: Image.asset('assets/images/pages/cancel.png', height: 16.h,)),
             )),
@@ -374,7 +374,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                       Padding(
                                         padding: const EdgeInsets.only(right: 20),
                                         child: GestureDetector(
-                                          onTap: () =>Navigator.pop(context),
+                                          onTap: () =>WayaNav.goBack(),
                                           child: Container(
                                             padding: const EdgeInsets.all(2),
                                             decoration:  BoxDecoration(
@@ -486,7 +486,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                       Padding(
                                         padding: const EdgeInsets.only(right: 20),
                                         child: GestureDetector(
-                                          onTap: () =>Navigator.pop(context),
+                                          onTap: () =>WayaNav.goBack(),
                                           child: Container(
                                             padding: const EdgeInsets.all(2),
                                             decoration:  BoxDecoration(

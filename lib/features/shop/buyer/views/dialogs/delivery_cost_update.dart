@@ -122,7 +122,7 @@ class DeliveryCostUpdate extends StatelessWidget {
                 const Gap(24),
                 WayaButton(
                     callback: () {
-                      // Navigator.of(context).pop();
+                      // WayaNav.goBack();
                       onPress();
                     },
                     text: "Accept Cost"),

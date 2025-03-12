@@ -134,14 +134,14 @@ class _UpdateStatusState extends State<UpdateStatus> {
             const Gap(24),
             WayaButton(
               callback: () {
-                Navigator.of(context).pop(selectedStatus);
+                WayaNav.goBack(result: selectedStatus);
               },
               text: "Confirm",
             ),
             const Gap(10),
             WayaButton(
               callback: () {
-                Navigator.of(context).pop();
+                WayaNav.goBack();
               },
               textColor: wayaTheme.colorScheme.greyColor500,
               color: wayaTheme.colorScheme.transparent,

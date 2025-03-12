@@ -194,7 +194,7 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                // Navigator.of(context).pop();
+                // WayaNav.goBack();
                 WayaUtils.showModalSheet(
                   context,
                   child: ContestantRejectModal(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/data/moment_helper/moment_helper_funcs.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
@@ -79,11 +80,11 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
       );
       _startTimer();
     } else {
-      if (Navigator.canPop(context)) {
+      if (WayaNav.canPop()) {
         if (isMine) {
-          Navigator.pushReplacementNamed(context, MyMoments.route);
+          WayaNav.replaceNamed( MyMoments.route);
         } else {
-          Navigator.pop(context);
+          WayaNav.goBack();
         }
       } else {
         debugPrint("No more pages, and cannot pop.");

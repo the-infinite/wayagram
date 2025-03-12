@@ -73,7 +73,7 @@ class _MyMomentState extends ConsumerState<MyMoments> {
     return InkWell(
       splashFactory: NoSplash.splashFactory,
       onTap: () {
-        Navigator.pushReplacementNamed(context, Moment.route);
+        WayaNav.replaceNamed( Moment.route);
       },
       child: Row(
         children: [

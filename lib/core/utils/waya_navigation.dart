@@ -1,12 +1,18 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
 class WayaNav<T> {
   static String get currentRoute => Get.currentRoute;
+  static VoidCallback? onChange;
 
   WayaNav._();
 
-  static void to(Widget page, {Function(dynamic)? onResult}) {
+  static Future<T> to<T>(Widget page, {Function(T)? onResult}) {
+    final completer = Completer<T>();
+    onChange?.call();
+    onChange = null;
     Get.to(
       () => page,
       transition: Transition.cupertino,
@@ -14,28 +20,31 @@ class WayaNav<T> {
       if (onResult != null) {
         onResult(result);
       }
+      completer.complete(result);
     });
+    return completer.future;
   }
 
-//this remove all screens on the stack leaving just one screen
-  static void removeUntil(Widget page) {
-    Get.offAll(
+  // This remove all screens on the stack leaving just one screen
+  static Future<T?>? removeUntil<T>(Widget page) {
+    return Get.offAll(
       () => page,
       transition: Transition.cupertino,
     );
   }
 
-  //remove all screens on the stack until the target route
-  static void removeAllUntil<T extends Widget>(Widget newScreen, String targetRoute) {
-    Get.offUntil(
+  // Remove all screens on the stack until the target route
+  static Future<T?>? removeAllUntil<T extends Widget>(Widget newScreen, String targetRoute) {
+    return Get.offUntil(
       GetPageRoute(page: () => newScreen),
       ModalRoute.withName(targetRoute),
     );
   }
 
-//this remove all screens on the stack leaving just one screen
-  static void removeUntilNamed(String route,
+  // This remove all screens on the stack leaving just one screen
+  static Future<T> removeUntilNamed<T>(String route,
       {dynamic arguments, Function(dynamic)? onResult, RoutePredicate? predicate}) {
+    final completer = Completer<T>();
     Get.offAllNamed(
       route,
       arguments: arguments,
@@ -44,16 +53,22 @@ class WayaNav<T> {
       if (onResult != null) {
         onResult(result);
       }
+      completer.complete(result);
     });
+    return completer.future;
   }
 
+  //
   static void goBack<T>({T? result}) {
     Get.back(
       result: result,
     );
   }
 
-  static void toNamed(String route, {dynamic arguments, Function(dynamic)? onResult}) {
+  static Future<T> toNamed<T>(String route, {dynamic arguments, Function(dynamic)? onResult}) {
+    final completer = Completer<T>();
+    onChange?.call();
+    onChange = null;
     Get.toNamed(
       route,
       arguments: arguments,
@@ -61,10 +76,13 @@ class WayaNav<T> {
       if (onResult != null) {
         onResult(result);
       }
+      completer.complete(result);
     });
+    return completer.future;
   }
 
-  static void replaceNamed(String route, {dynamic arguments, Function(dynamic)? onResult}) {
+  static Future<T?> replaceNamed<T>(String route, {dynamic arguments, Function(dynamic)? onResult}) {
+    final completer = Completer<T>();
     Get.offNamed(
       route,
       arguments: arguments,
@@ -72,22 +90,26 @@ class WayaNav<T> {
       if (onResult != null) {
         onResult(result);
       }
+      completer.complete(result);
     });
+    return completer.future;
   }
 
-  static void off(Widget page) {
-    Get.off(
+  static Future<T?>? off<T>(Widget page) {
+    return Get.off(
       () => page,
       transition: Transition.cupertino,
     );
   }
 
-  static void offNamed(String route, {dynamic arguments}) {
-    Get.offNamed(
+  static Future<T?>? offNamed<T>(String route, {dynamic arguments}) {
+    return Get.offNamed(
       route,
       arguments: arguments,
     );
   }
+
+  static bool canPop() => Navigator.canPop(Get.context!);
 
   static Map<String, String?> get search => Get.parameters;
 }

@@ -179,7 +179,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
                                                     statuses: pageReport,
                                                     currentStatus: "",
                                                     postId: '${post?.id}'));
-                                            Navigator.pop(context);
+                                            WayaNav.goBack();
                                           },
                                           asset: SvgPicture.asset(
                                               'assets/images/pages/flag.svg'),
@@ -204,7 +204,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
                                                 duration: Duration(seconds: 2),
                                               ),
                                             );
-                                            Navigator.pop(context);
+                                            WayaNav.goBack();
                                             WayaNav.toNamed('/pages');
                                           },
                                           asset: SvgPicture.asset(
@@ -625,7 +625,7 @@ class _GroupPostState extends ConsumerState<GroupPost>
                               ref
                                   .watch(createPageProvider.notifier)
                                   .reset();
-                              //Navigator.pop(context);
+                              //WayaNav.goBack();
                             }
                           }
                               : null,

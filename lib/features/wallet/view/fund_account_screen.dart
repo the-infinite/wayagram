@@ -136,7 +136,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => WayaNav.goBack(),
         ),
         title: const Text(
           'Fund With Bank Account',

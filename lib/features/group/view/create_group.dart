@@ -71,7 +71,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
     return WayaScaffold(
       title: "Create a Group",
       onTapBackButton: (){
-        Navigator.pop(context);
+        WayaNav.goBack();
         viewModel2.reset();
 
       },

@@ -62,7 +62,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                   child: _buildActionNav(
                     context: context,
                     onTap: () {
-                      Navigator.pop(context);
+                      WayaNav.goBack();
                       WayaNav.toNamed('/groupSetting');
                     },
                     asset: SvgPicture.asset('assets/images/pages/setting.svg'),
@@ -87,7 +87,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                   child: _buildActionNav(
                     context: context,
                     onTap: () {
-                      Navigator.pop(context);
+                      WayaNav.goBack();
                     },
                     asset: SvgPicture.asset('assets/images/pages/flag.svg'),
                     text: "Repost",

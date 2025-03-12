@@ -76,7 +76,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                   child: _buildActionNav(
                       context: context,
                       onTap: () {
-                        Navigator.pop(context1);
+                        WayaNav.goBack();
                         WayaNav.toNamed('/contest-mydashboard-profile-page');
                       },
                       asset: SvgPicture.asset('assets/images/pages/flag.svg'),
@@ -95,7 +95,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                             duration: Duration(seconds: 2),
                           ),
                         );
-                        Navigator.pop(context);
+                        WayaNav.goBack();
                         WayaNav.toNamed('/pages');
                       },
                       asset: SvgPicture.asset(

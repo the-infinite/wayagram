@@ -82,7 +82,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
                       child: _buildActionNav(
                           context: context,
                           onTap: () {
-                            Navigator.pop(context);
+                            WayaNav.goBack();
                             //WayaNav.toNamed('/groupSetting');
 
                           },
@@ -107,7 +107,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
                       child: _buildActionNav(
                           context: context,
                           onTap: () async{
-                            Navigator.pop(context);
+                            WayaNav.goBack();
                             await WayaUtils.showModalSheet(context,
                                 child: ReportPage(
                                     statuses: pageReport,
@@ -354,7 +354,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
                                          onTap: () {
                                            viewModel2.repost(context,
                                                postId: '${post.id}');
-                                           Navigator.pop(context);
+                                           WayaNav.goBack();
                                          },
                                          asset: SvgPicture.asset(
                                              'assets/images/pages/flag.svg'),
@@ -379,7 +379,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
                                                duration: Duration(seconds: 2),
                                              ),
                                            );
-                                           Navigator.pop(context);
+                                           WayaNav.goBack();
                                            WayaNav.toNamed('/pages');
                                          },
                                          asset: SvgPicture.asset(
@@ -740,7 +740,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
                               ref
                                   .watch(createPageProvider.notifier)
                                   .reset();
-                              //Navigator.pop(context);
+                              //WayaNav.goBack();
                             }
                           }
                               : null,

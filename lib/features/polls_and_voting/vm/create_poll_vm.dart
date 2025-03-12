@@ -686,7 +686,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       final response = await _pollAndVotingRepository.castVote(
           amountPaid, qty, choiceId, pollId);
       state = state.copyWith(isLoading: false);
-      Navigator.of(ctx).pop();
+      WayaNav.goBack();
       if (response.success && ctx.mounted) {
         WayaUtils.showModalSheet(
           ctx,

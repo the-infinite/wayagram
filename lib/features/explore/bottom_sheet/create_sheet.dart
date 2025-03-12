@@ -161,7 +161,7 @@ class CreateSheet extends ConsumerWidget {
                   title: "Donation",
                   description: "Create a donation and receive helps",
                   callback: () {
-                     Navigator.pushNamed(context, BottomView.route, arguments: 2);
+                     WayaNav.toNamed( BottomView.route, arguments: 2);
                   }),
 
               //> Second Row

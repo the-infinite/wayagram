@@ -131,7 +131,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
     if (_pin.length == _pinLength) {
       // TODO: Submit PIN
       // log('PIN submitted: $_pin');
-      // Navigator.of(context).pop();
+      // WayaNav.goBack();
       print(" i am so here ${widget.amount}");
       print(" i am so here ${widget.numOfVote}");
       var isPass = await ref
@@ -151,7 +151,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
             .read(votersContestNotifier.notifier)
             .getContestantProfileVoteDetails(
                 ref.read(selectedContestProvider.notifier).state?.id ?? "");
-        Navigator.of(context).pop();
+        WayaNav.goBack();
         WayaUtils.showModalSheet(context,
             child: VoteSuccessModal(
               candidateName: widget.candidateName,
@@ -363,7 +363,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
       });
       return;
     } else {
-      Navigator.of(context).pop();
+      WayaNav.goBack();
       print('$amount ${widget.voteFee}');
       WayaUtils.showModalSheet(
         context,
@@ -609,7 +609,7 @@ class _ConfirmVoteOptionModalState
             WayaButton(
               callback: !viewModel.isLoading
                   ? () async {
-                      Navigator.of(context).pop();
+                      WayaNav.goBack();
                       ref.watch(votersContestNotifier.notifier).getUserWallet();
                       print('${widget.amount} ${widget.voteFee}');
                       WayaUtils.showModalSheet(
@@ -641,7 +641,7 @@ class _ConfirmVoteOptionModalState
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                Navigator.of(context).pop();
+                WayaNav.goBack();
               },
               text: "Go Back",
               textColor: WayaColors.black,
@@ -833,7 +833,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
             WayaButton(
               callback: !isLoading.value
                   ? () async {
-                      Navigator.of(context).pop();
+                      WayaNav.goBack();
                       WayaUtils.showModalSheet(context,
                           child: PinEntryBottomSheet(
                             model: widget.model,
@@ -869,7 +869,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                Navigator.of(context).pop();
+                WayaNav.goBack();
               },
               text: "Go Back",
               textColor: WayaColors.black,
@@ -957,7 +957,7 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
             SizedBox(height: 30.h),
             WayaButton(
               callback: () async {
-                Navigator.of(context).pop();
+                WayaNav.goBack();
 
                 WayaNav.removeAllUntil(
                     AdminContestDetails(), "/upcoming-manage-contest-details");
@@ -1146,7 +1146,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
                   children: [
                     InkWell(
                       onTap: () {
-                        Navigator.pop(context);
+                        WayaNav.goBack();
                         WayaUtils.showModalSheet(
                           context,
                           child: PollsModal(),
