@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
@@ -43,7 +44,7 @@ class ChatProfilePicture extends StatelessWidget {
           // Second, the activity marker.
           if (showActive)
             Positioned(
-              right: 0,
+              right: 4.w,
               bottom: 0,
               child: Container(
                 padding: const EdgeInsets.all(7),

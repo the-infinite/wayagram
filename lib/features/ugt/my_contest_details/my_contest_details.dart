@@ -80,7 +80,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                       EdgeInsets.symmetric(horizontal: 6.0, vertical: 12.0),
                   decoration: BoxDecoration(
                     color: _selectedIndex == index
-                        ? wayaTheme.colorScheme.primar50
+                        ? wayaTheme.colorScheme.primary50
                         : Colors.white,
                     borderRadius: BorderRadius.circular(6.0),
                     border: Border.all(
@@ -129,7 +129,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                           ivalidateUGTVM(ref);
                           WayaNav.toNamed('/create-contest');
                         },
-                        color: wayaTheme.colorScheme.primar50,
+                        color: wayaTheme.colorScheme.primary50,
                         text: "Host a Contest",
                         textColor: wayaTheme.colorScheme.customPrimary,
                       ),

@@ -55,7 +55,7 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
                 Container(
                     padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                     decoration:
-                        BoxDecoration(color: wayaTheme.colorScheme.primar50, borderRadius: BorderRadius.circular(10)),
+                        BoxDecoration(color: wayaTheme.colorScheme.primary50, borderRadius: BorderRadius.circular(10)),
                     child: Text(
                       userState.userAccountModel?.data?.userdata?.profile?.referenceCode ?? '',
                       style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.primary),

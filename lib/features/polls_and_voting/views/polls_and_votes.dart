@@ -97,7 +97,7 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
                   callback: () {
                     WayaNav.toNamed('/create-poll');
                   },
-                  color: wayaTheme.colorScheme.primar50,
+                  color: wayaTheme.colorScheme.primary50,
                 ),
               ],
             ) :
@@ -137,7 +137,7 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
                     WayaNav.toNamed('/create-poll');
 
                   },
-                  color: wayaTheme.colorScheme.primar50,
+                  color: wayaTheme.colorScheme.primary50,
                 ),
               ],
             ),

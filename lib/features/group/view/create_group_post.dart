@@ -347,7 +347,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
                             width: double.infinity,
                             height: 56.h,
                             decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primar50
+                                color: Theme.of(context).colorScheme.primary50
                             ),
                             child: Padding(
                               padding: const EdgeInsets.only(left: 10),
@@ -459,7 +459,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
                             width: double.infinity,
                             height: 56.h,
                             decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primar50
+                                color: Theme.of(context).colorScheme.primary50
                             ),
                             child: Padding(
                               padding: const EdgeInsets.only(left: 10),

@@ -28,7 +28,7 @@ class _DisputeChatInput extends ConsumerState<DisputeChatInput> {
         children: [
           Container(
               decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.primar50,
+                  color: wayaTheme.colorScheme.primary50,
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
                       width: 1, color: wayaTheme.colorScheme.greyColor200)),

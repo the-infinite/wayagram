@@ -91,7 +91,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                               Container(
                                 padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
                                 decoration: BoxDecoration(
-                                  color: wayaTheme.colorScheme.primar50,
+                                  color: wayaTheme.colorScheme.primary50,
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Row(

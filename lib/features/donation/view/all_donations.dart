@@ -121,7 +121,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                 WayaNav.toNamed('/createDonation');
               }
             },
-            color: wayaTheme.colorScheme.primar50,
+            color: wayaTheme.colorScheme.primary50,
           ),
           Gap(20),
           FilterWidget(

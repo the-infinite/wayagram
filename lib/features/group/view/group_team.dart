@@ -67,7 +67,7 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
                 'groupId': widget.groupId
               });
             },
-            color: wayaTheme.colorScheme.primar50,
+            color: wayaTheme.colorScheme.primary50,
           ),
           const Gap(8),
           viewModel.allGroupMemberDocs!.isEmpty ? PostEmptyState():
@@ -95,7 +95,7 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
                         width: 80.w,
                         decoration: BoxDecoration(
                           color:group?.role == 'admin' || group?.role == 'owner'?
-                          wayaTheme.colorScheme.success50: wayaTheme.colorScheme.primar50,
+                          wayaTheme.colorScheme.success50: wayaTheme.colorScheme.primary50,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(

@@ -52,7 +52,7 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
           Container(
             padding: EdgeInsets.all(12),
             width: double.infinity,
-            decoration: BoxDecoration(color: wayaTheme.colorScheme.primar50, borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(color: wayaTheme.colorScheme.primary50, borderRadius: BorderRadius.circular(12)),
             child: Center(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +75,7 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
                     children: [
                       Text(isInsufficientBalance ? "Insufficient Balance" : "Wallet Balance",
                           style: isInsufficientBalance
-                              ? wayaTheme.textTheme.errorhintStyle
+                              ? wayaTheme.textTheme.errorHintStyle
                               : wayaTheme.textTheme.hintStyle),
                       const Gap(3),
                       WayaAmountFormatter(

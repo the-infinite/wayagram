@@ -164,7 +164,7 @@ class _ExploreState extends ConsumerState<Explore> {
               callback: () {
                 WayaNav.toNamed(CreateRequest.route);
               },
-              color: wayaTheme.colorScheme.primar50,
+              color: wayaTheme.colorScheme.primary50,
             ),
 
             // Some space.

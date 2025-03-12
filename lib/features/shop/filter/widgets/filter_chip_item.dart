@@ -25,7 +25,7 @@ class FilterChipItem extends StatelessWidget {
       onSelected: (_) => onSelected(),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       backgroundColor: wayaTheme.colorScheme.transparent,
-      selectedColor: wayaTheme.colorScheme.primar50,
+      selectedColor: wayaTheme.colorScheme.primary50,
       showCheckmark: false,
       padding: EdgeInsets.fromLTRB(15, 12, 15, 12),
       shape: RoundedRectangleBorder(
