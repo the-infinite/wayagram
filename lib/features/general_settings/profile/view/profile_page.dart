@@ -538,7 +538,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 ),
                                 style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                   color: wayaTheme.colorScheme.greyColor500,
-                                  fontWeight: FontWeight.w600,
+                                  fontWeight: FontWeight.w500,
                                   fontSize: 12,
                                 ),
                               ),
