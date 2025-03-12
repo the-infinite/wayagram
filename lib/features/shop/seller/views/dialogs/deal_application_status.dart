@@ -4,7 +4,6 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -150,8 +149,7 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
               WayaButton(
                   textColor: wayaTheme.colorScheme.greyColor900,
                   callback: () {
-                     WayaNav.goBack();
-                 
+                    WayaNav.goBack();
                   },
                   color: wayaTheme.colorScheme.transparent,
                   border: Border.all(
@@ -179,12 +177,9 @@ class AboutProductApplication extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
-
       children: [
-        Text(title, style: TextStyle(
-          color: WayaColors.greyColor400,
-          fontSize: 15
-        )),
+        Text(title,
+            style: TextStyle(color: WayaColors.greyColor400, fontSize: 15)),
         const Gap(5),
         contentWidget != null
             ? contentWidget!
