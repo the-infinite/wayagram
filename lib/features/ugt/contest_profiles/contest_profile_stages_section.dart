@@ -46,6 +46,7 @@ class _ContestProfileStagesSectionState
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (widget.stages!.isEmpty) emptyWidget(),
         ...widget.stages!.map((e) => _buildStages(e)),
       ],
     );
@@ -135,10 +136,9 @@ class _ContestProfileStagesSectionState
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc:
-            "You don’t have any active contest here. Create a \n contest and have different participant",
-        title: "No Contest Created",
-        buttonText: "Host a Contest",
+        desc: "",
+        title: "No Contest Stage yet",
+        buttonText: "Contest",
         onTap: () {
           //  ivalidateUGTVM(ref);
           //  WayaNav.toNamed("/create-contest");

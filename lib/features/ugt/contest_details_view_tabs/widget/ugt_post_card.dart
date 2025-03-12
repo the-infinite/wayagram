@@ -11,12 +11,14 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/ugt/media_card.dart';
+import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 
@@ -35,11 +37,16 @@ class UgtPostCard extends StatefulHookConsumerWidget {
 }
 
 class _UgtPostCardState extends ConsumerState<UgtPostCard> {
+  String createdDate = "";
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     var notifier = ref.watch(ugtContestantProfileVm.notifier);
     var contestModel2 = ref.watch(selectedContestProvider.notifier).state;
+    useEffect(() {
+      createdDate = widget.post.createdAt?.toString() ?? "";
+      return null;
+    }, []);
     final hasClickedLiked = useState(false);
     final hasClickedShared = useState(false);
     return Column(
@@ -108,8 +115,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                             ),
                             const Gap(8),
                             Text(
-                              WayaHelpers.formatTimeAgo(
-                                  '${widget.post.createdAt}'),
+                              WayaHelpers.formatTimeAgo(createdDate),
                               style: wayaTheme.textTheme.hintStyle,
                             ),
                           ],
@@ -151,11 +157,26 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
 
               MediaCard(
                   //just a random id
-
+                  ontap: (String url) {
+                    WayaNav.toNamed("/view-media-full-page", arguments: {
+                      "url": url,
+                      "title":
+                          widget.contestApplicant?.contestApplicant?.fullName ??
+                              "",
+                      "createdAt": widget.post.createdAt,
+                      "likeCount": widget.post.likes,
+                      "isLike": widget.post.hasLiked,
+                      "discription": widget.post.description,
+                      "shareCount": widget.post.shares,
+                      "type": MyFullMediaType.image
+                    });
+                  },
                   mediaUrls: [
                     // post.mediaContent![0].url!,
-                    ...widget.post.mediaContent!.map((e) =>
-                        CardMediaContent(type: e.type ?? "", url: e.url ?? ""))
+                    ...widget.post.mediaContent!.map((e) {
+                      return CardMediaContent(
+                          type: e.type ?? "", url: e.url ?? "");
+                    })
                   ] // post.mediaContent![0].url!,
                   ),
               const Gap(20),
@@ -168,7 +189,8 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                       GestureDetector(
                         onTap: () {
                           if (hasClickedLiked.value == false) {
-                            notifier.toggleLike(widget.post.id!);
+                            notifier.toggleLike(
+                                widget.post.contestId ?? "", widget.post.id!);
                           }
                           Future.delayed(Duration(seconds: 2), () {
                             hasClickedLiked.value = false;
@@ -185,12 +207,12 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                               width: 35,
                               height: 35,
                               child: Center(
-                                  child:Icon(
-                            Icons.thumb_up_alt,
-                            color: widget.post.hasLiked == true
-                                ? wayaTheme.colorScheme.primary
-                                : null,
-                          )),
+                                  child: Icon(
+                                Icons.thumb_up_alt,
+                                color: widget.post.hasLiked == true
+                                    ? wayaTheme.colorScheme.primary
+                                    : null,
+                              )),
                             ),
                             const Gap(3),
                             Text(

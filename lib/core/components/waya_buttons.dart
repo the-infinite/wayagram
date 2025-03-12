@@ -13,7 +13,9 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class WayaBackButton extends StatelessWidget {
   final Function()? onTap;
-  const WayaBackButton({super.key, this.onTap});
+  final Color? buttonBackgroundColor;
+  final Color? arrowColor;
+  const WayaBackButton({super.key, this.onTap, this.buttonBackgroundColor, this.arrowColor});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +25,7 @@ class WayaBackButton extends StatelessWidget {
         const Gap(15),
         Container(
           decoration: BoxDecoration(
-            color: wayaTheme.secondaryColor2,
+            color: buttonBackgroundColor ?? wayaTheme.secondaryColor2,
             shape: BoxShape.circle,
           ),
           padding: EdgeInsets.all(7),
@@ -36,6 +38,7 @@ class WayaBackButton extends StatelessWidget {
                   } catch (_) {}
                 },
             child: SvgPicture.asset('assets/icons/arrow-back.svg',
+            color: arrowColor,
                 fit: BoxFit.none),
           ),
         )

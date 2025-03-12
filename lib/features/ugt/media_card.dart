@@ -7,9 +7,10 @@ import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
 
 class MediaCard extends StatefulWidget {
-  final List<CardMediaContent> mediaUrls; // List of image and video URLs
+  final List<CardMediaContent> mediaUrls;
+  final Function(String)? ontap; // List of image and video URLs
 
-  const MediaCard({super.key, required this.mediaUrls});
+  const MediaCard({super.key, required this.mediaUrls, this.ontap});
 
   @override
   _MediaCardState createState() => _MediaCardState();
@@ -114,24 +115,29 @@ class _MediaCardState extends State<MediaCard> {
                       : Center(child: CircularProgressIndicator());
                 } else {
                   _videoController?.pause();
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                        16), // Adjust the radius as needed
-                    child: WayaImage(
-                      imageUrl: url,
-                      height: 200,
-                      width: context.width,
-                      fit: BoxFit.cover, // Ensur
-                      //  radius: BorderRadius.circular(45),
-                    ),
+                  return GestureDetector(
+                    onTap: () {
+                      widget.ontap!(url) ?? () {};
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(
+                          16), // Adjust the radius as needed
+                      child: WayaImage(
+                        imageUrl: url,
+                        height: 200,
+                        width: context.width,
+                        fit: BoxFit.cover, // Ensur
+                        //  radius: BorderRadius.circular(45),
+                      ),
 
-                    /*  Image.network(
-                  post.mediaContent?[0].url ?? "",
-                  height: 200,
-                  width: context.width,
-                  fit: BoxFit
-                      .cover, // Ensures the image covers the area properly
-                ), */
+                      /*  Image.network(
+                    post.mediaContent?[0].url ?? "",
+                    height: 200,
+                    width: context.width,
+                    fit: BoxFit
+                        .cover, // Ensures the image covers the area properly
+                                    ), */
+                    ),
                   );
                   // return Image.network(url, fit: BoxFit.cover);
                 }

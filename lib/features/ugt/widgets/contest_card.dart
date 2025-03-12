@@ -11,6 +11,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 //import 'package:wayagram/features/explore/data/model/default.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
@@ -130,7 +131,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                             const Gap(8),
                             Text(
                                 '${widget.post.applicantCount ?? 0} Participants',
-                                style: wayaTheme.textTheme.bodyMedium),
+                                style: WayaTextStyles.hintStyleSemiBold),
                           ],
                         ),
                         // Spacer(),
@@ -195,7 +196,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     "likeCount": widget.post.likeCount,
                     "isLike": widget.post.hasLiked,
                     "discription": widget.post.description,
-                    "shareCount":widget.post.shareCount,
+                    "shareCount": widget.post.shareCount,
                     "type": MyFullMediaType.image
                   });
                 },
@@ -234,7 +235,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
               const Gap(20),
               Text(
                 widget.post.description ?? "Description",
-                style: wayaTheme.textTheme.bodyMedium,
+                style: WayaTextStyles.hintStyleBold,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),

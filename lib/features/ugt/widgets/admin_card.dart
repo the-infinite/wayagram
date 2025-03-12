@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 
 class AdminCard extends StatelessWidget {
   final String imageUrl;
@@ -23,6 +24,7 @@ class AdminCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -39,8 +41,8 @@ class AdminCard extends StatelessWidget {
               ),
               child: CircleAvatar(
                 radius: radius ?? 35,
-                backgroundColor:
-                    Colors.pink[100], // Background color behind image
+                backgroundColor: wayaTheme
+                    .colorScheme.greyColor100, // Background color behind image
                 backgroundImage: NetworkImage(imageUrl),
               ),
             ),

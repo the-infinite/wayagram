@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
@@ -18,6 +19,7 @@ import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/ugt/media_card.dart';
+import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
@@ -135,10 +137,23 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                 ),
 
               ), */
-              MediaCard(mediaUrls: [
-                ...widget.post.mediaContent!.map((e) =>
-                    CardMediaContent(type: e.type ?? "", url: e.url ?? ""))
-              ]),
+              MediaCard(
+                  ontap: (String url) {
+                    WayaNav.toNamed("/view-media-full-page", arguments: {
+                      "url": url,
+                      "title": widget.post.contestApplication?.fullName ?? "",
+                      "createdAt": widget.post.createdAt,
+                      "likeCount": widget.post.likes,
+                      "isLike": widget.post.hasLiked,
+                      "discription": widget.post.description,
+                      "shareCount": widget.post.shares,
+                      "type": MyFullMediaType.image
+                    });
+                  },
+                  mediaUrls: [
+                    ...widget.post.mediaContent!.map((e) =>
+                        CardMediaContent(type: e.type ?? "", url: e.url ?? ""))
+                  ]),
               const Gap(20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -167,12 +182,12 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                               width: 35,
                               height: 35,
                               child: Center(
-                                  child:Icon(
-                            Icons.thumb_up_alt,
-                            color: widget.post.hasLiked == true
-                                ? wayaTheme.colorScheme.primary
-                                : null,
-                          )),
+                                  child: Icon(
+                                Icons.thumb_up_alt,
+                                color: widget.post.hasLiked == true
+                                    ? wayaTheme.colorScheme.primary
+                                    : null,
+                              )),
                             ),
                             const Gap(3),
                             Text(
@@ -185,13 +200,13 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                       const Gap(20),
                       GestureDetector(
                         onTap: () {
-                          if (hasClickedShared.value == false) {
-                            viewModel.toggleShare(widget.post.contestId ?? "",
-                                widget.post.id ?? "");
-                          }
-                          Future.delayed(Duration(seconds: 2), () {
+                          // if (hasClickedShared.value == false) {
+                          viewModel.toggleShare(widget.post.contestId ?? "",
+                              widget.post.id ?? "");
+                          //  }
+                          /*  Future.delayed(Duration(seconds: 2), () {
                             hasClickedShared.value = false;
-                          });
+                          }); */
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
