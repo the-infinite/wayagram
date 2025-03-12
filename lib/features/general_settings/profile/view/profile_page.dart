@@ -76,6 +76,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
+        WayaNav.onChange = () {
+          _tabController.close();
+        };
         await followNotifier.getFollowersOf(widget.id);
         await followNotifier.getUsersFollowing(widget.id);
         _getFollowState();
@@ -202,7 +205,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   context: context,
                   onTap: () {},
                   asset: WayaAssets.images.pages.setting.svg(),
-                  text: "Group settings",
+                  text: "Profile settings",
                   color: wayaTheme.colorScheme.customBlack,
                 ),
               ),

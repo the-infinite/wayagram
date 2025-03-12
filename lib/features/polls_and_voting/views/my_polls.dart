@@ -100,7 +100,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                                     context: context,
                                     onTap: () {
                                       ref.read(createPollVotingProvider.notifier).deletePoll(context, postId: '${poll.id}');
-                                      Navigator.pop(context);
+                                      WayaNav.goBack();
                                     },
                                     asset: SvgPicture.asset(
                                       'assets/images/pages/delete.svg',

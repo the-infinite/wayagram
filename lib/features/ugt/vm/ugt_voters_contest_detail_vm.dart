@@ -1,21 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/change_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
-import 'package:wayagram/features/ugt/data/model/contest_state.dart';
-import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_contest_aplicant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart' as model;
-import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/ugt/data/model/voter_contest_state.dart';
 
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
@@ -36,15 +32,13 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   final _logger = getLogger('ContestRepo');
 
-  VotersContestNotifier(
-      this._contestRepository, this._localDataSource, this._walletRepository)
+  VotersContestNotifier(this._contestRepository, this._localDataSource, this._walletRepository)
       : super(VoterDetailState());
 
-  Future<bool> verifyWalletPin(ValueNotifier<bool> isLoading, String pin,
-      Map<String, String> map) async {
+  Future<bool> verifyWalletPin(ValueNotifier<bool> isLoading, String pin, Map<String, String> map) async {
     isLoading.value = true;
-    final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(
-        userId: _localDataSource.getUserId().toString(), pin: pin));
+    final response = await _walletRepository!
+        .confirmWalletPin(ConfirmWalletPin(userId: _localDataSource.getUserId().toString(), pin: pin));
     if (response.success) {
       map["profileId"] = _localDataSource.getUserId().toString();
       print(map);
@@ -55,11 +49,10 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  Future<bool> verifyAndPayForPaidContest(ValueNotifier<bool> isLoading,
-      String pin, Map<String, String> map) async {
+  Future<bool> verifyAndPayForPaidContest(ValueNotifier<bool> isLoading, String pin, Map<String, String> map) async {
     isLoading.value = true;
-    final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(
-        userId: _localDataSource.getUserId().toString(), pin: pin));
+    final response = await _walletRepository!
+        .confirmWalletPin(ConfirmWalletPin(userId: _localDataSource.getUserId().toString(), pin: pin));
 
     print(map);
     if (response.success) {
@@ -71,11 +64,11 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  Future<bool> verifyAndPayForPaidStageContest(ValueNotifier<bool> isLoading,
-      String pin, Map<String, String> map) async {
+  Future<bool> verifyAndPayForPaidStageContest(
+      ValueNotifier<bool> isLoading, String pin, Map<String, String> map) async {
     isLoading.value = true;
-    final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(
-        userId: _localDataSource.getUserId().toString(), pin: pin));
+    final response = await _walletRepository!
+        .confirmWalletPin(ConfirmWalletPin(userId: _localDataSource.getUserId().toString(), pin: pin));
 
     print(map);
     if (response.success) {
@@ -87,8 +80,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  Future<bool> voteContestant(
-      ValueNotifier<bool> isLoading, Map<String, String> map) async {
+  Future<bool> voteContestant(ValueNotifier<bool> isLoading, Map<String, String> map) async {
     final response = await _contestRepository.voteContestant(map);
     isLoading.value = false;
     if (response.success) {
@@ -98,8 +90,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  Future<bool> payForPaidStageContest(
-      ValueNotifier<bool> isLoading, Map<String, String> map) async {
+  Future<bool> payForPaidStageContest(ValueNotifier<bool> isLoading, Map<String, String> map) async {
     final response = await _contestRepository.payForPaidStageContest(map);
     isLoading.value = false;
     if (response.success) {
@@ -109,8 +100,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  Future<bool> payForPaidContest(
-      ValueNotifier<bool> isLoading, Map<String, String> map) async {
+  Future<bool> payForPaidContest(ValueNotifier<bool> isLoading, Map<String, String> map) async {
     final response = await _contestRepository.payForPaidContest(map);
     isLoading.value = false;
     if (response.success) {
@@ -120,8 +110,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  Future<bool> startStageContest(
-      String stageName, Map<String, String> map) async {
+  Future<bool> startStageContest(String stageName, Map<String, String> map) async {
     final response = await _contestRepository.startStage(map);
 
     //  isLoading.value = false;
@@ -142,8 +131,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  Future<bool> qualifyDisqualify(
-      String contestId, Map<String, String> map) async {
+  Future<bool> qualifyDisqualify(String contestId, Map<String, String> map) async {
     final response = await _contestRepository.qualifyDisqualify(map);
     // isLoading.value = false;
     if (response.success) {
@@ -157,8 +145,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  Future<bool> acceptFreeStageContest(
-      String contestId, Map<String, String> map) async {
+  Future<bool> acceptFreeStageContest(String contestId, Map<String, String> map) async {
     final response = await _contestRepository.acceptFreeStageContest(map);
     // isLoading.value = false;
     if (response.success) {
@@ -172,13 +159,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
   }
 
   Future<bool> acceptRejectContestant(
-      ValueNotifier<bool> isLoading,
-      String contestApplicationId,
-      String contestId,
-      Map<String, String> map) async {
+      ValueNotifier<bool> isLoading, String contestApplicationId, String contestId, Map<String, String> map) async {
     isLoading.value = true;
-    final response = await _contestRepository.acceptRejectContestants(
-        contestApplicationId, map);
+    final response = await _contestRepository.acceptRejectContestants(contestApplicationId, map);
 
     isLoading.value = false;
     if (response.success) {
@@ -195,13 +178,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     if (response.success == true) {
       final walletData = response.data["data"]["wallet"];
       final walletAccountsData = response.data["data"]["walletAccounts"];
-      final externalWallets = (walletAccountsData as List)
-          .map((walletAccount) => ExternalWalletModel.fromJson(walletAccount))
-          .toList();
-      state = state.copyWith(
-          data: Wallet.fromJson(walletData),
-          externalWallets: externalWallets,
-          isLoading: false);
+      final externalWallets =
+          (walletAccountsData as List).map((walletAccount) => ExternalWalletModel.fromJson(walletAccount)).toList();
+      state = state.copyWith(data: Wallet.fromJson(walletData), externalWallets: externalWallets, isLoading: false);
     } else {
       state = state.copyWith(isLoading: false);
     }
@@ -214,25 +193,20 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
   Future<void> getContestantProfileVoteDetails(String contestId) async {
     print("i am here333  $contestId");
     try {
-      final response =
-          await _contestRepository.getContestantProfileVoteDetails(contestId);
+      final response = await _contestRepository.getContestantProfileVoteDetails(contestId);
       List<MyContestContestantModel> contestList = [];
       if (response.success) {
         state = state.copyWith(
           myContestList: [],
           myContestListCopy: [],
         );
-        ContestContestantModelMean responseModel =
-            ContestContestantModelMean.fromJson(response.data);
+        ContestContestantModelMean responseModel = ContestContestantModelMean.fromJson(response.data);
         contestList = responseModel.data ?? [];
         contestList.sort((a, b) => b.votes!.compareTo(a.votes!));
-        var model = contestList.firstWhere(
-            (e) => e.profileId == _localDataSource.getUserId().toString());
+        var model = contestList.firstWhere((e) => e.profileId == _localDataSource.getUserId().toString());
         // createPostId = ;
-        state = state.copyWith(
-            myContestList: contestList,
-            myContestListCopy: contestList,
-            createPostId: model.id ?? "");
+        state =
+            state.copyWith(myContestList: contestList, myContestListCopy: contestList, createPostId: model.id ?? "");
         // _page++;
         //isLoading = false;
       }
@@ -249,8 +223,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       final response = await _contestRepository.fetchAllContestGallery(id);
       List<UgtAllPostContestModel> contestList = [];
       if (response.success) {
-        UgtAllPostContestModelBase responseModel =
-            UgtAllPostContestModelBase.fromJson(response.data);
+        UgtAllPostContestModelBase responseModel = UgtAllPostContestModelBase.fromJson(response.data);
         contestList = responseModel.data?.docs ?? [];
 
         state = state.copyWith(myPostList: contestList);
@@ -265,8 +238,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       final response = await _contestRepository.fetchAllContestApplicant(id);
       List<ApplicantContestModel> contestList = [];
       if (response.success) {
-        ApplicantContestModelBase responseModel =
-            ApplicantContestModelBase.fromJson(response.data);
+        ApplicantContestModelBase responseModel = ApplicantContestModelBase.fromJson(response.data);
         contestList = responseModel.data ?? [];
 
         state = state.copyWith(myContestApplicantList: contestList);
@@ -292,28 +264,20 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  void uploadCreatePost(
-      WidgetRef ref,
-      BuildContext context,
-      ValueNotifier<bool> isLoading,
-      String text,
-      List<MyMediaType> selectedImages,
-      File? videoFile,
-      String s) async {
+  void uploadCreatePost(WidgetRef ref, BuildContext context, ValueNotifier<bool> isLoading, String text,
+      List<MyMediaType> selectedImages, File? videoFile, String s) async {
     List<String> imageUrls = [];
     String? videoUrl;
     isLoading.value = true;
 
     for (var model in selectedImages) {
       if (!model.type) {
-        final imageUrl = await WayaFileRepository.instance
-            .uploadFile(File(model.path), "ugt-image-${Uuid().v4()}");
+        final imageUrl = await WayaFileRepository.instance.uploadFile(File(model.path), "ugt-image-${Uuid().v4()}");
         imageUrls.add(imageUrl ?? "");
       }
     }
     if (videoFile != null) {
-      videoUrl = await WayaFileRepository.instance
-          .uploadFile(File(videoFile.path), "ugt-video-${Uuid().v4()}");
+      videoUrl = await WayaFileRepository.instance.uploadFile(File(videoFile.path), "ugt-video-${Uuid().v4()}");
     }
 
     List<Map<String, dynamic>> listMap = [];
@@ -334,11 +298,13 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     isLoading.value = false;
     if (response.success) {
       WayaSnackBar.showToast("Post created successfully!", showSuccess: true);
-      getContestantProfileVoteDetails(
-          ref.read(selectedContestProvider.notifier).state?.id ?? "");
-      Future.delayed(Duration(seconds: 2), () {
-        Navigator.pop(context);
-      });
+      getContestantProfileVoteDetails(ref.read(selectedContestProvider.notifier).state?.id ?? "");
+      Future.delayed(
+        Duration(seconds: 2),
+        () {
+          WayaNav.goBack();
+        },
+      );
     } else {
       WayaSnackBar.showToast("Unable to create Post, Please try again later");
     }
@@ -372,11 +338,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   void doOnLikeLike(String postId, String galleryId) async {
     // print("do like stuff");
-    final response = await _contestRepository.likeContest({
-      "profileId": _localDataSource.getUserId().toString(),
-      "contestId": postId,
-      "galleryId": galleryId
-    });
+    final response = await _contestRepository.likeContest(
+        {"profileId": _localDataSource.getUserId().toString(), "contestId": postId, "galleryId": galleryId});
 
     if (!response.success) {
       //  print("do like stuff Fail");
@@ -421,11 +384,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   void doshare(String postId, String galleryId) async {
     // print("do like stuff");
-    final response = await _contestRepository.shareContest({
-      "profileId": _localDataSource.getUserId().toString(),
-      "contestId": postId,
-      "galleryId": galleryId
-    });
+    final response = await _contestRepository.shareContest(
+        {"profileId": _localDataSource.getUserId().toString(), "contestId": postId, "galleryId": galleryId});
 
     if (!response.success) {
       //  print("do like stuff Fail");
@@ -451,10 +411,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   void doFollow(String postId) async {
     // print("do like stuff");
-    final response = await _contestRepository.followContest({
-      "profileId": _localDataSource.getUserId().toString(),
-      "contestId": postId
-    });
+    final response = await _contestRepository
+        .followContest({"profileId": _localDataSource.getUserId().toString(), "contestId": postId});
 
     if (response.success) {
       //  print("do like stuff Fail");
@@ -540,19 +498,15 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
   }
 
  */
-final selectedContestantProfile =
-    StateProvider<MyContestContestantModel?>((ref) => null);
+final selectedContestantProfile = StateProvider<MyContestContestantModel?>((ref) => null);
 
-final selectedApplicantProfile =
-    StateProvider<ApplicantContestModel?>((ref) => null);
+final selectedApplicantProfile = StateProvider<ApplicantContestModel?>((ref) => null);
 
 final authRepositoryProvider = Provider((ref) => ContestRepo());
 
-final votersContestNotifier =
-    StateNotifierProvider<VotersContestNotifier, VoterDetailState>(
+final votersContestNotifier = StateNotifierProvider<VotersContestNotifier, VoterDetailState>(
   (ref) {
-    return VotersContestNotifier(
-        ContestRepo(), WayaLocalDataSource(), WalletRepository.instance);
+    return VotersContestNotifier(ContestRepo(), WayaLocalDataSource(), WalletRepository.instance);
   },
 );
 

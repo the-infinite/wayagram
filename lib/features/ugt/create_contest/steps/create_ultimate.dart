@@ -3,19 +3,14 @@ import 'dart:io';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
-
-import '../../data/controller/contest_controller.dart';
 
 import '../../vm/ugt_vm.dart';
 
@@ -29,7 +24,6 @@ class CreateUltimate extends StatefulHookConsumerWidget {
 
 class _CreateUltimateState extends ConsumerState<CreateUltimate> {
   final _formKey = GlobalKey<FormState>();
-  final _contestController = Get.put(ContestController());
   List<String> category = [""];
   String selectedValue = 'Private';
   String selectedValue2 = 'Free';
@@ -75,34 +69,23 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           notifier.title.text = contestViewModel?.title ?? "";
           notifier.description.text = contestViewModel?.description ?? "";
           notifier.winnerPrize.text = contestViewModel?.winnerPrize ?? "";
-          notifier.amountPerVote.text =
-              contestViewModel?.amountPerVote?.toString() ?? "";
+          notifier.amountPerVote.text = contestViewModel?.amountPerVote?.toString() ?? "";
           /* notifier.voteCountToQualify.text =
               contestViewModel?.voteCountToQualify ?? ""; */
 
-          ref
-              .read(contestNotifierProvider.notifier)
-              .updateEdit(contestViewModel?.categoryName ?? "");
+          ref.read(contestNotifierProvider.notifier).updateEdit(contestViewModel?.categoryName ?? "");
 
-          ref
-              .read(contestNotifierProvider.notifier)
-              .selectStateEdit(contestViewModel?.state ?? "");
+          ref.read(contestNotifierProvider.notifier).selectStateEdit(contestViewModel?.state ?? "");
 
           //make public or private
-          String pubPrivate =
-              contestViewModel?.publicity == "PUBLIC" ? "Public" : "Private";
-          ref
-              .read(contestNotifierProvider.notifier)
-              .updatePrivatePublic(pubPrivate);
+          String pubPrivate = contestViewModel?.publicity == "PUBLIC" ? "Public" : "Private";
+          ref.read(contestNotifierProvider.notifier).updatePrivatePublic(pubPrivate);
           selectedValue = pubPrivate;
 
           //show overall result
-          bool mySwitched =
-              contestViewModel?.overallResult == "YES" ? true : false;
+          bool mySwitched = contestViewModel?.overallResult == "YES" ? true : false;
           isSwitched = mySwitched;
-          ref
-              .read(contestNotifierProvider.notifier)
-              .updateOverAllResult(mySwitched);
+          ref.read(contestNotifierProvider.notifier).updateOverAllResult(mySwitched);
 
           //  viewModel.categorys
           //  notifier.numberOfWeeks.text = contestViewModel.numberOfWeeks??"";
@@ -122,15 +105,12 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-              " ${isEditing ? "Edit" : "Create"} Your Ultimate Talent \n Contest!",
+          Text(" ${isEditing ? "Edit" : "Create"} Your Ultimate Talent \n Contest!",
               style: wayaTheme.textTheme.titleLarge),
           const Gap(5),
-          Text(
-              "Bring your talent contest vision to life. Customize \ndetails, set stages, and make it unforgettable",
-              style: wayaTheme.textTheme.hintStyle.copyWith(
-                  color: wayaTheme.colorScheme.greyColor500,
-                  fontWeight: FontWeight.w500)),
+          Text("Bring your talent contest vision to life. Customize \ndetails, set stages, and make it unforgettable",
+              style: wayaTheme.textTheme.hintStyle
+                  .copyWith(color: wayaTheme.colorScheme.greyColor500, fontWeight: FontWeight.w500)),
           const Gap(30),
           FormField<String>(validator: (value) {
             if (notifier.title.text.isEmpty) {
@@ -143,23 +123,19 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WayaTextFormField(
-                  helperText:
-                      "This name will be displayed as the official contest title. You can update it if needed",
+                  helperText: "This name will be displayed as the official contest title. You can update it if needed",
                   controller: notifier.title,
                   hintText: "Enter Contest Title",
                   label: "Contest Title",
                   //label: contestViewModel?.title,
-                  borderColor: formState.hasError && notifier.title.text.isEmpty
-                      ? wayaTheme.colorScheme.error
-                      : null,
+                  borderColor: formState.hasError && notifier.title.text.isEmpty ? wayaTheme.colorScheme.error : null,
                 ),
                 if (formState.hasError && notifier.title.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
                       formState.errorText ?? "",
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
                   ),
               ],
@@ -181,13 +157,10 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   value: viewModel.categorys,
                   label: "Contest Category",
                   hintText: 'Select Contest Category',
-                  items:
-                      ref.read(contestNotifierProvider.notifier).ugtCategory(),
+                  items: ref.read(contestNotifierProvider.notifier).ugtCategory(),
                   onSelected: (value) {
                     print('eee ${value.first.toJson()}');
-                    ref
-                        .read(contestNotifierProvider.notifier)
-                        .update(value.first, "contestCat");
+                    ref.read(contestNotifierProvider.notifier).update(value.first, "contestCat");
                   },
                   uniqueKey: 'contest-category',
                 ),
@@ -196,8 +169,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
                       formState.errorText ?? "",
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
                   ),
               ],
@@ -222,9 +194,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   items: ref.read(contestNotifierProvider.notifier).ugtStates(),
                   onSelected: (value) {
                     print(" heree $value");
-                    return ref
-                        .read(contestNotifierProvider.notifier)
-                        .selectState(value.first);
+                    return ref.read(contestNotifierProvider.notifier).selectState(value.first);
                   },
                   uniqueKey: 'contest-state',
                 ),
@@ -233,8 +203,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
                       formState.errorText ?? "",
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
                   ),
               ],
@@ -257,17 +226,14 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   label: "Contest Description",
                   line: 6,
                   borderColor:
-                      formState.hasError && notifier.description.text.isEmpty
-                          ? wayaTheme.colorScheme.error
-                          : null,
+                      formState.hasError && notifier.description.text.isEmpty ? wayaTheme.colorScheme.error : null,
                 ),
                 if (formState.hasError && notifier.description.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
                       formState.errorText ?? "",
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
                   ),
               ],
@@ -322,23 +288,17 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   keyboardType: TextInputType.number,
                   controller: notifier.winnerPrize,
                   hintText: "Enter Winner's Award",
-                  inputFormatters: [
-                    CurrencyTextInputFormatter.currency(
-                        name: 'NGN', symbol: 'NGN', locale: 'en_NG')
-                  ],
+                  inputFormatters: [CurrencyTextInputFormatter.currency(name: 'NGN', symbol: 'NGN', locale: 'en_NG')],
                   label: "Winner's Award",
                   borderColor:
-                      formState.hasError && notifier.winnerPrize.text.isEmpty
-                          ? wayaTheme.colorScheme.error
-                          : null,
+                      formState.hasError && notifier.winnerPrize.text.isEmpty ? wayaTheme.colorScheme.error : null,
                 ),
                 if (formState.hasError && notifier.winnerPrize.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
                       formState.errorText ?? "",
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
                   ),
               ],
@@ -369,9 +329,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 onChanged: (String value) {
                   setState(() {
                     selectedValue = value;
-                    ref
-                        .read(contestNotifierProvider.notifier)
-                        .updatePrivatePublic(value);
+                    ref.read(contestNotifierProvider.notifier).updatePrivatePublic(value);
 
                     // Update selected value
                   });
@@ -397,9 +355,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 groupValue: selectedValue,
                 onChanged: (String value) {
                   setState(() {
-                    ref
-                        .read(contestNotifierProvider.notifier)
-                        .updatePrivatePublic(value);
+                    ref.read(contestNotifierProvider.notifier).updatePrivatePublic(value);
                     selectedValue = value;
                   });
                 },
@@ -415,8 +371,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Show Overall Result",
-                      style: wayaTheme.textTheme.titleMedium),
+                  Text("Show Overall Result", style: wayaTheme.textTheme.titleMedium),
                   const Gap(6),
                   Text(
                     "Hide Overall Result",
@@ -429,9 +384,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   onChanged: (value) => {
                         setState(() {
                           isSwitched = value;
-                          ref
-                              .read(contestNotifierProvider.notifier)
-                              .updateOverAllResult(value);
+                          ref.read(contestNotifierProvider.notifier).updateOverAllResult(value);
                         }),
                       }),
             ],
@@ -515,17 +468,11 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   controller: notifier.amountPerVote,
                   hintText: "Enter Amount per Vote",
                   label: "Amount per Vote",
-                  inputFormatters: [
-                    CurrencyTextInputFormatter.currency(
-                        name: 'NGN', symbol: 'NGN', locale: 'en_NG')
-                  ],
+                  inputFormatters: [CurrencyTextInputFormatter.currency(name: 'NGN', symbol: 'NGN', locale: 'en_NG')],
                   onChanged: (value) {
-                    print(
-                        "Amount in word${value.replaceAll(",", "").substring(3)}");
+                    print("Amount in word${value.replaceAll(",", "").substring(3)}");
                     if (value.trim().isNotEmpty) {
-                      if (double.parse(
-                              value.replaceAll(",", "").substring(3).trim()) >
-                          0) {
+                      if (double.parse(value.replaceAll(",", "").substring(3).trim()) > 0) {
                         setState(() {
                           selectedValue2 = "Paid";
                         });
@@ -541,17 +488,14 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     }
                   },
                   borderColor:
-                      formState.hasError && notifier.amountPerVote.text.isEmpty
-                          ? wayaTheme.colorScheme.error
-                          : null,
+                      formState.hasError && notifier.amountPerVote.text.isEmpty ? wayaTheme.colorScheme.error : null,
                 ),
                 if (formState.hasError && notifier.amountPerVote.text.isEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
                       formState.errorText ?? "",
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                     ),
                   ),
               ],
@@ -599,9 +543,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 onTap: () async {
                   String? image = await _pickImage();
                   if (image != null) {
-                    ref
-                        .read(contestNotifierProvider.notifier)
-                        .updateImage(image);
+                    ref.read(contestNotifierProvider.notifier).updateImage(image);
                   }
                 },
                 child: Column(
@@ -636,8 +578,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("PNG, JPG or MP4 (max. 5MB)",
-                                style: wayaTheme.textTheme.hintStyle),
+                            Text("PNG, JPG or MP4 (max. 5MB)", style: wayaTheme.textTheme.hintStyle),
                           ],
                         )
                       : Image.file(
@@ -664,9 +605,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                         callback: () async {
                           String? image = await _pickImage();
                           if (image != null) {
-                            ref
-                                .read(contestNotifierProvider.notifier)
-                                .updateImage(image);
+                            ref.read(contestNotifierProvider.notifier).updateImage(image);
                           }
                         }),
                   ),
@@ -690,11 +629,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                 //check for image null
                 if (isEditing) {
                 } else {
-                  if (ref
-                      .read(contestNotifierProvider.notifier)
-                      .getImage()
-                      .trim()
-                      .isEmpty) {
+                  if (ref.read(contestNotifierProvider.notifier).getImage().trim().isEmpty) {
                     WayaSnackBar.showToast('Please pick image  to continue');
 
                     return;
@@ -708,14 +643,14 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           ),
           const Gap(8),
           WayaButton(
-              text: 'Go Back',
-              color: wayaTheme.colorScheme.greyColor300,
-              textColor: wayaTheme.colorScheme.customBlack,
-              border: Border.all(
-                  width: 1, color: wayaTheme.colorScheme.greyColor300),
-              callback: () {
-                Navigator.pop(context);
-              })
+            text: 'Go Back',
+            color: wayaTheme.colorScheme.greyColor300,
+            textColor: wayaTheme.colorScheme.customBlack,
+            border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+            callback: () {
+              WayaNav.goBack();
+            },
+          )
         ],
       ),
     );
@@ -789,8 +724,7 @@ class UgtRadioSelect extends StatelessWidget {
               groupValue: groupValue,
               onChanged: (value) {
                 if (value != null) {
-                  onChanged(
-                      value); // Call the parent-provided onChanged handler
+                  onChanged(value); // Call the parent-provided onChanged handler
                 }
               },
             ),

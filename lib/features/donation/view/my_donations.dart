@@ -123,7 +123,7 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
         //           title: "Update KYC Information ",
         //           message: 'You must complete KYC verification before creating a donation post',
         //           onPress: () {
-        //             Navigator.pop(context);
+        //             WayaNav.goBack();
         //             WayaNav.toNamed('/kycUpdate', arguments: {
         //               'kyc': '${viewModel.kycStatus}'
         //             });
@@ -138,7 +138,7 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
         //             title: "You don't have a Business Account",
         //             message: 'Please upgrade to a business account to create a donation post',
         //             onPress:  () {
-        //               Navigator.pop(context);
+        //               WayaNav.goBack();
         //               WayaNav.toNamed(UpgradeToBusiness.route);
         //             },
         //             buttonText: 'Upgrade to Business',

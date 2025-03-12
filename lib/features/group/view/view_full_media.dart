@@ -58,7 +58,7 @@ class _ViewFullMediaState extends ConsumerState<ViewFullMedia>
       padding: EdgeInsets.zero,
       appBar: AppBar(backgroundColor: Colors.black,
       leading: InkWell(
-        onTap: ()=> Navigator.pop(context),
+        onTap: ()=> WayaNav.goBack(),
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: SvgPicture.asset('assets/icons/back_arrow.svg',),
@@ -82,7 +82,7 @@ class _ViewFullMediaState extends ConsumerState<ViewFullMedia>
                       child: _buildActionNav(
                           context: context,
                           onTap: () {
-                            Navigator.pop(context);
+                            WayaNav.goBack();
 
 
                           },
@@ -107,7 +107,7 @@ class _ViewFullMediaState extends ConsumerState<ViewFullMedia>
                       child: _buildActionNav(
                           context: context,
                           onTap: () async{
-                            Navigator.pop(context);
+                            WayaNav.goBack();
                             /*await WayaUtils.showModalSheet(context,
                                 child: ReportGroup(
                                     statuses: groupReport,
@@ -541,7 +541,7 @@ class _ViewFullMediaState extends ConsumerState<ViewFullMedia>
                               ref
                                   .watch(createPageProvider.notifier)
                                   .reset();
-                              //Navigator.pop(context);
+                              //WayaNav.goBack();
                             }
                           }
                               : null,

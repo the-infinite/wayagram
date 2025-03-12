@@ -43,7 +43,7 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       onTapBackButton: () {
-        Navigator.pushNamed(context, BottomView.route, arguments: 0);
+        WayaNav.toNamed( BottomView.route, arguments: 0);
       },
       isLoading: viewModel.isLoading,
       isScrollable: true,

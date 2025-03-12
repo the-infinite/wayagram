@@ -184,10 +184,10 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                       "free") {
                     ref.read(selectedAppliedContestProvider.notifier).state =
                         widget.post;
-                    Navigator.pop(context);
+                    WayaNav.goBack();
                     WayaNav.toNamed("/create-profile-contest1");
                   } else {
-                    Navigator.pop(context);
+                    WayaNav.goBack();
                     WayaUtils.showModalSheet(
                       context,
                       child: AvailableBalanceModal(

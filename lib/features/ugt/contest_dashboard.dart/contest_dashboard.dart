@@ -132,7 +132,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                           child: _buildActionNav(
                               context: context,
                               onTap: () {
-                                Navigator.pop(context);
+                                WayaNav.goBack();
                                 selectPresentTap(e);
                               },
                               asset: WayaAssets.icons.mComments.svg(

@@ -313,7 +313,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         title: 'Payment Information',
         message:
         'Waya will take a commission from the payment\nand the rest of the money will be paid into your\naccount at the end of post duration or its\nexpiry date.',
-        onPress: () => Navigator.of(context).pop(),
+        onPress: () => WayaNav.goBack(),
         icon: Image.asset('assets/images/d-code-invalid.png', height: 10,),
         buttonCenterWidget: Column(
           children: [
@@ -321,7 +321,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             const Gap(8),
             InkWell(
               onTap: (){
-                Navigator.of(context).pop();
+                WayaNav.goBack();
                 WayaUtils.showModalSheet(
                   context,
                   child: PollsModal(url: '',),

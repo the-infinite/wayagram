@@ -69,14 +69,14 @@ class SellerOrderDetailVm extends ChangeNotifier {
         message:
             'Please confirm whether you’d like to reject. This will update the order status for the buyer.',
         onPress: () async {
-          Navigator.pop(context);
+          WayaNav.goBack();
           await WayaUtils.showModalSheet(context,
               child: RejectionReason(
                 orderId: orderId,
               ));
         },
         onCancel: () {
-          Navigator.pop(context);
+          WayaNav.goBack();
         },
         icon: Image.asset('assets/images/d-code-invalid.png'));
   }

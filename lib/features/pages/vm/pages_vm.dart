@@ -314,7 +314,7 @@ class PageVm extends StateNotifier<PageState> {
 
       if (response.success && context.mounted) {
         // show success modal
-        Navigator.of(context).pop();
+        WayaNav.goBack();
 
         if (context.mounted) {
           await WayaUtils.showNotice(
@@ -365,7 +365,7 @@ class PageVm extends StateNotifier<PageState> {
             'Your report has been submitted. Our team will review the issue and take appropriate action.',
             buttonText: 'Go to Page Dashboard');
         // show success modal
-        //Navigator.of(context).pop();
+        //WayaNav.goBack();
 
         print(response.data);
       }
@@ -389,7 +389,7 @@ class PageVm extends StateNotifier<PageState> {
 
       if (response.success && context.mounted) {
         // show success modal
-        Navigator.of(context).pop();
+        WayaNav.goBack();
 
         if (context.mounted) {
           await WayaUtils.showNotice(

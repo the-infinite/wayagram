@@ -381,7 +381,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               border: Border.all(
                   width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-                Navigator.pop(context);
+                WayaNav.goBack();
                 // WayaNav.toNamed("/ugt-home");
               })
         ],

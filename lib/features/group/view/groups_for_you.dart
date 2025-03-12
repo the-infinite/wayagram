@@ -197,7 +197,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                                                   statuses: pageReport,
                                                   currentStatus: "",
                                                   postId: '${post.id}'));
-                                          Navigator.pop(context);
+                                          WayaNav.goBack();
                                         },
                                         asset: SvgPicture.asset(
                                             'assets/images/pages/flag.svg'),
@@ -222,7 +222,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                                               duration: Duration(seconds: 2),
                                             ),
                                           );
-                                          Navigator.pop(context);
+                                          WayaNav.goBack();
                                           WayaNav.toNamed('/pages');
                                         },
                                         asset: SvgPicture.asset(
@@ -518,7 +518,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                                                   statuses: pageReport,
                                                   currentStatus: "",
                                                   postId: '${post.id}'));
-                                          Navigator.pop(context);
+                                          WayaNav.goBack();
                                         },
                                         asset: SvgPicture.asset(
                                             'assets/images/pages/flag.svg'),
@@ -543,7 +543,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                                               duration: Duration(seconds: 2),
                                             ),
                                           );
-                                          Navigator.pop(context);
+                                          WayaNav.goBack();
                                           WayaNav.toNamed('/pages');
                                         },
                                         asset: SvgPicture.asset(
@@ -890,7 +890,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou>
                               ref
                                   .watch(createPageProvider.notifier)
                                   .reset();
-                              //Navigator.pop(context);
+                              //WayaNav.goBack();
                             }
                           }
                               : null,

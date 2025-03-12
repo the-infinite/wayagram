@@ -256,7 +256,7 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                 Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
               print("stages  ${_contestController.contestStages.toString()}");
-              // Navigator.pop(context);
+              // WayaNav.goBack();
             })
       ],
     );

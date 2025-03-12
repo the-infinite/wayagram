@@ -137,7 +137,7 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: (){
-              Navigator.of(context).pop();
+              WayaNav.goBack();
             },
             height: 40,
             textStyle: WayaTextStyles.bodySmall.copyWith(
@@ -185,7 +185,7 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: (){
-              Navigator.of(context).pop();
+              WayaNav.goBack();
             },
             height: 40,
             textStyle: WayaTextStyles.bodySmall.copyWith(

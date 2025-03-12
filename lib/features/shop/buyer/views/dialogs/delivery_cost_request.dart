@@ -131,7 +131,7 @@ class DeliveryCostRequest extends ConsumerWidget {
 
                           ref.read(cartVmProvider.notifier).deliveryRequest(
                               shopId: shopId, address: _controller.text);
-                          Navigator.pop(context);
+                          WayaNav.goBack();
                         }
                       : null,
                   text: "Request Delivery Cost"),

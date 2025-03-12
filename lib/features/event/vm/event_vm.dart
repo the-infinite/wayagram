@@ -182,7 +182,7 @@ class EventVm extends StateNotifier<EventState> {
       if (response.success && context.mounted) {
         // show success modal
          WayaNav.goBack();
-       // Navigator.of(context).pop();
+       // WayaNav.goBack();
 
         if (context.mounted) {
           await WayaUtils.showNotice(

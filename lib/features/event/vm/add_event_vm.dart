@@ -155,7 +155,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
                   "Your event is now live. Share it with your audience and start engaging with attendees today!",
               onPress: () {
                 WayaNav.replaceNamed(EventView.route);
-                // Navigator.of(context).pop();
+                // WayaNav.goBack();
               },
               buttonText: 'Go To Event Home Page',
               secondButtonText: 'Share Event Link',

@@ -112,7 +112,7 @@ class PopModal extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                WayaNav.goBack();
                 create();
               },
               child: Text(
@@ -127,7 +127,7 @@ class PopModal extends StatelessWidget {
             SizedBox(height: 10),
             TextButton(
               onPressed: () {
-                   Navigator.pop(context);
+                   WayaNav.goBack();
                 view();
               },
               child: Text(
