@@ -75,10 +75,10 @@ import 'package:wayagram/features/shop/seller/views/delivery_request/delivery_re
 import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
 import 'package:wayagram/features/shop/seller/views/orders/seller_order_details.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/views/add_evidence.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/views/dispute_chat/dispute_chat.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute_detail.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/add_evidence.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/dispute_chat.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute_detail.dart';
 import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/application_product_details.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/product_listing.dart';

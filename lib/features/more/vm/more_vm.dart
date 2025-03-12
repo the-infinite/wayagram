@@ -30,7 +30,8 @@ class MoreVm {
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mGroup.path,
-        content: "Create groups and manage who is following you and who you follow.",
+        content:
+            "Create groups and manage who is following you and who you follow.",
         title: "Group",
         onTap: () {
           WayaNav.toNamed('/createGroup');
@@ -46,7 +47,8 @@ class MoreVm {
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mQuotation.path,
-        content: "Create groups and manage who is following you and who you follow.",
+        content:
+            "Create groups and manage who is following you and who you follow.",
         title: "Get Quotation",
         onTap: () {
           WayaNav.removeUntilNamed(BottomView.route, arguments: 3);
@@ -92,7 +94,8 @@ class MoreVm {
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mPromotion.path,
-        content: "Promote your goods and services so it can be seen by more people.",
+        content:
+            "Promote your goods and services so it can be seen by more people.",
         title: "Promotion",
         onTap: () {},
       ),
@@ -101,7 +104,8 @@ class MoreVm {
         content: "Manage your following, followers in one place.",
         title: "Followers & Following",
         onTap: () {
-          WayaNav.toNamed('/follow/relationships?tab=mutual&self=true', arguments: 'more');
+          WayaNav.toNamed('/follow/relationships?tab=mutual&self=true',
+              arguments: 'more');
         },
       ),
       MoreOptionModel(
@@ -124,6 +128,15 @@ class MoreVm {
         title: "Chat & Call",
         onTap: () {
           WayaNav.removeUntilNamed(BottomView.route, arguments: 4);
+        },
+      ),
+      MoreOptionModel(
+        asset: WayaAssets.icons.mChat.path,
+        content:
+            "If you believe there’s an error or issue within the app, please submit a dispute.",
+        title: "Disputes",
+        onTap: () {
+          // WayaNav.removeUntilNamed(BottomView.route, arguments: 4);
         },
       ),
     ];
