@@ -69,7 +69,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                               arguments:
                                   AddProductArg(uniqueKey: Uuid().v4()));
                         },
-                        color: wayaTheme.colorScheme.primar50,
+                        color: wayaTheme.colorScheme.primary50,
                         centerWidget: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,

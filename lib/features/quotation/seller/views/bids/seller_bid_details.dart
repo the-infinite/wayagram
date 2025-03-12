@@ -53,7 +53,7 @@ class SellerBidDetails extends ConsumerWidget {
                 ],
               ),
               callback: () {},
-              color: wayaTheme.colorScheme.primar50,
+              color: wayaTheme.colorScheme.primary50,
             ),
             const Gap(30),
             AboutProduct(

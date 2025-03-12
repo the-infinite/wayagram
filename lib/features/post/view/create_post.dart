@@ -331,7 +331,7 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                                 Container(
                                   width: double.infinity,
                                   height: 56.h,
-                                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primar50),
+                                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary50),
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Column(
@@ -439,7 +439,7 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                                 Container(
                                   width: double.infinity,
                                   height: 56.h,
-                                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primar50),
+                                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary50),
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Column(

@@ -152,7 +152,7 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
                 height: 40.h,
                 width: 40.w,
                 decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.primar50,
+                  color: wayaTheme.colorScheme.primary50,
                   shape: BoxShape.circle,
                 ),
                 child: WayaAssets.icons.wallet.wallet.svg(fit: BoxFit.none),
@@ -174,7 +174,7 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.primar50,
+                      color: wayaTheme.colorScheme.primary50,
                       borderRadius: BorderRadius.circular(120),
                     ),
                     child: Text(

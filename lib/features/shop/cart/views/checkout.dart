@@ -125,7 +125,7 @@ class Checkout extends ConsumerWidget {
                       arg.cartItem.shopLogo);
                 }
               },
-              color: wayaTheme.colorScheme.primar50,
+              color: wayaTheme.colorScheme.primary50,
             ),
           const Gap(10),
           Text("Product Ordered", style: wayaTheme.textTheme.bodyMedium),

@@ -115,7 +115,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                     debounceTimer: const Duration(milliseconds: 20),
                     getResult: ref.read(userSearchProvider.notifier).getUserByEmail,
                     getText: (user) => user?.fullname ?? "User not found",
-                    backgroundColor: wayaTheme.colorScheme.primar50,
+                    backgroundColor: wayaTheme.colorScheme.primary50,
                     searchController: viewModel.username,
                     buttonTextStyle: wayaTheme.textTheme.bodyBold.copyWith(
                       color: wayaTheme.colorScheme.primary,

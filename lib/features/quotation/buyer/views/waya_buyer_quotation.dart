@@ -79,7 +79,7 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation> with Si
                   callback: () {
                     WayaNav.toNamed(CreateRequest.route);
                   },
-                  color: wayaTheme.colorScheme.primar50,
+                  color: wayaTheme.colorScheme.primary50,
                 )
               : Container(),
           _selectedIndex == 0 || _selectedIndex == 1 ? const Gap(25) : const Gap(10),

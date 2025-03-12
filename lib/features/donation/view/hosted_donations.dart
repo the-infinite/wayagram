@@ -123,7 +123,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
               WayaNav.toNamed('/createDonation');
             }
           },
-          color: wayaTheme.colorScheme.primar50,
+          color: wayaTheme.colorScheme.primary50,
         ),
         Gap(20),
         FilterWidget(

@@ -105,7 +105,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
               //WayaNav.toNamed('/create-profile-contest1');
               WayaNav.toNamed('/create-contest');
             },
-            color: wayaTheme.colorScheme.primar50,
+            color: wayaTheme.colorScheme.primary50,
             text: "Host a Contest",
             textColor: wayaTheme.colorScheme.customPrimary,
           ),

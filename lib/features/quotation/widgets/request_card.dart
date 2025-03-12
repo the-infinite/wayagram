@@ -118,7 +118,7 @@ class RequestCard extends ConsumerWidget {
                   ],
                 ),
                 callback: onTap,
-                color: wayaTheme.colorScheme.primar50,
+                color: wayaTheme.colorScheme.primary50,
               ),
 
             ],

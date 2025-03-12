@@ -5,6 +5,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/buyer_dispute/views/detail.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
+import 'package:wayagram/features/chat/view/profile.dart';
 import 'package:wayagram/features/donation/view/create_donation.dart';
 import 'package:wayagram/features/donation/view/donation_details.dart';
 import 'package:wayagram/features/donation/view/donation_management.dart';
@@ -245,6 +246,7 @@ class WayaAppRoutes {
     AddTeamMember.route: () => AddTeamMember(),
     PrivateGroup.route: () => PrivateGroup(),
     SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
+    ChatProfilePage.route: () => ChatProfilePage(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route: () => DisplayFeed(),
     GroupSetting.route: () => GroupSetting(),
     AllUpcomingEvents.route: () => AllUpcomingEvents(),
@@ -253,7 +255,6 @@ class WayaAppRoutes {
     ViewMoment.route: () => ViewMoment(),
     CandidatePostScreen.route: () => CandidatePostScreen(),
     VideoTrimmerScreen.route: () => VideoTrimmerScreen(),
-
     ViewFullMedia.route: () => ViewFullMedia(),
     EditPost.route: () => EditPost(
           initialContent: '',
@@ -313,6 +314,10 @@ class WayaAppRoutes {
   /// one.
   static String getFollowersPage(bool isSelf, [String tab = 'mutual', String? uid]) =>
       "${MutualPage.route}?tab=$tab&self=$isSelf${uid != null ? '&uid=$uid' : ''}";
+
+  /// Helper function used to generate the route that is supposed ot navigate to
+  /// the chat profile of any given user.
+  static String getChatProfile(String id) => "${ChatProfilePage.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages {
