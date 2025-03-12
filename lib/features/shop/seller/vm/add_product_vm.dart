@@ -196,10 +196,13 @@ class AddProductVm extends StateNotifier<AddProductState> {
               WayaNav.removeUntilNamed(BottomView.route, arguments: 1);
               //reset();
             });
+      } else {
+        WayaSnackBar.showToast("${response.data["data"]}");
+        print(response.data);
       }
       //
     } catch (e) {
-      print(e);
+      print("wefewfwefwefwefweff $e");
     } finally {
       state = state.copyWith(isLoading: false);
     }

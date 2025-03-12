@@ -5,10 +5,12 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/dispute_chat.dart';
 
 class ContactSeller extends StatelessWidget {
-  const ContactSeller({super.key});
+  final Order order;
+  const ContactSeller({super.key, required this.order});
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +93,8 @@ class ContactSeller extends StatelessWidget {
           const Gap(10),
           WayaButton(
               callback: () {
-                WayaNav.toNamed(DisputeChat.route);
+                WayaNav.toNamed(DisputeChat.route, arguments: order);
+                WayaNav.goBack();
               },
               text: "Yes, Contact Seller"),
           const Gap(10),

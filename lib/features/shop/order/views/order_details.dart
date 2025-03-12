@@ -110,7 +110,7 @@ class OrderDetails extends ConsumerWidget {
                 visible: arg?.order.status == 'completed',
                 child: WayaButton(
                   callback: () async {
-                    WayaUtils.showModalSheet(context, child: ContactSeller());
+                    WayaUtils.showModalSheet(context, child: ContactSeller(order: arg!.order));
                   },
                   text: "Report a problem",
                 ))
