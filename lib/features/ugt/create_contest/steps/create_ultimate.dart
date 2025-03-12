@@ -72,25 +72,25 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
       if (isEditing) {
         Future.delayed(Duration(seconds: 1), () {
           //  print("my title ${contestViewModel?.toJson()}");
-          notifier.title.text = contestViewModel.title ?? "";
-          notifier.description.text = contestViewModel.description ?? "";
-          notifier.winnerPrize.text = contestViewModel.winnerPrize ?? "";
+          notifier.title.text = contestViewModel?.title ?? "";
+          notifier.description.text = contestViewModel?.description ?? "";
+          notifier.winnerPrize.text = contestViewModel?.winnerPrize ?? "";
           notifier.amountPerVote.text =
-              contestViewModel.amountPerVote?.toString() ?? "";
-          notifier.voteCountToQualify.text =
-              contestViewModel.voteCountToQualify ?? "";
+              contestViewModel?.amountPerVote?.toString() ?? "";
+          /* notifier.voteCountToQualify.text =
+              contestViewModel?.voteCountToQualify ?? ""; */
 
           ref
               .read(contestNotifierProvider.notifier)
-              .updateEdit(contestViewModel.categoryName ?? "");
+              .updateEdit(contestViewModel?.categoryName ?? "");
 
           ref
               .read(contestNotifierProvider.notifier)
-              .selectStateEdit(contestViewModel.state ?? "");
+              .selectStateEdit(contestViewModel?.state ?? "");
 
           //make public or private
           String pubPrivate =
-              contestViewModel.publicity == "PUBLIC" ? "Public" : "Private";
+              contestViewModel?.publicity == "PUBLIC" ? "Public" : "Private";
           ref
               .read(contestNotifierProvider.notifier)
               .updatePrivatePublic(pubPrivate);
@@ -98,7 +98,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
 
           //show overall result
           bool mySwitched =
-              contestViewModel.overallResult == "YES" ? true : false;
+              contestViewModel?.overallResult == "YES" ? true : false;
           isSwitched = mySwitched;
           ref
               .read(contestNotifierProvider.notifier)
@@ -127,8 +127,10 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
               style: wayaTheme.textTheme.titleLarge),
           const Gap(5),
           Text(
-              "Bring your talent contest vision to life. Customize \n details, set stages, and make it unforgettable",
-              style: wayaTheme.textTheme.hintStyle),
+              "Bring your talent contest vision to life. Customize \ndetails, set stages, and make it unforgettable",
+              style: wayaTheme.textTheme.hintStyle.copyWith(
+                  color: wayaTheme.colorScheme.greyColor500,
+                  fontWeight: FontWeight.w500)),
           const Gap(30),
           FormField<String>(validator: (value) {
             if (notifier.title.text.isEmpty) {
@@ -320,6 +322,10 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   keyboardType: TextInputType.number,
                   controller: notifier.winnerPrize,
                   hintText: "Enter Winner's Award",
+                  inputFormatters: [
+                    CurrencyTextInputFormatter.currency(
+                        name: 'NGN', symbol: 'NGN', locale: 'en_NG')
+                  ],
                   label: "Winner's Award",
                   borderColor:
                       formState.hasError && notifier.winnerPrize.text.isEmpty
@@ -605,7 +611,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     if (!isEditing) Image.asset("assets/images/upload.png"),
                     if (isEditing)
                       Image.network(
-                        contestViewModel.uploadCoverImages ?? "",
+                        contestViewModel?.uploadCoverImages ?? "",
                         height: 100,
                         // width: 45,
                         fit: BoxFit.cover,

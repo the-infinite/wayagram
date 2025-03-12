@@ -94,9 +94,9 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _singleWidget(context, "Talent Category",
-                    selectedContestModel.categoryName ?? ""),
+                    selectedContestModel?.categoryName ?? ""),
                 _singleWidget(context, "Description of Talent",
-                    selectedContestModel.description ?? "",
+                    selectedContestModel?.description ?? "",
                     longer: true),
               ],
             ),

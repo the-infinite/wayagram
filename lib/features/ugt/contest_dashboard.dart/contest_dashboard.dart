@@ -78,9 +78,9 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
     var model = ref.watch(selectedContestProvider);
     useEffect(() {
       Future.delayed(Duration(seconds: 1), () {
-        notifier.addStages(model.contestSettings?.stages ?? []);
+        notifier.addStages(model?.contestSettings?.stages ?? []);
       });
-      targetDate = DateTime.parse(model.endDate ?? "2026-01-01T00:00:00.000Z");
+      targetDate = DateTime.parse(model?.endDate ?? "2026-01-01T00:00:00.000Z");
       return null;
     }, []);
     return WayaScaffold(
@@ -116,13 +116,13 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         height: 42,
                         text: "Edit contest details",
                         callback: () async {
-                          /*   ivalidateUGTVM(ref);
+                          ivalidateUGTVM(ref);
                           ref
                               .read(stateIsEditingContestProvider.notifier)
                               .state = true;
                           ref.watch(selectedContestProvider.notifier).state =
                               model;
-                          WayaNav.toNamed('/create-contest'); */
+                          WayaNav.toNamed('/create-contest');
                         }),
                   ),
                 Gap(10),
@@ -189,9 +189,9 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 _buildStatCard("Number of participants", "240"),
-                _buildStatCard("Votes per contestant", "120"),
-                _buildStatCard("Contest Age\n",
-                    model.contestSettings?.stages?.length.toString() ?? "0"),
+                //  _buildStatCard("Votes per contestant", "120"),
+                _buildStatCard("Contest Age",
+                    model?.contestSettings?.stages?.length.toString() ?? "0"),
               ],
             ),
 
@@ -473,7 +473,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                             value: e.isActive ?? false,
                             onChanged: (bool value) {
                               notifier.startStageContest(e.stageName ?? "", {
-                                "contestId": model.id ?? "",
+                                "contestId": model?.id ?? "",
                                 "stageName": e.stageName ?? ""
                               });
                             }),

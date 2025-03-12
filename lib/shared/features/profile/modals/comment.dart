@@ -45,11 +45,19 @@ class _PostCommentModalState extends ConsumerState<PostCommentModal> {
       (_) async {
         final result = await commentNotifier.getCommentsStream(widget.post.id);
 
-        _timer = Timer.periodic(const Duration(seconds: 5), (_) {
+        _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
           //? Fetch and update the comments every 5 seconds.
           commentNotifier.getCommentsStream(widget.post.id).then(
             (result) {
-              setState(() => _comments = result);
+              //? If it is mounted.
+              if (mounted) {
+                setState(() => _comments = result);
+              }
+
+              //? Since it is not mounted, cancel the timer.
+              else {
+                timer.cancel();
+              }
             },
           );
         });
@@ -66,23 +74,33 @@ class _PostCommentModalState extends ConsumerState<PostCommentModal> {
   @override
   void reassemble() {
     _timer?.cancel();
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) async {
-        final result = await commentNotifier.getCommentsStream(widget.post.id);
+    if (mounted) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) async {
+          final result = await commentNotifier.getCommentsStream(widget.post.id);
 
-        _timer = Timer.periodic(const Duration(seconds: 5), (_) {
-          //? Fetch and update the comments every 5 seconds.
-          commentNotifier.getCommentsStream(widget.post.id).then(
-            (result) {
-              setState(() => _comments = result);
-            },
-          );
-        });
+          _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+            //? Fetch and update the comments every 5 seconds.
+            commentNotifier.getCommentsStream(widget.post.id).then(
+              (result) {
+                //? If it is mounted, update the comments to whatever we have now.
+                if (mounted) {
+                  setState(() => _comments = result);
+                }
 
-        //? If this is still good to go.
-        if (mounted) setState(() => _comments = result);
-      },
-    );
+                //? Since it is not mounted, cancel the timer.
+                else {
+                  timer.cancel();
+                }
+              },
+            );
+          });
+
+          //? If this is still good to go.
+          if (mounted) setState(() => _comments = result);
+        },
+      );
+    }
     super.reassemble();
   }
 

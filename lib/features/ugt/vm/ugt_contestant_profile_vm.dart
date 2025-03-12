@@ -48,13 +48,13 @@ class UgtContestantProfileVm extends StateNotifier<List<SingleContestantPosts>> 
       print("i dey here 11");
       if (post.id == postId) {
         print("i dey here 2");
-     //  bool isMyLiked = post.isLiked ?? false;
+       bool isMyLiked = post.hasLiked ?? false;
         // if (isMyLiked) {
           doOnLikeLike(postId);
       //  }
         return post.copyWith(
-          isLiked: true,
-          likes: post.likes! + 1,
+          hasLiked: !isMyLiked,
+          likes:isMyLiked?post.likes! - 1: post.likes! + 1,
         );
       }
       return post;
@@ -77,9 +77,10 @@ class UgtContestantProfileVm extends StateNotifier<List<SingleContestantPosts>> 
         print("i dey here 3");
         if (post.id == postId) {
           print("i dey here 3");
+           bool isMyLiked = post.hasLiked ?? false;
           return post.copyWith(
-            isLiked: !post.isLiked!,
-            likes: post.likes! - 1,
+            hasLiked: !isMyLiked,
+            likes:isMyLiked?post.likes! - 1: post.likes! + 1,
           );
         }
         return post;
@@ -87,7 +88,8 @@ class UgtContestantProfileVm extends StateNotifier<List<SingleContestantPosts>> 
      // state = state.copyWith(myPostList: [...list]);
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
-      print("do like stuff Success");
+      // WayaSnackBar.showToast("Contest already liked");
+      print("Contest already liked");
     }
   }
 

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -8,25 +10,34 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
+import 'package:wayagram/features/ugt/media_card.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
-class UgtPostAllCard extends ConsumerWidget {
+class UgtPostAllCard extends StatefulHookConsumerWidget {
   final UgtAllPostContestModel post;
   final Contest model;
 
   const UgtPostAllCard(this.post, this.model, {super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<UgtPostAllCard> createState() => _UgtPostAllCardState();
+}
+
+class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
+  @override
+  Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(votersContestNotifier.notifier);
+    final hasClickedLiked = useState(false);
+    final hasClickedShared = useState(false);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +80,8 @@ class UgtPostAllCard extends ConsumerWidget {
                           ),
                         ), */
                         WayaImage(
-                          imageUrl: post.contestantProfile?.profilePhoto ?? "",
+                          imageUrl:
+                              widget.post.contestantProfile?.profilePhoto ?? "",
                           height: 45,
                           width: 45,
                           fit: BoxFit.cover,
@@ -84,14 +96,15 @@ class UgtPostAllCard extends ConsumerWidget {
                             SizedBox(
                               width: context.width * 0.4,
                               child: Text(
-                                post.contestApplication?.fullName ?? "",
+                                widget.post.contestApplication?.fullName ?? "",
                                 overflow: TextOverflow.ellipsis,
                                 style: wayaTheme.textTheme.bodyMedium,
                               ),
                             ),
                             const Gap(8),
                             Text(
-                              'Today',
+                              WayaHelpers.formatTimeAgo(
+                                  '${widget.post.createdAt}'),
                               style: wayaTheme.textTheme.hintStyle,
                             ),
                           ],
@@ -108,10 +121,10 @@ class UgtPostAllCard extends ConsumerWidget {
                 ],
               ),
               const Gap(10),
-              Text(post.description ?? "",
+              Text(widget.post.description ?? "",
                   style: wayaTheme.textTheme.bodySmall),
               const Gap(20),
-              ClipRRect(
+              /*  ClipRRect(
                 borderRadius:
                     BorderRadius.circular(16), // Adjust the radius as needed
                 child: WayaImage(
@@ -121,14 +134,11 @@ class UgtPostAllCard extends ConsumerWidget {
                   fit: BoxFit.cover, // Ensur
                 ),
 
-/*                 Image.network(
-                  post.mediaContent?[0].url ?? "",
-                  height: 200,
-                  width: context.width,
-                  fit: BoxFit
-                      .cover, // Ensures the image covers the area properly
-                ), */
-              ),
+              ), */
+              MediaCard(mediaUrls: [
+                ...widget.post.mediaContent!.map((e) =>
+                    CardMediaContent(type: e.type ?? "", url: e.url ?? ""))
+              ]),
               const Gap(20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,7 +148,13 @@ class UgtPostAllCard extends ConsumerWidget {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          viewModel.toggleLike(post.id ?? "");
+                          if (hasClickedLiked.value == false) {
+                            viewModel.toggleLike(widget.post.contestId ?? "",
+                                widget.post.id ?? "");
+                          }
+                          Future.delayed(Duration(seconds: 2), () {
+                            hasClickedLiked.value = false;
+                          });
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -151,24 +167,31 @@ class UgtPostAllCard extends ConsumerWidget {
                               width: 35,
                               height: 35,
                               child: Center(
-                                  child: SvgPicture.asset(
-                                      "assets/icons/thumbsup.svg")),
+                                  child:Icon(
+                            Icons.thumb_up_alt,
+                            color: widget.post.hasLiked == true
+                                ? wayaTheme.colorScheme.primary
+                                : null,
+                          )),
                             ),
                             const Gap(3),
                             Text(
-                              "${post.likes} Likes",
-                              style: TextStyle().wayaCopyWith(
-                                  color: wayaTheme.colorScheme.customBlack,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500),
+                              "${widget.post.likes} Likes",
+                              style: wayaTheme.textTheme.bodySmall,
                             )
                           ],
                         ),
                       ),
-                      const Gap(30),
+                      const Gap(20),
                       GestureDetector(
                         onTap: () {
-                          viewModel.toggleShare(post.id ?? "");
+                          if (hasClickedShared.value == false) {
+                            viewModel.toggleShare(widget.post.contestId ?? "",
+                                widget.post.id ?? "");
+                          }
+                          Future.delayed(Duration(seconds: 2), () {
+                            hasClickedShared.value = false;
+                          });
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -186,11 +209,8 @@ class UgtPostAllCard extends ConsumerWidget {
                             ),
                             const Gap(3),
                             Text(
-                              "${post.shares} Shares",
-                              style: TextStyle().wayaCopyWith(
-                                  color: wayaTheme.colorScheme.customBlack,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500),
+                              "${widget.post.shares} Shares",
+                              style: wayaTheme.textTheme.bodySmall,
                             )
                           ],
                         ),
@@ -198,13 +218,18 @@ class UgtPostAllCard extends ConsumerWidget {
                     ],
                   ),
                   WayaButton(
-                    fontSize: 14,
+                    fontSize: 12,
+                    height: 40,
                     callback: () {
                       WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(
-                          voteFee: model.amountPerVote?.toString() ?? "0",
-                        isFree: model.entryType?.toLowerCase() =="free"?true: false,
+                          voteFee:
+                              widget.model.amountPerVote?.toString() ?? "0",
+                          isFree:
+                              widget.model.entryType?.toLowerCase() == "free"
+                                  ? true
+                                  : false,
                           //   amountPaid: "89",
                           /* 
                            contestId: contestantData.contestId ?? "",
@@ -214,16 +239,18 @@ class UgtPostAllCard extends ConsumerWidget {
                           
                            */
                           model: ContestVoteModel(
-                              contestId: post.contestId ?? "",
-                              contestantId: post.contestantProfileId ?? "",
-                              hostUserId: model.profileId ?? "",
+                              contestId: widget.post.contestId ?? "",
+                              contestantId:
+                                  widget.post.contestantProfileId ?? "",
+                              hostUserId: widget.model.profileId ?? "",
                               amount: "0",
                               numberOfVotes: "0",
                               profileId: "",
-                              type: model.type ?? ""),
+                              type: widget.model.entryType?.toLowerCase()),
 
                           candidateName:
-                              post.contestApplication?.fullName ?? "Name",
+                              widget.post.contestApplication?.fullName ??
+                                  "Name",
                           votingLink: "votingLink",
                         ),
                       );

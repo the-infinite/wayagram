@@ -348,6 +348,27 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     return dt;
   }
 
+  formatDonationDate(j) {
+    String dt = '';
+    if (j != null) {
+      if (j.toString().contains('T')) {
+        String x = j.toString().split('T')[0];
+        if (x.contains('-')) {
+          String a = x.split('-')[0];
+          String b = x.split('-')[1];
+          String c = x.split('-')[2];
+
+          dt = '${getDayAbbreviation(c)} ${getMonthName(b)}\n$a';
+        } else {
+          dt = x;
+        }
+      } else {
+        dt = j;
+      }
+    }
+    return dt;
+  }
+
   formatDt1(j) {
     String dt = '';
     if (j != null) {

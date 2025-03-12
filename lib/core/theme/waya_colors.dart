@@ -43,6 +43,7 @@ static const Color info = Color(0xff0288D1);
   static const secondaryColor2 = Color(0xffF6F6F6);
   //
   static const pendingColor = Color(0xfffef6e7);
+  static const pendingColor2 = Color(0xff865503);
   static const testColor = Color(0xFF0000FF);
   //
   static const tertiary = Color(0xff000000);

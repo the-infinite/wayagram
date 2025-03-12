@@ -71,7 +71,7 @@ class _ContestSignupRequirementState
         int index = 0;
         Future.delayed(Duration(seconds: 1), () {
           ref.read(stateRequirementProvider.notifier).state = [
-            ...contestViewModel.contestSettings?.formRequirements?.map((e) {
+            ...contestViewModel?.contestSettings?.formRequirements?.map((e) {
                   return NewRequirementModel(
                     requirementName: e.requirementName,
                     requirementType: e.requirementType,

@@ -41,15 +41,18 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
       children: [
         //  UgtLeaderboardCard(),
 
+        if(viewModel.myContestList.isEmpty)emptyWidget(),
+          if (viewModel.isLoading!) 
+               Center(child: CircularProgressIndicator()),
+            
+
+
         ListView.builder(
           controller: _scrollController,
           shrinkWrap: true,
           itemCount: viewModel.myContestList.length,
           itemBuilder: (context, index) {
-            if (viewModel.isLoading!) {
-              return Center(child: CircularProgressIndicator());
-            }
-
+          
             final post = viewModel.myContestList[index];
             return GestureDetector(
               onTap: () {
@@ -97,16 +100,16 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
     );
   }
 
+
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc:
-            "You don’t have any active contest here. Create a \n contest and have different participant",
-        title: "No Contest Created",
-        buttonText: "Host a Contest",
+        desc: "There is no Contestant for this contest yet",
+        title: "No Post Created",
+        buttonText: "",
+        hideButton: false,
         onTap: () {
-          //  ivalidateUGTVM(ref);
-          //  WayaNav.toNamed("/create-contest");
+         
         });
   }
 

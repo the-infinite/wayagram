@@ -9,7 +9,7 @@ import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
@@ -28,7 +28,6 @@ class ContestProfileStagesSection extends StatefulHookConsumerWidget {
 class _ContestProfileStagesSectionState
     extends ConsumerState<ContestProfileStagesSection> {
   final ScrollController _scrollController = ScrollController();
- 
 
   @override
   void initState() {
@@ -39,7 +38,6 @@ class _ContestProfileStagesSectionState
   @override
   Widget build(BuildContext context) {
     // final posts = ref.watch(postProvider);
-
 
     final wayaTheme = Theme.of(context);
 

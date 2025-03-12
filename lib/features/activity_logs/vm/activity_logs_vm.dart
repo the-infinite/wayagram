@@ -45,7 +45,6 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       this.ref,)
       : super(ActivityLogsState());
 
-
   Future<PaginatedResult<LoginHistoryDocs>?> getLoginActivity({required int page}) async {
 
     try{
@@ -110,7 +109,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchCmsDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(cmsDocs: fetchCmsDocs);
-        state = state.copyWith(cmsDocs: responseModel.data?.docs);
+        state = state.copyWith(cmsDocs: responseModel.data?.docs,
+        cmsDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -160,7 +160,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchPaymentActivityDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(paymentActivityDocs: fetchPaymentActivityDocs);
-        state = state.copyWith(paymentActivityDocs: responseModel.data?.docs);
+        state = state.copyWith(paymentActivityDocs: responseModel.data?.docs,
+        paymentActivityDocs1: responseModel.data?.docs,);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -210,7 +211,8 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
         fetchSearchLogsDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(searchLogDocs: fetchSearchLogsDocs);
-        state = state.copyWith(searchLogDocs: responseModel.data?.docs);
+        state = state.copyWith(searchLogDocs: responseModel.data?.docs,
+        searchLogDocs1: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }

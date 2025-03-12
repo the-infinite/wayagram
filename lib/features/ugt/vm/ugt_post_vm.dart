@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
@@ -24,7 +25,7 @@ class ContestForYou extends StateNotifier<List<Contest>> {
       List<Contest> contestList = [];
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);
-        contestList = responseModel.data.docs;
+        contestList = responseModel.data?.docs ?? [];
         state = [...contestList];
         /*  if (_page == 1) {
         } else {
@@ -48,12 +49,12 @@ class ContestForYou extends StateNotifier<List<Contest>> {
     print("Contest for you");
     state = state.map((post) {
       if (post.id == postId) {
-        if (!post.isLiked!) {
-          doOnLikeLike(postId);
-        }
+        doOnLikeLike(postId);
+        bool value = post.hasLiked == null ? false : post.hasLiked ?? false;
+
         return post.copyWith(
-          isLiked: true,
-          likeCount: post.likeCount! + 1,
+          hasLiked: !value,
+          likeCount: value ? post.likeCount! - 1 : post.likeCount! + 1,
         );
       }
       return post;
@@ -71,16 +72,19 @@ class ContestForYou extends StateNotifier<List<Contest>> {
       //  print("do like stuff Fail");
       state = state.map((post) {
         if (post.id == postId) {
+          bool value = post.hasLiked == null ? false : post.hasLiked ?? false;
+
           return post.copyWith(
-            isLiked: !post.isLiked!,
-            likeCount: post.likeCount! - 1,
+            hasLiked: !value,
+            likeCount: value ? post.likeCount! - 1 : post.likeCount! + 1,
           );
         }
         return post;
       }).toList();
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
-      print("do like stuff Success");
+      //WayaSnackBar.showToast("Contest already liked");
+      debugPrint("Contest already liked");
     }
   }
 
@@ -90,11 +94,23 @@ class ContestForYou extends StateNotifier<List<Contest>> {
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
+    state = state.map((post) {
+      if (post.id == postId) {
+        bool value =
+            post.isFollowing == null ? false : post.isFollowing ?? false;
+        return post.copyWith(
+          // isLiked: true,
+          isFollowing: !value,
+        );
+      }
+      return post;
+    }).toList();
+    doshare(postId);
 
     if (response.success) {
       //  print("do like stuff Fail");
 
-      WayaSnackBar.showToast("Contest liked");
+      // WayaSnackBar.showToast("Contest followed", showSuccess: true);
     } else {
       print("do like stuff Success");
     }
@@ -126,7 +142,7 @@ class ContestForYou extends StateNotifier<List<Contest>> {
       state = state.map((post) {
         if (post.id == postId) {
           return post.copyWith(
-            isLiked: !post.isLiked!,
+            hasLiked: !post.hasLiked!,
             likeCount: post.likeCount! - 1,
           );
         }
@@ -149,8 +165,8 @@ class ContestForYou extends StateNotifier<List<Contest>> {
   } */
 }
 
-final selectedContestProvider = StateProvider<Contest>((ref) {
-  return Contest();
+final selectedContestProvider = StateProvider<Contest?>((ref) {
+  return null;
 });
 // Provider
 final postProvider = StateNotifierProvider<ContestForYou, List<Contest>>((ref) {

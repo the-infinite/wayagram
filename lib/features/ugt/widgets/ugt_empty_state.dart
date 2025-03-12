@@ -67,10 +67,7 @@ class UgtEmptyState extends StatelessWidget {
                   Text(
                     buttonText,
                     textAlign: TextAlign.center,
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.white,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500),
+                    style: wayaTheme.textTheme.bodyMedium,
                   )
                 ],
               ),

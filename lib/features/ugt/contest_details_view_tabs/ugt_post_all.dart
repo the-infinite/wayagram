@@ -37,7 +37,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
         
         // UgtPostCard(),
         //  UgtPostCard(),
-        //  if (posts.isEmpty) emptyWidget(),
+         if ( viewModel.myPostList.isEmpty) emptyWidget(),
         //  if (posts.isNotEmpty)
         ListView.builder(
           controller: _scrollController,
@@ -59,16 +59,14 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc:
-            "You don’t have any active contest here. Create a \n contest and have different participant",
-        title: "No Contest Created",
-        buttonText: "Host a Contest",
+        desc: "There is no Post for this contest yet",
+        title: "No Post Created",
+        buttonText: "",
+        hideButton: false,
         onTap: () {
-          //  ivalidateUGTVM(ref);
-          //  WayaNav.toNamed("/create-contest");
+         
         });
   }
-
   @override
   void dispose() {
     _scrollController.dispose();
