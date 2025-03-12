@@ -13,18 +13,14 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_leaderboard.dart';
-import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
-import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
+
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
-import 'package:wayagram/features/ugt/widgets/contest_card.dart';
-import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 import '../../../core/components/waya_scaffold.dart';
@@ -75,8 +71,12 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(votersContestNotifier);
     final notifier = ref.read(votersContestNotifier.notifier);
+    final dashboardNotifier = ref.read(ugtAdminDashboardVm.notifier);
+    final dashboardVm = ref.read(ugtAdminDashboardVm);
     var model = ref.watch(selectedContestProvider);
     useEffect(() {
+      dashboardNotifier.fetchTotalContestant(model?.id ?? "");
+      dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
       Future.delayed(Duration(seconds: 1), () {
         notifier.addStages(model?.contestSettings?.stages ?? []);
       });
@@ -138,6 +138,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                               context: context,
                               onTap: () {
                                 WayaNav.goBack();
+                                dashboardNotifier.fetchTotalEarnings(
+                                    model?.id ?? "", e.text.toLowerCase());
                                 selectPresentTap(e);
                               },
                               asset: WayaAssets.icons.mComments.svg(
@@ -183,14 +185,16 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               ],
             ),
             const Gap(20),
-            _buildStatCard2(context, "Revenue Generated", "₦200,000"),
+            _buildStatCard2(context, "Revenue Generated",
+                "₦${dashboardVm.revenueGenerated}"),
             const Gap(10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatCard("Number of participants", "240"),
+                _buildStatCard("Number of participants",
+                    "${dashboardVm.totalContestants}"),
                 //  _buildStatCard("Votes per contestant", "120"),
-                _buildStatCard("Contest Age",
+                _buildStatCard("Contest Stage",
                     model?.contestSettings?.stages?.length.toString() ?? "0"),
               ],
             ),
@@ -553,14 +557,14 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
           //const Gap(4),
           Text(
             text,
-            style: TextStyle().wayaCopyWith(
-                color: color, fontWeight: FontWeight.w500, fontSize: 12),
+            style: WayaTextStyles.bodyMedium.copyWith(color: color),
           ),
           if (isActive)
             Container(
               padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
-                color: Colors.orange, // Background color for the checkmark
+                color: wayaTheme
+                    .primaryColor, // Background color for the checkmark
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -760,7 +764,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
 
   void selectPresentTap(MyFilterModel e) {
     var list = filterList.map((user) {
-      if (user.isActive) {
+      if (user == e) {
         return MyFilterModel(
             text: user.text, isActive: true); // Change isActive to false
       }
@@ -861,10 +865,9 @@ Color getColor(bool isText, String text) {
 }
 
 var filterList = [
-  MyFilterModel(text: "All Time Stats", isActive: true),
-  MyFilterModel(text: '''Today’s Stats''', isActive: false),
-  MyFilterModel(text: '''This Week’s Stats''', isActive: false),
-  MyFilterModel(text: '''This Month’s Stats''', isActive: false),
+  MyFilterModel(text: 'All', isActive: true),
+  MyFilterModel(text: 'Weekly', isActive: false),
+  MyFilterModel(text: 'Monthly', isActive: false),
 ];
 
 class MyFilterModel {

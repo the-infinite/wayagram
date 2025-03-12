@@ -320,7 +320,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     //state.copyWith(myPostList: contestList)
     var list = state.myPostList.map((post) {
       print("i dey here 11");
-      if (post.id == postId) {
+      if (post.id == galleryId) {
         print("i dey here 2");
         bool isMyLiked = post.hasLiked ?? false;
         // if (isMyLiked) {

@@ -80,6 +80,11 @@ dependencies:
   app_links: ^6.4.0
   firebase_analytics: ^11.4.4
   firebase_crashlytics: ^4.3.4
+  #for pinch to zoom
+  photo_view: ^0.15.0
+  #for saving file to gallery
+  gallery_saver_plus: ^3.2.4
+  
 
 
 
