@@ -23,7 +23,7 @@ class ChatModel {
   final String? latestMessageId;
   final MessageModel? lastMessage;
   final int unreadCount;
-  final String chatType;
+  final ChatType chatType;
   final DateTime createdAt;
   final DateTime updatedAt;
   final List<ChatMember> chatMembers;
@@ -79,7 +79,7 @@ class ChatModel {
     String? latestMessageId,
     MessageModel? lastMessage,
     int? unreadCount,
-    String? chatType,
+    ChatType? chatType,
     DateTime? createdAt,
     DateTime? updatedAt,
     List<ChatMember>? chatMembers,

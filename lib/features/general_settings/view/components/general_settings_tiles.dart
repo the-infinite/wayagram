@@ -9,6 +9,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -113,7 +114,11 @@ class GeneralSettingsOptionTile extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 10.0, top: 10),
                 child: Row(
                   children: [
-                    SvgPicture.asset("assets/icons/gen_set/${option.iconPath}.svg", fit: BoxFit.none),
+                    SvgPicture.asset(
+                      "assets/icons/gen_set/${option.iconPath}.svg",
+                      fit: BoxFit.none,
+                      color: option.iconPath == 'logout' ? WayaColors.primary : null,
+                    ),
                     Gap(10),
                     Text(option.title,
                         style: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.greyColor700)),
