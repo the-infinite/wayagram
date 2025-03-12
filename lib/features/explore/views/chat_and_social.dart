@@ -116,7 +116,7 @@ class _ChatAndSocialState extends ConsumerState<ChatAndSocial> {
           const Gap(25),
           GroupedWidgetHeader(
             onTap: () {
-              Navigator.pushNamed(context, BottomView.route, arguments: 4);
+              WayaNav.toNamed( BottomView.route, arguments: 4);
             },
             subTitle: 'Connect with friends and communities',
             title: 'Chats & Calls',

@@ -183,7 +183,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                        onTap: () {
                                          viewModel.repost(context,
                                              postId: '${post.id}');
-                                         Navigator.pop(context);
+                                         WayaNav.goBack();
                                        },
                                        asset: SvgPicture.asset(
                                            'assets/images/pages/flag.svg'),
@@ -208,7 +208,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                              duration: Duration(seconds: 2),
                                            ),
                                          );
-                                         Navigator.pop(context);
+                                         WayaNav.goBack();
                                          WayaNav.toNamed('/pages');
                                        },
                                        asset: SvgPicture.asset(
@@ -465,7 +465,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                 child: _buildActionNav(
                                     context: context,
                                     onTap: () {
-                                      Navigator.pop(context);
+                                      WayaNav.goBack();
                                       //WayaNav.toNamed('/editPost', arguments: '${post?.id}');
                                     },
                                     asset:
@@ -482,7 +482,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                         onTap: () {
                                           viewModel.repost(context,
                                               postId: '${post.id}');
-                                          Navigator.pop(context);
+                                          WayaNav.goBack();
                                         },
                                         asset: SvgPicture.asset(
                                             'assets/images/pages/flag.svg'),
@@ -507,7 +507,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                               duration: Duration(seconds: 2),
                                             ),
                                           );
-                                          Navigator.pop(context);
+                                          WayaNav.goBack();
                                           WayaNav.toNamed('/pages');
                                         },
                                         asset: SvgPicture.asset(
@@ -863,7 +863,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                         onTap: () {
                                           viewModel.repost(context,
                                               postId: '${post.id}');
-                                          Navigator.pop(context);
+                                          WayaNav.goBack();
                                         },
                                         asset: SvgPicture.asset(
                                             'assets/images/pages/flag.svg'),
@@ -888,7 +888,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                               duration: Duration(seconds: 2),
                                             ),
                                           );
-                                          Navigator.pop(context);
+                                          WayaNav.goBack();
                                           WayaNav.toNamed('/pages');
                                         },
                                         asset: SvgPicture.asset(
@@ -1151,7 +1151,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                 child: _buildActionNav(
                                     context: context,
                                     onTap: () {
-                                      Navigator.pop(context);
+                                      WayaNav.goBack();
                                       //WayaNav.toNamed('/editPost', arguments: '${post?.id}');
                                     },
                                     asset:
@@ -1167,7 +1167,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                         onTap: () {
                                           viewModel.repost(context,
                                               postId: '${post.id}');
-                                          Navigator.pop(context);
+                                          WayaNav.goBack();
                                         },
                                         asset: SvgPicture.asset(
                                             'assets/images/pages/flag.svg'),
@@ -1192,7 +1192,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                               duration: Duration(seconds: 2),
                                             ),
                                           );
-                                          Navigator.pop(context);
+                                          WayaNav.goBack();
                                           WayaNav.toNamed('/pages');
                                         },
                                         asset: SvgPicture.asset(
@@ -1604,7 +1604,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                     ref
                                         .watch(createPageProvider.notifier)
                                         .reset();
-                                    //Navigator.pop(context);
+                                    //WayaNav.goBack();
                                   }
                                 }
                               : null,

@@ -6,6 +6,7 @@ import 'package:get/get_core/get_core.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 // import 'package:wayagram/core/theme/vm/theme_vm.dart';
 
 class WayaScaffold extends ConsumerWidget {
@@ -169,7 +170,7 @@ class _WayaScaffoldWithProgressBarState extends State<WayaScaffoldWithProgressBa
 
   void goBack() {
     if (widget.tabController.index == 0) {
-      Navigator.pop(context);
+      WayaNav.goBack();
     } else {
       widget.tabController.animateTo(widget.tabController.index - 1);
     }

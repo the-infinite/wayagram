@@ -585,7 +585,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             _contestController.entryAmountController.text,
                         numPostPerWeek: _contestController
                             .contestNumberPostsPerWeekTextController.text));
-                Navigator.pop(context);
+                WayaNav.goBack();
               }
               /*  if (_formKey.currentState!.validate()) {
                 ref.read(stateContactProvider.notifier).state = ref
@@ -619,7 +619,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
               border: Border.all(
                   width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-                Navigator.pop(context);
+                WayaNav.goBack();
               })
         ],
       ),

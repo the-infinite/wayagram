@@ -46,7 +46,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
         return WayaUtils.showNotice(
             context: context,
             title: 'Payment Unsuccessful',
-            onCancel: () => Navigator.pop(context),
+            onCancel: () => WayaNav.goBack(),
             message:
                 'Payment failed. Top up your WayaGram Wallet to complete your purchase seamlessly',
             onPress: () => WayaNav.toNamed(FundWalletOptionsScreen.route),
@@ -102,7 +102,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
         WayaUtils.showNotice(
           context: context,
           title: 'Payment Successful',
-          onCancel: () => Navigator.pop(context),
+          onCancel: () => WayaNav.goBack(),
           message:
               'Your payment has been processed successfully, you can download your reciept and track your order progress',
           onPress: () => WayaNav.toNamed(BottomView.route,

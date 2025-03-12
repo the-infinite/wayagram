@@ -294,7 +294,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     final response = await _contestRepository.createProfile(map);
     isLoading.value = false;
     if (response.success) {
-      Navigator.pop(context);
+      WayaNav.goBack();
     }
   }
 

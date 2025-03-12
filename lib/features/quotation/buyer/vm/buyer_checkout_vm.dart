@@ -14,7 +14,7 @@ class BuyerCheckoutVm extends ChangeNotifier {
       context: context,
       title: 'Payment Unsuccessful',
       message: 'Payment failed. Top up your WayaGram Wallet to complete your \n purchase seamlessly',
-      onPress: () => Navigator.of(context).pop(),
+      onPress: () => WayaNav.goBack(),
       icon: Image.asset('assets/images/d-code-invalid.png'),
       buttonCenterWidget: Column(
         children: [

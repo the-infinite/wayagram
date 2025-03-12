@@ -233,7 +233,7 @@ class EventDetailAction extends StatelessWidget {
                   context: context,
                   onTap: () {
                     Share.share("https://example.com");
-                    Navigator.pop(context);
+                    WayaNav.goBack();
                   },
                   asset: Icon(
                     Icons.share,
@@ -248,7 +248,7 @@ class EventDetailAction extends StatelessWidget {
               child: _buildActionNav(
                   context: context,
                   onTap: () async {
-                    Navigator.pop(context);
+                    WayaNav.goBack();
                     await WayaUtils.showModalSheet(context,
                         child: ReportEvent(
                             statuses: eventReport,

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class WayaBottomSheetContent extends StatefulWidget {
   final double? contextHeight;
@@ -66,12 +67,13 @@ class _WayaBottomSheetContentState extends State<WayaBottomSheetContent> {
               Text(widget.title, style: wayaTheme.textTheme.titleLarge),
               if (widget.multi)
                 IconButton(
-                    onPressed: () => Navigator.pop(context, _selectedItems),
-                    icon: Icon(
-                      Icons.close,
-                      color: wayaTheme.colorScheme.greyColor400,
-                      size: 20,
-                    ))
+                  onPressed: () => WayaNav.goBack(result: _selectedItems),
+                  icon: Icon(
+                    Icons.close,
+                    color: wayaTheme.colorScheme.greyColor400,
+                    size: 20,
+                  ),
+                )
             ],
           ),
           const Gap(20),
@@ -88,7 +90,7 @@ class _WayaBottomSheetContentState extends State<WayaBottomSheetContent> {
                       _toggleSelection(item);
                     } else {
                       final isSelected = _selectedItems.contains(item);
-                      Navigator.pop(context, isSelected ? [Select(label: '', value: '')] : [item]);
+                      WayaNav.goBack(result: isSelected ? [Select(label: '', value: '')] : [item]);
                     }
                   },
                   child: Padding(
@@ -96,12 +98,8 @@ class _WayaBottomSheetContentState extends State<WayaBottomSheetContent> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(item.label,
-                            style: wayaTheme.textTheme.labelMedium),
-                        if (isSelected)
-                          Icon(Icons.check,
-                              color: wayaTheme.colorScheme.customBlack,
-                              size: 18),
+                        Text(item.label, style: wayaTheme.textTheme.labelMedium),
+                        if (isSelected) Icon(Icons.check, color: wayaTheme.colorScheme.customBlack, size: 18),
                       ],
                     ),
                   ),

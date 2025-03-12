@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:video_trimmer/video_trimmer.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class VideoTrimmerScreen extends ConsumerStatefulWidget {
   static const route = '/video-trimmer';
@@ -54,7 +55,7 @@ class _VideoTrimmerScreenState extends ConsumerState<VideoTrimmerScreen> {
       onSave: (outputPath) {
         if (outputPath != null) {
           File trimmedFile = File(outputPath);
-          Navigator.pop(context, trimmedFile);
+          WayaNav.goBack(result: trimmedFile);
         } else {}
       },
     );

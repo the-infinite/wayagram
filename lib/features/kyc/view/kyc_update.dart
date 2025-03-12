@@ -109,7 +109,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
               border:
               Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-              Navigator.pop(context);
+              WayaNav.goBack();
               },
           textStyle: WayaTextStyles.bodySmall.copyWith(
               fontSize: 16.sp,
@@ -142,7 +142,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              Navigator.pop(context);
+              WayaNav.goBack();
             },
             textStyle: WayaTextStyles.bodySmall.copyWith(
                 fontSize: 16.sp,

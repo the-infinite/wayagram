@@ -163,7 +163,7 @@ class LearnMoreInstructionsContent extends StatelessWidget {
 //                 walletProvider.calculateCustomTotalCreditAndDebit(walletProvider.transactionLocalList,
 //                     startDate: DateFormatterUtil.convertToDateTime(startDate.text),
 //                     endDate: DateFormatterUtil.convertToDateTime(endDate.text));
-//                 Navigator.pop(context);
+//                 WayaNav.goBack();
 //               },
 //             )
 //           ],

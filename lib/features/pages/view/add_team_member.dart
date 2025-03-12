@@ -46,7 +46,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
       isLoading: viewModel.isLoading,
       isScrollable: true,
       onTapBackButton: (){
-        Navigator.pop(context);
+        WayaNav.goBack();
         ref.watch(createGroupProvider.notifier).reset();
       },
       appBarTrailing: Padding(
@@ -72,7 +72,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
               await team.updateTeamMember(context, '', 'pageId','memberId');
               showCustomDialog(context, 'Success! ${viewModel.username} has been added as a\nModerator','You can now collaborate seamlessly and\nmanage the page together.');
               ref.watch(createGroupProvider.notifier).reset();
-              Navigator.pop(context);
+              WayaNav.goBack();
             }
           } : null,
           height: 30,
@@ -315,7 +315,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                            children: [
                              InkWell(
                                  onTap:(){
-                                   Navigator.of(cxt).pop();
+                                   WayaNav.goBack();
                                  },
                                  child: Image.asset('assets/images/pages/success.png', height: 32, width: 32,)),
                              Gap(10),
@@ -330,7 +330,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
 
                              InkWell(
                                  onTap:(){
-                                   Navigator.of(cxt).pop();
+                                   WayaNav.goBack();
                                  },
                                  child: Image.asset('assets/images/pages/x.png', height: 11, width: 11,)),
                              SizedBox(

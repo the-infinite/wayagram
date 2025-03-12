@@ -5,6 +5,7 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
 
 class WayaPaginatedSelectField extends ConsumerStatefulWidget {
@@ -75,7 +76,7 @@ class _WayaPaginatedSelectFieldState
                   uniqueKey: widget.uniqueKey,
                   onSelected: (value) {
                     widget.onSelected(value);
-                    Navigator.pop(context);
+                    WayaNav.goBack();
                   },
                 );
               },

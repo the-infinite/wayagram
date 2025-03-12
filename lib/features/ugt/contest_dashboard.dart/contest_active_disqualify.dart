@@ -150,7 +150,7 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                         child: _buildActionNav(
                             context: context,
                             onTap: () {
-                              Navigator.pop(context);
+                              WayaNav.goBack();
                               WayaNav.toNamed(
                                   '/contest-mydashboard-profile-page');
                             },
@@ -166,7 +166,7 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                         child: _buildActionNav(
                             context: context,
                             onTap: () {
-                              Navigator.pop(context);
+                              WayaNav.goBack();
                               ref
                                   .read(selectedContestantProfile.notifier)
                                   .state = item;
@@ -188,7 +188,7 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                         child: _buildActionNav(
                             context: context,
                             onTap: () {
-                              Navigator.pop(context);
+                              WayaNav.goBack();
                               // WayaNav.toNamed('/pages');
                               notifier.qualifyDisqualify(model?.id ?? "", {
                                 "contestId": model?.id ?? "",

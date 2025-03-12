@@ -131,7 +131,7 @@ class PostCard extends StatelessWidget {
                           child: _buildActionNav(
                               context: context,
                               onTap: () {
-                                Navigator.pop(context);
+                                WayaNav.goBack();
                               },
                               asset: SvgPicture.asset('assets/images/pages/flag.svg'),
                               text: "Repost",
@@ -150,7 +150,7 @@ class PostCard extends StatelessWidget {
                                     duration: Duration(seconds: 2),
                                   ),
                                 );
-                                Navigator.pop(context);
+                                WayaNav.goBack();
                                 WayaNav.toNamed('/pages');
 
                               },

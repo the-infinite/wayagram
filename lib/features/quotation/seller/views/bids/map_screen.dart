@@ -10,8 +10,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
-import 'package:wayagram/features/quotation/widgets/single_see_bid_widget.dart';
 
 class MapScreen extends ConsumerStatefulWidget {
   static const route = '/map';
@@ -23,7 +23,6 @@ class MapScreen extends ConsumerStatefulWidget {
 
 class _MapScreenState extends ConsumerState<MapScreen> {
   final _controller = Completer<GoogleMapController>();
-
 
   static const CameraPosition _kLake = CameraPosition(
       bearing: 192.8334901395799,
@@ -106,12 +105,13 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                   ),
                   const Spacer(),
                   InkWell(
-                      onTap: () => Navigator.pop(context),
-                      child: Image.asset(
-                        'assets/images/bid/back-arrow.png',
-                        height: 24,
-                        width: 24,
-                      )),
+                    onTap: () => WayaNav.goBack(),
+                    child: Image.asset(
+                      'assets/images/bid/back-arrow.png',
+                      height: 24,
+                      width: 24,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -148,12 +148,12 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     ),
                   ),
                   const Gap(20),
-                //   SingleSeeBidWidget(
-                //     color: wayaTheme.colorScheme.scaffoldColor,
-                //   ),
-                //   SingleSeeBidWidget(
-                //     color: wayaTheme.colorScheme.scaffoldColor,
-                //   ),
+                  //   SingleSeeBidWidget(
+                  //     color: wayaTheme.colorScheme.scaffoldColor,
+                  //   ),
+                  //   SingleSeeBidWidget(
+                  //     color: wayaTheme.colorScheme.scaffoldColor,
+                  //   ),
                 ],
               ),
             ),
@@ -165,7 +165,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                 Padding(
                   padding: EdgeInsets.only(bottom: 630.h),
                   child: InkWell(
-                      onTap: () => Navigator.pop(context),
+                      onTap: () => WayaNav.goBack(),
                       child: Image.asset(
                         'assets/images/bid/back-arrow.png',
                         height: 60.h,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -16,6 +15,7 @@ import 'package:wayagram/features/event/widgets/event_widget.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/event/views/all_upcoming_events.dart';
+
 class AllEvents extends ConsumerStatefulWidget {
   const AllEvents({super.key});
 
@@ -76,7 +76,7 @@ class _AllEventsState extends ConsumerState<AllEvents> {
                 WayaButton(
                   callback: () {
                     
-                     Navigator.pushReplacementNamed(context, AddEvent.route);
+                     WayaNav.replaceNamed( AddEvent.route);
                   },
                   color: wayaTheme.colorScheme.primar50,
                   centerWidget: Row(

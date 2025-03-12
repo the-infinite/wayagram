@@ -141,7 +141,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
               child: InkWell(
                   onTap: (){
                     ref.watch(createPageProvider.notifier).reset();
-                    Navigator.pop(context);
+                    WayaNav.goBack();
                   },
                   child: Image.asset('assets/images/pages/cancel.png', height: 16.h,)),
             )),
@@ -375,7 +375,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
                                       Padding(
                                         padding: const EdgeInsets.only(right: 20),
                                         child: GestureDetector(
-                                          onTap: () =>Navigator.pop(context),
+                                          onTap: () =>WayaNav.goBack(),
                                           child: Container(
                                             padding: const EdgeInsets.all(2),
                                             decoration:  BoxDecoration(
@@ -487,7 +487,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
                                       Padding(
                                         padding: const EdgeInsets.only(right: 20),
                                         child: GestureDetector(
-                                          onTap: () =>Navigator.pop(context),
+                                          onTap: () =>WayaNav.goBack(),
                                           child: Container(
                                             padding: const EdgeInsets.all(2),
                                             decoration:  BoxDecoration(

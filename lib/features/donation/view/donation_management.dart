@@ -145,7 +145,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
                           title: "Update KYC Information ",
                           message: 'You must complete KYC verification before setting minimum amount.',
                           onPress: () {
-                            Navigator.pop(context);
+                            WayaNav.goBack();
                             WayaNav.toNamed('/kycUpdate', arguments: {
                               'kyc': '${viewModel.kycStatus}'
                             });
@@ -160,7 +160,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
                             title: "You don't have a Business Account",
                             message: 'Please upgrade to a business account to create a donation post',
                             onPress: () {
-                              Navigator.pop(context);
+                              WayaNav.goBack();
                               WayaNav.toNamed(UpgradeToBusiness.route);
                             },
                             buttonText: 'Upgrade to Business',
