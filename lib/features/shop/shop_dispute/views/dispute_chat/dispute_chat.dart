@@ -12,9 +12,9 @@ import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/typing.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/views/dispute_chat/widgets/dispute_buyer_info.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/widgets/dispute_buyer_info.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/vm/default.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
 
 class DisputeChat extends ConsumerStatefulWidget {
   static const route = '/seller/dispute/chat';
@@ -43,7 +43,8 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
     return WayaScaffold(
       isLoading: false,
       isScrollable: false,
-      title: 'Dispute Chat',
+        padding: EdgeInsets.zero,
+          resizeToAvoidBottomInset: true,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,

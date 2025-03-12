@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/widgets/single_dispute_widget.dart';
+import 'package:wayagram/features/shop/shop_dispute/widgets/single_dispute_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 
 class SellerDispute extends ConsumerStatefulWidget {
