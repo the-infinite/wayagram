@@ -16,6 +16,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
 
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
@@ -70,8 +71,12 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(votersContestNotifier);
     final notifier = ref.read(votersContestNotifier.notifier);
+    final dashboardNotifier = ref.read(ugtAdminDashboardVm.notifier);
+    final dashboardVm = ref.read(ugtAdminDashboardVm);
     var model = ref.watch(selectedContestProvider);
     useEffect(() {
+      dashboardNotifier.fetchTotalContestant(model?.id ?? "");
+      dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
       Future.delayed(Duration(seconds: 1), () {
         notifier.addStages(model?.contestSettings?.stages ?? []);
       });
@@ -133,6 +138,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                               context: context,
                               onTap: () {
                                 WayaNav.goBack();
+                                dashboardNotifier.fetchTotalEarnings(
+                                    model?.id ?? "", e.text.toLowerCase());
                                 selectPresentTap(e);
                               },
                               asset: WayaAssets.icons.mComments.svg(
@@ -178,14 +185,16 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               ],
             ),
             const Gap(20),
-            _buildStatCard2(context, "Revenue Generated", "₦200,000"),
+            _buildStatCard2(context, "Revenue Generated",
+                "₦${dashboardVm.revenueGenerated}"),
             const Gap(10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatCard("Number of participants", "240"),
+                _buildStatCard("Number of participants",
+                    "${dashboardVm.totalContestants}"),
                 //  _buildStatCard("Votes per contestant", "120"),
-                _buildStatCard("Contest Age",
+                _buildStatCard("Contest Stage",
                     model?.contestSettings?.stages?.length.toString() ?? "0"),
               ],
             ),
@@ -857,7 +866,7 @@ Color getColor(bool isText, String text) {
 
 var filterList = [
   MyFilterModel(text: 'All', isActive: true),
-  MyFilterModel(text: 'Week', isActive: false),
+  MyFilterModel(text: 'Weekly', isActive: false),
   MyFilterModel(text: 'Monthly', isActive: false),
 ];
 
