@@ -12,6 +12,7 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
 import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
@@ -29,8 +30,7 @@ class RegisterContest extends StatefulHookConsumerWidget {
   const RegisterContest({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _RegisterContestState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _RegisterContestState();
 }
 
 bool isSwitched = false;
@@ -71,11 +71,9 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Join University Got Talent and Let\n Your Talent Shine!",
-                style: wayaTheme.textTheme.titleLarge),
+            Text("Join University Got Talent and Let\n Your Talent Shine!", style: wayaTheme.textTheme.titleLarge),
             const Gap(5),
-            Text(
-                "Sign up now to be part of the biggest university talent\n competition and make your mark!",
+            Text("Sign up now to be part of the biggest university talent\n competition and make your mark!",
                 style: wayaTheme.textTheme.hintStyle),
             const Gap(20),
             Text("Personal Information", style: wayaTheme.textTheme.hintStyle),
@@ -95,9 +93,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     hintText: "Enter Full Name",
                     label: "Full Name",
                     borderColor:
-                        formState.hasError && notifier.fullName.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
+                        formState.hasError && notifier.fullName.text.isEmpty ? wayaTheme.colorScheme.error : null,
                     //  label: 'Business Name',
                   ),
                   if (formState.hasError && notifier.fullName.text.isEmpty)
@@ -105,8 +101,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
                         formState.errorText!,
-                        style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                        style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                       ),
                     ),
                 ],
@@ -137,9 +132,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     controller: notifier.emailAddress,
                     hintText: 'example@gmail.com',
                     borderColor:
-                        formState.hasError && notifier.emailAddress.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
+                        formState.hasError && notifier.emailAddress.text.isEmpty ? wayaTheme.colorScheme.error : null,
                     label: 'Email Address',
                   ),
                   if (formState.hasError && notifier.emailAddress.text.isEmpty)
@@ -147,8 +140,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
                         formState.errorText!,
-                        style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                        style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                       ),
                     ),
                 ],
@@ -170,17 +162,14 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     hintText: "Enter Address here",
                     label: "Address",
                     borderColor:
-                        formState.hasError && notifier.address.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
+                        formState.hasError && notifier.address.text.isEmpty ? wayaTheme.colorScheme.error : null,
                   ),
                   if (formState.hasError && notifier.address.text.isEmpty)
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
                         formState.errorText!,
-                        style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                        style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                       ),
                     ),
                 ],
@@ -213,11 +202,8 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                         width: 90,
                         padding: EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                            border: Border.all(
-                                color: wayaTheme.colorScheme.greyColor300,
-                                width: 1),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(6.0))),
+                            border: Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
+                            borderRadius: BorderRadius.all(Radius.circular(6.0))),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -241,8 +227,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                           keyboardType: TextInputType.phone,
                           controller: notifier.phoneNumber,
                           hintText: '000-000-000',
-                          borderColor: formState.hasError &&
-                                  notifier.phoneNumber.text.isEmpty
+                          borderColor: formState.hasError && notifier.phoneNumber.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                         ),
@@ -254,16 +239,14 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
                         formState.errorText!,
-                        style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                        style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                       ),
                     ),
                 ],
               );
             }),
             const Gap(20),
-            Text("University Information",
-                style: wayaTheme.textTheme.hintStyle),
+            Text("University Information", style: wayaTheme.textTheme.hintStyle),
             //  const Gap(20),
             FormField<String>(validator: (value) {
               if (selectedState.value.isEmpty) {
@@ -280,14 +263,11 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     value: selectedState.value,
                     label: "State",
                     hintText: 'Select State',
-                    items:
-                        ref.read(contestNotifierProvider.notifier).ugtStates(),
+                    items: ref.read(contestNotifierProvider.notifier).ugtStates(),
                     onSelected: (value) {
                       print(" heree $value");
                       selectedState.value = value.first.label;
-                      return ref
-                          .read(contestNotifierProvider.notifier)
-                          .selectState(value.first);
+                      return ref.read(contestNotifierProvider.notifier).selectState(value.first);
                     },
                     uniqueKey: 'contest-state',
                   ),
@@ -296,8 +276,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
                         formState.errorText ?? "",
-                        style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                        style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                       ),
                     ),
                 ],
@@ -400,8 +379,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
 
             ListView.builder(
               shrinkWrap: true, // Makes the ListView take only the needed space
-              physics:
-                  NeverScrollableScrollPhysics(), // Disables ListView's scrolling
+              physics: NeverScrollableScrollPhysics(), // Disables ListView's scrolling
 
               itemCount: viewModel.length,
               itemBuilder: (context, index) {
@@ -429,27 +407,21 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                                 onChanged: (value) {
                                   // print("Mean kkkkkk  $value");
                                   // field.textController!.text = value;
-                                  ref
-                                      .read(registerFormProvider.notifier)
-                                      .updateText(field.id, value);
+                                  ref.read(registerFormProvider.notifier).updateText(field.id, value);
                                 },
                                 hintText: "${field.title} is required",
                                 label: field.title,
-                                borderColor: formState.hasError &&
-                                        field.textController!.text.isEmpty
+                                borderColor: formState.hasError && field.textController!.text.isEmpty
                                     ? wayaTheme.colorScheme.error
                                     : null,
                                 //  label: 'Business Name',
                               ),
-                              if (formState.hasError &&
-                                  field.textController!.text.isEmpty)
+                              if (formState.hasError && field.textController!.text.isEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style: TextStyle(
-                                        color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
+                                    style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                                   ),
                                 ),
                             ],
@@ -470,26 +442,22 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
 
             const Gap(40),
             WayaButton(
-              centerWidget: LoadingState(
-                  loading: isLoading.value, text: 'Apply Now & Join the Fun!'),
+              centerWidget: LoadingState(loading: isLoading.value, text: 'Apply Now & Join the Fun!'),
               callback: !isLoading.value
                   ? () {
                       if (_formKey.currentState!.validate()) {
                         for (var model in viewModel) {
                           if (model.isRequired) {
                             if (model.type == FieldType.image) {
-                              if (model.imagePath == null ||
-                                  model.imagePath!.trim().isEmpty) {
-                                WayaSnackBar.showToast(
-                                    "please pick image for ${model.title}");
+                              if (model.imagePath == null || model.imagePath!.trim().isEmpty) {
+                                WayaSnackBar.showToast("please pick image for ${model.title}");
 
                                 return;
                               }
                             }
                           }
                         }
-                        notifier.submitDetail(
-                            context, isLoading, selectedState.value);
+                        notifier.submitDetail(context, isLoading, selectedState.value);
                       }
                     }
                   : null,
@@ -500,14 +468,14 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
             ),
             const Gap(8),
             WayaButton(
-                text: 'Go Back',
-                color: wayaTheme.colorScheme.greyColor300,
-                textColor: wayaTheme.colorScheme.customBlack,
-                border: Border.all(
-                    width: 1, color: wayaTheme.colorScheme.greyColor300),
-                callback: () {
-                  Navigator.pop(context);
-                })
+              text: 'Go Back',
+              color: wayaTheme.colorScheme.greyColor300,
+              textColor: wayaTheme.colorScheme.customBlack,
+              border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+              callback: () {
+                WayaNav.goBack();
+              },
+            )
           ],
         ),
       ),
@@ -541,8 +509,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     field.imagePath == null
                         ? Column(
                             children: [
-                              Text("JPG, MP4 format . Max. 25MB",
-                                  style: wayaTheme.textTheme.hintStyle),
+                              Text("JPG, MP4 format . Max. 25MB", style: wayaTheme.textTheme.hintStyle),
                             ],
                           )
                         : Image.file(
@@ -561,9 +528,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                         // {if (_selectedImage != null) {
                         String? image = await _pickImage();
                         if (image != null) {
-                          ref
-                              .read(registerFormProvider.notifier)
-                              .updateImage(id, image);
+                          ref.read(registerFormProvider.notifier).updateImage(id, image);
                         }
                       }),
                 ],

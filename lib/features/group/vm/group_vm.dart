@@ -387,7 +387,7 @@ class GroupVm extends StateNotifier<GroupState> {
         //   ),
         // );
       }else{
-        Navigator.pop(ctx);
+        WayaNav.goBack();
       }
     } catch (e) {
       print(e);
@@ -609,7 +609,7 @@ class GroupVm extends StateNotifier<GroupState> {
 
       if (response.success && context.mounted) {
         // show success modal
-        Navigator.of(context).pop();
+        WayaNav.goBack();
 
         if (context.mounted) {
           await WayaUtils.showNotice(

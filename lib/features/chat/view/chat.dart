@@ -135,7 +135,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                       customBorder: StadiumBorder(),
                       splashFactory: NoSplash.splashFactory,
                       onTap: () {
-                        WayaNav.toNamed(WayaAppRoutes.getProfileRoute(chat.other.userId));
+                        WayaNav.toNamed(WayaAppRoutes.getChatProfile(chat.id));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,

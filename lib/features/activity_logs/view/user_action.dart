@@ -32,11 +32,6 @@ class _UserActionState extends ConsumerState<UserAction> {
 
   List<String> dates = [];
 
-  List<PaymentActivityDocs> activityLogs = [];
-  List<PaymentActivityDocs> activityLogs1 = [];
-
-  int transLength = 0;
-
   String selTransact = 'All Time';
   var lsTransact = ['All Time', 'This week', 'This month', 'This Year'];
 
@@ -111,7 +106,9 @@ class _UserActionState extends ConsumerState<UserAction> {
                     }
                   }
                   return SingleChildScrollView(
-                    child: ListView.builder(
+                    child:viewModel.userActionsDocs.isEmpty ?
+                    ActivityLogsEmptyState(text: 'You don\'t have user actions this week',):
+                    ListView.builder(
                         padding: EdgeInsets.only(bottom: 80.h, top: 0),
                         physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
@@ -160,14 +157,61 @@ class _UserActionState extends ConsumerState<UserAction> {
     );
   }
   sortList(s) {
-    activityLogs = [];
+    final viewModel = ref.watch(activityLogsVmProvider);
+    viewModel.userActionsDocs = [];
+    print('ACTIVITY End ====> ${s}');
     setState(() {
-      if(s == 'All Time'){
-        activityLogs = activityLogs1;
+      if(s == 'all time'){
+        viewModel.userActionsDocs = viewModel.userActionsDocs1;
+      }else if(s =='this week'){
+        int w = 7 - DateTime.now().weekday; // counting forward
+
+        int y = 7 - w; // counting backward
+
+        List<String> allWeekDays = [];
+
+        for (int i = 0; i < w; i++) {
+          String a = DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
+          String b = a.split('-')[2];
+          allWeekDays.add(b.padLeft(2,'0'));
+          print('AAAA $b');
+        }
+
+        for (int i = 0; i < y; i++) {
+          String a = DateTime.now().subtract(Duration(days: i +1)).toString().split(' ')[0];
+          String b = a.split('-')[2];
+          allWeekDays.add(b.padLeft(2,'0'));
+          print('AAAABBBBB $b');
+        }
+
+        print('WeekDAY $w');
+        for (int i = 0; i < viewModel.userActionsDocs1.length; i++) {
+          String week = viewModel.userActionsDocs1[i].createdAt.toString().split('T')[0];
+          if (allWeekDays.contains(week.split('-')[2]) ) {
+            viewModel.userActionsDocs.add(viewModel.userActionsDocs1[i]);
+          }
+        }
+        print('ACTIVIVBVB ${viewModel.userActionsDocs.length}');
+      } else if(s =='this month'){
+        String m =  DateTime.now().month.toString().padLeft(2,'0');
+        for (int i = 0; i < viewModel.userActionsDocs1.length; i++) {
+          String month = viewModel.userActionsDocs1[i].createdAt.toString().split('T')[0];
+          if (m == month.split('-')[1]) {
+            viewModel.userActionsDocs.add(viewModel.userActionsDocs1[i]);
+          }
+        }
+      } else if(s =='this year'){
+        String y =  DateTime.now().year.toString();
+        for (int i = 0; i < viewModel.userActionsDocs1.length; i++) {
+          String month = viewModel.userActionsDocs1[i].createdAt.toString().split('T')[0];
+          if (y == month.split('-')[0]) {
+            viewModel.userActionsDocs.add(viewModel.userActionsDocs1[i]);
+          }
+        }
       } else {
-        for (int i = 0; i < transLength; i++) {
-          if (s.toString().trim() == activityLogs1[i].createdAt.toString()) {
-            activityLogs.add(activityLogs1[i]);
+        for (int i = 0; i < viewModel.userActionsDocs1.length; i++) {
+          if (s.toString().trim() == viewModel.userActionsDocs1[i].createdAt.toString()) {
+            viewModel.userActionsDocs.add(viewModel.userActionsDocs1[i]);
           }
         }
       }

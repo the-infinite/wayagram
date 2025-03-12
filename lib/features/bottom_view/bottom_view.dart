@@ -6,6 +6,7 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/chat/view/default.dart';
@@ -84,7 +85,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
               SizedBox(
                 width: 60,
                 child: WayaButton(
-                  callback: () => Navigator.of(context).pop(false),
+                  callback: () => WayaNav.goBack(result: false),
                   text: 'No',
                   height: 35,
                   radius: 6,
@@ -142,7 +143,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
     // This is fine.
     return PopScope(
       canPop: false,
-      onPopInvoked: (popDisposition) async {
+      onPopInvokedWithResult: (popDisposition, result) async {
         if (_selectedIndex != 0) {
           setState(() {
             _selectedIndex = 0;

@@ -138,7 +138,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                   arguments: viewModel.singleShop!.id,
                 );
               },
-              color: wayaTheme.colorScheme.primar50,
+              color: wayaTheme.colorScheme.primary50,
               centerWidget: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

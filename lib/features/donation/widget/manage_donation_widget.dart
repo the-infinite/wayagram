@@ -105,7 +105,7 @@ class ManageDonationWidget extends ConsumerWidget {
                               radius: 5,
                               height: 30,
                               callback: onTap,
-                              color: wayaTheme.colorScheme.primar50,
+                              color: wayaTheme.colorScheme.primary50,
                             ),
                           ),
                         ],

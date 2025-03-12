@@ -43,11 +43,11 @@ class DonationTabButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 15),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
-            color: isSelected ? theme.colorScheme.primar50
+            color: isSelected ? theme.colorScheme.primary50
                 : theme.colorScheme.white,
             border: Border.all(
                 color: isSelected
-                      ? theme.colorScheme.primar50
+                      ? theme.colorScheme.primary50
                       : theme.colorScheme.greyColor300,
             )
           ),

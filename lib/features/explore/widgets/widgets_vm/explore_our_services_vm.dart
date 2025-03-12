@@ -22,13 +22,13 @@ class ExploreOurServicesVm {
           icon: WayaAssets.icons.eShop.path,
           name: 'Shop',
           onTap: () {
-            Navigator.pushNamed(context, BottomView.route, arguments: 1);
+            WayaNav.toNamed( BottomView.route, arguments: 1);
           }),
       Services(
           icon: WayaAssets.icons.eQuotation.path,
           name: 'Get Quotation',
           onTap: () {
-            Navigator.pushNamed(context, BottomView.route, arguments: 3);
+            WayaNav.toNamed( BottomView.route, arguments: 3);
           }),
       Services(
           icon: WayaAssets.icons.eChat.path,
@@ -40,7 +40,7 @@ class ExploreOurServicesVm {
           icon: WayaAssets.icons.eDonation.path,
           name: 'Donations',
           onTap: () {
-            Navigator.pushNamed(context, BottomView.route, arguments: 2);
+            WayaNav.toNamed( BottomView.route, arguments: 2);
           }),
       Services(
           icon: WayaAssets.icons.ePoll.path,

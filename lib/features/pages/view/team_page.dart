@@ -63,7 +63,7 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
             callback: () {
               WayaNav.toNamed('/addTeamMember');
             },
-            color: wayaTheme.colorScheme.primar50,
+            color: wayaTheme.colorScheme.primary50,
           ),
           const Gap(8),
           ListView.builder(

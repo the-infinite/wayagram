@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:gallery_saver_plus/gallery_saver.dart';
 
 class WayaFileExtensions {
   WayaFileExtensions._();
@@ -167,12 +168,14 @@ class WayaFileExtensions {
 
     // Documents
     if (['pdf'].contains(ext)) return MediaType('application', 'pdf');
-    if (['doc', 'docx'].contains(ext)) return MediaType('application', 'msword');
+    if (['doc', 'docx'].contains(ext))
+      return MediaType('application', 'msword');
     if (['txt'].contains(ext)) return MediaType('text', 'plain');
     if (['rtf'].contains(ext)) return MediaType('application', 'rtf');
 
     // Spreadsheets
-    if (['xls', 'xlsx'].contains(ext)) return MediaType('application', 'vnd.ms-excel');
+    if (['xls', 'xlsx'].contains(ext))
+      return MediaType('application', 'vnd.ms-excel');
     if (['csv'].contains(ext)) return MediaType('text', 'csv');
 
     // Images
@@ -195,7 +198,8 @@ class WayaFileExtensions {
 
     // Archives
     if (['zip'].contains(ext)) return MediaType('application', 'zip');
-    if (['rar'].contains(ext)) return MediaType('application', 'x-rar-compressed');
+    if (['rar'].contains(ext))
+      return MediaType('application', 'x-rar-compressed');
 
     // Markup
     if (['json'].contains(ext)) return MediaType('application', 'json');
@@ -215,7 +219,8 @@ class WayaFileHelper {
   static String getFileSize(int bytes) {
     if (bytes < 1024) return '$bytes B';
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(2)} KB';
-    if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
+    if (bytes < 1024 * 1024 * 1024)
+      return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
     return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
   }
 
@@ -232,7 +237,8 @@ class WayaFileHelper {
 
     //?  If this is Android.
     if (Platform.isAndroid) {
-      directory = Directory("${(await getExternalStorageDirectory())!.parent.parent.parent.path}/media/ng.wayagram");
+      directory = Directory(
+          "${(await getExternalStorageDirectory())!.parent.parent.parent.path}/media/ng.wayagram");
     }
 
     //? If this does not exist...
@@ -396,7 +402,8 @@ class WayaFileHelper {
   static String generateFilename(String chatId, File original) {
     final filename = original.uri.pathSegments.last;
     final extensionIndex = filename.lastIndexOf(".");
-    final ext = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+    final ext =
+        extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
     return "${chatId}_${WayaValueHelper.createUid()}.$ext".replaceAll("-", "_");
   }
 
@@ -407,15 +414,18 @@ class WayaFileHelper {
 
   /// A helper function used to calculate the directory of the file for a given
   /// message.
-  static Future<File> getFileDirectory(MessageModel message, MessageMedia file) async {
+  static Future<File> getFileDirectory(
+      MessageModel message, MessageMedia file) async {
     final uri = Uri.parse(file.mediaUrl);
     final filename = uri.pathSegments.last;
     final extensionIndex = filename.lastIndexOf(".");
-    final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+    final extension =
+        extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
     var directory = await WayaFileHelper.getDocumentsDirectory();
 
     //? Now, we check what kind of extension this is.
-    if ([...WayaFileExtensions.images, ...WayaFileExtensions.videos].contains(extension)) {
+    if ([...WayaFileExtensions.images, ...WayaFileExtensions.videos]
+        .contains(extension)) {
       directory = await WayaFileHelper.getMediaDirectory();
     }
 
@@ -425,7 +435,8 @@ class WayaFileHelper {
     }
 
     //? Now, we try looking for the rest here.
-    final path = "${WayaFileHelper.getFileSubdirectory(directory, message)}/$filename";
+    final path =
+        "${WayaFileHelper.getFileSubdirectory(directory, message)}/$filename";
 
     // Now, return this file.
     return File(path);
@@ -433,15 +444,18 @@ class WayaFileHelper {
 
   /// A helper function used to calculate the directory of the file for a given
   /// message.
-  static Future<File> getFileLocalDirectory(MessageModel message, String file) async {
+  static Future<File> getFileLocalDirectory(
+      MessageModel message, String file) async {
     final uri = File(file);
     final filename = uri.uri.pathSegments.last;
     final extensionIndex = filename.lastIndexOf(".");
-    final extension = extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+    final extension =
+        extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
     var directory = await WayaFileHelper.getDocumentsDirectory();
 
     //? Now, we check what kind of extension this is.
-    if ([...WayaFileExtensions.images, ...WayaFileExtensions.videos].contains(extension)) {
+    if ([...WayaFileExtensions.images, ...WayaFileExtensions.videos]
+        .contains(extension)) {
       directory = await WayaFileHelper.getMediaDirectory();
     }
 
@@ -451,9 +465,26 @@ class WayaFileHelper {
     }
 
     //? Now, we try looking for the rest here.
-    final path = "${WayaFileHelper.getFileSubdirectory(directory, message)}/$filename";
+    final path =
+        "${WayaFileHelper.getFileSubdirectory(directory, message)}/$filename";
 
     // Now, return this file.
     return File(path);
+  }
+
+  // helper method for saving file from online to user gallery
+  //call the method passing in the image url
+  // returns true when successful and false when it fails
+
+  static Future<bool> saveNetworkImage(
+    String imagePath, {
+    String? albumName,
+    bool toDcim = false,
+    Map<String, String>? headers,
+  }) async {
+    //the method class for saving
+    return await GallerySaver.saveImage(imagePath,
+            albumName: albumName, toDcim: toDcim, headers: headers) ??
+        false;
   }
 }

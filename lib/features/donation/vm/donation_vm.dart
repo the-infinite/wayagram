@@ -99,7 +99,7 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.donate(campaignId, amount, message);
       state = state.copyWith(isLoading: false);
-      Navigator.of(ctx).pop();
+      WayaNav.goBack();
       if (response.success && ctx.mounted) {
         WayaUtils.showModalSheet(
           ctx,

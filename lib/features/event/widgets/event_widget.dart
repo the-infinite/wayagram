@@ -137,7 +137,7 @@ class EventWidget extends ConsumerWidget {
                         callback: () {
                           WayaNav.toNamed(EventDetail.route, arguments: event);
                         },
-                        color: wayaTheme.colorScheme.primar50,
+                        color: wayaTheme.colorScheme.primary50,
                         textColor: wayaTheme.colorScheme.customPrimary,
                         text: "View Event",
                       ),

@@ -86,9 +86,9 @@ class _MyEventState extends ConsumerState<MyEvents> {
           WayaButton(
             callback: () {
              
-               Navigator.pushReplacementNamed(context, AddEvent.route);
+               WayaNav.replaceNamed( AddEvent.route);
             },
-            color: wayaTheme.colorScheme.primar50,
+            color: wayaTheme.colorScheme.primary50,
             centerWidget: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -132,7 +132,7 @@ class EventEmptyState extends StatelessWidget {
       child: EmptyState(
           hasButton: true,
           onTap: () {
-              Navigator.pushReplacementNamed(context, AddEvent.route);
+              WayaNav.replaceNamed( AddEvent.route);
           },
           buttontext: 'Create an Event',
           buttonTrailingIcon: SvgPicture.asset(

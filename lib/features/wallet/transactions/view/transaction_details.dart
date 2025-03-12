@@ -1,14 +1,11 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/components/loading_dialog.dart';
 import 'package:wayagram/features/wallet/mixin/wallet_mixin.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
@@ -155,7 +152,7 @@ class _TransactionDetailsScreenState
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => WayaNav.goBack(),
         ),
         title: const Text(
           'Transaction Details',
@@ -244,7 +241,7 @@ class _TransactionDetailsScreenState
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: wayaTheme.colorScheme.primar50,
+                                color: wayaTheme.colorScheme.primary50,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(

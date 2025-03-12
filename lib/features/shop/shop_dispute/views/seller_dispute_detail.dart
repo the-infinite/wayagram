@@ -65,7 +65,7 @@ class SellerDisputeDetail extends ConsumerWidget {
               callback: () {
                 WayaNav.toNamed(DisputeChat.route);
               },
-              color: wayaTheme.colorScheme.primar50,
+              color: wayaTheme.colorScheme.primary50,
             ),
             const Gap(20),
             Text(

@@ -42,7 +42,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       onTapBackButton: (){
-        Navigator.pop(context);
+        WayaNav.goBack();
         ref.watch(createPollVotingProvider.notifier).reset();
       },
         title: "Create Poll",
@@ -54,7 +54,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
             callback: !viewModel.isLoading
                 ? () async {
               if (_formKey.currentState!.validate()) {
-             //Navigator.pop(context);
+             //WayaNav.goBack();
                 WayaNav.toNamed("/add-choices");
 
               }

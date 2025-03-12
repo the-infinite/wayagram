@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
@@ -19,7 +20,7 @@ import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/utils/waya_navigation.dart';
-import '../widgets/upcoming_widgets/upcoming_widget.dart';
+
 import 'custom_modal_contest.dart';
 
 class ApplicationStatus extends StatefulHookConsumerWidget {
@@ -123,20 +124,24 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                     children: [
                       UpcomingWidget(
                           title: "Start Date",
+                          isFromDetailsPage: true,
                           content: formatDate(
                               widget.post?.contest?.startDate ?? "")),
                       const Gap(20),
                       UpcomingWidget(
                           title: "End Date",
+                          isFromDetailsPage: true,
                           content:
                               formatDate(widget.post?.contest?.endDate ?? "")),
                       const Gap(20),
                       UpcomingWidget(
                           title: "Entry Type",
+                          isFromDetailsPage: true,
                           content: widget.post?.contest?.entryType ?? ""),
                       const Gap(20),
                       UpcomingWidget(
                           title: "Duration",
+                          isFromDetailsPage: true,
                           content: getRealDateDiffBtwDate(
                               widget.post?.contest?.startDate ?? "",
                               widget.post?.contest?.endDate ?? "")),
@@ -150,17 +155,23 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                     children: [
                       UpcomingWidget(
                           title: "Total Stages",
+                          isFromDetailsPage: true,
                           content: widget.post?.contest?.multipleStages ?? ""),
                       const Gap(20),
                       UpcomingWidget(
                           title: "Category",
+                          isFromDetailsPage: true,
                           content: widget.post?.categoryName ?? ""),
                       const Gap(20),
                       UpcomingWidget(
                           title: "Prize",
+                          isFromDetailsPage: true,
                           content: widget.post?.contest?.winnerPrize ?? ""),
                       const Gap(20),
-                      UpcomingWidget(title: "Host", content: "Host"),
+                      UpcomingWidget(
+                          title: "Host",
+                          isFromDetailsPage: true,
+                          content: "Host"),
                     ],
                   ),
                   const Gap(20),
@@ -174,22 +185,21 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                       "free") {
                     ref.read(selectedAppliedContestProvider.notifier).state =
                         widget.post;
-                    Navigator.pop(context);
+                    WayaNav.goBack();
                     WayaNav.toNamed("/create-profile-contest1");
                   } else {
-                    Navigator.pop(context);
+                    WayaNav.goBack();
                     WayaUtils.showModalSheet(
                       context,
                       child: AvailableBalanceModal(
                         voteCount: "0",
-                        model:widget.post,
+                        model: widget.post,
                         voteFee:
                             widget.post?.contest?.amount?.toString() ?? "0",
                         // model: widget.model,
                         votingLink: "",
                         onTap: () {
                           print("i am on the verge");
-                         
                         },
                         candidateName: "",
                       ),
@@ -210,7 +220,9 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                 textColor: wayaTheme.colorScheme.customBlack,
                 border: Border.all(
                     width: 1, color: wayaTheme.colorScheme.greyColor300),
-                callback: () {})
+                callback: () {
+                  WayaNav.goBack();
+                })
           ],
         ),
       ),
@@ -229,5 +241,73 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
         const Gap(5),
       ],
     );
+  }
+}
+
+class UpcomingWidget extends StatelessWidget {
+  final String title;
+  final String content;
+  final bool status;
+  final bool isFromDetailsPage;
+  const UpcomingWidget({
+    super.key,
+    required this.title,
+    required this.content,
+    this.status = false,
+    this.isFromDetailsPage = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width:
+              isFromDetailsPage ? context.width * 0.18 : context.width * 0.21,
+          child: Text(title, style: WayaTextStyles.hintStyleBold),
+        ),
+        const Gap(5),
+        if (!status)
+          SizedBox(
+            width:
+                isFromDetailsPage ? context.width * 0.18 : context.width * 0.21,
+            child: Text(content,
+                // overflow: TextOverflow.ellipsis,
+                style: wayaTheme.textTheme.bodyMedium),
+          ),
+        if (status)
+          Container(
+            decoration: BoxDecoration(
+              color: getColor(false, content.toLowerCase()), // Background color
+              borderRadius: BorderRadius.circular(20), // Rounded corners
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                child: Text(
+                  content,
+                  style: TextStyle(
+                      color: getColor(true, content.toLowerCase()),
+                      fontSize: 10),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Color getColor(bool isText, String text) {
+    if (text == "pending") {
+      return isText ? Color(0xff865503) : Color(0xffFEF6E7);
+    } else if (text == "rejected") {
+      return isText ? Color(0xff9E0A05) : Color(0xffFBEAE9);
+    } else {
+      return isText ? Color(0xff036B26) : Color(0xffE7F6EC);
+    }
   }
 }

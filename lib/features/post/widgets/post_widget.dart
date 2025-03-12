@@ -680,7 +680,7 @@ class PostWidget extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                WayaNav.goBack(); // Close the dialog
               },
               child: const Text('Close'),
             ),

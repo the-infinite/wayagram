@@ -189,7 +189,7 @@ class _MediaPostState extends ConsumerState<MediaPost>
                                           onTap: () {
                                             viewModel.repost(context,
                                                 postId: '${post.id}');
-                                            Navigator.pop(context);
+                                            WayaNav.goBack();
                                           },
                                           asset: SvgPicture.asset(
                                               'assets/images/pages/flag.svg'),
@@ -214,7 +214,7 @@ class _MediaPostState extends ConsumerState<MediaPost>
                                                 duration: Duration(seconds: 2),
                                               ),
                                             );
-                                            Navigator.pop(context);
+                                            WayaNav.goBack();
                                             WayaNav.toNamed('/pages');
                                           },
                                           asset: SvgPicture.asset(
@@ -523,7 +523,7 @@ class _MediaPostState extends ConsumerState<MediaPost>
                                             onTap: () {
                                               viewModel.repost(context,
                                                   postId: '${post?.id}');
-                                              Navigator.pop(context);
+                                              WayaNav.goBack();
                                             },
                                             asset: SvgPicture.asset(
                                                 'assets/images/pages/flag.svg'),
@@ -548,7 +548,7 @@ class _MediaPostState extends ConsumerState<MediaPost>
                                                   duration: Duration(seconds: 2),
                                                 ),
                                               );
-                                              Navigator.pop(context);
+                                              WayaNav.goBack();
                                               WayaNav.toNamed('/pages');
                                             },
                                             asset: SvgPicture.asset(
@@ -1140,7 +1140,7 @@ class _MediaPostState extends ConsumerState<MediaPost>
                               ref
                                   .watch(createPageProvider.notifier)
                                   .reset();
-                              //Navigator.pop(context);
+                              //WayaNav.goBack();
                             }
                           }
                               : null,

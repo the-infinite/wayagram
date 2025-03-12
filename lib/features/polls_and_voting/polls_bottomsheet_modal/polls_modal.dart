@@ -166,7 +166,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
       });
       return;
     }else{
-      Navigator.of(context).pop();
+      WayaNav.goBack();
       WayaUtils.showModalSheet(
         context,
         child: ConfirmVoteOptionModal(amountPaid: amount, voteFee: widget.voteFee,
@@ -415,7 +415,7 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                Navigator.of(context).pop();
+                WayaNav.goBack();
               },
               text: "Go Back",
               textColor: WayaColors.black,
@@ -467,7 +467,7 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
             SizedBox(height: 30.h),
             WayaButton(
               callback: () async {
-                Navigator.of(context).pop();
+                WayaNav.goBack();
                 WayaNav.toNamed("/poll-and-voting");
               },
               text: "Return to Polls Page",
@@ -654,7 +654,7 @@ class _PaymentDialogState extends State<PaymentDialog> {
         children: [
           InkWell(
             onTap: (){
-              Navigator.pop(context);
+              WayaNav.goBack();
               WayaUtils.showModalSheet(
                 context,
                 child: PollsModal(url: '',),

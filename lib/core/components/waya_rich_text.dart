@@ -31,25 +31,23 @@ class WayaRichText extends StatelessWidget {
           fontSize: 18.0,
           color: wayaTheme.colorScheme.black,
         ),
-        children:texts ?? [
-          TextSpan(
-              text: title1,
-              style: style1 ??
-                  wayaTheme.textTheme.hintStyle
-                      .wayaCopyWith(fontWeight: FontWeight.w500, color: wayaTheme.colorScheme.black)),
-          TextSpan(
-            text: title2,
-            style: style2 ??
-                wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                  color: wayaTheme.colorScheme.primary,
-                  fontWeight: FontWeight.w600,
-                ),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                onTap2!();
-              },
-          ),
-        ],
+        children: texts ??
+            [
+              TextSpan(
+                  text: title1,
+                  style: style1 ??
+                      wayaTheme.textTheme.hintStyle
+                          .wayaCopyWith(fontWeight: FontWeight.w500, color: wayaTheme.colorScheme.black)),
+              TextSpan(
+                text: title2,
+                style: style2 ??
+                    wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                      color: wayaTheme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                recognizer: TapGestureRecognizer()..onTap = onTap2,
+              ),
+            ],
       ),
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class FundAmountDialog extends StatefulWidget {
   final String title;
@@ -163,14 +164,14 @@ class _AmountInputDialogState extends State<FundAmountDialog> {
       ),
       actions: [
         TextButton(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => WayaNav.goBack(),
           child: const Text('Cancel'),
         ),
         FilledButton(
           onPressed: () {
             if (_formKey.currentState!.validate()) {
               final amount = _parseAmount(_amountController.text);
-              Navigator.pop(context, amount);
+              WayaNav.goBack(result: amount);
             }
           },
           child: const Text('Confirm'),

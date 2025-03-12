@@ -117,43 +117,47 @@ class ContestAppliedCard extends StatelessWidget {
                 ],
               ),
               const Gap(20),
-              GestureDetector(
-                onTap: (){
-                   WayaNav.toNamed("/view-media-full-page", arguments: {
-                    "url": post.contest?.uploadCoverImages,
-                    "title":post.contest?.title ?? "Title",
-                    "createdAt": post.contest?.createdAt,
-                    "likeCount": 0,
-                    "isLike":false,
-                    "discription":post.contest?.description,
-                    "shareCount":0,
-                    "type": MyFullMediaType.image
-                  });
-                },
-                child: ClipRRect(
-                  borderRadius:
-                      BorderRadius.circular(16), // Adjust the radius as needed
-                  child: post.contest?.uploadCoverImages != null
-                      ? WayaImage(
-                          imageUrl: post.contest?.uploadCoverImages ?? "",
-                          height: 200,
-                          width: context.width,
-                          fit: BoxFit.cover,
-                          radius: BorderRadius.circular(10),
-                        )
-                
-                      /*  Image.network(
-                          post.contest?.uploadCoverImages ?? "",
-                          height: 200,
-                          fit: BoxFit
-                              .cover, // Ensures the image covers the area properly
-                        ) */
-                      : Image.asset(
-                          'assets/images/frameuni.png',
-                          height: 200,
-                          fit: BoxFit
-                              .cover, // Ensures the image covers the area properly
-                        ),
+              Hero(
+             
+                tag: "fullPic",
+                child: GestureDetector(
+                  onTap: (){
+                     WayaNav.toNamed("/view-media-full-page", arguments: {
+                      "url": post.contest?.uploadCoverImages,
+                      "title":post.contest?.title ?? "Title",
+                      "createdAt": post.contest?.createdAt,
+                      "likeCount": 0,
+                      "isLike":false,
+                      "discription":post.contest?.description,
+                      "shareCount":0,
+                      "type": MyFullMediaType.image
+                    });
+                  },
+                  child: ClipRRect(
+                    borderRadius:
+                        BorderRadius.circular(16), // Adjust the radius as needed
+                    child: post.contest?.uploadCoverImages != null
+                        ? WayaImage(
+                            imageUrl: post.contest?.uploadCoverImages ?? "",
+                            height: 200,
+                            width: context.width,
+                            fit: BoxFit.cover,
+                            radius: BorderRadius.circular(10),
+                          )
+                  
+                        /*  Image.network(
+                            post.contest?.uploadCoverImages ?? "",
+                            height: 200,
+                            fit: BoxFit
+                                .cover, // Ensures the image covers the area properly
+                          ) */
+                        : Image.asset(
+                            'assets/images/frameuni.png',
+                            height: 200,
+                            fit: BoxFit
+                                .cover, // Ensures the image covers the area properly
+                          ),
+                  ),
                 ),
               ),
               /*WayaImage(
