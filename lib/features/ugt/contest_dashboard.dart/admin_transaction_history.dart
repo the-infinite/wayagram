@@ -1,36 +1,41 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/padding_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_history_card.dart';
+import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
+import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
+import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 import '../../../core/components/waya_scaffold.dart';
 
-class ManageStateContest extends StatefulHookConsumerWidget {
-  static const route = '/manage-contest-stage';
-  const ManageStateContest({super.key});
+class AdminTransactionHistory extends StatefulHookConsumerWidget {
+  static const route = '/admin-transaction-page';
+  const AdminTransactionHistory({super.key});
 
   @override
-  ConsumerState<ManageStateContest> createState() => _ManageStateContestState();
+  ConsumerState<AdminTransactionHistory> createState() =>
+      _ManageStateContestState();
 }
 
-class _ManageStateContestState extends ConsumerState<ManageStateContest> {
+class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final dashboardVm = ref.read(ugtAdminDashboardVm);
+    final viewModel = ref.watch(votersContestNotifier);
+    var model = ref.watch(selectedContestProvider);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
-      title: "Manage States",
+      title: "Transaction History",
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         //  padding: EdgeInsets.all(),
@@ -42,12 +47,8 @@ class _ManageStateContestState extends ConsumerState<ManageStateContest> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("Overview",
-                    style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black)),
-                GestureDetector(
+                Text("Overview", style: WayaTextStyles.bodyExtraMedium),
+                /*   GestureDetector(
                   onTap: () {},
                   child: Container(
                     //  margin: EdgeInsets.only(right: 20.w),
@@ -77,25 +78,26 @@ class _ManageStateContestState extends ConsumerState<ManageStateContest> {
                       ],
                     ),
                   ),
-                ),
+                ), */
               ],
             ),
             const Gap(20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatCard(
+                /*  _buildStatCard(
                     context,
                     "Number of\n States",
                     "10",
                     Icon(
                       Icons.map_outlined,
                       color: Colors.white,
-                    )),
+                    )), */
+
                 _buildStatCard(
                     context,
-                    "Number of\n Contestants",
-                    "2,765",
+                    "Revenue Generated",
+                    "₦${dashboardVm.revenueGenerated}",
                     Icon(
                       Icons.map_outlined,
                       color: Colors.white,
@@ -105,29 +107,26 @@ class _ManageStateContestState extends ConsumerState<ManageStateContest> {
 
             SizedBox(height: 20),
 
-            // Manage States
-            Container(
-              color: Colors.white,
-              padding: EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        WayaNav.toNamed('/manage-application-single-contest');
-                      },
-                      child: _buildStateItem(
-                          context, "Lagos state", "241 contestants")),
-                  Gap(20),
-                  _buildStateItem(context, "Oyo state", "241 contestants"),
-                  Gap(20),
-                  _buildStateItem(context, "Ogun state", "241 contestants"),
-                ],
+            if (dashboardVm.transactionList.isEmpty) emptyWidget(),
+
+            if (dashboardVm.transactionList.isNotEmpty)
+              ListView.builder(
+                // controller: _scrollController,
+                shrinkWrap: true,
+                itemCount: dashboardVm.transactionList.length,
+                itemBuilder: (context, index) {
+                  final post = dashboardVm.transactionList[index];
+                  return GestureDetector(
+                    onTap: () {},
+                    child: UgtHistoryCard(
+                      model: post,
+                      position: index + 1,
+                    ),
+                  );
+                },
               ),
-            ),
 
             SizedBox(height: 20),
-
-          
           ],
         ),
       ),
@@ -155,7 +154,7 @@ class _ManageStateContestState extends ConsumerState<ManageStateContest> {
               children: [
                 Text(title,
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+                    style: WayaTextStyles.hintStyleBold),
                 Container(
                     width: 50.w, // Must be equal to height for a perfect circle
                     height: 50.w,
@@ -172,46 +171,29 @@ class _ManageStateContestState extends ConsumerState<ManageStateContest> {
               ],
             ),
             Gap(10),
-            Text(value,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            Text(value, style: WayaTextStyles.headlineMedium),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildStateItem(
-      BuildContext context, String state, String contestants) {
-    final wayaTheme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(state,
-            style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-                fontSize: 16)),
-        Row(
-          children: [
-            Text(contestants,
-                style: TextStyle(
-                    color: wayaTheme.colorScheme.greyColor700, fontSize: 14)),
-            Gap(10),
-            Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
-            Gap(10)
-          ],
-        ),
-      ],
-    );
+  Widget emptyWidget() {
+    return UgtEmptyState(
+        icon: WayaAssets.images.uEmptystate.image(),
+        desc: "There are no contestant for this contes yet",
+        title: "No Contestestant yet",
+        buttonText: "Host a Contest",
+        hideButton: true,
+        onTap: () {});
   }
-}
-Color getColor(bool isText, String text) {
-  return isText ? Color(0xff9E0A05) : Color(0xffFEF6E7);
-  /*  } else if (text == "rejected") {
+
+  Color getColor(bool isText, String text) {
+    return isText ? Color(0xff9E0A05) : Color(0xffFEF6E7);
+    /*  } else if (text == "rejected") {
       return isText ? Color(0xff9E0A05) : Color(0xffFBEAE9);
     } else {
       return isText ? Color(0xff865503) : Color(0xffFEF6E7);
     } */
+  }
 }
-
-
