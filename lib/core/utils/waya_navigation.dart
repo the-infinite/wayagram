@@ -9,13 +9,16 @@ class WayaNav<T> {
 
   WayaNav._();
 
-  static Future<T> to<T>(Widget page, {Function(T)? onResult}) {
+  static Future<T> to<T>(Widget page, {Function(T)? onResult, bool preventDuplicates = true}) {
     final completer = Completer<T>();
-    onChange?.call();
-    onChange = null;
+    try {
+      onChange?.call();
+      onChange = null;
+    } catch (_) {}
     Get.to(
       () => page,
       transition: Transition.cupertino,
+      preventDuplicates: preventDuplicates,
     )?.then((result) {
       if (onResult != null) {
         onResult(result);
@@ -65,13 +68,17 @@ class WayaNav<T> {
     );
   }
 
-  static Future<T> toNamed<T>(String route, {dynamic arguments, Function(dynamic)? onResult}) {
+  static Future<T> toNamed<T>(String route,
+      {dynamic arguments, Function(dynamic)? onResult, bool preventDuplicates = true}) {
     final completer = Completer<T>();
-    onChange?.call();
-    onChange = null;
+    try {
+      onChange?.call();
+      onChange = null;
+    } catch (_) {}
     Get.toNamed(
       route,
       arguments: arguments,
+      preventDuplicates: preventDuplicates,
     )?.then((result) {
       if (onResult != null) {
         onResult(result);
