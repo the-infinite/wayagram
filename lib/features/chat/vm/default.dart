@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/repo/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -190,6 +191,12 @@ class ConversationVm extends StateNotifier<ConversationState> {
   /// Helper function used to block or unblock a user as the case may be.
   Future<bool> blockOrUnblockUser(String id) async {
     final response = await repo.blockOrUnblockUser(id);
+
+    //? This is fine.
+    if (response.success) {
+      final message = response.data["data"]["message"];
+      WayaSnackBar.showToast(message);
+    }
 
     //? Return whether or not this is true.
     return response.success;

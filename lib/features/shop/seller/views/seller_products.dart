@@ -69,7 +69,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                               arguments:
                                   AddProductArg(uniqueKey: Uuid().v4()));
                         },
-                        color: wayaTheme.colorScheme.primar50,
+                        color: wayaTheme.colorScheme.primary50,
                         centerWidget: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -196,7 +196,7 @@ class SellerProductEmptyState extends StatelessWidget {
         ),
         const Gap(25),
         Text(
-          "Your shop is empty. Start adding products to \n showcase your items.",
+          "Your shop is empty. Start adding products to showcase your items.",
           textAlign: TextAlign.center,
           style: wayaTheme.textTheme.descriptionStyle,
         ),

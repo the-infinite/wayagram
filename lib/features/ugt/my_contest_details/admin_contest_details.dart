@@ -266,7 +266,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                   callback: () {
                     WayaNav.toNamed('/contest-mydashboard-profile-page');
                   },
-                  color: wayaTheme.colorScheme.primar50,
+                  color: wayaTheme.colorScheme.primary50,
                   text: "View Contest Dashboard",
                   textColor: wayaTheme.colorScheme.customPrimary,
                 ),

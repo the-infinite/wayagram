@@ -16,7 +16,7 @@ import 'package:wayagram/features/shop/seller/views/delivery_request/delivery_re
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
 import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
@@ -138,7 +138,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                   arguments: viewModel.singleShop!.id,
                 );
               },
-              color: wayaTheme.colorScheme.primar50,
+              color: wayaTheme.colorScheme.primary50,
               centerWidget: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

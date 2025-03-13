@@ -75,8 +75,10 @@ class WayaTextStyles {
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
+
   static final bodyBold = TextStyle(
-    fontSize: 12.sp,
+    fontSize: 14.sp,
+
     fontWeight: FontWeight.w700,
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
@@ -96,6 +98,7 @@ class WayaTextStyles {
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
+
   static final errorhintStyle = TextStyle(
     fontSize: 14.sp,
     fontWeight: FontWeight.w400,

@@ -241,7 +241,7 @@ class _TransactionDetailsScreenState
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: wayaTheme.colorScheme.primar50,
+                                color: wayaTheme.colorScheme.primary50,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(

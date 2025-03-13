@@ -49,9 +49,11 @@ class _ExploreState extends ConsumerState<Explore> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+
       //> need to fetch user data
       ref.read(successfulSetupVmProvider.notifier).getUserData();
       //>
+
 
       ref.read(regionsProvider.notifier).getCurrentCountry();
       ref.read(selectInterestProvider.notifier).getUserInterest();
@@ -164,7 +166,7 @@ class _ExploreState extends ConsumerState<Explore> {
               callback: () {
                 WayaNav.toNamed(CreateRequest.route);
               },
-              color: wayaTheme.colorScheme.primar50,
+              color: wayaTheme.colorScheme.primary50,
             ),
 
             // Some space.

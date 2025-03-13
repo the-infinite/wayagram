@@ -186,7 +186,7 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
         AboutProduct(
             title: 'Price Per Unit',
             content: WayaHelpers.formatPrice(
-                int.parse(viewModel.pricePerUnit.text))),
+                int.parse(viewModel.pricePerUnit.text ))),
         const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

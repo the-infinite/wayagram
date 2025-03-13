@@ -93,7 +93,7 @@ class _WayaSellerQuotationState extends ConsumerState<WayaSellerQuotation> with 
             callback: () {
               WayaNav.toNamed('/create-request');
             },
-            color: wayaTheme.colorScheme.primar50,
+            color: wayaTheme.colorScheme.primary50,
           ),
           const Gap(25),
           _selectedIndex == 0

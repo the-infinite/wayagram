@@ -8,6 +8,7 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/shop/filter/constants/filter_options.dart';
+import 'package:wayagram/features/shop/seller/data/model/add_product_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
@@ -118,6 +119,33 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }
   }
 
+  bool validateFields() {
+  if (state.productName.text.trim().isEmpty) {
+    WayaSnackBar.showToast("Product name is required");
+    return false;
+  }
+  if (state.productDescription.text.trim().isEmpty) {
+    WayaSnackBar.showToast("Product description is required");
+    return false;
+  }
+  if (state.pricePerUnit.text.trim().isEmpty) {
+    WayaSnackBar.showToast("Price is required");
+    return false;
+  }
+  if (state.selectedCategory == null) {
+    WayaSnackBar.showToast("Please select a category");
+    return false;
+  }
+
+  if (state.productCondition.trim().isEmpty) {
+    WayaSnackBar.showToast("Product condition is required");
+    return false;
+  }
+
+  return true; 
+}
+
+
   Future<void> onSubmit(BuildContext context) async {
     try {
       if (state.uploadedDocuments.isEmpty) {
@@ -196,6 +224,9 @@ class AddProductVm extends StateNotifier<AddProductState> {
               WayaNav.removeUntilNamed(BottomView.route, arguments: 1);
               //reset();
             });
+      } else {
+        WayaSnackBar.showToast("${response.data["data"]}");
+        //print(response.data);
       }
       //
     } catch (e) {

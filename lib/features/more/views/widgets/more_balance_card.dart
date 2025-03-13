@@ -40,7 +40,7 @@ class _MoreBalanceCardState extends ConsumerState<MoreBalanceCard> {
             padding: EdgeInsets.all(16),
             width: 1.sw,
             decoration: BoxDecoration(
-              color: wayaTheme.colorScheme.primar50,
+              color: wayaTheme.colorScheme.primary50,
               borderRadius: BorderRadius.circular(15),
             ),
             child: Column(

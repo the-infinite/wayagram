@@ -4,7 +4,7 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute_detail.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute_detail.dart';
 
 class SingleDisputeWidget extends StatelessWidget {
   const SingleDisputeWidget({super.key});

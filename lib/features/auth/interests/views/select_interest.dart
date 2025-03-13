@@ -69,7 +69,8 @@ class _SelectInterestState extends ConsumerState<SelectInterest> {
               }).toList(),
             ),
           const Gap(25),
-          WayaButton(
+          if (!state.isLoading)
+         ...[ WayaButton(
             callback: selectedInterests.isEmpty
                 ? null
                 : () async {
@@ -97,7 +98,7 @@ class _SelectInterestState extends ConsumerState<SelectInterest> {
                   fontWeight: FontWeight.w600),
             ),
           )),
-          const Gap(20),
+          const Gap(20),]
         ],
       ),
     );

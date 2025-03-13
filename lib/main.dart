@@ -6,14 +6,16 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:wayagram/core/components/waya_snackbar.dart';
+import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/helpers/deep_linking_listener.dart';
 import 'package:wayagram/core/service/notification_service.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/theme/vm/theme_vm.dart';
-import 'package:wayagram/core/theme/waya_theme.dart';
 import 'package:wayagram/core/utils/task.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
@@ -59,18 +61,24 @@ void main() async {
   // TODO: Switch to native splash screens when possible.
 
   //? Fifth, configure our visibility detector.
-  VisibilityDetectorController.instance.notifyNow();
+  VisibilityDetectorController.instance.updateInterval =
+      const Duration(milliseconds: 50);
 
   //? Finally, run the app.
   //? added DeepLinkListener to listen to incoming deepLinking urls
   runApp(ProviderScope(child: const DeepLinkListener(child: Wayagram())));
 }
 
-class Wayagram extends ConsumerWidget {
+class Wayagram extends ConsumerStatefulWidget {
   const Wayagram({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<Wayagram> createState() => _WayagramState();
+}
+
+class _WayagramState extends ConsumerState<Wayagram> {
+  @override
+  Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);
     var size = MediaQuery.of(context).size;
     //? added this screenutil init here to register before getting to the theme
@@ -81,7 +89,8 @@ class Wayagram extends ConsumerWidget {
       minTextAdapt: true,
       splitScreenMode: true,
     );
-    return GetMaterialApp(
+
+     GetMaterialApp(
       initialRoute: '/',
       title: WayaConstants.appName,
       theme: WayaTheme.lightTheme,
@@ -89,6 +98,23 @@ class Wayagram extends ConsumerWidget {
       themeMode: themeMode,
       debugShowCheckedModeBanner: false,
       getPages: WayaAppRoutes.getPages,
+      builder: (context, child) => ValueListenableBuilder(
+        valueListenable: WayaPreloaderController.instance.notifier,
+        builder: (context, showPreloader, _) {
+          return Stack(
+            children: [
+              //? First, the widget that is being laid out.
+              child!,
+
+              //? Second, our preloader widget.
+              if (showPreloader) WayaPreloaderOverlay(),
+
+              //? Third, the debug console.
+              if (!WayaConstants.isProduction) WayaDebugConsole(),
+            ],
+          );
+        },
+      ),
     );
   }
 }

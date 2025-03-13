@@ -6,9 +6,9 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/dialogs/dispute_evidence.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/views/add_evidence.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/views/dispute_chat/dispute_chat.dart';
+import 'package:wayagram/features/shop/shop_dispute/dialogs/dispute_evidence.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/add_evidence.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/dispute_chat.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
 
 class SellerDisputeDetail extends ConsumerWidget {
@@ -65,7 +65,7 @@ class SellerDisputeDetail extends ConsumerWidget {
               callback: () {
                 WayaNav.toNamed(DisputeChat.route);
               },
-              color: wayaTheme.colorScheme.primar50,
+              color: wayaTheme.colorScheme.primary50,
             ),
             const Gap(20),
             Text(

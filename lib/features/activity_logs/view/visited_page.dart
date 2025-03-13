@@ -30,6 +30,9 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
 
   List<String> dates = [];
 
+  String selTransact = 'All Time';
+  var lsTransact = ['All Time', 'This week', 'This month', 'This Year'];
+
   @override
   Widget build(BuildContext context) {
 
@@ -45,26 +48,40 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
         children: [
           Gap(10),
           Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: WayaColors.greyColor300),
-              borderRadius: BorderRadius.circular(6),
-            ),
+            alignment: Alignment.center,
             width: 102.w,
             height: 36.h ,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                    'All Time',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontFamily: WayaConstants.fontFamily,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    )),
-                Gap(10),
-                SvgPicture.asset(WayaAssets.icons.downArrow.path,)
-              ],
+            padding: const EdgeInsets.only(left: 8, right: 5, top: 5, bottom: 0),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: WayaColors.greyColor300)),
+            child: DropdownButton(
+                underline: Container(),
+                borderRadius: BorderRadius.circular(8),
+                elevation: 4,
+                padding: EdgeInsets.zero,
+                iconSize: 12,
+                icon: SvgPicture.asset(WayaAssets.icons.downArrow.path,),
+                isDense: true,
+                isExpanded: false,
+                value: selTransact,
+                items: lsTransact.map((String ls){
+                  return DropdownMenuItem(
+                    value: ls,
+                    child: Text(ls,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontFamily: WayaConstants.fontFamily,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                        )),
+                  );
+                }).toList(),
+                onChanged: (String? value){
+                  setState(() {
+                    selTransact = value!;
+                    sortList(selTransact.toLowerCase());
+                  });
+                }
             ),
           ),
           Gap(10),
@@ -87,7 +104,9 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
                     }
                   }
                   return SingleChildScrollView(
-                    child: ListView.builder(
+                    child: viewModel.visitedPagesDocs.isEmpty ?
+                    ActivityLogsEmptyState(text: 'You haven\'t visited any Page this week',):
+                    ListView.builder(
                         padding: EdgeInsets.only(bottom: 80.h, top: 0),
                         physics: const ClampingScrollPhysics(),
                         shrinkWrap: true,
@@ -136,6 +155,66 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
       ),
     );
   }
+  sortList(s) {
+    final viewModel = ref.watch(activityLogsVmProvider);
+    viewModel.visitedPagesDocs = [];
+    print('ACTIVITY End ====> ${s}');
+    setState(() {
+      if(s == 'all time'){
+        viewModel.visitedPagesDocs = viewModel.visitedPagesDocs1;
+      }else if(s =='this week'){
+        int w = 7 - DateTime.now().weekday; // counting forward
 
+        int y = 7 - w; // counting backward
+
+        List<String> allWeekDays = [];
+
+        for (int i = 0; i < w; i++) {
+          String a = DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
+          String b = a.split('-')[2];
+          allWeekDays.add(b.padLeft(2,'0'));
+          print('AAAA $b');
+        }
+
+        for (int i = 0; i < y; i++) {
+          String a = DateTime.now().subtract(Duration(days: i +1)).toString().split(' ')[0];
+          String b = a.split('-')[2];
+          allWeekDays.add(b.padLeft(2,'0'));
+          print('AAAABBBBB $b');
+        }
+
+        print('WeekDAY $w');
+        for (int i = 0; i < viewModel.visitedPagesDocs1.length; i++) {
+          String week = viewModel.visitedPagesDocs1[i].createdAt.toString().split('T')[0];
+          if (allWeekDays.contains(week.split('-')[2]) ) {
+            viewModel.visitedPagesDocs.add(viewModel.visitedPagesDocs1[i]);
+          }
+        }
+        print('ACTIVIVBVB ${viewModel.visitedPagesDocs.length}');
+      } else if(s =='this month'){
+        String m =  DateTime.now().month.toString().padLeft(2,'0');
+        for (int i = 0; i < viewModel.visitedPagesDocs1.length; i++) {
+          String month = viewModel.visitedPagesDocs1[i].createdAt.toString().split('T')[0];
+          if (m == month.split('-')[1]) {
+            viewModel.visitedPagesDocs.add(viewModel.visitedPagesDocs1[i]);
+          }
+        }
+      } else if(s =='this year'){
+        String y =  DateTime.now().year.toString();
+        for (int i = 0; i < viewModel.visitedPagesDocs1.length; i++) {
+          String month = viewModel.visitedPagesDocs1[i].createdAt.toString().split('T')[0];
+          if (y == month.split('-')[0]) {
+            viewModel.visitedPagesDocs.add(viewModel.visitedPagesDocs1[i]);
+          }
+        }
+      } else {
+        for (int i = 0; i < viewModel.visitedPagesDocs1.length; i++) {
+          if (s.toString().trim() == viewModel.visitedPagesDocs1[i].createdAt.toString()) {
+            viewModel.visitedPagesDocs.add(viewModel.visitedPagesDocs1[i]);
+          }
+        }
+      }
+    });
+  }
 
 }

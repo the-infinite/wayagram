@@ -49,6 +49,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(
+
                   title: 'Wallet',
                   iconPath: 'wallet',
                   onTap: () => WayaNav.toNamed(WalletPage.route)),
@@ -61,6 +62,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                     //? added role access route
                     WayaNav.toNamed(RoleAccessPage.route);
                   }),
+
               GeneralSettingsOptionModel(
                   title: 'Logs & Audit Trails',
                   iconPath: 'history',
@@ -153,6 +155,15 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 title: 'Dispute Management',
                 iconPath: 'info',
                 onTap: () => WayaNav.toNamed(SupportDisputeScreen.route),
+              ),
+            ],
+          ),
+          GeneralSettingsOptionTile(
+            genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Log Out',
+                iconPath: 'logout',
+                onTap: () => ref.read(profileVmProvider.notifier).logOutUser(),
               ),
             ],
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
@@ -82,8 +83,11 @@ class LoginVm extends StateNotifier<LoginState> {
   }
 
   Future<void> onSubmit(WidgetRef ref, {String? email, bool? isBusinessLogin}) async {
+    //? Now, finish the login procedure.
     try {
-      state = state.copyWith(isLoading: true);
+      //? Show the preloader.
+      WayaPreloaderController.instance.show();
+      //state = state.copyWith(isLoading: true);
       final response = await _authRepository.login(
           isBusinessLogin: isBusinessLogin,
           email: email ?? state.emailController.text,
@@ -156,7 +160,9 @@ class LoginVm extends StateNotifier<LoginState> {
     } catch (e) {
       _logger.e(e);
     } finally {
-      state = state.copyWith(isLoading: false);
+      //state = state.copyWith(isLoading: false);
+      //? Hide the preloader.
+      WayaPreloaderController.instance.hide();
     }
   }
 }

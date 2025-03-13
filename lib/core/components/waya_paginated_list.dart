@@ -159,7 +159,9 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
           }
 
           //? Now, notify the listeners of a change in state.
-          _itemsNotifier.value = _itemsNotifier.value + 1;
+          try {
+            _itemsNotifier.value = _itemsNotifier.value + 1;
+          } catch (_) {}
           _loadingController.value = false;
         },
       )();

@@ -88,7 +88,7 @@ class _MyEventState extends ConsumerState<MyEvents> {
              
                WayaNav.replaceNamed( AddEvent.route);
             },
-            color: wayaTheme.colorScheme.primar50,
+            color: wayaTheme.colorScheme.primary50,
             centerWidget: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,

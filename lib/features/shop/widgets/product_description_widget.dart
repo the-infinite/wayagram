@@ -40,7 +40,7 @@ class _ProductDescriptionState extends State<ProductDescriptionWidget> {
               widget.description,
               maxLines: isExpanded ? null : 5,
               overflow: isExpanded ? null : TextOverflow.ellipsis,
-              style: wayaTheme.textTheme.mediumdescriptionStyle,
+              style: wayaTheme.textTheme.mediumDescriptionStyle,
               
             ),
             if (exceedsMaxLines && !isExpanded)
