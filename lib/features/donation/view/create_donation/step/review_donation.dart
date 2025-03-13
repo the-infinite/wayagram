@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -152,15 +153,17 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
       children: [
       Text(title,
         style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-            fontSize: 14,
+            fontSize: 14.sp,
             fontWeight: FontWeight.w400,
+            fontFamily: WayaConstants.fontFamily,
             color: Theme.of(context).colorScheme.greyColor500),),
 
       Text(subTitle,
         style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-            fontSize: 16,
+            fontSize: 14.sp,
             fontWeight: FontWeight.w500,
-            color: Theme.of(context).colorScheme.black),),
+            fontFamily: WayaConstants.fontFamily,
+            color: Theme.of(context).colorScheme.greyColor900),),
     ],);
   }
 }
