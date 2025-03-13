@@ -466,8 +466,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               //? Fourth the profile overview.
                               InkWell(
                                 customBorder: const StadiumBorder(),
-                                onTap: () =>
-                                    WayaNav.toNamed(WayaAppRoutes.getFollowersPage(false, 'mutual', widget.id)),
+                                onTap: () => WayaNav.toNamed(WayaAppRoutes.getFollowersPage(false, 'mutual', widget.id, 'profile')),
                                 borderRadius: BorderRadius.circular(12.r),
                                 splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
                                 focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),

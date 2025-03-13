@@ -52,9 +52,9 @@ class ConversationState {
 
   // This is fine.
   static void setSelf(UserDetailsModel? self, SocialProfileModel? profile, [BusinessDetailsModel? business]) async {
-    ConversationState._self ??= self;
-    ConversationState._profile ??= profile;
-    ConversationState._business ??= business;
+    ConversationState._self = self;
+    ConversationState._profile = profile;
+    ConversationState._business = business;
 
     //? If this is not undefined.
     if (self != null && !kDebugMode) {

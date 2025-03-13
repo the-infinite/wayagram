@@ -118,7 +118,7 @@ class ProfileVm extends StateNotifier<ProfileState> {
     }
   }
 
-  void logOutUser() async {
+  Future<void> logOutUser() async {
     await _secureDataSource.saveToken("");
     await _secureDataSource.saveRefreshToken("");
     await _secureDataSource.saveBusinessId("");
