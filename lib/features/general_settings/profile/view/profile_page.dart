@@ -161,6 +161,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final isSelf = widget.id == ConversationState.self.id;
     final size = MediaQuery.sizeOf(context);
     final postState = ref.watch(userPostsProvider);
     final eventState = ref.watch(userEventsProvider);
@@ -199,16 +200,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             position: PopupMenuPosition.under,
             offset: Offset(0, 10),
             itemBuilder: (context) => [
-              PopupMenuItem<int>(
-                value: 0,
-                child: WayaActionNav(
-                  context: context,
-                  onTap: () {},
-                  asset: WayaAssets.images.pages.setting.svg(),
-                  text: "Profile settings",
-                  color: wayaTheme.colorScheme.customBlack,
+              if (isSelf)
+                PopupMenuItem<int>(
+                  value: 0,
+                  child: WayaActionNav(
+                    context: context,
+                    onTap: () => WayaNav.toNamed(EditProfilePage.route),
+                    asset: WayaAssets.images.pages.setting.svg(),
+                    text: "Profile settings",
+                    color: wayaTheme.colorScheme.customBlack,
+                  ),
                 ),
-              ),
 
               //? Share.
               PopupMenuItem<int>(
@@ -298,7 +300,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     // This is fine.
                     final user = data.$1;
                     final profile = data.$2;
-                    final isSelf = user.id == ConversationState.self.id;
 
                     //? The main component.
                     return Column(
@@ -337,9 +338,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 if (isSelf)
                                   GestureDetector(
                                     onTap: () {
-                                      WayaNav.toNamed(
-                                        EditProfilePage.route,
-                                      );
+                                      WayaNav.toNamed(EditProfilePage.route);
                                     },
                                     child: Container(
                                       margin: EdgeInsets.only(right: 20.w),
@@ -466,7 +465,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               //? Fourth the profile overview.
                               InkWell(
                                 customBorder: const StadiumBorder(),
-                                onTap: () => WayaNav.toNamed(WayaAppRoutes.getFollowersPage(false, 'mutual', widget.id, 'profile')),
+                                onTap: () => WayaNav.toNamed(
+                                    WayaAppRoutes.getFollowersPage(false, 'mutual', widget.id, 'profile')),
                                 borderRadius: BorderRadius.circular(12.r),
                                 splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
                                 focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
