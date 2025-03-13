@@ -313,7 +313,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
             border:
                 Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              //  ref.read(addProductProvider.notifier).submit();
+            
               widget.gotoPreviousTab();
             })
       ],

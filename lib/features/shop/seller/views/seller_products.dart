@@ -196,7 +196,7 @@ class SellerProductEmptyState extends StatelessWidget {
         ),
         const Gap(25),
         Text(
-          "Your shop is empty. Start adding products to \n showcase your items.",
+          "Your shop is empty. Start adding products to showcase your items.",
           textAlign: TextAlign.center,
           style: wayaTheme.textTheme.descriptionStyle,
         ),

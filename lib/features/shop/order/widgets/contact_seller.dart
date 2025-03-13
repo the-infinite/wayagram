@@ -93,8 +93,9 @@ class ContactSeller extends StatelessWidget {
           const Gap(10),
           WayaButton(
               callback: () {
+                 WayaNav.goBack();
                 WayaNav.toNamed(DisputeChat.route, arguments: order);
-                WayaNav.goBack();
+               
               },
               text: "Yes, Contact Seller"),
           const Gap(10),

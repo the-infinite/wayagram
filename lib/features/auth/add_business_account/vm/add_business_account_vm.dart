@@ -21,7 +21,11 @@ class DocType {
   final String type;
   final String url;
 
-  DocType({required this.file, required this.type, required this.name, this.url = ''});
+  DocType(
+      {required this.file,
+      required this.type,
+      required this.name,
+      this.url = ''});
 }
 
 class AddBusinessAccountState {

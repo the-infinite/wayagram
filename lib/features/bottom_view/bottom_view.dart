@@ -74,11 +74,11 @@ class _BottomViewState extends ConsumerState<BottomView> {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .wayaCopyWith(fontSize: 16, color: Theme.of(context).colorScheme.customBlack),
+                  .copyWith(fontSize: 16, color: Theme.of(context).colorScheme.customBlack),
             ),
             content: Text(
               'Are you sure you want to exit?',
-              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                   fontSize: 14, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor700),
             ),
             actions: <Widget>[

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/delivery_request_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart';
@@ -22,27 +23,32 @@ List<SalesMetric> salesMetrics = [
 
 class ManageShopVm extends StateNotifier<ManageShopState> {
   final ShopRepository _shopRepository;
+  final ProfileRepo _profileRepo;
 
   final Ref ref;
 
   final _logger = getLogger('ManageShopVm');
 
-  ManageShopVm(this._shopRepository, this.ref)
+  ManageShopVm(this._profileRepo, this._shopRepository, this.ref)
       : super(ManageShopState.initial());
 
   Future<void> getSellerShops() async {
-    final userState = ref.read(successfulSetupVmProvider);
-  
-    if (userState.business == null) {
-      // account is most likely a personal account
-      state = state.copyWith(isPersonalNotUpgradedToBusiness: true);
-      return;
-    }
-
-    state = state.copyWith(isPersonalNotUpgradedToBusiness: false);
-
     try {
       state = state.copyWith(isLoading: true);
+
+      final businessProfile = await _profileRepo.getBusinessDataRepo(
+          userId: ConversationState.self.id);
+
+      if (businessProfile.success) {
+        print("dsffsefffdsvdvfvdfvdfvdfv");
+        print(businessProfile.data);
+        state = state.copyWith(isPersonalNotUpgradedToBusiness: false);
+      } else {
+        state = state.copyWith(isPersonalNotUpgradedToBusiness: true);
+        state = state.copyWith(isLoading: false);
+        return;
+      }
+
       final response =
           await _shopRepository.getShopBySellerId(ConversationState.self.id);
 
@@ -156,5 +162,5 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
 final manageShopVmProvider =
     StateNotifierProvider.autoDispose<ManageShopVm, ManageShopState>((ref) {
-  return ManageShopVm(ShopRepository.instance, ref);
+  return ManageShopVm(ProfileRepo(), ShopRepository.instance, ref);
 });

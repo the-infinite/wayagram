@@ -25,7 +25,8 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/category/all?page=$page&limit=1000');
   }
 
-  Future<WayaRequestResponse> createProduct({required AddProductModel payload, required String id}) {
+  Future<WayaRequestResponse> createProduct(
+      {required AddProductModel payload, required String id}) {
     return post(
       "$serviceUrl/products/create/$id",
       payload.toJson(),
@@ -42,32 +43,38 @@ class ShopRepository extends BaseRepository {
 
   ///products/:productId/shop/:shopId
 
-  Future<WayaRequestResponse> deleteProductRequest({required String shopId, required String productId}) {
+  Future<WayaRequestResponse> deleteProductRequest(
+      {required String shopId, required String productId}) {
     return delete("$serviceUrl/products/$productId/shop/$shopId");
   }
 
-  Future<WayaRequestResponse> editProductRequest({required AddProductModel payload, required String productId}) {
+  Future<WayaRequestResponse> editProductRequest(
+      {required AddProductModel payload, required String productId}) {
     return patch("$serviceUrl/products/edit/$productId", payload.toJson());
   }
 
-  Future<WayaRequestResponse> getSellerProducts({required String shopId, required int page}) {
+  Future<WayaRequestResponse> getSellerProducts(
+      {required String shopId, required int page}) {
     return get('$serviceUrl/products/get?shopId=$shopId&page=$page');
   }
 
-  Future<WayaRequestResponse> editShop(CreateShopModel payload, String vendorId) {
+  Future<WayaRequestResponse> editShop(
+      CreateShopModel payload, String vendorId) {
     return patch(
       "$serviceUrl/shops/edit/$vendorId",
       payload.toJson(),
     );
   }
 
-  Future<WayaRequestResponse> addToFavorite({required String productId, required String shopId}) {
+  Future<WayaRequestResponse> addToFavorite(
+      {required String productId, required String shopId}) {
     return post("$serviceUrl/favorites/add/$shopId", {"productId": productId});
   }
 
   ///
   Future<WayaRequestResponse> addToken({required String deliveryToken}) {
-    return post("$serviceUrl/orders/complete-order", {"deliveryToken": deliveryToken});
+    return post(
+        "$serviceUrl/orders/complete-order", {"deliveryToken": deliveryToken});
   }
 
   Future<WayaRequestResponse> getShopDetailsById(String id) {
@@ -81,7 +88,12 @@ class ShopRepository extends BaseRepository {
       required int score,
       required String review,
       required String type}) {
-    final payload = {'raterId': raterId, 'score': score, 'review': review, 'type': type};
+    final payload = {
+      'raterId': raterId,
+      'score': score,
+      'review': review,
+      'type': type
+    };
 
     if (productId != null) payload['productId'];
     if (shopId != null) payload['shopId'];
