@@ -4,26 +4,25 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
-import 'package:wayagram/shared/features/follow/vm/default.dart';
+import 'package:wayagram/shared/features/follow/notifier/self.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class FollowRelationshipWidget extends StatelessWidget {
   final FollowModel data;
   final int index;
-  final FollowNotifier notifier;
 
   // This is fine.
   const FollowRelationshipWidget({
     super.key,
     required this.data,
     required this.index,
-    required this.notifier,
   });
 
   @override
   Widget build(BuildContext context) {
     //? Our theme.
     final theme = Theme.of(context);
+    final notifier = myFollowProvider;
 
     //? The actual component.
     return WayaFutureSubscriber(
@@ -74,7 +73,7 @@ class FollowRelationshipWidget extends StatelessWidget {
                               GestureDetector(
                                 onTap: () async {
                                   //? If this user is following this one.
-                                  if (this.data.isUserFollowing) {
+                                  if (myFollowProvider.isUserFollowing(data.$1.id)) {
                                     await notifier.unfollowUser(data.$1.id);
                                   }
 
@@ -87,19 +86,21 @@ class FollowRelationshipWidget extends StatelessWidget {
                                   margin: EdgeInsets.only(right: 20.w),
                                   padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
                                   decoration: BoxDecoration(
-                                    border: this.data.isUserFollowing
+                                    border: myFollowProvider.isUserFollowing(data.$1.id)
                                         ? Border.all(
                                             color: theme.colorScheme.primary,
                                             width: 1.5,
                                           )
                                         : null,
-                                    color: this.data.isUserFollowing  ? theme.colorScheme.white : theme.colorScheme.primary,
+                                    color: myFollowProvider.isUserFollowing(data.$1.id)
+                                        ? theme.colorScheme.white
+                                        : theme.colorScheme.primary,
                                     borderRadius: BorderRadius.circular(7.r),
                                   ),
                                   child: Text(
-                                    this.data.isUserFollowing ? "Following" : "Follow",
+                                    myFollowProvider.isUserFollowing(data.$1.id) ? "Following" : "Follow",
                                     style: theme.textTheme.labelSmall?.copyWith(
-                                      color: this.data.isUserFollowing
+                                      color: myFollowProvider.isUserFollowing(data.$1.id)
                                           ? theme.colorScheme.primary
                                           : theme.colorScheme.white,
                                       fontWeight: FontWeight.w600,

@@ -5,21 +5,25 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/explore/search/model/user_detail.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
 import 'package:wayagram/shared/features/follow/vm/default.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
-class UserWidget extends ConsumerStatefulWidget {
-  final UserDetails user;
-  const UserWidget({super.key, required this.user});
+class FollowUserWidget extends ConsumerStatefulWidget {
+  final String userId;
+
+  // Construct.
+  const FollowUserWidget({
+    super.key,
+    required this.userId,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _UserWidgetState();
 }
 
-class _UserWidgetState extends ConsumerState<UserWidget> {
+class _UserWidgetState extends ConsumerState<FollowUserWidget> {
   late final followNotifier = ref.watch(userFollowProvider.notifier);
   FollowStatusModel? _followStatus;
 
@@ -32,8 +36,8 @@ class _UserWidgetState extends ConsumerState<UserWidget> {
   }
 
   Future<void> _getFollowState() async {
-    if (widget.user.id == ConversationState.self.id) return;
-    final result = await followNotifier.getFollowStatus(widget.user.id!);
+    if (widget.userId == ConversationState.self.id) return;
+    final result = await followNotifier.getFollowStatus(widget.userId);
 
     //? Update this value if it works fine.
     if (mounted) {
@@ -47,7 +51,7 @@ class _UserWidgetState extends ConsumerState<UserWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return WayaFutureSubscriber(
-      future: UserResource.getUserDetails(widget.user.id!),
+      future: UserResource.getUserDetails(widget.userId),
       suspense: (context) => const SizedBox(),
       builder: (context, data) => data == null
           ? const SizedBox()
@@ -90,48 +94,50 @@ class _UserWidgetState extends ConsumerState<UserWidget> {
                               // Infinite space.
                               Spacer(),
 
-                              //? The current state of affairs.
-                              GestureDetector(
-                                onTap: () async {
-                                  //? If this user is following this one.
-                                  if (_followStatus?.isUserFollowing == true) {
-                                    await followNotifier.unfollowUser(data.$1.id);
-                                  }
+                              //? Only show this when the user in question is not
+                              //? the current user.
+                              if (widget.userId != ConversationState.self.id)
+                                GestureDetector(
+                                  onTap: () async {
+                                    //? If this user is following this one.
+                                    if (_followStatus?.isUserFollowing == true) {
+                                      await followNotifier.unfollowUser(data.$1.id);
+                                    }
 
-                                  //? Since I am not yet following this user...
-                                  else {
-                                    await followNotifier.followUser(data.$1.id);
-                                  }
+                                    //? Since I am not yet following this user...
+                                    else {
+                                      await followNotifier.followUser(data.$1.id);
+                                    }
 
-                                  //? Update this.
-                                  await _getFollowState();
-                                },
-                                child: Container(
-                                  margin: EdgeInsets.only(right: 20.w),
-                                  padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
-                                  decoration: BoxDecoration(
-                                    border: _followStatus?.isUserFollowing == true
-                                        ? Border.all(
-                                            color: theme.colorScheme.primary,
-                                            width: 1.5,
-                                          )
-                                        : null,
-                                    color: _followStatus?.isUserFollowing == true
-                                        ? theme.colorScheme.white
-                                        : theme.colorScheme.primary,
-                                    borderRadius: BorderRadius.circular(7.r),
-                                  ),
-                                  child: Text(
-                                    _followStatus?.isUserFollowing == true ? "Following" : "Follow",
-                                    style: theme.textTheme.labelSmall?.copyWith(
+                                    //? Update this.
+                                    await _getFollowState();
+                                  },
+                                  child: Container(
+                                    margin: EdgeInsets.only(right: 20.w),
+                                    padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
+                                    decoration: BoxDecoration(
+                                      border: _followStatus?.isUserFollowing == true
+                                          ? Border.all(
+                                              color: theme.colorScheme.primary,
+                                              width: 1.5,
+                                            )
+                                          : null,
                                       color: _followStatus?.isUserFollowing == true
-                                          ? theme.colorScheme.primary
-                                          : theme.colorScheme.white,
-                                      fontWeight: FontWeight.w600,
+                                          ? theme.colorScheme.white
+                                          : theme.colorScheme.primary,
+                                      borderRadius: BorderRadius.circular(7.r),
+                                    ),
+                                    child: Text(
+                                      _followStatus?.isUserFollowing == true ? "Following" : "Follow",
+                                      style: theme.textTheme.labelSmall?.copyWith(
+                                        color: _followStatus?.isUserFollowing == true
+                                            ? theme.colorScheme.primary
+                                            : theme.colorScheme.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
                             ],
                           ),
                           subtitle: Text(

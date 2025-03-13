@@ -16,7 +16,7 @@ class _DeepLinkListenerState extends State<DeepLinkListener> {
   void initState() {
     final appLinks = AppLinks(); // AppLinks is singleton
 
-// Subscribe to all events (initial link and further)
+    // Subscribe to all events (initial link and further)
     final sub = appLinks.uriLinkStream.listen((uri) {
       log('URI: ${uri.toString()}');
       //  WayaNav.toNamed("/ugt-home");
