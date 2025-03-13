@@ -99,7 +99,7 @@ class WayaTextStyles {
    // overflow: TextOverflow.ellipsis,
   );
 
-  static final errorhintStyle = TextStyle(
+  static final errorHintStyle = TextStyle(
     fontSize: 14.sp,
     fontWeight: FontWeight.w400,
     color: WayaColors.error,

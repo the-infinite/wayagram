@@ -61,8 +61,7 @@ void main() async {
   // TODO: Switch to native splash screens when possible.
 
   //? Fifth, configure our visibility detector.
-  VisibilityDetectorController.instance.updateInterval =
-      const Duration(milliseconds: 50);
+  VisibilityDetectorController.instance.updateInterval = const Duration(milliseconds: 50);
 
   //? Finally, run the app.
   //? added DeepLinkListener to listen to incoming deepLinking urls
@@ -90,7 +89,7 @@ class _WayagramState extends ConsumerState<Wayagram> {
       splitScreenMode: true,
     );
 
-     GetMaterialApp(
+    return GetMaterialApp(
       initialRoute: '/',
       title: WayaConstants.appName,
       theme: WayaTheme.lightTheme,

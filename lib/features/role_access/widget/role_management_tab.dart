@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -7,7 +6,6 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/role_access/widget/role_access_card.dart';
-import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
@@ -29,10 +27,7 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
 
   @override
   Widget build(BuildContext context) {
-    final posts = ref.watch(postProvider);
-
     final wayaTheme = Theme.of(context);
-    final postNotifier = ref.read(postProvider.notifier);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +38,7 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
             //WayaNav.toNamed('/create-profile-contest1');
             WayaNav.toNamed('/create-contest'); */
           },
-          color: wayaTheme.colorScheme.primar50,
+          color: wayaTheme.colorScheme.primary50,
           text: "Add New Team Member",
           textColor: wayaTheme.colorScheme.customPrimary,
         ),
