@@ -11,7 +11,7 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
-import 'package:wayagram/shared/features/follow/vm/default.dart';
+import 'package:wayagram/shared/features/follow/notifier/self.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/features/user/widget/search.dart';
 import 'package:wayagram/shared/features/user/widget/social.dart';
@@ -40,8 +40,6 @@ class _StartConversationModalState extends State<StartConversationModal> {
         child: Consumer(builder: (context, ref, _) {
           final notifier = ref.read(conversationProvider.notifier);
           final chatNotifier = ref.read(chatProvider.notifier);
-          final followersNotifier = ref.read(myFollowProvider.notifier);
-          final state = ref.watch(myFollowProvider);
 
           //? This is fine.
           return Column(
@@ -136,57 +134,60 @@ class _StartConversationModalState extends State<StartConversationModal> {
                 const Gap(10),
 
                 //? After this, a list of users you are following.
-                Expanded(
-                  child: WayaPaginatedListView(
-                    shouldFetch: !state.isLoadingFollowing,
-                    isAtEnd: !state.followingHasNextPage,
-                    nextPage: state.followingPage,
-                    itemCount: state.following.length,
-                    handler: handler,
-                    getPage: (page) => followersNotifier.getUsersFollowing(ConversationState.self.id),
-                    builder: (context, index) => WayaFutureSubscriber(
-                      future: state.following[index].getOtherUser(),
-                      builder: (context, data) => data == null
-                          ? const SizedBox()
-                          : InkWell(
-                              onTap: () {
-                                //? This is fine.
-                                notifier.startChat(ChatType.personal, [data.$1.id]).then(
-                                  (chat) {
-                                    //? Leave here.
-                                    WayaNav.goBack();
+                ValueListenableBuilder(
+                  valueListenable: myFollowProvider,
+                  builder: (context, state, _) => Expanded(
+                    child: WayaPaginatedListView(
+                      shouldFetch: !state.isLoadingFollowing,
+                      isAtEnd: !state.followingHasNextPage,
+                      nextPage: state.followingPage,
+                      itemCount: state.following.length,
+                      handler: handler,
+                      getPage: (page) => myFollowProvider.getUsersFollowing(ConversationState.self.id),
+                      builder: (context, index) => WayaFutureSubscriber(
+                        future: state.following[index].getOtherUser(),
+                        builder: (context, data) => data == null
+                            ? const SizedBox()
+                            : InkWell(
+                                onTap: () {
+                                  //? This is fine.
+                                  notifier.startChat(ChatType.personal, [data.$1.id]).then(
+                                    (chat) {
+                                      //? Leave here.
+                                      WayaNav.goBack();
 
-                                    //? Stop if we could not make this chat.
-                                    if (chat == null) return;
+                                      //? Stop if we could not make this chat.
+                                      if (chat == null) return;
 
-                                    //? If we could make this chat...
-                                    chatNotifier.setChat(chat);
-                                    WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
-                                  },
-                                ).catchError(
-                                  (_) {
-                                    //? Leave here.
-                                    WayaNav.goBack();
-                                  },
-                                );
+                                      //? If we could make this chat...
+                                      chatNotifier.setChat(chat);
+                                      WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
+                                    },
+                                  ).catchError(
+                                    (_) {
+                                      //? Leave here.
+                                      WayaNav.goBack();
+                                    },
+                                  );
 
-                                //? After starting the conversation...
-                                setState(() {
-                                  _peer = data.$1;
-                                });
-                              },
-                              borderRadius: BorderRadius.circular(10),
-                              splashColor: WayaColors.primary.withAlpha(30),
-                              focusColor: WayaColors.primary.withAlpha(30),
-                              highlightColor: WayaColors.primary.withAlpha(30),
-                              child: Container(
-                                margin: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 5.h),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
+                                  //? After starting the conversation...
+                                  setState(() {
+                                    _peer = data.$1;
+                                  });
+                                },
+                                borderRadius: BorderRadius.circular(10),
+                                splashColor: WayaColors.primary.withAlpha(30),
+                                focusColor: WayaColors.primary.withAlpha(30),
+                                highlightColor: WayaColors.primary.withAlpha(30),
+                                child: Container(
+                                  margin: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 5.h),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: SocialUserWidget(user: data.$1),
                                 ),
-                                child: SocialUserWidget(user: data.$1),
                               ),
-                            ),
+                      ),
                     ),
                   ),
                 ),

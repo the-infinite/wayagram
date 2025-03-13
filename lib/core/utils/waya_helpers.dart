@@ -12,7 +12,7 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class WayaHelpers {
   static String extractFileName(File? imageFile) {
-    return imageFile == null ? 'file is null' : imageFile.path.split('/').last;
+    return imageFile == null ? 'null' : imageFile.uri.pathSegments.last;
   }
 
   static String? getContentType(File file) {
@@ -58,8 +58,7 @@ class WayaHelpers {
   }
 
   static String formatPrice(int price) {
-    String formattedCurrency =
-        NumberFormat.currency(locale: 'en_US', symbol: '₦').format(price);
+    String formattedCurrency = NumberFormat.currency(locale: 'en_US', symbol: '₦').format(price);
 
     return formattedCurrency;
   }
@@ -140,9 +139,7 @@ class WayaHelpers {
     final regex = RegExp(r'(?<=[a-z])(?=[A-Z])|_');
     final words = text.split(regex);
     return words
-        .map((word) => word.isNotEmpty
-            ? word[0].toUpperCase() + word.substring(1).toLowerCase()
-            : '')
+        .map((word) => word.isNotEmpty ? word[0].toUpperCase() + word.substring(1).toLowerCase() : '')
         .join(' ');
   }
 
@@ -160,9 +157,7 @@ class WayaHelpers {
 
   static String _formatNumber(int number, int divisor, String suffix) {
     double result = number / divisor;
-    return result % 1 == 0
-        ? "${result.toInt()}$suffix"
-        : "${result.toStringAsFixed(1)}$suffix";
+    return result % 1 == 0 ? "${result.toInt()}$suffix" : "${result.toStringAsFixed(1)}$suffix";
   }
 
   static String format24HRSToAPM(String time) {

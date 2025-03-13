@@ -13,6 +13,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
+import 'package:wayagram/features/follow/view/follow_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/products_grid.dart';
@@ -325,7 +326,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       ),
                                     ),
                                   ),
-                                  fit: BoxFit.fill,
+                                  fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: (size.height * 0.2).h,
                                   imageUrl: profile.coverImage.toString(),
@@ -382,17 +383,23 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       margin: EdgeInsets.only(right: 20.w),
                                       padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
                                       decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: wayaTheme.colorScheme.primary600,
-                                          width: 1.5,
-                                        ),
-                                        color: wayaTheme.colorScheme.white,
+                                        border: _followStatus?.isUserFollowing == true
+                                            ? Border.all(
+                                                color: wayaTheme.colorScheme.primary,
+                                                width: 1.5,
+                                              )
+                                            : null,
+                                        color: _followStatus?.isUserFollowing == true
+                                            ? wayaTheme.colorScheme.white
+                                            : wayaTheme.colorScheme.primary,
                                         borderRadius: BorderRadius.circular(7.r),
                                       ),
                                       child: Text(
                                         _followStatus?.isUserFollowing == true ? "Following" : "Follow",
-                                        style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
-                                          color: wayaTheme.colorScheme.primary600,
+                                        style: wayaTheme.textTheme.labelSmall?.copyWith(
+                                          color: _followStatus?.isUserFollowing == true
+                                              ? wayaTheme.colorScheme.primary
+                                              : wayaTheme.colorScheme.white,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -465,8 +472,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               //? Fourth the profile overview.
                               InkWell(
                                 customBorder: const StadiumBorder(),
-                                onTap: () => WayaNav.toNamed(
-                                    WayaAppRoutes.getFollowersPage(false, 'mutual', widget.id, 'profile')),
+                                onTap: () => isSelf
+                                    ? WayaNav.toNamed(FollowRelationshipsPage.route)
+                                    : WayaNav.toNamed(WayaAppRoutes.getFollowersPage(widget.id, 'mutual', 'profile')),
                                 borderRadius: BorderRadius.circular(12.r),
                                 splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
                                 focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
