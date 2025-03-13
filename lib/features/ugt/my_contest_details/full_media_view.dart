@@ -72,7 +72,7 @@ class CandidatePostScreen extends StatelessWidget {
                     },
                     child: Text("Download Media",
                         style: WayaTextStyles.bodyMedium)),
-                const PopupMenuItem(
+                 PopupMenuItem(
                     value: "share",
                     child: Text("Share Post Link",
                         style: WayaTextStyles.bodyMedium)),

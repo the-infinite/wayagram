@@ -61,7 +61,8 @@ void main() async {
   // TODO: Switch to native splash screens when possible.
 
   //? Fifth, configure our visibility detector.
-  VisibilityDetectorController.instance.updateInterval = const Duration(milliseconds: 50);
+  VisibilityDetectorController.instance.updateInterval =
+      const Duration(milliseconds: 50);
 
   //? Finally, run the app.
   //? added DeepLinkListener to listen to incoming deepLinking urls
@@ -80,35 +81,39 @@ class _WayagramState extends ConsumerState<Wayagram> {
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);
     var size = MediaQuery.of(context).size;
-    return ScreenUtilInit(
+    //? added this screenutil init here to register before getting to the theme
+    //? else it will throw an error
+    ScreenUtil.init(
+      context,
       designSize: Size(size.width, size.height),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: GetMaterialApp(
-        initialRoute: '/',
-        title: WayaConstants.appName,
-        theme: WayaTheme.lightTheme,
-        darkTheme: WayaTheme.darkTheme,
-        themeMode: themeMode,
-        debugShowCheckedModeBanner: false,
-        getPages: WayaAppRoutes.getPages,
-        builder: (context, child) => ValueListenableBuilder(
-          valueListenable: WayaPreloaderController.instance.notifier,
-          builder: (context, showPreloader, _) {
-            return Stack(
-              children: [
-                //? First, the widget that is being laid out.
-                child!,
+    );
 
-                //? Second, our preloader widget.
-                if (showPreloader) WayaPreloaderOverlay(),
+     GetMaterialApp(
+      initialRoute: '/',
+      title: WayaConstants.appName,
+      theme: WayaTheme.lightTheme,
+      darkTheme: WayaTheme.darkTheme,
+      themeMode: themeMode,
+      debugShowCheckedModeBanner: false,
+      getPages: WayaAppRoutes.getPages,
+      builder: (context, child) => ValueListenableBuilder(
+        valueListenable: WayaPreloaderController.instance.notifier,
+        builder: (context, showPreloader, _) {
+          return Stack(
+            children: [
+              //? First, the widget that is being laid out.
+              child!,
 
-                //? Third, the debug console.
-                if (!WayaConstants.isProduction) WayaDebugConsole(),
-              ],
-            );
-          },
-        ),
+              //? Second, our preloader widget.
+              if (showPreloader) WayaPreloaderOverlay(),
+
+              //? Third, the debug console.
+              if (!WayaConstants.isProduction) WayaDebugConsole(),
+            ],
+          );
+        },
       ),
     );
   }

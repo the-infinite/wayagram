@@ -56,6 +56,7 @@ class CreateShopVm extends StateNotifier<CreateShopState> {
       await ref.read(manageShopVmProvider.notifier).refreshShops();
     } catch (e) {
       _logger.e(e);
+      return;
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -83,6 +84,6 @@ class CreateShopVm extends StateNotifier<CreateShopState> {
 final createShopVmProvider =
     StateNotifierProvider<CreateShopVm, CreateShopState>((ref) {
   final setUp = ref.watch(successfulSetupVmProvider);
-  return CreateShopVm(
-      ShopRepository.instance, ImagePicker(), WayaSecureDataSource(), setUp, ref);
+  return CreateShopVm(ShopRepository.instance, ImagePicker(),
+      WayaSecureDataSource(), setUp, ref);
 });

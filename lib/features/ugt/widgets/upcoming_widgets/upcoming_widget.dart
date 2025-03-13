@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 class UpcomingWidget extends StatelessWidget {
   final String title;
@@ -60,6 +58,8 @@ class UpcomingWidget extends StatelessWidget {
       ],
     );
   }
+
+  
 
   Color getColor(bool isText, String text) {
     if (text == "pending") {

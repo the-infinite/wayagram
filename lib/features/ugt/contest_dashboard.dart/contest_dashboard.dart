@@ -69,10 +69,10 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.read(votersContestNotifier);
+    final viewModel = ref.watch(votersContestNotifier);
     final notifier = ref.read(votersContestNotifier.notifier);
-    final dashboardNotifier = ref.read(ugtAdminDashboardVm.notifier);
-    final dashboardVm = ref.read(ugtAdminDashboardVm);
+    final dashboardNotifier = ref.watch(ugtAdminDashboardVm.notifier);
+    final dashboardVm = ref.watch(ugtAdminDashboardVm);
     var model = ref.watch(selectedContestProvider);
     useEffect(() {
       dashboardNotifier.fetchTotalContestant(model?.id ?? "");
@@ -185,8 +185,14 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               ],
             ),
             const Gap(20),
-            _buildStatCard2(context, "Revenue Generated",
-                "₦${dashboardVm.revenueGenerated}"),
+            GestureDetector(
+              onTap: () {
+                
+                WayaNav.toNamed('/admin-transaction-page');
+              },
+              child: _buildStatCard2(context, "Revenue Generated",
+                  "₦${dashboardVm.revenueGenerated}"),
+            ),
             const Gap(10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -253,7 +259,11 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               ),
               child: Column(
                 children: [
-                  _buildSectionTitle("Leaderboard"),
+                  InkWell(
+                      onTap: () {
+                        WayaNav.toNamed('/manage-leaderboard-page');
+                      },
+                      child: _buildSectionTitle("Leaderboard")),
                   /*  ListView.builder(
                     //  controller: _scrollController,
                     shrinkWrap: true,
@@ -289,7 +299,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       "${viewModel.myContestList[1].contestApplicant?.fullName}",
                       Color(0xffFEF6E7),
                     ),
-                  if (viewModel.myContestList.length > 1)
+                  if (viewModel.myContestList.length > 2)
                     _buildLeaderboardItem(
                       context,
                       "${viewModel.myContestList[2].votes} votes",

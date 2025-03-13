@@ -51,7 +51,7 @@ class UgtAdminDashboardVm extends StateNotifier<UgtDashboardState> {
         //  contestList = responseModel.data;
 
         state =
-            state.copyWith(revenueGenerated: responseModel.data?.totalSum ?? 0);
+            state.copyWith(revenueGenerated: responseModel.data?.totalSum ?? 0, transactionList: responseModel.data?.transactions??[]);
       }
     } catch (e) {
       //print(e);

@@ -7,6 +7,7 @@ import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/repo/message.dart';
 import 'package:wayagram/features/chat/state/chat.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/repo/shop_dispute_repository.dart';
 
 class ChatNotifier extends StateNotifier<ChatState> {
@@ -384,16 +385,20 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
   /// A helper function to open a shop dispute ticket
   Future<void> openTicket(
-      {required String details,
-      required String orderNumber,
+      {required String reason,
+      required String deliveryToken,
+      List<OrderItem>? orderedItem,
+      String? sellerId,
       required String reference}) async {
     try {
       final response = await shopdisputerepo.openTicket(
-          reasonCategory: "Invalid product",
-          details: details,
-          orderNumber: orderNumber,
+          reasonCategory: reason,
+          details: "details",
+          deliveryToken: deliveryToken,
+          orderedItem: orderedItem,
           userId: ConversationState.self.id,
           disputeType: "shop",
+          sellerId: sellerId,
           reference: reference);
       if (response.success) {
         print(response.data);

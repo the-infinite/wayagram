@@ -87,6 +87,7 @@ class WayaNav<T> {
     });
     return completer.future;
   }
+  
 
   static Future<T?> replaceNamed<T>(String route, {dynamic arguments, Function(dynamic)? onResult}) {
     final completer = Completer<T>();

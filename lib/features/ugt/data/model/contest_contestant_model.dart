@@ -71,6 +71,7 @@ class MyContestContestantModel {
   final String? updatedAt;
   final ContestApplicant? contestApplicant;
   final int? votes;
+  
 
   MyContestContestantModel copyWith({
     String? id,
@@ -229,9 +230,9 @@ class Stage {
 
   final String? stageName;
   final String? entryType;
-  final int? entryAmount;
-  final int? voteCountToQualify;
-  final int? numberOfPostPerWeek;
+  final dynamic entryAmount;
+  final dynamic voteCountToQualify;
+  final dynamic numberOfPostPerWeek;
   final int? priceOfTheWinner;
   final String? startDate;
   final String? endDate;
@@ -246,9 +247,9 @@ class Stage {
   Stage copyWith({
     String? stageName,
     String? entryType,
-    int? entryAmount,
-    int? voteCountToQualify,
-    int? numberOfPostPerWeek,
+    dynamic entryAmount,
+    dynamic voteCountToQualify,
+    dynamic numberOfPostPerWeek,
     int? priceOfTheWinner,
     String? startDate,
     String? endDate,

@@ -275,7 +275,9 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                       ?.wayaCopyWith(color: wayaTheme.colorScheme.primary500)),
               const Gap(15), */
               const Gap(15),
-              Text("Top Contestants", style: wayaTheme.textTheme.bodyMedium),
+              Text("Top Contestants",
+                  style: wayaTheme.textTheme.bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.bold)),
               const Gap(15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

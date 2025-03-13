@@ -3,14 +3,14 @@ import 'package:wayagram/core/theme/theme.dart';
 
 class WayaTextStrip extends StatelessWidget {
   final String? text;
-  final TextStyle style;
+  final TextStyle? style;
   final Color? backgroundColor;
   final Color? textColor;
 
   const WayaTextStrip(
     this.text, {
     super.key,
-    this.style = WayaTextStyles.bodyMedium,
+    this.style,
     this.backgroundColor = WayaColors.scaffoldColor2,
     this.textColor = WayaColors.greyColor400,
   });
@@ -31,10 +31,15 @@ class WayaTextStrip extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10),
             child: Text(
               text!,
-              style: style.copyWith(
-                backgroundColor: backgroundColor,
-                color: textColor,
-              ),
+              style: style == null
+                  ? WayaTextStyles.bodyMedium.copyWith(
+                      backgroundColor: backgroundColor,
+                      color: textColor,
+                    )
+                  : style?.copyWith(
+                      backgroundColor: backgroundColor,
+                      color: textColor,
+                    ),
             ),
           )
       ],

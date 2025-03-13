@@ -72,6 +72,17 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
+    void openTicket({required String reason}) async {
+      if (orderDetail != null) {
+        notifier.openTicket(
+            reason: reason,
+            sellerId: orderDetail!.vendorId,
+            orderedItem: orderDetail?.items,
+            reference: orderDetail!.id,
+            deliveryToken: orderDetail!.deliveryToken!);
+      }
+    }
+
     //? This is fine.
     return WayaScaffold(
       isLoading: false,
@@ -207,8 +218,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
           // DisputeBuyerInfo(),
 
           //? Second, the chat messages.
-          if (!isCustomReason && (
-              state.chat == null ||
+          if ((state.chat == null ||
               (state.messages.isEmpty && state.hasLoaded)))
             Padding(
               padding: EdgeInsets.only(top: 25),
@@ -232,21 +242,24 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                     children: suggestedReason.map((suggestion) {
                       return IntrinsicWidth(
                         child: WayaButton(
-                          callback: () {
-                            final lastIndex = suggestedReason
-                                .indexWhere((c) => c == suggestion);
-                            setState(() {
-                              isCustomReason = true;
-                            });
-                            if (lastIndex == suggestion.length) {
-                              // show input field
-                              return;
-                            } else {
-                              controller.setText(suggestion);
-                            }
+                          callback: () async {
+                            openTicket(reason: suggestion);
+                            // final lastIndex = suggestedReason
+                            //     .indexWhere((c) => c == suggestion);
+                            // setState(() {
+                            //   isCustomReason = true;
+                            // });
+                            // if (lastIndex == suggestion.length) {
+                            //   // show input field
+                            //   return;
+                            // } else {
+                            //   controller.setText(suggestion);
+                            // }
                           },
                           horizontalPadding: 6,
                           textColor: wayaTheme.colorScheme.greyColor600,
+                          textStyle: wayaTheme.textTheme.descriptionStyle
+                              .copyWith(fontWeight: FontWeight.normal),
                           color: wayaTheme.colorScheme.transparent,
                           border: Border.all(
                               width: 1,
@@ -297,8 +310,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                     : null,
               ),
             ),
-          if (isCustomReason ||
-              state.chat != null ||
+          if (state.chat != null ||
               (state.messages.isNotEmpty && state.hasLoaded))
             //? This is fine.
             ChatInputWidget(
