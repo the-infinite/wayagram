@@ -8,6 +8,8 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
+import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
 
 final uuid = Uuid();
@@ -24,7 +26,8 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
   String? postId = "";
   Contest? post;
 
-  RegisterFormNotifier(this._contestRepository, this._localDataSource) : super([]) {
+  RegisterFormNotifier(this._contestRepository, this._localDataSource)
+      : super([]) {
     fullName = TextEditingController();
     emailAddress = TextEditingController();
     address = TextEditingController();
@@ -99,7 +102,8 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     state = [...fieldList];
   }
 
-  Future<void> submitDetail(BuildContext context, ValueNotifier<bool> isLoading, String mySelectedState) async {
+  Future<void> submitDetail(BuildContext context, ValueNotifier<bool> isLoading,
+      String mySelectedState, VoidCallback onPressed) async {
     isLoading.value = true;
     // print("Mean  werr $state");
     List<Map<String, dynamic>> detailsList = state.map(
@@ -114,7 +118,11 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
       File(image!),
     );
         } */
-        return <String, dynamic>{"title": model.title, "data": image, "type": model.type};
+        return <String, dynamic>{
+          "title": model.title,
+          "data": image,
+          "type": model.type
+        };
       },
     ).toList();
     print("Mean $detailsList");
@@ -131,6 +139,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
         // detailsListRight.add({oldMap["title"]: oldMap["data"]});
       }
     }
+
     print("Mean 1 $detailsListRight");
 
     var map = {
@@ -150,8 +159,11 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     isLoading.value = false;
 
     if (response.success) {
-      WayaSnackBar.showToast("Application sent, Your Application is under review");
-      WayaNav.goBack();
+      WayaSnackBar.showToast(
+          "Application sent, Your Application is under review");
+      Future.delayed(Duration(seconds: 1), () {
+        WayaNav.removeAllUntil(UgtHome(), "/ugt-home");
+      });
     }
   }
 
@@ -191,7 +203,8 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
 }
 
 // Provider for the StateNotifier
-final registerFormProvider = StateNotifierProvider<RegisterFormNotifier, List<DynamicField>>(
+final registerFormProvider =
+    StateNotifierProvider<RegisterFormNotifier, List<DynamicField>>(
   (ref) => RegisterFormNotifier(ContestRepo(), WayaLocalDataSource()),
 );
 
