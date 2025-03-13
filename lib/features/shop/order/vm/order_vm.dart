@@ -25,8 +25,8 @@ class OrderVm extends StateNotifier<OrderState> {
       bool hasNextPage = false;
       if (response.success) {
         OrdersResponse ordersResponse = OrdersResponse.fromJson(response.data);
-        orders = ordersResponse.data.data;
-        hasNextPage = ordersResponse.data.pagination.hasNextPage;
+        orders = ordersResponse.data.docs;
+        hasNextPage = ordersResponse.data.hasNextPage;
       }
 
       return PaginatedResult<Order>(hasNextPage: hasNextPage, items: orders);

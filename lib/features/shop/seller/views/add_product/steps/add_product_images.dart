@@ -41,7 +41,7 @@ class _AddProductImagesState extends ConsumerState<AddProductImages> {
           Text("Add Product Images", style: wayaTheme.textTheme.titleLarge),
           const Gap(5),
           Text(
-              "Upload images and review your product details \n before submission",
+              "Upload images and review your product details before submission",
               style: wayaTheme.textTheme.hintStyle),
           const Gap(30),
           Text(

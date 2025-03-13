@@ -8,6 +8,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_additional_shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/upload_image.dart';
@@ -28,7 +29,9 @@ class _CreateShopState extends ConsumerState<CreateShop> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _initializeArgs();
-      ref.read(createAdditionalShopVmProvider(uniqueKey).notifier).fetchStates();
+      ref
+          .read(createAdditionalShopVmProvider(uniqueKey).notifier)
+          .fetchStates();
     });
     super.initState();
   }
@@ -38,7 +41,9 @@ class _CreateShopState extends ConsumerState<CreateShop> {
 
     if (args is UpdateShopArg) {
       uniqueKey = args.uniqueKey;
-      ref.read(createAdditionalShopVmProvider(args.uniqueKey).notifier).initializeEdit(args.singleShop);
+      ref
+          .read(createAdditionalShopVmProvider(args.uniqueKey).notifier)
+          .initializeEdit(args.singleShop);
     } else if (args is CreateShopArg) {
       uniqueKey = args.uniqueKey;
     } else {
@@ -67,7 +72,10 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                     url: viewModel.url,
                     isEditingMode: viewModel.isEditingMode,
                     onUpload: () {
-                      ref.read(createAdditionalShopVmProvider(uniqueKey).notifier).uploadFile();
+                      ref
+                          .read(createAdditionalShopVmProvider(uniqueKey)
+                              .notifier)
+                          .uploadFile();
                     }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
@@ -85,7 +93,9 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                         controller: viewModel.name,
                         hintText: 'Enter Shop Name',
                         borderColor:
-                            formState.hasError && viewModel.name.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                            formState.hasError && viewModel.name.text.isEmpty
+                                ? wayaTheme.colorScheme.error
+                                : null,
                         label: 'Shop Name',
                       ),
                       if (formState.hasError && viewModel.name.text.isEmpty)
@@ -93,7 +103,9 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
                           ),
                         ),
                     ],
@@ -112,7 +124,10 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                     children: [
                       Text(
                         "Phone Number",
-                        style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.wayaCopyWith(
                               fontSize: 14,
                               color: wayaTheme.colorScheme.greyColor900,
                             ),
@@ -126,8 +141,11 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                             width: 90,
                             padding: EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                                border: Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
-                                borderRadius: BorderRadius.all(Radius.circular(6.0))),
+                                border: Border.all(
+                                    color: wayaTheme.colorScheme.greyColor300,
+                                    width: 1),
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(6.0))),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -151,7 +169,8 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                               keyboardType: TextInputType.phone,
                               controller: viewModel.phone,
                               hintText: '000-000-000',
-                              borderColor: formState.hasError && viewModel.phone.text.isEmpty
+                              borderColor: formState.hasError &&
+                                      viewModel.phone.text.isEmpty
                                   ? wayaTheme.colorScheme.error
                                   : null,
                             ),
@@ -163,7 +182,9 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
                           ),
                         ),
                     ],
@@ -188,7 +209,9 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                         controller: viewModel.email,
                         hintText: 'example@gmail.com',
                         borderColor:
-                            formState.hasError && viewModel.email.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                            formState.hasError && viewModel.email.text.isEmpty
+                                ? wayaTheme.colorScheme.error
+                                : null,
                         label: 'Email Address',
                       ),
                       if (formState.hasError && viewModel.email.text.isEmpty)
@@ -196,7 +219,9 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
                           ),
                         ),
                     ],
@@ -219,17 +244,21 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                         padding: EdgeInsets.all(10),
                         controller: viewModel.description,
                         hintText: 'Enter Shop Description',
-                        borderColor: formState.hasError && viewModel.description.text.isEmpty
+                        borderColor: formState.hasError &&
+                                viewModel.description.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         label: 'Shop Description',
                       ),
-                      if (formState.hasError && viewModel.description.text.isEmpty)
+                      if (formState.hasError &&
+                          viewModel.description.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
                           ),
                         ),
                     ],
@@ -252,14 +281,18 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                           value: viewModel.state,
                           hintText: 'Select State',
                           items: viewModel.states,
-                          onSelected: (value) =>
-                              ref.read(createAdditionalShopVmProvider(uniqueKey).notifier).selectState(value.first)),
+                          onSelected: (value) => ref
+                              .read(createAdditionalShopVmProvider(uniqueKey)
+                                  .notifier)
+                              .selectState(value.first)),
                       if (formState.hasError && viewModel.state.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
                           ),
                         ),
                     ],
@@ -282,14 +315,18 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                           hintText: 'Select LGA',
                           value: viewModel.lga,
                           items: viewModel.lgas,
-                          onSelected: (value) =>
-                              ref.read(createAdditionalShopVmProvider(uniqueKey).notifier).selectLGA(value.first)),
+                          onSelected: (value) => ref
+                              .read(createAdditionalShopVmProvider(uniqueKey)
+                                  .notifier)
+                              .selectLGA(value.first)),
                       if (formState.hasError && viewModel.lga.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
                           ),
                         ),
                     ],
@@ -311,7 +348,9 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                         controller: viewModel.address,
                         hintText: 'Enter Shop Address',
                         borderColor:
-                            formState.hasError && viewModel.address.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                            formState.hasError && viewModel.address.text.isEmpty
+                                ? wayaTheme.colorScheme.error
+                                : null,
                         label: 'Shop Address',
                         prefixIcon: Icon(
                           Icons.location_on_outlined,
@@ -324,7 +363,9 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12),
                           ),
                         ),
                     ],
@@ -332,12 +373,22 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                 }),
                 const Gap(30),
                 WayaButton(
-                    callback: () {
-                      if (_formKey.currentState!.validate()) {
-                        ref.read(createAdditionalShopVmProvider(uniqueKey).notifier).createSellerShop();
-                      }
-                    },
-                    text: viewModel.isEditingMode ? 'Edit Shop' : 'Create Shop'),
+                  callback: !viewModel.isLoading
+                      ? () {
+                          if (_formKey.currentState!.validate()) {
+                            ref
+                                .read(createAdditionalShopVmProvider(uniqueKey)
+                                    .notifier)
+                                .createSellerShop();
+                          }
+                        }
+                      : null,
+                  centerWidget: LoadingState(
+                      loading: viewModel.isLoading,
+                      text: viewModel.isEditingMode
+                          ? 'Edit Shop'
+                          : 'Create Shop'),
+                ),
               ],
             )));
   }

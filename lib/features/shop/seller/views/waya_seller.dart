@@ -43,7 +43,7 @@ class _WayaSellerState extends ConsumerState<WayaSeller> with SingleTickerProvid
                 ),
                 WayaTabButton(
                   isSelected: _selectedIndex == 2,
-                  text: 'Manage Shop',
+                  text: 'Manage Shops',
                   onTap: () => setState(() => _selectedIndex = 2),
                 ),
               ],
