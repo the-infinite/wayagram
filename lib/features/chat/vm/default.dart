@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/repo/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -193,10 +192,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
     final response = await repo.blockOrUnblockUser(id);
 
     //? This is fine.
-    if (response.success) {
-      final message = response.data["data"]["message"];
-      WayaSnackBar.showToast(message);
-    }
+    if (response.success) {}
 
     //? Return whether or not this is true.
     return response.success;

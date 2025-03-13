@@ -56,7 +56,7 @@ class _WayaPreloaderOverlayState extends State<WayaPreloaderOverlay> {
       (_) async {
         await Future.delayed(const Duration(milliseconds: 350));
         _timer = Timer.periodic(
-          const Duration(milliseconds: 750),
+          const Duration(milliseconds: 500),
           (timer) {
             //? If this is showing only the first icon
             if (step == 1) {
@@ -120,7 +120,7 @@ class _WayaPreloaderOverlayState extends State<WayaPreloaderOverlay> {
                   ),
                   crossFadeState: state,
                   duration: const Duration(
-                    milliseconds: 250,
+                    milliseconds: 350,
                   ),
                 );
               },
@@ -140,7 +140,7 @@ class _WayaPreloaderOverlayState extends State<WayaPreloaderOverlay> {
                   ),
                   crossFadeState: state,
                   duration: const Duration(
-                    milliseconds: 250,
+                    milliseconds: 350,
                   ),
                 );
               },

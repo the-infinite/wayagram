@@ -6,8 +6,9 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/modals/block.dart';
+import 'package:wayagram/features/chat/modals/unblock.dart';
 import 'package:wayagram/features/chat/model/default.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/profile/button.dart';
 import 'package:wayagram/features/chat/widget/profile/section.dart';
 import 'package:wayagram/shared/features/chat/widget/empty_conversation.dart';
@@ -29,8 +30,8 @@ class PersonalChatProfilePage extends StatefulWidget {
 }
 
 class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
-  late final notifier = widget.ref.read(conversationProvider.notifier);
   final mediaTypeController = ValueNotifier(0);
+  bool blocked = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +39,6 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
     final user = widget.chat.other.userData!;
     final profile = widget.chat.other.profileData!;
     final theme = Theme.of(context);
-    final conversationState = widget.ref.watch(conversationProvider);
 
     //? Now, build and return the widget.
     return WayaScaffold(
@@ -132,12 +132,50 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
 
                 //* Finally, to block/unblock a user.
                 ProfileActionButton(
-                  onTap: () {
-                    notifier.blockOrUnblockUser(user.id);
-                  },
+                  onTap: blocked
+                      ? () async {
+                          final result = await WayaUtils.showModalSheet<bool?>(
+                            context,
+                            child: UnblockUserDialog(
+                              chat: widget.chat,
+                              ref: widget.ref,
+                            ),
+                          );
+
+                          // If this is defined...
+                          if (result == null) return;
+
+                          //? Then pop.
+                          if (result) {
+                            WayaSnackBar.showToast("This user has been unblocked successfully");
+                            setState(() {
+                              blocked = false;
+                            });
+                          }
+                        }
+                      : () async {
+                          final result = await WayaUtils.showModalSheet<bool?>(
+                            context,
+                            child: BlockUserDialog(
+                              chat: widget.chat,
+                              ref: widget.ref,
+                            ),
+                          );
+
+                          // If this is defined...
+                          if (result == null) return;
+
+                          //? Then pop.
+                          if (result) {
+                            WayaSnackBar.showToast("This user has been blocked successfully");
+                            setState(() {
+                              blocked = true;
+                            });
+                          }
+                        },
                   icon: WayaAssets.icons.cProfileBlock.path,
-                  isBad: true,
-                  text: "Block",
+                  isBad: !blocked,
+                  text: blocked ? "Unblock" : "Block",
                 )
               ],
             ),

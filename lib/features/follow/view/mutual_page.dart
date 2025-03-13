@@ -15,12 +15,14 @@ class MutualPage extends ConsumerStatefulWidget {
   final String initialTab;
   final bool isSelf;
   final String? userId;
+  final String source;
 
   const MutualPage({
     super.key,
     required this.initialTab,
     required this.isSelf,
     required this.userId,
+    required this.source,
   });
 
   @override
@@ -79,7 +81,7 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
         if (!isPopping || widget.isSelf) return;
 
         //? Step backward from here.
-        notifier.reset();
+        if (widget.source != 'profile') notifier.reset();
       },
       child: WayaScaffold(
         backgroundColor: wayaTheme.colorScheme.greyColor50,

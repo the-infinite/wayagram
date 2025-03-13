@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/modals/logout.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/support/views/chat.dart';
@@ -143,7 +144,12 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Log Out',
                 iconPath: 'logout',
-                onTap: () => ref.read(profileVmProvider.notifier).logOutUser(),
+                onTap: () => WayaUtils.showModalSheet(
+                  context,
+                  child: LogoutDialog(
+                    ref: ref,
+                  ),
+                ),
               ),
             ],
           ),

@@ -240,6 +240,7 @@ class WayaAppRoutes {
           isSelf: bool.tryParse(WayaNav.search['self'].toString()) ?? true,
           initialTab: WayaNav.search['tab'] ?? 'mutual',
           userId: WayaNav.search['uid'],
+          source: WayaNav.search['source'] ?? 'any',
         ),
     PublicGroup.route: () => PublicGroup(),
     EditPageInfo.route: () => EditPageInfo(),
@@ -312,8 +313,8 @@ class WayaAppRoutes {
   /// Helper function used to generate the route that is supposed to navigate to
   /// all the followers, followings, and mutuals that one user has with another
   /// one.
-  static String getFollowersPage(bool isSelf, [String tab = 'mutual', String? uid]) =>
-      "${MutualPage.route}?tab=$tab&self=$isSelf${uid != null ? '&uid=$uid' : ''}";
+  static String getFollowersPage(bool isSelf, [String tab = 'mutual', String? uid, String source = 'any']) =>
+      "${MutualPage.route}?tab=$tab&self=$isSelf&source=$source${uid != null ? '&uid=$uid' : ''}";
 
   /// Helper function used to generate the route that is supposed ot navigate to
   /// the chat profile of any given user.
