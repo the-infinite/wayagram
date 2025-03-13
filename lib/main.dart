@@ -73,19 +73,22 @@ class Wayagram extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
     var size = MediaQuery.of(context).size;
-    return ScreenUtilInit(
+    //? added this screenutil init here to register before getting to the theme
+    //? else it will throw an error
+    ScreenUtil.init(
+      context,
       designSize: Size(size.width, size.height),
       minTextAdapt: true,
       splitScreenMode: true,
-      child: GetMaterialApp(
-        initialRoute: '/',
-        title: WayaConstants.appName,
-        theme: WayaTheme.lightTheme,
-        darkTheme: WayaTheme.darkTheme,
-        themeMode: themeMode,
-        debugShowCheckedModeBanner: false,
-        getPages: WayaAppRoutes.getPages,
-      ),
+    );
+    return GetMaterialApp(
+      initialRoute: '/',
+      title: WayaConstants.appName,
+      theme: WayaTheme.lightTheme,
+      darkTheme: WayaTheme.darkTheme,
+      themeMode: themeMode,
+      debugShowCheckedModeBanner: false,
+      getPages: WayaAppRoutes.getPages,
     );
   }
 }
