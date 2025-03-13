@@ -64,7 +64,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
    );
 
 
-    return filteredAllDonations.isEmpty ?DonationEmptyState() :
+    return
     Expanded(
       child: ListView(
         //crossAxisAlignment: CrossAxisAlignment.start,
@@ -137,6 +137,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),),
           const Gap(30),
+          filteredAllDonations.isEmpty ?DonationEmptyState() :
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -192,6 +193,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                 fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.greyColor500 ),),
           const Gap(30),
+          filteredAllDonations.isEmpty ?DonationEmptyState() :
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
