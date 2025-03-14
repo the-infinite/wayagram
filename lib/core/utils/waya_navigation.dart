@@ -6,6 +6,7 @@ import 'package:get/route_manager.dart';
 class WayaNav<T> {
   static String get currentRoute => Get.currentRoute;
   static VoidCallback? onChange;
+  static BuildContext get context => Get.context!;
 
   WayaNav._();
 

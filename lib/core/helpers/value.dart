@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:intl/intl.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 
 class WayaValueHelper {
   WayaValueHelper._();
@@ -48,5 +49,42 @@ class WayaValueHelper {
   static String formatPrice(num number, [int decimalDigits = 2]) {
     final format = NumberFormat.currency(decimalDigits: decimalDigits, symbol: "₦");
     return format.format(number);
+  }
+
+  /// Returns a human-readable string representation of a [WayaDebugEventModule].
+  ///
+  /// Takes a [module] enum value and returns its corresponding display name.
+  static String getModuleName(WayaDebugEventModule module) {
+    return switch (module) {
+      WayaDebugEventModule.chats => 'Chats and Socials',
+      WayaDebugEventModule.disputes => 'Disputes',
+      WayaDebugEventModule.donations => 'Donations',
+      WayaDebugEventModule.events => 'Events',
+      WayaDebugEventModule.groups => 'Groups',
+      WayaDebugEventModule.pages => 'Pages',
+      WayaDebugEventModule.polls => 'Polls',
+      WayaDebugEventModule.posts => 'Posts',
+      WayaDebugEventModule.promotion => 'Promotions',
+      WayaDebugEventModule.quotations => 'Get Quotation',
+      WayaDebugEventModule.relationships => 'Followers and Following',
+      WayaDebugEventModule.shops => 'Shops',
+      WayaDebugEventModule.support => 'Support',
+      WayaDebugEventModule.ugt => 'University Got Talent',
+      WayaDebugEventModule.wallets => 'Wallets',
+      _ => 'Unknown',
+    };
+  }
+
+  /// Returns a human-readable string representation of a [WayaDebugEventType].
+  ///
+  /// Takes a [type] enum value and returns its corresponding display name.
+  static String getEventTypeName(WayaDebugEventType type) {
+    return switch (type) {
+      WayaDebugEventType.exception => 'Exception',
+      WayaDebugEventType.fatal => 'Flutter Error',
+      WayaDebugEventType.http => 'HTTP',
+      WayaDebugEventType.logical => 'Logical',
+      WayaDebugEventType.runtime => 'Runtime',
+    };
   }
 }
