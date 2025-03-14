@@ -48,7 +48,8 @@ class LoginState {
         userData: userData ?? this.userData,
         emailController: emailController ?? this.emailController,
         passwordController: passwordController ?? this.passwordController,
-        businessIdController: businessIdController ?? this.businessIdController);
+        businessIdController:
+            businessIdController ?? this.businessIdController);
   }
 }
 
@@ -60,7 +61,8 @@ class LoginVm extends StateNotifier<LoginState> {
   final ProfileRepo _profileRepo;
   final _logger = getLogger("LoginVm");
 
-  LoginVm(this._authRepository, this._localDataSource, this._secureDataSource, this._setupVm, this._profileRepo)
+  LoginVm(this._authRepository, this._localDataSource, this._secureDataSource,
+      this._setupVm, this._profileRepo)
       : super(LoginState(
             emailController: TextEditingController(),
             passwordController: TextEditingController(),
@@ -82,17 +84,19 @@ class LoginVm extends StateNotifier<LoginState> {
     super.dispose();
   }
 
-  Future<void> onSubmit(WidgetRef ref, {String? email, bool? isBusinessLogin}) async {
+  Future<void> onSubmit(WidgetRef ref,
+      {String? email, bool? isBusinessLogin}) async {
     //? Now, finish the login procedure.
     try {
       //? Show the preloader.
       WayaPreloaderController.instance.show();
       //state = state.copyWith(isLoading: true);
+      //? added trim, add issue login in just cause of space issues
       final response = await _authRepository.login(
           isBusinessLogin: isBusinessLogin,
-          email: email ?? state.emailController.text,
-          businessId: state.businessIdController.text,
-          password: state.passwordController.text);
+          email: email?.trim() ?? state.emailController.text.trim(),
+          businessId: state.businessIdController.text.trim(),
+          password: state.passwordController.text.trim());
 
       // _logger.d(" result ${response.data['message']}");
       if (response.success) {
@@ -100,10 +104,14 @@ class LoginVm extends StateNotifier<LoginState> {
         final remoteUserData = UserModel.fromJson(response.data);
         state = state.copyWith(userData: remoteUserData);
 
-        _localDataSource.saveUserId(remoteUserData.data?.userdata?.user?.id as String);
-        await _secureDataSource.saveUserId(remoteUserData.data?.userdata?.user?.id as String);
-        await _secureDataSource.saveToken(remoteUserData.data?.token?.token as String);
-        await _secureDataSource.saveRefreshToken(remoteUserData.data?.token?.refreshToken as String);
+        _localDataSource
+            .saveUserId(remoteUserData.data?.userdata?.user?.id as String);
+        await _secureDataSource
+            .saveUserId(remoteUserData.data?.userdata?.user?.id as String);
+        await _secureDataSource
+            .saveToken(remoteUserData.data?.token?.token as String);
+        await _secureDataSource.saveRefreshToken(
+            remoteUserData.data?.token?.refreshToken as String);
 
         //
         if (remoteUserData.data != null) {
@@ -116,22 +124,27 @@ class LoginVm extends StateNotifier<LoginState> {
 
           // Now, in a contained region, load up this person's stores.
           try {
-            final shops = await ShopResource.getShopsForVendor(ConversationState.self.id);
+            final shops =
+                await ShopResource.getShopsForVendor(ConversationState.self.id);
             ShopResource.setShop(shops.first);
           } catch (_) {}
 
           //? Now we do the unnecessary part of things.
-          final response =
-              await _profileRepo.getUserDataRepo(userId: remoteUserData.data?.userdata?.user?.id as String);
+          final response = await _profileRepo.getUserDataRepo(
+              userId: remoteUserData.data?.userdata?.user?.id as String);
 
           if (response.success) {
-            UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
-            _setupVm.state = _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
+            UserAccountModel userAccountModel =
+                UserAccountModel.fromJson(response.data);
+            _setupVm.state =
+                _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
 
-            if (userAccountModel.data != null && userAccountModel.data!.userdata!.user!.role != "PERSONAL") {
-              final bizResponse =
-                  await _profileRepo.getBusinessDataRepo(userId: remoteUserData.data?.userdata?.user?.id as String);
-              BusinessAccountData bizData = BusinessAccountData.fromJson(bizResponse.data["data"]);
+            if (userAccountModel.data != null &&
+                userAccountModel.data!.userdata!.user!.role != "PERSONAL") {
+              final bizResponse = await _profileRepo.getBusinessDataRepo(
+                  userId: remoteUserData.data?.userdata?.user?.id as String);
+              BusinessAccountData bizData =
+                  BusinessAccountData.fromJson(bizResponse.data["data"]);
 
               _setupVm.state = _setupVm.state.copyWith(business: bizData);
 
@@ -169,5 +182,6 @@ class LoginVm extends StateNotifier<LoginState> {
 
 final loginVmProvider = StateNotifierProvider<LoginVm, LoginState>((ref) {
   final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
-  return LoginVm(AuthRepository(), WayaLocalDataSource(), WayaSecureDataSource(), successfulSetupVm, ProfileRepo());
+  return LoginVm(AuthRepository(), WayaLocalDataSource(),
+      WayaSecureDataSource(), successfulSetupVm, ProfileRepo());
 });

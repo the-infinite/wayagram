@@ -6,15 +6,11 @@ import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:svg_flutter/svg.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
-//import 'package:wayagram/features/explore/data/model/default.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
@@ -22,6 +18,7 @@ import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_detail
 import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/about_ugt_widget.dart';
 import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
 import 'package:wayagram/features/ugt/widgets/status_widget.dart';
@@ -46,6 +43,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final postNotifier = ref.read(postProvider.notifier);
+    final voteNotifier = ref.read(votersContestNotifier.notifier);
     final hasClickedLiked = useState(false);
     final hasClickedShared = useState(false);
     return Column(
@@ -131,7 +129,10 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                             const Gap(8),
                             Text(
                                 '${widget.post.applicantCount ?? 0} Participants',
-                                style: WayaTextStyles.hintStyleSemiBold),
+                                style: WayaTextStyles.hintStyleBold
+                                    .wayaCopyWith(
+                                        color: WayaColors.greyColor500,
+                                        fontWeight: FontWeight.w400)),
                           ],
                         ),
                         // Spacer(),
@@ -157,7 +158,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                                 callback: () =>
                                     widget.onFollowPressed(widget.post.id!),
                                 height: 40,
-                                text: "Follow",
+                                text: "   Follow  ",
                               )
                         /*  : SizedBox(
                                 height: 40,
@@ -235,7 +236,9 @@ class _ContestCardState extends ConsumerState<ContestCard> {
               const Gap(20),
               Text(
                 widget.post.description ?? "Description",
-                style: WayaTextStyles.hintStyleBold,
+                style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                    color: WayaColors.greyColor500,
+                    fontWeight: FontWeight.w400),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -290,10 +293,18 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                 ],
               ),
               // const Gap(20),
+
               WayaButton(
                 callback: () {
-                  print("Start Date: ${widget.post.startDate}");
-                  print("End Date: ${widget.post.endDate}");
+                  //  print("Start Date: ${widget.post.startDate}");
+                  //print("End Date: ${widget.post.endDate}");
+                  if (widget.post.profileId ==
+                      voteNotifier.getLoggedInUserId()) {
+                    ref.read(selectedContestProvider.notifier).state =
+                        widget.post;
+                    WayaNav.toNamed('/upcoming-manage-contest-details');
+                    return;
+                  }
                   if (isDateInFuture(widget.post.startDate ?? "")) {
                     ref.read(registerFormProvider.notifier).addDefault(
                         widget.post.contestSettings?.formRequirements ?? [],

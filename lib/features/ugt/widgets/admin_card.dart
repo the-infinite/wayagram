@@ -62,14 +62,9 @@ class AdminCard extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(5.0),
                   child: Center(
-                    child: Text(
-                      rank,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
+                    child: Text(rank,
+                        style: WayaTextStyles.bodyBold.copyWith(
+                            fontWeight: FontWeight.bold, color: Colors.white)),
                   ),
                 ),
               ),

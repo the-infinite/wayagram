@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
@@ -118,7 +119,10 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                             const Gap(8),
                             Text(
                               WayaHelpers.formatTimeAgo(createdDate),
-                              style: wayaTheme.textTheme.hintStyle,
+                              style:  WayaTextStyles.hintStyleBold
+                                    .wayaCopyWith(
+                                        color: WayaColors.greyColor500,
+                                        fontWeight: FontWeight.w400),
                             ),
                           ],
                         ),

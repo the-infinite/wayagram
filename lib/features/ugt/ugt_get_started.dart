@@ -39,7 +39,7 @@ class UgtGetStarted extends ConsumerWidget {
             const Gap(3),
             Text(
               'Discover the vibrant world of student talents and creativity! UGT \n is your ultimate stage to showcase your skills, compete with fellow \n university talents, and support your favorites',
-              style: WayaTextStyles.hintStyleBold,
+              style: WayaTextStyles.hintStyleSemiBold,
             ),
             const Gap(10),
             Text(
@@ -120,7 +120,7 @@ class AdList extends StatelessWidget {
         const Gap(6),
         Text(
           desc,
-          style: WayaTextStyles.hintStyleBold,
+          style: WayaTextStyles.hintStyleSemiBold,
         ),
       ],
     );

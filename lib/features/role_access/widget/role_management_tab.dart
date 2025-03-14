@@ -5,6 +5,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/role_access/view/add_team_member_page.dart';
+import 'package:wayagram/features/role_access/view/member_details_page.dart';
 import 'package:wayagram/features/role_access/widget/role_access_card.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
@@ -24,6 +26,7 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
   void initState() {
     super.initState();
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +37,7 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
       children: [
         WayaButton(
           callback: () {
-            /*   ivalidateUGTVM(ref);
-            //WayaNav.toNamed('/create-profile-contest1');
-            WayaNav.toNamed('/create-contest'); */
+            WayaNav.toNamed(AddTeamMemberPage.route);
           },
           color: wayaTheme.colorScheme.primary50,
           text: "Add New Team Member",
@@ -46,16 +47,22 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
         /*   if (posts.isEmpty) emptyWidget(),
         if (postNotifier.isLoading) Center(child: CircularProgressIndicator()),
         if (posts.isNotEmpty) */
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: users.length,
-            itemBuilder: (context, index) {
-              final user = users[index];
-              return RoleAccessCard(user: user);
-            },
-          ),
+
+        ListView.builder(
+          shrinkWrap: true,
+          itemCount: users.length,
+          itemBuilder: (context, index) {
+            final user = users[index];
+            return GestureDetector(
+              onTap: () {
+                WayaNav.toNamed(MemberDetailsPage.route);
+              },
+              child: RoleAccessCard(
+                user: user,
+                showImage: false,
+              ),
+            );
+          },
         ),
       ],
     );

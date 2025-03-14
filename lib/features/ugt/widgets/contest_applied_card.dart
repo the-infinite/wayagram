@@ -6,6 +6,9 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
@@ -107,7 +110,9 @@ class ContestAppliedCard extends StatelessWidget {
                             const Gap(8),
                             Text(
                               '${post.applicantCount} Participants',
-                              style: wayaTheme.textTheme.hintStyle,
+                              style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                                  color: WayaColors.greyColor500,
+                                  fontWeight: FontWeight.w400),
                             ),
                           ],
                         )
@@ -118,24 +123,23 @@ class ContestAppliedCard extends StatelessWidget {
               ),
               const Gap(20),
               Hero(
-             
                 tag: "fullPic",
                 child: GestureDetector(
-                  onTap: (){
-                     WayaNav.toNamed("/view-media-full-page", arguments: {
+                  onTap: () {
+                    WayaNav.toNamed("/view-media-full-page", arguments: {
                       "url": post.contest?.uploadCoverImages,
-                      "title":post.contest?.title ?? "Title",
+                      "title": post.contest?.title ?? "Title",
                       "createdAt": post.contest?.createdAt,
                       "likeCount": 0,
-                      "isLike":false,
-                      "discription":post.contest?.description,
-                      "shareCount":0,
+                      "isLike": false,
+                      "discription": post.contest?.description,
+                      "shareCount": 0,
                       "type": MyFullMediaType.image
                     });
                   },
                   child: ClipRRect(
-                    borderRadius:
-                        BorderRadius.circular(16), // Adjust the radius as needed
+                    borderRadius: BorderRadius.circular(
+                        16), // Adjust the radius as needed
                     child: post.contest?.uploadCoverImages != null
                         ? WayaImage(
                             imageUrl: post.contest?.uploadCoverImages ?? "",
@@ -144,7 +148,7 @@ class ContestAppliedCard extends StatelessWidget {
                             fit: BoxFit.cover,
                             radius: BorderRadius.circular(10),
                           )
-                  
+
                         /*  Image.network(
                             post.contest?.uploadCoverImages ?? "",
                             height: 200,
@@ -168,7 +172,9 @@ class ContestAppliedCard extends StatelessWidget {
               const Gap(20),
               Text(
                 post.contest?.description ?? "",
-                style: wayaTheme.textTheme.hintStyle,
+                style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                    color: WayaColors.greyColor500,
+                    fontWeight: FontWeight.w400),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
