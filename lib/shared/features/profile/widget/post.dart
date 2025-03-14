@@ -69,22 +69,9 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
     //? Do nothing.
     if (result == null) return;
-
-    // Update the state of comments.
-    setState(() {
-      comment += 1;
-    });
   }
 
   void _sharePost(engagementMonitor, pageNotifier, serviceNotifier) {
-    // Save the old value here.
-    final previous = shared;
-
-    // Increment the count.
-    setState(() {
-      shared += 1;
-    });
-
     //? Acknowledge this user's choice to share the post.
     postEngagement(engagementMonitor, widget.data, PostPoints.sharePoint.value);
 
@@ -95,14 +82,14 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
           // Share the post.
           pageNotifier.sharePost(context, postId: widget.data.id);
 
+          // Only
+          setState(() {
+            shared += 1;
+          });
+
           // Now stop.
           return;
         }
-
-        // Only
-        setState(() {
-          shared = previous;
-        });
       },
     );
 
@@ -379,19 +366,12 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                     image: WayaAssets.images.pages.like2.path,
                     color: liked == 0 ? wayaTheme.colorScheme.greyColor500 : wayaTheme.colorScheme.primary,
                     onPressed: () {
-                      int value = liked;
-
-                      // Increment count.
-                      setState(() {
-                        liked += 1;
-                      });
-
                       //? Perform the action on the post.
                       pageNotifier.likePost(context, postId: widget.data.id, userId: ConversationState.self.id).then(
                         (result) {
-                          if (result) return;
+                          if (!result) return;
                           setState(() {
-                            liked = value;
+                            liked += 1;
                           });
                         },
                       );
