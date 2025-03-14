@@ -81,6 +81,7 @@ class WayaDebugEvent {
   final String message;
   final Object? raw;
   final StackTrace? stackTrace;
+  final DateTime timestamp;
   final read = ValueNotifier(false);
 
   // Construct.
@@ -90,6 +91,7 @@ class WayaDebugEvent {
     required this.message,
     required this.raw,
     required this.stackTrace,
+    required this.timestamp,
   });
 }
 
@@ -100,7 +102,6 @@ class WayaDebugConsoleController {
   /// A value notifier that is used to refresh the debug console component.
   final refreshNotifier = ValueNotifier(0);
   var _awaiter = Completer<void>();
-  var _unreadStart = -1;
   bool visible = false;
 
   /// Helper function used to get the total count of all unread messages.
@@ -146,26 +147,15 @@ class WayaDebugConsoleController {
 
     //? Since we can, try to resolve this issue.
     errors[index].read.value = true;
-
-    //? Recalculate where our unread messages starts from again.
-    if (index == _unreadStart) {
-      _unreadStart = errors.indexWhere((error) => !error.read.value, _unreadStart);
-    }
   }
 
   /// A function that is used to mark all messages past the unread starting
   /// point as read.
   void markAllAsRead() {
-    //? Now, we resolve this issue.
-    if (_unreadStart >= errors.length || _unreadStart == -1) return;
-
     //? For each message we have that is unread...
-    for (int i = _unreadStart; i < errors.length; i++) {
+    for (int i = 0; i < errors.length; i++) {
       errors[i].read.value = true;
     }
-
-    //? Reset the unready counter.
-    _unreadStart = -1;
 
     //? Refresh this.
     refresh();
@@ -174,8 +164,29 @@ class WayaDebugConsoleController {
   /// A function used to add a new debug event so it becomes visible to the
   /// people who can view the debug message.
   void addDebugEvent(WayaDebugEvent event) {
-    if (_unreadStart == -1) _unreadStart = errors.length;
     errors.insert(0, event);
     refresh();
+  }
+
+  /// A function used to add a new exception to the list of errors. Care and
+  /// attention should be paid while using this function because it is kind of
+  /// a wrapper around its more complicated predecessor.
+  void addException(
+    String message,
+    dynamic error,
+    WayaDebugEventModule module, [
+    StackTrace? stackTrace,
+    WayaDebugEventType type = WayaDebugEventType.exception,
+  ]) {
+    addDebugEvent(
+      WayaDebugEvent(
+        type: type,
+        module: module,
+        message: message,
+        raw: error,
+        stackTrace: stackTrace,
+        timestamp: DateTime.now(),
+      ),
+    );
   }
 }

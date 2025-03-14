@@ -74,6 +74,7 @@ dependencies:
   flutter_hooks: ^0.21.2
   syncfusion_flutter_sliders: ^28.2.6
   video_trimmer: ^3.0.1-LTS
+  stack_trace: ^1.12.0
 
   #for deep link
   app_links: ^6.4.0

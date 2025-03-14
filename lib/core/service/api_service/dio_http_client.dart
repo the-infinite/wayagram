@@ -407,9 +407,12 @@ class DioHttpClient implements WayaHttpClientInterface {
             WayaDebugEvent(
               type: WayaDebugEventType.http,
               module: WayaDebugEventModule.unknown,
-              message: e.message ?? e.toString(),
+              message: e.response?.data['errors'] != null
+                  ? e.response?.data['errors'][0]
+                  : e.response?.data['message'] ?? e.message ?? e.toString(),
               raw: e,
               stackTrace: e.stackTrace,
+              timestamp: DateTime.now(),
             ),
           );
         }

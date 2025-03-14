@@ -98,20 +98,22 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                               //? the current user.
                               if (widget.userId != ConversationState.self.id)
                                 GestureDetector(
-                                  onTap: () async {
-                                    //? If this user is following this one.
-                                    if (_followStatus?.isUserFollowing == true) {
-                                      await followNotifier.unfollowUser(data.$1.id);
-                                    }
+                                  onTap: _followStatus == null
+                                      ? null
+                                      : () async {
+                                          //? If this user is following this one.
+                                          if (_followStatus!.isUserFollowing) {
+                                            await followNotifier.unfollowUser(data.$1.id);
+                                          }
 
-                                    //? Since I am not yet following this user...
-                                    else {
-                                      await followNotifier.followUser(data.$1.id);
-                                    }
+                                          //? Since I am not yet following this user...
+                                          else {
+                                            await followNotifier.followUser(data.$1.id);
+                                          }
 
-                                    //? Update this.
-                                    await _getFollowState();
-                                  },
+                                          //? Update this.
+                                          await _getFollowState();
+                                        },
                                   child: Container(
                                     margin: EdgeInsets.only(right: 20.w),
                                     padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),

@@ -46,6 +46,7 @@ void main() async {
             message: errorDetails.summary.toDescription(),
             raw: errorDetails,
             stackTrace: errorDetails.stack,
+            timestamp: DateTime.now(),
           ),
         );
       }
@@ -67,6 +68,7 @@ void main() async {
             message: error.toString().split("\n").first.trim(),
             raw: error,
             stackTrace: stack,
+            timestamp: DateTime.now(),
           ),
         );
       }
@@ -95,6 +97,7 @@ void main() async {
             message: errorAndStacktrace.first.toString().split("\n").first.trim(),
             raw: errorAndStacktrace.first,
             stackTrace: StackTrace.fromString(errorAndStacktrace.last.toString()),
+            timestamp: DateTime.now(),
           ),
         );
       }

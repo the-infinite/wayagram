@@ -1,14 +1,18 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:stack_trace/stack_trace.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+
+import 'waya_debug_event.dart';
 
 class _WayaDebugMessage extends StatelessWidget {
   final int index;
@@ -19,9 +23,190 @@ class _WayaDebugMessage extends StatelessWidget {
     required this.event,
   });
 
+  String _getLocation() {
+    final trace = Trace.from((event.raw as Error).stackTrace ?? StackTrace.current);
+    return trace.frames.first.location;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    //? Get the things needed to build the component.
+    final theme = Theme.of(context);
+    final color = switch (event.type) {
+      WayaDebugEventType.runtime => theme.colorScheme.error200,
+      WayaDebugEventType.logical => theme.colorScheme.error700,
+      WayaDebugEventType.http => theme.colorScheme.pending,
+      WayaDebugEventType.fatal => theme.colorScheme.error,
+      WayaDebugEventType.exception => Colors.blue,
+    };
+
+    //? Build and return the component.
+    return InkWell(
+      onTap: () async {
+        WayaDebugConsoleController.instance.collapse();
+        WayaDebugConsoleController.instance.markAsRead(index);
+        await WayaNav.to(WayaDebugEventScreen(event: event, index: index));
+      },
+      borderRadius: BorderRadius.circular(12.r),
+      splashColor: theme.colorScheme.primary.withAlpha(30),
+      focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+      highlightColor: theme.colorScheme.primary.withAlpha(30),
+      child: ValueListenableBuilder(
+        valueListenable: event.read,
+        builder: (context, isRead, _) => Card(
+          elevation: 0,
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(12.r),
+              border: Border.all(color: isRead ? theme.colorScheme.greyColor300 : theme.colorScheme.primary),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //? First, the icon and text indicating the type of this event and its module.
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 10.w,
+                  children: [
+                    //* For the icon.
+                    switch (event.type) {
+                      WayaDebugEventType.runtime => WayaAssets.icons.bugRuntime,
+                      WayaDebugEventType.logical => WayaAssets.icons.bugLogical,
+                      WayaDebugEventType.http => WayaAssets.icons.bugHttp,
+                      WayaDebugEventType.fatal => WayaAssets.icons.bugFatal,
+                      WayaDebugEventType.exception => WayaAssets.icons.bugFlutter,
+                    }
+                        .svg(color: color, height: 20.dg, width: 20.dg),
+
+                    //* For the text.
+                    ClipPath(
+                      clipper: ShapeBorderClipper(
+                        shape: StadiumBorder(),
+                      ),
+                      child: ColoredBox(
+                        color: color.withAlpha(30),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                          child: Text(
+                            WayaValueHelper.getModuleName(event.module),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: color,
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    //* For the text.
+                    ClipPath(
+                      clipper: ShapeBorderClipper(
+                        shape: StadiumBorder(),
+                      ),
+                      child: ColoredBox(
+                        color: theme.colorScheme.scaffoldColor,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                          child: Text(
+                            WayaDateHelper.getFullTimestamp(event.timestamp),
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: theme.colorScheme.greyColor400,
+                              fontSize: 12.sp,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+
+                // Some space.
+                SizedBox(height: 5.h),
+
+                //? Second, the summary of the error itself.
+                Text(
+                  event.message,
+                  maxLines: 3,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: isRead ? FontWeight.normal : FontWeight.w600,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+
+                // Some space.
+                SizedBox(height: 5.h),
+
+                //? Third, some data relevant to the optional type this is.
+                ClipPath(
+                  clipper: ShapeBorderClipper(
+                    shape: StadiumBorder(),
+                  ),
+                  child: ColoredBox(
+                    color: theme.colorScheme.error50,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      child: Text(
+                        switch (event.type) {
+                          WayaDebugEventType.http =>
+                            "Status: ${(event.raw as DioException?)?.response?.statusCode?.toString() ?? "N/A"}",
+                          WayaDebugEventType.fatal =>
+                            "Source: ${(event.raw as FlutterErrorDetails?)?.library ?? "N/A"}",
+                          WayaDebugEventType.runtime =>
+                            "Type: ${(event.raw as dynamic)?.runtimeType.toString() ?? "N/A"}",
+                          _ => "N/A",
+                        },
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.error500,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Some space.
+                SizedBox(height: 5.h),
+
+                //? Fourth, some data relevant to the optional type this is.
+                ClipPath(
+                  clipper: ShapeBorderClipper(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
+                  child: ColoredBox(
+                    color: theme.colorScheme.scaffoldColor,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      child: Text(
+                        switch (event.type) {
+                          WayaDebugEventType.http =>
+                            (event.raw as DioException?)?.requestOptions.uri.toString() ?? "N/A",
+                          WayaDebugEventType.fatal => (event.raw as FlutterErrorDetails?)?.context?.toString() ?? "N/A",
+                          WayaDebugEventType.runtime => _getLocation(),
+                          _ => "N/A",
+                        },
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.greyColor400,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Some space.
+                SizedBox(height: 5.h),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
@@ -162,7 +347,8 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
                               ),
 
                               //* The unread counter.
-                              if (WayaDebugConsoleController.instance.unreadCount > 0)
+                              if (WayaDebugConsoleController.instance.unreadCount > 0 &&
+                                  !WayaDebugConsoleController.instance.visible)
                                 Positioned(
                                   top: 0,
                                   left: 0,
