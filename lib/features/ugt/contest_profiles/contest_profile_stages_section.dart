@@ -12,6 +12,7 @@ import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
+import 'package:wayagram/features/ugt/widgets/about_ugt_widget.dart';
 import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
@@ -75,13 +76,13 @@ class _ContestProfileStagesSectionState
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                UpcomingWidget(
+                AboutUgtWidget(
                     title: "Start Date",
-                    isFromDetailsPage: true,
+                    // isFromDetailsPage: true,
                     content: formatDate(model.startDate ?? "")),
                 const Gap(20),
-                UpcomingWidget(
-                    isFromDetailsPage: true,
+                AboutUgtWidget(
+                    // isFromDetailsPage: true,
                     title: "Position",
                     content: model.position?.toString() == "0"
                         ? "No Position"
@@ -93,13 +94,13 @@ class _ContestProfileStagesSectionState
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                UpcomingWidget(
-                    isFromDetailsPage: true,
+                AboutUgtWidget(
+                    // isFromDetailsPage: true,
                     title: "End Date",
                     content: formatDate(model.endDate ?? "")),
                 const Gap(20),
-                UpcomingWidget(
-                    isFromDetailsPage: true,
+                AboutUgtWidget(
+                    // isFromDetailsPage: true,
                     title: "Prize for Winner",
                     content:
                         "NGN${formatMoney(model.amountEarned.toString())}"),
@@ -109,10 +110,10 @@ class _ContestProfileStagesSectionState
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                UpcomingWidget(
-                    isFromDetailsPage: true,
+                AboutUgtWidget(
+                    // isFromDetailsPage: true,
                     title: "Entry Type",
-                    content: model.entryType ?? ""),
+                    content: "${model.entryType}\n" ?? ""),
                 const Gap(20),
                 StatusOngoing(
                   title: "Qualification Status",

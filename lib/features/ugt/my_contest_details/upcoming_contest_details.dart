@@ -6,6 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -106,7 +109,10 @@ class _UpcomingContestDetailsState
                   style: wayaTheme.textTheme.bodyMedium),
               const Gap(5),
               Text(model?.description ?? "Description",
-                  style: wayaTheme.textTheme.hintStyle),
+                  style: WayaTextStyles.hintStyleBold
+                                    .wayaCopyWith(
+                                        color: WayaColors.greyColor500,
+                                        fontWeight: FontWeight.w400)),
               const Gap(20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -151,7 +157,10 @@ class _UpcomingContestDetailsState
               Text("How it Works", style: wayaTheme.textTheme.bodyMedium),
               const Gap(15),
               Text(model?.howItWorks ?? "",
-                  style: wayaTheme.textTheme.hintStyle),
+                  style:  WayaTextStyles.hintStyleBold
+                                    .wayaCopyWith(
+                                        color: WayaColors.greyColor500,
+                                        fontWeight: FontWeight.w400)),
               const Gap(15),
               Text(
                 "Stages",

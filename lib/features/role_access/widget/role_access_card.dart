@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 
 class RoleAccessCard extends StatelessWidget {
@@ -12,6 +14,7 @@ class RoleAccessCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isCurrentUser = user["isCurrentUser"] ?? false;
+    final wayaTheme = Theme.of(context);
     return Card(
       elevation: 0.2,
       child: Container(
@@ -78,7 +81,8 @@ class RoleAccessCard extends StatelessWidget {
                   else
                     Text(
                       user["role"],
-                      style: WayaTextStyles.hintStyleBold,
+                      style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                          color: wayaTheme.colorScheme.greyColor700),
                     ),
                 ],
               ),

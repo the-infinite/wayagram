@@ -70,6 +70,7 @@ import 'package:wayagram/features/quotation/seller/views/bids/see_seller_bids.da
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
 import 'package:wayagram/features/role_access/view/add_team_member_page.dart';
+import 'package:wayagram/features/role_access/view/member_details_page.dart';
 import 'package:wayagram/features/role_access/view/role_access_page.dart';
 import 'package:wayagram/features/shop/filter/views/product_search_result.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
@@ -296,6 +297,7 @@ class WayaAppRoutes {
     RoleAccessPage.route: () => RoleAccessPage(),
 
     AddTeamMemberPage.route: () => AddTeamMemberPage(),
+    MemberDetailsPage.route: () => MemberDetailsPage(),
     
     
 

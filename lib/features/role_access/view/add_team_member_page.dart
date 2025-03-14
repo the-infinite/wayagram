@@ -24,12 +24,13 @@ class AddTeamMemberPage extends StatefulHookConsumerWidget {
 }
 
 class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
+  final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final rollAccessNotifier = ref.read(roleAccessVm.notifier);
     final isLoading = useState(false);
-    final isEmptyTest = useState(false);
+    final isEmptyTest = useState(true);
     final rolePicker = useState("Role");
     final isPasswordVisible = useState(false);
     final isConfirmPasswordFocused = useState(false);
@@ -42,16 +43,18 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
       appBar: AppBar(
         actions: [
           Padding(
-            padding: const EdgeInsets.only(right: 20),
+            padding: const EdgeInsets.only(right: 10),
             child: SizedBox(
               width: context.width * 0.15,
               child: !isEmptyTest.value
                   ? WayaButton(
                       callback: isLoading.value
                           ? () async {
-                              // if (_formKey.currentState!.validate()) {}
+                              if (_formKey.currentState!.validate()) {}
                             }
-                          : null,
+                          : () {
+                              if (_formKey.currentState!.validate()) {}
+                            },
                       height: 30,
                       text: 'Add user',
                       isLoading: isLoading.value,
@@ -63,6 +66,7 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                   : WayaButton(
                       callback: !isLoading.value
                           ? () async {
+                              if (_formKey.currentState!.validate()) {}
                               /*   if (_formKey.currentState!.validate()) {
                                 notifier.uploadCreatePost(
                                     ref,
@@ -86,282 +90,225 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
             ),
           ),
         ],
-        leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: WayaBackButton(
-                //onTap: onTapBackButton,
-                )),
+        leading: WayaBackButton(
+            //onTap: onTapBackButton,
+            ),
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "User information",
-            style: WayaTextStyles.hintStyleBold,
-          ),
-          Row(
-            children: [
-              Expanded(
-                child: FormField<String>(validator: (value) {
-                  if (rollAccessNotifier.firstName.text.isEmpty) {
-                    return 'First Name is required';
-                  }
-
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaTextFormField(
-                        keyboardType: TextInputType.name,
-                        controller: rollAccessNotifier.firstName,
-                        hintText: 'Enter Your First Name',
-                        borderColor: formState.hasError &&
-                                rollAccessNotifier.firstName.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
-                        label: 'First Name',
-                      ),
-                      if (formState.hasError &&
-                          rollAccessNotifier.firstName.text.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
-                          ),
-                        ),
-                    ],
-                  );
-                }),
-              ),
-              const Gap(10),
-              Expanded(
-                child: FormField<String>(validator: (value) {
-                  if (rollAccessNotifier.lastName.text.isEmpty) {
-                    return 'Last Name is required';
-                  }
-
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaTextFormField(
-                        keyboardType: TextInputType.name,
-                        controller: rollAccessNotifier.lastName,
-                        hintText: 'Enter Your Last Name',
-                        borderColor: formState.hasError &&
-                                rollAccessNotifier.lastName.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
-                        label: 'Last Name',
-                      ),
-                      if (formState.hasError &&
-                          rollAccessNotifier.lastName.text.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
-                          ),
-                        ),
-                    ],
-                  );
-                }),
-              )
-            ],
-          ),
-          const Gap(10),
-          FormField<String>(validator: (value) {
-            if (rollAccessNotifier.email.text.isEmpty) {
-              return 'Email is required';
-            }
-            final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-            if (!regexp.hasMatch(rollAccessNotifier.email.text)) {
-              return 'Invalid email address';
-            }
-            return null;
-          }, builder: (formState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      body: Form(
+        key: _formKey,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                WayaTextFormField(
-                  keyboardType: TextInputType.emailAddress,
-                  controller: rollAccessNotifier.email,
-                  hintText: 'example@gmail.com',
-                  borderColor: formState.hasError &&
-                          rollAccessNotifier.email.text.isEmpty
-                      ? wayaTheme.colorScheme.error
-                      : null,
-                  label: 'Email Address',
+                Expanded(
+                  child: Text(
+                    "User information",
+                    style: WayaTextStyles.hintStyleBold,
+                  ),
                 ),
-                if (formState.hasError && rollAccessNotifier.email.text.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      formState.errorText!,
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
-                    ),
+                Expanded(
+                  flex: 2,
+                  child: Divider(
+                    color: wayaTheme.colorScheme.greyColor200,
+                    height: 0.5,
                   ),
+                )
               ],
-            );
-          }),
-          const Gap(10),
-          const Gap(10),
-          FormField<String>(validator: (value) {
-            if (rolePicker.value.isEmpty) {
-              return 'Role is required';
-            }
+            ),
+            Gap(20),
 
-            return null;
-          }, builder: (formState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WayaSelectField<String>(
-                    height: 0.2,
-                    label: "Role",
-                    value: rolePicker.value,
-                    uniqueKey: 'Role',
-                    hintText: 'Select Role',
-                    items: [
-                      Select(label: "Role", value: "1"),
-                      Select(label: "Manager", value: "2"),
-                      Select(label: "Servant", value: "3"),
-                    ],
-                    onSelected: (value) =>
-                        rolePicker.value = value.first.label),
-                if (formState.hasError && rolePicker.value.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      formState.errorText!,
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
-                    ),
-                  ),
-              ],
-            );
-          }),
-          const Gap(10),
-          FormField<String>(validator: (value) {
-            return WayaValidators.passwordValidator(
-                rollAccessNotifier.password.text);
-          }, builder: (formState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Focus(
-                  onFocusChange: (hasFocus) {
-                    ref
-                        .read(personalFirstStepProvider.notifier)
-                        .setPasswordFocus(hasFocus);
-                  },
-                  child: WayaTextFormField(
-                    keyboardType: TextInputType.visiblePassword,
-                    controller: rollAccessNotifier.password,
+            //  const Gap(10),
+            FormField<String>(validator: (value) {
+              if (rollAccessNotifier.email.text.isEmpty) {
+                return 'Email is required';
+              }
+              final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
+              if (!regexp.hasMatch(rollAccessNotifier.email.text)) {
+                return 'Invalid email address';
+              }
+              return null;
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WayaTextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    controller: rollAccessNotifier.email,
+                    hintText: 'example@gmail.com',
                     borderColor: formState.hasError &&
-                            rollAccessNotifier.password.text.isEmpty
+                            rollAccessNotifier.email.text.isEmpty
                         ? wayaTheme.colorScheme.error
                         : null,
-                    hintText: 'Enter Your Password',
-                    label: 'Password',
-                    obscureText: !isPasswordVisible.value,
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        ref
-                            .read(personalFirstStepProvider.notifier)
-                            .togglePasswordVisibility();
-                      },
-                      autofocus: false,
-                      icon: Icon(isPasswordVisible.value
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined),
-                      color: wayaTheme.colorScheme.greyColor300,
-                    ),
+                    label: 'Email Address',
                   ),
-                ),
-                if (formState.hasError && !isPasswordFocused.value)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      formState.errorText!,
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                  if (formState.hasError &&
+                      rollAccessNotifier.email.text.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText!,
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                      ),
                     ),
-                  ),
-              ],
-            );
-          }),
-          const Gap(10),
-          FormField<String>(validator: (value) {
-            if (rollAccessNotifier.confirmPassword.text.isEmpty) {
-              return 'Password is required';
-            }
-            if (rollAccessNotifier.confirmPassword.text.length < 8) {
-              return 'Password must be at least 8';
-            }
-            if (rollAccessNotifier.password.text !=
-                rollAccessNotifier.confirmPassword.text) {
-              return 'Password does not match';
-            }
+                ],
+              );
+            }),
+            const Gap(10),
+            const Gap(10),
+            FormField<String>(validator: (value) {
+              if (rolePicker.value.isEmpty) {
+                return 'Role is required';
+              }
 
-            return null;
-          }, builder: (formState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Focus(
-                  onFocusChange: (hasFocus) {
-                    ref
-                        .read(personalFirstStepProvider.notifier)
-                        .setConfirmPasswordFocus(hasFocus);
-                  },
-                  child: WayaTextFormField(
-                    keyboardType: TextInputType.visiblePassword,
-                    controller: rollAccessNotifier.confirmPassword,
-                    borderColor: formState.hasError &&
-                            rollAccessNotifier.confirmPassword.text.isEmpty
-                        ? wayaTheme.colorScheme.error
-                        : null,
-                    hintText: 'Enter your Password',
-                    label: 'Confirm Password',
-                    obscureText: !isConfirmPasswordVisible.value,
-                    suffixIcon: IconButton(
-                      onPressed: () {
-                        ref
-                            .read(personalFirstStepProvider.notifier)
-                            .toggleConfirmPasswordVisibility();
-                      },
-                      autofocus: false,
-                      icon: Icon(isConfirmPasswordVisible.value
-                          ? Icons.visibility_outlined
-                          : Icons.visibility_off_outlined),
-                      color: wayaTheme.colorScheme.greyColor300,
+              return null;
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WayaSelectField<String>(
+                      height: 0.2,
+                      label: "Role",
+                      value: rolePicker.value,
+                      uniqueKey: 'Role',
+                      hintText: 'Select Role',
+                      items: [
+                        Select(label: "Role", value: "1"),
+                        Select(label: "Manager", value: "2"),
+                        Select(label: "Servant", value: "3"),
+                      ],
+                      onSelected: (value) =>
+                          rolePicker.value = value.first.label),
+                  if (formState.hasError && rolePicker.value.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText!,
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                      ),
+                    ),
+                ],
+              );
+            }),
+            const Gap(10),
+            FormField<String>(validator: (value) {
+              return WayaValidators.passwordValidator(
+                  rollAccessNotifier.password.text);
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Focus(
+                    onFocusChange: (hasFocus) {
+                      ref
+                          .read(personalFirstStepProvider.notifier)
+                          .setPasswordFocus(hasFocus);
+                    },
+                    child: WayaTextFormField(
+                      keyboardType: TextInputType.visiblePassword,
+                      controller: rollAccessNotifier.password,
+                      borderColor: formState.hasError &&
+                              rollAccessNotifier.password.text.isEmpty
+                          ? wayaTheme.colorScheme.error
+                          : null,
+                      hintText: 'Enter Your Password',
+                      label: 'Password',
+                      obscureText: !isPasswordVisible.value,
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          isPasswordVisible.value = !isPasswordVisible.value;
+                          /*     ref
+                              .read(personalFirstStepProvider.notifier)
+                              .togglePasswordVisibility(); */
+                        },
+                        autofocus: false,
+                        icon: Icon(isPasswordVisible.value
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined),
+                        color: wayaTheme.colorScheme.greyColor300,
+                      ),
                     ),
                   ),
-                ),
-                if (formState.hasError && !isConfirmPasswordFocused.value)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      formState.errorText!,
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                  if (formState.hasError && !isPasswordFocused.value)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText!,
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                      ),
+                    ),
+                ],
+              );
+            }),
+            const Gap(10),
+            FormField<String>(validator: (value) {
+              if (rollAccessNotifier.confirmPassword.text.isEmpty) {
+                return 'Password is required';
+              }
+              if (rollAccessNotifier.confirmPassword.text.length < 8) {
+                return 'Password must be at least 8';
+              }
+              if (rollAccessNotifier.password.text !=
+                  rollAccessNotifier.confirmPassword.text) {
+                return 'Password does not match';
+              }
+
+              return null;
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Focus(
+                    onFocusChange: (hasFocus) {
+                      /*  ref
+                          .read(personalFirstStepProvider.notifier)
+                          .setConfirmPasswordFocus(hasFocus); */
+                    },
+                    child: WayaTextFormField(
+                      keyboardType: TextInputType.visiblePassword,
+                      controller: rollAccessNotifier.confirmPassword,
+                      borderColor: formState.hasError &&
+                              rollAccessNotifier.confirmPassword.text.isEmpty
+                          ? wayaTheme.colorScheme.error
+                          : null,
+                      hintText: 'Enter your Password',
+                      label: 'Confirm Password',
+                      obscureText: !isConfirmPasswordVisible.value,
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          isConfirmPasswordVisible.value =
+                              !isConfirmPasswordVisible.value;
+                          /*  ref
+                              .read(personalFirstStepProvider.notifier)
+                              .toggleConfirmPasswordVisibility(); */
+                        },
+                        autofocus: false,
+                        icon: Icon(isConfirmPasswordVisible.value
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined),
+                        color: wayaTheme.colorScheme.greyColor300,
+                      ),
                     ),
                   ),
-              ],
-            );
-          }),
-          const Gap(10),
-        ],
+                  if (formState.hasError && !isConfirmPasswordFocused.value)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText!,
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                      ),
+                    ),
+                ],
+              );
+            }),
+            const Gap(10),
+          ],
+        ),
       ),
     );
   }

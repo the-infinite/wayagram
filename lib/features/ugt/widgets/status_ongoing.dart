@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 
 class StatusOngoing extends StatelessWidget {
@@ -17,7 +18,10 @@ class StatusOngoing extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: WayaTextStyles.hintStyleBold),
+        Text(title, style:  WayaTextStyles.hintStyleBold
+                                    .wayaCopyWith(
+                                        color: WayaColors.greyColor500,
+                                        fontWeight: FontWeight.w400)),
         const Gap(5),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),

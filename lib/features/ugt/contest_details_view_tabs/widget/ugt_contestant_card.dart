@@ -15,6 +15,7 @@ import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 class UgtContestantCard extends ConsumerWidget {
@@ -85,6 +86,11 @@ class UgtContestantCard extends ConsumerWidget {
               color: WayaColors.primary50,
               textColor: WayaColors.primary500,
               callback: () {
+                if (isPresentIsPast(model.endDate ?? "")) {
+                  WayaSnackBar.showToast("Contest has ended");
+                  return;
+                }
+
                 //VoteSuccessModal
                 //ConfirmVoteOptionModal
                 //VoteOptionModal

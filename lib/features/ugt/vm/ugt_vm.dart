@@ -729,6 +729,14 @@ bool isDateInFuture(String dateString) {
   return givenDate.isAfter(now);
 }
 
+bool isPresentIsPast(String dateString) {
+  DateTime givenDate = DateTime.parse(dateString).toUtc(); // Convert to UTC
+
+  DateTime now = DateTime.now().toUtc();
+
+  return now.isAfter(givenDate);
+}
+
 bool isDateBefore(String dateString) {
   DateTime givenDate = DateTime.parse(dateString).toUtc(); // Convert to UTC
 
