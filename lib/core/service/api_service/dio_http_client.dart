@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/interface/waya_http_client_interface.dart';
@@ -381,9 +382,6 @@ class DioHttpClient implements WayaHttpClientInterface {
 
           //? Then try again.
           if (success && depth > 0) {
-            // @sekani50, this code is faulty because it would retry the request
-            // infinitely using the already configured headers.
-
             return repeater.repeat(repeater);
           }
 
@@ -400,16 +398,24 @@ class DioHttpClient implements WayaHttpClientInterface {
         } catch (_) {}
         _logger.e('message: $message, ${e.response?.data}');
 
-        // This is fine
-        if (showErrors && !WayaConstants.isProduction) {
-          // debugPrint(message);
-          /*   _snackBarService.showCustomSnackbar(
-            message: message,
-            variant: SnackbarType.failure,
-          ); */
+        //? If this should show errors.
+        if (showErrors) {}
+
+        //? If this is in the staging environment.
+        if (!WayaConstants.isProduction) {
+          WayaDebugConsoleController.instance.addDebugEvent(
+            WayaDebugEvent(
+              type: WayaDebugEventType.http,
+              module: WayaDebugEventModule.unknown,
+              message: e.message ?? e.toString(),
+              raw: e,
+              stackTrace: e.stackTrace,
+            ),
+          );
         }
       }
 
+      //? Handle this error.
       return WayaHttpException.handleDioError(e);
     }
   }

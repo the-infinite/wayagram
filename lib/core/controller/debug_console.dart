@@ -75,15 +75,36 @@ enum WayaDebugEventModule {
   promotion,
 }
 
-class WayaDebugEvent {}
+class WayaDebugEvent {
+  final WayaDebugEventType type;
+  final WayaDebugEventModule module;
+  final String message;
+  final Object? raw;
+  final StackTrace? stackTrace;
+  final read = ValueNotifier(false);
+
+  // Construct.
+  WayaDebugEvent({
+    required this.type,
+    required this.module,
+    required this.message,
+    required this.raw,
+    required this.stackTrace,
+  });
+}
 
 class WayaDebugConsoleController {
   static final instance = WayaDebugConsoleController._();
+  final errors = <WayaDebugEvent>[];
 
   /// A value notifier that is used to refresh the debug console component.
   final refreshNotifier = ValueNotifier(0);
   var _awaiter = Completer<void>();
+  var _unreadStart = -1;
   bool visible = false;
+
+  /// Helper function used to get the total count of all unread messages.
+  int get unreadCount => errors.where((error) => !error.read.value).length;
 
   // Construct.
   WayaDebugConsoleController._();
@@ -116,5 +137,45 @@ class WayaDebugConsoleController {
   /// when there is no problem you are trying to investigate.
   void refresh() {
     refreshNotifier.value = refreshNotifier.value + 1;
+  }
+
+  /// A function that is used to mark a given debug log as read using its index.
+  void markAsRead(int index) {
+    //? Now, we resolve this issue.
+    if (index >= errors.length) return;
+
+    //? Since we can, try to resolve this issue.
+    errors[index].read.value = true;
+
+    //? Recalculate where our unread messages starts from again.
+    if (index == _unreadStart) {
+      _unreadStart = errors.indexWhere((error) => !error.read.value, _unreadStart);
+    }
+  }
+
+  /// A function that is used to mark all messages past the unread starting
+  /// point as read.
+  void markAllAsRead() {
+    //? Now, we resolve this issue.
+    if (_unreadStart >= errors.length || _unreadStart == -1) return;
+
+    //? For each message we have that is unread...
+    for (int i = _unreadStart; i < errors.length; i++) {
+      errors[i].read.value = true;
+    }
+
+    //? Reset the unready counter.
+    _unreadStart = -1;
+
+    //? Refresh this.
+    refresh();
+  }
+
+  /// A function used to add a new debug event so it becomes visible to the
+  /// people who can view the debug message.
+  void addDebugEvent(WayaDebugEvent event) {
+    if (_unreadStart == -1) _unreadStart = errors.length;
+    errors.insert(0, event);
+    refresh();
   }
 }
