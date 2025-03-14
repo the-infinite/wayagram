@@ -62,8 +62,8 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
       WayaDebugEventType.runtime => theme.colorScheme.error200,
       WayaDebugEventType.logical => theme.colorScheme.error700,
       WayaDebugEventType.http => theme.colorScheme.pending,
-      WayaDebugEventType.fatal => theme.colorScheme.error,
-      WayaDebugEventType.exception => Colors.blue,
+      WayaDebugEventType.fatal => Colors.blue,
+      WayaDebugEventType.exception => theme.colorScheme.error,
     };
 
     //? Return this component.
@@ -129,8 +129,8 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                               WayaDebugEventType.runtime => WayaAssets.icons.bugRuntime,
                               WayaDebugEventType.logical => WayaAssets.icons.bugLogical,
                               WayaDebugEventType.http => WayaAssets.icons.bugHttp,
-                              WayaDebugEventType.fatal => WayaAssets.icons.bugFatal,
-                              WayaDebugEventType.exception => WayaAssets.icons.bugFlutter,
+                              WayaDebugEventType.fatal => WayaAssets.icons.bugFlutter,
+                              WayaDebugEventType.exception => WayaAssets.icons.bugFatal,
                             }
                                 .svg(color: color, height: 20.dg, width: 20.dg),
 

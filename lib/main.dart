@@ -30,7 +30,7 @@ void main() async {
 
   //? Second, setup the error handlers for synchronous errors here and asynchronous
   //? errors here.
-  if (!kDebugMode) {
+  if (kDebugMode) {
     FlutterError.onError = (errorDetails) {
       //? If this is production.
       if (WayaConstants.isProduction) {
