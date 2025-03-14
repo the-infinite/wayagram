@@ -7,8 +7,10 @@ import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
+import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/auth/login/model/user_model.dart';
+import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/features/notifications/vm/default.dart';
@@ -86,7 +88,6 @@ class LoginVm extends StateNotifier<LoginState> {
 
   Future<void> onSubmit(WidgetRef ref,
       {String? email, bool? isBusinessLogin}) async {
-    //? Now, finish the login procedure.
     try {
       //? Show the preloader.
       WayaPreloaderController.instance.show();
@@ -169,6 +170,16 @@ class LoginVm extends StateNotifier<LoginState> {
 
         // This is good too.
         WayaNav.toNamed("/explore");
+      } else {
+        if (response.data['responseCode'] == 625) {
+          await ref
+              .read(verifyAccountProvider.notifier)
+              .resendOtpForRegisteredButNotVerifiedUser(
+                  email: state.emailController.text);
+
+          WayaNav.toNamed(VerifyEmail.route,
+              arguments: state.emailController.text);
+        }
       }
     } catch (e) {
       _logger.e(e);

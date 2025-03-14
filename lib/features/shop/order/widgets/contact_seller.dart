@@ -6,7 +6,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
-import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/dispute_chat.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/init_dispute.dart';
 
 class ContactSeller extends StatelessWidget {
   final Order order;
@@ -94,7 +94,7 @@ class ContactSeller extends StatelessWidget {
           WayaButton(
               callback: () {
                  WayaNav.goBack();
-                WayaNav.toNamed(DisputeChat.route, arguments: order);
+                WayaNav.toNamed(InitDispute.route, arguments: order);
                
               },
               text: "Yes, Contact Seller"),

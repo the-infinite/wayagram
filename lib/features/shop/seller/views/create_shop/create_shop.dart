@@ -383,11 +383,8 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                           }
                         }
                       : null,
-                  centerWidget: LoadingState(
-                      loading: viewModel.isLoading,
-                      text: viewModel.isEditingMode
-                          ? 'Edit Shop'
-                          : 'Create Shop'),
+                  centerWidget:
+                      LoadingState(loading: viewModel.isLoading, text: 'Save'),
                 ),
               ],
             )));
