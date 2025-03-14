@@ -16,6 +16,7 @@ import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/chat/view/chat.dart';
 import 'package:wayagram/features/explore/views/chat_and_social.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
+import 'package:wayagram/features/follow/view/follow_page.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
@@ -241,11 +242,11 @@ class WayaAppRoutes {
     CreateGroupPost.route: () => CreateGroupPost(),
     CreatePagePost.route: () => CreatePagePost(),
     MutualPage.route: () => MutualPage(
-          isSelf: bool.tryParse(WayaNav.search['self'].toString()) ?? true,
           initialTab: WayaNav.search['tab'] ?? 'mutual',
-          userId: WayaNav.search['uid'],
+          userId: WayaNav.search['uid'].toString(),
           source: WayaNav.search['source'] ?? 'any',
         ),
+    FollowRelationshipsPage.route: () => FollowRelationshipsPage(),
     PublicGroup.route: () => PublicGroup(),
     EditPageInfo.route: () => EditPageInfo(),
     AddTeamMember.route: () => AddTeamMember(),
@@ -293,9 +294,11 @@ class WayaAppRoutes {
     SellerBuyRequestsScreen.route: () => SellerBuyRequestsScreen(),
     BuyerBuyRequestsScreen.route: () => BuyerBuyRequestsScreen(),
     RoleAccessPage.route: () => RoleAccessPage(),
+
     AddTeamMemberPage.route: () => AddTeamMemberPage(),
     
     
+
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -321,8 +324,8 @@ class WayaAppRoutes {
   /// Helper function used to generate the route that is supposed to navigate to
   /// all the followers, followings, and mutuals that one user has with another
   /// one.
-  static String getFollowersPage(bool isSelf, [String tab = 'mutual', String? uid, String source = 'any']) =>
-      "${MutualPage.route}?tab=$tab&self=$isSelf&source=$source${uid != null ? '&uid=$uid' : ''}";
+  static String getFollowersPage(String uid, [String tab = 'mutual', String source = 'any']) =>
+      "${MutualPage.route}?tab=$tab&source=$source&uid=$uid";
 
   /// Helper function used to generate the route that is supposed ot navigate to
   /// the chat profile of any given user.

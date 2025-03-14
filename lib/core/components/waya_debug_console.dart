@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -13,7 +14,7 @@ class WayaDebugConsole extends StatefulWidget {
 }
 
 class _WayaDebugConsoleState extends State<WayaDebugConsole> {
-  Offset position = Offset(15, 70);
+  Offset position = Offset(15, 50);
 
   @override
   void dispose() {
@@ -25,6 +26,7 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
     // If this is defined, remove it.
     final renderBox = context.findRenderObject() as RenderBox?;
     final size = renderBox?.size;
+    final screenSize = MediaQuery.sizeOf(context);
 
     // If we do  not find the renderBox
     if (size == null || renderBox == null) {
@@ -63,7 +65,10 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
             left: position.dx,
             child: GestureDetector(
               onPanUpdate: (details) {
-                position = details.globalPosition;
+                position = Offset(
+                  min(max(0, details.globalPosition.dx), screenSize.width - 80),
+                  min(max(0, details.globalPosition.dy), screenSize.height - 80),
+                );
                 WayaDebugConsoleController.instance.refresh();
               },
               child: Container(

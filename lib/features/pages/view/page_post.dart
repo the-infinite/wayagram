@@ -680,7 +680,7 @@ class _PagePostState extends ConsumerState<PagePost>
           subtitle: InkWell(
             splashFactory: NoSplash.splashFactory,
             splashColor: Colors.transparent,
-            onTap: () => WayaNav.toNamed('/follow/relationships?tab=mutual&self=true'),
+            onTap: () => WayaNav.toNamed('/follow/relationships/self'),
             child: Text(
               '48.6k Followers',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(

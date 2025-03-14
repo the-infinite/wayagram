@@ -49,11 +49,9 @@ class _ExploreState extends ConsumerState<Explore> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       //> need to fetch user data
       ref.read(successfulSetupVmProvider.notifier).getUserData();
       //>
-
 
       ref.read(regionsProvider.notifier).getCurrentCountry();
       ref.read(selectInterestProvider.notifier).getUserInterest();
@@ -186,9 +184,7 @@ class _ExploreState extends ConsumerState<Explore> {
             CategoriesFilterWidget(setCategory: (value) {
               ref.read(shopVmProvider.notifier).setCategory(value);
               for (String categoryId in value) {
-                ref
-                    .read(productEngagementProvider.notifier)
-                    .addCategory(categoryId, ProductPoint.searchPoint.value);
+                ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
               }
             }),
             const Gap(25),
@@ -200,13 +196,6 @@ class _ExploreState extends ConsumerState<Explore> {
                         : notifier.filteredProducts),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {},
-                subTitle: 'Support a cause that matters',
-                title: 'Donations'),
-            const Gap(25),
-            DonationsFeedWidget(),
-            const Gap(25),
-            GroupedWidgetHeader(
                 onTap: () {
                   WayaNav.toNamed(DisplayFeed.route);
                 },
@@ -214,6 +203,14 @@ class _ExploreState extends ConsumerState<Explore> {
                 title: 'Discover'),
             const Gap(25),
             SharedPosts(),
+            const Gap(25),
+            GroupedWidgetHeader(
+              onTap: () {},
+              subTitle: 'Support a cause that matters',
+              title: 'Donations',
+            ),
+            const Gap(25),
+            DonationsFeedWidget(),
             const Gap(25),
 
             GroupedWidgetHeader(

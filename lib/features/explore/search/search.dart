@@ -5,10 +5,8 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/explore/widgets/moments_widget.dart';
 import 'package:wayagram/features/moments/data/model/folllowed_user_moments_model.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
-import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/widgets/my_moment_widget.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
@@ -62,33 +60,24 @@ class _SearchState extends ConsumerState<SearchView> {
     print(moments);
 
 //post
-    final List<Post> filteredPosts = WayaUtils.strictSearch<Post>(
-        state.topPosts, ['hashtags'], searchController.text);
+    final List<Post> filteredPosts = WayaUtils.strictSearch<Post>(state.topPosts, ['hashtags'], searchController.text);
 
     //post
-    final List<MomentData> filteredMoments = WayaUtils.strictSearch<MomentData>(
-        moments, ['caption'], searchController.text);
+    final List<MomentData> filteredMoments =
+        WayaUtils.strictSearch<MomentData>(moments, ['caption'], searchController.text);
 
     // user
-    final List<UserDetails> filteredAccounts =
-        WayaUtils.strictSearch<UserDetails>(state.usersDetails,
-            ['firstName', 'lastName', 'email'], searchController.text);
+    final List<UserDetails> filteredAccounts = WayaUtils.strictSearch<UserDetails>(
+        state.usersDetails, ['firstName', 'lastName', 'email'], searchController.text);
 
-    Map<String, dynamic> serviceData = {
-      'Post': filteredPosts,
-      'Account': filteredAccounts,
-      'Moment': filteredMoments
-    };
+    Map<String, dynamic> serviceData = {'Post': filteredPosts, 'Account': filteredAccounts, 'Moment': filteredMoments};
 
-    List<String> matchingServices = serviceData.entries
-        .where((entry) => (entry.value as List).isNotEmpty)
-        .map((entry) => entry.key)
-        .toList();
+    List<String> matchingServices =
+        serviceData.entries.where((entry) => (entry.value as List).isNotEmpty).map((entry) => entry.key).toList();
 
     selectedServices.retainAll(matchingServices);
 
-    List<String> activeServices =
-        selectedServices.isEmpty ? matchingServices : selectedServices.toList();
+    List<String> activeServices = selectedServices.isEmpty ? matchingServices : selectedServices.toList();
 
     bool allServicesEmpty = matchingServices.isEmpty;
 
@@ -99,8 +88,7 @@ class _SearchState extends ConsumerState<SearchView> {
         leading: WayaBackButton(onTap: () => WayaNav.goBack()),
         title: WayaTextFormField(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-          prefixIcon:
-              Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
+          prefixIcon: Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
           controller: searchController,
           hintText: 'Search hashtags, accounts, comments, users, etc.',
         ),
@@ -140,9 +128,8 @@ class _SearchState extends ConsumerState<SearchView> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                           side: BorderSide(
-                            color: isSelected
-                                ? wayaTheme.colorScheme.customPrimary
-                                : wayaTheme.colorScheme.greyColor300,
+                            color:
+                                isSelected ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.greyColor300,
                           ),
                         ),
                       ));
@@ -165,8 +152,7 @@ class _SearchState extends ConsumerState<SearchView> {
             Expanded(
               child: ListView(
                 children: activeServices.map((service) {
-                  return _buildServiceWidget(
-                      service, serviceData[service], wayaTheme);
+                  return _buildServiceWidget(service, serviceData[service], wayaTheme);
                 }).toList(),
               ),
             ),
@@ -209,14 +195,15 @@ class _SearchState extends ConsumerState<SearchView> {
       );
     } else if (service == 'Account' && data is List<UserDetails>) {
       return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: data
-              .map((account) => SizedBox(
-                    child: UserWidget(
-                      user: account,
-                    ),
-                  ))
-              .toList());
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: data
+            .map((account) => SizedBox(
+                  child: FollowUserWidget(
+                    userId: account.id!,
+                  ),
+                ))
+            .toList(),
+      );
     }
     return SizedBox.shrink();
   }

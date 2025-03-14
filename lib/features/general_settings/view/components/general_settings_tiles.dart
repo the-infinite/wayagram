@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,7 +24,6 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final userState = ref.watch(profileVmProvider);
-    log("${userState.userAccountModel?.data}");
     return Container(
       decoration:
           BoxDecoration(borderRadius: BorderRadius.circular(10), color: wayaTheme.colorScheme.cardBackgroudColor2),
