@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
 import 'package:wayagram/features/shop/shop_dispute/widgets/single_dispute_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 
@@ -18,15 +19,24 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
   final searchController = TextEditingController();
   final handler = WayaObservableScrollController();
 
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(disputeVmProvider.notifier).getDisputes();
+    });
+    super.initState();
+  }
+
   // This is fine.
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(disputeVmProvider);
     return WayaScaffold(
       isLoading: false,
       isScrollable: false,
       title: 'All Disputes',
       body: WayaObservableScrollView(
-        shouldFetch: false,
+        shouldFetch: !state.isLoading,
         isAtEnd: true,
         handler: handler,
         onReachEnd: () async {},
@@ -53,9 +63,10 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
             ListView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: 10,
+              itemCount: state.disputes.length,
               itemBuilder: (context, index) {
-                return SingleDisputeWidget();
+                final dispute = state.disputes[index];
+                return SingleDisputeWidget(dispute:dispute);
               },
             )
           ],

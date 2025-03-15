@@ -8,9 +8,8 @@ class ShopDisputeRepository extends BaseRepository {
   Future<WayaRequestResponse> openTicket(
       {required String reasonCategory,
       required String details,
-      String? deliveryToken,
       required String userId,
-      List<OrderItem>? orderedItem,
+      Order? orderedItem,
       required String disputeType,
       required String reference,
       String? sellerId,
@@ -21,14 +20,13 @@ class ShopDisputeRepository extends BaseRepository {
       "userId": userId,
       "disputeType": disputeType,
       "reference": reference,
-      
-     
     };
 
     final metadata = {};
 
-    if (deliveryToken != null) metadata['deliveryToken'] = deliveryToken;
-    if (orderedItem != null) metadata['orderedItem'] = orderedItem.toString();
+    if (orderedItem != null) {
+      metadata['orderedItem'] = orderedItem.toJson();
+    }
 
     if (sellerId != null) payload['sellerId'] = sellerId;
     if (media != null) payload['media'] = media;
@@ -37,5 +35,54 @@ class ShopDisputeRepository extends BaseRepository {
     print(payload);
 
     return post("$serviceUrl/client/dispute", payload);
+  }
+
+  Future<WayaRequestResponse> getUserDisputes() async {
+    return get("$serviceUrl/client/dispute?limit=1000&page=1");
+  }
+
+  //
+  ///
+  Future<WayaRequestResponse> getSingleDispute({required String id}) async {
+    return get("$serviceUrl/client/dispute/$id");
+  }
+
+  Future<WayaRequestResponse> updateTicket(
+      {required String reasonCategory,
+      required String details,
+      required String userId,
+      Order? orderedItem,
+      required String disputeType,
+      required String reference,
+      String? sellerId,
+      required String disputeId,
+      String? media}) async {
+    final Map<dynamic, dynamic> payload = {
+      "reasonCategory": reasonCategory,
+      "details": details,
+      "userId": userId,
+      "disputeType": disputeType,
+      "reference": reference,
+    };
+
+    final metadata = {};
+
+    if (orderedItem != null) {
+      metadata['orderedItem'] = orderedItem.toJson();
+    }
+
+    if (sellerId != null) payload['sellerId'] = sellerId;
+    if (media != null) payload['media'] = media;
+    if (metadata.isNotEmpty) payload['metadata'] = metadata;
+
+    print(payload);
+
+    return patch("$serviceUrl/client/dispute/$disputeId", payload);
+  }
+
+  Future<WayaRequestResponse> escalate(
+      {required String id, required String escalatedBy}) async {
+    return post("$serviceUrl/client/dispute/escalate-to-mediator/$id",
+        {"escalatedBy": escalatedBy});
   }
 }

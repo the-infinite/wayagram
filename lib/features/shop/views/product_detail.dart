@@ -9,6 +9,8 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/shared/engagement/provider/product_engagement_monitor.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
@@ -61,6 +63,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(productDetailVmProvider);
+    final addState = ref.watch(addProductProvider('add-product'));
     final wayaTheme = Theme.of(context);
 
     if (viewModel.product == null) {
@@ -258,7 +261,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
             ),
             const Gap(25),
             Visibility(
-                visible: true,
+                visible: false,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -312,78 +315,69 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     SizedBox(
                       width: context.width * 0.45,
                       child: WayaButton(
-                        callback: () {
-                          ref
-                              .read(productDetailVmProvider.notifier)
-                              .initiateDelete(context, viewModel.product!);
-                        },
-                        text: 'Delete Product',
+                        callback: !addState.isDeleting
+                            ? () {
+                                ref
+                                    .read(productDetailVmProvider.notifier)
+                                    .initiateDelete(
+                                        context, viewModel.product!);
+                              }
+                            : null,
+                        centerWidget: LoadingState(
+                            loading: addState.isDeleting,
+                            text: 'Delete Product'),
                         color: wayaTheme.colorScheme.error,
                       ),
                     )
                   ],
                 )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: context.width * 0.45,
-                      child: WayaButton(
-                        callback: () {
-                          final product = viewModel.product!;
-                          final String image =
-                              product.images.isEmpty ? "" : product.images[0];
-                          int intPrice = double.parse(product.price).toInt();
-                          int price = product.discountPercentage > 0
-                              ? (intPrice -
-                                      (intPrice *
-                                          product.discountPercentage /
-                                          100))
-                                  .toInt()
-                              : intPrice;
-                          ref.read(cartVmProvider.notifier).addToCart(
-                              count: 1,
-                              productId: product.id,
-                              productImage: image,
-                              productName: product.name,
-                              price: price,
-                              shopId: product.shopId);
-                        },
-                        centerWidget: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.shopping_cart_outlined,
-                                color: wayaTheme.colorScheme.customPrimary,
-                              ),
-                              const Gap(6),
-                              Text('Add To Cart',
-                                  style: TextStyle().wayaCopyWith(
-                                      color:
-                                          wayaTheme.colorScheme.customPrimary,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500))
-                            ],
-                          ),
-                        ),
-                        color: wayaTheme.colorScheme.transparent,
-                        textColor: wayaTheme.colorScheme.customPrimary,
-                        border: Border.all(
+              : SizedBox(
+                  //alignment: Alignment.bottomCenter,
+                  width: context.width * 0.95,
+                  child: WayaButton(
+                    callback: () {
+                      final product = viewModel.product!;
+                      final String image =
+                          product.images.isEmpty ? "" : product.images[0];
+                      int intPrice = double.parse(product.price).toInt();
+                      int price = product.discountPercentage > 0
+                          ? (intPrice -
+                                  (intPrice * product.discountPercentage / 100))
+                              .toInt()
+                          : intPrice;
+                      ref.read(cartVmProvider.notifier).addToCart(
+                          count: 1,
+                          productId: product.id,
+                          productImage: image,
+                          productName: product.name,
+                          price: price,
+                          shopId: product.shopId);
+
+                      WayaSnackBar.showToast("Item added to cart");
+                    },
+                    centerWidget: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.shopping_cart_outlined,
                             color: wayaTheme.colorScheme.customPrimary,
-                            width: 1),
+                          ),
+                          const Gap(6),
+                          Text('Add To Cart',
+                              style: TextStyle().wayaCopyWith(
+                                  color: wayaTheme.colorScheme.customPrimary,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500))
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      width: context.width * 0.45,
-                      child: WayaButton(
-                        callback: () {},
-                        text: 'Buy Now',
-                      ),
-                    )
-                  ],
+                    color: wayaTheme.colorScheme.transparent,
+                    textColor: wayaTheme.colorScheme.customPrimary,
+                    border: Border.all(
+                        color: wayaTheme.colorScheme.customPrimary, width: 1),
+                  ),
                 ),
         ));
   }

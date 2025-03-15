@@ -87,7 +87,7 @@ class ProductCard extends ConsumerWidget {
                 ],
               )),
           SizedBox(height: 3),
-          Text(product.name, style: wayaTheme.textTheme.bodyXtraMedium),
+          Text(product.name.capitalizeFirst!, style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
               visible: !isExplore && product.rating != null,
               child: Column(
@@ -160,6 +160,7 @@ class ProductCard extends ConsumerWidget {
                           productName: product.name,
                           price: price,
                           shopId: product.shopId);
+                       WayaSnackBar.showToast("Item added to cart");    
                     },
                     height: 38,
                     radius: 6,

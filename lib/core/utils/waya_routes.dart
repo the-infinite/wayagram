@@ -3,6 +3,7 @@ import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/buyer_dispute/views/detail.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
 import 'package:wayagram/features/chat/view/profile.dart';
@@ -77,6 +78,7 @@ import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dar
 import 'package:wayagram/features/shop/seller/views/orders/seller_order_details.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/add_evidence.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/dispute_chat.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/init_dispute.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute_detail.dart';
 import 'package:wayagram/features/shop/seller/views/seller_products.dart';
@@ -182,7 +184,7 @@ class WayaAppRoutes {
     SellerDisputeDetail.route: () => SellerDisputeDetail(),
     MapScreen.route: () => MapScreen(),
     AddEvidence.route: () => AddEvidence(),
-    DisputeChat.route: () => DisputeChat(),
+    DisputeChat.route: () => DisputeChat(id: WayaNav.search['id'].toString()),
     UgtGetStarted.route: () => UgtGetStarted(),
     UgtHome.route: () => UgtHome(),
     CreateContest.route: () => CreateContest(),
@@ -274,6 +276,7 @@ class WayaAppRoutes {
     SupportRequestScreen.route: () => SupportRequestScreen(),
     SupportDisputeScreen.route: () => SupportDisputeScreen(),
     SupportChatScreen.route: () => SupportChatScreen(),
+    InitDispute.route: () => InitDispute(),
     DisputeDetail.route: () => DisputeDetail(id: WayaNav.search['id'].toString()),
     ProductSearchResult.route: () => ProductSearchResult(),
     LogsAndAuditTrials.route: () => LogsAndAuditTrials(),
@@ -287,6 +290,8 @@ class WayaAppRoutes {
     KycUpdate.route: () => KycUpdate(),
     SellerBuyRequestsScreen.route: () => SellerBuyRequestsScreen(),
     BuyerBuyRequestsScreen.route: () => BuyerBuyRequestsScreen(),
+    VerifyEmail.route:() => VerifyEmail()
+   
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -300,6 +305,10 @@ class WayaAppRoutes {
   /// Helper function that is used to get the route to the details of a single
   /// dispute by its ID.
   static String getDisputeDetailsRoute(String id) => "${DisputeDetail.route}?id=$id";
+
+    /// Helper function that is used to get the route to the chat of a single
+  /// dispute by its ID.
+  static String getDisputeChatsRoute(String id) => "${DisputeChat.route}?id=$id";
 
   /// Helper function that is used to navigate to the route that contains all
   /// the bids of sellers

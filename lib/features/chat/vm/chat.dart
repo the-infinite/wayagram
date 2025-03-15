@@ -383,30 +383,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     );
   }
 
-  /// A helper function to open a shop dispute ticket
-  Future<void> openTicket(
-      {required String reason,
-      required String deliveryToken,
-      List<OrderItem>? orderedItem,
-      String? sellerId,
-      required String reference}) async {
-    try {
-      final response = await shopdisputerepo.openTicket(
-          reasonCategory: reason,
-          details: "details",
-          deliveryToken: deliveryToken,
-          orderedItem: orderedItem,
-          userId: ConversationState.self.id,
-          disputeType: "shop",
-          sellerId: sellerId,
-          reference: reference);
-      if (response.success) {
-        print(response.data);
-      }
-    } catch (error) {
-      print(error);
-    }
-  }
+ 
 }
 
 final chatProvider = StateNotifierProvider<ChatNotifier, ChatState>((ref) {
