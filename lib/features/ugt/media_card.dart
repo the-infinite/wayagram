@@ -5,10 +5,12 @@ import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
+import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 
 class MediaCard extends StatefulWidget {
   final List<CardMediaContent> mediaUrls;
-  final Function(String)? ontap; // List of image and video URLs
+  final Function(String, MyFullMediaType)?
+      ontap; // List of image and video URLs
 
   const MediaCard({super.key, required this.mediaUrls, this.ontap});
 
@@ -111,14 +113,39 @@ class _MediaCardState extends State<MediaCard> {
                                   _videoController!.play();
                                 }
                               },
-                              child: VideoPlayer(_videoController!)))
+                              child: Stack(
+                                children: [
+                                  VideoPlayer(_videoController!),
+                                  Positioned(
+                                      bottom: 10,
+                                      right: 10,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          widget.ontap!(
+                                                  url, MyFullMediaType.video) ??
+                                              () {};
+                                        },
+                                        child: Container(
+                                            width: 40,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              color: Colors.black12,
+                                              shape: BoxShape.circle,
+                                            ),
+                                            child: Icon(
+                                              Icons.fullscreen,
+                                              color: Colors.white,
+                                            )),
+                                      )),
+                                ],
+                              )))
                       : Center(child: CircularProgressIndicator());
                 } else if (widget.mediaUrls[index].type?.toLowerCase() ==
                     "image") {
                   _videoController?.pause();
                   return GestureDetector(
                     onTap: () {
-                      widget.ontap!(url) ?? () {};
+                      widget.ontap!(url, MyFullMediaType.image) ?? () {};
                     },
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(

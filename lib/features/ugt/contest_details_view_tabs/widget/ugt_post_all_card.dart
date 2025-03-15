@@ -185,17 +185,32 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
 
               ), */
               MediaCard(
-                  ontap: (String url) {
-                    WayaNav.toNamed("/view-media-full-page", arguments: {
-                      "url": url,
-                      "title": widget.post.contestApplication?.fullName ?? "",
-                      "createdAt": widget.post.createdAt,
-                      "likeCount": widget.post.likes,
-                      "isLike": widget.post.hasLiked,
-                      "discription": widget.post.description,
-                      "shareCount": widget.post.shares,
-                      "type": MyFullMediaType.image
-                    });
+                  ontap: (String url, MyFullMediaType type) {
+                    if (type == MyFullMediaType.image) {
+                      WayaNav.toNamed("/view-media-full-page", arguments: {
+                        "url": url,
+                        "title": widget.post.contestApplication?.fullName ?? "",
+                        "createdAt": widget.post.createdAt,
+                        "likeCount": widget.post.likes,
+                        "isLike": widget.post.hasLiked,
+                          "showDescription":true,
+                        "discription": widget.post.description,
+                        "shareCount": widget.post.shares,
+                        "type": MyFullMediaType.image
+                      });
+                    } else {
+                      WayaNav.toNamed("/view-media-full-page", arguments: {
+                        "url": url,
+                        "title": widget.post.contestApplication?.fullName ?? "",
+                        "createdAt": widget.post.createdAt,
+                        "likeCount": widget.post.likes,
+                        "isLike": widget.post.hasLiked,
+                        "showDescription":true,
+                        "discription": widget.post.description,
+                        "shareCount": widget.post.shares,
+                        "type": MyFullMediaType.video
+                      });
+                    }
                   },
                   mediaUrls: [
                     ...widget.post.mediaContent!
@@ -287,7 +302,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                     fontSize: 12,
                     height: 40,
                     callback: () {
-                    //  print(widget.model.endDate ?? "");
+                      //  print(widget.model.endDate ?? "");
                       if (isPresentIsPast(widget.model.endDate ?? "")) {
                         WayaSnackBar.showToast("Contest has ended");
                         return;
