@@ -57,6 +57,3 @@ class PostNotifier extends StateNotifier<PostState> {
   }
 }
 
-final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>((ref) {
-  return PostNotifier(PostState.initial);
-});

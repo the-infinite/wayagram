@@ -3,6 +3,7 @@ import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 class ConversationState {
@@ -13,6 +14,7 @@ class ConversationState {
   final String searchFilter;
   final List<ChatModel> conversations;
   final List<ChatModel> archived;
+  final List<ChatUser> blocked;
   final bool inArchived;
 
   //? For chats.
@@ -48,11 +50,14 @@ class ConversationState {
     required this.archivedTotalPages,
     required this.archivedPage,
     required this.archivedHasNextPage,
+    required this.blocked,
   });
 
   // This is fine.
   static void setSelf(UserDetailsModel? self, SocialProfileModel? profile, [BusinessDetailsModel? business]) async {
-    if (self != null) ConversationState._self = self;
+    if (self != null) {
+      ConversationState._self = self.copyWith(accountType: _self?.id == self.id ? _self?.accountType : null);
+    }
     if (profile != null) ConversationState._profile = profile;
     if (business != null) ConversationState._business = business;
 
@@ -98,6 +103,7 @@ class ConversationState {
     archivedTotalPages: 0,
     archivedPage: 1,
     archivedHasNextPage: true,
+    blocked: [],
   );
 
   /// Utility used to retrieve the list of pinned chats from this one.
@@ -120,7 +126,7 @@ class ConversationState {
     //? This is fine.
     return conversations
         .where((chat) =>
-            (chat.chatType == 'group' && (chat.name ?? '').toLowerCase().contains(filter)) ||
+            (chat.chatType == ChatType.group && (chat.name ?? '').toLowerCase().contains(filter)) ||
             (chat.other.userData?.fullname.toLowerCase().contains(filter) ?? false) ||
             (chat.other.profileData?.username?.toLowerCase().contains(filter) ?? false) ||
             (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ?? false))
@@ -141,12 +147,16 @@ class ConversationState {
     //? This is fine.
     return archived
         .where((chat) =>
-            (chat.chatType == 'group' && (chat.name ?? '').toLowerCase().contains(filter)) ||
+            (chat.chatType == ChatType.group && (chat.name ?? '').toLowerCase().contains(filter)) ||
             (chat.other.userData?.fullname.toLowerCase().contains(filter) ?? false) ||
             (chat.other.profileData?.username?.toLowerCase().contains(filter) ?? false) ||
             (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ?? false))
         .toList();
   }
+
+  /// A helper function used to check if a user is blocked by using the current
+  /// list of blocked users.
+  bool isBlocked(String userId) => blocked.any((user) => user.userId == userId);
 
   /// Clone this conversation but change a little bit of details about it.
   ConversationState copyWith({
@@ -166,6 +176,7 @@ class ConversationState {
     bool? inArchived,
     bool? hasLoaded,
     bool? hasLoadedArchived,
+    List<ChatUser>? blocked,
   }) {
     return ConversationState(
       hasLoaded: hasLoaded ?? this.hasLoaded,
@@ -184,6 +195,7 @@ class ConversationState {
       archivedPage: archivedPage ?? this.archivedPage,
       archivedHasNextPage: archivedHasNextPage ?? this.archivedHasNextPage,
       inArchived: inArchived ?? this.inArchived,
+      blocked: blocked ?? this.blocked,
     );
   }
 }

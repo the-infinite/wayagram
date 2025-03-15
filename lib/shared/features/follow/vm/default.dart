@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
 import 'package:wayagram/shared/features/follow/repo/default.dart';
 import 'package:wayagram/shared/features/follow/state/default.dart';
@@ -44,7 +46,12 @@ class FollowNotifier extends StateNotifier<FollowState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     return result;
@@ -87,7 +94,12 @@ class FollowNotifier extends StateNotifier<FollowState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     return result;
@@ -106,7 +118,12 @@ class FollowNotifier extends StateNotifier<FollowState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     //? This is fine.
@@ -122,7 +139,12 @@ class FollowNotifier extends StateNotifier<FollowState> {
       //? After getting these posts...
       return response.success;
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     //? This is fine.
@@ -138,7 +160,12 @@ class FollowNotifier extends StateNotifier<FollowState> {
       //? After getting these posts...
       return response.success;
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     //? This is fine.
@@ -166,6 +193,3 @@ class FollowNotifier extends StateNotifier<FollowState> {
 
 typedef FollowProvider = StateNotifierProvider<FollowNotifier, FollowState>;
 
-final userFollowProvider = FollowProvider(
-  (ref) => FollowNotifier(FollowState.initial),
-);

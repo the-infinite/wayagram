@@ -30,7 +30,7 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
   final screenshotController = ScreenshotController();
 
   String _getLocation() {
-    final trace = Trace.from((widget.event.raw as Error).stackTrace ?? StackTrace.current);
+    final trace = Trace.from(widget.event.stackTrace ?? WayaDebugHelpers.getStackTrace(widget.event.raw));
     return "${trace.frames.first.uri} ${trace.frames.first.line}:${trace.frames.first.column}";
   }
 
@@ -62,7 +62,7 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
       WayaDebugEventType.runtime => theme.colorScheme.error200,
       WayaDebugEventType.logical => theme.colorScheme.error700,
       WayaDebugEventType.http => theme.colorScheme.pending,
-      WayaDebugEventType.fatal => Colors.blue,
+      WayaDebugEventType.flutter => Colors.blue,
       WayaDebugEventType.exception => theme.colorScheme.error,
     };
 
@@ -129,10 +129,9 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                               WayaDebugEventType.runtime => WayaAssets.icons.bugRuntime,
                               WayaDebugEventType.logical => WayaAssets.icons.bugLogical,
                               WayaDebugEventType.http => WayaAssets.icons.bugHttp,
-                              WayaDebugEventType.fatal => WayaAssets.icons.bugFlutter,
+                              WayaDebugEventType.flutter => WayaAssets.icons.bugFlutter,
                               WayaDebugEventType.exception => WayaAssets.icons.bugFatal,
-                            }
-                                .svg(color: color, height: 20.dg, width: 20.dg),
+                            }.svg(color: color, height: 20.dg, width: 20.dg),
 
                             //* The type of this debug event.
                             Text(
@@ -200,9 +199,10 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                       switch (widget.event.type) {
                         WayaDebugEventType.http =>
                           "Status: ${(widget.event.raw as DioException?)?.response?.statusCode?.toString() ?? "N/A"}",
-                        WayaDebugEventType.fatal =>
+                        WayaDebugEventType.flutter =>
                           "Source: ${(widget.event.raw as FlutterErrorDetails?)?.library ?? "N/A"}",
-                        WayaDebugEventType.runtime =>
+                        WayaDebugEventType.runtime  ||
+                          WayaDebugEventType.exception =>
                           "Type: ${(widget.event.raw as dynamic)?.runtimeType.toString() ?? "N/A"}",
                         _ => "N/A",
                       },
@@ -233,9 +233,9 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                       switch (widget.event.type) {
                         WayaDebugEventType.http =>
                           (widget.event.raw as DioException?)?.requestOptions.uri.toString() ?? "N/A",
-                        WayaDebugEventType.fatal =>
+                        WayaDebugEventType.flutter =>
                           (widget.event.raw as FlutterErrorDetails?)?.context?.toString() ?? "N/A",
-                        WayaDebugEventType.runtime => _getLocation(),
+                        WayaDebugEventType.runtime || WayaDebugEventType.exception => _getLocation(),
                         _ => "N/A",
                       },
                       style: theme.textTheme.bodyMedium?.copyWith(

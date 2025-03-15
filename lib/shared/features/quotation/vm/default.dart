@@ -1,8 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/repo/default.dart';
 import 'package:wayagram/shared/features/quotation/state/default.dart';
+import 'package:wayagram/shared/features/shop/resource/default.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 class QuotationsNotifier extends StateNotifier<QuotationsState> {
@@ -13,6 +16,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   /// loaded.
   Future<List<BuyRequestModel>> getBuyRequestsIfNotLoaded() async {
     if (!state.hasLoadedRequests) {
+      await ShopResource.configureShop(ConversationState.self.id);
       return getBuyRequests();
     }
 
@@ -25,45 +29,59 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   Future<List<BuyRequestModel>> getBuyRequests() async {
     final result = <BuyRequestModel>[];
 
-    //? Now, we are loading bro.
-    state = state.copyWith(isLoadingRequests: true);
-
     //? This is fine.
-    final response = !state.isUser && ConversationState.self.accountType == UserAccountType.business
-        ? await repo.getAllAvailableQuotation(state.limit, state.requestPage)
-        : await repo.getBuyerRequest(state.limit, state.requestPage, state.requestStatus, state.isUser);
-
-    //? This is fine.
-    if (response.success) {
-      //? If the previous page had a next page, offload them onto this place.
-      if (state.hasNextRequest) {
-        result.addAll(state.requests);
-      }
-
-      //? The data.
-      final data = response.data['data'];
-
-      //? Parse the conversations as they are in the response object...
-      final docs = (data['docs'] as List).map((doc) => BuyRequestModel.fromJson(doc)).toList();
-
-      //? This is fine.
-      result.addAll(docs);
-
-      //? Update state.
-      state = state.copyWith(
-        hasLoadedRequests: true,
-        requests: result,
-        totalRequests: data['totalDocs'],
-        requestPages: data['totalPages'],
-        hasNextRequest: data['hasNextPage'],
-        requestPage: int.tryParse(data['nextPage'].toString()) ?? 1,
-        isLoadingRequests: false,
-      );
+    if (state.isLoadingRequests) {
+      return state.requests;
     }
 
-    //? Since it failed.
-    else {
-      state = state.copyWith(isLoadingRequests: false);
+    try {
+      //? Now, we are loading bro.
+      state = state.copyWith(isLoadingRequests: true);
+
+      //? This is fine.
+      final response = !state.isUser && ConversationState.self.accountType == UserAccountType.business
+          ? await repo.getAllAvailableQuotation(state.limit, state.requestPage)
+          : await repo.getBuyerRequest(state.limit, state.requestPage, state.requestStatus, state.isUser);
+
+      //? This is fine.
+      if (response.success) {
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextRequest) {
+          result.addAll(state.requests);
+        }
+
+        //? The data.
+        final data = response.data['data'];
+
+        //? Parse the conversations as they are in the response object...
+        final docs = (data['docs'] as List).map((doc) => BuyRequestModel.fromJson(doc)).toList();
+
+        //? This is fine.
+        result.addAll(docs);
+
+        //? Update state.
+        state = state.copyWith(
+          hasLoadedRequests: true,
+          requests: result,
+          totalRequests: data['totalDocs'],
+          requestPages: data['totalPages'],
+          hasNextRequest: data['hasNextPage'],
+          requestPage: int.tryParse(data['nextPage'].toString()) ?? 1,
+          isLoadingRequests: false,
+        );
+      }
+
+      //? Since it failed.
+      else {
+        state = state.copyWith(isLoadingRequests: false);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     //? Return this collated result.
@@ -78,27 +96,36 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     final response = await repo.retrieveBuyRequest(id);
 
     //? This is fine.
-    if (response.success) {
-      //? The data.
-      final data = response.data['data'];
+    try {
+      if (response.success) {
+        //? The data.
+        final data = response.data['data'];
 
-      //? Parse the single buy request to ensure we are doing things right.
-      final doc = BuyRequestModel.fromJson(data);
+        //? Parse the single buy request to ensure we are doing things right.
+        final doc = BuyRequestModel.fromJson(data);
 
-      //? Update the buy request in the list of buy requests.
-      final index = state.requests.indexWhere((element) => element.id == id);
+        //? Update the buy request in the list of buy requests.
+        final index = state.requests.indexWhere((element) => element.id == id);
 
-      //? This is fine.
-      if (index != -1) {
-        final previous = state.requests;
-        previous[index] = doc;
-        state = state.copyWith(
-          requests: [...previous],
-        );
+        //? This is fine.
+        if (index != -1) {
+          final previous = state.requests;
+          previous[index] = doc;
+          state = state.copyWith(
+            requests: [...previous],
+          );
+        }
+
+        //? Return the document.
+        return doc;
       }
-
-      //? Return the document.
-      return doc;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     //? Since it failed.
@@ -134,7 +161,12 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       //? Return this value if it was fine.
       return response.success;
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     return false;
@@ -149,38 +181,52 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       // This is fine.
       return response.success;
     } catch (e) {
-      // TODO: Proper error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
     return false;
   }
 
   /// Helper function used to place a bid so that we can enter a quote auction.
   Future<QuotationBidModel?> sendBid(String requestId, double amount, String shopId) async {
-    final response = await repo.placeBid(
-      requestId: requestId,
-      amount: amount,
-      shopId: shopId,
-      vendorId: ConversationState.self.id,
-    );
-
-    //? This is fine.
-    if (response.success) {
-      //? The data.
-      final data = response.data['data'];
-
-      //? Parse the single buy request to ensure we are doing things right.
-      final doc = QuotationBidModel.fromJson(data);
-
-      //? STylishly sneak this bid into the list of bids on screen.
-      state = state.copyWith(
-        bids: [
-          doc,
-          ...state.bids,
-        ],
+    try {
+      final response = await repo.placeBid(
+        requestId: requestId,
+        amount: amount,
+        shopId: shopId,
+        vendorId: ConversationState.self.id,
       );
 
-      //? Return the document.
-      return doc;
+      //? This is fine.
+      if (response.success) {
+        //? The data.
+        final data = response.data['data'];
+
+        //? Parse the single buy request to ensure we are doing things right.
+        final doc = QuotationBidModel.fromJson(data);
+
+        //? STylishly sneak this bid into the list of bids on screen.
+        state = state.copyWith(
+          bids: [
+            doc,
+            ...state.bids,
+          ],
+        );
+
+        //? Return the document.
+        return doc;
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     //? Since it failed.
@@ -192,43 +238,52 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   Future<List<QuotationBidModel>> getBids(String shopId) async {
     final result = <QuotationBidModel>[];
 
-    //? Now, we are loading bro.
-    state = state.copyWith(isLoadingRequests: true);
-
-    //? This is fine.
-    final response = await repo.getVendorQuotation(shopId, state.limit, state.bidPage);
-
-    //? This is fine.
-    if (response.success) {
-      //? If the previous page had a next page, offload them onto this place.
-      if (state.hasNextRequest) {
-        result.addAll(state.bids);
-      }
-
-      //? The data.
-      final data = response.data['data'];
-
-      //? Parse the conversations as they are in the response object...
-      final docs = (data['docs'] as List).map((doc) => QuotationBidModel.fromJson(doc)).toList();
+    try {
+      //? Now, we are loading bro.
+      state = state.copyWith(isLoadingRequests: true);
 
       //? This is fine.
-      result.addAll(docs);
+      final response = await repo.getVendorQuotation(shopId, state.limit, state.bidPage);
 
-      //? Update state.
-      state = state.copyWith(
-        hasLoadedBids: true,
-        bids: result,
-        totalBids: data['totalDocs'],
-        bidPages: data['totalPages'],
-        hasNextBid: data['hasNextPage'],
-        bidPage: int.tryParse(data['nextPage'].toString()) ?? 1,
-        isLoadingBids: false,
+      //? This is fine.
+      if (response.success) {
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextRequest) {
+          result.addAll(state.bids);
+        }
+
+        //? The data.
+        final data = response.data['data'];
+
+        //? Parse the conversations as they are in the response object...
+        final docs = (data['docs'] as List).map((doc) => QuotationBidModel.fromJson(doc)).toList();
+
+        //? This is fine.
+        result.addAll(docs);
+
+        //? Update state.
+        state = state.copyWith(
+          hasLoadedBids: true,
+          bids: result,
+          totalBids: data['totalDocs'],
+          bidPages: data['totalPages'],
+          hasNextBid: data['hasNextPage'],
+          bidPage: int.tryParse(data['nextPage'].toString()) ?? 1,
+          isLoadingBids: false,
+        );
+      }
+
+      //? Since it failed.
+      else {
+        state = state.copyWith(isLoadingBids: false);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
       );
-    }
-
-    //? Since it failed.
-    else {
-      state = state.copyWith(isLoadingBids: false);
     }
 
     //? Return our compounded result.
@@ -238,23 +293,32 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   /// Helper function used to get the overview/summary of the bids the user
   /// has made with his or her account.
   Future<BidDashboardModel?> getBidsOverview(String shopId) async {
-    final response = await repo.getBidDashboard(shopId: shopId);
+    try {
+      final response = await repo.getBidDashboard(shopId: shopId);
 
-    //? This is fine.
-    if (response.success) {
-      //? The data.
-      final data = response.data['data'];
+      //? This is fine.
+      if (response.success) {
+        //? The data.
+        final data = response.data['data'];
 
-      //? Parse the single buy request to ensure we are doing things right.
-      final doc = BidDashboardModel.fromJson(data);
+        //? Parse the single buy request to ensure we are doing things right.
+        final doc = BidDashboardModel.fromJson(data);
 
-      //? Update the bid dashboard state with this.
-      state = state.copyWith(
-        overview: doc,
+        //? Update the bid dashboard state with this.
+        state = state.copyWith(
+          overview: doc,
+        );
+
+        //? Return the document.
+        return doc;
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
       );
-
-      //? Return the document.
-      return doc;
     }
 
     //? Since it failed.

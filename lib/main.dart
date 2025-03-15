@@ -41,7 +41,7 @@ void main() async {
       else {
         WayaDebugConsoleController.instance.addDebugEvent(
           WayaDebugEvent(
-            type: WayaDebugEventType.fatal,
+            type: WayaDebugEventType.flutter,
             module: WayaDebugEventModule.unknown,
             message: errorDetails.summary.toDescription(),
             raw: errorDetails,

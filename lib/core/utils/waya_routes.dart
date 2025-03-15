@@ -176,7 +176,10 @@ class WayaAppRoutes {
     VerifyTransactionScreen.route: () => VerifyTransactionScreen(),
     AllTransactionHistory.route: () => AllTransactionHistory(),
     BankTransferScreen.route: () => BankTransferScreen(),
-    ProfilePage.route: () => ProfilePage(id: WayaNav.search['id'].toString()),
+    ProfilePage.route: () => ProfilePage(
+          id: WayaNav.search['id'].toString(),
+          source: WayaNav.search['source'].toString(),
+        ),
     EditNamePage.route: () => EditNamePage(),
     EditProfilePage.route: () => EditProfilePage(),
     AddProduct.route: () => AddProduct(),
@@ -298,14 +301,9 @@ class WayaAppRoutes {
     SellerBuyRequestsScreen.route: () => SellerBuyRequestsScreen(),
     BuyerBuyRequestsScreen.route: () => BuyerBuyRequestsScreen(),
     RoleAccessPage.route: () => RoleAccessPage(),
-
     AddTeamMemberPage.route: () => AddTeamMemberPage(),
     MemberDetailsPage.route: () => MemberDetailsPage(),
-    
-    
-
-    VerifyEmail.route:() => VerifyEmail()
-   
+    VerifyEmail.route: () => VerifyEmail()
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -314,13 +312,13 @@ class WayaAppRoutes {
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getProfileRoute(String id) => "${ProfilePage.route}?id=$id";
+  static String getProfileRoute(String id, [String source = 'any']) => "${ProfilePage.route}?id=$id&source=$source";
 
   /// Helper function that is used to get the route to the details of a single
   /// dispute by its ID.
   static String getDisputeDetailsRoute(String id) => "${DisputeDetail.route}?id=$id";
 
-    /// Helper function that is used to get the route to the chat of a single
+  /// Helper function that is used to get the route to the chat of a single
   /// dispute by its ID.
   static String getDisputeChatsRoute(String id) => "${DisputeChat.route}?id=$id";
 

@@ -172,10 +172,10 @@ class BuyRequestModel {
 @JsonSerializable()
 class QuotationBidModel {
   final String id;
-  final bool isFinal;
+  final bool? isFinal;
   final BidActionType status;
   final BidActionAuthor lastCounterSentBy;
-  final bool isDeleted;
+  final bool? isDeleted;
   final String requestId;
   final String vendorId;
   final String bidAmount;
