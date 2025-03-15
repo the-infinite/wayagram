@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:app_links/app_links.dart';
 import 'package:flutter/material.dart';
-import 'package:wayagram/core/utils/utils.dart';
 
 class DeepLinkListener extends StatefulWidget {
   const DeepLinkListener({super.key, required this.child});
@@ -15,19 +14,14 @@ class DeepLinkListener extends StatefulWidget {
 class _DeepLinkListenerState extends State<DeepLinkListener> {
   @override
   void initState() {
-    // TODO: implement initState
-
     final appLinks = AppLinks(); // AppLinks is singleton
 
-// Subscribe to all events (initial link and further)
+    // Subscribe to all events (initial link and further)
     final sub = appLinks.uriLinkStream.listen((uri) {
       log('URI: ${uri.toString()}');
-    //  WayaNav.toNamed("/ugt-home");
-      if (uri.pathSegments.first == 'ugt' && mounted) {
-     
-      }
+      //  WayaNav.toNamed("/ugt-home");
+      if (uri.pathSegments.first == 'ugt' && mounted) {}
     });
-    
 
     super.initState();
   }

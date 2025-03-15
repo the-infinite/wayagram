@@ -201,6 +201,3 @@ final userFollowProvider = FollowProvider(
   (ref) => FollowNotifier(FollowState.initial),
 );
 
-final myFollowProvider = FollowProvider(
-  (ref) => FollowNotifier(FollowState.initial),
-);

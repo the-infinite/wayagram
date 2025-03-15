@@ -806,7 +806,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     Expanded(
                       child: RichText(
                         textAlign: TextAlign.start,
-                        text: const TextSpan(
+                        text:  TextSpan(
                           children: [
                             TextSpan(
                                 text: "I agree to the ",

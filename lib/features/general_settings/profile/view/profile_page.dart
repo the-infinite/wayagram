@@ -13,6 +13,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
+import 'package:wayagram/features/follow/view/follow_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/products_grid.dart';
@@ -161,6 +162,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final isSelf = widget.id == ConversationState.self.id;
     final size = MediaQuery.sizeOf(context);
     final postState = ref.watch(userPostsProvider);
     final eventState = ref.watch(userEventsProvider);
@@ -199,16 +201,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             position: PopupMenuPosition.under,
             offset: Offset(0, 10),
             itemBuilder: (context) => [
-              PopupMenuItem<int>(
-                value: 0,
-                child: WayaActionNav(
-                  context: context,
-                  onTap: () {},
-                  asset: WayaAssets.images.pages.setting.svg(),
-                  text: "Profile settings",
-                  color: wayaTheme.colorScheme.customBlack,
+              if (isSelf)
+                PopupMenuItem<int>(
+                  value: 0,
+                  child: WayaActionNav(
+                    context: context,
+                    onTap: () => WayaNav.toNamed(EditProfilePage.route),
+                    asset: WayaAssets.images.pages.setting.svg(),
+                    text: "Profile settings",
+                    color: wayaTheme.colorScheme.customBlack,
+                  ),
                 ),
-              ),
 
               //? Share.
               PopupMenuItem<int>(
@@ -298,7 +301,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     // This is fine.
                     final user = data.$1;
                     final profile = data.$2;
-                    final isSelf = user.id == ConversationState.self.id;
 
                     //? The main component.
                     return Column(
@@ -324,7 +326,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       ),
                                     ),
                                   ),
-                                  fit: BoxFit.fill,
+                                  fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: (size.height * 0.2).h,
                                   imageUrl: profile.coverImage.toString(),
@@ -337,9 +339,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 if (isSelf)
                                   GestureDetector(
                                     onTap: () {
-                                      WayaNav.toNamed(
-                                        EditProfilePage.route,
-                                      );
+                                      WayaNav.toNamed(EditProfilePage.route);
                                     },
                                     child: Container(
                                       margin: EdgeInsets.only(right: 20.w),
@@ -383,17 +383,23 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       margin: EdgeInsets.only(right: 20.w),
                                       padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
                                       decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: wayaTheme.colorScheme.primary600,
-                                          width: 1.5,
-                                        ),
-                                        color: wayaTheme.colorScheme.white,
+                                        border: _followStatus?.isUserFollowing == true
+                                            ? Border.all(
+                                                color: wayaTheme.colorScheme.primary,
+                                                width: 1.5,
+                                              )
+                                            : null,
+                                        color: _followStatus?.isUserFollowing == true
+                                            ? wayaTheme.colorScheme.white
+                                            : wayaTheme.colorScheme.primary,
                                         borderRadius: BorderRadius.circular(7.r),
                                       ),
                                       child: Text(
                                         _followStatus?.isUserFollowing == true ? "Following" : "Follow",
-                                        style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
-                                          color: wayaTheme.colorScheme.primary600,
+                                        style: wayaTheme.textTheme.labelSmall?.copyWith(
+                                          color: _followStatus?.isUserFollowing == true
+                                              ? wayaTheme.colorScheme.primary
+                                              : wayaTheme.colorScheme.white,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -466,8 +472,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               //? Fourth the profile overview.
                               InkWell(
                                 customBorder: const StadiumBorder(),
-                                onTap: () =>
-                                    WayaNav.toNamed(WayaAppRoutes.getFollowersPage(false, 'mutual', widget.id)),
+                                onTap: () => isSelf
+                                    ? WayaNav.toNamed(FollowRelationshipsPage.route)
+                                    : WayaNav.toNamed(WayaAppRoutes.getFollowersPage(widget.id, 'mutual', 'profile')),
                                 borderRadius: BorderRadius.circular(12.r),
                                 splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
                                 focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
@@ -486,6 +493,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       ),
                                       style2: wayaTheme.textTheme.bodySmall?.copyWith(
                                         color: wayaTheme.colorScheme.greyColor500,
+                                        fontWeight: FontWeight.w500,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -500,6 +508,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       ),
                                       style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                         color: wayaTheme.colorScheme.greyColor500,
+                                        fontWeight: FontWeight.w500,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -514,6 +523,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       ),
                                       style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                         color: wayaTheme.colorScheme.greyColor500,
+                                        fontWeight: FontWeight.w500,
                                         fontSize: 12,
                                       ),
                                     ),
@@ -525,19 +535,20 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               Gap(5.w),
 
                               //? Some more space.
-                              if (isSelf)
-                                WayaRichText(
-                                  title1: 'Joined: ',
-                                  title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
-                                  style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                    color: wayaTheme.colorScheme.black,
-                                    fontSize: 12,
-                                  ),
-                                  style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                    color: wayaTheme.colorScheme.greyColor500,
-                                    fontSize: 12,
-                                  ),
+                              //if (isSelf)
+                              WayaRichText(
+                                title1: 'Joined: ',
+                                title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
+                                style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  color: wayaTheme.colorScheme.black,
+                                  fontSize: 12,
                                 ),
+                                style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  color: wayaTheme.colorScheme.greyColor500,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 12,
+                                ),
+                              ),
                             ],
                           ),
                         ),

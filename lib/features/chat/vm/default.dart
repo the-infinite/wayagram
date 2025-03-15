@@ -191,6 +191,9 @@ class ConversationVm extends StateNotifier<ConversationState> {
   Future<bool> blockOrUnblockUser(String id) async {
     final response = await repo.blockOrUnblockUser(id);
 
+    //? This is fine.
+    if (response.success) {}
+
     //? Return whether or not this is true.
     return response.success;
   }

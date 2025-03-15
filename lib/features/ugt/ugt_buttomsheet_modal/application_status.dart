@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
@@ -54,7 +55,8 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
             SizedBox(height: 3.h),
             Text(
               "Stay updated with the progress of your University Got Talent application. Below are the details and current status of your submission",
-              style: wayaTheme.textTheme.hintStyle,
+              style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                  color: WayaColors.greyColor500, fontWeight: FontWeight.w400),
               textAlign: TextAlign.start,
             ),
             const Gap(20),
@@ -267,7 +269,9 @@ class UpcomingWidget extends StatelessWidget {
         SizedBox(
           width:
               isFromDetailsPage ? context.width * 0.18 : context.width * 0.21,
-          child: Text(title, style: WayaTextStyles.hintStyleBold),
+          child: Text(title,
+              style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                  color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
         ),
         const Gap(5),
         if (!status)

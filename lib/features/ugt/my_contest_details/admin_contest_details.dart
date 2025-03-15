@@ -115,17 +115,11 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           const Gap(20),
           ClipRRect(
             borderRadius: BorderRadius.circular(45),
-            child: Image.network(
-              model?.uploadCoverImages ?? "",
+            child: WayaImage(
+              imageUrl: model?.uploadCoverImages ?? "",
               height: 45,
               width: 45,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  height: 45,
-                  width: 45,
-                  color: wayaTheme.colorScheme.greyColor400,
-                );
-              },
+
               fit: BoxFit.cover, // Ensures the image covers the area properly
             ),
           ),
@@ -204,8 +198,8 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
                       )
-                    : Image.network(
-                        model?.uploadCoverImages ?? "",
+                    : WayaImage(
+                        imageUrl: model?.uploadCoverImages ?? "",
                         width: context.width,
                         height: 200,
                         fit: BoxFit
@@ -217,7 +211,9 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                   style: wayaTheme.textTheme.bodyMedium),
               const Gap(5),
               Text(model?.description ?? "Description",
-                  style: wayaTheme.textTheme.hintStyle),
+                  style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                      color: WayaColors.greyColor500,
+                      fontWeight: FontWeight.w400)),
               const Gap(20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -275,7 +271,9 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                       ?.wayaCopyWith(color: wayaTheme.colorScheme.primary500)),
               const Gap(15), */
               const Gap(15),
-              Text("Top Contestants", style: wayaTheme.textTheme.bodyMedium),
+              Text("Top Contestants",
+                  style: wayaTheme.textTheme.bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.bold)),
               const Gap(15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -474,7 +472,9 @@ class UpcomingWidgetAdmin extends StatelessWidget {
       children: [
         SizedBox(
           width: context.width * 0.18,
-          child: Text(title, style: WayaTextStyles.hintStyleBold),
+          child: Text(title,
+              style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                  color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
         ),
         const Gap(5),
         if (!status)

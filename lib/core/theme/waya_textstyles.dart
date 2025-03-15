@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 
 import 'waya_colors.dart';
@@ -8,110 +9,113 @@ class WayaTextStyles {
   WayaTextStyles._();
 
   //
-  static const labelSmall = TextStyle(
-    fontSize: 12,
+  static final labelSmall = TextStyle(
+    fontSize: 12.sp,
     fontWeight: FontWeight.w400,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
     //overflow: TextOverflow.ellipsis,
   );
-  static const labelMedium = TextStyle(
-    fontSize: 16,
+  static final labelMedium = TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.w400,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
     // overflow: TextOverflow.ellipsis,
   );
   //
-  static const titleLarge = TextStyle(
-    fontSize: 18,
+  static final titleLarge = TextStyle(
+    fontSize: 18.sp,
     fontWeight: FontWeight.w600,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
-  static const titleMedium = TextStyle(
-    fontSize: 16,
+  static final titleMedium = TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.w600,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
 //
-  static const headlineLarge = TextStyle(
-    fontSize: 24,
+  static final headlineLarge = TextStyle(
+    fontSize: 24.sp,
     fontWeight: FontWeight.w700,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
-  static const headlineMedium = TextStyle(
-    fontSize: 20,
+  static final headlineMedium = TextStyle(
+    fontSize: 20.sp,
     fontWeight: FontWeight.w700,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
     //overflow: TextOverflow.ellipsis,
   );
   //
-  static const bodyMedium = TextStyle(
-    fontSize: 16,
+  static final bodyMedium = TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.w500,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
-  static const bodySemiBold = TextStyle(
-    fontSize: 16,
+  static final bodySemiBold = TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.w600,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
-  static const bodySmall = TextStyle(
-    fontSize: 12,
+  static final bodySmall = TextStyle(
+    fontSize: 12.sp,
     fontWeight: FontWeight.w500,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
-  static const bodyBold = TextStyle(
-    fontSize: 14,
+
+  static final bodyBold = TextStyle(
+    fontSize: 14.sp,
+
     fontWeight: FontWeight.w700,
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
-  static const bodyExtraMedium = TextStyle(
-    fontSize: 14,
+  static final bodyExtraMedium = TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.w400,
     color: WayaColors.black,
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
   //
-  static const hintStyle = TextStyle(
-    fontSize: 14,
+  static final hintStyle = TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.w400,
     color: WayaColors.greyColor400,
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
-  static const errorHintStyle = TextStyle(
-    fontSize: 14,
+
+  static final errorHintStyle = TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.w400,
     color: WayaColors.error,
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
-  static const hintStyleSemiBold = TextStyle(
-    fontSize: 14,
+  static final hintStyleSemiBold = TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.w500,
     color: WayaColors.greyColor400,
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
 
-  static const hintStyleBold = TextStyle(
-    fontSize: 14,
+  static final hintStyleBold = TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.w600,
     color: WayaColors.greyColor400,
     fontFamily: WayaConstants.fontFamily,
@@ -119,23 +123,23 @@ class WayaTextStyles {
   );
 
   // description
-  static const descriptionStyle = TextStyle(
-    fontSize: 16,
+  static final descriptionStyle = TextStyle(
+    fontSize: 16.sp,
     fontWeight: FontWeight.w400,
     color: WayaColors.greyColor500,
     fontFamily: WayaConstants.fontFamily,
   //  overflow: TextOverflow.ellipsis,
   );
-  static const mediumDescriptionStyle = TextStyle(
-    fontSize: 14,
+  static final mediumDescriptionStyle = TextStyle(
+    fontSize: 14.sp,
     fontWeight: FontWeight.w400,
     color: WayaColors.greyColor500,
     fontFamily: WayaConstants.fontFamily,
    // overflow: TextOverflow.ellipsis,
   );
   //
-  static const smallActiveLinkStyle = TextStyle(
-    fontSize: 12,
+  static final smallActiveLinkStyle = TextStyle(
+    fontSize: 12.sp,
     fontWeight: FontWeight.w500,
     color: WayaColors.customPrimary,
     fontFamily: WayaConstants.fontFamily,

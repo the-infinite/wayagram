@@ -51,7 +51,7 @@ class WayaTextFormField extends StatefulWidget {
     this.line = 1,
     this.maxLines,
     this.isDense,
-    this.style = WayaTextStyles.labelMedium,
+    this.style ,
     this.maxLength,
     this.hasError = false,
     this.onTap,
@@ -137,7 +137,7 @@ class _AppFieldState extends State<WayaTextFormField> {
       onFieldSubmitted: widget.onFieldSubmitted,
       textInputAction: widget.textInputAction,
       onSaved: widget.onSaved,
-      style: widget.style,
+      style: widget.style??WayaTextStyles.labelMedium,
       decoration: InputDecoration(
         isDense: widget.isDense,
         errorBorder: OutlineInputBorder(

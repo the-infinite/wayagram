@@ -49,6 +49,10 @@ class _ExploreState extends ConsumerState<Explore> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      //> need to fetch user data
+      ref.read(successfulSetupVmProvider.notifier).getUserData();
+      //>
+
       ref.read(regionsProvider.notifier).getCurrentCountry();
       ref.read(selectInterestProvider.notifier).getUserInterest();
       ref.read(shopVmProvider.notifier).allCategories(1);
@@ -172,7 +176,7 @@ class _ExploreState extends ConsumerState<Explore> {
             //? For the next section.
             GroupedWidgetHeader(
                 onTap: () {
-                  WayaNav.toNamed( BottomView.route, arguments: 1);
+                  WayaNav.toNamed(BottomView.route, arguments: 1);
                 },
                 subTitle: 'Explore Categories & Best Offers',
                 title: 'Shop'),
@@ -191,10 +195,6 @@ class _ExploreState extends ConsumerState<Explore> {
                         ? notifier.filteredProducts.sublist(0, 2)
                         : notifier.filteredProducts),
             const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Support a cause that matters', title: 'Donations'),
-            const Gap(25),
-            DonationsFeedWidget(),
-            const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {
                   WayaNav.toNamed(DisplayFeed.route);
@@ -203,6 +203,14 @@ class _ExploreState extends ConsumerState<Explore> {
                 title: 'Discover'),
             const Gap(25),
             SharedPosts(),
+            const Gap(25),
+            GroupedWidgetHeader(
+              onTap: () {},
+              subTitle: 'Support a cause that matters',
+              title: 'Donations',
+            ),
+            const Gap(25),
+            DonationsFeedWidget(),
             const Gap(25),
 
             GroupedWidgetHeader(
@@ -280,7 +288,13 @@ class _ExploreState extends ConsumerState<Explore> {
             const ConversationFeedWidget(isExpanded: false),
 
             const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
+            GroupedWidgetHeader(
+                onTap: () {
+                  //? navigate to ugt contest page
+                  WayaNav.toNamed("/ugt-home");
+                },
+                subTitle: 'Join Upcoming Activities',
+                title: 'University Got Talent'),
             const Gap(25),
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),

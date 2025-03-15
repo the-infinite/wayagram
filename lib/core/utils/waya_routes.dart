@@ -17,6 +17,7 @@ import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/chat/view/chat.dart';
 import 'package:wayagram/features/explore/views/chat_and_social.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
+import 'package:wayagram/features/follow/view/follow_page.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
@@ -69,6 +70,9 @@ import 'package:wayagram/features/quotation/seller/views/bids/map_screen.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/see_seller_bids.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
+import 'package:wayagram/features/role_access/view/add_team_member_page.dart';
+import 'package:wayagram/features/role_access/view/member_details_page.dart';
+import 'package:wayagram/features/role_access/view/role_access_page.dart';
 import 'package:wayagram/features/shop/filter/views/product_search_result.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
@@ -90,9 +94,10 @@ import 'package:wayagram/features/shop/views/products_view_page.dart';
 import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
 import 'package:wayagram/features/support/views/request.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/admin_transaction_history.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disqualify.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_application_contest.dart';
-import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_contest.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_leaderboard_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/view_single_contestant_data.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart';
@@ -196,7 +201,8 @@ class WayaAppRoutes {
     ManageApplicationContest.route: () => ManageApplicationContest(),
     ManageStateSingleContest.route: () => ManageStateSingleContest(),
     DashboardContestPage.route: () => DashboardContestPage(),
-    ManageStateContest.route: () => ManageStateContest(),
+    ManageLeaderboardContest.route: () => ManageLeaderboardContest(),
+    AdminTransactionHistory.route: () => AdminTransactionHistory(),
     ContestSettingContent.route: () => ContestSettingContent(),
     EditStagePreference.route: () => EditStagePreference(),
     CreateRequest.route: () => CreateRequest(),
@@ -239,10 +245,11 @@ class WayaAppRoutes {
     CreateGroupPost.route: () => CreateGroupPost(),
     CreatePagePost.route: () => CreatePagePost(),
     MutualPage.route: () => MutualPage(
-          isSelf: bool.tryParse(WayaNav.search['self'].toString()) ?? true,
           initialTab: WayaNav.search['tab'] ?? 'mutual',
-          userId: WayaNav.search['uid'],
+          userId: WayaNav.search['uid'].toString(),
+          source: WayaNav.search['source'] ?? 'any',
         ),
+    FollowRelationshipsPage.route: () => FollowRelationshipsPage(),
     PublicGroup.route: () => PublicGroup(),
     EditPageInfo.route: () => EditPageInfo(),
     AddTeamMember.route: () => AddTeamMember(),
@@ -290,6 +297,13 @@ class WayaAppRoutes {
     KycUpdate.route: () => KycUpdate(),
     SellerBuyRequestsScreen.route: () => SellerBuyRequestsScreen(),
     BuyerBuyRequestsScreen.route: () => BuyerBuyRequestsScreen(),
+    RoleAccessPage.route: () => RoleAccessPage(),
+
+    AddTeamMemberPage.route: () => AddTeamMemberPage(),
+    MemberDetailsPage.route: () => MemberDetailsPage(),
+    
+    
+
     VerifyEmail.route:() => VerifyEmail()
    
   };
@@ -321,8 +335,8 @@ class WayaAppRoutes {
   /// Helper function used to generate the route that is supposed to navigate to
   /// all the followers, followings, and mutuals that one user has with another
   /// one.
-  static String getFollowersPage(bool isSelf, [String tab = 'mutual', String? uid]) =>
-      "${MutualPage.route}?tab=$tab&self=$isSelf${uid != null ? '&uid=$uid' : ''}";
+  static String getFollowersPage(String uid, [String tab = 'mutual', String source = 'any']) =>
+      "${MutualPage.route}?tab=$tab&source=$source&uid=$uid";
 
   /// Helper function used to generate the route that is supposed ot navigate to
   /// the chat profile of any given user.

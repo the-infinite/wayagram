@@ -261,9 +261,9 @@ class Stage {
 
   final String? stageName;
   final String? entryType;
-  final int? entryAmount;
-  final int? voteCountToQualify;
-  final int? numberOfPostPerWeek;
+  final dynamic entryAmount;
+  final dynamic voteCountToQualify;
+  final dynamic numberOfPostPerWeek;
   final int? priceOfTheWinner;
   final bool? isActive;
   final String? startDate;

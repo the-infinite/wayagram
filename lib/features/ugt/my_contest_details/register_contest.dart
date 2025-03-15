@@ -457,7 +457,9 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                             }
                           }
                         }
-                        notifier.submitDetail(context, isLoading, selectedState.value);
+                        notifier.submitDetail(context, isLoading, selectedState.value, (){
+                            WayaNav.goBack();
+                        });
                       }
                     }
                   : null,

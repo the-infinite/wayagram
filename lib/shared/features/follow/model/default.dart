@@ -44,11 +44,10 @@ class FollowModel {
     return followerId == ConversationState.self.id || (followingId == ConversationState.self.id && followedBack);
   }
 
-  Future<CachedUserDataTuple?> getOtherUser() {
-    return ConversationState.self.id == followerId
-        ? UserResource.getUserDetails(followingId)
-        : UserResource.getUserDetails(followerId);
-  }
+  /// Helper function used to get the user ID of the person in this follower following relationship that is not the user in question.
+  String get otherUserId => ConversationState.self.id == followerId ? followingId : followerId;
+
+  Future<CachedUserDataTuple?> getOtherUser() => UserResource.getUserDetails(otherUserId);
 }
 
 @JsonSerializable()

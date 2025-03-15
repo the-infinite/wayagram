@@ -23,6 +23,7 @@ import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_m
 import 'package:wayagram/features/ugt/media_card.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
+import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 class UgtPostAllCard extends StatefulHookConsumerWidget {
@@ -197,8 +198,12 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                     });
                   },
                   mediaUrls: [
-                    ...widget.post.mediaContent!.map((e) =>
-                        CardMediaContent(type: e.type ?? "", url: e.url ?? ""))
+                    ...widget.post.mediaContent!
+                        .where((e) =>
+                            e.type?.toLowerCase() == "video" ||
+                            e.type?.toLowerCase() == "image")
+                        .map((e) => CardMediaContent(
+                            type: e.type ?? "", url: e.url ?? ""))
                   ]),
               const Gap(20),
               Row(
@@ -282,6 +287,12 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                     fontSize: 12,
                     height: 40,
                     callback: () {
+                    //  print(widget.model.endDate ?? "");
+                      if (isPresentIsPast(widget.model.endDate ?? "")) {
+                        WayaSnackBar.showToast("Contest has ended");
+                        return;
+                      }
+
                       WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(

@@ -113,7 +113,8 @@ class _MediaCardState extends State<MediaCard> {
                               },
                               child: VideoPlayer(_videoController!)))
                       : Center(child: CircularProgressIndicator());
-                } else {
+                } else if (widget.mediaUrls[index].type?.toLowerCase() ==
+                    "image") {
                   _videoController?.pause();
                   return GestureDetector(
                     onTap: () {
@@ -140,6 +141,8 @@ class _MediaCardState extends State<MediaCard> {
                     ),
                   );
                   // return Image.network(url, fit: BoxFit.cover);
+                } else {
+                  return Container();
                 }
               },
             ),
