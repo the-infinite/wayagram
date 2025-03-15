@@ -33,7 +33,7 @@ class FollowRelationshipWidget extends StatelessWidget {
           : Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: InkWell(
-                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(data.$1.id)),
+                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(data.$1.id, 'profile')),
                 borderRadius: BorderRadius.circular(12.r),
                 splashColor: theme.colorScheme.primary.withAlpha(30),
                 focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),

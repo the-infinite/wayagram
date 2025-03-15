@@ -8,7 +8,6 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
@@ -143,7 +142,7 @@ class _StartConversationModalState extends State<StartConversationModal> {
                       nextPage: state.followingPage,
                       itemCount: state.following.length,
                       handler: handler,
-                      getPage: (page) => myFollowProvider.getUsersFollowing(ConversationState.self.id),
+                      getPage: (page) => myFollowProvider.getUsersFollowing(),
                       builder: (context, index) => WayaFutureSubscriber(
                         future: state.following[index].getOtherUser(),
                         builder: (context, data) => data == null

@@ -7,9 +7,9 @@ enum WayaDebugEventType {
   /// network request.
   http,
 
-  /// The error is a fatal error. Which means it is happening because of some very
-  /// bad unhandled exception.
-  fatal,
+  /// The error is a flutter error. Which means it is happening because of some 
+  /// odd and unhandled exception in the WidgetTree.
+  flutter,
 
   /// The error is a logical error which means a condition that should otherwise
   /// never be, is somehow true.

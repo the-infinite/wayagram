@@ -24,7 +24,7 @@ class _WayaDebugMessage extends StatelessWidget {
   });
 
   String _getLocation() {
-    final trace = Trace.from((event.raw as Error).stackTrace ?? StackTrace.current);
+    final trace = Trace.from(event.stackTrace ?? WayaDebugHelpers.getStackTrace(event.raw));
     return trace.frames.first.location;
   }
 
@@ -36,7 +36,7 @@ class _WayaDebugMessage extends StatelessWidget {
       WayaDebugEventType.runtime => theme.colorScheme.error200,
       WayaDebugEventType.logical => theme.colorScheme.error700,
       WayaDebugEventType.http => theme.colorScheme.pending,
-      WayaDebugEventType.fatal => Colors.blue,
+      WayaDebugEventType.flutter => Colors.blue,
       WayaDebugEventType.exception => theme.colorScheme.error,
     };
 
@@ -77,10 +77,9 @@ class _WayaDebugMessage extends StatelessWidget {
                       WayaDebugEventType.runtime => WayaAssets.icons.bugRuntime,
                       WayaDebugEventType.logical => WayaAssets.icons.bugLogical,
                       WayaDebugEventType.http => WayaAssets.icons.bugHttp,
-                      WayaDebugEventType.fatal => WayaAssets.icons.bugFlutter,
+                      WayaDebugEventType.flutter => WayaAssets.icons.bugFlutter,
                       WayaDebugEventType.exception => WayaAssets.icons.bugFatal,
-                    }
-                        .svg(color: color, height: 20.dg, width: 20.dg),
+                    }.svg(color: color, height: 20.dg, width: 20.dg),
 
                     //* For the text.
                     ClipPath(
@@ -153,9 +152,10 @@ class _WayaDebugMessage extends StatelessWidget {
                         switch (event.type) {
                           WayaDebugEventType.http =>
                             "Status: ${(event.raw as DioException?)?.response?.statusCode?.toString() ?? "N/A"}",
-                          WayaDebugEventType.fatal =>
+                          WayaDebugEventType.flutter =>
                             "Source: ${(event.raw as FlutterErrorDetails?)?.library ?? "N/A"}",
-                          WayaDebugEventType.runtime =>
+                          WayaDebugEventType.runtime ||
+                          WayaDebugEventType.exception =>
                             "Type: ${(event.raw as dynamic)?.runtimeType.toString() ?? "N/A"}",
                           _ => "N/A",
                         },
@@ -186,8 +186,9 @@ class _WayaDebugMessage extends StatelessWidget {
                         switch (event.type) {
                           WayaDebugEventType.http =>
                             (event.raw as DioException?)?.requestOptions.uri.toString() ?? "N/A",
-                          WayaDebugEventType.fatal => (event.raw as FlutterErrorDetails?)?.context?.toString() ?? "N/A",
-                          WayaDebugEventType.runtime => _getLocation(),
+                          WayaDebugEventType.flutter =>
+                            (event.raw as FlutterErrorDetails?)?.context?.toString() ?? "N/A",
+                          WayaDebugEventType.runtime || WayaDebugEventType.exception => _getLocation(),
                           _ => "N/A",
                         },
                         style: theme.textTheme.bodyMedium?.copyWith(

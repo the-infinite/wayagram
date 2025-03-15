@@ -6,18 +6,20 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class UnblockUserDialog extends StatefulWidget {
-  final ChatModel chat;
+  final UserDetailsModel user;
+  final SocialProfileModel profile;
   final WidgetRef ref;
 
   // Construct.
   const UnblockUserDialog({
     super.key,
-    required this.chat,
+    required this.user,
+    required this.profile,
     required this.ref,
   });
 
@@ -39,8 +41,8 @@ class _UnblockUserDialogState extends State<UnblockUserDialog> {
   @override
   Widget build(BuildContext context) {
     //? First, we obtain all things needed to build this widget.
-    final user = widget.chat.other.userData!;
-    final profile = widget.chat.other.profileData!;
+    final user = widget.user;
+    final profile = widget.profile;
     final theme = Theme.of(context);
 
     return Padding(

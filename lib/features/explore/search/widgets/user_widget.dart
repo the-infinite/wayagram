@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
+import 'package:wayagram/shared/features/follow/state/default.dart';
 import 'package:wayagram/shared/features/follow/vm/default.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
@@ -24,6 +25,11 @@ class FollowUserWidget extends ConsumerStatefulWidget {
 }
 
 class _UserWidgetState extends ConsumerState<FollowUserWidget> {
+  late final userFollowProvider = FollowProvider(
+    (ref) => FollowNotifier(FollowState.initial.copyWith(
+      userId: widget.userId,
+    )),
+  );
   late final followNotifier = ref.watch(userFollowProvider.notifier);
   FollowStatusModel? _followStatus;
 
@@ -58,7 +64,7 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
           : Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: InkWell(
-                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(data.$1.id)),
+                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(data.$1.id, 'profile')),
                 borderRadius: BorderRadius.circular(12.r),
                 splashColor: theme.colorScheme.primary.withAlpha(30),
                 focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),

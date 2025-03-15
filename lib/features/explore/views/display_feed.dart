@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -43,17 +44,21 @@ class _DisplayFeedState extends ConsumerState<DisplayFeed> {
         padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 20.w,
           children: [
             GestureDetector(
               onTap: () => WayaNav.toNamed(SearchView.route),
-              child: SvgPicture.asset(WayaAssets.icons.searchIconFeed.path),
+              child: SvgPicture.asset(
+                WayaAssets.icons.searchIconFeed.path,
+                height: 20.dg,
+                width: 20.dg,
+              ),
             ),
-            const Gap(6),
             WayaDp(
               onTap: () {
                 WayaNav.toNamed('/general-settings');
               },
-              radius: 18,
+              radius: 18.r,
             ),
           ],
         ),

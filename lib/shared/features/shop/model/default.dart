@@ -62,8 +62,8 @@ class ShopModel {
   final String address;
   final String state;
   final String lga;
-  final double? longitude;
-  final double? latitude;
+  final String? longitude;
+  final String? latitude;
   final String country;
   final String town;
   final String phone;

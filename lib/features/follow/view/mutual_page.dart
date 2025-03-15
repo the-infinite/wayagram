@@ -6,6 +6,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/follow/view/mutuals.dart';
 import 'package:wayagram/features/follow/widget/follows.dart';
+import 'package:wayagram/shared/features/follow/state/default.dart';
 import 'package:wayagram/shared/features/follow/vm/default.dart';
 
 class MutualPage extends ConsumerStatefulWidget {
@@ -26,6 +27,11 @@ class MutualPage extends ConsumerStatefulWidget {
 }
 
 class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProviderStateMixin {
+  late final userFollowProvider = FollowProvider(
+    (ref) => FollowNotifier(FollowState.initial.copyWith(
+      userId: widget.userId,
+    )),
+  );
   late final notifier = ref.read(userFollowProvider.notifier);
   final followersHandler = WayaObservableScrollController();
   final followingHandler = WayaObservableScrollController();
@@ -116,10 +122,12 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
                 1 => FollowingDataView(
                     provider: userFollowProvider,
                     handler: followingHandler,
+                    userId: widget.userId,
                   ),
                 _ => FollowersDataView(
                     provider: userFollowProvider,
                     handler: followersHandler,
+                    userId: widget.userId,
                   ),
               },
             ),

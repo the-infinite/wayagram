@@ -81,7 +81,7 @@ class WayaValueHelper {
   static String getEventTypeName(WayaDebugEventType type) {
     return switch (type) {
       WayaDebugEventType.exception => 'Exception',
-      WayaDebugEventType.fatal => 'Flutter Error',
+      WayaDebugEventType.flutter => 'Flutter Error',
       WayaDebugEventType.http => 'HTTP',
       WayaDebugEventType.logical => 'Logical',
       WayaDebugEventType.runtime => 'Runtime',

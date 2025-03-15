@@ -380,6 +380,7 @@ class DioHttpClient implements WayaHttpClientInterface {
       [bool showErrors = false, int depth = 3]) async {
     try {
       final response = await future;
+      _logger.i('Request URI: ${response.requestOptions.uri.toString()}');
       _logger.i('data: ${response.data}');
       return WayaRequestResponse(
         data: response.data,
