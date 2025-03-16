@@ -61,6 +61,7 @@ class WayaValueHelper {
       WayaDebugEventModule.donations => 'Donations',
       WayaDebugEventModule.events => 'Events',
       WayaDebugEventModule.groups => 'Groups',
+      WayaDebugEventModule.moments => "Moments",
       WayaDebugEventModule.pages => 'Pages',
       WayaDebugEventModule.polls => 'Polls',
       WayaDebugEventModule.posts => 'Posts',
@@ -71,7 +72,7 @@ class WayaValueHelper {
       WayaDebugEventModule.support => 'Support',
       WayaDebugEventModule.ugt => 'University Got Talent',
       WayaDebugEventModule.wallets => 'Wallets',
-      _ => 'Unknown',
+      WayaDebugEventModule.unknown => 'Unknown',
     };
   }
 

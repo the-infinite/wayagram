@@ -7,7 +7,7 @@ enum WayaDebugEventType {
   /// network request.
   http,
 
-  /// The error is a flutter error. Which means it is happening because of some 
+  /// The error is a flutter error. Which means it is happening because of some
   /// odd and unhandled exception in the WidgetTree.
   flutter,
 
@@ -37,6 +37,9 @@ enum WayaDebugEventModule {
 
   /// An event that occurred in the chat module.
   chats,
+
+  /// This is something that has to do with moments.
+  moments,
 
   /// An event that occurred in the events module.
   events,

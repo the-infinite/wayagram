@@ -506,17 +506,25 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                 width: 1.5,
                                               )
                                             : null,
-                                        color: _followStatus?.isUserFollowing == true
-                                            ? wayaTheme.colorScheme.white
-                                            : wayaTheme.colorScheme.primary,
+                                        color: _followStatus == null
+                                            ? wayaTheme.colorScheme.greyColor200
+                                            : _followStatus!.isUserFollowing
+                                                ? wayaTheme.colorScheme.white
+                                                : wayaTheme.colorScheme.primary,
                                         borderRadius: BorderRadius.circular(7.r),
                                       ),
                                       child: Text(
-                                        _followStatus?.isUserFollowing == true ? "Following" : "Follow",
+                                        _followStatus == null
+                                            ? "Loading"
+                                            : _followStatus!.isUserFollowing
+                                                ? "Following"
+                                                : "Follow",
                                         style: wayaTheme.textTheme.labelSmall?.copyWith(
-                                          color: _followStatus?.isUserFollowing == true
-                                              ? wayaTheme.colorScheme.primary
-                                              : wayaTheme.colorScheme.white,
+                                          color: _followStatus == null
+                                              ? wayaTheme.colorScheme.greyColor500
+                                              : _followStatus!.isUserFollowing
+                                                  ? wayaTheme.colorScheme.primary
+                                                  : wayaTheme.colorScheme.white,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
