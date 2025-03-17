@@ -460,7 +460,7 @@ class DioHttpClient implements WayaHttpClientInterface {
       final newRefreshToken = response.data['data']['token']['refreshToken'];
       _logger.i("New token acquired");
 
-      //> persit the tokens
+      //> persist the tokens
       await secureDataSource.saveToken(newToken);
       await secureDataSource.saveRefreshToken(newRefreshToken);
       return true;

@@ -8,27 +8,38 @@ class AuthRepository extends BaseRepository {
   static const graphServiceUrl = "wayagram-graph/api/v2";
 
   Future<WayaRequestResponse> register(Register payload) {
-    return post('$serviceUrl/client/auth/register', payload.toJson(), showErrors: true);
+    return post('$serviceUrl/client/auth/register', payload.toJson(),
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> verifyOtp(VerifyOtp payload) {
-    return post('$serviceUrl/client/auth/register/verify-email', payload.toJson(), showErrors: true);
+    return post(
+        '$serviceUrl/client/auth/register/verify-email', payload.toJson(),
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> resendOtp(String email) {
-    return post('$serviceUrl/client/auth/resend-otp', {"email": email, "purpose": 'REGISTER_USER'});
+    return post('$serviceUrl/client/auth/resend-otp',
+        {"email": email, "purpose": 'REGISTER_USER'});
   }
 
   Future<WayaRequestResponse> verifyEmail(String email) {
-    return post('$serviceUrl/client/auth/password/reset-password', {"email": email}, showErrors: true);
+    return post(
+        '$serviceUrl/client/auth/password/reset-password', {"email": email},
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> resetPassword(ForgotPassword payload) {
-    return post('$serviceUrl/client/auth/password/new-password', payload.toJson(), showErrors: true);
+    return post(
+        '$serviceUrl/client/auth/password/new-password', payload.toJson(),
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> login(
-      {required String password, String? email, String? businessId, bool? isBusinessLogin}) {
+      {required String password,
+      String? email,
+      String? businessId,
+      bool? isBusinessLogin}) {
     final payload = <String, dynamic>{};
     if (isBusinessLogin == true) {
       payload['businessId'] = businessId;
@@ -49,16 +60,21 @@ class AuthRepository extends BaseRepository {
     return get("$serviceUrl/client/location/states?countryCode=NG");
   }
 
-  Future<WayaRequestResponse> getAllLGA({required String stateCode, required String countryCode}) {
-    return get("$serviceUrl/client/location/lgas?stateCode=$stateCode&countryCode=$countryCode");
+  Future<WayaRequestResponse> getAllLGA(
+      {required String stateCode, required String countryCode}) {
+    return get(
+        "$serviceUrl/client/location/lgas?stateCode=$stateCode&countryCode=$countryCode");
   }
 
-  Future<WayaRequestResponse> getAllCities({required String stateCode, required String countryCode}) {
-    return get("$serviceUrl/client/location/cities?stateCode=$stateCode&countryCode=$countryCode");
+  Future<WayaRequestResponse> getAllCities(
+      {required String stateCode, required String countryCode}) {
+    return get(
+        "$serviceUrl/client/location/cities?stateCode=$stateCode&countryCode=$countryCode");
   }
 
   Future<WayaRequestResponse> businessKyc(dynamic data) {
-    return post('$serviceUrl/client/kyc/add-business-kyc', data, formdata: true);
+    return post('$serviceUrl/client/kyc/add-business-kyc', data,
+        formdata: true);
   }
 
   Future<WayaRequestResponse> getAccountType() async {
@@ -69,8 +85,11 @@ class AuthRepository extends BaseRepository {
     return get('$serviceUrl/client/businesses/types/all');
   }
 
-  Future<WayaRequestResponse> upgradeToBusiness({required UpgradeToBusinessModel payload, required String id}) {
-    return post('$serviceUrl/client/users/$id/upgrade-to-business', payload.toJson(), showErrors: true);
+  Future<WayaRequestResponse> upgradeToBusiness(
+      {required UpgradeToBusinessModel payload, required String id}) {
+    return post(
+        '$serviceUrl/client/users/$id/upgrade-to-business', payload.toJson(),
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> selectInterest(dynamic data) {
@@ -80,7 +99,8 @@ class AuthRepository extends BaseRepository {
     );
   }
 
-  Future<WayaRequestResponse> getSelectedInterests({required String userId}) async {
+  Future<WayaRequestResponse> getSelectedInterests(
+      {required String userId}) async {
     return get('$graphServiceUrl/interests/$userId');
   }
 
@@ -88,5 +108,8 @@ class AuthRepository extends BaseRepository {
     return get("$graphServiceUrl/interests/categories");
   }
 
+  Future<WayaRequestResponse> refreshToken({required String token}) async {
+    return post("$serviceUrl/client/auth/refresh-token", {"token": token});
+  }
 //
 }

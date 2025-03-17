@@ -37,8 +37,9 @@ class ShopDisputeRepository extends BaseRepository {
     return post("$serviceUrl/client/dispute", payload);
   }
 
-  Future<WayaRequestResponse> getUserDisputes() async {
-    return get("$serviceUrl/client/dispute?limit=1000&page=1");
+  Future<WayaRequestResponse> getUserDisputes(
+      { int? page = 1000, int? limit = 10}) async {
+    return get("$serviceUrl/client/dispute?limit=1000&page=$page");
   }
 
   //

@@ -1,6 +1,5 @@
-import 'dart:convert';
 
-import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
+import 'package:wayagram/shared/model/base_model.dart';
 
 class DisputeResponseModel {
   final String message;
@@ -52,7 +51,7 @@ class DataModel {
   }
 }
 
-class DisputeModel {
+class DisputeModel  extends BaseModel<DisputeModel>{
   final String id;
   final String userId;
   final String status;
@@ -110,6 +109,16 @@ class DisputeModel {
      'ticketBody': ticketBody.toJson(),
     };
   }
+
+   @override
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'userId': userId,
+        'escalatedBy': escalatedBy,
+        'sellerId': sellerId,
+        'status': status,
+       
+      };
 }
 
 class TicketBodyModel {

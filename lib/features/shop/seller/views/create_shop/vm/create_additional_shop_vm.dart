@@ -55,17 +55,17 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
           state.isEditingMode && state.url == null) {
         return WayaSnackBar.showToast('Pls add a Logo');
       }
-      if (state.logo == null && state.image != null) {
-        final String? url =
+      state = state.copyWith(isLoading: true);
+      if (state.image != null) {
+         String? url =
             await WayaFileRepository.instance.uploadFile(state.image!);
-        state.copyWith(logo: url);
+       state =  state.copyWith(logo: url);
+
+       
       }
       state = state.copyWith(vendorId: ConversationState.self.id);
-      state = state.copyWith(isLoading: true);
-
       final response = state.isEditingMode
-          ? await _shopRepository.editShop(
-              state.createShopModel, state.shopId)
+          ? await _shopRepository.editShop(state.createShopModel, state.shopId)
           : await _shopRepository.createShop(state.createShopModel);
 
       _logger.i(response.data);
