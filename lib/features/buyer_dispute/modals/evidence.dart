@@ -36,7 +36,7 @@ class BuyerDisputeEvidenceModal extends StatelessWidget {
               "Evidence Details",
               style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
-                fontSize: 24,
+                fontSize: 24.sp,
               ),
             ),
 
@@ -46,7 +46,7 @@ class BuyerDisputeEvidenceModal extends StatelessWidget {
             Text(
               "Here is the full description of your evidence",
               style: theme.textTheme.descriptionStyle.copyWith(
-                fontSize: 14,
+                fontSize: 14.sp,
               ),
             ),
 

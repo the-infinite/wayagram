@@ -3,6 +3,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/more/data/model/more_option_model.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/support/modal/default.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
@@ -101,7 +102,7 @@ class MoreVm {
         content: "Manage your following, followers in one place.",
         title: "Followers & Following",
         onTap: () {
-          WayaNav.toNamed('/follow/relationships?tab=mutual&self=true', arguments: 'more');
+          WayaNav.toNamed('/follow/relationships/self', arguments: 'more');
         },
       ),
       MoreOptionModel(
@@ -124,6 +125,14 @@ class MoreVm {
         title: "Chat & Call",
         onTap: () {
           WayaNav.removeUntilNamed(BottomView.route, arguments: 4);
+        },
+      ),
+      MoreOptionModel(
+        asset: WayaAssets.icons.mChat.path,
+        content: "If you believe there’s an error or issue within the app, please submit a dispute.",
+        title: "Disputes",
+        onTap: () {
+          WayaNav.toNamed(SellerDispute.route);
         },
       ),
     ];

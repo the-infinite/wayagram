@@ -1,14 +1,12 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/components/loading_dialog.dart';
 import 'package:wayagram/features/wallet/mixin/wallet_mixin.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
@@ -48,8 +46,8 @@ class _TransactionDetailsScreenState
         children: [
           Text(
             label,
-            style: const TextStyle(
-              fontSize: 14,
+            style:  TextStyle(
+              fontSize: 14.sp,
               color: Colors.black87,
             ),
           ),
@@ -58,7 +56,7 @@ class _TransactionDetailsScreenState
               Text(
                 value,
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   color: valueColor ?? Colors.black87,
                   fontWeight: FontWeight.w500,
                 ),
@@ -87,7 +85,7 @@ class _TransactionDetailsScreenState
           Text(
             'Transaction Receipt',
             style: TextStyle(
-              fontSize: 18,
+              fontSize: 18.sp,
               fontWeight: FontWeight.bold,
               color: Theme.of(context).primaryColor,
             ),
@@ -96,7 +94,7 @@ class _TransactionDetailsScreenState
           Text(
             '₦${state.transaction?.netAmount ?? "0"}',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 24.sp,
               color: wayaTheme.colorScheme.success,
               fontWeight: FontWeight.bold,
             ),
@@ -155,13 +153,13 @@ class _TransactionDetailsScreenState
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => WayaNav.goBack(),
         ),
-        title: const Text(
+        title:  Text(
           'Transaction Details',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 16,
+            fontSize: 16.sp,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -178,10 +176,10 @@ class _TransactionDetailsScreenState
                     width: double.infinity,
                     child: Column(
                       children: [
-                        const Text(
+                         Text(
                           'Transaction Amount',
                           style: TextStyle(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             color: Colors.grey,
                           ),
                         ),
@@ -189,7 +187,7 @@ class _TransactionDetailsScreenState
                         Text(
                           '+ ₦${state.transaction?.netAmount ?? "0"}',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 24.sp,
                             color: wayaTheme.colorScheme.success,
                             fontWeight: FontWeight.bold,
                           ),
@@ -244,13 +242,13 @@ class _TransactionDetailsScreenState
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: wayaTheme.colorScheme.primar50,
+                                color: wayaTheme.colorScheme.primary50,
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(
                                 'Copy',
                                 style: TextStyle(
-                                  fontSize: 12,
+                                  fontSize: 12.sp,
                                   color: wayaTheme.colorScheme.primary200,
                                 ),
                               ),
@@ -281,12 +279,12 @@ class _TransactionDetailsScreenState
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
+                        children:  [
                           Icon(Icons.share, size: 20, color: Colors.white),
                           SizedBox(width: 8),
                           Text(
                             'Share Receipt',
-                            style: TextStyle(fontSize: 16),
+                            style: TextStyle(fontSize: 16.sp),
                           ),
                         ],
                       ),
@@ -323,12 +321,12 @@ class _TransactionDetailsScreenState
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children:  [
                             Icon(Icons.check, size: 20),
                             SizedBox(width: 8),
                             Text(
                               'Verify Transaction',
-                              style: TextStyle(fontSize: 16),
+                              style: TextStyle(fontSize: 16.sp),
                             ),
                           ],
                         ),
@@ -354,9 +352,9 @@ class _TransactionDetailsScreenState
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      subtitle: const Text(
+                      subtitle:  Text(
                         'If you have any issue with this transaction\nYou can reach out to our Support Center',
-                        style: TextStyle(fontSize: 12),
+                        style: TextStyle(fontSize: 12.sp),
                       ),
                       trailing: const Icon(Icons.chevron_right),
                       onTap: () {},

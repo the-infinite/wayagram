@@ -51,7 +51,7 @@ class _SuccessfulModalState extends ConsumerState<SuccessfulModal> {
             SizedBox(height: 17.h),
             WayaButton(
               callback: () {
-                // Navigator.pop(context);
+                // WayaNav.goBack();
                 widget.onTap(context,ref);
               },
               text: widget.buttonText ?? "Manage Contest",

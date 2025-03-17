@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 
 class AboutUgtWidget extends StatelessWidget {
   final String title;
@@ -16,7 +17,9 @@ class AboutUgtWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: wayaTheme.textTheme.bodyMedium),
+        Text(title,
+            style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
         const Gap(5),
         SizedBox(
           width: context.width * 0.2,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -73,7 +74,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -110,7 +111,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -141,7 +142,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -177,7 +178,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -250,7 +251,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -293,7 +294,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Inlcude Measurements",
+                        Text("Include Measurements",
                             style: wayaTheme.textTheme.titleMedium),
                         const Gap(6),
                         Text(

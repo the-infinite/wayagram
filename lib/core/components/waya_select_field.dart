@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/waya_dummy_input.dart';
 import 'package:wayagram/core/components/waya_input_decorator.dart';
@@ -49,7 +50,7 @@ class WayaSelectField<T> extends ConsumerWidget {
             child: Text(
               label!,
               style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                fontSize: 14,
+                fontSize: 14.sp,
                 color: wayaTheme.colorScheme.greyColor900,
               ),
             ),
@@ -68,7 +69,7 @@ class WayaSelectField<T> extends ConsumerWidget {
                     ? (value as List<Select>).map((e) => e.label).join(',')
                     : _getPair(value.toString())?.label ?? value as String,
             hintStyle: wayaTheme.textTheme.bodyMedium?.copyWith(
-              fontSize: 14,
+              fontSize: 14.sp,
               color: (value == null ||
                       value.toString().isEmpty ||
                       (value is List<Select> && (value as List<Select>).isEmpty))

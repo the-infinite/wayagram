@@ -52,7 +52,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
             args['title'],
             style: TextStyle().wayaCopyWith(
                 color: wayaTheme.colorScheme.black,
-                fontSize: 24,
+                fontSize: 24.sp,
                 fontWeight: FontWeight.w700),
           ),
           Gap(10),
@@ -80,7 +80,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
             "Donation Information",
             style: TextStyle().wayaCopyWith(
                 color: wayaTheme.colorScheme.greyColor400,
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w400),
           ),
           Gap(20),
@@ -145,7 +145,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
                           title: "Update KYC Information ",
                           message: 'You must complete KYC verification before setting minimum amount.',
                           onPress: () {
-                            Navigator.pop(context);
+                            WayaNav.goBack();
                             WayaNav.toNamed('/kycUpdate', arguments: {
                               'kyc': '${viewModel.kycStatus}'
                             });
@@ -160,7 +160,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
                             title: "You don't have a Business Account",
                             message: 'Please upgrade to a business account to create a donation post',
                             onPress: () {
-                              Navigator.pop(context);
+                              WayaNav.goBack();
                               WayaNav.toNamed(UpgradeToBusiness.route);
                             },
                             buttonText: 'Upgrade to Business',
@@ -196,7 +196,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
             child:  Text(
               name,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),
@@ -207,7 +207,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
             child: Text(
               number,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.black ),
             ),
@@ -225,13 +225,13 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
       children: [
         Text(title,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 14,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.greyColor500),),
 
         Text(subTitle,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 16,
+              fontSize: 16.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.black),),
       ],);

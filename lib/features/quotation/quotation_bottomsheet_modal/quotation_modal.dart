@@ -85,7 +85,7 @@ class _QuotationModalState extends State<QuotationModal> {
                                             style: TextStyle().wayaCopyWith(
                                               color: wayaTheme.colorScheme.white,
                                               fontWeight: FontWeight.w500,
-                                              fontSize: 11,
+                                              fontSize: 11.sp,
                                             ),
                                           ),
                                         ],
@@ -102,7 +102,7 @@ class _QuotationModalState extends State<QuotationModal> {
                                   "SURAJ STORES",
                                   style: TextStyle().wayaCopyWith(
                                     color: wayaTheme.colorScheme.customBlack,
-                                    fontSize: 14,
+                                    fontSize: 14.sp,
                                   ),
                                 ),
 
@@ -117,7 +117,7 @@ class _QuotationModalState extends State<QuotationModal> {
                                             text: '15min ',
                                             style: TextStyle().wayaCopyWith(
                                               color: wayaTheme.colorScheme.black,
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                               fontWeight: FontWeight.w400,
                                             ),
                                           ),
@@ -125,7 +125,7 @@ class _QuotationModalState extends State<QuotationModal> {
                                             text: '2km ',
                                             style: TextStyle().wayaCopyWith(
                                               color: WayaColors.greyColor400,
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                               fontWeight: FontWeight.w400,
                                             ),
                                           ),
@@ -144,7 +144,7 @@ class _QuotationModalState extends State<QuotationModal> {
                                           style: TextStyle().wayaCopyWith(
                                             color: WayaColors.greyColor400,
                                             //color: wayaTheme.colorScheme.,
-                                            fontSize: 12,
+                                            fontSize: 12.sp,
                                           ),
                                         ),
                                       ],
@@ -166,7 +166,7 @@ class _QuotationModalState extends State<QuotationModal> {
                         "₦ 19,000.00",
                         style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 20,
+                          fontSize: 20.sp,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
@@ -243,7 +243,7 @@ class _BidWonModalState extends State<BidWonModal> {
                                   "Samsung S24 Ultra",
                                   style: TextStyle().wayaCopyWith(
                                     color: wayaTheme.colorScheme.customBlack,
-                                    fontSize: 14,
+                                    fontSize: 14.sp,
                                   ),
                                 ),
                                 //const Gap(8),
@@ -255,13 +255,13 @@ class _BidWonModalState extends State<BidWonModal> {
                                           text: 'Time Remaining | ',
                                           style: TextStyle().wayaCopyWith(
                                               color: WayaColors.greyColor400,
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                               fontWeight: FontWeight.w400)),
                                       TextSpan(
                                           text: '11h: 20m: 30s',
                                           style: TextStyle().wayaCopyWith(
                                               color: wayaTheme.colorScheme.customPrimary,
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                               fontWeight: FontWeight.w400)),
                                     ])),
                                     Spacer(),
@@ -279,14 +279,14 @@ class _BidWonModalState extends State<BidWonModal> {
                                       style: TextStyle().wayaCopyWith(
                                         color: WayaColors.greyColor400,
                                         //color: wayaTheme.colorScheme.,
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                       ),
                                     ),
                                     Text(
                                       " Lagos State",
                                       style: TextStyle().wayaCopyWith(
                                         color: WayaColors.greyColor400,
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                       ),
                                     ),
                                   ],
@@ -308,7 +308,7 @@ class _BidWonModalState extends State<BidWonModal> {
                             "₦ 350,500.00",
                             style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 20,
+                              fontSize: 20.sp,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -426,7 +426,7 @@ class _EditOfferModalState extends State<EditOfferModal> {
             Text(
               widget.hint,
               style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w400,
                 color: wayaTheme.colorScheme.greyColor500,
               ),
@@ -456,7 +456,7 @@ class _EditOfferModalState extends State<EditOfferModal> {
                       child: Text(
                         '-${widget.delta}',
                         style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
                           color: wayaTheme.colorScheme.white,
                         ),
@@ -473,7 +473,7 @@ class _EditOfferModalState extends State<EditOfferModal> {
                   child: Text(
                     WayaValueHelper.formatPrice(raw, 0),
                     style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 36,
+                      fontSize: 36.sp,
                       fontWeight: FontWeight.w600,
                       color: raw == 0 ? wayaTheme.colorScheme.greyColor400 : wayaTheme.colorScheme.black,
                     ),
@@ -501,7 +501,7 @@ class _EditOfferModalState extends State<EditOfferModal> {
                       child: Text(
                         '+${widget.delta}',
                         style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
                           color: wayaTheme.colorScheme.white,
                         ),
@@ -589,7 +589,7 @@ class NumPadButton extends StatelessWidget {
               : Text(
                   text!,
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 24.sp,
                     color: Colors.grey.shade800,
                   ),
                 ),

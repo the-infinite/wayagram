@@ -25,8 +25,8 @@ class OrderVm extends StateNotifier<OrderState> {
       bool hasNextPage = false;
       if (response.success) {
         OrdersResponse ordersResponse = OrdersResponse.fromJson(response.data);
-        orders = ordersResponse.data.data;
-        hasNextPage = ordersResponse.data.pagination.hasNextPage;
+        orders = ordersResponse.data.docs;
+        hasNextPage = ordersResponse.data.hasNextPage;
       }
 
       return PaginatedResult<Order>(hasNextPage: hasNextPage, items: orders);
@@ -49,7 +49,7 @@ class OrderVm extends StateNotifier<OrderState> {
 
       if (response.success && context.mounted) {
         WayaSnackBar.showToast("You have declined this order");
-        Navigator.pop(context);
+        WayaNav.goBack();
         WayaNav.toNamed(BottomView.route,
             arguments: {'index': 1, 'current': 2});
       }

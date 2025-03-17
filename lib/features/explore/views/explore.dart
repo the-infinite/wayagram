@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -51,7 +52,7 @@ class _ExploreState extends ConsumerState<Explore> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       //> need to fetch user data
       ref.read(successfulSetupVmProvider.notifier).getUserData();
-      //> 
+      //>
 
       ref.read(regionsProvider.notifier).getCurrentCountry();
       ref.read(selectInterestProvider.notifier).getUserInterest();
@@ -111,7 +112,7 @@ class _ExploreState extends ConsumerState<Explore> {
                     onTap: () {
                       WayaNav.toNamed('/general-settings');
                     },
-                    radius: 18,
+                    radius: 18.r,
                   ),
                 ],
               ),
@@ -156,7 +157,7 @@ class _ExploreState extends ConsumerState<Explore> {
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.primary,
                       fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                      fontSize: 16.sp,
                     ),
                   ),
                 ],
@@ -164,7 +165,7 @@ class _ExploreState extends ConsumerState<Explore> {
               callback: () {
                 WayaNav.toNamed(CreateRequest.route);
               },
-              color: wayaTheme.colorScheme.primar50,
+              color: wayaTheme.colorScheme.primary50,
             ),
 
             // Some space.
@@ -176,7 +177,7 @@ class _ExploreState extends ConsumerState<Explore> {
             //? For the next section.
             GroupedWidgetHeader(
                 onTap: () {
-                  Navigator.pushNamed(context, BottomView.route, arguments: 1);
+                  WayaNav.toNamed(BottomView.route, arguments: 1);
                 },
                 subTitle: 'Explore Categories & Best Offers',
                 title: 'Shop'),
@@ -195,10 +196,6 @@ class _ExploreState extends ConsumerState<Explore> {
                         ? notifier.filteredProducts.sublist(0, 2)
                         : notifier.filteredProducts),
             const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Support a cause that matters', title: 'Donations'),
-            const Gap(25),
-            DonationsFeedWidget(),
-            const Gap(25),
             GroupedWidgetHeader(
                 onTap: () {
                   WayaNav.toNamed(DisplayFeed.route);
@@ -207,6 +204,14 @@ class _ExploreState extends ConsumerState<Explore> {
                 title: 'Discover'),
             const Gap(25),
             SharedPosts(),
+            const Gap(25),
+            GroupedWidgetHeader(
+              onTap: () {},
+              subTitle: 'Support a cause that matters',
+              title: 'Donations',
+            ),
+            const Gap(25),
+            DonationsFeedWidget(),
             const Gap(25),
 
             GroupedWidgetHeader(
@@ -284,7 +289,13 @@ class _ExploreState extends ConsumerState<Explore> {
             const ConversationFeedWidget(isExpanded: false),
 
             const Gap(25),
-            GroupedWidgetHeader(onTap: () {}, subTitle: 'Join Upcoming Activities', title: 'University Got Talent'),
+            GroupedWidgetHeader(
+                onTap: () {
+                  //? navigate to ugt contest page
+                  WayaNav.toNamed("/ugt-home");
+                },
+                subTitle: 'Join Upcoming Activities',
+                title: 'University Got Talent'),
             const Gap(25),
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),

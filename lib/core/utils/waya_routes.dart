@@ -3,8 +3,10 @@ import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/buyer_dispute/views/detail.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
+import 'package:wayagram/features/chat/view/profile.dart';
 import 'package:wayagram/features/donation/view/create_donation.dart';
 import 'package:wayagram/features/donation/view/donation_details.dart';
 import 'package:wayagram/features/donation/view/donation_management.dart';
@@ -15,6 +17,7 @@ import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/chat/view/chat.dart';
 import 'package:wayagram/features/explore/views/chat_and_social.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
+import 'package:wayagram/features/follow/view/follow_page.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
@@ -67,6 +70,9 @@ import 'package:wayagram/features/quotation/seller/views/bids/map_screen.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/see_seller_bids.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
+import 'package:wayagram/features/role_access/view/add_team_member_page.dart';
+import 'package:wayagram/features/role_access/view/member_details_page.dart';
+import 'package:wayagram/features/role_access/view/role_access_page.dart';
 import 'package:wayagram/features/shop/filter/views/product_search_result.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/create_shop.dart';
@@ -74,10 +80,11 @@ import 'package:wayagram/features/shop/seller/views/delivery_request/delivery_re
 import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
 import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
 import 'package:wayagram/features/shop/seller/views/orders/seller_order_details.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/views/add_evidence.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/views/dispute_chat/dispute_chat.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute.dart';
-import 'package:wayagram/features/shop/seller/views/seller_dispute/views/seller_dispute_detail.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/add_evidence.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/dispute_chat.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/init_dispute.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute_detail.dart';
 import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/application_product_details.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/product_listing.dart';
@@ -87,9 +94,10 @@ import 'package:wayagram/features/shop/views/products_view_page.dart';
 import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
 import 'package:wayagram/features/support/views/request.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/admin_transaction_history.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disqualify.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_application_contest.dart';
-import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_contest.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_leaderboard_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/manage_state_single_contest.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/view_single_contestant_data.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart';
@@ -168,7 +176,10 @@ class WayaAppRoutes {
     VerifyTransactionScreen.route: () => VerifyTransactionScreen(),
     AllTransactionHistory.route: () => AllTransactionHistory(),
     BankTransferScreen.route: () => BankTransferScreen(),
-    ProfilePage.route: () => ProfilePage(id: WayaNav.search['id'].toString()),
+    ProfilePage.route: () => ProfilePage(
+          id: WayaNav.search['id'].toString(),
+          source: WayaNav.search['source'].toString(),
+        ),
     EditNamePage.route: () => EditNamePage(),
     EditProfilePage.route: () => EditProfilePage(),
     AddProduct.route: () => AddProduct(),
@@ -181,7 +192,7 @@ class WayaAppRoutes {
     SellerDisputeDetail.route: () => SellerDisputeDetail(),
     MapScreen.route: () => MapScreen(),
     AddEvidence.route: () => AddEvidence(),
-    DisputeChat.route: () => DisputeChat(),
+    DisputeChat.route: () => DisputeChat(id: WayaNav.search['id'].toString()),
     UgtGetStarted.route: () => UgtGetStarted(),
     UgtHome.route: () => UgtHome(),
     CreateContest.route: () => CreateContest(),
@@ -193,7 +204,8 @@ class WayaAppRoutes {
     ManageApplicationContest.route: () => ManageApplicationContest(),
     ManageStateSingleContest.route: () => ManageStateSingleContest(),
     DashboardContestPage.route: () => DashboardContestPage(),
-    ManageStateContest.route: () => ManageStateContest(),
+    ManageLeaderboardContest.route: () => ManageLeaderboardContest(),
+    AdminTransactionHistory.route: () => AdminTransactionHistory(),
     ContestSettingContent.route: () => ContestSettingContent(),
     EditStagePreference.route: () => EditStagePreference(),
     CreateRequest.route: () => CreateRequest(),
@@ -236,15 +248,17 @@ class WayaAppRoutes {
     CreateGroupPost.route: () => CreateGroupPost(),
     CreatePagePost.route: () => CreatePagePost(),
     MutualPage.route: () => MutualPage(
-          isSelf: bool.tryParse(WayaNav.search['self'].toString()) ?? true,
           initialTab: WayaNav.search['tab'] ?? 'mutual',
-          userId: WayaNav.search['uid'],
+          userId: WayaNav.search['uid'].toString(),
+          source: WayaNav.search['source'] ?? 'any',
         ),
+    FollowRelationshipsPage.route: () => FollowRelationshipsPage(),
     PublicGroup.route: () => PublicGroup(),
     EditPageInfo.route: () => EditPageInfo(),
     AddTeamMember.route: () => AddTeamMember(),
     PrivateGroup.route: () => PrivateGroup(),
     SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
+    ChatProfilePage.route: () => ChatProfilePage(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route: () => DisplayFeed(),
     GroupSetting.route: () => GroupSetting(),
     AllUpcomingEvents.route: () => AllUpcomingEvents(),
@@ -253,7 +267,6 @@ class WayaAppRoutes {
     ViewMoment.route: () => ViewMoment(),
     CandidatePostScreen.route: () => CandidatePostScreen(),
     VideoTrimmerScreen.route: () => VideoTrimmerScreen(),
-
     ViewFullMedia.route: () => ViewFullMedia(),
     EditPost.route: () => EditPost(
           initialContent: '',
@@ -273,6 +286,7 @@ class WayaAppRoutes {
     SupportRequestScreen.route: () => SupportRequestScreen(),
     SupportDisputeScreen.route: () => SupportDisputeScreen(),
     SupportChatScreen.route: () => SupportChatScreen(),
+    InitDispute.route: () => InitDispute(),
     DisputeDetail.route: () => DisputeDetail(id: WayaNav.search['id'].toString()),
     ProductSearchResult.route: () => ProductSearchResult(),
     LogsAndAuditTrials.route: () => LogsAndAuditTrials(),
@@ -286,6 +300,10 @@ class WayaAppRoutes {
     KycUpdate.route: () => KycUpdate(),
     SellerBuyRequestsScreen.route: () => SellerBuyRequestsScreen(),
     BuyerBuyRequestsScreen.route: () => BuyerBuyRequestsScreen(),
+    RoleAccessPage.route: () => RoleAccessPage(),
+    AddTeamMemberPage.route: () => AddTeamMemberPage(),
+    MemberDetailsPage.route: () => MemberDetailsPage(),
+    VerifyEmail.route: () => VerifyEmail()
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -294,11 +312,15 @@ class WayaAppRoutes {
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getProfileRoute(String id) => "${ProfilePage.route}?id=$id";
+  static String getProfileRoute(String id, [String source = 'any']) => "${ProfilePage.route}?id=$id&source=$source";
 
   /// Helper function that is used to get the route to the details of a single
   /// dispute by its ID.
   static String getDisputeDetailsRoute(String id) => "${DisputeDetail.route}?id=$id";
+
+  /// Helper function that is used to get the route to the chat of a single
+  /// dispute by its ID.
+  static String getDisputeChatsRoute(String id) => "${DisputeChat.route}?id=$id";
 
   /// Helper function that is used to navigate to the route that contains all
   /// the bids of sellers
@@ -311,8 +333,12 @@ class WayaAppRoutes {
   /// Helper function used to generate the route that is supposed to navigate to
   /// all the followers, followings, and mutuals that one user has with another
   /// one.
-  static String getFollowersPage(bool isSelf, [String tab = 'mutual', String? uid]) =>
-      "${MutualPage.route}?tab=$tab&self=$isSelf${uid != null ? '&uid=$uid' : ''}";
+  static String getFollowersPage(String uid, [String tab = 'mutual', String source = 'any']) =>
+      "${MutualPage.route}?tab=$tab&source=$source&uid=$uid";
+
+  /// Helper function used to generate the route that is supposed ot navigate to
+  /// the chat profile of any given user.
+  static String getChatProfile(String id) => "${ChatProfilePage.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages {

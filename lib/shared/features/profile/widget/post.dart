@@ -1,7 +1,10 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
@@ -11,16 +14,15 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/view/report_group_post.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
+import 'package:wayagram/features/post/view/comment.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/shared/features/profile/logic/default.dart';
-import 'package:wayagram/shared/features/profile/modals/comment.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
@@ -54,25 +56,45 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
   }
 
   Future<void> invalidate(ServicesProvider notifier) async {
-   // notifier.getEngagedPost(); Not considered for now
+    // notifier.getEngagedPost(); Not considered for now
   }
 
   void showComments(BuildContext context) async {
-    final result = await WayaUtils.showModalSheet(
-      context,
-      child: PostCommentModal(
-        post: widget.data,
-        index: widget.index,
+    final result = await WayaNav.to(
+      transition: Transition.downToUp,
+      PostCommentsWidget(
+        id: widget.data.id,
       ),
     );
 
     //? Do nothing.
     if (result == null) return;
+  }
 
-    // Update the state of comments.
-    setState(() {
-      comment += 1;
-    });
+  void _sharePost(engagementMonitor, pageNotifier, serviceNotifier) {
+    //? Acknowledge this user's choice to share the post.
+    postEngagement(engagementMonitor, widget.data, PostPoints.sharePoint.value);
+
+    //? Share the post.
+    Share.share('${widget.data.url}', subject: 'Share Options').then(
+      (value) {
+        if (value.status == ShareResultStatus.success) {
+          // Share the post.
+          pageNotifier.sharePost(context, postId: widget.data.id);
+
+          // Only
+          setState(() {
+            shared += 1;
+          });
+
+          // Now stop.
+          return;
+        }
+      },
+    );
+
+    // Notify all.
+    invalidate(serviceNotifier);
   }
 
   @override
@@ -141,7 +163,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                 Text(
                                   formatTimeAgo('${widget.data.createdAt}'),
                                   style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                                    fontSize: 14,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.w400,
                                     color: wayaTheme.colorScheme.greyColor500,
                                   ),
@@ -161,24 +183,63 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                         position: PopupMenuPosition.under,
                         itemBuilder: (context) {
                           return [
+                            //? First, the button to share a post.
                             PopupMenuItem<int>(
-                              value: 0,
+                              value: 2,
                               child: WayaActionNav(
                                 context: context,
-                                onTap: () {
-                                  WayaUtils.showModalSheet(context,
-                                              child: ReportGroupPost(
-                                                  statuses: pageReport,
-                                                  currentStatus: "",
-                                                  postId: widget.data.id));
-
-
-                                },
-                                asset: WayaAssets.images.pages.flag.svg(),
-                                text: "Report",
+                                onTap: () => _sharePost(engagementMonitor, pageNotifier, serviceNotifier),
+                                asset: WayaAssets.icons.share.svg(
+                                  height: 20,
+                                ),
+                                text: "Share Post",
                                 color: wayaTheme.colorScheme.customBlack,
                               ),
                             ),
+
+                            //? Controls that only show if this is the creator of the post.
+                            if (widget.data.userId == ConversationState.self.id) ...[
+                              //? Second, the button to delete a post
+                              PopupMenuItem<int>(
+                                value: 1,
+                                child: WayaActionNav(
+                                  context: context,
+                                  onTap: () => pageNotifier.deletePost(context,
+                                      postId: widget.data.id, userId: ConversationState.self.id),
+                                  asset: WayaAssets.images.pages.delete.svg(
+                                    color: wayaTheme.colorScheme.error500,
+                                    height: 20,
+                                  ),
+                                  text: "Delete Post",
+                                  color: wayaTheme.colorScheme.error500,
+                                ),
+                              ),
+                            ]
+
+                            //? Buttons that show when this is not the author of
+                            //? the post.
+                            else ...[
+                              //? Third, the button to report a group post.
+                              PopupMenuItem<int>(
+                                value: 0,
+                                child: WayaActionNav(
+                                  context: context,
+                                  onTap: () {
+                                    WayaUtils.showModalSheet(
+                                      context,
+                                      child: ReportGroupPost(
+                                        statuses: pageReport,
+                                        currentStatus: "",
+                                        postId: widget.data.id,
+                                      ),
+                                    );
+                                  },
+                                  asset: WayaAssets.images.pages.flag.svg(),
+                                  text: "Report",
+                                  color: wayaTheme.colorScheme.customBlack,
+                                ),
+                              )
+                            ],
                           ];
                         },
                         child: WayaAssets.images.polls.menu.image(
@@ -305,19 +366,12 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                     image: WayaAssets.images.pages.like2.path,
                     color: liked == 0 ? wayaTheme.colorScheme.greyColor500 : wayaTheme.colorScheme.primary,
                     onPressed: () {
-                      int value = liked;
-
-                      // Increment count.
-                      setState(() {
-                        liked += 1;
-                      });
-
                       //? Perform the action on the post.
                       pageNotifier.likePost(context, postId: widget.data.id, userId: ConversationState.self.id).then(
                         (result) {
-                          if (result) return;
+                          if (!result) return;
                           setState(() {
-                            liked = value;
+                            liked += 1;
                           });
                         },
                       );
@@ -351,39 +405,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                     text: '$shared Shares',
                     image: WayaAssets.images.pages.share2.path,
                     color: shared == 0 ? wayaTheme.colorScheme.greyColor500 : wayaTheme.colorScheme.primary,
-                    onPressed: () {
-                      // Save the old value here.
-                      final previous = shared;
-
-                      // Increment the count.
-                      setState(() {
-                        shared += 1;
-                      });
-
-                      //? Acknowledge this user's choice to share the post.
-                      postEngagement(engagementMonitor, widget.data, PostPoints.sharePoint.value);
-
-                      //? Share the post.
-                      Share.share('${widget.data.url}', subject: 'Share Options').then(
-                        (value) {
-                          if (value.status == ShareResultStatus.success) {
-                            // Share the post.
-                            pageNotifier.sharePost(context, postId: widget.data.id);
-
-                            // Now stop.
-                            return;
-                          }
-
-                          // Only
-                          setState(() {
-                            shared = previous;
-                          });
-                        },
-                      );
-
-                      // Notify all.
-                      invalidate(serviceNotifier);
-                    },
+                    onPressed: () => _sharePost(engagementMonitor, pageNotifier, serviceNotifier),
                   ),
 
                   //? For saving a post to booked posts.

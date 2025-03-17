@@ -1,7 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -202,7 +201,7 @@ class _TabButton extends StatelessWidget {
                 color: isSelected
                     ? wayaTheme.colorScheme.white
                     : wayaTheme.colorScheme.white.withOpacity(0.5),
-                fontSize: 16,
+                fontSize: 16.sp,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),
             ),

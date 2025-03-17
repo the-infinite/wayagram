@@ -51,7 +51,7 @@ class SinglePageWidget extends StatelessWidget {
                   Text(
                     page.name,
                     style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                       color: wayaTheme.colorScheme.black,
                     ),
@@ -61,7 +61,7 @@ class SinglePageWidget extends StatelessWidget {
               subtitle: Text(
                 "${WayaValueHelper.formatNumber(page.followerCount)} followers",
                 style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: wayaTheme.colorScheme.greyColor500,
                 ),
@@ -77,7 +77,7 @@ class SinglePageWidget extends StatelessWidget {
               child: Text(
                 page.description,
                 style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: wayaTheme.colorScheme.greyColor500,
                 ),

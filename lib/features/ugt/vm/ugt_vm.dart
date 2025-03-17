@@ -294,7 +294,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     final response = await _contestRepository.createProfile(map);
     isLoading.value = false;
     if (response.success) {
-      Navigator.pop(context);
+      WayaNav.goBack();
     }
   }
 
@@ -727,6 +727,14 @@ bool isDateInFuture(String dateString) {
   DateTime now = DateTime.now().toUtc();
 
   return givenDate.isAfter(now);
+}
+
+bool isPresentIsPast(String dateString) {
+  DateTime givenDate = DateTime.parse(dateString).toUtc(); // Convert to UTC
+
+  DateTime now = DateTime.now().toUtc();
+
+  return now.isAfter(givenDate);
 }
 
 bool isDateBefore(String dateString) {

@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,23 +11,49 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
+import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget.dart';
 import 'package:wayagram/features/buyer_dispute/modals/failure.dart';
-import 'package:wayagram/features/buyer_dispute/modals/success.dart';
-import 'package:wayagram/features/buyer_dispute/vm/default.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
+import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
+import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class ReportDisputeModal extends ConsumerStatefulWidget {
-  const ReportDisputeModal({super.key});
+  final Order order;
+  final String disputeId;
+  final String tobeEscalatedBy;
+  const ReportDisputeModal(
+      {super.key, required this.order, required this.disputeId, required  this.tobeEscalatedBy});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ReportDisputeModalState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ReportDisputeModalState();
 }
 
 class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
-  late final notifier = ref.read(buyerDisputeProvider.notifier);
+  late final notifier = ref.read(disputeVmProvider.notifier);
+
   final reasonController = ValueNotifier<Select?>(null);
   final detailsController = TextEditingController();
   final loadingController = ValueNotifier(false);
   final _formKey = GlobalKey<FormState>();
+
+  List<DocType> mediaDoc = [];
+
+  void addFile(File file) {
+    setState(() {
+      mediaDoc = [
+        DocType(file: file, type: "evidence", name: file.path.split('/').last)
+      ];
+    });
+  }
+
+  void removeFile() {
+    setState(() {
+      mediaDoc = mediaDoc.where((i) => i.type != 'evidence').toList();
+    });
+  }
 
   Future<void> _submitDispute() async {
     if (!_formKey.currentState!.validate()) return;
@@ -34,16 +62,27 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
     final details = detailsController.text.trim();
     final reason = reasonController.value!.value;
 
+    if (details.isEmpty || reason.isEmpty) {
+      return WayaSnackBar.showToast("Reason and Details are required");
+    }
     //? This is fine.
-    final result = await notifier.sendDisputeTicket(reason, details.isEmpty ? null : details);
+    final result = await notifier.updateTicket(
+        orderedItem: widget.order,
+        reason: reason,
+        reference: widget.order.id,
+        sellerId: widget.order.vendorId,
+        disputeId: widget.disputeId,
+        tobeEscalatedBy: widget.tobeEscalatedBy,
+        mediaDoc: mediaDoc.isNotEmpty ? mediaDoc[0] : null,
+        details: details);
 
     //? After sending this one...
     if (result) {
       WayaNav.goBack();
-      await WayaUtils.showModalSheet(
-        context,
-        child: BuyerDisputeSuccessModal(),
-      );
+      // await WayaUtils.showModalSheet(
+      //   context,
+      //   child: BuyerDisputeSuccessModal(),
+      // );
     }
 
     //? Await this one.
@@ -91,7 +130,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                   "Report a Dispute",
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    fontSize: 24,
+                    fontSize: 24.sp,
                   ),
                 ),
 
@@ -101,7 +140,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                 Text(
                   "Let us know what went wrong to help resolve the issue",
                   style: theme.textTheme.descriptionStyle.copyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
                 ),
 
@@ -113,7 +152,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                   style: theme.textTheme.descriptionStyle.copyWith(
                     color: theme.colorScheme.customBlack,
                     fontWeight: FontWeight.w500,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                   ),
                 ),
 
@@ -121,13 +160,23 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
 
                 //? Now, for the products ordered.
                 ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: 3,
-                  itemBuilder: (context, index) {
-                    return Container(); //OrderedProductCard();
-                  },
-                ),
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: widget.order.items.length,
+                    itemBuilder: (context, index) {
+                      CartProduct order = CartProduct(
+                          price: double.parse(widget.order.items[index].price)
+                              .toInt(),
+                          quantity: widget.order.items[index].quantity,
+                          productId: widget.order.items[index].productId,
+                          productName: widget.order.items[index].productName,
+                          deliveryCharge: false,
+                          unitPrice: widget.order.items[index].price,
+                          productImage:
+                              widget.order.items[index].productImage ?? '',
+                          deliveryOptions: '');
+                      return OrderedProductCard(orders: order);
+                    }),
 
                 // Some space.
                 Gap(30.h),
@@ -161,20 +210,22 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                               label: "Reason for dispute",
                               hintText: 'Select Type',
                               items: notifier.disputeType,
-                              onSelected: (value) => reasonController.value = value.first,
+                              onSelected: (value) =>
+                                  reasonController.value = value.first,
                             );
                           },
                         ),
 
                         //? If this has failed.
-                        if (formState.hasError && reasonController.value == null)
+                        if (formState.hasError &&
+                            reasonController.value == null)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.error,
-                                fontSize: 12,
+                                fontSize: 12.sp,
                               ),
                             ),
                           ),
@@ -190,11 +241,23 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                 WayaTextFormField(
                   keyboardType: TextInputType.multiline,
                   controller: detailsController,
-                  hintText: 'Share the details about your issue to get it resolved quickly',
+                  hintText:
+                      'Share the details about your issue to get it resolved quickly',
                   line: 6,
                   padding: const EdgeInsets.all(12),
                   label: 'Provide Details (Optional)',
                 ),
+
+                Gap(15.h),
+
+                AddDocumentWidget(
+                    addFile: addFile,
+                    removeFile: removeFile,
+                    title: mediaDoc.isNotEmpty
+                        ? mediaDoc[0].name
+                        : "Upload Evidence",
+                    isUploaded: mediaDoc.isNotEmpty,
+                    description: "IMG , JPG Format"),
 
                 // Some space.
                 Gap(25.h),
@@ -202,7 +265,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                 //? The button we use to submit the details of this dispute.
                 WayaProgressiveButton(
                   callback: _submitDispute,
-                  text: "Submit Dispute",
+                  text: "Report Dispute to Mediator",
                   notifier: loadingController,
                 ),
 
@@ -214,7 +277,8 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                   callback: () => WayaNav.goBack(),
                   textColor: theme.colorScheme.greyColor500,
                   color: theme.colorScheme.transparent,
-                  border: Border.all(color: theme.colorScheme.greyColor300, width: 1),
+                  border: Border.all(
+                      color: theme.colorScheme.greyColor300, width: 1),
                   text: "Cancel",
                 ),
               ],

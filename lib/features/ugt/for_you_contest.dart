@@ -105,14 +105,14 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
               //WayaNav.toNamed('/create-profile-contest1');
               WayaNav.toNamed('/create-contest');
             },
-            color: wayaTheme.colorScheme.primar50,
+            color: wayaTheme.colorScheme.primary50,
             text: "Host a Contest",
             textColor: wayaTheme.colorScheme.customPrimary,
           ),
         if (ConversationState.self.accountType == UserAccountType.business)
           const Gap(10),
-        if (posts.isEmpty) emptyWidget(),
         if (postNotifier.isLoading) Center(child: CircularProgressIndicator()),
+        if (posts.isEmpty) emptyWidget(),
         if (posts.isNotEmpty)
           ListView.builder(
             controller: _scrollController,

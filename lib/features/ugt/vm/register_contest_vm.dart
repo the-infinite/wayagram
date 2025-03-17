@@ -5,10 +5,11 @@ import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
-import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
+import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
+import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
 
 final uuid = Uuid();
@@ -102,7 +103,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
   }
 
   Future<void> submitDetail(BuildContext context, ValueNotifier<bool> isLoading,
-      String mySelectedState) async {
+      String mySelectedState, VoidCallback onPressed) async {
     isLoading.value = true;
     // print("Mean  werr $state");
     List<Map<String, dynamic>> detailsList = state.map(
@@ -138,6 +139,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
         // detailsListRight.add({oldMap["title"]: oldMap["data"]});
       }
     }
+
     print("Mean 1 $detailsListRight");
 
     var map = {
@@ -159,7 +161,9 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     if (response.success) {
       WayaSnackBar.showToast(
           "Application sent, Your Application is under review");
-      Navigator.pop(context);
+      Future.delayed(Duration(seconds: 1), () {
+        WayaNav.removeAllUntil(UgtHome(), "/ugt-home");
+      });
     }
   }
 

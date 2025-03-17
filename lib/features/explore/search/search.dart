@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/explore/widgets/moments_widget.dart';
 import 'package:wayagram/features/moments/data/model/folllowed_user_moments_model.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
-import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/widgets/my_moment_widget.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
@@ -27,6 +28,7 @@ class SearchView extends ConsumerStatefulWidget {
 
 class _SearchState extends ConsumerState<SearchView> {
   late TextEditingController searchController;
+  final storage = WayaLocalDataSource.instance;
   List<MomentData> moments = [];
   Set<String> selectedServices = {}; // Tracks selected services
 
@@ -37,8 +39,22 @@ class _SearchState extends ConsumerState<SearchView> {
       ref.read(servicesProvider.notifier).getAllUsers();
     });
     searchController = TextEditingController();
+
+    //? How we get all users from storage.
     searchController.addListener(() {
-      setState(() {}); // Rebuild when search text changes
+      final value = searchController.text.trim();
+
+      //? Leave when this has no content.
+      if (value.isEmpty) return;
+
+      //? Now, try to update it.
+      debounce(
+        key: "search-discovery",
+        delay: const Duration(milliseconds: 750),
+        () {
+          setState(() {}); // Rebuild when search text changes
+        },
+      )();
     });
   }
 
@@ -53,44 +69,51 @@ class _SearchState extends ConsumerState<SearchView> {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(servicesProvider);
     final momentState = ref.watch(momentVmProvider);
+    final query = searchController.text.trim();
 
-    // moments
+    //? Aggregating moments.
     for (UserMoments userMoments in momentState.moments) {
       moments = [...userMoments.moments];
     }
 
-    print(moments);
+    //? Searching posts.
+    final List<Post> filteredPosts = WayaUtils.strictSearch<Post>(state.topPosts, ['hashtags'], query);
+    final history = storage.getSearchHistory();
 
-//post
-    final List<Post> filteredPosts = WayaUtils.strictSearch<Post>(
-        state.topPosts, ['hashtags'], searchController.text);
-
-    //post
+    //? Moments
     final List<MomentData> filteredMoments = WayaUtils.strictSearch<MomentData>(
-        moments, ['caption'], searchController.text);
+      moments,
+      ['caption'],
+      query,
+    );
 
-    // user
-    final List<UserDetails> filteredAccounts =
-        WayaUtils.strictSearch<UserDetails>(state.usersDetails,
-            ['firstName', 'lastName', 'email'], searchController.text);
+    //? Searching user data.
+    final List<UserDetails> filteredAccounts = WayaUtils.strictSearch<UserDetails>(
+      state.usersDetails,
+      ['firstName', 'lastName', 'email'],
+      query,
+    );
 
-    Map<String, dynamic> serviceData = {
-      'Post': filteredPosts,
-      'Account': filteredAccounts,
-      'Moment': filteredMoments
-    };
+    Map<String, dynamic> serviceData = {'Post': filteredPosts, 'Account': filteredAccounts, 'Moment': filteredMoments};
 
-    List<String> matchingServices = serviceData.entries
-        .where((entry) => (entry.value as List).isNotEmpty)
-        .map((entry) => entry.key)
-        .toList();
+    List<String> matchingServices =
+        serviceData.entries.where((entry) => (entry.value as List).isNotEmpty).map((entry) => entry.key).toList();
 
     selectedServices.retainAll(matchingServices);
 
-    List<String> activeServices =
-        selectedServices.isEmpty ? matchingServices : selectedServices.toList();
+    List<String> activeServices = selectedServices.isEmpty ? matchingServices : selectedServices.toList();
 
     bool allServicesEmpty = matchingServices.isEmpty;
+
+    if (!allServicesEmpty) {
+      debounce(
+        key: "search-history-add",
+        delay: const Duration(seconds: 1, milliseconds: 750),
+        () {
+          storage.addSearchToHistory(query);
+        },
+      );
+    }
 
     return WayaScaffold(
       isLoading: false,
@@ -99,8 +122,7 @@ class _SearchState extends ConsumerState<SearchView> {
         leading: WayaBackButton(onTap: () => WayaNav.goBack()),
         title: WayaTextFormField(
           padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-          prefixIcon:
-              Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
+          prefixIcon: Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
           controller: searchController,
           hintText: 'Search hashtags, accounts, comments, users, etc.',
         ),
@@ -111,45 +133,108 @@ class _SearchState extends ConsumerState<SearchView> {
           const SizedBox(
             height: 10,
           ),
-          if (matchingServices.isNotEmpty)
+          if (query.isEmpty && history != null && history.isNotEmpty) ...[
+            //? Title text for the search history section...
+            Text(
+              "Search history",
+              style: wayaTheme.textTheme.titleSmall?.copyWith(
+                color: wayaTheme.colorScheme.greyColor300,
+              ),
+            ),
+
+            // Some space.
+            Gap(5.h),
+
+            //? Then the search history.
+            Expanded(
+              child: ListView.builder(
+                itemCount: history.length,
+                itemBuilder: (context, index) => Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 3.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      //? Our title for this search entry.
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            searchController.text = history[index];
+                          },
+                          child: Text(
+                            history[index],
+                            maxLines: 1,
+                            style: wayaTheme.textTheme.titleSmall?.copyWith(
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                      // Some space.
+                      Gap(10.w),
+
+                      //? Oor button to remove it.
+                      InkWell(
+                        onTap: () {
+                          storage.removeFromSearchHistory(index);
+                          setState(() {});
+                        },
+                        child: WayaAssets.icons.actonDismiss.svg(
+                          height: 15,
+                          width: 15,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ] else if (matchingServices.isNotEmpty)
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
-                children: matchingServices.map((service) {
-                  final isSelected = selectedServices.contains(service);
-                  return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                      child: FilterChip(
-                        label: Text(service),
-                        labelStyle: wayaTheme.textTheme.descriptionStyle,
-                        selected: isSelected,
-                        onSelected: (selected) {
-                          setState(() {
-                            if (selected) {
-                              selectedServices.add(service);
-                            } else {
-                              selectedServices.remove(service);
-                            }
-                          });
-                        },
-                        materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        backgroundColor: wayaTheme.colorScheme.transparent,
-                        selectedColor: wayaTheme.colorScheme.primar50,
-                        showCheckmark: false,
-                        padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          side: BorderSide(
-                            color: isSelected
-                                ? wayaTheme.colorScheme.customPrimary
-                                : wayaTheme.colorScheme.greyColor300,
+                children: matchingServices.map(
+                  (service) {
+                    final isSelected = selectedServices.contains(service);
+                    return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                        child: FilterChip(
+                          label: Text(service),
+                          labelStyle: wayaTheme.textTheme.descriptionStyle,
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                selectedServices.add(service);
+                              } else {
+                                selectedServices.remove(service);
+                              }
+                            });
+                          },
+                          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          backgroundColor: wayaTheme.colorScheme.transparent,
+                          selectedColor: wayaTheme.colorScheme.primary50,
+                          showCheckmark: false,
+                          padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            side: BorderSide(
+                              color:
+                                  isSelected ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.greyColor300,
+                            ),
                           ),
-                        ),
-                      ));
-                }).toList(),
+                        ));
+                  },
+                ).toList(),
               ),
             ),
+
+          // Some space.
           const SizedBox(height: 10),
+
+          //? Now for the data on services.
           if (allServicesEmpty)
             Expanded(
               child: Center(
@@ -164,10 +249,15 @@ class _SearchState extends ConsumerState<SearchView> {
           else
             Expanded(
               child: ListView(
-                children: activeServices.map((service) {
-                  return _buildServiceWidget(
-                      service, serviceData[service], wayaTheme);
-                }).toList(),
+                children: activeServices
+                    .map(
+                      (service) => _buildServiceWidget(
+                        service,
+                        serviceData[service],
+                        wayaTheme,
+                      ),
+                    )
+                    .toList(),
               ),
             ),
         ],
@@ -209,14 +299,15 @@ class _SearchState extends ConsumerState<SearchView> {
       );
     } else if (service == 'Account' && data is List<UserDetails>) {
       return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: data
-              .map((account) => SizedBox(
-                    child: UserWidget(
-                      user: account,
-                    ),
-                  ))
-              .toList());
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: data
+            .map((account) => SizedBox(
+                  child: FollowUserWidget(
+                    userId: account.id!,
+                  ),
+                ))
+            .toList(),
+      );
     }
     return SizedBox.shrink();
   }

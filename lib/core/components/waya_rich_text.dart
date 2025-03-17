@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -28,28 +29,26 @@ class WayaRichText extends StatelessWidget {
     return RichText(
       text: TextSpan(
         style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-          fontSize: 18.0,
+          fontSize: 18.0.sp,
           color: wayaTheme.colorScheme.black,
         ),
-        children:texts ?? [
-          TextSpan(
-              text: title1,
-              style: style1 ??
-                  wayaTheme.textTheme.hintStyle
-                      .wayaCopyWith(fontWeight: FontWeight.w500, color: wayaTheme.colorScheme.black)),
-          TextSpan(
-            text: title2,
-            style: style2 ??
-                wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                  color: wayaTheme.colorScheme.primary,
-                  fontWeight: FontWeight.w600,
-                ),
-            recognizer: TapGestureRecognizer()
-              ..onTap = () {
-                onTap2!();
-              },
-          ),
-        ],
+        children: texts ??
+            [
+              TextSpan(
+                  text: title1,
+                  style: style1 ??
+                      wayaTheme.textTheme.hintStyle
+                          .wayaCopyWith(fontWeight: FontWeight.w500, color: wayaTheme.colorScheme.black)),
+              TextSpan(
+                text: title2,
+                style: style2 ??
+                    wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                      color: wayaTheme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                recognizer: TapGestureRecognizer()..onTap = onTap2,
+              ),
+            ],
       ),
     );
   }

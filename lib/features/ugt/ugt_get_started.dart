@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/ugt/vm/ugt_restructed/provider_notify/provider_notifyer.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
@@ -38,7 +39,7 @@ class UgtGetStarted extends ConsumerWidget {
             const Gap(3),
             Text(
               'Discover the vibrant world of student talents and creativity! UGT \n is your ultimate stage to showcase your skills, compete with fellow \n university talents, and support your favorites',
-              style: wayaTheme.textTheme.hintStyle,
+              style: WayaTextStyles.hintStyleSemiBold,
             ),
             const Gap(10),
             Text(
@@ -119,7 +120,7 @@ class AdList extends StatelessWidget {
         const Gap(6),
         Text(
           desc,
-          style: wayaTheme.textTheme.hintStyle,
+          style: WayaTextStyles.hintStyleSemiBold,
         ),
       ],
     );

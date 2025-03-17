@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -24,7 +25,7 @@ class ReactionWidgetBubble extends StatelessWidget {
           Text(
             reaction,
             style: WayaTextStyles.labelMedium.copyWith(
-              fontSize: 14,
+              fontSize: 14.sp,
             ),
           ),
 
@@ -36,7 +37,7 @@ class ReactionWidgetBubble extends StatelessWidget {
             Text(
               WayaValueHelper.formatNumber(count),
               style: WayaTextStyles.labelMedium.copyWith(
-                fontSize: 14,
+                fontSize: 14.sp,
               ),
             ),
         ],

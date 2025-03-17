@@ -58,12 +58,12 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
 
             Text("Application submission",
                 style: wayaTheme.textTheme.displaySmall!
-                    .wayaCopyWith(fontWeight: FontWeight.w700, fontSize: 24)),
+                    .wayaCopyWith(fontWeight: FontWeight.w700, fontSize: 24.sp)),
             const Gap(5),
             Text(
                 "View all the details submitted by the contestant to enter for the contest",
                 style: wayaTheme.textTheme.hintStyle
-                    .wayaCopyWith(fontSize: 16, fontWeight: FontWeight.w400)),
+                    .wayaCopyWith(fontSize: 16.sp, fontWeight: FontWeight.w400)),
             //  Text("Your Bio", style: wayaTheme.textTheme.bodyMedium),
             const Gap(20),
 
@@ -110,12 +110,12 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
                         Text(entry.key,
                             style: wayaTheme.textTheme.displaySmall!
                                 .wayaCopyWith(
-                                    fontWeight: FontWeight.w500, fontSize: 16)),
+                                    fontWeight: FontWeight.w500, fontSize: 16.sp)),
                         const Gap(5),
                         Text(entry.value,
                             style: wayaTheme.textTheme.displaySmall!
                                 .wayaCopyWith(
-                                    fontWeight: FontWeight.w500, fontSize: 14)),
+                                    fontWeight: FontWeight.w500, fontSize: 14.sp)),
                         const Gap(5),
                       ],
                     );
@@ -127,7 +127,7 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
                         Text(entry.key,
                             style: wayaTheme.textTheme.displaySmall!
                                 .wayaCopyWith(
-                                    fontWeight: FontWeight.w500, fontSize: 16)),
+                                    fontWeight: FontWeight.w500, fontSize: 16.sp)),
                         const Gap(5),
                         WayaImage(
                           imageUrl: entry.key,
@@ -194,7 +194,7 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                // Navigator.of(context).pop();
+                // WayaNav.goBack();
                 WayaUtils.showModalSheet(
                   context,
                   child: ContestantRejectModal(
@@ -241,14 +241,14 @@ Widget _singleWidget(BuildContext context, String title, String subTitle,
       Text(title,
           style: wayaTheme.textTheme.displaySmall!.wayaCopyWith(
               fontWeight: FontWeight.w700,
-              fontSize: 14,
+              fontSize: 14.sp,
               color: wayaTheme.colorScheme.greyColor900)),
       const Gap(5),
       SizedBox(
         width: longer ? context.width * 0.5 : context.width * 0.2,
         child: Text(subTitle,
             style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
                 color: wayaTheme.colorScheme.greyColor900)),
       ),

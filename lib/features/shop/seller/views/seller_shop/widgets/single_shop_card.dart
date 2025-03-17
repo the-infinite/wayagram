@@ -27,6 +27,9 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
+    print(widget.shop.logo);
+    print("dvdvdv");
+
     return Container(
       margin: EdgeInsets.only(bottom: 10.h),
       padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
@@ -53,21 +56,25 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                 children: [
                   Text(
                     widget.shop.name.capitalizeFirst!,
-                    style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),
+                    style: TextStyle().wayaCopyWith(
+                        color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
                   ),
                   const Gap(8),
                   Container(
                     padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
                     decoration: BoxDecoration(
-                        color:
-                            widget.shop.deactivated ? wayaTheme.colorScheme.error200 : wayaTheme.colorScheme.success50,
+                        color: widget.shop.deactivated
+                            ? wayaTheme.colorScheme.error200
+                            : wayaTheme.colorScheme.success50,
                         borderRadius: BorderRadius.circular(6)),
                     child: Text(
                       widget.shop.deactivated ? "Inactive" : "Active",
                       style: TextStyle().wayaCopyWith(
-                        color: widget.shop.deactivated ? wayaTheme.colorScheme.error : wayaTheme.colorScheme.success,
+                        color: widget.shop.deactivated
+                            ? wayaTheme.colorScheme.error
+                            : wayaTheme.colorScheme.success,
                         fontWeight: FontWeight.w500,
-                        fontSize: 11,
+                        fontSize: 11.sp,
                       ),
                     ),
                   )
@@ -110,7 +117,8 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                       WayaNav.goBack();
                       WayaNav.toNamed(
                         CreateShop.route,
-                        arguments: UpdateShopArg(uniqueKey: "update-shop", singleShop: widget.shop),
+                        arguments: UpdateShopArg(
+                            uniqueKey: "update-shop", singleShop: widget.shop),
                       );
                     },
                     asset: Icon(
@@ -130,7 +138,10 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
   }
 
   InkWell _buildActionNav(
-      {required BuildContext context, required VoidCallback onTap, required Widget asset, required String text}) {
+      {required BuildContext context,
+      required VoidCallback onTap,
+      required Widget asset,
+      required String text}) {
     final wayaTheme = Theme.of(context);
     return InkWell(
       onTap: onTap,
@@ -143,8 +154,10 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
           const Gap(4),
           Text(
             text,
-            style: TextStyle()
-                .wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontWeight: FontWeight.w500, fontSize: 12),
+            style: TextStyle().wayaCopyWith(
+                color: wayaTheme.colorScheme.customBlack,
+                fontWeight: FontWeight.w500,
+                fontSize: 12.sp),
           )
         ],
       ),

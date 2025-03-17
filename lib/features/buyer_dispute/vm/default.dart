@@ -1,32 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/data/model/model.dart';
+
 import 'package:wayagram/features/buyer_dispute/state/default.dart';
 
 class BuyerDisputeNotifier extends StateNotifier<BuyerDisputeState> {
   BuyerDisputeNotifier(super.state);
 
-  // OUr support topics.
-  List<Select> get disputeType {
-    return [
-      // This is fine too.
-      Select(
-        label: "Missing Item(s)",
-        value: "missing-item",
-      ),
-
-      // This is fine.
-      Select(
-        label: "Damaged Item(s)",
-        value: "damaged-item",
-      ),
-
-      // This is fine.
-      Select(
-        label: "Incorrect Item(s)",
-        value: "damaged-item",
-      ),
-    ];
-  }
+ 
 
   /// Helper used to reset everything in this form.
   void reset() {}
@@ -42,6 +21,7 @@ class BuyerDisputeNotifier extends StateNotifier<BuyerDisputeState> {
   }
 }
 
-final buyerDisputeProvider = StateNotifierProvider<BuyerDisputeNotifier, BuyerDisputeState>(
+final buyerDisputeProvider =
+    StateNotifierProvider<BuyerDisputeNotifier, BuyerDisputeState>(
   (ref) => BuyerDisputeNotifier(BuyerDisputeState.initial),
 );

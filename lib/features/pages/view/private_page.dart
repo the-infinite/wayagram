@@ -139,7 +139,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                   Text(
                     '${args['desc']}',
                     style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                        fontSize: 12,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
                         color: Theme.of(context).colorScheme.greyColor500 ),
                   ),
@@ -212,7 +212,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
           Text(
             txt2,
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.greyColor500 ),
           ),

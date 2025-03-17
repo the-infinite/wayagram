@@ -6,6 +6,9 @@ import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -106,21 +109,24 @@ class _UpcomingContestDetailsState
                   style: wayaTheme.textTheme.bodyMedium),
               const Gap(5),
               Text(model?.description ?? "Description",
-                  style: wayaTheme.textTheme.hintStyle),
+                  style: WayaTextStyles.hintStyleBold
+                                    .wayaCopyWith(
+                                        color: WayaColors.greyColor500,
+                                        fontWeight: FontWeight.w400)),
               const Gap(20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UpcomingWidget(
+                  AboutUgtWidget(
                       title: "Start Date",
                       content: formatDate(model?.startDate ?? "")),
                   const Gap(20),
-                  UpcomingWidget(
+                  AboutUgtWidget(
                       title: "End Date",
                       content: formatDate(model?.endDate ?? "")),
                   const Gap(20),
-                  UpcomingWidget(
+                  AboutUgtWidget(
                       title: "Entry Type", content: model?.entryType ?? ""),
                   /*  const Gap(20),
                   UpcomingWidget(
@@ -134,14 +140,14 @@ class _UpcomingContestDetailsState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UpcomingWidget(
+                  AboutUgtWidget(
                       title: "Total Stages",
                       content: model?.multipleStages ?? ""),
                   const Gap(20),
-                  UpcomingWidget(
+                  AboutUgtWidget(
                       title: "Category", content: model?.categoryName ?? ""),
                   const Gap(20),
-                  UpcomingWidget(
+                  AboutUgtWidget(
                       title: "Prize", content: model?.winnerPrize ?? ""),
                   /*   const Gap(20),
                   UpcomingWidget(title: "Host", content: "Host"), */
@@ -151,14 +157,18 @@ class _UpcomingContestDetailsState
               Text("How it Works", style: wayaTheme.textTheme.bodyMedium),
               const Gap(15),
               Text(model?.howItWorks ?? "",
-                  style: wayaTheme.textTheme.hintStyle),
+                  style:  WayaTextStyles.hintStyleBold
+                                    .wayaCopyWith(
+                                        color: WayaColors.greyColor500,
+                                        fontWeight: FontWeight.w400)),
               const Gap(15),
               Text(
                 "Stages",
                 style: wayaTheme.textTheme.bodyMedium,
               ),
               SizedBox(height: 8),
-              ...model?.contestSettings!.stages!.map((e) => _buildStages(e))??[],
+              ...model?.contestSettings!.stages!.map((e) => _buildStages(e)) ??
+                  [],
               /*   SizedBox(height: 8),
               _buildStagesContestLevel1(), */
               /*   SizedBox(height: 8),
@@ -208,18 +218,18 @@ class _UpcomingContestDetailsState
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            UpcomingWidget(
+            AboutUgtWidget(
                 title: "Start Date",
-                isFromDetailsPage: true,
+                //  isFromDetailsPage: true,
                 content: formatDate(model.startDate ?? "")),
             const Gap(20),
-            UpcomingWidget(
-                isFromDetailsPage: true,
+            AboutUgtWidget(
+                //isFromDetailsPage: true,
                 title: "End Date",
                 content: formatDate(model.endDate ?? "")),
             const Gap(20),
-            UpcomingWidget(
-                isFromDetailsPage: true,
+            AboutUgtWidget(
+                // isFromDetailsPage: true,
                 title: "Entry Type",
                 content: model.entryType ?? ""),
           ],
@@ -229,14 +239,14 @@ class _UpcomingContestDetailsState
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            UpcomingWidget(
-                isFromDetailsPage: true,
+            AboutUgtWidget(
+                // isFromDetailsPage: true,
                 title: "No of Posts",
                 content:
                     "${model.numberOfPostPerWeek?.toString()} of Duration"),
             const Gap(20),
-            UpcomingWidget(
-                isFromDetailsPage: true,
+            AboutUgtWidget(
+                // isFromDetailsPage: true,
                 title: "Prize for Winner",
                 content:
                     "NGN${formatMoney(model.priceOfTheWinner.toString())}"),

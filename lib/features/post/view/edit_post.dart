@@ -152,7 +152,7 @@ class _EditPostState extends ConsumerState<EditPost>
               child: InkWell(
                   onTap: (){
                     ref.watch(createPageProvider.notifier).reset();
-                    Navigator.pop(context);
+                    WayaNav.goBack();
                   },
                   child: Image.asset('assets/images/pages/cancel.png', height: 16.h,)),
             )),
@@ -386,7 +386,7 @@ class _EditPostState extends ConsumerState<EditPost>
                                       Padding(
                                         padding: const EdgeInsets.only(right: 20),
                                         child: GestureDetector(
-                                          onTap: () =>Navigator.pop(context),
+                                          onTap: () =>WayaNav.goBack(),
                                           child: Container(
                                             padding: const EdgeInsets.all(2),
                                             decoration:  BoxDecoration(
@@ -498,7 +498,7 @@ class _EditPostState extends ConsumerState<EditPost>
                                       Padding(
                                         padding: const EdgeInsets.only(right: 20),
                                         child: GestureDetector(
-                                          onTap: () =>Navigator.pop(context),
+                                          onTap: () =>WayaNav.goBack(),
                                           child: Container(
                                             padding: const EdgeInsets.all(2),
                                             decoration:  BoxDecoration(
@@ -675,7 +675,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
                   text: 'Edit Post',
                   isLoading: viewModel.isLoading,
                   textStyle: WayaTextStyles.bodySmall.copyWith(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.white ),
                 ) :
@@ -696,7 +696,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
                   text: 'Update Post',
                   isLoading: viewModel.isLoading,
                   textStyle: WayaTextStyles.bodySmall.copyWith(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.white ),
                 ),
@@ -708,7 +708,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
             child: InkWell(
                 onTap: (){
                   ref.watch(createPageProvider.notifier).reset();
-                  Navigator.pop(context);
+                  WayaNav.goBack();
                 },
                 child: Image.asset('assets/images/pages/cancel.png', height: 16.h,)),
           )),
@@ -765,7 +765,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
                                   formState.errorText!,
                                   style: TextStyle(
                                       color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
+                                      fontSize: 12.sp),
                                 ),
                               ),
                           ],
@@ -827,7 +827,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
                     Text(
                       sel ?'Public post' : 'Private post',
                       style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                           color: Theme.of(context).colorScheme.primary ),
                     ),

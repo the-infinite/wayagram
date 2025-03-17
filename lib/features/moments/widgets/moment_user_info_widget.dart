@@ -68,7 +68,7 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
                       widget.moment.name,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                           color: wayaTheme.colorScheme.white),
                     ),
@@ -79,7 +79,7 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
                   Text(
                     timeago.format(widget.moment.updatedAt),
                     style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 12.sp,
                         color: wayaTheme.colorScheme.scaffoldColor,
                         fontWeight: FontWeight.w400),
                   ),

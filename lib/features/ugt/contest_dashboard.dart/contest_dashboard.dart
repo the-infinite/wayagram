@@ -13,18 +13,14 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_leaderboard.dart';
-import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
-import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
+
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
-import 'package:wayagram/features/ugt/widgets/contest_card.dart';
-import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 import '../../../core/components/waya_scaffold.dart';
@@ -73,10 +69,14 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.read(votersContestNotifier);
+    final viewModel = ref.watch(votersContestNotifier);
     final notifier = ref.read(votersContestNotifier.notifier);
+    final dashboardNotifier = ref.watch(ugtAdminDashboardVm.notifier);
+    final dashboardVm = ref.watch(ugtAdminDashboardVm);
     var model = ref.watch(selectedContestProvider);
     useEffect(() {
+      dashboardNotifier.fetchTotalContestant(model?.id ?? "");
+      dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
       Future.delayed(Duration(seconds: 1), () {
         notifier.addStages(model?.contestSettings?.stages ?? []);
       });
@@ -100,7 +100,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             const Gap(5),
             Text("Manage your contest activity",
                 style: wayaTheme.textTheme.hintStyle
-                    .wayaCopyWith(fontSize: 16, fontWeight: FontWeight.w400)),
+                    .wayaCopyWith(fontSize: 16.sp, fontWeight: FontWeight.w400)),
             //  Text("Your Bio", style: wayaTheme.textTheme.bodyMedium),
             const Gap(20),
             Row(
@@ -137,7 +137,9 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                           child: _buildActionNav(
                               context: context,
                               onTap: () {
-                                Navigator.pop(context);
+                                WayaNav.goBack();
+                                dashboardNotifier.fetchTotalEarnings(
+                                    model?.id ?? "", e.text.toLowerCase());
                                 selectPresentTap(e);
                               },
                               asset: WayaAssets.icons.mComments.svg(
@@ -183,14 +185,22 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               ],
             ),
             const Gap(20),
-            _buildStatCard2(context, "Revenue Generated", "₦200,000"),
+            GestureDetector(
+              onTap: () {
+                
+                WayaNav.toNamed('/admin-transaction-page');
+              },
+              child: _buildStatCard2(context, "Revenue Generated",
+                  "₦${dashboardVm.revenueGenerated}"),
+            ),
             const Gap(10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatCard("Number of participants", "240"),
+                _buildStatCard("Number of participants",
+                    "${dashboardVm.totalContestants}"),
                 //  _buildStatCard("Votes per contestant", "120"),
-                _buildStatCard("Contest Age",
+                _buildStatCard("Contest Stage",
                     model?.contestSettings?.stages?.length.toString() ?? "0"),
               ],
             ),
@@ -249,7 +259,11 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               ),
               child: Column(
                 children: [
-                  _buildSectionTitle("Leaderboard"),
+                  InkWell(
+                      onTap: () {
+                        WayaNav.toNamed('/manage-leaderboard-page');
+                      },
+                      child: _buildSectionTitle("Leaderboard")),
                   /*  ListView.builder(
                     //  controller: _scrollController,
                     shrinkWrap: true,
@@ -285,7 +299,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                       "${viewModel.myContestList[1].contestApplicant?.fullName}",
                       Color(0xffFEF6E7),
                     ),
-                  if (viewModel.myContestList.length > 1)
+                  if (viewModel.myContestList.length > 2)
                     _buildLeaderboardItem(
                       context,
                       "${viewModel.myContestList[2].votes} votes",
@@ -524,10 +538,10 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
           children: [
             Text(title,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+                style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
             Gap(10),
             Text(value,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -553,14 +567,14 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
           //const Gap(4),
           Text(
             text,
-            style: TextStyle().wayaCopyWith(
-                color: color, fontWeight: FontWeight.w500, fontSize: 12),
+            style: WayaTextStyles.bodyMedium.copyWith(color: color),
           ),
           if (isActive)
             Container(
               padding: EdgeInsets.all(5),
               decoration: BoxDecoration(
-                color: Colors.orange, // Background color for the checkmark
+                color: wayaTheme
+                    .primaryColor, // Background color for the checkmark
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -591,15 +605,15 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
         children: [
           Text(title,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+              style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
           Gap(5),
           Row(
             children: [
               Text(value,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
               Text(".00",
                   style: TextStyle(
-                      color: wayaTheme.colorScheme.greyColor300, fontSize: 16)),
+                      color: wayaTheme.colorScheme.greyColor300, fontSize: 16.sp)),
             ],
           ),
         ],
@@ -615,7 +629,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
           if (seeAll)
             Row(
               children: [
@@ -706,10 +720,10 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.black,
-                  fontSize: 16)),
+                  fontSize: 16.sp)),
           Text(contestants,
               style: TextStyle(
-                  color: wayaTheme.colorScheme.greyColor700, fontSize: 14)),
+                  color: wayaTheme.colorScheme.greyColor700, fontSize: 14.sp)),
         ],
       ),
     );
@@ -729,12 +743,12 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.black,
-                  fontSize: 16)),
+                  fontSize: 16.sp)),
           Text(isprofile ? "View profile" : "View application",
               style: TextStyle(
                   color: Colors.orange,
                   fontWeight: FontWeight.w600,
-                  fontSize: 14)),
+                  fontSize: 14.sp)),
         ],
       ),
     );
@@ -760,7 +774,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
 
   void selectPresentTap(MyFilterModel e) {
     var list = filterList.map((user) {
-      if (user.isActive) {
+      if (user == e) {
         return MyFilterModel(
             text: user.text, isActive: true); // Change isActive to false
       }
@@ -861,10 +875,9 @@ Color getColor(bool isText, String text) {
 }
 
 var filterList = [
-  MyFilterModel(text: "All Time Stats", isActive: true),
-  MyFilterModel(text: '''Today’s Stats''', isActive: false),
-  MyFilterModel(text: '''This Week’s Stats''', isActive: false),
-  MyFilterModel(text: '''This Month’s Stats''', isActive: false),
+  MyFilterModel(text: 'All', isActive: true),
+  MyFilterModel(text: 'Weekly', isActive: false),
+  MyFilterModel(text: 'Monthly', isActive: false),
 ];
 
 class MyFilterModel {

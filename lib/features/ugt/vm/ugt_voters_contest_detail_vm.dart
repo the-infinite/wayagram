@@ -1,21 +1,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/change_notifier.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
-import 'package:wayagram/features/ugt/data/model/contest_state.dart';
-import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_contest_aplicant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart' as model;
-import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/ugt/data/model/voter_contest_state.dart';
 
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
@@ -46,7 +42,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(
         userId: _localDataSource.getUserId().toString(), pin: pin));
     if (response.success) {
-      map["profileId"] = _localDataSource.getUserId().toString();
       print(map);
       return await voteContestant(isLoading, map);
     } else {
@@ -89,6 +84,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   Future<bool> voteContestant(
       ValueNotifier<bool> isLoading, Map<String, String> map) async {
+    isLoading.value = true;
+    map["profileId"] = _localDataSource.getUserId().toString();
     final response = await _contestRepository.voteContestant(map);
     isLoading.value = false;
     if (response.success) {
@@ -336,9 +333,12 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       WayaSnackBar.showToast("Post created successfully!", showSuccess: true);
       getContestantProfileVoteDetails(
           ref.read(selectedContestProvider.notifier).state?.id ?? "");
-      Future.delayed(Duration(seconds: 2), () {
-        Navigator.pop(context);
-      });
+      Future.delayed(
+        Duration(seconds: 2),
+        () {
+          WayaNav.goBack();
+        },
+      );
     } else {
       WayaSnackBar.showToast("Unable to create Post, Please try again later");
     }
@@ -354,7 +354,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     //state.copyWith(myPostList: contestList)
     var list = state.myPostList.map((post) {
       print("i dey here 11");
-      if (post.id == postId) {
+      if (post.id == galleryId) {
         print("i dey here 2");
         bool isMyLiked = post.hasLiked ?? false;
         // if (isMyLiked) {

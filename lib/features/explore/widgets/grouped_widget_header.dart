@@ -3,6 +3,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 
 class GroupedWidgetHeader extends StatelessWidget {
   final VoidCallback? onTap;
@@ -11,7 +12,11 @@ class GroupedWidgetHeader extends StatelessWidget {
   final bool isVisible;
 
   const GroupedWidgetHeader(
-      {super.key, this.onTap, required this.subTitle, this.isVisible = true, required this.title});
+      {super.key,
+      this.onTap,
+      required this.subTitle,
+      this.isVisible = true,
+      required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -28,10 +33,10 @@ class GroupedWidgetHeader extends StatelessWidget {
             children: [
               Text(title, style: wayaTheme.textTheme.titleLarge),
               const Gap(3),
-              Text(
-                subTitle,
-                style: wayaTheme.textTheme.hintStyle,
-              )
+              Text(subTitle,
+                  style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                      color: WayaColors.greyColor500,
+                      fontWeight: FontWeight.w400))
             ],
           ),
           Visibility(
@@ -40,8 +45,8 @@ class GroupedWidgetHeader extends StatelessWidget {
               onTap: onTap,
               child: Text(
                 "See All",
-                style: TextStyle().wayaCopyWith(
-                    color: wayaTheme.colorScheme.customPrimary, fontSize: 14, fontWeight: FontWeight.w500),
+                style: WayaTextStyles.hintStyleBold
+                    .wayaCopyWith(color: WayaColors.greyColor500),
               ),
             ),
           )

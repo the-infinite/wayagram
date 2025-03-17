@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -77,7 +78,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                       style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                         color: wayaTheme.colorScheme.white,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 11,
+                                        fontSize: 11.sp,
                                       ),
                                     ),
                                   ],
@@ -91,7 +92,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                               Container(
                                 padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
                                 decoration: BoxDecoration(
-                                  color: wayaTheme.colorScheme.primar50,
+                                  color: wayaTheme.colorScheme.primary50,
                                   borderRadius: BorderRadius.circular(6),
                                 ),
                                 child: Row(
@@ -108,7 +109,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                       style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                         color: wayaTheme.colorScheme.primary600,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 11,
+                                        fontSize: 11.sp,
                                       ),
                                     ),
                                   ],
@@ -123,7 +124,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                             "Samsung S24 Ultra",
                             style: wayaTheme.textTheme.bodyMedium?.copyWith(
                               color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 14,
+                              fontSize: 14.sp,
                             ),
                           ),
                           const Gap(8),
@@ -134,7 +135,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                   text: 'Rufai Maleek ',
                                   style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                     color: wayaTheme.colorScheme.black,
-                                    fontSize: 12,
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -142,7 +143,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                   text: 'Fairly Used ',
                                   style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                     color: WayaColors.greyColor400,
-                                    fontSize: 10,
+                                    fontSize: 10.sp,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -154,7 +155,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                                   text: '2Km Away',
                                   style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                     color: WayaColors.greyColor400,
-                                    fontSize: 10,
+                                    fontSize: 10.sp,
                                     fontWeight: FontWeight.w400,
                                   ),
                                 ),
@@ -186,7 +187,7 @@ class SingleSeeBidWidget extends ConsumerWidget {
                       WayaValueHelper.formatPrice(request.bidStartingAmount),
                       style: wayaTheme.textTheme.bodyMedium?.copyWith(
                         color: wayaTheme.colorScheme.customBlack,
-                        fontSize: 20,
+                        fontSize: 20.sp,
                         fontWeight: FontWeight.w700,
                       ),
                     ),

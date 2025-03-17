@@ -47,7 +47,7 @@ class DioInterceptor extends Interceptor {
               method: retryRequest.method,
               headers: retryRequest.headers,
             ),
-            data: retryRequest.data,
+            data: retryRequest.data,  
             queryParameters: retryRequest.queryParameters,
           );
 

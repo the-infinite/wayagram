@@ -1,4 +1,5 @@
 import 'package:logger/logger.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/features/user/repo/default.dart';
 
@@ -12,6 +13,14 @@ class UserResource {
   static final logger = Logger();
 
   static Future<CachedUserDataTuple?> getUserDetails(String id) async {
+    //? If this is for me...
+    try {
+      if (id == ConversationState.self.id) {
+        return (ConversationState.self, ConversationState.profile);
+      }
+    } catch (_) {}
+
+    // Fine.
     final found = userCache[id];
     final now = DateTime.now();
 

@@ -1,14 +1,13 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/group/widget/group_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
-
 
 class JoinedGroup extends ConsumerStatefulWidget {
   const JoinedGroup({super.key});
@@ -18,7 +17,6 @@ class JoinedGroup extends ConsumerStatefulWidget {
 }
 
 class _JoinedGroupState extends ConsumerState<JoinedGroup> with SingleTickerProviderStateMixin {
-
   @override
   void initState() {
     super.initState();
@@ -27,39 +25,63 @@ class _JoinedGroupState extends ConsumerState<JoinedGroup> with SingleTickerProv
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     final viewModel = ref.watch(createGroupProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        viewModel.joinedGroup!.isEmpty ? GroupEmptyState():
-        ListView.builder(
-          padding: EdgeInsets.only(bottom: 40),
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: viewModel.joinedGroup?.length,
-            itemBuilder: (_, index){
-            print('THE LENGTH IS ===>> ${ viewModel.joinedGroup?.length}');
-            final group = viewModel.joinedGroup?[index];
-              return GroupWidget(
-                  name: '${group?.name?.capitalizeFirst}',
-                  desc: '${group?.description?.capitalizeFirst}',
-                  image:'${group?.coverImage}', count: '${group?.memberCount} Members',
-                  buttonText: 'Member',
-                  chk: true,
-                  onTap: (){});
-            }),
-
+        viewModel.joinedGroup!.isEmpty
+            ? GroupEmptyState()
+            : ListView.builder(
+                padding: EdgeInsets.only(bottom: 40),
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: viewModel.joinedGroup?.length,
+                itemBuilder: (_, index) {
+                  final group = viewModel.joinedGroup?[index];
+                  return GroupWidget(
+                    name: '${group?.name?.capitalizeFirst}',
+                    desc: '${group?.description?.capitalizeFirst}',
+                    image: '${group?.coverImage}',
+                    count: '${group?.memberCount} Members',
+                    buttonText: 'Member',
+                    chk: true,
+                    onTap: () {
+                      group?.isPrivate == true
+                          ? WayaNav.toNamed(
+                              '/privateGroup',
+                              arguments: {
+                                'memberCount': '${group!.memberCount}',
+                                'name': group.name,
+                                'url': '',
+                                'desc': group.description,
+                                'coverImage': '${group.coverImage}',
+                                'profileImage': '${group.profileImage}',
+                                'groupId': group.id,
+                              },
+                            )
+                          : WayaNav.toNamed(
+                              '/publicGroup',
+                              arguments: {
+                                'memberCount': '${group!.memberCount}',
+                                'name': group.name,
+                                'url': '',
+                                'desc': group.description,
+                                'coverImage': '${group.coverImage}',
+                                'profileImage': '${group.profileImage}',
+                                'groupId': group.id
+                              },
+                            );
+                    },
+                  );
+                },
+              ),
       ],
     );
-
   }
-
 }
 
 class GroupEmptyState extends StatelessWidget {
@@ -73,12 +95,10 @@ class GroupEmptyState extends StatelessWidget {
         padding: EdgeInsets.all(20),
         child: EmptyState(
             hasButton: false,
-            onTap: () {
-            },
+            onTap: () {},
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter:
-              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

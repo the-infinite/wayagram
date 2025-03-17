@@ -120,6 +120,22 @@ class ContestRepo extends BaseRepository {
   }
 
 
+  
+  Future<WayaRequestResponse> fetchAllTotalEarningContest(String contestId, String filter) {
+    return get('$serviceUrl2/statistics/transaction?filter=$filter&contestId=$contestId');
+  }
+
+    
+  Future<WayaRequestResponse> fetchAllTotalContest(String contestId) {
+    return get('$serviceUrl2/statistics/contestant-profiles?contestId=$contestId');
+  }
+
+      
+  Future<WayaRequestResponse> fetchVoteStatsContest(String contestId) {
+    return get('$serviceUrl2/statistics/votes-stats?contestId=$contestId');
+  }
+
+
   /*Future<WayaRequestResponse> createContestController({
     required final String contestStatus,
     required final String profileId,

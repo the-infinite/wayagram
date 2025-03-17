@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -104,7 +105,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                     child: Text(
                       formState.errorText!,
                       style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -146,7 +147,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                     child: Text(
                       formState.errorText!,
                       style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -185,7 +186,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                       child: Text(
                         formState.errorText!,
                         style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                            color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                       ),
                     ),
                 ],
@@ -313,7 +314,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                     child: Text(
                       formState.errorText!,
                       style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -347,7 +348,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                     child: Text(
                       formState.errorText!,
                       style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -381,7 +382,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               border: Border.all(
                   width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-                Navigator.pop(context);
+                WayaNav.goBack();
                 // WayaNav.toNamed("/ugt-home");
               })
         ],

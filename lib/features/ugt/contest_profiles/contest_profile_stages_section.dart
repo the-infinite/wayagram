@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -12,6 +13,7 @@ import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
+import 'package:wayagram/features/ugt/widgets/about_ugt_widget.dart';
 import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
@@ -46,6 +48,7 @@ class _ContestProfileStagesSectionState
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (widget.stages!.isEmpty) emptyWidget(),
         ...widget.stages!.map((e) => _buildStages(e)),
       ],
     );
@@ -62,7 +65,7 @@ class _ContestProfileStagesSectionState
           child: Text(model.stageName ?? "",
               style: TextStyle().wayaCopyWith(
                 color: Colors.black,
-                fontSize: 16,
+                fontSize: 16.sp,
               )),
         ),
         const Gap(10),
@@ -74,13 +77,13 @@ class _ContestProfileStagesSectionState
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                UpcomingWidget(
+                AboutUgtWidget(
                     title: "Start Date",
-                    isFromDetailsPage: true,
+                    // isFromDetailsPage: true,
                     content: formatDate(model.startDate ?? "")),
                 const Gap(20),
-                UpcomingWidget(
-                    isFromDetailsPage: true,
+                AboutUgtWidget(
+                    // isFromDetailsPage: true,
                     title: "Position",
                     content: model.position?.toString() == "0"
                         ? "No Position"
@@ -92,13 +95,13 @@ class _ContestProfileStagesSectionState
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                UpcomingWidget(
-                    isFromDetailsPage: true,
+                AboutUgtWidget(
+                    // isFromDetailsPage: true,
                     title: "End Date",
                     content: formatDate(model.endDate ?? "")),
                 const Gap(20),
-                UpcomingWidget(
-                    isFromDetailsPage: true,
+                AboutUgtWidget(
+                    // isFromDetailsPage: true,
                     title: "Prize for Winner",
                     content:
                         "NGN${formatMoney(model.amountEarned.toString())}"),
@@ -108,10 +111,10 @@ class _ContestProfileStagesSectionState
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                UpcomingWidget(
-                    isFromDetailsPage: true,
+                AboutUgtWidget(
+                    // isFromDetailsPage: true,
                     title: "Entry Type",
-                    content: model.entryType ?? ""),
+                    content: "${model.entryType}\n" ?? ""),
                 const Gap(20),
                 StatusOngoing(
                   title: "Qualification Status",
@@ -135,10 +138,9 @@ class _ContestProfileStagesSectionState
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc:
-            "You don’t have any active contest here. Create a \n contest and have different participant",
-        title: "No Contest Created",
-        buttonText: "Host a Contest",
+        desc: "",
+        title: "No Contest Stage yet",
+        buttonText: "Contest",
         onTap: () {
           //  ivalidateUGTVM(ref);
           //  WayaNav.toNamed("/create-contest");

@@ -4,11 +4,17 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
+import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/ugt/my_contest_details/full_video_player_widget.dart';
 
 enum MyFullMediaType {
   image,
@@ -26,82 +32,121 @@ class CandidatePostScreen extends StatelessWidget {
     final data = Get.arguments;
 
     return WayaScaffold(
-      color: Colors.black,
-      backgroundColor: Colors.black,
-      isLoading: false,
-      isScrollable: true,
-      // removeAppBar: true,
-      title: "Contest Details",
-      appBar: AppBar(
+        color: Colors.black,
         backgroundColor: Colors.black,
-      ),
-      appBarTrailing: Row(
-        children: [
-          PopupMenuButton<String>(
-            icon: const Icon(Icons.more_vert, color: Colors.white),
-            color: Colors.white,
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                  value: "download",
-                  child: Text("Download Media",
-                      style: TextStyle(color: Colors.white))),
-              const PopupMenuItem(
-                  value: "share",
-                  child: Text("Share Post Link",
-                      style: TextStyle(color: Colors.white))),
-            ],
-            onSelected: (value) {
-              // Handle selection
+        isLoading: false,
+        isScrollable: true,
+        // removeAppBar: true,
+
+        title: "Contest Details",
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          title: Text("Contest details",
+              style:
+                  WayaTextStyles.headlineMedium.copyWith(color: Colors.white)),
+          leading: WayaBackButton(
+            buttonBackgroundColor: Color(0xff121212),
+            arrowColor: Colors.white,
+            onTap: () {
+              WayaNav.goBack();
             },
           ),
-        ],
-      ),
-      body: Container(
-        color: Colors.black12,
-        //  height: double.infinity,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.end,
-          // mainAxisSize: MainAxisSize.max,
+          actions: [
+            PopupMenuButton<String>(
+              icon: const Icon(Icons.more_vert, color: Colors.white),
+              color: Colors.white,
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                    value: "download",
+                    onTap: () async {
+                      bool hasSaved = await WayaFileHelper.saveNetworkImage(
+                          data["url"] ?? "");
+
+                      if (hasSaved) {
+                        WayaSnackBar.showToast("image saved",
+                            showSuccess: true);
+                      } else {
+                        WayaSnackBar.showToast(
+                          "Unable to save image!",
+                        );
+                      }
+                    },
+                    child: Text("Download Media",
+                        style: WayaTextStyles.bodyMedium)),
+                PopupMenuItem(
+                    value: "share",
+                    child: Text("Share Post Link",
+                        style: WayaTextStyles.bodyMedium)),
+              ],
+              onSelected: (value) {
+                // Handle selection
+              },
+            ),
+          ],
+        ),
+        body: Column(
           children: [
-            // Post Image
-            //  Gap(10),
+            SizedBox(
+              height: context.height / 1.6,
+              width: context.width,
+              child: data["type"] == MyFullMediaType.image
+                  ? PhotoView(
+                      imageProvider: NetworkImage(data["url"] ?? ""),
+                    )
+                  : FullPageVideoPlayer(
+                      videoUrl: data["url"] ?? "",
+                    ),
+            ),
+            Container(
+              color: Colors.black12,
+              //  height: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.end,
+                // mainAxisSize: MainAxisSize.max,
+                children: [
+                  // Post Image
+                  //  Gap(10),
 
-            data["type"] == MyFullMediaType.image
-                ? CachedNetworkImage(
-                    imageUrl:
-                        data["url"] ?? "", // Replace with actual image URL
-                    placeholder: (context, url) =>
-                        const Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error, color: Colors.grey),
-                    fit: BoxFit.cover,
+                  /* data["type"] == MyFullMediaType.image
+                ? Hero(
+                    tag: "fullPic",
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          data["url"] ?? "", // Replace with actual image URL
+                      placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error, color: Colors.grey),
+                      fit: BoxFit.cover,
 
-                    height: 400,
+                      height: 400,
+                    ),
                   )
                 : Container(),
+ */
+                  if (data["showDescription"])
+                    Container(
+                      //padding: const EdgeInsets.all(12.0),
+                      color: Colors.black,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // User Details
+                          ListTile(
+                            contentPadding: EdgeInsets.zero,
+                            leading: ClipRRect(
+                                borderRadius: BorderRadius.circular(
+                                    45), // Adjust the radius as needed
+                                child: WayaImage(
+                                  imageUrl: data["url"] ?? "",
+                                  height: 45,
+                                  width: 45,
+                                  fit: BoxFit.cover,
+                                  radius: BorderRadius.circular(45),
+                                )
 
-            Container(
-              //padding: const EdgeInsets.all(12.0),
-              color: Colors.black,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // User Details
-                  ListTile(
-                    contentPadding: EdgeInsets.zero,
-                    leading: ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                            45), // Adjust the radius as needed
-                        child: WayaImage(
-                          imageUrl: data["url"] ?? "",
-                          height: 45,
-                          width: 45,
-                          fit: BoxFit.cover,
-                          radius: BorderRadius.circular(45),
-                        )
-
-                        /*  Image.network(
+                                /*  Image.network(
                                     post.uploadCoverImages!,
                                     height: 45,
                                     width: 45,
@@ -109,30 +154,33 @@ class CandidatePostScreen extends StatelessWidget {
                                         .cover, // Ensures the image covers the area properly
                                   ) */
 
-                        ),
-                    title: Text(
-                      data["title"],
-                      style: TextStyle(
-                          color: Colors.white, fontWeight: FontWeight.bold),
-                    ),
-                    subtitle: Text(
-                        WayaHelpers.formatTimeAgo('${data["createdAt"]}'),
-                        style: TextStyle(color: Colors.grey)),
-                  ),
+                                ),
+                            title: Text(
+                              data["title"],
+                              style: WayaTextStyles.bodyMedium
+                                  .copyWith(color: Colors.white),
+                            ),
+                            subtitle: Text(
+                                WayaHelpers.formatTimeAgo(
+                                    '${data["createdAt"]}'),
+                                style: WayaTextStyles.bodyMedium
+                                    .copyWith(color: Colors.grey)),
+                          ),
 
-                  /* 
+                          /* 
 
 
 
  */
-                  // Post Text
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12.0),
-                    child: Text(
-                      data["discription"],
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
+                          // Post Text
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Text(
+                              data["discription"],
+                              style: WayaTextStyles.bodySmall
+                                  .copyWith(color: Colors.white),
+                            ),
+                          ),
 /* 
  "likeCount": widget.post.likeCount,
                     "isLike": widget.post.hasLiked,
@@ -141,83 +189,88 @@ class CandidatePostScreen extends StatelessWidget {
                     "type": MyFullMediaType.image
 
  */
-                  const SizedBox(height: 8),
+                          const SizedBox(height: 8),
 
-                  // Reactions Row
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                    child: Row(
-                      children: [
-                        // Likes
-                        Row(
-                          children: [
-                            // const Icon(Icons.favorite, color: Colors.red),
-                            // const SizedBox(width: 4),
-                            Container(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xff121212)),
-                              width: 35,
-                              height: 35,
-                              child: Center(
-                                  child: Icon(
-                                Icons.thumb_up_alt,
-                                color: data["isLike"] == true
-                                    ? wayaTheme.colorScheme.primary
-                                    : wayaTheme.colorScheme.greyColor500,
-                              )),
-                            ),
-                            Gap(5),
-                            Text("${data["likeCount"]} Likes",
-                                style: TextStyle(color: Colors.white)),
-                          ],
-                        ),
-                        const Spacer(),
+                          // Reactions Row
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
+                            child: Row(
+                              children: [
+                                // Likes
+                                Row(
+                                  children: [
+                                    // const Icon(Icons.favorite, color: Colors.red),
+                                    // const SizedBox(width: 4),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xff121212)),
+                                      width: 35,
+                                      height: 35,
+                                      child: Center(
+                                          child: Icon(
+                                        Icons.thumb_up_alt,
+                                        color: data["isLike"] == true
+                                            ? wayaTheme.colorScheme.primary
+                                            : wayaTheme
+                                                .colorScheme.greyColor500,
+                                      )),
+                                    ),
+                                    Gap(5),
+                                    Text("${data["likeCount"]} Likes",
+                                        style: WayaTextStyles.bodyMedium
+                                            .copyWith(color: Colors.white)),
+                                  ],
+                                ),
+                                const Spacer(),
 
-                        // Shares
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xff121212)),
-                              width: 35,
-                              height: 35,
-                              child: Center(
-                                child: SvgPicture.asset(
-                                    "assets/icons/u-share.svg"),
-                              ),
+                                // Shares
+                                Row(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xff121212)),
+                                      width: 35,
+                                      height: 35,
+                                      child: Center(
+                                        child: SvgPicture.asset(
+                                            "assets/icons/u-share.svg"),
+                                      ),
+                                    ),
+                                    Gap(5),
+                                    Text("${data["shareCount"]} Shares",
+                                        style: WayaTextStyles.bodyMedium
+                                            .copyWith(color: Colors.white)),
+                                  ],
+                                ),
+                                const Spacer(),
+                                Row(
+                                  children: [
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xff121212)),
+                                      width: 35,
+                                      height: 35,
+                                      child: Center(
+                                        child: Icon(Icons.bookmark_border_sharp,
+                                            color: wayaTheme
+                                                .colorScheme.greyColor500),
+                                      ),
+                                    ),
+                                    Gap(5),
+                                  ],
+                                ),
+                              ],
                             ),
-                            Gap(5),
-                            Text("${data["shareCount"]} Shares",
-                                style: TextStyle(color: Colors.white)),
-                          ],
-                        ),
-                        const Spacer(),
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xff121212)),
-                              width: 35,
-                              height: 35,
-                              child: Center(
-                                child: Icon(Icons.bookmark_border_sharp,
-                                    color: wayaTheme.colorScheme.greyColor500),
-                              ),
-                            ),
-                            Gap(5),
-                          ],
-                        ),
-                      ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ),
 
-            /*   Expanded(
+                  /*   Expanded(
               child: CachedNetworkImage(
                 imageUrl:
                     "https://example.com/sample-image.jpg", // Replace with actual image URL
@@ -230,10 +283,11 @@ class CandidatePostScreen extends StatelessWidget {
               ),
             ),
          */
-            // Post Details
+                  // Post Details
+                ],
+              ),
+            ),
           ],
-        ),
-      ),
-    );
+        ));
   }
 }

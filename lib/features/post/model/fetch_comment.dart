@@ -156,10 +156,8 @@ class Comments {
     commentCount = json['commentCount'];
     shareCount = json['shareCount'];
     deletedAt = json['deletedAt'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
+    createdAt = DateTime.tryParse(json['createdAt'].toString());
+    updatedAt = DateTime.tryParse(json['updatedAt'].toString());
     user = json['user'] != null ? UserDetailsModel.fromJson(json['user']) : null;
   }
   String? id;
@@ -171,8 +169,8 @@ class Comments {
   num? commentCount;
   num? shareCount;
   dynamic deletedAt;
-  String? createdAt;
-  String? updatedAt;
+  DateTime? createdAt;
+  DateTime? updatedAt;
   UserDetailsModel? user;
   Comments copyWith({
     String? id,
@@ -184,8 +182,8 @@ class Comments {
     num? commentCount,
     num? shareCount,
     dynamic deletedAt,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     UserDetailsModel? user,
   }) =>
       Comments(

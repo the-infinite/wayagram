@@ -6,6 +6,6 @@ class ProductsRepository extends BaseRepository {
   static final instance = ProductsRepository._();
   ProductsRepository._();
   Future<WayaRequestResponse> getShopProducts(String id, int page, [int limit = 15]) {
-    return get("$serviceUrl/get");
+    return get("$serviceUrl/get?userId=$id&page=$page");
   }
 }

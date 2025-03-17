@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -48,7 +49,7 @@ class SingleShopWidget extends ConsumerWidget {
                           "Bola Hairs Shop",
                           style: wayaTheme.textTheme.bodyMedium?.copyWith(
                               color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         ),
                         const Gap(8),
                         Container(
@@ -61,7 +62,7 @@ class SingleShopWidget extends ConsumerWidget {
                             style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                 color: wayaTheme.colorScheme.success,
                                 fontWeight: FontWeight.w500,
-                                fontSize: 11),
+                                fontSize: 11.sp),
                           ),
                         )
                       ],
@@ -143,7 +144,7 @@ class SingleShopWidgetViewModel extends ChangeNotifier {
                 "Shop Dashboard",
                 style: wayaTheme.textTheme.bodyMedium?.copyWith(
                   //color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -161,7 +162,7 @@ class SingleShopWidgetViewModel extends ChangeNotifier {
                 "Quotation Dashboard",
                 style: wayaTheme.textTheme.bodyMedium?.copyWith(
                   //color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),

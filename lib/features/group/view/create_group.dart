@@ -71,7 +71,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
     return WayaScaffold(
       title: "Create a Group",
       onTapBackButton: (){
-        Navigator.pop(context);
+        WayaNav.goBack();
         viewModel2.reset();
 
       },
@@ -85,10 +85,10 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
             if (_formKey.currentState!.validate()) {
               if(!sel && !sel2){
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                   SnackBar(
                     content: Text('Select group type', style: TextStyle(
                       fontFamily: WayaConstants.fontFamily,
-                      fontSize: 12
+                      fontSize: 12.sp
                     ),),
                     backgroundColor: Colors.red,
                     duration: Duration(seconds: 2),
@@ -96,10 +96,10 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                 );
               }else if(_selectedImage == null || _coverImage == null){
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                   SnackBar(
                     content: Text('Add Images', style: TextStyle(
                         fontFamily: WayaConstants.fontFamily,
-                        fontSize: 12
+                        fontSize: 12.sp
                     ),),
                     backgroundColor: Colors.red,
                     duration: Duration(seconds: 2),
@@ -121,7 +121,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
           text: 'Create',
           horizontalPadding: 12,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
           height: 30,
@@ -271,7 +271,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -308,7 +308,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],

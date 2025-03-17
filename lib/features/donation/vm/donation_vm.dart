@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
@@ -99,7 +100,7 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.donate(campaignId, amount, message);
       state = state.copyWith(isLoading: false);
-      Navigator.of(ctx).pop();
+      WayaNav.goBack();
       if (response.success && ctx.mounted) {
         WayaUtils.showModalSheet(
           ctx,
@@ -156,11 +157,11 @@ class DonationVm extends StateNotifier<DonationState> {
     } else if( response.data['error'] == 'User hasn\'t set wallet pin yet'){
 
       ScaffoldMessenger.of(ctx).showSnackBar(
-        const SnackBar(
+         SnackBar(
           content: Text(
             'Kindly set your wallet pin',
             style:
-            TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+            TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
           ),
           backgroundColor: WayaColors.primary,
           duration: Duration(seconds: 2),
@@ -183,11 +184,11 @@ class DonationVm extends StateNotifier<DonationState> {
       //? If this is fine...
       if (response.success && ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
+           SnackBar(
             content: Text(
               'Minimum amount updated successfully!',
               style:
-              TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+              TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
             ),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),

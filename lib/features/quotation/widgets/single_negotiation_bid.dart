@@ -147,7 +147,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                                         style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                           color: wayaTheme.colorScheme.white,
                                           fontWeight: FontWeight.w500,
-                                          fontSize: 11,
+                                          fontSize: 11.sp,
                                         ),
                                       ),
                                     ],
@@ -164,7 +164,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                               _shopData?.shop.name ?? "Loading",
                               style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                 color: wayaTheme.colorScheme.customBlack,
-                                fontSize: 14,
+                                fontSize: 14.sp,
                               ),
                             ),
 
@@ -182,7 +182,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                                         text: '15min ',
                                         style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                           color: wayaTheme.colorScheme.black,
-                                          fontSize: 12,
+                                          fontSize: 12.sp,
                                           fontWeight: FontWeight.w400,
                                         ),
                                       ),
@@ -192,7 +192,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                                         text: '2km ',
                                         style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                           color: WayaColors.greyColor400,
-                                          fontSize: 12,
+                                          fontSize: 12.sp,
                                           fontWeight: FontWeight.w400,
                                         ),
                                       ),
@@ -215,7 +215,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                                       " ${_shopData?.averageRating ?? '0'} (${_shopData?.ratings.length ?? 0} reviews)",
                                       style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                         color: WayaColors.greyColor400,
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                       ),
                                     ),
                                   ],
@@ -245,7 +245,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                     WayaValueHelper.formatPrice(double.tryParse(widget.bid.bidAmount) ?? 0),
                     style: wayaTheme.textTheme.bodyMedium?.copyWith(
                       color: wayaTheme.colorScheme.customBlack,
-                      fontSize: 20,
+                      fontSize: 20.sp,
                       fontWeight: FontWeight.w700,
                     ),
                   ),

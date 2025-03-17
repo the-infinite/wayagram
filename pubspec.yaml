@@ -2,7 +2,7 @@ name: wayagram
 description: The codebase for the entire WayaGram application
 homepage: https://wayagram.ng
 publish_to: "none" # NEVER PUBLISH TO pub.dev!
-version: 1.91.5-prod+134
+version: 1.91.10+153
 
 environment:
   sdk: ^3.6.0
@@ -21,10 +21,10 @@ dependencies:
   visibility_detector: ^0.4.0+2
   flutter_secure_storage: ^9.2.2
   path_provider: ^2.1.5
+  shimmer: ^3.0.0
   #sqlite3_flutter_libs: ^0.5.29+1
   dio: ^5.2.1+1
   http: ^1.2.1
-  shared_preferences: ^2.2.3
   svg_flutter: ^0.0.1
   flutter_screenutil: ^5.9.3
   screenshot: ^3.0.0
@@ -69,6 +69,20 @@ dependencies:
   #sqfentity_gen: ^2.5.0
   infinite_scroll_pagination: ^4.1.0
   video_trimmer: ^3.0.1-LTS
+  stack_trace: ^1.12.0
+
+  #for deep link
+  app_links: ^6.4.0
+  firebase_analytics: ^11.4.4
+  firebase_crashlytics: ^4.3.4
+  #for pinch to zoom
+  photo_view: ^0.15.0
+  #for saving file to gallery
+  gallery_saver_plus: ^3.2.4
+  
+
+
+
 
 dev_dependencies:
   flutter_test:

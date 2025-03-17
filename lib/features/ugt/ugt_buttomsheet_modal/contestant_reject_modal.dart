@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class ContestantRejectModal extends StatefulHookConsumerWidget {
   //final String quantity;
@@ -45,7 +43,7 @@ class _ConfirmVoteOptionModalState
             Text(
               'Add Reason for Rejection',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -81,7 +79,7 @@ class _ConfirmVoteOptionModalState
                         child: Text(
                           formState.errorText ?? "",
                           style: TextStyle(
-                              color: wayaTheme.colorScheme.error, fontSize: 12),
+                              color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                         ),
                       ),
                   ],
@@ -103,7 +101,7 @@ class _ConfirmVoteOptionModalState
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                Navigator.of(context).pop();
+                WayaNav.goBack();
               },
               text: "Go Back",
               textColor: WayaColors.black,

@@ -26,6 +26,30 @@ class SingleGroupWidget extends StatelessWidget {
       focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
       highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
       borderRadius: BorderRadius.circular(12.r),
+      onTap: () {
+        group.isPrivate == true
+            ? WayaNav.toNamed('/privateGroup', arguments: {
+                'memberCount': '${group.memberCount}',
+                'name': group.name,
+                'url': '${group.url}',
+                'desc': group.description,
+                'coverImage': '${group.coverImage}',
+                'profileImage': '${group.profileImage}',
+                'groupId': group.id,
+              })
+            : WayaNav.toNamed(
+                '/publicGroup',
+                arguments: {
+                  'memberCount': '${group.memberCount}',
+                  'name': group.name,
+                  'url': '${group.url}',
+                  'desc': group.description,
+                  'coverImage': '${group.coverImage}',
+                  'profileImage': '${group.profileImage}',
+                  'groupId': group.id
+                },
+              );
+      },
       child: Container(
         margin: EdgeInsets.only(bottom: 15),
         padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
@@ -51,7 +75,7 @@ class SingleGroupWidget extends StatelessWidget {
                   Text(
                     group.name,
                     style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                       color: wayaTheme.colorScheme.black,
                     ),
@@ -61,7 +85,7 @@ class SingleGroupWidget extends StatelessWidget {
               subtitle: Text(
                 "${WayaValueHelper.formatNumber(group.memberCount)} members",
                 style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: wayaTheme.colorScheme.greyColor500,
                 ),
@@ -77,7 +101,7 @@ class SingleGroupWidget extends StatelessWidget {
               child: Text(
                 group.description,
                 style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: wayaTheme.colorScheme.greyColor500,
                 ),

@@ -70,7 +70,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                           const Gap(3),
                           Text(' • ${ WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 14,
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.w400,
                                 color: Theme.of(context).colorScheme.greyColor500 ),
                           ),
@@ -100,7 +100,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                                     context: context,
                                     onTap: () {
                                       ref.read(createPollVotingProvider.notifier).deletePoll(context, postId: '${poll.id}');
-                                      Navigator.pop(context);
+                                      WayaNav.goBack();
                                     },
                                     asset: SvgPicture.asset(
                                       'assets/images/pages/delete.svg',
@@ -127,7 +127,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                               Text(
                                 '${e.description?.toLowerCase().capitalizeFirst}',
                                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 12,
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w400,
                                     color: Theme.of(context).colorScheme.greyColor500 ),
                               ),),
@@ -136,7 +136,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                         Text(
                           '${poll.voteCount} ${poll.voteCount == 0 || poll.voteCount == 1 ? 'Vote' : 'Votes'} •  $daysLeft hours remaining',
                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).colorScheme.greyColor500 ),
                         ),
@@ -153,11 +153,11 @@ class _MyPollsState extends ConsumerState<MyPolls> {
 
                                         if(currentDate.isAfter(expirationDate)){
                                           ScaffoldMessenger.of(context).showSnackBar(
-                                            const SnackBar(
+                                             SnackBar(
                                               content: Text(
                                                 'The poll has ended.',
                                                 style:
-                                                TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                                                TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
                                               ),
                                               backgroundColor: WayaColors.primary,
                                               duration: Duration(seconds: 2),
@@ -289,7 +289,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
               child: Text(
                 name,
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(ctx).colorScheme.primary600 ),
               ),
@@ -302,7 +302,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
               Text(
                 name,
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(ctx).colorScheme.primary600 ),
               ),
@@ -335,7 +335,7 @@ class _MyPollsState extends ConsumerState<MyPolls> {
               color: color,
               fontFamily: WayaConstants.fontFamily,
               fontWeight: FontWeight.w400,
-              fontSize: 14,
+              fontSize: 14.sp,
             ),
           )
         ],

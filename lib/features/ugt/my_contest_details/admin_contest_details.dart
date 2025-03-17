@@ -13,6 +13,7 @@ import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disqualify.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_contestants.dart';
@@ -76,7 +77,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                   child: _buildActionNav(
                       context: context,
                       onTap: () {
-                        Navigator.pop(context1);
+                        WayaNav.goBack();
                         WayaNav.toNamed('/contest-mydashboard-profile-page');
                       },
                       asset: SvgPicture.asset('assets/images/pages/flag.svg'),
@@ -95,7 +96,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                             duration: Duration(seconds: 2),
                           ),
                         );
-                        Navigator.pop(context);
+                        WayaNav.goBack();
                         WayaNav.toNamed('/pages');
                       },
                       asset: SvgPicture.asset(
@@ -114,17 +115,11 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           const Gap(20),
           ClipRRect(
             borderRadius: BorderRadius.circular(45),
-            child: Image.network(
-              model?.uploadCoverImages ?? "",
+            child: WayaImage(
+              imageUrl: model?.uploadCoverImages ?? "",
               height: 45,
               width: 45,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  height: 45,
-                  width: 45,
-                  color: wayaTheme.colorScheme.greyColor400,
-                );
-              },
+
               fit: BoxFit.cover, // Ensures the image covers the area properly
             ),
           ),
@@ -132,7 +127,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,7 +149,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         style: TextStyle(
                             color: getColor(
                                 true, model?.status?.toLowerCase() ?? ""),
-                            fontSize: 12),
+                            fontSize: 12.sp),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -183,7 +178,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                           child: Text(
                             "Live",
                             style: TextStyle(
-                                color: Color(0xff036B26), fontSize: 12),
+                                color: Color(0xff036B26), fontSize: 12.sp),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -203,8 +198,8 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
                       )
-                    : Image.network(
-                        model?.uploadCoverImages ?? "",
+                    : WayaImage(
+                        imageUrl: model?.uploadCoverImages ?? "",
                         width: context.width,
                         height: 200,
                         fit: BoxFit
@@ -216,24 +211,26 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                   style: wayaTheme.textTheme.bodyMedium),
               const Gap(5),
               Text(model?.description ?? "Description",
-                  style: wayaTheme.textTheme.hintStyle),
+                  style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                      color: WayaColors.greyColor500,
+                      fontWeight: FontWeight.w400)),
               const Gap(20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UpcomingWidget(
+                  UpcomingWidgetAdmin(
                       title: "Start Date",
                       content: formatDate(model?.startDate ?? "")),
                   const Gap(20),
-                  UpcomingWidget(
+                  UpcomingWidgetAdmin(
                       title: "End Date",
                       content: formatDate(model?.endDate ?? "")),
                   const Gap(20),
-                  UpcomingWidget(
+                  UpcomingWidgetAdmin(
                       title: "Entry Type", content: model?.entryType ?? ""),
                   const Gap(20),
-                  UpcomingWidget(
+                  UpcomingWidgetAdmin(
                       title: "Duration",
                       content: getRealDateDiffBtwDate(
                           model?.startDate ?? "", model?.endDate ?? "")),
@@ -242,21 +239,21 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
               const Gap(10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UpcomingWidget(
+                  UpcomingWidgetAdmin(
                       title: "Total Stages",
                       content: model?.multipleStages ?? ""),
                   const Gap(20),
-                  UpcomingWidget(
+                  UpcomingWidgetAdmin(
                       title: "Category", content: model?.categoryName ?? ""),
                   const Gap(20),
-                  UpcomingWidget(
+                  UpcomingWidgetAdmin(
                       title: "Prize",
                       content:
                           "₦${formatMoney(model?.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
                   const Gap(20),
-                  UpcomingWidget(title: "Host", content: "Host"),
+                  UpcomingWidgetAdmin(title: "Host", content: "Host"),
                 ],
               ),
               const Gap(20),
@@ -265,7 +262,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                   callback: () {
                     WayaNav.toNamed('/contest-mydashboard-profile-page');
                   },
-                  color: wayaTheme.colorScheme.primar50,
+                  color: wayaTheme.colorScheme.primary50,
                   text: "View Contest Dashboard",
                   textColor: wayaTheme.colorScheme.customPrimary,
                 ),
@@ -274,7 +271,9 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                       ?.wayaCopyWith(color: wayaTheme.colorScheme.primary500)),
               const Gap(15), */
               const Gap(15),
-              Text("Top Contestants", style: wayaTheme.textTheme.bodyMedium),
+              Text("Top Contestants",
+                  style: wayaTheme.textTheme.bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.bold)),
               const Gap(15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -434,7 +433,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           Text(
             text,
             style: TextStyle().wayaCopyWith(
-                color: color, fontWeight: FontWeight.w500, fontSize: 12),
+                color: color, fontWeight: FontWeight.w500, fontSize: 12.sp),
           )
         ],
       ),
@@ -448,5 +447,73 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     } else {
       return isText ? Color(0xff865503) : Color(0xffFEF6E7);
     } */
+  }
+}
+
+class UpcomingWidgetAdmin extends StatelessWidget {
+  final String title;
+  final String content;
+  final bool status;
+  final bool isFromDetailsPage;
+  const UpcomingWidgetAdmin({
+    super.key,
+    required this.title,
+    required this.content,
+    this.status = false,
+    this.isFromDetailsPage = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: context.width * 0.18,
+          child: Text(title,
+              style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                  color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
+        ),
+        const Gap(5),
+        if (!status)
+          SizedBox(
+            width: context.width * 0.18,
+            child: Text(content,
+                // overflow: TextOverflow.ellipsis,
+                style: WayaTextStyles.bodySmall),
+          ),
+        if (status)
+          Container(
+            decoration: BoxDecoration(
+              color: getColor(false, content.toLowerCase()), // Background color
+              borderRadius: BorderRadius.circular(20), // Rounded corners
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                child: Text(
+                  content,
+                  style: WayaTextStyles.bodySmall.copyWith(
+                    color: getColor(true, content.toLowerCase()),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Color getColor(bool isText, String text) {
+    if (text == "pending") {
+      return isText ? Color(0xff865503) : Color(0xffFEF6E7);
+    } else if (text == "rejected") {
+      return isText ? Color(0xff9E0A05) : Color(0xffFBEAE9);
+    } else {
+      return isText ? Color(0xff036B26) : Color(0xffE7F6EC);
+    }
   }
 }

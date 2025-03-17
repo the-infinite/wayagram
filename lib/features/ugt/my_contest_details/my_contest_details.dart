@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -80,7 +81,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                       EdgeInsets.symmetric(horizontal: 6.0, vertical: 12.0),
                   decoration: BoxDecoration(
                     color: _selectedIndex == index
-                        ? wayaTheme.colorScheme.primar50
+                        ? wayaTheme.colorScheme.primary50
                         : Colors.white,
                     borderRadius: BorderRadius.circular(6.0),
                     border: Border.all(
@@ -98,7 +99,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                         fontWeight: _selectedIndex == index
                             ? FontWeight.bold
                             : FontWeight.bold,
-                        fontSize: 12),
+                        fontSize: 12.sp),
                   ),
                 ),
               );
@@ -123,19 +124,22 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    if (ConversationState.self.accountType == UserAccountType.business)
+                    if (ConversationState.self.accountType ==
+                        UserAccountType.business)
                       WayaButton(
                         callback: () {
                           ivalidateUGTVM(ref);
                           WayaNav.toNamed('/create-contest');
                         },
-                        color: wayaTheme.colorScheme.primar50,
+                        color: wayaTheme.colorScheme.primary50,
                         text: "Host a Contest",
                         textColor: wayaTheme.colorScheme.customPrimary,
                       ),
                     const Gap(10),
                     if (host.isEmpty && applied.isEmpty && followed.isEmpty)
                       emptyWidget(),
+                    /*  if (hostNotifier.isLoading)
+                      Center(child: CircularProgressIndicator()), */
                     ListView.builder(
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -152,10 +156,6 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                       shrinkWrap: true,
                       itemCount: followed.length,
                       itemBuilder: (context, index) {
-                        if (hostNotifier.isLoading) {
-                          return Center(child: CircularProgressIndicator());
-                        }
-
                         final post = followed[index];
                         return ContestCard(
                             post,
@@ -170,9 +170,9 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                       shrinkWrap: true,
                       itemCount: host.length,
                       itemBuilder: (context, index) {
-                        if (hostNotifier.isLoading) {
+                        /*  if (hostNotifier.isLoading) {
                           return Center(child: CircularProgressIndicator());
-                        }
+                        } */
 
                         final post = host[index];
                         return ContestCard(post, hostNotifier.toggleLike,
@@ -184,16 +184,15 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
 
                 /// Hosted Contests
                 if (host.isEmpty) emptyWidget(),
+                if (hostNotifier.isLoading && host.isEmpty)
+                  Center(child: CircularProgressIndicator()),
+
                 if (host.isNotEmpty)
                   ListView.builder(
                     controller: _hostedScrollController,
                     shrinkWrap: true,
                     itemCount: host.length,
                     itemBuilder: (context, index) {
-                      if (hostNotifier.isLoading) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-
                       final post = host[index];
                       return GestureDetector(
                         onTap: () {
@@ -232,13 +231,15 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc:  ConversationState.self.accountType == UserAccountType.business
+        desc: ConversationState.self.accountType == UserAccountType.business
             ? "You don’t have any active contest here. Create a \n contest and have different participant"
             : "You don’t have any active contest here. Create a \n Business account to access more features",
         title: "No Contest Created",
         buttonText: "Host a Contest",
         hideButton:
-            ConversationState.self.accountType == UserAccountType.business ? true : false,
+            ConversationState.self.accountType == UserAccountType.business
+                ? true
+                : false,
         onTap: () {
           ivalidateUGTVM(ref);
           WayaNav.toNamed("/create-contest");

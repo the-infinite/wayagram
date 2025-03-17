@@ -40,7 +40,7 @@ class InstructionContainer extends StatelessWidget {
                 alignment: Alignment.center,
                 height: 32.h,
                 width: 32.w,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: wayaTheme.colorScheme.primar50),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: wayaTheme.colorScheme.primary50),
                 child: Text(position,
                     style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.black)),
               ),
@@ -247,7 +247,7 @@ class PaymentMethodTile extends StatelessWidget {
           height: 40.h,
           width: 40.w,
           decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.primar50,
+            color: wayaTheme.colorScheme.primary50,
             shape: BoxShape.circle,
           ),
           child: iconPath.svg(fit: BoxFit.none)),

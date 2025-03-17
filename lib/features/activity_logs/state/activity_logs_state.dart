@@ -23,8 +23,11 @@ class ActivityLogsState{
   List<SearchLogDocs> searchLogDocs;
   List<SearchLogDocs> searchLogDocs1;
   List<UserActionsDocs> userActionsDocs;
+  List<UserActionsDocs> userActionsDocs1;
   List<UserInteractionDocs> userInteractionDocs;
+  List<UserInteractionDocs> userInteractionDocs1;
   List<VisitedPagesDocs> visitedPagesDocs;
+  List<VisitedPagesDocs> visitedPagesDocs1;
   VisitedPagesModel? visitedPagesModel;
 
   final bool isLoading;
@@ -41,8 +44,11 @@ class ActivityLogsState{
     this.searchLogDocs = const [],
     this.searchLogDocs1 = const [],
     this.userActionsDocs = const [],
+    this.userActionsDocs1 = const [],
     this.userInteractionDocs = const [],
+    this.userInteractionDocs1 = const [],
     this.visitedPagesDocs = const [],
+    this.visitedPagesDocs1 = const [],
     this.visitedPagesModel,
 
   }):   title = title ?? TextEditingController();
@@ -57,8 +63,11 @@ class ActivityLogsState{
     List<SearchLogDocs>? searchLogDocs,
     List<SearchLogDocs>? searchLogDocs1,
     List<UserActionsDocs>? userActionsDocs,
+    List<UserActionsDocs>? userActionsDocs1,
     List<UserInteractionDocs>? userInteractionDocs,
+    List<UserInteractionDocs>? userInteractionDocs1,
     List<VisitedPagesDocs>? visitedPagesDocs,
+    List<VisitedPagesDocs>? visitedPagesDocs1,
     VisitedPagesModel? visitedPagesModel,
     bool? isLoading,
 
@@ -74,8 +83,11 @@ class ActivityLogsState{
       searchLogDocs: searchLogDocs ?? this.searchLogDocs,
       searchLogDocs1: searchLogDocs1 ?? this.searchLogDocs1,
       userActionsDocs: userActionsDocs ?? this.userActionsDocs,
+      userActionsDocs1: userActionsDocs1 ?? this.userActionsDocs1,
       userInteractionDocs: userInteractionDocs ?? this.userInteractionDocs,
+      userInteractionDocs1: userInteractionDocs1 ?? this.userInteractionDocs1,
       visitedPagesDocs: visitedPagesDocs ?? this.visitedPagesDocs,
+      visitedPagesDocs1: visitedPagesDocs1 ?? this.visitedPagesDocs1,
       visitedPagesModel: visitedPagesModel ?? this.visitedPagesModel,
 
     );

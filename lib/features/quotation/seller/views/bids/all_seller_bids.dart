@@ -122,7 +122,7 @@ class _AllSellerBidsState extends ConsumerState<AllSellerBids> {
             Text(
               "Recent Bids",
               style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                fontSize: 15,
+                fontSize: 15.sp,
                 fontWeight: FontWeight.w600,
                 color: wayaTheme.colorScheme.customBlack,
               ),
@@ -191,7 +191,7 @@ class _AllSellerBidsState extends ConsumerState<AllSellerBids> {
                   Text(
                     "See Bids",
                     style: TextStyle()
-                        .wayaCopyWith(color: wayaTheme.colorScheme.white, fontWeight: FontWeight.w600, fontSize: 14),
+                        .wayaCopyWith(color: wayaTheme.colorScheme.white, fontWeight: FontWeight.w600, fontSize: 14.sp),
                   ),
                 ],
               ),

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +7,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -25,7 +24,6 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final userState = ref.watch(profileVmProvider);
-    log("${userState.userAccountModel?.data}");
     return Container(
       decoration:
           BoxDecoration(borderRadius: BorderRadius.circular(10), color: wayaTheme.colorScheme.cardBackgroudColor2),
@@ -55,7 +53,7 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
                 Container(
                     padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                     decoration:
-                        BoxDecoration(color: wayaTheme.colorScheme.primar50, borderRadius: BorderRadius.circular(10)),
+                        BoxDecoration(color: wayaTheme.colorScheme.primary50, borderRadius: BorderRadius.circular(10)),
                     child: Text(
                       userState.userAccountModel?.data?.userdata?.profile?.referenceCode ?? '',
                       style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.primary),
@@ -113,7 +111,11 @@ class GeneralSettingsOptionTile extends StatelessWidget {
                 padding: EdgeInsets.only(bottom: 10.0, top: 10),
                 child: Row(
                   children: [
-                    SvgPicture.asset("assets/icons/gen_set/${option.iconPath}.svg", fit: BoxFit.none),
+                    SvgPicture.asset(
+                      "assets/icons/gen_set/${option.iconPath}.svg",
+                      fit: BoxFit.none,
+                      color: option.iconPath == 'logout' ? WayaColors.primary : null,
+                    ),
                     Gap(10),
                     Text(option.title,
                         style: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.greyColor700)),

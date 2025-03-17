@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -46,8 +47,8 @@ class _SellerShopState extends ConsumerState<SellerShop> {
             Text(
               "You don't Have a Shop Yet",
                textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 20,
+              style:  TextStyle(
+                fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),

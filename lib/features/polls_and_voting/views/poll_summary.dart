@@ -105,7 +105,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             text: 'Create',
             horizontalPadding: 12,
             textStyle: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.white ),
           )
@@ -123,7 +123,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             Text(
               '${viewModel.pollDescription.text.capitalizeFirst}',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),
@@ -148,7 +148,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             Text(
               'Choices',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
                   color: Theme.of(context).colorScheme.greyColor900 ),
             ),
@@ -173,7 +173,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         Text(
           title,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.greyColor600 ),
         ),
@@ -181,7 +181,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         Text(
           subTitle,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.black ),
         ),
@@ -189,7 +189,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         Text(
           title2,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.greyColor600 ),
         ),
@@ -197,7 +197,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         Text(
           subTitle2,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.black ),
         ),
@@ -256,7 +256,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         Text(
           name,
           style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 20,
+              fontSize: 20.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(ctx).colorScheme.primary600 ),
         ),
@@ -313,7 +313,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         title: 'Payment Information',
         message:
         'Waya will take a commission from the payment\nand the rest of the money will be paid into your\naccount at the end of post duration or its\nexpiry date.',
-        onPress: () => Navigator.of(context).pop(),
+        onPress: () => WayaNav.goBack(),
         icon: Image.asset('assets/images/d-code-invalid.png', height: 10,),
         buttonCenterWidget: Column(
           children: [
@@ -321,7 +321,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             const Gap(8),
             InkWell(
               onTap: (){
-                Navigator.of(context).pop();
+                WayaNav.goBack();
                 WayaUtils.showModalSheet(
                   context,
                   child: PollsModal(url: '',),
@@ -330,7 +330,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               child: Text(
                 'Ok, I Agree',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                     color: Theme.of(context).colorScheme.greyColor500 ),
               ),

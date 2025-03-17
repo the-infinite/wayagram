@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -72,7 +73,7 @@ class ProductCard extends ConsumerWidget {
                           style: TextStyle().wayaCopyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
-                              fontSize: 10)),
+                              fontSize: 10.sp)),
                     ),
                   )
                 ],
@@ -87,7 +88,7 @@ class ProductCard extends ConsumerWidget {
                 ],
               )),
           SizedBox(height: 3),
-          Text(product.name, style: wayaTheme.textTheme.bodyXtraMedium),
+          Text(product.name.capitalizeFirst!, style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
               visible: !isExplore && product.rating != null,
               child: Column(
@@ -107,7 +108,7 @@ class ProductCard extends ConsumerWidget {
                         product.rating ?? '0',
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.greyColor400,
-                            fontSize: 11),
+                            fontSize: 11.sp),
                       )
                     ],
                   )
@@ -123,7 +124,7 @@ class ProductCard extends ConsumerWidget {
                     style: TextStyle().wayaCopyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: wayaTheme.colorScheme.greyColor400,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: wayaTheme.colorScheme.greyColor400),
                   ),
                 ],
@@ -138,7 +139,7 @@ class ProductCard extends ConsumerWidget {
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary
                       : wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500)),
           Visibility(
               visible: canbeAddedTocart,
@@ -160,6 +161,7 @@ class ProductCard extends ConsumerWidget {
                           productName: product.name,
                           price: price,
                           shopId: product.shopId);
+                       WayaSnackBar.showToast("Item added to cart");    
                     },
                     height: 38,
                     radius: 6,
@@ -168,7 +170,7 @@ class ProductCard extends ConsumerWidget {
                       'Add To Cart',
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 14),
+                          fontSize: 14.sp),
                     ),
                     textColor: wayaTheme.colorScheme.customBlack,
                   )
@@ -190,7 +192,7 @@ class ProductCard extends ConsumerWidget {
                       'Manage Product',
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 14),
+                          fontSize: 14.sp),
                     ),
                     textColor: wayaTheme.colorScheme.customBlack,
                   )
@@ -254,7 +256,7 @@ class SellerProductCard extends ConsumerWidget {
                           style: TextStyle().wayaCopyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w500,
-                              fontSize: 10)),
+                              fontSize: 10.sp)),
                     ),
                   )
                 ],
@@ -290,7 +292,7 @@ class SellerProductCard extends ConsumerWidget {
                         product.rating ?? '0',
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.greyColor400,
-                            fontSize: 11),
+                            fontSize: 11.sp),
                       )
                     ],
                   )
@@ -306,7 +308,7 @@ class SellerProductCard extends ConsumerWidget {
                     style: TextStyle().wayaCopyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: wayaTheme.colorScheme.greyColor400,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: wayaTheme.colorScheme.greyColor400),
                   ),
                 ],
@@ -321,7 +323,7 @@ class SellerProductCard extends ConsumerWidget {
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary
                       : wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500)),
           Visibility(
               visible: sellerProduct,
@@ -341,7 +343,7 @@ class SellerProductCard extends ConsumerWidget {
                       'Manage Product',
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 14),
+                          fontSize: 14.sp),
                     ),
                     textColor: wayaTheme.colorScheme.customBlack,
                   )

@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
+import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/auth/login/model/user_model.dart';
+import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/features/notifications/vm/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/features/follow/notifier/self.dart';
 import 'package:wayagram/shared/features/shop/resource/default.dart';
 
 class LoginState {
@@ -83,12 +89,15 @@ class LoginVm extends StateNotifier<LoginState> {
 
   Future<void> onSubmit(WidgetRef ref, {String? email, bool? isBusinessLogin}) async {
     try {
-      state = state.copyWith(isLoading: true);
+      //? Show the preloader.
+      WayaPreloaderController.instance.show();
+      //state = state.copyWith(isLoading: true);
+      //? added trim, add issue login in just cause of space issues
       final response = await _authRepository.login(
           isBusinessLogin: isBusinessLogin,
-          email: email ?? state.emailController.text,
-          businessId: state.businessIdController.text,
-          password: state.passwordController.text);
+          email: email?.trim() ?? state.emailController.text.trim(),
+          businessId: state.businessIdController.text.trim(),
+          password: state.passwordController.text.trim());
 
       // _logger.d(" result ${response.data['message']}");
       if (response.success) {
@@ -112,9 +121,27 @@ class LoginVm extends StateNotifier<LoginState> {
 
           // Now, in a contained region, load up this person's stores.
           try {
-            final shops = await ShopResource.getShopsForVendor(ConversationState.self.id);
-            ShopResource.setShop(shops.first);
-          } catch (_) {}
+            await ShopResource.configureShop(ConversationState.self.id);
+          } catch (e) {
+            WayaDebugConsoleController.instance.addException(
+              WayaDebugHelpers.getMessage(e),
+              e,
+              WayaDebugEventModule.shops,
+              WayaDebugHelpers.getStackTrace(e),
+            );
+          }
+
+          //? Now, load this user's followers
+          try {
+            await myFollowProvider.getIfEmpty();
+          } catch (e) {
+            WayaDebugConsoleController.instance.addException(
+              WayaDebugHelpers.getMessage(e),
+              e,
+              WayaDebugEventModule.relationships,
+              WayaDebugHelpers.getStackTrace(e),
+            );
+          }
 
           //? Now we do the unnecessary part of things.
           final response =
@@ -152,11 +179,21 @@ class LoginVm extends StateNotifier<LoginState> {
 
         // This is good too.
         WayaNav.toNamed("/explore");
+      } else {
+        if (response.data['responseCode'] == 625) {
+          await ref
+              .read(verifyAccountProvider.notifier)
+              .resendOtpForRegisteredButNotVerifiedUser(email: state.emailController.text);
+
+          WayaNav.toNamed(VerifyEmail.route, arguments: state.emailController.text);
+        }
       }
     } catch (e) {
       _logger.e(e);
     } finally {
-      state = state.copyWith(isLoading: false);
+      //state = state.copyWith(isLoading: false);
+      //? Hide the preloader.
+      WayaPreloaderController.instance.hide();
     }
   }
 }

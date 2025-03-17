@@ -39,7 +39,7 @@ class _LogsAndAuditTrialsState extends ConsumerState<LogsAndAuditTrials> {
       isLoading: false,
       isScrollable: true,
       onTapBackButton: (){
-        Navigator.pop(context);
+        WayaNav.goBack();
         ref.watch(createGroupProvider.notifier).reset();
       },
       body: Column(

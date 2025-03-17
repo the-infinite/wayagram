@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -116,7 +117,7 @@ class _ChatReplyToWidgetState extends State<ChatReplyToWidget> with SingleTicker
                     widget.message.contentDescription,
                     maxLines: 5,
                     style: WayaTextStyles.labelMedium.copyWith(
-                      fontSize: 15,
+                      fontSize: 15.sp,
                       color: Colors.black,
                       overflow: TextOverflow.ellipsis,
                     ),

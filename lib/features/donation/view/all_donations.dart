@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:svg_flutter/svg_flutter.dart';
@@ -64,7 +65,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
    );
 
 
-    return filteredAllDonations.isEmpty ?DonationEmptyState() :
+    return
     Expanded(
       child: ListView(
         //crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +85,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                 Text(
                   "Create a Donation Post",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                      color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
                 ),
               ],
             ),
@@ -95,7 +96,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                      title: "Update KYC Information ",
                      message: 'You must complete KYC verification before creating a donation post',
                      onPress: () {
-                       Navigator.pop(context);
+                       WayaNav.goBack();
                        WayaNav.toNamed('/kycUpdate', arguments: {
                          'kyc': '${viewModel.kycStatus}'
                        });
@@ -110,7 +111,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                       title: "You don't have a Business Account",
                       message: 'Please upgrade to a business account to create a donation post',
                       onPress: () {
-                        Navigator.pop(context);
+                        WayaNav.goBack();
                         WayaNav.toNamed(UpgradeToBusiness.route);
                       },
                       buttonText: 'Upgrade to Business',
@@ -121,7 +122,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                 WayaNav.toNamed('/createDonation');
               }
             },
-            color: wayaTheme.colorScheme.primar50,
+            color: wayaTheme.colorScheme.primary50,
           ),
           Gap(20),
           FilterWidget(
@@ -133,10 +134,11 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
           Text(
               "Support a Cause That Matters",
               style: WayaTextStyles.bodySmall.copyWith(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),),
           const Gap(30),
+          filteredAllDonations.isEmpty ?DonationEmptyState() :
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -188,10 +190,11 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
           Text(
             "View donations based on their categories",
             style: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.greyColor500 ),),
           const Gap(30),
+          filteredAllDonations.isEmpty ?DonationEmptyState() :
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,

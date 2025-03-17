@@ -106,7 +106,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                     text: 'Post',
                     isLoading: viewModel.isLoading,
                     textStyle: WayaTextStyles.bodySmall.copyWith(
-                        fontSize: 12,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.white ),
                   ) :
@@ -128,7 +128,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                     text: 'Post',
                     isLoading: viewModel.isLoading,
                     textStyle: WayaTextStyles.bodySmall.copyWith(
-                        fontSize: 12,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.white ),
                   ),
@@ -140,7 +140,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
               child: InkWell(
                   onTap: (){
                     ref.watch(createPageProvider.notifier).reset();
-                    Navigator.pop(context);
+                    WayaNav.goBack();
                   },
                   child: Image.asset('assets/images/pages/cancel.png', height: 16.h,)),
             )),
@@ -201,7 +201,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                                 formState.errorText!,
                                                 style: TextStyle(
                                                     color: wayaTheme.colorScheme.error,
-                                                    fontSize: 12),
+                                                    fontSize: 12.sp),
                                               ),
                                             ),
                                         ],
@@ -297,7 +297,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                   Text(
                     sel ?'Public post' : 'Private post',
                     style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.primary ),
                   ),
@@ -346,7 +346,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                             width: double.infinity,
                             height: 56.h,
                             decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primar50
+                                color: Theme.of(context).colorScheme.primary50
                             ),
                             child: Padding(
                               padding: const EdgeInsets.only(left: 10),
@@ -356,7 +356,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                   Text(
                                     'Public',
                                     style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                        fontSize: 14,
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w600,
                                         color: Theme.of(context).colorScheme.primary ),
                                   ),
@@ -366,7 +366,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                       Text(
                                         'Everybody can see and interact with this post',
                                         style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                            fontSize: 14,
+                                            fontSize: 14.sp,
                                             fontWeight: FontWeight.w400,
                                             color: Theme.of(context).colorScheme.primary ),
                                       ),
@@ -374,7 +374,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                       Padding(
                                         padding: const EdgeInsets.only(right: 20),
                                         child: GestureDetector(
-                                          onTap: () =>Navigator.pop(context),
+                                          onTap: () =>WayaNav.goBack(),
                                           child: Container(
                                             padding: const EdgeInsets.all(2),
                                             decoration:  BoxDecoration(
@@ -407,14 +407,14 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                   Text(
                                     'Private',
                                     style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                        fontSize: 14,
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w600,
                                         color: Theme.of(context).colorScheme.black ),
                                   ),
                                   Text(
                                     'Only your friends can see and interact with this post',
                                     style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                        fontSize: 14,
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w400,
                                         color: Theme.of(context).colorScheme.greyColor500 ),
                                   ),
@@ -439,14 +439,14 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                   Text(
                                     'Public',
                                     style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                        fontSize: 14,
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w600,
                                         color: Theme.of(context).colorScheme.black ),
                                   ),
                                   Text(
                                     'Everybody can see and interact with this post',
                                     style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                        fontSize: 14,
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w400,
                                         color: Theme.of(context).colorScheme.greyColor500 ),
                                   ),
@@ -458,7 +458,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                             width: double.infinity,
                             height: 56.h,
                             decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primar50
+                                color: Theme.of(context).colorScheme.primary50
                             ),
                             child: Padding(
                               padding: const EdgeInsets.only(left: 10),
@@ -468,7 +468,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                   Text(
                                     'Private',
                                     style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                        fontSize: 14,
+                                        fontSize: 14.sp,
                                         fontWeight: FontWeight.w600,
                                         color: Theme.of(context).colorScheme.primary ),
                                   ),
@@ -478,7 +478,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                       Text(
                                         'Only your friends can see and interact with this post',
                                         style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                            fontSize: 14,
+                                            fontSize: 14.sp,
                                             fontWeight: FontWeight.w400,
                                             color: Theme.of(context).colorScheme.primary ),
                                       ),
@@ -486,7 +486,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                       Padding(
                                         padding: const EdgeInsets.only(right: 20),
                                         child: GestureDetector(
-                                          onTap: () =>Navigator.pop(context),
+                                          onTap: () =>WayaNav.goBack(),
                                           child: Container(
                                             padding: const EdgeInsets.all(2),
                                             decoration:  BoxDecoration(
