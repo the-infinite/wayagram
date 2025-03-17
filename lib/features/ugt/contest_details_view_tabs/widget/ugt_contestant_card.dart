@@ -91,10 +91,31 @@ class UgtContestantCard extends ConsumerWidget {
                   return;
                 }
 
-                //VoteSuccessModal
-                //ConfirmVoteOptionModal
-                //VoteOptionModal
-                //PollsModal
+                if (model.entryType?.toLowerCase() == "free") {
+                  WayaUtils.showModalSheet(
+                    context,
+                    child: ConfirmVoteOptionModal(
+                      amount: "1",
+                      voteFee: "0",
+                      isFree: true,
+                      model: ContestVoteModel(
+                          contestId: contestantData.contestId ?? "",
+                          contestantId: contestantData.id ?? "",
+                          hostUserId: contestantData.profileId ?? "",
+                          amount: "0",
+                          numberOfVotes: "0",
+                          profileId: "",
+                          type: model.entryType?.toLowerCase()),
+                      candidateName:
+                          contestantData.contestApplicant?.fullName ?? "Name",
+                      votingLink: "votingLink",
+                    ),
+                  );
+
+                  return;
+                }
+
+               
                 WayaUtils.showModalSheet(
                   context,
                   child: VoteOptionModal(

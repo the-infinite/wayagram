@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -54,7 +55,7 @@ class VerifyEmail extends ConsumerWidget {
             Align(
               alignment: Alignment.center,
               child: VerificationCode(
-                textStyle: const TextStyle(fontSize: 20.0),
+                textStyle:  TextStyle(fontSize: 20.0.sp),
                 keyboardType: TextInputType.number,
                 underlineColor: wayaTheme.colorScheme.customBlack,
                 fullBorder: true,

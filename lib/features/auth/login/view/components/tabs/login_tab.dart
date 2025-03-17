@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -107,7 +108,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -158,7 +159,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -171,7 +172,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                     onTap: () => WayaNav.toNamed('/forgot-password'),
                     child: Text('Forgot Password?',
                         style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             color: wayaTheme.colorScheme.customPrimary)),
                   ),
                 ),
@@ -306,7 +307,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -357,7 +358,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -370,7 +371,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                     onTap: () => WayaNav.toNamed('/forgot-password'),
                     child: Text('Forgot Password?',
                         style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             color: wayaTheme.colorScheme.customPrimary)),
                   ),
                 ),

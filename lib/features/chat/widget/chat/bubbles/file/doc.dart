@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -214,7 +215,7 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
                               WayaFileHelper.getFileSize(total),
                               style: WayaTextStyles.bodySmall.copyWith(
                                 color: WayaColors.primary,
-                                fontSize: 14,
+                                fontSize: 14.sp,
                               ),
                             ),
                           ),
@@ -256,7 +257,7 @@ class _DocumentFileWidgetState extends State<DocumentFileWidget> {
                                 widget.extension.toUpperCase(),
                                 style: WayaTextStyles.bodySemiBold.copyWith(
                                   color: highlights,
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                 ),
                               ),
                             ],

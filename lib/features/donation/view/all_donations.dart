@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:svg_flutter/svg_flutter.dart';
@@ -84,7 +85,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                 Text(
                   "Create a Donation Post",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                      color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
                 ),
               ],
             ),
@@ -133,7 +134,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
           Text(
               "Support a Cause That Matters",
               style: WayaTextStyles.bodySmall.copyWith(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),),
           const Gap(30),
@@ -189,7 +190,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
           Text(
             "View donations based on their categories",
             style: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.greyColor500 ),),
           const Gap(30),

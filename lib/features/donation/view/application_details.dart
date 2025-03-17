@@ -61,7 +61,7 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Application Status ",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
           const Gap(5),
           Text(
               maxLines: 3,
@@ -99,7 +99,7 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
                 Text(
                   'Application',
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w400,
                       color: Theme.of(context).colorScheme.greyColor600 ),
                 ),
@@ -117,7 +117,7 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
                     child: Text(
                       widget.status,
                       style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 12,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
                           color: widget.status == 'Pending'? WayaColors.pendingColor2: widget.status == 'Approved'? WayaColors.success: WayaColors.error ),
                     ),
@@ -206,13 +206,13 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
       children: [
         Text(title,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.greyColor500),),
 
         Text(subTitle,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.black),),
       ],);

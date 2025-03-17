@@ -193,7 +193,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                         "createdAt": widget.post.createdAt,
                         "likeCount": widget.post.likes,
                         "isLike": widget.post.hasLiked,
-                          "showDescription":true,
+                        "showDescription": true,
                         "discription": widget.post.description,
                         "shareCount": widget.post.shares,
                         "type": MyFullMediaType.image
@@ -205,7 +205,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                         "createdAt": widget.post.createdAt,
                         "likeCount": widget.post.likes,
                         "isLike": widget.post.hasLiked,
-                        "showDescription":true,
+                        "showDescription": true,
                         "discription": widget.post.description,
                         "shareCount": widget.post.shares,
                         "type": MyFullMediaType.video
@@ -308,7 +308,34 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                         return;
                       }
 
-                      WayaUtils.showModalSheet(
+                        if (widget.model.entryType?.toLowerCase() == "free") {
+                   
+                        WayaUtils.showModalSheet(
+                          context,
+                          child: ConfirmVoteOptionModal(
+                            amount: "1",
+                            voteFee: "0",
+                            isFree: true,
+                            model: ContestVoteModel(
+                                contestId: widget.post.contestId ?? "",
+                                contestantId:
+                                    widget.post.contestantProfileId ?? "",
+                                hostUserId: widget.model.profileId ?? "",
+                                amount: "0",
+                                numberOfVotes: "0",
+                                profileId: "",
+                                type: widget.model.entryType?.toLowerCase()),
+                            candidateName:
+                                widget.post.contestApplication?.fullName ??
+                                    "Name",
+                            votingLink: "votingLink",
+                          ),
+                        );
+
+                        return;
+                      }
+
+                        WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(
                           voteFee:

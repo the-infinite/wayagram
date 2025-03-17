@@ -56,7 +56,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
               child: Text(
                 "Enter your login details to access your account",
                 style: wayaTheme.textTheme.bodyMedium
-                    ?.wayaCopyWith(fontSize: 15, color: wayaTheme.colorScheme.greyColor600),
+                    ?.wayaCopyWith(fontSize: 15.sp, color: wayaTheme.colorScheme.greyColor600),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -118,7 +118,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
                                 formState.errorText!,
-                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -131,7 +131,7 @@ class _WelcomeBackPageState extends ConsumerState<WelcomeBackPage> {
                         onTap: () => WayaNav.toNamed('/forgot-password'),
                         child: Text('Forgot Password?',
                             style: wayaTheme.textTheme.bodySemiBold
-                                .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customPrimary)),
+                                .wayaCopyWith(fontSize: 14.sp, color: wayaTheme.colorScheme.customPrimary)),
                       ),
                     ),
                     Gap(Get.height * 0.15),

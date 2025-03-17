@@ -52,8 +52,8 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
               ),
             ],
           ),
-          const Gap(10),
-          const Gap(10),
+        
+          const Gap(20),
           if (_selectedIndex == 0) ManageUserTab(),
           if (_selectedIndex == 1) RoleManagementTab(),
         ],

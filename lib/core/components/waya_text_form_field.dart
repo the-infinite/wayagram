@@ -210,7 +210,7 @@ class _AppFieldState extends State<WayaTextFormField> {
             child: Text(
               widget.label!,
               style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     color: wayaTheme.greyColor900,
                   ),
             ),
@@ -222,7 +222,7 @@ class _AppFieldState extends State<WayaTextFormField> {
             child: Text(
               widget.helperText!,
               style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                    fontSize: 13,
+                    fontSize: 13.sp,
                     color: wayaTheme.greyColor400,
                   ),
             ),
@@ -359,7 +359,7 @@ class WayaFormField extends StatelessWidget {
                   formState.errorText!,
                   style: TextStyle(
                     color: wayaTheme.error,
-                    fontSize: 12,
+                    fontSize: 12.sp,
                   ),
                 ),
               ),

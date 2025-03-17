@@ -517,7 +517,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
   }
 }
 
-class ConfirmVoteOptionModal extends ConsumerStatefulWidget {
+class ConfirmVoteOptionModal extends StatefulHookConsumerWidget {
   //final String quantity;
   final String amount;
   final String voteFee;
@@ -549,7 +549,7 @@ class _ConfirmVoteOptionModalState
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createPollVotingProvider);
+    final isLoading = useState(false);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
       child: SingleChildScrollView(
@@ -607,9 +607,40 @@ class _ConfirmVoteOptionModalState
             ),
             const Gap(200),
             WayaButton(
-              callback: !viewModel.isLoading
+              callback: !isLoading.value
                   ? () async {
-                      WayaNav.goBack();
+                      // WayaNav.goBack();
+                      if (widget.isFree) {
+                        isLoading.value = true;
+                        var isPass = await ref
+                            .read(votersContestNotifier.notifier)
+                            .voteContestant(isLoading, {
+                          "contestId": widget.model.contestId ?? "",
+                          "contestantId": widget.model.contestantId ?? "",
+                          "hostUserId": widget.model.hostUserId ?? "",
+                          "amount": "0",
+                          "numberOfVotes": "1",
+                          "profileId": widget.model.profileId ?? "",
+                          "type": "FREE"
+                        });
+
+                        if (isPass) {
+                          ref
+                              .read(votersContestNotifier.notifier)
+                              .getContestantProfileVoteDetails(ref
+                                      .read(selectedContestProvider.notifier)
+                                      .state
+                                      ?.id ??
+                                  "");
+                          WayaNav.goBack();
+                          WayaUtils.showModalSheet(context,
+                              child: VoteSuccessModal(
+                                candidateName: widget.candidateName,
+                                votingLink: "link",
+                              ));
+                        }
+                        return;
+                      }
                       ref.watch(votersContestNotifier.notifier).getUserWallet();
                       print('${widget.amount} ${widget.voteFee}');
                       WayaUtils.showModalSheet(
@@ -634,7 +665,7 @@ class _ConfirmVoteOptionModalState
                     }
                   : null,
               centerWidget:
-                  LoadingState(loading: viewModel.isLoading, text: 'Yes, Vote'),
+                  LoadingState(loading: isLoading.value, text: 'Yes, Vote'),
             ),
             SizedBox(height: 17.h),
             WayaButton(

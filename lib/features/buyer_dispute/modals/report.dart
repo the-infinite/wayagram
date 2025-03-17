@@ -128,7 +128,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                   "Report a Dispute",
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    fontSize: 24,
+                    fontSize: 24.sp,
                   ),
                 ),
 
@@ -138,7 +138,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                 Text(
                   "Let us know what went wrong to help resolve the issue",
                   style: theme.textTheme.descriptionStyle.copyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
                 ),
 
@@ -150,7 +150,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                   style: theme.textTheme.descriptionStyle.copyWith(
                     color: theme.colorScheme.customBlack,
                     fontWeight: FontWeight.w500,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                   ),
                 ),
 
@@ -223,7 +223,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                               formState.errorText!,
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.error,
-                                fontSize: 12,
+                                fontSize: 12.sp,
                               ),
                             ),
                           ),
