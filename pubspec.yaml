@@ -67,6 +67,7 @@ dependencies:
   url_launcher: ^6.3.1
   #sqfentity: ^2.5.0
   #sqfentity_gen: ^2.5.0
+  google_maps_flutter: ^2.10.0
   currency_text_input_formatter: ^2.2.3
   hooks_riverpod: ^2.6.1
   flutter_hooks: ^0.21.2
