@@ -140,7 +140,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
               color: Theme.of(context).colorScheme.greyColor500),
         ),
         const Gap(30),
-        viewModel.myDonationDocs!.isEmpty ? ActivityLogsEmptyState(text: 'There is no hosted donations',):
+        viewModel.myDonationDocs!.isEmpty ? ActivityLogsEmptyState(text: 'There is no hosted donationsgit',):
         SizedBox(
           height: Platform.isAndroid ? 350 : 250,
           child: ListView.builder(
