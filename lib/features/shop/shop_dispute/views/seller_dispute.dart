@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
 import 'package:wayagram/features/shop/shop_dispute/widgets/single_dispute_widget.dart';
+import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 
 class SellerDispute extends ConsumerStatefulWidget {
@@ -31,6 +34,9 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(disputeVmProvider);
+
+    final filteredDispute =
+        WayaUtils.search(state.disputes, ["status"], searchController.text);
     return WayaScaffold(
       isLoading: false,
       isScrollable: false,
@@ -44,31 +50,40 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Some space.
-            Gap(20.h),
+            if (state.disputes.isEmpty && !state.isLoading) ...[
+              Center(
+                child: EmptyState(
+                  assetImage: WayaAssets.icons.emptyState.svg(),
+                  message: "Nothing to show yet",
+                ),
+              ),
+            ] else ...[
+              // Some space.
+              Gap(20.h),
 
-            //? How search through our list of disputes...
-            FilterWidget(
-              search: searchController,
-              hintText: 'Search Dispute',
-              onTextChanged: (value) {
-                // TODO: Filter this.
-              },
-            ),
+              //? How search through our list of disputes...
+              FilterWidget(
+                search: searchController,
+                hintText: 'Search Dispute by status (pending, resolved)',
+                onTextChanged: (value) {
+                  // TODO: Filter this.
+                },
+              ),
 
-            // Some space.
-            Gap(20.h),
+              // Some space.
+              Gap(20.h),
 
-            //? Where we show our disputes.
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: state.disputes.length,
-              itemBuilder: (context, index) {
-                final dispute = state.disputes[index];
-                return SingleDisputeWidget(dispute:dispute);
-              },
-            )
+              //? Where we show our disputes.
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: state.disputes.length,
+                itemBuilder: (context, index) {
+                  final dispute = state.disputes[index];
+                  return SingleDisputeWidget(dispute: dispute);
+                },
+              )
+            ]
           ],
         ),
       ),

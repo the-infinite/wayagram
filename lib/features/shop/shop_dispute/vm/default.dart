@@ -19,14 +19,42 @@ class States {
   final bool isLoading;
   final List<DisputeModel> disputes;
   final DisputeModel? dispute;
+  final int totalSize;
+  final int totalPages;
+  final bool hasNextPage;
+  final bool hasLoaded;
+  final int page;
+  final int? nextPage;
 
-  States({this.isLoading = false, this.disputes = const [], this.dispute});
+  States(
+      {this.isLoading = false,
+      this.disputes = const [],
+      this.dispute,
+      this.hasLoaded = false,
+      this.page = 0,
+      this.totalPages = 1,
+      this.totalSize = 0,
+      this.nextPage = 1,
+      this.hasNextPage = false});
 
   States copyWith(
-      {bool? isLoading, List<DisputeModel>? disputes, DisputeModel? dispute}) {
+      {bool? isLoading,
+      List<DisputeModel>? disputes,
+      int? totalSize,
+      int? totalPages,
+      bool? hasNextPage,
+      bool? hasLoaded,
+      int? page,
+      int? nextPage,
+      DisputeModel? dispute}) {
     return States(
         isLoading: isLoading ?? this.isLoading,
         dispute: dispute ?? this.dispute,
+        nextPage : nextPage ?? this.nextPage,
+        page: page ?? this.page,
+        hasLoaded: hasLoaded ?? this.hasLoaded,
+        totalPages: totalPages ?? this.totalPages,
+        totalSize: totalSize ?? this.totalSize,
         disputes: disputes ?? this.disputes);
   }
 }
@@ -45,7 +73,9 @@ class DisputeVm extends StateNotifier<States> {
       if (response.success) {
         DisputeResponseModel responseModel =
             DisputeResponseModel.fromJson(response.data);
-        state = state.copyWith(disputes: responseModel.data.docs);
+        state = state.copyWith(
+            disputes: responseModel.data.docs,
+        );
         print(response.data);
       }
     } catch (error) {
