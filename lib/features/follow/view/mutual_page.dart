@@ -38,8 +38,8 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
   late int _selectedIndex = widget.initialTab == 'mutual'
       ? 0
       : widget.initialTab == 'followers'
-          ? 1
-          : 2;
+          ? 2
+          : 1;
 
   @override
   void initState() {

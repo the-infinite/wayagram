@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
@@ -22,10 +20,12 @@ class MyMoments extends ConsumerStatefulWidget {
 }
 
 class _MyMomentState extends ConsumerState<MyMoments> {
+  late final notifier = ref.read(momentVmProvider.notifier);
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(momentVmProvider.notifier).getUserMoments(1);
+      notifier.getUserMoments(1);
     });
     super.initState();
   }
@@ -40,31 +40,29 @@ class _MyMomentState extends ConsumerState<MyMoments> {
       isScrollable: false,
       backgroundColor: wayaTheme.colorScheme.scaffoldColor,
       body: Container(
-          margin: EdgeInsets.fromLTRB(0, 12, 0, 0),
-          padding: EdgeInsets.all(12),
-          decoration: BoxDecoration(
-              color: wayaTheme.colorScheme.white,
-              borderRadius: BorderRadius.circular(12)),
-          child: RefreshIndicator(
-              child: ListView(
-                children: [
-                  addMoment(context: context, ref: ref),
-                  const Gap(10),
-                  ListView.builder(
-                      itemCount: state.myMoments.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return MyMomentWidget(
-                          moment: state.myMoments[index],
-                          allMoments: state.myMoments,
-                          index: index
-                        );
-                      })
-                ],
-              ),
-              onRefresh: () =>
-                  ref.read(momentVmProvider.notifier).getUserMoments(1))),
+        margin: EdgeInsets.fromLTRB(0, 12, 0, 0),
+        padding: EdgeInsets.all(12),
+        decoration: BoxDecoration(color: wayaTheme.colorScheme.white, borderRadius: BorderRadius.circular(12)),
+        child: RefreshIndicator(
+          child: ListView(
+            children: [
+              addMoment(context: context, ref: ref),
+              const Gap(10),
+              ListView.builder(
+                itemCount: state.myMoments.length,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemBuilder: (context, index) => MyMomentWidget(
+                  moment: state.myMoments[index],
+                  allMoments: state.myMoments,
+                  index: index,
+                ),
+              )
+            ],
+          ),
+          onRefresh: () => notifier.getUserMoments(1),
+        ),
+      ),
     );
   }
 
@@ -73,7 +71,7 @@ class _MyMomentState extends ConsumerState<MyMoments> {
     return InkWell(
       splashFactory: NoSplash.splashFactory,
       onTap: () {
-        WayaNav.replaceNamed( Moment.route);
+        WayaNav.replaceNamed(Moment.route);
       },
       child: Row(
         children: [
@@ -83,10 +81,7 @@ class _MyMomentState extends ConsumerState<MyMoments> {
           ),
           Text(
             "Add New Moment",
-            style: TextStyle(
-                color: wayaTheme.colorScheme.customPrimary,
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500),
+            style: TextStyle(color: wayaTheme.colorScheme.customPrimary, fontSize: 14.sp, fontWeight: FontWeight.w500),
           )
         ],
       ),

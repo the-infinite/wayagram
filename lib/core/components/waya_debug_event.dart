@@ -131,7 +131,8 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                               WayaDebugEventType.http => WayaAssets.icons.bugHttp,
                               WayaDebugEventType.flutter => WayaAssets.icons.bugFlutter,
                               WayaDebugEventType.exception => WayaAssets.icons.bugFatal,
-                            }.svg(color: color, height: 20.dg, width: 20.dg),
+                            }
+                                .svg(color: color, height: 20.dg, width: 20.dg),
 
                             //* The type of this debug event.
                             Text(
@@ -201,8 +202,8 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                           "Status: ${(widget.event.raw as DioException?)?.response?.statusCode?.toString() ?? "N/A"}",
                         WayaDebugEventType.flutter =>
                           "Source: ${(widget.event.raw as FlutterErrorDetails?)?.library ?? "N/A"}",
-                        WayaDebugEventType.runtime  ||
-                          WayaDebugEventType.exception =>
+                        WayaDebugEventType.runtime ||
+                        WayaDebugEventType.exception =>
                           "Type: ${(widget.event.raw as dynamic)?.runtimeType.toString() ?? "N/A"}",
                         _ => "N/A",
                       },
@@ -218,7 +219,33 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
               // Some space.
               SizedBox(height: 5.h),
 
-              //? Sixth, some data relevant to the optional type this is.
+              //? Sixth, the HTTP method data. Only useful IF this is actually a
+              //? HTTP error.
+              if (widget.event.type == WayaDebugEventType.http) ...[
+                ClipPath(
+                  clipper: ShapeBorderClipper(
+                    shape: StadiumBorder(),
+                  ),
+                  child: ColoredBox(
+                    color: theme.colorScheme.primary50,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      child: Text(
+                        (widget.event.raw as DioException?)?.requestOptions.method ?? "N/A",
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Some space.
+                SizedBox(height: 5.h),
+              ],
+
+              //? Seventh, some data relevant to the optional type this is.
               ClipPath(
                 clipper: ShapeBorderClipper(
                   shape: RoundedRectangleBorder(
@@ -271,7 +298,7 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                 ),
               ),
 
-              //? Seventh, the stack trace data.
+              //? Finally, the stack trace data.
               Text(
                 _getStackTrace(),
                 style: theme.textTheme.bodyMedium!.copyWith(

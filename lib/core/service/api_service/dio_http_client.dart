@@ -93,7 +93,7 @@ class DioHttpClient implements WayaHttpClientInterface {
         );
 
         //? After that, then complete with the result.
-        completer.complete(result);
+        if (!completer.isCompleted) completer.complete(result);
         return result;
       },
     );
@@ -172,7 +172,7 @@ class DioHttpClient implements WayaHttpClientInterface {
         );
 
         //? Now, complete this with the awaited result.
-        completer.complete(result);
+        if (!completer.isCompleted) completer.complete(result);
 
         //? Return this one.
         return result;
@@ -212,7 +212,7 @@ class DioHttpClient implements WayaHttpClientInterface {
         );
 
         //? After that, then complete with the result.
-        completer.complete(result);
+        if (!completer.isCompleted) completer.complete(result);
 
         //? Return a result.
         return result;
@@ -281,7 +281,7 @@ class DioHttpClient implements WayaHttpClientInterface {
         );
 
         //? After that, then complete with the result.
-        completer.complete(result);
+        if (!completer.isCompleted) completer.complete(result);
 
         //? Return a result.
         return result;
@@ -328,7 +328,7 @@ class DioHttpClient implements WayaHttpClientInterface {
         );
 
         //? After that, then complete with the result.
-        completer.complete(result);
+        if (!completer.isCompleted) completer.complete(result);
         return result;
       },
     );
@@ -364,7 +364,7 @@ class DioHttpClient implements WayaHttpClientInterface {
         );
 
         //? After that, then complete with the result.
-        completer.complete(result);
+        if (!completer.isCompleted) completer.complete(result);
         return result;
       },
     );
@@ -417,6 +417,12 @@ class DioHttpClient implements WayaHttpClientInterface {
 
         //? If this should show errors.
         if (showErrors) {
+          //? Close all dialogs before we get here.
+          while (WayaNav.isDialogOpen) {
+            WayaNav.goBack();
+          }
+
+          // Now continue.
           WayaUtils.showModalSheet(WayaNav.context, child: WayaErrorDialog(title: message));
         }
 

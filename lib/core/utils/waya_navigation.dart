@@ -7,10 +7,16 @@ class WayaNav<T> {
   static String get currentRoute => Get.currentRoute;
   static VoidCallback? onChange;
   static BuildContext get context => Get.context!;
+  static bool get isDialogOpen => (Get.isBottomSheetOpen ?? false) || (Get.isDialogOpen ?? false);
 
   WayaNav._();
 
-  static Future<T> to<T>(Widget page, {Function(T)? onResult, bool preventDuplicates = true}) {
+  static Future<T> to<T>(
+    Widget page, {
+    Function(T)? onResult,
+    bool preventDuplicates = true,
+    Transition transition = Transition.cupertino,
+  }) {
     final completer = Completer<T>();
     try {
       onChange?.call();
@@ -18,7 +24,7 @@ class WayaNav<T> {
     } catch (_) {}
     Get.to(
       () => page,
-      transition: Transition.cupertino,
+      transition: transition,
       preventDuplicates: preventDuplicates,
     )?.then((result) {
       if (onResult != null) {
@@ -30,10 +36,13 @@ class WayaNav<T> {
   }
 
   // This remove all screens on the stack leaving just one screen
-  static Future<T?>? removeUntil<T>(Widget page) {
+  static Future<T?>? removeUntil<T>(
+    Widget page, [
+    Transition transition = Transition.cupertino,
+  ]) {
     return Get.offAll(
       () => page,
-      transition: Transition.cupertino,
+      transition: transition,
     );
   }
 
@@ -63,9 +72,10 @@ class WayaNav<T> {
   }
 
   //
-  static void goBack<T>({T? result}) {
+  static void goBack<T>({T? result, bool closeOverlays = false}) {
     Get.back(
       result: result,
+      closeOverlays: closeOverlays,
     );
   }
 
@@ -88,7 +98,6 @@ class WayaNav<T> {
     });
     return completer.future;
   }
-  
 
   static Future<T?> replaceNamed<T>(String route, {dynamic arguments, Function(dynamic)? onResult}) {
     final completer = Completer<T>();

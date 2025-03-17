@@ -5,14 +5,16 @@ part 'groups.g.dart';
 @JsonSerializable()
 class GroupModel {
   final String id;
-  final String? url;
   final String name;
-  final String description;
+  final String ownerId;
   final int memberCount;
+  final String description;
   final bool isOpen;
+  final List<String>? categories;
+  final String url;
   final bool isPrivate;
-  final String? coverImage;
-  final String? profileImage;
+  final String coverImage;
+  final String profileImage;
   final DateTime? deletedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -24,6 +26,8 @@ class GroupModel {
     required this.description,
     required this.memberCount,
     required this.isOpen,
+    required this.ownerId,
+    required this.categories,
     required this.isPrivate,
     required this.coverImage,
     required this.profileImage,

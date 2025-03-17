@@ -5,7 +5,7 @@ class PollAndVotingRepository extends BaseRepository {
   static const serviceUrl = "wayagram-products/api/v1";
 
   Future<WayaRequestResponse> createPoll(dynamic data) {
-    return post('$serviceUrl/client/polls', data, formdata: true);
+    return post('$serviceUrl/client/polls', data, formdata: true, showErrors: true);
   }
 
   Future<WayaRequestResponse> castVote(dynamic amountPaid, String qty, String choiceId, String pollId) {
@@ -17,11 +17,11 @@ class PollAndVotingRepository extends BaseRepository {
       "amountPaid": amountPaid
     };
 
-    return post("$serviceUrl/client/polls/$pollId/votes", payload);
+    return post("$serviceUrl/client/polls/$pollId/votes", payload, showErrors: true);
   }
 
   Future<WayaRequestResponse> deletePoll(pollId) {
-    return delete("$serviceUrl/client/polls/$pollId");
+    return delete("$serviceUrl/client/polls/$pollId", showErrors: true);
   }
 
   Future<WayaRequestResponse> getAllPolls(int page, [int limit = 15, String? creatorId]) {
