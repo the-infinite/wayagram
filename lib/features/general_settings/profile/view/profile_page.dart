@@ -622,6 +622,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                         fontWeight: FontWeight.w500,
                                         fontSize: 12,
                                       ),
+                                      onTap2: isSelf
+                                          ? null
+                                          : () => WayaNav.toNamed(
+                                                WayaAppRoutes.getFollowersPage(widget.id, 'following', 'profile'),
+                                              ),
                                     ),
 
                                     //? Followers.
@@ -638,6 +643,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                         fontWeight: FontWeight.w500,
                                         fontSize: 12,
                                       ),
+                                      onTap2: isSelf
+                                          ? null
+                                          : () => WayaNav.toNamed(
+                                                WayaAppRoutes.getFollowersPage(widget.id, 'followers', 'profile'),
+                                              ),
                                     ),
 
                                     //? Posts.

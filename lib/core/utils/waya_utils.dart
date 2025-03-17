@@ -8,6 +8,7 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/model/base_model.dart';
@@ -57,17 +58,15 @@ class WayaUtils {
     List<Select>? selectedItems,
     bool multi = false,
   }) async {
-    final result = await showModalBottomSheet(
-      context: context,
+    final result = await showModalSheet(
+      context,
       isDismissible: !multi,
-      builder: (BuildContext context) {
-        return WayaBottomSheetContent(
-          title: title,
-          items: items,
-          selectedItems: selectedItems,
-          multi: multi,
-        );
-      },
+      child: WayaBottomSheetContent(
+        title: title,
+        items: items,
+        selectedItems: selectedItems,
+        multi: multi,
+      ),
     );
 
     return result ?? [];
@@ -79,38 +78,55 @@ class WayaUtils {
   }
 
   static Future<T?> showModalSheet<T>(BuildContext context, {required Widget child, bool isDismissible = true}) {
-    return showModalBottomSheet<T?>(
-      constraints: BoxConstraints(maxHeight: Get.height * 0.8),
-      context: context,
+    // Get the theme.
+    final theme = Theme.of(context);
+
+    // Return the modal.
+    return Get.bottomSheet(
+      ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: Get.height * 0.8),
+        child: child,
+      ),
+      backgroundColor: theme.colorScheme.scaffoldColor2,
       isScrollControlled: true,
       isDismissible: isDismissible,
       useRootNavigator: true,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
-      builder: (context) => child,
     );
   }
 
   static showModalSheetUgt(BuildContext context, {required Widget child}) {
-    return showModalBottomSheet(
-      constraints: BoxConstraints(maxHeight: Get.height * 0.8),
-      context: context,
+    // Get the theme.
+    final theme = Theme.of(context);
+
+    // Return the modal.
+    return Get.bottomSheet(
+      ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: Get.height * 0.8),
+        child: child,
+      ),
+      backgroundColor: theme.colorScheme.scaffoldColor2,
       isScrollControlled: true,
       useRootNavigator: true,
-      /*isDismissible: true,
-        enableDrag: false,*/
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
-      builder: (context) => child,
     );
   }
 
   static showModalSheetQuotation(BuildContext context, {required Widget child}) {
-    return showModalBottomSheet(
+    // Get the theme.
+    final theme = Theme.of(context);
+
+    // Return the modal.
+    return Get.bottomSheet(
+      ConstrainedBox(
         constraints: BoxConstraints(maxHeight: Get.height * 0.8),
-        context: context,
-        isScrollControlled: true,
-        useRootNavigator: true,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
-        builder: (context) => child);
+        child: child,
+      ),
+      backgroundColor: theme.colorScheme.scaffoldColor2,
+      isScrollControlled: true,
+      useRootNavigator: true,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+    );
   }
 
   static Future<File?> pickImageFromGallery() async {

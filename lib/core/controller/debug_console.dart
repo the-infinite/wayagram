@@ -62,6 +62,9 @@ enum WayaDebugEventModule {
   /// An event that occurred in the polls module.
   polls,
 
+  /// This is happening because of feed.
+  feed,
+
   /// An event that occurred in the support module.
   support,
 

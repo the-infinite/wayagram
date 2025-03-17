@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
-import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
@@ -20,16 +21,9 @@ class CategorizedPost {
   final String categoryName;
 
   CategorizedPost(
-      {required this.posts,
-      required this.currentPage,
-      required this.categoryName,
-      required this.hasNextPage});
+      {required this.posts, required this.currentPage, required this.categoryName, required this.hasNextPage});
 
-  CategorizedPost copyWith(
-      {List<Post>? posts,
-      int? currentPage,
-      bool? hasNextPage,
-      String? categoryName}) {
+  CategorizedPost copyWith({List<Post>? posts, int? currentPage, bool? hasNextPage, String? categoryName}) {
     return CategorizedPost(
       posts: posts ?? this.posts,
       currentPage: currentPage ?? this.currentPage,
@@ -86,10 +80,9 @@ class ServicesProvider extends StateNotifier<States> {
   final PageRepository _pageRepository;
   final PollAndVotingRepository _pollAndVotingRepository;
   final WayaSecureDataSource _secureDataSource;
-  final _logger = getLogger("ServicesProvider");
 
-  ServicesProvider(this._pollAndVotingRepository, this._pageRepository,
-      this._secureDataSource, this._eventRepository, this.ref)
+  ServicesProvider(
+      this._pollAndVotingRepository, this._pageRepository, this._secureDataSource, this._eventRepository, this.ref)
       : super(States());
 
   Future<void> getEvents() async {
@@ -102,10 +95,8 @@ class ServicesProvider extends StateNotifier<States> {
         EventResponse eventResponse = EventResponse.fromJson(response.data);
 
         // Only public event and event with active status
-        List<EventDoc> allEvents = eventResponse.data.docs
-            .where(
-                (e) => e.privacyOption == 'public' && e.eventStatus != 'paused')
-            .toList();
+        List<EventDoc> allEvents =
+            eventResponse.data.docs.where((e) => e.privacyOption == 'public' && e.eventStatus != 'paused').toList();
 
         if (allEvents.isEmpty) {
           state = state.copyWith(events: [], topEvents: []);
@@ -113,16 +104,12 @@ class ServicesProvider extends StateNotifier<States> {
         }
 
         // Get rankings for event type and location
-        Map<String, int> locationRanks =
-            ref.read(eventEngagementProvider.notifier).getAllEventLocation();
-        Map<String, int> typeRanks =
-            ref.read(eventEngagementProvider.notifier).getAllEventType();
+        Map<String, int> locationRanks = ref.read(eventEngagementProvider.notifier).getAllEventLocation();
+        Map<String, int> typeRanks = ref.read(eventEngagementProvider.notifier).getAllEventType();
 
         // Calculate event scores (based on both location and type rankings)
         Map<EventDoc, int> eventScores = {
-          for (var event in allEvents)
-            event: (locationRanks[event.location] ?? 0) +
-                (typeRanks[event.eventType] ?? 0)
+          for (var event in allEvents) event: (locationRanks[event.location] ?? 0) + (typeRanks[event.eventType] ?? 0)
         };
 
         // Sort events by score (higher score first)
@@ -134,20 +121,16 @@ class ServicesProvider extends StateNotifier<States> {
         int totalSlots = 10;
 
         // Get unique scores in descending order
-        List<int> uniqueScores = eventScores.values.toSet().toList()
-          ..sort((b, a) => a.compareTo(b));
+        List<int> uniqueScores = eventScores.values.toSet().toList()..sort((b, a) => a.compareTo(b));
 
         // Calculate the ratio of event selection based on score levels
-        List<int> distribution =
-            _getScoreDistribution(uniqueScores.length, totalSlots);
+        List<int> distribution = _getScoreDistribution(uniqueScores.length, totalSlots);
 
         for (int i = 0; i < uniqueScores.length; i++) {
           int score = uniqueScores[i];
-          List<EventDoc> eventsWithScore =
-              sortedEvents.where((e) => eventScores[e] == score).toList();
+          List<EventDoc> eventsWithScore = sortedEvents.where((e) => eventScores[e] == score).toList();
 
-          int allowedEvents =
-              distribution[i]; // Events allowed from this score level
+          int allowedEvents = distribution[i]; // Events allowed from this score level
           int count = 0;
 
           for (var event in eventsWithScore) {
@@ -175,16 +158,19 @@ class ServicesProvider extends StateNotifier<States> {
 
         List<EventDoc> topEvents = sortedByAttendee.take(8).toList();
 
-        state = state.copyWith(
-            events: finalEvents.take(10).toList(), topEvents: topEvents);
+        state = state.copyWith(events: finalEvents.take(10).toList(), topEvents: topEvents);
       }
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 
-  void invalidatePostData(String id,
-      {int? likeCount, int? commentCount, int? shareCount}) {
+  void invalidatePostData(String id, {int? likeCount, int? commentCount, int? shareCount}) {
     Post updatePost(Post post) {
       return post.id == id
           ? post.copyWith(
@@ -205,65 +191,66 @@ class ServicesProvider extends StateNotifier<States> {
   }
 
   //// Posts
-Future<void> getPosts() async {
-  try {
-    final response = await _pageRepository.getAllPosts();
-    if (response.success) {
-      PostReponseModel responseModel = PostReponseModel.fromJson(response.data);
-      final userInterests = ref.watch(selectInterestProvider).userInterests;
-      final List<Post> allPosts = responseModel.data.docs;
+  Future<void> getPosts() async {
+    try {
+      final response = await _pageRepository.getAllPosts();
+      if (response.success) {
+        PostReponseModel responseModel = PostReponseModel.fromJson(response.data);
+        final userInterests = ref.watch(selectInterestProvider).userInterests;
+        final List<Post> allPosts = responseModel.data.docs;
 
-      // Map user interests to categories and scores
-      Map<String, int> interestMap = {
-        for (var interest in userInterests) interest.category: interest.score
-      };
+        // Map user interests to categories and scores
+        Map<String, int> interestMap = {for (var interest in userInterests) interest.category: interest.score};
 
-      // Filter posts that match user interests, handling null categories
-      List<Post> matchingPosts = allPosts
-          .where((post) =>
-              (post.categories?.isNotEmpty ?? false) &&
-              post.categories!.any((category) => interestMap.containsKey(category)))
-          .toList();
-
-      // Sort posts by highest matching interest score
-      matchingPosts.sort((a, b) {
-        int aMaxScore = (a.categories ?? [])
-            .map((c) => interestMap[c] ?? 0)
-            .fold(0, (prev, score) => score > prev ? score : prev);
-        int bMaxScore = (b.categories ?? [])
-            .map((c) => interestMap[c] ?? 0)
-            .fold(0, (prev, score) => score > prev ? score : prev);
-        return bMaxScore.compareTo(aMaxScore); // Higher scores first
-      });
-
-      // Get score distribution and select top posts
-      List<int> scoreDistribution = _getScoreDistribution(userInterests.length, 5);
-      List<Post> topPosts = [];
-      int index = 0;
-
-      for (int slots in scoreDistribution) {
-        for (int i = 0; i < slots && index < matchingPosts.length; i++) {
-          topPosts.add(matchingPosts[index++]);
-        }
-      }
-
-      // If fewer than 5 posts, add random non-matching posts
-      if (topPosts.length < 5) {
-        final remainingPosts = allPosts
-            .where((post) => !topPosts.contains(post) && (post.categories?.isNotEmpty ?? false))
+        // Filter posts that match user interests, handling null categories
+        List<Post> matchingPosts = allPosts
+            .where((post) =>
+                (post.categories?.isNotEmpty ?? false) &&
+                post.categories!.any((category) => interestMap.containsKey(category)))
             .toList();
-        remainingPosts.shuffle();
-        topPosts.addAll(remainingPosts.take(5 - topPosts.length));
+
+        // Sort posts by highest matching interest score
+        matchingPosts.sort((a, b) {
+          int aMaxScore = (a.categories ?? [])
+              .map((c) => interestMap[c] ?? 0)
+              .fold(0, (prev, score) => score > prev ? score : prev);
+          int bMaxScore = (b.categories ?? [])
+              .map((c) => interestMap[c] ?? 0)
+              .fold(0, (prev, score) => score > prev ? score : prev);
+          return bMaxScore.compareTo(aMaxScore); // Higher scores first
+        });
+
+        // Get score distribution and select top posts
+        List<int> scoreDistribution = _getScoreDistribution(userInterests.length, 5);
+        List<Post> topPosts = [];
+        int index = 0;
+
+        for (int slots in scoreDistribution) {
+          for (int i = 0; i < slots && index < matchingPosts.length; i++) {
+            topPosts.add(matchingPosts[index++]);
+          }
+        }
+
+        // If fewer than 5 posts, add random non-matching posts
+        if (topPosts.length < 5) {
+          final remainingPosts =
+              allPosts.where((post) => !topPosts.contains(post) && (post.categories?.isNotEmpty ?? false)).toList();
+          remainingPosts.shuffle();
+          topPosts.addAll(remainingPosts.take(5 - topPosts.length));
+        }
+
+        // Update state
+        state = state.copyWith(topPosts: topPosts);
       }
-
-      // Update state
-      state = state.copyWith(topPosts: topPosts);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
-  } catch (error) {
-    print(error);
   }
-}
-
 
   //> No more in use for now
   @Deprecated("No more in use for now")
@@ -271,14 +258,12 @@ Future<void> getPosts() async {
     try {
       final response = await _pageRepository.getAllPosts();
       if (response.success) {
-        PostReponseModel responseModel =
-            PostReponseModel.fromJson(response.data);
+        PostReponseModel responseModel = PostReponseModel.fromJson(response.data);
 
         List<Post> allPosts = responseModel.data.docs;
 
         // Get hashtag rankings from engagement provider
-        Map<String, int> tagRanks =
-            ref.read(postEngagementProvider.notifier).getAlltags();
+        Map<String, int> tagRanks = ref.read(postEngagementProvider.notifier).getAlltags();
 
         if (tagRanks.isEmpty) {
           state = state.copyWith(posts: []);
@@ -287,34 +272,27 @@ Future<void> getPosts() async {
 
         // Compute hashtag scores for each post
         Map<Post, int> postScores = {
-          for (var post in allPosts)
-            post:
-                post.hashtags.fold(0, (sum, tag) => sum + (tagRanks[tag] ?? 0))
+          for (var post in allPosts) post: post.hashtags.fold(0, (sum, tag) => sum + (tagRanks[tag] ?? 0))
         };
 
         // Sort posts by highest score first
-        List<Post> sortedPosts = postScores.keys.toList()
-          ..sort((a, b) => postScores[b]!.compareTo(postScores[a]!));
+        List<Post> sortedPosts = postScores.keys.toList()..sort((a, b) => postScores[b]!.compareTo(postScores[a]!));
 
         List<Post> finalPosts = [];
         Set<String> seenPostIds = {}; // Ensure uniqueness
         int totalSlots = 10;
 
         // Get unique scores in descending order
-        List<int> uniqueScores = postScores.values.toSet().toList()
-          ..sort((b, a) => a.compareTo(b));
+        List<int> uniqueScores = postScores.values.toSet().toList()..sort((b, a) => a.compareTo(b));
 
         // Calculate the ratio of post selection based on score levels
-        List<int> distribution =
-            _getScoreDistribution(uniqueScores.length, totalSlots);
+        List<int> distribution = _getScoreDistribution(uniqueScores.length, totalSlots);
 
         for (int i = 0; i < uniqueScores.length; i++) {
           int score = uniqueScores[i];
-          List<Post> postsWithScore =
-              sortedPosts.where((p) => postScores[p] == score).toList();
+          List<Post> postsWithScore = sortedPosts.where((p) => postScores[p] == score).toList();
 
-          int allowedPosts =
-              distribution[i]; // Posts allowed from this score level
+          int allowedPosts = distribution[i]; // Posts allowed from this score level
           int count = 0;
 
           for (var post in postsWithScore) {
@@ -334,8 +312,13 @@ Future<void> getPosts() async {
         // Ensure we don't exceed 10 posts
         state = state.copyWith(posts: finalPosts.take(10).toList());
       }
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 
@@ -349,32 +332,25 @@ Future<void> getPosts() async {
         final userInterests = ref.watch(selectInterestProvider).userInterests;
 
         // Map user interests to categories and scores
-        Map<String, int> interestMap = {
-          for (var interest in userInterests) interest.category: interest.score
-        };
+        Map<String, int> interestMap = {for (var interest in userInterests) interest.category: interest.score};
 
         // Filter polls that match user interests, ignoring empty categories
         List<Docs> matchingPolls = allPolls
             .where((poll) =>
-                poll.categories!.isNotEmpty &&
-                poll.categories!
-                    .any((category) => interestMap.containsKey(category)))
+                poll.categories!.isNotEmpty && poll.categories!.any((category) => interestMap.containsKey(category)))
             .toList();
 
         // Sort polls by highest matching interest score
         matchingPolls.sort((a, b) {
-          int aMaxScore = a.categories!
-              .map((c) => interestMap[c] ?? 0)
-              .fold(0, (prev, score) => score > prev ? score : prev);
-          int bMaxScore = b.categories!
-              .map((c) => interestMap[c] ?? 0)
-              .fold(0, (prev, score) => score > prev ? score : prev);
+          int aMaxScore =
+              a.categories!.map((c) => interestMap[c] ?? 0).fold(0, (prev, score) => score > prev ? score : prev);
+          int bMaxScore =
+              b.categories!.map((c) => interestMap[c] ?? 0).fold(0, (prev, score) => score > prev ? score : prev);
           return bMaxScore.compareTo(aMaxScore); // Higher scores first
         });
 
         // Get score distribution and select top polls
-        List<int> scoreDistribution =
-            _getScoreDistribution(userInterests.length, 5);
+        List<int> scoreDistribution = _getScoreDistribution(userInterests.length, 5);
         List<Docs> feedPolls = [];
         int index = 0;
 
@@ -386,10 +362,8 @@ Future<void> getPosts() async {
 
         // If fewer than 5 polls, add random non-matching polls
         if (feedPolls.length < 5) {
-          final remainingPolls = allPolls
-              .where((poll) =>
-                  !feedPolls.contains(poll) && poll.categories!.isNotEmpty)
-              .toList();
+          final remainingPolls =
+              allPolls.where((poll) => !feedPolls.contains(poll) && poll.categories!.isNotEmpty).toList();
           remainingPolls.shuffle();
           feedPolls.addAll(remainingPolls.take(5 - feedPolls.length));
         }
@@ -397,8 +371,13 @@ Future<void> getPosts() async {
         // Update state
         state = state.copyWith(feedPolls: feedPolls);
       }
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 
@@ -406,8 +385,7 @@ Future<void> getPosts() async {
   List<int> _getScoreDistribution(int levels, int maxSlots) {
     if (levels == 1) return [maxSlots]; // If only one level, take all slots
 
-    List<int> distribution =
-        List.filled(levels, 1); // Start with 1 post per level
+    List<int> distribution = List.filled(levels, 1); // Start with 1 post per level
     int remainingSlots = maxSlots - levels; // Remaining slots to distribute
 
     for (int i = 0; i < levels && remainingSlots > 0; i++) {
@@ -429,8 +407,7 @@ Future<void> getPosts() async {
   Future<void> fetchPostsByCategory({int page = 1}) async {
     try {
       // Get category rankings
-      Map<String, int> categoryRanks =
-          ref.read(postEngagementProvider.notifier).getAllCategories();
+      Map<String, int> categoryRanks = ref.read(postEngagementProvider.notifier).getAllCategories();
 
       if (categoryRanks.isEmpty) {
         state = state.copyWith(categorizedPosts: []);
@@ -444,8 +421,7 @@ Future<void> getPosts() async {
       List<CategorizedPost> categorizedPosts = [];
 
       for (String category in sortedCategories) {
-        final response = await _pageRepository.getAllPostsWithCategory(
-            category: category, page: page);
+        final response = await _pageRepository.getAllPostsWithCategory(category: category, page: page);
 
         if (response.success) {
           final postResponse = PostReponseModel.fromJson(response.data);
@@ -466,27 +442,30 @@ Future<void> getPosts() async {
       state = state.copyWith(categorizedPosts: categorizedPosts);
     } catch (e) {
       state = state.copyWith(categorizedPosts: []);
-      print('Error fetching posts by category: $e');
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 
   Future<void> loadMorePosts(String category) async {
     try {
       // Find the category in the existing state
-      final existingCategory = state.categorizedPosts
-          .firstWhere((cat) => cat.categoryName == category,
-              orElse: () => CategorizedPost(
-                    posts: [],
-                    currentPage: 0,
-                    categoryName: category,
-                    hasNextPage: false,
-                  ));
+      final existingCategory = state.categorizedPosts.firstWhere((cat) => cat.categoryName == category,
+          orElse: () => CategorizedPost(
+                posts: [],
+                currentPage: 0,
+                categoryName: category,
+                hasNextPage: false,
+              ));
 
       if (!existingCategory.hasNextPage) return;
 
       final nextPage = existingCategory.currentPage + 1;
-      final response = await _pageRepository.getAllPostsWithCategory(
-          category: category, page: nextPage);
+      final response = await _pageRepository.getAllPostsWithCategory(category: category, page: nextPage);
 
       if (response.success) {
         final postResponse = PostReponseModel.fromJson(response.data);
@@ -507,7 +486,12 @@ Future<void> getPosts() async {
         }
       }
     } catch (e) {
-      print('Error loading more posts for category $category: $e');
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 
@@ -516,20 +500,21 @@ Future<void> getPosts() async {
       final response = await UserRepository.instance.getAllUsers();
 
       if (response.success) {
-        print(response.data);
         final data = response.data['data'];
-        final docs = (data['docs'] as List)
-            .map((doc) => UserDetails.fromJson(doc))
-            .toList();
+        final docs = (data['docs'] as List).map((doc) => UserDetails.fromJson(doc)).toList();
         state = state.copyWith(usersDetails: docs);
       }
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 }
 
 final servicesProvider = StateNotifierProvider<ServicesProvider, States>((ref) {
-  return ServicesProvider(PollAndVotingRepository(), PageRepository(),
-      WayaSecureDataSource(), EventRepository(), ref);
+  return ServicesProvider(PollAndVotingRepository(), PageRepository(), WayaSecureDataSource(), EventRepository(), ref);
 });

@@ -101,55 +101,60 @@ class SinglePollWidget extends ConsumerWidget {
           const Gap(10),
           // index == 0?
           if (poll.choices != null && poll.choices!.isNotEmpty) ...[
-            ...List.generate(poll.choices!.length, (index) {
-              final choice = poll.choices![index];
+            ...List.generate(
+              poll.choices!.length,
+              (index) {
+                final choice = poll.choices![index];
 
-              return InkWell(
-                splashColor: Colors.transparent,
-                splashFactory: NoSplash.splashFactory,
-                onTap: () {
-                  WayaUtils.showModalSheet(
-                    context,
-                    child: VoteOptionModal(
-                      voteFee: poll.feePerVote!,
-                      choiceId: choice.id,
-                      pollId: poll.id,
-                      candidateName: choice.text,
-                      votingLink: poll.url!,
-                    ),
-                  );
-                },
-                child: Container(
-                    padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 10.w, bottom: 10.w),
-                    margin: EdgeInsets.only(bottom: 4),
-                    // height: 60.h,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: wayaTheme.colorScheme.primary600,
+                return InkWell(
+                  splashColor: Colors.transparent,
+                  splashFactory: NoSplash.splashFactory,
+                  onTap: () {
+                     WayaUtils.showModalSheet(
+                      context,
+                      child: VoteOptionModal(
+                        voteFee: poll.feePerVote!,
+                        choiceId: choice.id,
+                        pollId: poll.id,
+                        candidateName: choice.text,
+                        votingLink: poll.url!,
                       ),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: choice.imageUrl != null ? MainAxisAlignment.start : MainAxisAlignment.center,
-                      children: [
-                        choice.imageUrl != null
-                            ? WayaImage(
-                                imageUrl: choice.imageUrl ?? '',
-                                fit: BoxFit.cover,
-                                height: 44.h,
-                                width: 60,
-                              )
-                            : SizedBox.shrink(),
-                        choice.imageUrl != null ? const Gap(40) : SizedBox.shrink(),
-                        Text(
-                          choice.text,
-                          style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                              fontSize: 14, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.primary600),
+                    );
+
+
+                  },
+                  child: Container(
+                      padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 10.w, bottom: 10.w),
+                      margin: EdgeInsets.only(bottom: 4),
+                      // height: 60.h,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: wayaTheme.colorScheme.primary600,
                         ),
-                      ],
-                    )),
-              );
-            })
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: choice.imageUrl != null ? MainAxisAlignment.start : MainAxisAlignment.center,
+                        children: [
+                          choice.imageUrl != null
+                              ? WayaImage(
+                                  imageUrl: choice.imageUrl ?? '',
+                                  fit: BoxFit.cover,
+                                  height: 44.h,
+                                  width: 60,
+                                )
+                              : SizedBox.shrink(),
+                          choice.imageUrl != null ? const Gap(40) : SizedBox.shrink(),
+                          Text(
+                            choice.text,
+                            style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                                fontSize: 14, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.primary600),
+                          ),
+                        ],
+                      )),
+                );
+              },
+            )
           ]
         ],
       ),

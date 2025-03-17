@@ -60,6 +60,7 @@ class WayaValueHelper {
       WayaDebugEventModule.disputes => 'Disputes',
       WayaDebugEventModule.donations => 'Donations',
       WayaDebugEventModule.events => 'Events',
+      WayaDebugEventModule.feed => 'Feed',
       WayaDebugEventModule.groups => 'Groups',
       WayaDebugEventModule.moments => "Moments",
       WayaDebugEventModule.pages => 'Pages',
