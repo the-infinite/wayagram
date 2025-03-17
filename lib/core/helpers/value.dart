@@ -60,7 +60,9 @@ class WayaValueHelper {
       WayaDebugEventModule.disputes => 'Disputes',
       WayaDebugEventModule.donations => 'Donations',
       WayaDebugEventModule.events => 'Events',
+      WayaDebugEventModule.feed => 'Feed',
       WayaDebugEventModule.groups => 'Groups',
+      WayaDebugEventModule.moments => "Moments",
       WayaDebugEventModule.pages => 'Pages',
       WayaDebugEventModule.polls => 'Polls',
       WayaDebugEventModule.posts => 'Posts',
@@ -71,7 +73,7 @@ class WayaValueHelper {
       WayaDebugEventModule.support => 'Support',
       WayaDebugEventModule.ugt => 'University Got Talent',
       WayaDebugEventModule.wallets => 'Wallets',
-      _ => 'Unknown',
+      WayaDebugEventModule.unknown => 'Unknown',
     };
   }
 

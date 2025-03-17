@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:video_player/video_player.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/data/moment_helper/moment_helper_funcs.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
+import 'package:wayagram/features/moments/widgets/media/image.dart';
+import 'package:wayagram/features/moments/widgets/media/video.dart';
 import 'package:wayagram/features/moments/widgets/moment_user_info_widget.dart';
 import 'package:wayagram/features/moments/widgets/my_moment_metrics.dart';
 import 'package:wayagram/features/moments/widgets/reply_moment_widget.dart';
@@ -19,8 +20,7 @@ class ViewMoment extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ViewMomentState();
 }
 
-class _ViewMomentState extends ConsumerState<ViewMoment>
-    with SingleTickerProviderStateMixin {
+class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProviderStateMixin {
   late PageController _pageController;
   late AnimationController _animationController;
   List<MomentData> moments = [];
@@ -52,14 +52,10 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
 
   void _startTimer() {
     if (moments.isEmpty) return;
-
     final moment = moments[currentIndex];
-    print("in timer $currentIndex");
-    print(moments[currentIndex].id);
     final duration = moment.contentType == 'video' ? 30 : 7;
     _animationController.duration = Duration(seconds: duration);
     _animationController.forward(from: 0.0).whenComplete(() {
-      print("completed");
       if (mounted && !isPaused) {
         _nextMoment();
       }
@@ -70,8 +66,6 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
     if (!mounted) return;
 
     if (currentIndex < moments.length - 1) {
-      //  print("efew $currentIndex");
-
       setState(() {
         currentIndex++;
       });
@@ -80,43 +74,55 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
         curve: Curves.ease,
       );
       _startTimer();
-    } else {
-      if (WayaNav.canPop()) {
-        if (isMine) {
-          WayaNav.replaceNamed( MyMoments.route);
-        } else {
-          WayaNav.goBack();
-        }
-      } else {
-        debugPrint("No more pages, and cannot pop.");
-      }
+      return;
+    }
+
+    //? Since there is nowhere to go to.
+    if (!WayaNav.canPop()) {
+      debugPrint("No more pages, and cannot pop.");
+      return;
+    }
+
+    //? If this is my own moment I am viewing...
+    if (isMine) {
+      WayaNav.replaceNamed(MyMoments.route);
+    }
+
+    //? Since it is not mine, I just go somewhere else.
+    else {
+      WayaNav.goBack();
     }
   }
-  // void _previousMoment() {
-  //   if (currentIndex > 0) {
-  //     _pageController.previousPage(
-  //         duration: Duration(milliseconds: 300), curve: Curves.ease);
-  //   }
-  // }
+
+  //? Fair enough, go back to the previous moment.
+  void _previousMoment() {
+    if (currentIndex > 0) {
+      _pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.ease);
+    }
+  }
 
   void _onPageChanged(int index) {
     if (!mounted) return;
 
+    //? This is fine.
     if (index < moments.length) {
       setState(() {
         currentIndex = index;
         _animationController.reset();
         _startTimer();
       });
-    } else {
+    }
+
+    //? Then we can just do it like this.
+    else {
       _pageController.jumpToPage(moments.length - 1);
     }
   }
 
-  void pauseAnimation() {
+  void pauseAnimation([bool hideControls = true]) {
     if (!_animationController.isAnimating) return;
     setState(() {
-      isPaused = true;
+      isPaused = hideControls;
       _animationController.stop();
     });
   }
@@ -125,8 +131,6 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
     if (_animationController.isAnimating) return;
     setState(() {
       isPaused = false;
-      print("completed ${_animationController.duration}");
-      //_animationController.forward();
       _startTimer();
     });
   }
@@ -142,8 +146,6 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
-
     if (moments.isEmpty) {
       return Scaffold(
         body: Center(child: CircularProgressIndicator()),
@@ -157,56 +159,99 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
           onLongPressEnd: (_) => continueAnimating(),
           child: Container(
             color: moments[currentIndex].contentType == 'text'
-                ? MomentHelper.hexToColor(
-                    moments[currentIndex].color ?? "#1D2939")
+                ? MomentHelper.hexToColor(moments[currentIndex].color ?? "#1D2939")
                 : wayaTheme.colorScheme.black,
             child: Stack(
               fit: StackFit.expand,
               children: [
                 PageView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
                   controller: _pageController,
-                  onPageChanged: (index) {
-                    _onPageChanged(index);
-                  },
                   itemCount: moments.length,
+                  onPageChanged: (index) => _onPageChanged(index),
                   itemBuilder: (context, index) {
                     final moment = moments[currentIndex];
                     return moment.contentType == 'text'
                         ? textMoment(context: context, ref: ref, moment: moment)
                         : mediaPreview(
-                            context: context, ref: ref, moment: moment);
+                            context: context,
+                            ref: ref,
+                            moment: moment,
+                            pause: () => pauseAnimation(false),
+                            resume: continueAnimating,
+                          );
                   },
                 ),
+
+                //? Next, the layer that is used to move to the next page.
+                Positioned.fill(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      //? First, the button to go to the previous page.
+                      Expanded(
+                        child: GestureDetector(
+                          onDoubleTap: () {
+                            //? If this is the first page, reset the timer.
+                            if (_pageController.page == 0) {
+                              _startTimer();
+                            }
+
+                            //? Move to the previous page.
+                            else {
+                              _previousMoment();
+                            }
+                          },
+                        ),
+                      ),
+
+                      //? Second, the button to go to the previous page.
+                      Expanded(
+                        child: GestureDetector(
+                          onDoubleTap: () {
+                            //? If this is the first page, reset the timer.
+                            if (_pageController.page == moments.length - 1) {
+                            }
+
+                            //? Move to the previous page.
+                            else {
+                              _nextMoment();
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                //? The title of this page.
                 if (!isPaused)
                   Positioned(
                     top: 20,
                     left: 0,
                     right: 0,
                     child: Row(
-                      children: List.generate(moments.length, (index) {
-                        return Expanded(
+                      children: List.generate(
+                        moments.length,
+                        (index) => Expanded(
                           child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4.0),
-                              child: AnimatedBuilder(
-                                animation: _animationController,
-                                builder: (context, child) {
-                                  return LinearProgressIndicator(
-                                    minHeight: 6,
-                                    borderRadius: BorderRadius.circular(12),
-                                    value: index == currentIndex
-                                        ? _animationController.value
-                                        : (index < currentIndex ? 1.0 : 0.0),
-                                    backgroundColor: Colors.black
-                                        .withOpacity(0.5)
-                                        .withOpacity(0.5),
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white),
-                                  );
-                                },
-                              )),
-                        );
-                      }),
+                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                            child: AnimatedBuilder(
+                              animation: _animationController,
+                              builder: (context, child) => LinearProgressIndicator(
+                                minHeight: 6,
+                                borderRadius: BorderRadius.circular(12),
+                                value: index == currentIndex
+                                    ? _animationController.value
+                                    : (index < currentIndex ? 1.0 : 0.0),
+                                backgroundColor: Colors.black.withOpacity(0.25),
+                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 if (!isPaused)
@@ -216,12 +261,14 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
                     top: 30,
                     child: MomentUserInfoWidget(
                       moment: moments[currentIndex],
-                      isMine: args['isMine'],
+                      isMine: isMine,
                       pause: pauseAnimation,
                       continues: continueAnimating,
                     ),
                   ),
-                if (!args['isMine'])
+
+                //?
+                if (!isMine)
                   Positioned(
                     left: 0,
                     right: 0,
@@ -233,15 +280,18 @@ class _ViewMomentState extends ConsumerState<ViewMoment>
                       moment: moments[currentIndex],
                     ),
                   ),
-                if (args['isMine'] && !isPaused)
+
+                //? How we see our current moment metrics.
+                if (isMine && !isPaused)
                   Positioned(
                     left: 0,
                     right: 0,
                     bottom: 20,
                     child: MyMomentMetrics(
-                        pause: pauseAnimation,
-                        continues: continueAnimating,
-                        moment: moments[currentIndex]),
+                      pause: pauseAnimation,
+                      continues: continueAnimating,
+                      moment: moments[currentIndex],
+                    ),
                   ),
               ],
             ),
@@ -262,9 +312,7 @@ Widget textMoment({
     alignment: Alignment.center,
     child: Text(
       moment.content,
-      style: moment.fontType != null
-          ? MomentHelper.textStyleFromJson(moment.fontType!)
-          : null,
+      style: moment.fontType != null ? MomentHelper.textStyleFromJson(moment.fontType!) : null,
       textAlign: TextAlign.center,
     ),
   );
@@ -274,20 +322,50 @@ Widget mediaPreview({
   required BuildContext context,
   required WidgetRef ref,
   required MomentData moment,
+  required VoidCallback pause,
+  required VoidCallback resume,
 }) {
   final wayaTheme = Theme.of(context);
   return Stack(
     fit: StackFit.expand,
     children: [
       // Media Preview
-      moment.contentType == "video"
-          ? VideoPreview(
+      if (moment.contentType == "video")
+        WayaFutureSubscriber(
+          future: WayaFileHelper.getMomentDirectory(moment, moment.content),
+          builder: (context, data) {
+            if (data == null) {
+              return const SizedBox();
+            }
+
+            //? Now, return the image moment.
+            return VideoPreview(
               content: moment.content,
-            )
-          : Image.network(
-              moment.content,
-              fit: BoxFit.cover,
-            ),
+              file: data,
+              data: moment,
+              pause: pause,
+              resume: resume,
+            );
+          },
+        )
+      else
+        WayaFutureSubscriber(
+          future: WayaFileHelper.getMomentDirectory(moment, moment.content),
+          builder: (context, data) {
+            if (data == null) {
+              return const SizedBox();
+            }
+
+            //? Now, return the image moment.
+            return ImageMomentScreen(
+              media: moment.content,
+              data: moment,
+              file: data,
+              pause: pause,
+              resume: resume,
+            );
+          },
+        ),
 
       // Caption
       if (moment.caption != null && moment.caption!.isNotEmpty)
@@ -296,75 +374,30 @@ Widget mediaPreview({
           right: 0,
           bottom: 50,
           child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-              decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.customBlack.withOpacity(0.5),
-                //borderRadius: BorderRadius.horizontal(left: , right: Radius.circular(12)),
-              ),
-              child: moment.caption!.length < 100
-                  ? Text(
-                      moment.caption!,
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.white,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 14.sp),
-                      textAlign: TextAlign.center,
-                    )
-                  : Text(moment.caption!,
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.white,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 13.sp))),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+            decoration: BoxDecoration(
+              color: wayaTheme.colorScheme.customBlack.withOpacity(0.5),
+            ),
+            child: moment.caption!.length < 100
+                ? Text(
+                    moment.caption!,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: wayaTheme.colorScheme.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 14,
+                    ),
+                  )
+                : Text(
+                    moment.caption!,
+                    style: TextStyle(
+                      color: wayaTheme.colorScheme.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
+                    ),
+                  ),
+          ),
         ),
     ],
   );
-}
-
-class VideoPreview extends ConsumerStatefulWidget {
-  final String content;
-
-  const VideoPreview({super.key, required this.content});
-
-  @override
-  ConsumerState<VideoPreview> createState() => _VideoPreviewState();
-}
-
-class _VideoPreviewState extends ConsumerState<VideoPreview> {
-  VideoPlayerController? _controller;
-  bool _isInitialized = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _initializeVideo();
-  }
-
-  Future<void> _initializeVideo() async {
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.content))
-      ..initialize().then((_) {
-        setState(() {
-          _isInitialized = true;
-        });
-        _controller?.play();
-        _controller?.setLooping(true);
-      });
-  }
-
-  @override
-  void dispose() {
-    _controller?.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!_isInitialized) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    return AspectRatio(
-      aspectRatio: _controller!.value.aspectRatio,
-      child: VideoPlayer(_controller!),
-    );
-  }
 }

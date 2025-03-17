@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
@@ -16,40 +15,42 @@ class PostMomentWidget extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
 
     return Container(
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-        decoration: BoxDecoration(
-          color: wayaTheme.colorScheme.white.withOpacity(0.1),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              children: [
-                  SvgPicture.asset(WayaAssets.icons.mPublic.path),
-                  SizedBox(width: 4.w,),
-                  Text("Public Moment", style: TextStyle(
-                    color: wayaTheme.colorScheme.white,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w500
-                  ),)
-              ],
-            ),
-            SizedBox(
-              width: 36,
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+      decoration: BoxDecoration(
+        color: wayaTheme.colorScheme.white.withOpacity(0.1),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            children: [
+              SvgPicture.asset(WayaAssets.icons.mPublic.path),
+              SizedBox(
+                width: 4.w,
+              ),
+              Text(
+                "Public Moment",
+                style: TextStyle(color: wayaTheme.colorScheme.white, fontSize: 12, fontWeight: FontWeight.w500),
+              )
+            ],
+          ),
+          SizedBox(
+            width: 36,
+            height: 36,
+            child: WayaButton(
               height: 36,
-              child: WayaButton(
-                height: 36,
-                radius: 36,
-                callback: () {
-                  ref.read(momentVmProvider.notifier).submitMoment(context: context);
-                },
-                centerWidget: Center(
-                  child: SvgPicture.asset(WayaAssets.icons.aMoment.path),
-                ),
+              radius: 36,
+              callback: () {
+                ref.read(momentVmProvider.notifier).submitMoment(context: context);
+              },
+              centerWidget: Center(
+                child: SvgPicture.asset(WayaAssets.icons.aMoment.path),
               ),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }

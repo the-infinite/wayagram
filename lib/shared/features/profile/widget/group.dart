@@ -26,6 +26,30 @@ class SingleGroupWidget extends StatelessWidget {
       focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
       highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
       borderRadius: BorderRadius.circular(12.r),
+      onTap: () {
+        group.isPrivate == true
+            ? WayaNav.toNamed('/privateGroup', arguments: {
+                'memberCount': '${group.memberCount}',
+                'name': group.name,
+                'url': '${group.url}',
+                'desc': group.description,
+                'coverImage': '${group.coverImage}',
+                'profileImage': '${group.profileImage}',
+                'groupId': group.id,
+              })
+            : WayaNav.toNamed(
+                '/publicGroup',
+                arguments: {
+                  'memberCount': '${group.memberCount}',
+                  'name': group.name,
+                  'url': '${group.url}',
+                  'desc': group.description,
+                  'coverImage': '${group.coverImage}',
+                  'profileImage': '${group.profileImage}',
+                  'groupId': group.id
+                },
+              );
+      },
       child: Container(
         margin: EdgeInsets.only(bottom: 15),
         padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),

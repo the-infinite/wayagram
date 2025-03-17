@@ -1,8 +1,9 @@
 import 'dart:io';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:wayagram/core/helpers/files.dart';
-import 'package:wayagram/core/helpers/value.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/utils/utils.dart';
+
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
@@ -110,9 +111,6 @@ class SendMessageDto {
         //? when we try to look for it locally.
         final target = await WayaFileHelper.getFileLocalDirectory(buildMessage(messageId), "/x/x/$name");
 
-        //? Print this.
-        print("SendMessageDTO/ Copying ${entity.path} to ${target.path}");
-
         //? If this does not exist...
         if (!await target.exists()) {
           try {
@@ -122,11 +120,23 @@ class SendMessageDto {
                 : WayaFileExtensions.videos.contains(extension)
                     ? MessageType.video
                     : type;
-          } catch (_) {}
+          } catch (e) {
+            WayaDebugConsoleController.instance.addException(
+              WayaDebugHelpers.getMessage(e),
+              e,
+              WayaDebugEventModule.chats,
+              WayaDebugHelpers.getStackTrace(e),
+            );
+          }
 
           //? This was copied successfully.
           if (!await target.exists()) {
-            print("SendMessageDTO/ Failed to copy ${entity.path} to ${target.path}");
+            WayaDebugConsoleController.instance.addException(
+              "Failed to copy original file to media source destination",
+              Exception("Failed to copy original file to media source destination"),
+              WayaDebugEventModule.chats,
+              StackTrace.current,
+            );
           }
         }
       }

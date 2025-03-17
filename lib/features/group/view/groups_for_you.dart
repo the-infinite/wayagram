@@ -15,23 +15,18 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/group/view/report_group.dart';
 import 'package:wayagram/features/group/view/report_group_post.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/group/widget/join_card_widget.dart';
 import 'package:wayagram/features/pages/data/model/feeds.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:wayagram/features/post/view/report_post.dart';
-import 'package:wayagram/features/post/vm/comment.dart';
+import 'package:wayagram/features/post/view/comment.dart';
 
 import '../../../assetsgen/assets.gen.dart';
 import '../../explore/widgets/grouped_widget_header.dart';
-import '../../pages/component/extras.dart';
 import '../../pages/state/page_state.dart';
 import '../../post/view/create_post.dart';
 import '../../shop/widgets/empty_state.dart';
-import '../state/group_state.dart';
 
 class GroupsForYou extends ConsumerStatefulWidget {
   const GroupsForYou({super.key});
@@ -41,9 +36,6 @@ class GroupsForYou extends ConsumerStatefulWidget {
 }
 
 class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerProviderStateMixin {
-  static const int _pageSize = 10;
-  final PagingController<int, Post> _pagingController = PagingController(firstPageKey: 1);
-
   int like = 0;
 
   @override
@@ -73,7 +65,6 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider.notifier);
     //final viewModel2 = ref.watch(createPageProvider);
-    final viewModel2 = ref.watch(createGroupProvider);
     final recommended = ref.watch(createGroupProvider);
     final group = ref.watch(createGroupProvider.notifier);
     final viewGroup = ref.watch(createGroupProvider);
@@ -177,7 +168,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
                                 return [
                                   PopupMenuItem<int>(
                                     value: 0,
-                                    child: _buildActionNav(
+                                    child: WayaActionNav(
                                         context: context,
                                         onTap: () async {
                                           //viewModel.repost(context,postId: '${post.id}');
@@ -192,7 +183,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
                                   ),
                                   PopupMenuItem<int>(
                                     value: 1,
-                                    child: _buildActionNav(
+                                    child: WayaActionNav(
                                       context: context,
                                       onTap: () {
                                         viewModel.deletePost(context,
@@ -327,13 +318,24 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
                             'assets/images/pages/like2.png', onPressed: () {
                           viewModel.likePost(context, postId: '${post.id}', userId: ConversationState.self.id);
                         }, color: post.likeCount == 0 ? WayaColors.greyColor500 : WayaColors.primary),
-                        actionType('${post.commentCount} Comments', 'assets/images/pages/comment2.png', onPressed: () {
-                          showCommentBox(context, post.id);
-                          print(post.id);
+                        actionType('${post.commentCount} Comments', 'assets/images/pages/comment2.png',
+                            onPressed: () async {
+                          final result = await WayaNav.to(
+                            transition: Transition.downToUp,
+                            PostCommentsWidget(
+                              id: post.id!,
+                            ),
+                          );
+
+                          //? Do nothing.
+                          if (result == null) return;
                         }),
-                        actionType('${post.shareCount} Shares', 'assets/images/pages/share2.png', onPressed: () {
-                          viewModel.sharePost(context, postId: '${post.id}');
-                          Share.share('${post.url}', subject: 'Share Options');
+                        actionType('${post.shareCount} Shares', 'assets/images/pages/share2.png', onPressed: () async {
+                          final result = await Share.share('${post.url}', subject: 'Share Options');
+
+                          if (result.status == ShareResultStatus.success) {
+                            await viewModel.sharePost(context, postId: '${post.id}');
+                          }
                         }),
                         InkWell(
                             onTap: () {
@@ -468,7 +470,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
                                 return [
                                   PopupMenuItem<int>(
                                     value: 0,
-                                    child: _buildActionNav(
+                                    child: WayaActionNav(
                                         context: context,
                                         onTap: () async {
                                           //viewModel.repost(context, postId: '${post.id}');
@@ -483,7 +485,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
                                   ),
                                   PopupMenuItem<int>(
                                     value: 1,
-                                    child: _buildActionNav(
+                                    child: WayaActionNav(
                                         context: context,
                                         onTap: () {
                                           viewModel.deletePost(context,
@@ -617,13 +619,24 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
                             'assets/images/pages/like2.png', onPressed: () {
                           viewModel.likePost(context, postId: '${post.id}', userId: ConversationState.self.id);
                         }, color: post.likeCount == 0 ? WayaColors.greyColor500 : WayaColors.primary),
-                        actionType('${post.commentCount} Comments', 'assets/images/pages/comment2.png', onPressed: () {
-                          showCommentBox(context, post.id);
-                          print(post.id);
+                        actionType('${post.commentCount} Comments', 'assets/images/pages/comment2.png',
+                            onPressed: () async {
+                          final result = await WayaNav.to(
+                            transition: Transition.downToUp,
+                            PostCommentsWidget(
+                              id: post.id!,
+                            ),
+                          );
+
+                          //? Do nothing.
+                          if (result == null) return;
                         }),
-                        actionType('${post.shareCount} Shares', 'assets/images/pages/share2.png', onPressed: () {
-                          viewModel.sharePost(context, postId: '${post.id}');
-                          Share.share('${post.url}', subject: 'Share Options');
+                        actionType('${post.shareCount} Shares', 'assets/images/pages/share2.png', onPressed: () async {
+                          final result = await Share.share('${post.url}', subject: 'Share Options');
+
+                          if (result.status == ShareResultStatus.success) {
+                            await viewModel.sharePost(context, postId: '${post.id}');
+                          }
                         }),
                         InkWell(
                             onTap: () {
@@ -640,190 +653,6 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
               );
             }),
       ],
-    );
-  }
-
-  void showCommentBox(BuildContext context, postId) {
-    @override
-    final _formKey = GlobalKey<FormState>();
-    final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createPageProvider);
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {});
-
-    print('ShowCommentBox ${ref.read(createPageProvider.notifier).getCommentsStream(postId)}');
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true, // Makes the keyboard push up the bottom sheet
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) {
-        return Padding(
-          padding: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          child: Container(
-            height: 450.h,
-            padding: EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text('All Comments',
-                    style: TextStyle(
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black,
-                    )),
-                Gap(20),
-                Expanded(
-                    child: WayaFutureSubscriber(
-                        future: ref.read(createCommentProvider.notifier).getCommentsStream(postId),
-                        suspense: (_) => Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                        error: (_, error, __) => Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                        builder: (_, data) {
-                          return ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: data?.length ?? 0,
-                            itemBuilder: (context, index) {
-                              String formatTimeAgo(String dateString) {
-                                DateTime dateTime = DateTime.parse(dateString); // Convert string to DateTime
-                                return timeago.format(dateTime); // Convert to "time ago" format
-                              }
-
-                              return Padding(
-                                padding: EdgeInsets.symmetric(vertical: 20.h, horizontal: 15.w),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        circleImage(
-                                          radius: 10.r,
-                                          data?[index].user?.profilePicture ?? '',
-                                        ),
-                                        Gap(10),
-                                        Text(
-                                          '${data?[index].user?.firstName} ${data?[index].user?.lastName}',
-                                          style: TextStyle(
-                                            fontFamily: WayaConstants.fontFamily,
-                                            fontSize: 12.sp,
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
-                                        Gap(10),
-                                        Text(
-                                          '• ${formatTimeAgo('${data?[index].createdAt}')}',
-                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w500,
-                                              color: Theme.of(context).colorScheme.greyColor500),
-                                        ),
-                                      ],
-                                    ),
-                                    Text(
-                                      '${data?[index].content?.capitalizeFirst}',
-                                      style: TextStyle(
-                                        //fontFamily: WayaConstants.fontFamily,
-                                        fontSize: 12.sp,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w200,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          );
-                        })),
-                Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: WayaDp(
-                        radius: 20,
-                      ),
-                    ),
-                    Gap(10),
-                    Expanded(
-                      flex: 2,
-                      child: Form(
-                          key: _formKey,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              FormField<String>(validator: (value) {
-                                return null;
-                              }, builder: (formState) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    WayaTextFormField(
-                                      showBorder: true,
-                                      keyboardType: TextInputType.text,
-                                      controller: viewModel.content,
-                                      hintText: 'Write comment here',
-                                      borderColor: formState.hasError && viewModel.content.text.isEmpty
-                                          ? wayaTheme.colorScheme.error
-                                          : null,
-                                    ),
-                                    if (formState.hasError && viewModel.content.text.isEmpty)
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 5),
-                                        child: Text(
-                                          formState.errorText!,
-                                          style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
-                                        ),
-                                      ),
-                                  ],
-                                );
-                              }),
-                              Gap(20),
-                            ],
-                          )),
-                    ),
-                    Gap(10),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: SizedBox(
-                        width: 50,
-                        child: WayaButton(
-                          centerWidget: Image.asset(
-                            'assets/images/pages/send_ic.png',
-                            height: 25.h,
-                          ),
-                          callback: !viewModel.isLoading
-                              ? () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    await ref.watch(createPageProvider.notifier).commentOnPost(
-                                          postId,
-                                          viewModel.content.text,
-                                        );
-                                    ref.watch(createPageProvider.notifier).reset();
-                                    //WayaNav.goBack();
-                                  }
-                                }
-                              : null,
-                          height: 50,
-                          isLoading: viewModel.isLoading,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 
@@ -937,31 +766,6 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
         ),
         Gap(20),
       ],
-    );
-  }
-
-  InkWell _buildActionNav(
-      {required BuildContext context,
-      required VoidCallback onTap,
-      required Widget asset,
-      required String text,
-      required Color color}) {
-    final wayaTheme = Theme.of(context);
-    return InkWell(
-      onTap: onTap,
-      splashFactory: NoSplash.splashFactory,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          asset,
-          const Gap(4),
-          Text(
-            text,
-            style: TextStyle().wayaCopyWith(color: color, fontWeight: FontWeight.w500, fontSize: 12),
-          )
-        ],
-      ),
     );
   }
 }

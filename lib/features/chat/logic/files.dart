@@ -47,7 +47,7 @@ Future<File> getVoiceMessageFile(MessageModel message) async {
   final uri = Uri.parse(file.mediaUrl);
   final filename = uri.pathSegments.last;
   final directory = await WayaFileHelper.getVoiceMessagesDirectory();
-  final path = "${WayaFileHelper.getFileSubdirectory(directory, message)}/$filename";
+  final path = "${WayaFileHelper.getFileSubdirectory(directory, message.senderId)}/$filename";
 
   //? This is fine.
   return File(path).absolute;

@@ -67,11 +67,6 @@ class ChatNotifier extends StateNotifier<ChatState> {
       );
     }
 
-    //? Since it failed.
-    else {
-      // TODO: Actual error handling.
-    }
-
     //? Return this collated result.
     return result;
   }

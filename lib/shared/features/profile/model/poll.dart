@@ -8,7 +8,7 @@ class PollChoice {
   final String id;
   final String pollId;
   final String text;
-  final String description;
+  final String? description;
   final String? imageUrl;
   final int order;
   final int? voteCount;
