@@ -237,7 +237,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                           ),
                           const Gap(6),
                           Text(
-                            viewModel.product!.shopName,
+                            viewModel.product!.shopName.capitalizeFirst!,
                             style: wayaTheme.textTheme.labelMedium,
                           )
                         ],
@@ -248,10 +248,10 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      RatingStars(rating: 0),
+                      RatingStars(rating: viewModel.product!.shopRating),
                       const Gap(2),
                       Text(
-                        "4.0",
+                       "${viewModel.product!.shopRating}",
                         style: wayaTheme.textTheme.hintStyle,
                       )
                     ],

@@ -150,6 +150,7 @@ class DisputeVm extends StateNotifier<States> {
       Order? orderedItem,
       String? sellerId,
       DocType? mediaDoc,
+      required String tobeEscalatedBy,
       required String reference,
       required String disputeId}) async {
     try {
@@ -171,7 +172,7 @@ class DisputeVm extends StateNotifier<States> {
           disputeId: disputeId);
       bool isSuccess = false;
       if (response.success) {
-        await repo.escalate(id: disputeId, escalatedBy: "buyer");
+        await repo.escalate(id: disputeId, escalatedBy: tobeEscalatedBy);
 
         await getSDispute(id: disputeId);
         isSuccess = true;

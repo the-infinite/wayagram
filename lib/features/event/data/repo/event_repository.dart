@@ -1,6 +1,7 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/features/event/data/model/add_event_request_model.dart';
+import 'package:wayagram/features/event/data/model/update_event_request_model.dart';
 
 class EventRepository extends BaseRepository {
   static const serviceUrl = "wayagram-graph/api/v2";
@@ -25,7 +26,8 @@ class EventRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> editEvent(
-      AddEventRequestModel payload, String id) {
+      UpdateEventRequestModel payload, String id) {
+    
     return patch("$serviceUrl/events/edit-event/$id", payload.toJson(),
         formdata: false);
   }
@@ -49,13 +51,13 @@ class EventRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> joinedUsers(
-      {required String id,  int? page = 100, int? limit = 10}) {
+      {required String id, int? page = 100, int? limit = 10}) {
     return get(
         "$serviceUrl/join-events/get?eventId=$id&page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> eventsJoined(
-      {required String userId,  int? page = 100, int? limit = 10}) {
+      {required String userId, int? page = 100, int? limit = 10}) {
     return get(
         "$serviceUrl/join-events/get?userId=$userId&page=$page&limit=$limit");
   }

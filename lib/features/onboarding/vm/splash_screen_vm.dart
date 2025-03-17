@@ -38,7 +38,7 @@ class SplashScreenVm extends StateNotifier<void> {
 
       //>  get a new auth token
       await getNewToken();
-
+      print("token refreshed");
       final response = await _profileRepo.getUserDataRepo(userId: userId);
 
       if (response.success) {
