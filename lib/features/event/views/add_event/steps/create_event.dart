@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
@@ -39,8 +37,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
       children: [
         Text("Create an Event", style: wayaTheme.textTheme.titleLarge),
         const Gap(5),
-        Text("Start by selecting the basic details about your event",
-            style: wayaTheme.textTheme.hintStyle),
+        Text("Start by selecting the basic details about your event", style: wayaTheme.textTheme.hintStyle),
         const Gap(30),
         Text(
           "Event Details",
@@ -54,11 +51,8 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
               children: [
                 AddDocumentWidget(
                     addFile: ref.read(addEventVmProvider.notifier).addFile,
-                    removeFile:
-                        ref.read(addEventVmProvider.notifier).removeFile,
-                    title: viewModel.eventImage.isNotEmpty
-                        ? viewModel.eventImage[0].name
-                        : "Upload Event Thumbnail",
+                    removeFile: ref.read(addEventVmProvider.notifier).removeFile,
+                    title: viewModel.eventImage.isNotEmpty ? viewModel.eventImage[0].name : "Upload Event Thumbnail",
                     isUploaded: viewModel.eventImage.isNotEmpty,
                     description: "IMG , JPG Format"),
                 const Gap(10),
@@ -77,9 +71,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                         controller: viewModel.title,
                         hintText: 'Enter Event Title',
                         borderColor:
-                            formState.hasError && viewModel.title.text.isEmpty
-                                ? wayaTheme.colorScheme.error
-                                : null,
+                            formState.hasError && viewModel.title.text.isEmpty ? wayaTheme.colorScheme.error : null,
                         label: 'Title of Event',
                       ),
                       if (formState.hasError && viewModel.title.text.isEmpty)
@@ -87,9 +79,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
@@ -110,21 +100,16 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                         keyboardType: TextInputType.text,
                         controller: viewModel.organizer,
                         hintText: "Enter Organizer's name",
-                        borderColor: formState.hasError &&
-                                viewModel.organizer.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
+                        borderColor:
+                            formState.hasError && viewModel.organizer.text.isEmpty ? wayaTheme.colorScheme.error : null,
                         label: "Organizer's Name",
                       ),
-                      if (formState.hasError &&
-                          viewModel.organizer.text.isEmpty)
+                      if (formState.hasError && viewModel.organizer.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
@@ -141,24 +126,19 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                         line: 6,
                         keyboardType: TextInputType.text,
                         controller: viewModel.description,
-                         padding: const EdgeInsets.all(12),
-                        hintText:
-                            'Provide a brief description of the event and what attendees can attend',
-                        borderColor: formState.hasError &&
-                                viewModel.description.text.isEmpty
+                        padding: const EdgeInsets.all(12),
+                        hintText: 'Provide a brief description of the event and what attendees can attend',
+                        borderColor: formState.hasError && viewModel.description.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         label: 'Event Description',
                       ),
-                      if (formState.hasError &&
-                          viewModel.description.text.isEmpty)
+                      if (formState.hasError && viewModel.description.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
@@ -185,20 +165,15 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           label: "Location Type",
                           value: viewModel.location,
                           hintText: 'Select Location Type',
-                          items: ref
-                              .read(addEventVmProvider.notifier)
-                              .locationTypes,
-                          onSelected: (value) => ref
-                              .read(addEventVmProvider.notifier)
-                              .update(value.first, "locationType")),
+                          items: ref.read(addEventVmProvider.notifier).locationTypes,
+                          onSelected: (value) =>
+                              ref.read(addEventVmProvider.notifier).update(value.first, "locationType")),
                       if (formState.hasError && viewModel.eventType.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
@@ -216,21 +191,16 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           keyboardType: TextInputType.text,
                           controller: viewModel.address,
                           hintText: "Enter Event Address",
-                          borderColor: formState.hasError &&
-                                  viewModel.address.text.isEmpty
-                              ? wayaTheme.colorScheme.error
-                              : null,
+                          borderColor:
+                              formState.hasError && viewModel.address.text.isEmpty ? wayaTheme.colorScheme.error : null,
                           label: "Enter Event Address",
                         ),
-                        if (formState.hasError &&
-                            viewModel.address.text.isEmpty)
+                        if (formState.hasError && viewModel.address.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                             ),
                           ),
                       ],
@@ -250,9 +220,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           controller: viewModel.link,
                           hintText: "Enter Link",
                           borderColor:
-                              formState.hasError && viewModel.link.text.isEmpty
-                                  ? wayaTheme.colorScheme.error
-                                  : null,
+                              formState.hasError && viewModel.link.text.isEmpty ? wayaTheme.colorScheme.error : null,
                           label: "Enter Virtual Event Link",
                         ),
                         if (formState.hasError && viewModel.link.text.isEmpty)
@@ -260,9 +228,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                             ),
                           ),
                       ],
@@ -288,9 +254,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                               formErrorMessage: "Date is required",
                               hintText: 'Select Start Date',
                               label: 'Start Date',
-                              selectDate: ref
-                                  .read(addEventVmProvider.notifier)
-                                  .selectStartDate)),
+                              selectDate: ref.read(addEventVmProvider.notifier).selectStartDate)),
                       const Gap(6),
                       Expanded(
                           child: EventDateWidget(
@@ -299,9 +263,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                               formErrorMessage: "Date is required",
                               hintText: 'Select End Date',
                               label: 'End Date',
-                              selectDate: ref
-                                  .read(addEventVmProvider.notifier)
-                                  .selectEndDate)),
+                              selectDate: ref.read(addEventVmProvider.notifier).selectEndDate)),
                     ],
                   ),
                 ),
@@ -319,9 +281,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                               formErrorMessage: "Time is required",
                               hintText: 'Select Start Time',
                               label: 'Start Time',
-                              selectTime: ref
-                                  .read(addEventVmProvider.notifier)
-                                  .selectStartTime)),
+                              selectTime: ref.read(addEventVmProvider.notifier).selectStartTime)),
                       const Gap(6),
                       Expanded(
                           child: EventTimeWidget(
@@ -330,9 +290,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                               hintText: 'Select End Time',
                               label: 'End Time',
                               time: viewModel.endTime,
-                              selectTime: ref
-                                  .read(addEventVmProvider.notifier)
-                                  .selectEndTime)),
+                              selectTime: ref.read(addEventVmProvider.notifier).selectEndTime)),
                     ],
                   ),
                 ),
@@ -352,68 +310,73 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       WayaSelectField<String>(
-                          height: 0.3,
-                          uniqueKey: 'event-type',
-                          label: "Event Type",
-                          value: viewModel.eventType,
-                          hintText: 'Select Event Type',
-                          items:
-                              ref.read(addEventVmProvider.notifier).eventTypes,
-                          onSelected: (value) => ref
-                              .read(addEventVmProvider.notifier)
-                              .update(value.first, "eventType")),
+                        height: 0.3,
+                        uniqueKey: 'event-type',
+                        label: "Event Type",
+                        value: viewModel.eventType,
+                        hintText: 'Select Event Type',
+                        items: ref.read(addEventVmProvider.notifier).eventTypes,
+                        onSelected: (value) => ref.read(addEventVmProvider.notifier).update(
+                              value.first,
+                              "eventType",
+                            ),
+                      ),
                       if (formState.hasError && viewModel.eventType.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
                   );
                 }),
-                const Gap(10),
-                FormField<String>(validator: (value) {
-                  if (viewModel.eventFee.text.isEmpty) {
-                    return 'Price is required';
-                  }
 
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaTextFormField(
-                          keyboardType: TextInputType.number,
-                          controller: viewModel.eventFee,
-                          hintText: 'Enter Event Fee',
-                          borderColor: formState.hasError &&
-                                  viewModel.eventFee.text.isEmpty
-                              ? wayaTheme.colorScheme.error
-                              : null,
-                          label: 'Price per Unit',
-                          suffixIcon: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 15),
-                            child: Text("NGN",
-                                style: wayaTheme.textTheme.hintStyle),
-                          )),
-                      if (formState.hasError && viewModel.eventFee.text.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
-                          ),
-                        ),
-                    ],
-                  );
-                }),
+                // Some space.
                 const Gap(10),
+
+                //? If this is paid.
+                if (viewModel.eventType == 'Paid') ...[
+                  FormField<String>(validator: (value) {
+                    if (viewModel.eventFee.text.isEmpty) {
+                      return 'Price is required';
+                    }
+
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                            keyboardType: TextInputType.number,
+                            controller: viewModel.eventFee,
+                            hintText: 'Enter Event Fee',
+                            borderColor: formState.hasError && viewModel.eventFee.text.isEmpty
+                                ? wayaTheme.colorScheme.error
+                                : null,
+                            label: 'Price per Unit',
+                            suffixIcon: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 15),
+                              child: Text("NGN", style: wayaTheme.textTheme.hintStyle),
+                            )),
+                        if (formState.hasError && viewModel.eventFee.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
+
+                  // Some space.
+                  const Gap(10),
+                ],
+
+                //? Maximum capacity.
                 FormField<String>(validator: (value) {
                   return null;
                 }, builder: (formState) {
@@ -423,8 +386,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                       WayaTextFormField(
                         keyboardType: TextInputType.number,
                         controller: viewModel.maxCapacity,
-                        hintText:
-                            'Enter Maximum capacity, leave blank if unlimited',
+                        hintText: 'Enter Maximum capacity, leave blank if unlimited',
                         label: 'Maximum Capacity',
                       ),
                     ],
@@ -435,9 +397,8 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Privacy Option",
-                        style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 14,
-                            color: wayaTheme.colorScheme.customBlack)),
+                        style: wayaTheme.textTheme.bodyMedium!
+                            .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customBlack)),
                     const Gap(6),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -446,19 +407,12 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           child: RadioSelect(
                             title: Text("Public",
                                 style: wayaTheme.textTheme.titleMedium!
-                                    .wayaCopyWith(
-                                        fontSize: 14,
-                                        color:
-                                            wayaTheme.colorScheme.customBlack)),
+                                    .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customBlack)),
                             value: 'Public',
                             groupedValue: selectedOption,
                             onChanged: (value) {
-                              ref
-                                  .read(radioSelectProvider(key).notifier)
-                                  .state = value;
-                              ref
-                                  .read(addEventVmProvider.notifier)
-                                  .updatePrivacyOption(value!);
+                              ref.read(radioSelectProvider(key).notifier).state = value;
+                              ref.read(addEventVmProvider.notifier).updatePrivacyOption(value!);
                             },
                           ),
                         ),
@@ -467,19 +421,13 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                             child: RadioSelect(
                           title: Text("Private",
                               style: wayaTheme.textTheme.titleMedium!
-                                  .wayaCopyWith(
-                                      fontSize: 14,
-                                      color:
-                                          wayaTheme.colorScheme.customBlack)),
+                                  .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customBlack)),
                           value: 'Private',
                           groupedValue: selectedOption,
                           onChanged: (value) {
-                            ref.read(radioSelectProvider(key).notifier).state =
-                                value;
+                            ref.read(radioSelectProvider(key).notifier).state = value;
 
-                            ref
-                                .read(addEventVmProvider.notifier)
-                                .updatePrivacyOption(value!);
+                            ref.read(addEventVmProvider.notifier).updatePrivacyOption(value!);
                           },
                         )),
                       ],
@@ -501,8 +449,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
             text: 'Go Back',
             color: wayaTheme.colorScheme.transparent,
             textColor: wayaTheme.colorScheme.customBlack,
-            border:
-                Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+            border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
               WayaNav.goBack();
             })
