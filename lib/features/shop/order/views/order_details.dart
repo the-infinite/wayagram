@@ -4,8 +4,10 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/order/data/model/order_state.dart';
+import 'package:wayagram/features/shop/order/widgets/contact_seller.dart';
 import 'package:wayagram/features/shop/order/widgets/order_address_widget.dart';
 import 'package:wayagram/features/shop/widgets/copy_code.dart';
 import 'package:wayagram/features/shop/order/widgets/order_tracking.dart';
@@ -18,10 +20,9 @@ class OrderDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+    final arg = ModalRoute.of(context)?.settings.arguments as OrderDetailArg?;
 
-    final OrderDetailArg? arg =
-        ModalRoute.of(context)?.settings.arguments as OrderDetailArg?;
-
+    //? The actual components.
     return WayaScaffold(
         isLoading: false,
         isScrollable: true,
@@ -44,20 +45,30 @@ class OrderDetails extends ConsumerWidget {
                 itemCount: arg?.order.items.length,
                 itemBuilder: (context, index) {
                   CartProduct order = CartProduct(
-                      price: arg?.order.items[index].price ?? 0,
+                      price: double.parse(arg?.order.items[index].price ?? '0')
+                          .toInt(),
                       quantity: arg?.order.items[index].quantity ?? 0,
                       productId: arg?.order.items[index].productId ?? '',
-                      productName: arg?.order.items[index].name ?? '',
+                      productName: arg?.order.items[index].productName ?? '',
                       deliveryCharge: false,
+                      unitPrice: "${arg?.order.items[index].price ?? 0}",
                       productImage: arg?.order.items[index].productImage ?? '',
                       deliveryOptions: '');
                   return OrderedProductCard(orders: order);
                 }),
             const Gap(25),
-            OrderAddressWidget(
-                type: 'Pickup Address', address: arg?.order.pickupAddress),
-            OrderAddressWidget(
-                type: 'Delivery Address', address: arg?.order.deliveryAddress),
+            Visibility(
+              visible: arg?.order.pickupAddress != null,
+              child: OrderAddressWidget(
+                  type: 'Pickup Address',
+                  address: arg?.order.pickupAddress ?? ''),
+            ),
+            Visibility(
+              visible: arg?.order.deliveryAddress != null,
+              child: OrderAddressWidget(
+                  type: 'Delivery Address',
+                  address: arg?.order.deliveryAddress ?? ''),
+            ),
             Text("Token", style: wayaTheme.textTheme.bodyMedium),
             const Gap(10),
             CopyCode(
@@ -75,21 +86,39 @@ class OrderDetails extends ConsumerWidget {
                     ? pickupStatus
                     : deliveryStatus,
                 type: arg?.order.deliveryType,
-                status: arg?.order.deliveryType == 'Pickup'
-                    ? arg?.order.pickupStatus
-                    : arg?.order.deliveryStatus),
+                currentStatuses: arg?.order.deliveryType == 'Pickup'
+                    ? arg?.order.pickupStatusHistory
+                    : arg?.order.deliveryStatusHistory),
             const Gap(25),
             Visibility(
-                visible: arg?.order.deliveryStatus == 'completed' ||
-                    arg?.order.pickupStatus == 'completed',
+                visible: arg?.order.status != 'completed' &&
+                    ((arg?.order.deliveryStatusHistory.isNotEmpty == true &&
+                            arg?.order.deliveryStatusHistory.last.status ==
+                                'completed') ||
+                        (arg?.order.pickupStatusHistory.isNotEmpty == true &&
+                            arg?.order.pickupStatusHistory.last.status ==
+                                'completed')),
                 child: WayaButton(
                   callback: () {
                     WayaNav.toNamed(ConfirmOrderDelivery.route,
-                        arguments: arg?.order.deliveryToken);
+                        arguments: arg?.order);
                   },
                   text: "Confirm Order Delivery",
+                )),
+            const Gap(10),
+            Visibility(
+                visible: arg?.order.status == 'completed',
+                child: WayaButton(
+                  callback: () async {
+                    WayaUtils.showModalSheet(context, child: ContactSeller(order: arg!.order));
+                  },
+                  text: "Report a problem",
                 ))
           ],
         ));
   }
 }
+
+/**
+ 
+ */

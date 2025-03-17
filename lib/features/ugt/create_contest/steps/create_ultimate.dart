@@ -1,28 +1,20 @@
 import 'dart:io';
 
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-//import 'package:wayagram/features/shared/components/radio_select.dart';
-import 'package:wayagram/features/shop/widgets/upload_image.dart';
-import 'package:wayagram/features/ugt/vm/ugt_restructed/model/contest_ugt_model.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 
-import '../../../../core/utils/waya_navigation.dart';
-import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
-import '../../../auth/login/model/user_model.dart';
-import '../../../auth/upgrade_to_business/vm/upgrade_to_business_vm.dart';
-import '../../../shop/seller/vm/add_product_vm.dart';
-import '../../data/controller/contest_controller.dart';
-import '../../data/model/create_contest.dart';
 import '../../vm/ugt_vm.dart';
 
-class CreateUltimate extends ConsumerStatefulWidget {
+class CreateUltimate extends StatefulHookConsumerWidget {
   final VoidCallback goToNextTab;
   const CreateUltimate({super.key, required this.goToNextTab});
 
@@ -31,22 +23,28 @@ class CreateUltimate extends ConsumerStatefulWidget {
 }
 
 class _CreateUltimateState extends ConsumerState<CreateUltimate> {
-  final _contestController = Get.put(ContestController());
+  final _formKey = GlobalKey<FormState>();
   List<String> category = [""];
   String selectedValue = 'Private';
   String selectedValue2 = 'Free';
   bool isSwitched = false;
+  //final _logger = getLogger("LoginVm");
 
+  //XFile? _selectedImage;
 
-  XFile? _selectedImage;
-
-  Future<void> _pickImage() async {
+  Future<String?> _pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
-    setState(() {
+
+    /*  setState(() {
       _selectedImage = image;
-    });
+    }); */
+    if (image != null) {
+      return image.path;
+    }
+    return null;
   }
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -57,82 +55,261 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
 
   @override
   Widget build(BuildContext context) {
+    var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
     final viewModel = ref.watch(contestNotifierProvider);
-    final viewModel2 = ref.watch(upgradeToBusinessVmProvider);
+    // final viewModel2 = ref.watch(upgradeToBusinessVmProvider);
+    final notifier = ref.read(contestNotifierProvider.notifier);
+    var isEditing = ref.watch(stateIsEditingContestProvider);
+
     final wayaTheme = Theme.of(context);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text("Create Your Ultimate Talent \n Contest!",
-            style: wayaTheme.textTheme.titleLarge),
-        const Gap(5),
-        Text(
-            "Bring your talent contest vision to life. Customize \n details, set stages, and make it unforgettable",
-            style: wayaTheme.textTheme.hintStyle),
-        const Gap(30),
-        WayaTextFormField(
-          helperText:
-              "This name will be displayed as the official contest title. You can update it if needed",
-          controller: viewModel.title,
-          hintText: "Enter Contest Title",
-          label: "Contest Title",
-        ),
-        const Gap(15),
-        WayaSelectField(
-          height: 0.3,
-          value: "New America Talent",
-          label: "Contest Category",
-          hintText: 'Select Contest Category',
-          items:  ref
-        .read(contestNotifierProvider.notifier)
-        .ugtCategoryStat(),
-          onSelected: (value) => ref
-              .read(contestNotifierProvider.notifier)
-              .update(value, "contestCat")
-              ,
-          uniqueKey: 'contest-category',
-        ),
-        const Gap(15),
-        WayaSelectField(
-          height: 0.3,
-          value: "Lagos",
-          label: "Contest State",
-          hintText: 'Select Contest State',
-          items: ref
-        .read(contestNotifierProvider.notifier)
-        .ugtStates(),
-          onSelected: (value) =>ref
-              .read(personalFirstStepProvider.notifier)
-              .selectState(value),
-          uniqueKey: 'contest-state',
-        ),
-        const Gap(15),
-        WayaTextFormField(
-          controller: viewModel.description,
-          hintText: "Enter Contest Description",
-          label: "Contest Description",
-          line: 6,
-        ),
-        const Gap(15),
-        WayaTextFormField(
-          keyboardType: TextInputType.number,
-          controller: viewModel.voteCountToQualify,
-          hintText: "Enter Vote Counts to Qualify",
-          label: "Vote Counts to Qualify",
-        ),
-        const Gap(15),
-        WayaTextFormField(
-          controller: viewModel.winnerPrize,
-          hintText: "Enter Winner's Award",
-          label: "Winner's Award",
-        ),
-        const Gap(15),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UgtRadioSelect(
+    useEffect(() {
+      if (isEditing) {
+        Future.delayed(Duration(seconds: 1), () {
+          //  print("my title ${contestViewModel?.toJson()}");
+          notifier.title.text = contestViewModel?.title ?? "";
+          notifier.description.text = contestViewModel?.description ?? "";
+          notifier.winnerPrize.text = contestViewModel?.winnerPrize ?? "";
+          notifier.amountPerVote.text = contestViewModel?.amountPerVote?.toString() ?? "";
+          /* notifier.voteCountToQualify.text =
+              contestViewModel?.voteCountToQualify ?? ""; */
+
+          ref.read(contestNotifierProvider.notifier).updateEdit(contestViewModel?.categoryName ?? "");
+
+          ref.read(contestNotifierProvider.notifier).selectStateEdit(contestViewModel?.state ?? "");
+
+          //make public or private
+          String pubPrivate = contestViewModel?.publicity == "PUBLIC" ? "Public" : "Private";
+          ref.read(contestNotifierProvider.notifier).updatePrivatePublic(pubPrivate);
+          selectedValue = pubPrivate;
+
+          //show overall result
+          bool mySwitched = contestViewModel?.overallResult == "YES" ? true : false;
+          isSwitched = mySwitched;
+          ref.read(contestNotifierProvider.notifier).updateOverAllResult(mySwitched);
+
+          //  viewModel.categorys
+          //  notifier.numberOfWeeks.text = contestViewModel.numberOfWeeks??"";
+          //  notifier.image = contestViewModel.image;
+          // notifier.state = contestViewModel.state;
+          // notifier.categorys = contestViewModel.categorys;
+          //  notifier.privatePublic = contestViewModel.privatePublic;
+          // notifier.overAllResult = contestViewModel.overAllResult;
+        });
+      }
+      return null;
+    }, []);
+
+    return Form(
+      key: _formKey,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(" ${isEditing ? "Edit" : "Create"} Your Ultimate Talent \n Contest!",
+              style: wayaTheme.textTheme.titleLarge),
+          const Gap(5),
+          Text("Bring your talent contest vision to life. Customize \ndetails, set stages, and make it unforgettable",
+              style: wayaTheme.textTheme.hintStyle
+                  .copyWith(color: wayaTheme.colorScheme.greyColor500, fontWeight: FontWeight.w500)),
+          const Gap(30),
+          FormField<String>(validator: (value) {
+            if (notifier.title.text.isEmpty) {
+              return 'Contest title is required';
+            }
+
+            return null;
+          }, builder: (formState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                WayaTextFormField(
+                  helperText: "This name will be displayed as the official contest title. You can update it if needed",
+                  controller: notifier.title,
+                  hintText: "Enter Contest Title",
+                  label: "Contest Title",
+                  //label: contestViewModel?.title,
+                  borderColor: formState.hasError && notifier.title.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                ),
+                if (formState.hasError && notifier.title.text.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      formState.errorText ?? "",
+                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                    ),
+                  ),
+              ],
+            );
+          }),
+          const Gap(15),
+          FormField<String>(validator: (value) {
+            if (viewModel.categorys.isEmpty) {
+              return 'Contest Category is required';
+            }
+
+            return null;
+          }, builder: (formState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                WayaSelectField<String>(
+                  height: 0.3,
+                  value: viewModel.categorys,
+                  label: "Contest Category",
+                  hintText: 'Select Contest Category',
+                  items: ref.read(contestNotifierProvider.notifier).ugtCategory(),
+                  onSelected: (value) {
+                    print('eee ${value.first.toJson()}');
+                    ref.read(contestNotifierProvider.notifier).update(value.first, "contestCat");
+                  },
+                  uniqueKey: 'contest-category',
+                ),
+                if (formState.hasError && viewModel.categorys.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      formState.errorText ?? "",
+                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                    ),
+                  ),
+              ],
+            );
+          }),
+          const Gap(15),
+          FormField<String>(validator: (value) {
+            if (viewModel.state.isEmpty) {
+              return 'Contest State is required';
+            }
+
+            return null;
+          }, builder: (formState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                WayaSelectField<String>(
+                  height: 0.3,
+                  value: viewModel.state,
+                  label: "Contest State",
+                  hintText: 'Select Contest State',
+                  items: ref.read(contestNotifierProvider.notifier).ugtStates(),
+                  onSelected: (value) {
+                    print(" heree $value");
+                    return ref.read(contestNotifierProvider.notifier).selectState(value.first);
+                  },
+                  uniqueKey: 'contest-state',
+                ),
+                if (formState.hasError && viewModel.state.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      formState.errorText ?? "",
+                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                    ),
+                  ),
+              ],
+            );
+          }),
+          const Gap(15),
+          FormField<String>(validator: (value) {
+            if (notifier.description.text.isEmpty) {
+              return '"Contest Description is required';
+            }
+
+            return null;
+          }, builder: (formState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                WayaTextFormField(
+                  controller: notifier.description,
+                  hintText: "Enter Contest Description",
+                  label: "Contest Description",
+                  line: 6,
+                  borderColor:
+                      formState.hasError && notifier.description.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                ),
+                if (formState.hasError && notifier.description.text.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      formState.errorText ?? "",
+                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                    ),
+                  ),
+              ],
+            );
+          }),
+          const Gap(15),
+          /*   FormField<String>(validator: (value) {
+            if (notifier.voteCountToQualify.text.isEmpty) {
+              return 'Vote Counts to Qualify is required';
+            }
+
+            return null;
+          }, builder: (formState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                WayaTextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: notifier.voteCountToQualify,
+                  hintText: "Enter Vote Counts to Qualify",
+                  label: "Vote Counts to Qualify",
+                  borderColor: formState.hasError &&
+                          notifier.voteCountToQualify.text.isEmpty
+                      ? wayaTheme.colorScheme.error
+                      : null,
+                ),
+                if (formState.hasError &&
+                    notifier.voteCountToQualify.text.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      formState.errorText ?? "",
+                      style: TextStyle(
+                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                    ),
+                  ),
+              ],
+            );
+          }),
+          const Gap(15), */
+          FormField<String>(validator: (value) {
+            if (notifier.winnerPrize.text.isEmpty) {
+              return 'Winner`s Award is required';
+            }
+
+            return null;
+          }, builder: (formState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                WayaTextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: notifier.winnerPrize,
+                  hintText: "Enter Winner's Award",
+                  inputFormatters: [CurrencyTextInputFormatter.currency(name: 'NGN', symbol: 'NGN', locale: 'en_NG')],
+                  label: "Winner's Award",
+                  borderColor:
+                      formState.hasError && notifier.winnerPrize.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                ),
+                if (formState.hasError && notifier.winnerPrize.text.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      formState.errorText ?? "",
+                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                    ),
+                  ),
+              ],
+            );
+          }),
+          const Gap(15),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              UgtRadioSelect(
                 title: Container(
                     padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                     child: Column(
@@ -147,16 +324,18 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                         )
                       ],
                     )),
-                value: "Private", groupValue: selectedValue, onChanged: (String value) {
-              setState(() {
-                selectedValue = value;
+                value: "Private",
+                groupValue: selectedValue,
+                onChanged: (String value) {
+                  setState(() {
+                    selectedValue = value;
+                    ref.read(contestNotifierProvider.notifier).updatePrivatePublic(value);
 
-
-                // Update selected value
-              });
-
-            },),
-            UgtRadioSelect(
+                    // Update selected value
+                  });
+                },
+              ),
+              UgtRadioSelect(
                 title: Container(
                   padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                   child: Column(
@@ -172,46 +351,50 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     ],
                   ),
                 ),
-                value: "Public", groupValue: selectedValue, onChanged: (String value) {
-              setState(() {
-                selectedValue = value;
-
-              });
-            },),
-          ],
-        ),
-        const Gap(15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Show Overall Result",
-                    style: wayaTheme.textTheme.titleMedium),
-                const Gap(6),
-                Text(
-                  "Hide Overall Result",
-                  style: wayaTheme.textTheme.hintStyle,
-                )
-              ],
-            ),
-            Switch(value: isSwitched, onChanged: (value) => {
-            setState(() {
-            isSwitched = value;
-            viewModel.overallResult == value;// Update the switch state
-            }),
-            }),
-          ],
-        ),
-        const Gap(15),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UgtRadioSelect(
+                value: "Public",
+                groupValue: selectedValue,
+                onChanged: (String value) {
+                  setState(() {
+                    ref.read(contestNotifierProvider.notifier).updatePrivatePublic(value);
+                    selectedValue = value;
+                  });
+                },
+              ),
+            ],
+          ),
+          const Gap(15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Show Overall Result", style: wayaTheme.textTheme.titleMedium),
+                  const Gap(6),
+                  Text(
+                    "Hide Overall Result",
+                    style: wayaTheme.textTheme.hintStyle,
+                  )
+                ],
+              ),
+              Switch(
+                  value: isSwitched,
+                  onChanged: (value) => {
+                        setState(() {
+                          isSwitched = value;
+                          ref.read(contestNotifierProvider.notifier).updateOverAllResult(value);
+                        }),
+                      }),
+            ],
+          ),
+          /*   const Gap(15),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              UgtRadioSelect(
                 title: Container(
                     padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                     child: Column(
@@ -226,13 +409,19 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                         )
                       ],
                     )),
-                value: "Free", groupValue: selectedValue2, onChanged: (String value) {
-              setState(() {
-                selectedValue2 = value;
-
-              });
-            },),
-            UgtRadioSelect(
+                value: "Free",
+                groupValue: selectedValue2,
+                onChanged: (String value) {
+                  viewModel.amountPerVote.text = "0";
+                  ref
+                      .read(contestNotifierProvider.notifier)
+                      .updateContestFreePaid(value);
+                  setState(() {
+                    selectedValue2 = value;
+                  });
+                },
+              ),
+              UgtRadioSelect(
                 title: Container(
                   padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                   child: Column(
@@ -248,124 +437,222 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                     ],
                   ),
                 ),
-                value: "Paid", groupValue: selectedValue2, onChanged: (String value) {
-              setState(() {
-                selectedValue2 = value;
-
-              });
-            },),
-          ],
-        ),
-        const Gap(15),
-        WayaTextFormField(
-          keyboardType: TextInputType.number,
-          controller: viewModel.amountPerVote,
-          hintText: "Enter Amount per Vote",
-          label: "Amount per Vote",
-        ),
-        const Gap(15),
-        WayaTextFormField(
-          keyboardType: TextInputType.number,
-          controller: viewModel.numberOfWeeks,
-          hintText: "Enter Number of Weeks",
-          label: "Number of Weeks",
-        ),
-
-        const Gap(20),
-        Column(
-
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            GestureDetector(
-              onTap: _pickImage,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset("assets/images/upload.png"),
-                ],
+                value: "Paid",
+                groupValue: selectedValue2,
+                onChanged: (String value) {
+                  ref
+                      .read(contestNotifierProvider.notifier)
+                      .updateContestFreePaid(value);
+                  setState(() {
+                    selectedValue2 = value;
+                  });
+                },
               ),
-            ),
+            ],
+          ),
+          const Gap(15),
+          if (selectedValue2 == "Paid") */
+          const Gap(15),
+          FormField<String>(validator: (value) {
+            if (notifier.amountPerVote.text.isEmpty) {
+              return 'Amount is required';
+            }
 
-            const Gap(20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
+            return null;
+          }, builder: (formState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(width: 22),
-                Text(
-                    "Tap Icon to upload.",
-                    style: wayaTheme.textTheme.bodyMedium, ),
-                SizedBox(height: 4),
-                _selectedImage == null
-                    ? Column(
+                WayaTextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: notifier.amountPerVote,
+                  hintText: "Enter Amount per Vote",
+                  label: "Amount per Vote",
+                  inputFormatters: [CurrencyTextInputFormatter.currency(name: 'NGN', symbol: 'NGN', locale: 'en_NG')],
+                  onChanged: (value) {
+                    print("Amount in word${value.replaceAll(",", "").substring(3)}");
+                    if (value.trim().isNotEmpty) {
+                      if (double.parse(value.replaceAll(",", "").substring(3).trim()) > 0) {
+                        setState(() {
+                          selectedValue2 = "Paid";
+                        });
+                      } else {
+                        setState(() {
+                          selectedValue2 = "Free";
+                        });
+                      }
+                    } else {
+                      setState(() {
+                        selectedValue2 = "Free";
+                      });
+                    }
+                  },
+                  borderColor:
+                      formState.hasError && notifier.amountPerVote.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                ),
+                if (formState.hasError && notifier.amountPerVote.text.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      formState.errorText ?? "",
+                      style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                    ),
+                  ),
+              ],
+            );
+          }),
+          const Gap(15),
+          /*   FormField<String>(validator: (value) {
+            if (notifier.numberOfWeeks.text.isEmpty) {
+              return 'Number of Weeks is required';
+            }
+
+            return null;
+          }, builder: (formState) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                WayaTextFormField(
+                  keyboardType: TextInputType.number,
+                  controller: notifier.numberOfWeeks,
+                  hintText: "Enter Number of Weeks",
+                  label: "Number of Weeks",
+                  borderColor:
+                      formState.hasError && notifier.numberOfWeeks.text.isEmpty
+                          ? wayaTheme.colorScheme.error
+                          : null,
+                ),
+                if (formState.hasError && notifier.numberOfWeeks.text.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 5),
+                    child: Text(
+                      formState.errorText ?? "",
+                      style: TextStyle(
+                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                    ),
+                  ),
+              ],
+            );
+          }),
+          const Gap(20), */
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  String? image = await _pickImage();
+                  if (image != null) {
+                    ref.read(contestNotifierProvider.notifier).updateImage(image);
+                  }
+                },
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                        "PNG, JPG or MP4 (max. 5MB)",
-                        style: wayaTheme.textTheme.hintStyle),
+                    if (!isEditing) Image.asset("assets/images/upload.png"),
+                    if (isEditing)
+                      Image.network(
+                        contestViewModel?.uploadCoverImages ?? "",
+                        height: 100,
+                        // width: 45,
+                        fit: BoxFit.cover,
+                        // radius: BorderRadius.circular(45),
+                      ),
                   ],
-                )
-                    : Image.file(
-                  File(_selectedImage!.path),
-                  height: 100,
                 ),
-
-              ],
-            ),
-            const Gap(20),
-            Text(
-              "Or.",
-              style: wayaTheme.textTheme.hintStyle, ),
-            const Gap(20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 90),
-                  child: WayaButton(
-
-                      horizontalPadding: 50,
-                      text: "Browse Files",
-                      callback: ()=> {
-                        if (_selectedImage != null) {
-
-                        }
-                      }
-
+              ),
+              const Gap(20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(width: 22),
+                  Text(
+                    "Tap Icon to upload.",
+                    style: wayaTheme.textTheme.bodyMedium,
                   ),
-                ),
+                  SizedBox(height: 4),
+                  viewModel.image.trim().isEmpty
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("PNG, JPG or MP4 (max. 5MB)", style: wayaTheme.textTheme.hintStyle),
+                          ],
+                        )
+                      : Image.file(
+                          File(viewModel.image),
+                          height: 100,
+                        ),
+                ],
+              ),
+              const Gap(20),
+              Text(
+                "Or.",
+                style: wayaTheme.textTheme.hintStyle,
+              ),
+              const Gap(20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 90),
+                    child: WayaButton(
+                        horizontalPadding: 50,
+                        text: "Browse Files",
+                        callback: () async {
+                          String? image = await _pickImage();
+                          if (image != null) {
+                            ref.read(contestNotifierProvider.notifier).updateImage(image);
+                          }
+                        }),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          /*UploadImage(onUpload: () {
+      
+      
+      
+          }),*/
+          const Gap(60),
+          WayaButton(
+            callback: () async {
+              // widget.goToNextTab();
+              /*   if (selectedValue2 == "Free") {
+                notifier.amountPerVote.text = "0";
+              } */
+              if (_formKey.currentState!.validate()) {
+                //check for image null
+                if (isEditing) {
+                } else {
+                  if (ref.read(contestNotifierProvider.notifier).getImage().trim().isEmpty) {
+                    WayaSnackBar.showToast('Please pick image  to continue');
 
-              ],
-            ),
-          ],
-        ),
-        /*UploadImage(onUpload: () {
+                    return;
+                  }
+                }
 
-
-
-        }),*/
-        const Gap(60),
-        WayaButton(
-          callback: () async{
-            widget.goToNextTab();
-          },
-          text: "Submit",
-        ),
-        const Gap(8),
-        WayaButton(
+                widget.goToNextTab();
+              }
+            },
+            text: "Submit",
+          ),
+          const Gap(8),
+          WayaButton(
             text: 'Go Back',
             color: wayaTheme.colorScheme.greyColor300,
             textColor: wayaTheme.colorScheme.customBlack,
-            border:
-                Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+            border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              Navigator.pop(context);
-            })
-      ],
+              WayaNav.goBack();
+            },
+          )
+        ],
+      ),
     );
   }
 }
@@ -405,9 +692,6 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
     );
   }
 }*/
-
-
-
 
 class UgtRadioSelect extends StatelessWidget {
   final Widget title;

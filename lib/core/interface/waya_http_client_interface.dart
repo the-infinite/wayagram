@@ -6,6 +6,7 @@ abstract class WayaHttpClientInterface {
     Map<String, dynamic>? body,
     Map<String, dynamic>? params,
     bool formdata = false,
+    required bool useBase,
   });
 
   Future<WayaRequestResponse> postHttp(

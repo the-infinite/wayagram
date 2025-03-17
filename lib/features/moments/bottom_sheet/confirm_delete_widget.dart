@@ -3,6 +3,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class ConfirmDeleteWidget extends ConsumerWidget {
   final Future<void> Function() delete;
@@ -10,7 +11,6 @@ class ConfirmDeleteWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.all(20),
@@ -32,7 +32,7 @@ class ConfirmDeleteWidget extends ConsumerWidget {
           const SizedBox(height: 15),
           WayaButton(
             callback: () {
-              Navigator.of(context).pop();
+              WayaNav.goBack();
               delete();
             },
             text: "Yes Delete",
@@ -42,7 +42,7 @@ class ConfirmDeleteWidget extends ConsumerWidget {
           WayaButton(
             textColor: wayaTheme.colorScheme.greyColor600,
             callback: () {
-              Navigator.of(context).pop();
+              WayaNav.goBack();
             },
             text: "Cancel",
             color: wayaTheme.colorScheme.transparent,

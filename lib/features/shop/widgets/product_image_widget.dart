@@ -13,7 +13,6 @@ class ProductImageWidget extends ConsumerWidget {
  
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(productImageWidgetVmProvider.notifier);
@@ -60,7 +59,7 @@ class ProductImageWidget extends ConsumerWidget {
               width: 40,
               padding: EdgeInsets.fromLTRB(6, 3, 6, 3),
               decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.primar50,
+                  color: wayaTheme.colorScheme.primary50,
                   borderRadius: BorderRadius.circular(12)),
               child: Center(
                 child: Text("${currPage + 1}/${images.length}",

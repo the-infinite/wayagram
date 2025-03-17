@@ -3,8 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/helpers/date.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -30,6 +31,7 @@ class SingleChatScreen extends ConsumerStatefulWidget {
 
 class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   late final notifier = ref.watch(chatProvider.notifier);
+  final handler = WayaObservableScrollController();
 
   @override
   void initState() {
@@ -61,9 +63,16 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   // We start a video call.
   void _startVideoCall() async {}
 
+  Future<ChatModel?> _startConversation() async {
+    return null;
+  }
+
   // This is fine.
   @override
   Widget build(BuildContext context) {
+    // Get the theme.
+    final theme = Theme.of(context);
+
     // This is fine.
     return Consumer(builder: (context, ref, _) {
       final state = ref.watch(chatProvider);
@@ -116,47 +125,66 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                   // Some space.
                   const Gap(10),
 
-                  //* First, the user's profile picture.
-                  ChatProfilePicture(
-                    user: chat.other.userData ?? ConversationState.self,
-                    showActive: userStatus == ChatUserActivity.online,
-                    lastSeen: chat.other.chatUser?.lastSeen,
-                    radius: 16,
-                  ),
-
-                  //* Second, the user's name.
+                  //* Second the profile picture and name.
                   Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.only(right: 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                    child: InkWell(
+                      splashColor: theme.colorScheme.primary.withAlpha(30),
+                      focusColor: theme.colorScheme.primary.withAlpha(30),
+                      highlightColor: theme.colorScheme.primary.withAlpha(30),
+                      customBorder: StadiumBorder(),
+                      splashFactory: NoSplash.splashFactory,
+                      onTap: () {
+                        WayaNav.toNamed(WayaAppRoutes.getChatProfile(chat.id));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          //* For the other person's name.
-                          Text(
-                            chat.name ??
-                                chat.other.userData?.fullname ??
-                                chat.other.chatUser?.displayName ??
-                                "WayaGram User",
-                            maxLines: 1,
-                            style: WayaTextStyles.titleMedium.copyWith(
-                              fontSize: 15,
-                              overflow: TextOverflow.ellipsis,
-                            ),
+                          // First, the user's profile picture.
+                          ChatProfilePicture(
+                            user: chat.other.userData ?? ConversationState.self,
+                            showActive: userStatus == ChatUserActivity.online,
+                            lastSeen: chat.other.chatUser?.lastSeen,
+                            radius: 16,
                           ),
 
-                          //? For the message content...
-                          if (lastSeenText != null)
-                            Text(
-                              userStatus == ChatUserActivity.online ? "Online" : lastSeenText,
-                              maxLines: 1,
-                              style: WayaTextStyles.titleMedium.copyWith(
-                                fontWeight: FontWeight.normal,
-                                overflow: TextOverflow.ellipsis,
-                                color: WayaColors.greyColor500,
-                                fontSize: 13,
+                          // Second, the user's name.
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  //* For the other person's name.
+                                  Text(
+                                    chat.name ??
+                                        chat.other.userData?.fullname ??
+                                        chat.other.chatUser?.displayName ??
+                                        "WayaGram User",
+                                    maxLines: 1,
+                                    style: WayaTextStyles.titleMedium.copyWith(
+                                      fontSize: 15,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+
+                                  //? For the message content...
+                                  if (lastSeenText != null)
+                                    Text(
+                                      userStatus == ChatUserActivity.online ? "Online" : lastSeenText,
+                                      maxLines: 1,
+                                      style: WayaTextStyles.titleMedium.copyWith(
+                                        fontWeight: FontWeight.normal,
+                                        overflow: TextOverflow.ellipsis,
+                                        color: WayaColors.greyColor500,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                ],
                               ),
                             ),
+                          ),
                         ],
                       ),
                     ),
@@ -203,93 +231,97 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
               ),
             ),
           ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              //? First, the divider.
-              Divider(color: WayaColors.greyColor200, height: 1),
+          body: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                //? First, the divider.
+                Divider(color: WayaColors.greyColor200, height: 1),
 
-              //? Second, the chat messages.
-              if (state.messages.isEmpty && state.hasLoaded)
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      //* First, the image.
-                      WayaAssets.images.cSayHello.image(
-                        height: 70,
-                        width: 70,
-                        fit: BoxFit.cover,
-                      ),
-
-                      // Some space.
-                      const Gap(20),
-
-                      //* Some text
-                      Text(
-                        "Send the first message",
-                        style: WayaTextStyles.titleLarge.copyWith(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 24,
+                //? Second, the chat messages.
+                if (state.messages.isEmpty && state.hasLoaded)
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        //* First, the image.
+                        WayaAssets.images.cSayHello.image(
+                          height: 70,
+                          width: 70,
+                          fit: BoxFit.cover,
                         ),
-                      ),
 
-                      // Some space.
-                      const Gap(10),
+                        // Some space.
+                        const Gap(20),
 
-                      //* Some text
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
-                        child: Text(
-                          "Start a conversation with ${chat.other.chatUser?.displayName} by sending the first message",
-                          maxLines: 3,
-                          textAlign: TextAlign.center,
-                          style: WayaTextStyles.hintStyle,
+                        //* Some text
+                        Text(
+                          "Send the first message",
+                          style: WayaTextStyles.titleLarge.copyWith(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 24,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                )
-              else
-                Expanded(
-                  child: WayaPaginatedListView<MessageModel>(
-                    nextPage: state.page,
-                    itemCount: state.messages.length,
-                    isAtEnd: !state.hasNextPage,
-                    shouldFetch: !state.isLoading,
-                    direction: Axis.vertical,
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    reverse: true,
-                    getPage: (page) async {
-                      return notifier.getMessages();
-                    },
-                    builder: (context, index) => ChatBubbleWidget(
-                      index: index,
-                      previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
-                      data: state.messages[index],
-                      controller: inputController,
-                      isLast: index == state.messages.length - 1,
+
+                        // Some space.
+                        const Gap(10),
+
+                        //* Some text
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 40),
+                          child: Text(
+                            "Start a conversation with ${chat.other.chatUser?.displayName} by sending the first message",
+                            maxLines: 3,
+                            textAlign: TextAlign.center,
+                            style: WayaTextStyles.hintStyle,
+                          ),
+                        ),
+                      ],
                     ),
-                    child: state.typing
-                        ? Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              PersonalTypingIndicator(),
-                            ],
-                          )
-                        : null,
+                  )
+                else
+                  Expanded(
+                    child: WayaPaginatedListView<MessageModel>(
+                      handler: handler,
+                      nextPage: state.page,
+                      itemCount: state.messages.length,
+                      isAtEnd: !state.hasNextPage,
+                      shouldFetch: !state.isLoading,
+                      direction: Axis.vertical,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      reverse: true,
+                      getPage: (page) async {
+                        return notifier.getMessages();
+                      },
+                      builder: (context, index) => ChatBubbleWidget(
+                        index: index,
+                        previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
+                        data: state.messages[index],
+                        controller: inputController,
+                        isLast: index == state.messages.length - 1,
+                      ),
+                      child: state.typing
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                PersonalTypingIndicator(),
+                              ],
+                            )
+                          : null,
+                    ),
                   ),
-                ),
 
-              //? Third, the chat input widget.
-              ChatInputWidget(
-                controller: inputController,
-                notifier: notifier,
-              )
-            ],
+                //? Third, the chat input widget.
+                ChatInputWidget(
+                  controller: inputController,
+                  notifier: notifier,
+                  createChat: _startConversation,
+                ),
+              ],
+            ),
           ),
         ),
       );

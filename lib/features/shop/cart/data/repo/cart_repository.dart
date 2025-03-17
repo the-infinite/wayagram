@@ -9,13 +9,13 @@ class CartRepository extends BaseRepository {
       required int quantity,
       required String userId,
       required String shopId,
-      required int price}) {
+     }) {
     return post("$serviceUrl/cart/add-to-cart", {
       "productId": productId,
       "quantity": quantity,
       "shopId": shopId,
       "userId": userId,
-      "price": price
+      
     });
   }
 
@@ -67,12 +67,12 @@ class CartRepository extends BaseRepository {
 
   //
   ///
-  Future<WayaRequestResponse> createOrder(
-      {required String cartId,
-      required String shopId,
-      required String userId}) {
-    return post("$serviceUrl/orders/place-order",
-        {'cartId': cartId, 'shopId': shopId, 'userId': userId});
-  }
+  // Future<WayaRequestResponse> createOrder(
+  //     {required String cartId,
+  //     required String shopId,
+  //     required String userId}) {
+  //   return post("$serviceUrl/orders/place-order",
+  //       {'cartId': cartId, 'shopId': shopId, 'userId': userId});
+  // }
   //
 }

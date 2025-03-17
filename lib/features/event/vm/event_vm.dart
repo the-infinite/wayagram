@@ -12,7 +12,6 @@ import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/event/data/model/event_attendee_response_model.dart';
 import 'package:wayagram/features/event/data/model/single_event_response_model.dart';
 import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
-import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 
 class EventVm extends StateNotifier<EventState> {
   final Ref ref;
@@ -34,6 +33,20 @@ class EventVm extends StateNotifier<EventState> {
     }
   }
 
+  Future<void> joinedEvents() async {
+    try {
+      final userId = await _secureDataSource.getUserId();
+      final response = await _eventRepository.eventsJoined(userId: userId!);
+
+      if (response.success) {
+        EventResponse eventResponse = EventResponse.fromJson(response.data);
+        state = state.copyWith(joinedEvents: eventResponse.data.docs);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
   // Future<void> fetchEventsWithStatus() async {
   //   try {
   //     state = state.copyWith(isLoadingEventWithStatus: true);
@@ -49,7 +62,7 @@ class EventVm extends StateNotifier<EventState> {
   //   }
   // }
 
-  Future<PaginatedResult<EventDoc>?> getEventWithStatus(int page) async {
+  Future<PaginatedResult<EventDoc>?> getEventWithStatus({required int page}) async {
     try {
       state = state.copyWith(isLoadingEventWithStatus: true);
       final response = await _eventRepository.getEventWithStatus(
@@ -84,13 +97,13 @@ class EventVm extends StateNotifier<EventState> {
     //
   }
 
-  Future<PaginatedResult<EventDoc>?> getUserEvents(int page) async {
+  Future<PaginatedResult<EventDoc>?> getUserEvents({required int page}) async {
     try {
       state = state.copyWith(isLoadingUserEvents: true);
 
       final userId = await _secureDataSource.getUserId();
       final response =
-          await _eventRepository.getUserEvents(userId: userId!, page: page);
+      await _eventRepository.getUserEvents(userId: userId!, page: page);
       List<EventDoc> myEvents = [];
       bool hasNextPage = false;
       if (response.success) {
@@ -118,31 +131,32 @@ class EventVm extends StateNotifier<EventState> {
       final userId = await _secureDataSource.getUserId();
       final response =
           await _eventRepository.joinEvent(userId: userId!, eventId: eventId);
-      Navigator.of(context).pop();
+
       final provider = ref.read(eventEngagementProvider.notifier);
 
       provider.addLocation(event.location, EventPoint.joinEvent.value);
       provider.addEventType(event.eventType, EventPoint.joinEvent.value);
       if (response.success && context.mounted) {
+         WayaNav.goBack();
+     
         if (context.mounted) {
           WayaUtils.showNotice(
-            context: context,
-            buttonText: 'View Event Details',
-            secondButtonText: 'Explore more events',
-            icon: Image.asset(
-              WayaAssets.images.createEventSuccess.path,
-              scale: 1.5,
-            ),
-            title: "You've successfully joined the event",
-            message:
-                'Your spot is confirmed. Stay tuned for updates and get ready for an amazing experience',
-            onPress: () {
-              Navigator.pushReplacementNamed(context, EventDetail.route);
-              // Refresh the screen
-            },
-            onCancel: () =>
-                Navigator.pushReplacementNamed(context, EventView.route),
-          );
+              context: context,
+              secondButtonText: 'Explore more events',
+              icon: Image.asset(
+                WayaAssets.images.createEventSuccess.path,
+                scale: 1.5,
+              ),
+              onPress: () {
+                WayaNav.goBack();
+              },
+              buttonText: 'View Event Details',
+              title: "You've successfully joined the event",
+              message:
+                  'Your spot is confirmed. Stay tuned for updates and get ready for an amazing experience',
+              onCancel: () {
+                WayaNav.toNamed(EventView.route);
+              });
         }
 
         print(response.data);
@@ -164,23 +178,27 @@ class EventVm extends StateNotifier<EventState> {
       final userId = await _secureDataSource.getUserId();
       final response = await _eventRepository.reportEvent(
           userId: userId!, eventId: eventId, reason: reason);
-      Navigator.of(context).pop();
+
       if (response.success && context.mounted) {
         // show success modal
+         WayaNav.goBack();
+       // WayaNav.goBack();
 
-        await WayaUtils.showNotice(
-            context: context,
-            title: "Thank you for reporting",
-            onPress: () {
-              Navigator.pushReplacementNamed(context, EventView.route);
-            },
-            icon: Image.asset(
-              WayaAssets.images.eCheckEvent.path,
-              scale: 1.5,
-            ),
-            message:
-                'Your report has been submitted. Our team will review the issue and take appropriate action.',
-            buttonText: 'Go to Event Page');
+        if (context.mounted) {
+          await WayaUtils.showNotice(
+              context: context,
+              title: "Thank you for reporting",
+              onPress: () {
+                WayaNav.replaceNamed(EventView.route);
+              },
+              icon: Image.asset(
+                WayaAssets.images.eCheckEvent.path,
+                scale: 1.5,
+              ),
+              message:
+                  'Your report has been submitted. Our team will review the issue and take appropriate action.',
+              buttonText: 'Go to Event Page');
+        }
         print(response.data);
       }
     } catch (error) {
@@ -190,7 +208,7 @@ class EventVm extends StateNotifier<EventState> {
     }
   }
 
-  Future<PaginatedResult<Doc>?> getAttendees(int page) async {
+  Future<PaginatedResult<Doc>?> getAttendees({required int page}) async {
     try {
       state = state.copyWith(isLoadingAttendees: true);
       final userId = await _secureDataSource.getUserId();

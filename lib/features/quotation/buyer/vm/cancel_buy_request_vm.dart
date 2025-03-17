@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
 class CancelBuyRequestVm extends ChangeNotifier {
@@ -17,7 +14,7 @@ class CancelBuyRequestVm extends ChangeNotifier {
         title: 'Cancel Buy Request',
         message:
         'Are you sure you want to cancel this request?',
-        onPress: () => Navigator.of(context).pop(),
+        onPress: () => WayaNav.goBack(),
         icon: Image.asset('assets/images/d-code-invalid.png'),
         buttonCenterWidget: Column(
           children: [
@@ -40,7 +37,7 @@ class CancelBuyRequestVm extends ChangeNotifier {
         title: 'Are you sure you want to reject\nthis bid?',
         message:
         'Are you sure you want to reject this bid? Once confirmed this can’t\nbe undone',
-        onPress: () => Navigator.of(context).pop(),
+        onPress: () => WayaNav.goBack(),
         icon: Image.asset('assets/images/d-code-invalid.png'),
         buttonCenterWidget: Column(
           children: [

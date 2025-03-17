@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
@@ -11,7 +12,6 @@ class OrderInfoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Container(
       width: double.infinity,
@@ -24,15 +24,15 @@ class OrderInfoWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            title,
+            title.capitalize!,
             style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.greyColor500, fontSize: 10),
+                color: wayaTheme.colorScheme.greyColor500, fontSize: 11),
           ),
         
          Container(
           constraints: BoxConstraints(maxWidth: 150),
           child:  Text(
-           description,
+           description.capitalize!,
            textAlign: TextAlign.start,
             style: TextStyle().wayaCopyWith(
                 color: wayaTheme.colorScheme.greyColor500, fontSize: 13),

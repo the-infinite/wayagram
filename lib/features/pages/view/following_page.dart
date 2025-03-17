@@ -40,6 +40,7 @@ class _FollowingPageState extends ConsumerState<FollowingPage> with SingleTicker
       children: [
         viewModel.pagesUsersFollow!.isEmpty ? PageEmptyState():
         ListView.builder(
+          padding: EdgeInsets.only(bottom: 40),
             shrinkWrap: true,
             itemCount: viewModel.pagesUsersFollow?.length,
             itemBuilder: (_, index){

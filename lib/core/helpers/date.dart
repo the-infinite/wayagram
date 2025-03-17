@@ -62,7 +62,14 @@ class WayaDateHelper {
     return '${duration.inHours == 0 ? '' : '$hh:'}$mm:$ss';
   }
 
-  static String getSocialTimestamp(DateTime timestamp) {
+  static String convertDurationToCountdown(Duration duration) {
+    final hh = (duration.inHours).toString().padLeft(2, '0');
+    final mm = (duration.inMinutes % 60).toString().padLeft(2, '0');
+    final ss = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    return '${duration.inHours == 0 ? '' : '${hh}h '}${mm}m ${ss}s';
+  }
+
+  static String getSocialTimestamp(DateTime timestamp, [bool extraPrecise = true]) {
     final now = DateTime.now();
     final gap = now.difference(timestamp);
 
@@ -92,7 +99,7 @@ class WayaDateHelper {
     }
 
     //? If this is x days ago.
-    if (gap.inDays.abs() < 10) {
+    if (!extraPrecise || gap.inDays.abs() < 10) {
       return "${gap.inDays.abs()} days ago, ${getTimestamp(timestamp)}";
     }
 
@@ -100,7 +107,7 @@ class WayaDateHelper {
     return getFullTimestamp(timestamp);
   }
 
-  static String getSocialDate(DateTime timestamp) {
+  static String getSocialDate(DateTime timestamp, [bool extraPrecise = true]) {
     final now = pureDate(DateTime.now());
     final gap = now.difference(pureDate(timestamp));
 
@@ -115,7 +122,7 @@ class WayaDateHelper {
     }
 
     //? If this is x days ago.
-    if (gap.inDays.abs() < 10) {
+    if (!extraPrecise || gap.inDays.abs() < 10) {
       return "${gap.inDays.abs()} days ago";
     }
 

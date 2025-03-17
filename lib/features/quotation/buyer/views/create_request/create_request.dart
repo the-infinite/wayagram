@@ -8,14 +8,15 @@ import 'package:wayagram/features/quotation/buyer/views/create_request/steps/pri
 
 class CreateRequest extends ConsumerStatefulWidget {
   static const route = '/create-request';
-  const CreateRequest({super.key,});
+  const CreateRequest({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CreateRequestState();
 }
 
 class _CreateRequestState extends ConsumerState<CreateRequest> with SingleTickerProviderStateMixin {
-
   late TabController _tabController;
 
   @override
@@ -39,26 +40,29 @@ class _CreateRequestState extends ConsumerState<CreateRequest> with SingleTicker
   void _goBack(int index) {
     _tabController.animateTo(index);
   }
-  final _formKey = GlobalKey<FormState>();
+  // final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return WayaScaffoldWithProgressBar(
-        isLoading: false,
-        isScrollable: true,
-        padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
-        tabsView: [
-          CreateBuyingRequest(gotoNextTab: _goToNextTab, gotoPreviousTab: _goToPreviousTab,),
-          PricingAndDeliveryRequest(
-            gotoNextTab: _goToNextTab,
-            gotoPreviousTab: _goToPreviousTab,
-          ),
-          PreviewRequest(
-            goBack: _goBack,
-            gotoPreviousTab: _goToPreviousTab,
-          )
-        ],
-        tabController: _tabController);
+      isLoading: false,
+      isScrollable: true,
+      padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
+      tabsView: [
+        CreateBuyingRequest(
+          gotoNextTab: _goToNextTab,
+          gotoPreviousTab: _goToPreviousTab,
+        ),
+        PricingAndDeliveryRequest(
+          gotoNextTab: _goToNextTab,
+          gotoPreviousTab: _goToPreviousTab,
+        ),
+        PreviewRequest(
+          goBack: _goBack,
+          gotoPreviousTab: _goToPreviousTab,
+        )
+      ],
+      tabController: _tabController,
+    );
   }
 }

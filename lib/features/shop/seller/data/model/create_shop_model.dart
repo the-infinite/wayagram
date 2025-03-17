@@ -1,17 +1,14 @@
-
-import 'package:dio/dio.dart';
-
-
 class CreateShopModel {
   final String name;
   final String description;
   final String address;
   final String phone;
   final String email;
-  final MultipartFile? logo;
+  final String? logo;
   final String vendorId;
   final String lga;
   final String state;
+  final String country;
 
   CreateShopModel(
       {required this.name,
@@ -22,7 +19,8 @@ class CreateShopModel {
       required this.logo,
       required this.vendorId,
       required this.lga,
-      required this.state});
+      required this.state,
+      required this.country});
 
   factory CreateShopModel.fromJson(Map<String, dynamic> json) {
     return CreateShopModel(
@@ -34,6 +32,7 @@ class CreateShopModel {
         vendorId: json['vendorId'],
         logo: json['logo'],
         lga: json['lga'],
+        country: json['country'],
         state: json['state']);
   }
 
@@ -46,7 +45,8 @@ class CreateShopModel {
       'email': email,
       'vendorId': vendorId,
       'lga': lga,
-      'state': state
+      'state': state,
+      'country': country
     };
 
     if (logo != null) json['logo'] = logo;

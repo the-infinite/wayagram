@@ -1,18 +1,12 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/group/view/approval_screen.dart';
 import 'package:wayagram/features/group/widget/group_widget.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
@@ -31,7 +25,7 @@ class _ManagePagesState extends ConsumerState<ManagePages> with SingleTickerProv
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPageProvider.notifier).getAllPages('${ConversationState.self.id}');
+      ref.read(createPageProvider.notifier).getAllPages(ConversationState.self.id);
     });
   }
 
@@ -45,6 +39,8 @@ class _ManagePagesState extends ConsumerState<ManagePages> with SingleTickerProv
       children: [
         viewModel.pagesUsersFollow!.isEmpty ? PageEmptyState():
         ListView.builder(
+            padding: EdgeInsets.only(bottom: 40),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: viewModel.pagesUsersFollow?.length,
             itemBuilder: (_, index){
@@ -52,19 +48,30 @@ class _ManagePagesState extends ConsumerState<ManagePages> with SingleTickerProv
               return GroupWidget(
                   name: '${page?.name?.capitalizeFirst}',
                   desc: '${page?.description?.capitalizeFirst}',
-                  image:'${page?.coverImage}', count: '${page?.followerCount} Followers',
+                  image:'${page?.coverImage}',
+                  count:'${page?.followerCount} ${page?.followerCount == 0 || page?.followerCount == 1 ? 'Follower' : 'Followers'}',
                   buttonText: '',
                   chk: false,
                   onTap: (){
+                    page?.isPublic == true ?
+                    WayaNav.toNamed('/publicPage',
+              arguments: {
+              'pageId': '${page?.id}',
+              'followerCount':'${page?.followerCount}',
+              'name': '${page?.name}',
+              'desc': '${page?.description}',
+              'coverImage': '${page?.coverImage}',
+              'profileImage': '${page?.profileImage}',
+              }):
                     WayaNav.toNamed('/privatePage',
-                        arguments: {
-                          'pageId': '${page?.id}',
-                          'followerCount':'${page?.followerCount}',
-                          'name': '${page?.name}',
-                          'desc': '${page?.description}',
-                          'coverImage': '${page?.coverImage}',
-                          'profileImage': '${page?.profileImage}',
-                        });
+              arguments: {
+              'pageId': '${page?.id}',
+              'followerCount':'${page?.followerCount}',
+              'name': '${page?.name}',
+              'desc': '${page?.description}',
+              'coverImage': '${page?.coverImage}',
+              'profileImage': '${page?.profileImage}',
+              });
                   });
 
             }),

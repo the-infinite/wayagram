@@ -31,7 +31,8 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
 
     return WayaScaffold(
       onTapBackButton: () {
-        Navigator.pushNamed(context, BottomView.route, arguments: 0);
+        WayaNav.toNamed("/explore");
+        // WayaNav.toNamed( BottomView.route, arguments: 0);
       },
       isLoading: viewModel.isLoading,
       isScrollable: true,

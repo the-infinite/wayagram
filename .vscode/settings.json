@@ -1,8 +1,9 @@
 {
   "java.configuration.updateBuildConfiguration": "interactive",
-  "dart.flutterSdkPath": ".fvm/versions/stable",
+  "dart.flutterSdkPath": ".fvm/versions/3.27.2",
   "githubIssues.issueBranchTitle": "issue-${issueNumber}",
   "cSpell.words": [
+    "successugt",
     "wayalogo"
   ],
   "githubIssues.workingIssueFormatScm": "",

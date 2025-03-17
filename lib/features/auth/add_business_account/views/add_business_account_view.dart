@@ -35,7 +35,7 @@ class _AddBusinessAccountViewState
             Text("Add Business Account", style: WayaTextStyles.titleLarge),
             const Gap(5),
             Text(
-                "Provide us with informations for your business \n account to get you started",
+                "Provide us with information for your business \n account to get you started",
                 style: WayaTextStyles.hintStyle),
             const Gap(30),
             Text("Select Business Account Type",

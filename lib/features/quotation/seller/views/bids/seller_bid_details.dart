@@ -6,11 +6,8 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/features/shop/seller/vm/seller_order_detail_vm.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
-import 'package:wayagram/features/shop/widgets/dotted_border_order_info_widget.dart';
 import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
-import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 
 class SellerBidDetails extends ConsumerWidget {
   static const route = '/seller-bid-details';
@@ -18,8 +15,7 @@ class SellerBidDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
-    final viewModel = ref.watch(sellerOrderDetailVmProvider);
+    //final viewModel = ref.watch(sellerOrderDetailVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         isLoading: false,
@@ -57,7 +53,7 @@ class SellerBidDetails extends ConsumerWidget {
                 ],
               ),
               callback: () {},
-              color: wayaTheme.colorScheme.primar50,
+              color: wayaTheme.colorScheme.primary50,
             ),
             const Gap(30),
             AboutProduct(

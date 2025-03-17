@@ -67,10 +67,11 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
     final viewModel = ref.watch(createGroupProvider);
     final viewModel2 = ref.watch(createGroupProvider.notifier);
     final wayaTheme = Theme.of(context);
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
     return WayaScaffold(
       title: "Create a Group",
       onTapBackButton: (){
-        Navigator.pop(context);
+        WayaNav.goBack();
         viewModel2.reset();
 
       },

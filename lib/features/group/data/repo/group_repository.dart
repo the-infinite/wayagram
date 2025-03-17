@@ -11,7 +11,7 @@ class GroupRepository extends BaseRepository {
       String coverImage, String profileImage ) {
     final payload = {
       "name": groupName,
-      "description": groupName,
+      "description": groupDesc,
       "isPrivate": groupType, //Optional field, if you leave it blank it defaults to false
       //"isOpen": false, // this defaults to true if it is not inserted
       "coverImage":  coverImage,
@@ -54,7 +54,7 @@ class GroupRepository extends BaseRepository {
       String coverImage, String profileImage, groupId) {
     final payload = {
       "name": groupName,
-      "description": groupName,
+      "description": groupDesc,
       "isPrivate": groupType, //Optional field, if you leave it blank it defaults to false
       //"isOpen": false, // this defaults to true if it is not inserted
       "coverImage":  coverImage,
@@ -90,16 +90,25 @@ class GroupRepository extends BaseRepository {
     return get("$serviceUrl/posts?groupId=$groupId&status=active");
   }
 
-  Future<WayaRequestResponse> getAllGroups() {
-    return get("$serviceUrl/groups");
+  Future<WayaRequestResponse> getMyGroups() {
+    return get("$serviceUrl/groups/user-groups?limit=100&orderBy=createdAt&orderDirection=DESC");
   }
 
-  Future<WayaRequestResponse> getGroupPost() {
-    return get("$serviceUrl/groups/recommended");
+
+  Future<WayaRequestResponse> getAllGroups() {
+    return get("$serviceUrl/groups?limit=500");
+  }
+
+  Future<WayaRequestResponse> getGroupPost(groupId) {
+    return get("$serviceUrl/posts?groupId=$groupId&status=active");
   }
 
   Future<WayaRequestResponse> getGroupMember(groupId) {
     return get("$serviceUrl/groups/members?groupId=$groupId");
+  }
+
+  Future<WayaRequestResponse> fetchPopularPost() {
+    return get("$serviceUrl/groups/popular-post");
   }
 
   Future<WayaRequestResponse> getEvent() {
@@ -111,7 +120,15 @@ class GroupRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getJoinedGroup() {
-    return get("$serviceUrl/groups/joined-groups");
+    return get("$serviceUrl/groups/joined-groups&orderBy=createdAt&orderDirection=DESC&limit=50");
+  }
+
+  Future<WayaRequestResponse> reportGroup(String groupId, String reason) {
+    final payload = {
+      "groupId": groupId,
+      "reason": reason
+    };
+    return post("$serviceUrl/moderation", payload);
   }
 
   Future<WayaRequestResponse> approveJoinRequest(String requestId ) {
@@ -129,12 +146,13 @@ class GroupRepository extends BaseRepository {
 
   Future<WayaRequestResponse> inviteUserToGroup(String groupId, String role, targetId) {
     final payload = {
-    "targetUserId": "d8ad236b-f969-4e1d-acd2-07f439c78574",
+    "targetUserId": targetId,
     "role": role
     };
     return post("$serviceUrl/groups/invitations/$groupId", payload);
   }
 
+  // recommended groups
   Future<WayaRequestResponse> recommendedGroup() {
     return get("$serviceUrl/groups/recommended");
   }
@@ -159,7 +177,6 @@ class GroupRepository extends BaseRepository {
   Future<WayaRequestResponse> removeReaction(
       String postId, String? reactionId) async {
     return delete("$serviceUrl/posts/$postId/like");
-    // return getBooleanResponse(response);
   }
 
   Future<WayaRequestResponse> getComment(postId) {
@@ -169,8 +186,6 @@ class GroupRepository extends BaseRepository {
   Future<WayaRequestResponse> deleteComment(String commentId) async {
     return delete("$serviceUrl/posts/$commentId/comment");
   }
-
-
 
 
 }

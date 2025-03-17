@@ -1,10 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 
 class RegisteredDone extends StatefulWidget {
@@ -38,7 +38,7 @@ class _RegisteredDonState extends State<RegisteredDone> {
             SizedBox(height: 17.h),
             WayaButton(
               callback: () async{
-                Navigator.pop(context);
+                WayaNav.goBack();
                 //  WayaNav.toNamed("/contest-setting-content");
               },
               text: "View Application Status",

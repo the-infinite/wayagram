@@ -5,7 +5,7 @@ import 'package:wayagram/features/shop/data/model/shop_state.dart';
 
 class PaginatedDataView<T> extends ConsumerStatefulWidget {
   final String uniqueKey;
-  final Future<PaginatedResult<T>?> Function(int page) fetchData;
+  final Future<PaginatedResult<T>?> Function({required int page}) fetchData;
   final Widget Function(List<T>, ScrollController) result;
   final Widget? loadingState;
   final Widget? emptyState;
@@ -23,8 +23,7 @@ class PaginatedDataView<T> extends ConsumerStatefulWidget {
       required this.result});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _PaginatedDataViewState<T>();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PaginatedDataViewState<T>();
 }
 
 class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
@@ -32,33 +31,21 @@ class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
 
   @override
   void initState() {
-    // TODO: implement initState
-
     _scrollController.addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref
-          .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
-          .initialize(widget.fetchData);
+      ref.read(paginatedDataVmProvider(widget.uniqueKey).notifier).initialize(widget.fetchData);
     });
     super.initState();
   }
 
   void _scrollListener() {
-    print("efwefwefwef");
-    print("pixel ${_scrollController.position.pixels}");
-    print("scroll ${_scrollController.position.maxScrollExtent}");
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 100) {
-      ref
-          .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
-          .loadMoreItems(widget.fetchData);
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
+      ref.read(paginatedDataVmProvider(widget.uniqueKey).notifier).loadMoreItems(widget.fetchData);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-
     final state = ref.watch(paginatedDataVmProvider(widget.uniqueKey));
 
     if (state.initialLoading) {
@@ -78,14 +65,10 @@ class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
       controller: _scrollController,
       physics: AlwaysScrollableScrollPhysics(),
       children: [
-        if (widget.trailingWidget != null) ...[
-          widget.trailingWidget ?? SizedBox.shrink()
-        ],
+        if (widget.trailingWidget != null) ...[widget.trailingWidget ?? SizedBox.shrink()],
         RefreshIndicator(
           onRefresh: () async {
-            ref
-                .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
-                .initialize(widget.fetchData);
+            ref.read(paginatedDataVmProvider(widget.uniqueKey).notifier).initialize(widget.fetchData);
           },
           child: widget.result(state.data.cast<T>(), _scrollController),
         ),

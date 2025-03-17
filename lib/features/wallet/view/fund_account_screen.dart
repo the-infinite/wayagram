@@ -79,6 +79,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
         ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final fundOptionCode = args!["code"];
     final name = args["name"];
+    final redirect = args['redirect'] ?? '';
     log('Submitted amount: $amount NGN');
     switch (name) {
       case "PAYSTACK":
@@ -95,7 +96,8 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
               "url": data["authorizationUrl"],
               "title": "Waya Webview",
               "transactionId": data["transactionId"],
-              "fundingOption": name
+              "fundingOption": name,
+              'redirect': redirect
             });
           }
         }
@@ -111,7 +113,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
           WayaLoadingDialog.hide(context);
           if (data != null) {
             WayaNav.toNamed(BankTransferScreen.route,
-                arguments: {...data, "amount": amount});
+                arguments: {...data, "amount": amount, 'redirect': redirect});
           }
         }
         break;
@@ -134,7 +136,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => WayaNav.goBack(),
         ),
         title: const Text(
           'Fund With Bank Account',

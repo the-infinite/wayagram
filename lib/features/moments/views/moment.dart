@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
@@ -45,8 +43,6 @@ class _MomentViewState extends ConsumerState<Moment> {
     if (status.type == StatusType.media && status.isImagePickerOpen) {
       _openImagePicker();
     }
-
-    
 
     return Scaffold(
       body: SafeArea(
@@ -139,6 +135,13 @@ class _MomentViewState extends ConsumerState<Moment> {
       onTap: () {
         FocusScope.of(context).requestFocus(FocusNode()); // keyboard
       },
+      onVerticalDragUpdate: (details) {
+        // swipe in the negative y-axis
+        if (details.delta.dy > 10) {
+        
+          FocusScope.of(context).unfocus();
+        }
+      },
       child: Container(
         padding: const EdgeInsets.all(24.0),
         alignment: Alignment.center,
@@ -146,7 +149,6 @@ class _MomentViewState extends ConsumerState<Moment> {
           style: status.textStyle,
           decoration: InputDecoration(
             border: InputBorder.none,
-            
             counterText: '',
             hintText: 'Type your moment',
             hintStyle: status.textStyle.copyWith(
@@ -163,7 +165,7 @@ class _MomentViewState extends ConsumerState<Moment> {
             ref.read(momentVmProvider.notifier).submitMoment(context: context);
           },
           controller: TextEditingController(text: status.text)
-          ..selection = TextSelection.collapsed(offset: status.text.length),
+            ..selection = TextSelection.collapsed(offset: status.text.length),
         ),
       ),
     );

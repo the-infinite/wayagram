@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -19,8 +20,9 @@ class SelectInterestWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final firstSection = interestData.sublist(0, 6);
-    final secondSection = interestData.sublist(6);
+    final splitIndex = (interestData.length / 2).ceil();
+    final firstSection = interestData.sublist(0, splitIndex);
+    final secondSection = interestData.sublist(splitIndex);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -28,7 +30,7 @@ class SelectInterestWidget extends StatelessWidget {
         Text(title, style: WayaTextStyles.bodyMedium),
         const Gap(8),
         SizedBox(
-          height: 45,
+          height: 40,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: firstSection.length,
@@ -49,8 +51,8 @@ class SelectInterestWidget extends StatelessWidget {
                           ? wayaTheme.colorScheme.primaryBrown50
                           : wayaTheme.colorScheme.transparent,
                       radius: 10,
-                      height: 45,
-                      centerWidget: Text(firstSection[index],
+                      height: 35,
+                      centerWidget: Text(firstSection[index].capitalizeFirst!,
                           style: WayaTextStyles.hintStyle),
                     ),
                     const Gap(6),
@@ -60,7 +62,7 @@ class SelectInterestWidget extends StatelessWidget {
         ),
         const Gap(10),
         SizedBox(
-          height: 50,
+          height: 40,
           child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: secondSection.length,
@@ -81,8 +83,8 @@ class SelectInterestWidget extends StatelessWidget {
                           ? wayaTheme.colorScheme.primaryBrown50
                           : wayaTheme.colorScheme.transparent,
                       radius: 10,
-                      height: 45,
-                      centerWidget: Text(secondSection[index],
+                      height: 35,
+                      centerWidget: Text(secondSection[index].capitalizeFirst!,
                           style: WayaTextStyles.hintStyle),
                     ),
                     const Gap(6),

@@ -45,7 +45,6 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final reportState = ref.watch(eventVmProvider);
     return SingleChildScrollView(
@@ -169,7 +168,8 @@ class _ReportEventState extends ConsumerState<ReportEvent> {
           const Gap(10),
           WayaButton(
               callback: () {
-                Navigator.of(context).pop();
+                 WayaNav.goBack();
+             
               },
               textColor: wayaTheme.colorScheme.greyColor500,
               color: wayaTheme.colorScheme.transparent,

@@ -49,14 +49,11 @@ class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScree
     if (state.verified!) {
       Future.delayed(const Duration(seconds: 2), () {
         if (context.mounted) {
-          Navigator.popUntil(
-            context,
-            (route) => route.settings.name == "/general-settings",
-          );
-          Navigator.pushNamed(context, WalletPage.route);
+          WayaNav.removeUntilNamed(WalletPage.route, predicate: (route) => route.settings.name == "/general-settings");
         }
       });
     }
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     return WayaScaffold(
       body: SafeArea(
         child: Padding(
@@ -122,11 +119,10 @@ class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScree
                         const SizedBox(height: 16),
                         ElevatedButton(
                             onPressed: () {
-                              Navigator.popUntil(
-                                context,
-                                (route) => route.settings.name == "/general-settings",
+                              WayaNav.removeUntilNamed(
+                                WalletPage.route,
+                                predicate: (route) => route.settings.name == "/general-settings",
                               );
-                              Navigator.pushNamed(context, WalletPage.route);
                             },
                             child: Text("Done", style: wayaTheme.textTheme.bodyLarge!.copyWith(color: Colors.white)))
                       ] else ...[
@@ -158,14 +154,17 @@ class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScree
               if (!state.isVerifying! && !state.verified!) ...[
                 const SizedBox(height: 32),
                 ElevatedButton(
-                  onPressed: () => WayaNav.removeUntilNamed(WalletPage.route),
+                  onPressed: () => args?['redirect'] != null
+                      ? WayaNav.removeUntilNamed(BottomView.route)
+                      : WayaNav.removeUntilNamed(WalletPage.route),
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
-                  ),
-                  child: const Text('Back to Wallet', style: TextStyle(fontSize: 18)),
+                  ), // I am sorry, i just want to push sth that is working
+                  child: Text(args?['redirect'] != null ? 'Back to Home' : 'Back to Wallet',
+                      style: TextStyle(fontSize: 18)),
                 ),
               ],
             ],

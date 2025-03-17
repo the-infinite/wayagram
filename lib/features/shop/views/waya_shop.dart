@@ -14,7 +14,8 @@ import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 import 'package:gap/gap.dart';
 
 class WayaShop extends ConsumerStatefulWidget {
-  const WayaShop({super.key});
+  final int currentIndex;
+  const WayaShop({super.key, this.currentIndex = 0});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _WayaShopState();
@@ -25,69 +26,76 @@ class _WayaShopState extends ConsumerState<WayaShop>
   int _selectedIndex = 0;
 
   @override
+  void initState() {
+    // TODO: implement initState
+    _selectedIndex = widget.currentIndex;
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
 
     return WayaScaffold(
-        isLoading: ref.watch(createShopVmProvider).isLoading,
-        isScrollable: true,
-        progressIndicator: loadingState(context: context),
-        onTapBackButton: () =>
-            Navigator.pushNamed(context, BottomView.route, arguments: 0),
-        title: 'Shop',
-        appBarTrailing: WayaCartIcon(),
-        body: Column(
-          children: [
-            const Gap(10),
-            Row(
-              children: [
-                WayaTabButton(
-                  isSelected: _selectedIndex == 0,
-                  text: 'All Products',
-                  onTap: () => setState(() => _selectedIndex = 0),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 1,
-                  text: 'Orders',
-                  onTap: () => setState(() => _selectedIndex = 1),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 2,
-                  text: 'Manage Shop',
-                  onTap: () => setState(() => _selectedIndex = 2),
-                ),
-              ],
-            ),
-            const Gap(10),
-            if (_selectedIndex == 0) AllProducts(),
-            if (_selectedIndex == 1) AllOrders(),
-            if (_selectedIndex == 2) SellerShop()
-          ],
-        ),
-        floatingActionButton: Visibility(
-          visible: ref.read(successfulSetupVmProvider).user!.user!.role!.name !=
-                  'PERSONAL' &&
-              _selectedIndex == 2,
-          child: SizedBox(
+      isLoading: ref.watch(createShopVmProvider).isLoading,
+      isScrollable: false,
+      progressIndicator: loadingState(context: context),
+      onTapBackButton: () =>
+          WayaNav.toNamed( BottomView.route, arguments: 0),
+      title: 'Shop',
+      appBarTrailing: WayaCartIcon(),
+      body: Column(
+        children: [
+          const Gap(10),
+          Row(
+            children: [
+              WayaTabButton(
+                isSelected: _selectedIndex == 0,
+                text: 'All Products',
+                onTap: () => setState(() => _selectedIndex = 0),
+              ),
+              WayaTabButton(
+                isSelected: _selectedIndex == 1,
+                text: 'Orders',
+                onTap: () => setState(() => _selectedIndex = 1),
+              ),
+              WayaTabButton(
+                isSelected: _selectedIndex == 2,
+                text: 'Manage Shops',
+                onTap: () => setState(() => _selectedIndex = 2),
+              ),
+            ],
+          ),
+          const Gap(10),
+          if (_selectedIndex == 0) AllProducts(),
+          if (_selectedIndex == 1) AllOrders(),
+          if (_selectedIndex == 2) SellerShop()
+        ],
+      ),
+      floatingActionButton: Visibility(
+        visible: ref.read(successfulSetupVmProvider).user!.user!.role !=
+                'PERSONAL' &&
+            _selectedIndex == 2,
+        child: SizedBox(
+          height: 50,
+          width: 50,
+          child: WayaButton(
+            callback: () {
+              WayaNav.toNamed(CreateShop.route,
+                  arguments: CreateShopArg(uniqueKey: 'create-shop'));
+            },
             height: 50,
-            width: 50,
-            child: WayaButton(
-              callback: () {
-                WayaNav.toNamed(CreateShop.route,
-                    arguments: CreateShopArg(uniqueKey: 'create-shop'));
-              },
-              height: 50,
-              centerWidget: Center(
-                child: Icon(
-                  Icons.add,
-                  color: wayaTheme.colorScheme.white,
-                  size: 40,
-                ),
+            centerWidget: Center(
+              child: Icon(
+                Icons.add,
+                color: wayaTheme.colorScheme.white,
+                size: 40,
               ),
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget loadingState({required BuildContext context}) {

@@ -32,7 +32,7 @@ class Checkout extends ConsumerWidget {
         ? 0
         : arg?.cartItem.products.fold(
             0,
-            (prodSum, prod) => prodSum + (prod.price * prod.quantity),
+            (prodSum, prod) => prodSum + (double.parse(prod.unitPrice).toInt() * prod.quantity),
           );
     final int deliveryCharge = arg?.cartItem.deliveryFee ?? 0;
 
@@ -125,7 +125,7 @@ class Checkout extends ConsumerWidget {
                       arg.cartItem.shopLogo);
                 }
               },
-              color: wayaTheme.colorScheme.primar50,
+              color: wayaTheme.colorScheme.primary50,
             ),
           const Gap(10),
           Text("Product Ordered", style: wayaTheme.textTheme.bodyMedium),
@@ -356,7 +356,7 @@ class Checkout extends ConsumerWidget {
                         cartId: arg.cartId,
                         shopId: arg.cartItem.shopId,
                         amount: subTotal + deliveryCharge,
-                        pickUpAddress: pickUpindex != -1
+                        pickupAddress: pickUpindex != -1
                             ? arg.cartItem.products[pickUpindex!].pickUpAddress
                             : null);
                   }

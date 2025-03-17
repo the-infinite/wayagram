@@ -1,14 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/buyer/views/dialogs/review_product.dart';
+import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 
 final orderPinProvider = StateProvider<String>((ref) => '');
 
-class ConfirmOrderDeliveryVm extends StateNotifier<void> {
-  ConfirmOrderDeliveryVm(this.ref) : super(null);
+class States {
+  final bool isLoading;
+
+  States({this.isLoading = false});
+
+  States copyWith({bool? isLoading}) {
+    return States(isLoading: isLoading ?? this.isLoading);
+  }
+}
+
+class ConfirmOrderDeliveryVm extends StateNotifier<States> {
+  ConfirmOrderDeliveryVm(this._shopRepository, this.ref) : super(States());
   final Ref ref;
+  final ShopRepository _shopRepository;
 
   void handleKeyPress(String value) {
     final pin = ref.read(orderPinProvider);
@@ -31,27 +42,42 @@ class ConfirmOrderDeliveryVm extends StateNotifier<void> {
     ref.read(orderPinProvider.notifier).state = '';
   }
 
-  void submitPins(BuildContext context) {
+  Future<void> submitPins(BuildContext context, String productId) async {
     final pin = ref.read(orderPinProvider);
 
-    if (pin.length < 10) {
-      WayaUtils.showNotice(
-          context: context,
-          title: 'Invalid Code Entered!',
-          message:
-              'The code you entered is incorrect. Please double-check and try \n again',
-          onPress: () => Navigator.of(context).pop(),
-          icon: Image.asset('assets/icons/d-code-invalid.svg'),
-          buttonText: 'Try Again');
-    } else {
-      WayaUtils.showNotice(
-          context: context,
-          title: 'Handover Successful!',
-          message:
-              'The confirmation code has been verified. The product is now \n officially handed over to the buyer',
-          onPress: () => WayaNav.toNamed('/explore'),
-          icon: Image.asset('assets/icons/d-code-valid.svg'),
-          buttonText: 'Go To Shop');
+    try {
+      if (pin.length < 10) {
+        WayaUtils.showNotice(
+            context: context,
+            title: 'Invalid Code Entered!',
+            message:
+                'The code you entered is incorrect. Please double-check and try again',
+            onPress: () {
+               WayaNav.goBack();
+            
+            },
+            icon: Image.asset('assets/icons/d-code-invalid.svg'),
+            buttonText: 'Try Again');
+
+        return;
+      }
+      state = state.copyWith(isLoading: true);
+      final response =
+          await _shopRepository.addToken(deliveryToken: pin.toString());
+
+      if (response.success && context.mounted) {
+        clearPins();
+        state = state.copyWith(isLoading: false);
+        await WayaUtils.showModalSheet(context,
+            child: ReviewProduct(
+              productId: productId,
+            ));
+      }
+    } catch (error) {
+      print(error);
+      clearPins();
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
   }
 
@@ -61,6 +87,6 @@ class ConfirmOrderDeliveryVm extends StateNotifier<void> {
 }
 
 final confirmOrderDeliveryVmProvider =
-    StateNotifierProvider<ConfirmOrderDeliveryVm, void>((ref) {
-  return ConfirmOrderDeliveryVm(ref);
+    StateNotifierProvider<ConfirmOrderDeliveryVm, States>((ref) {
+  return ConfirmOrderDeliveryVm(ShopRepository.instance, ref);
 });

@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 
 class AddProductModel {
   final String name;
@@ -16,7 +15,7 @@ class AddProductModel {
   final String? discountPercentage; // 1-100
   final String? pickupAddress;
   final bool? deliveryCharge;
-  final List<MultipartFile> images;
+  final List<String> images;
   final bool? wayagramDeal;
   final String? discountTypeId;
 
@@ -53,7 +52,7 @@ class AddProductModel {
         options: json['options'] as String,
         wayagramDeal: json['wayagramDeal'] as bool?,
         discountTypeId: json['discountTypeId'] as String?,
-        images: (json['images'] as List<MultipartFile>),
+        images: json['images'],
         color: json['color'] as String?,
         materialType: json['materialType'] as String?,
         height: json['height'] as String?,

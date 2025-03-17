@@ -11,11 +11,16 @@ class FilterWidget extends ConsumerStatefulWidget {
   final String? hintText;
   final bool isPopFilter;
   final TextEditingController search;
-  const FilterWidget(
-      {super.key,
-      this.hintText = 'Search Shop',
-     required this.search,
-      this.isPopFilter = false});
+  final void Function(String)? onTextChanged;
+
+  // This is fine.
+  const FilterWidget({
+    super.key,
+    this.hintText = 'Search Shop',
+    required this.search,
+    this.isPopFilter = false,
+    this.onTextChanged,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _FilterWidgetState();
@@ -26,49 +31,57 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    // TODO: implement build
+    // This one.
     return SizedBox(
       height: 50,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          //? If this is a popup filter.
           SizedBox(
-            width: widget.isPopFilter ? context.width * 0.78 : context.width *0.9,
+            width: widget.isPopFilter ? context.width * 0.76 : context.width * 0.9,
             child: WayaTextFormField(
-                padding: EdgeInsets.all(1),
-                prefixIcon: Icon(
-                  Icons.search,
-                  color: wayaTheme.colorScheme.greyColor400,
-                ),
-                controller: widget.search,
-                hintText: widget.hintText!),
+              padding: EdgeInsets.all(1),
+              prefixIcon: Icon(
+                Icons.search,
+                color: wayaTheme.colorScheme.greyColor400,
+              ),
+              onChanged: widget.onTextChanged,
+              controller: widget.search,
+              hintText: widget.hintText!,
+            ),
           ),
+
+          //? This is hidden when  it is a popup filter.
           Visibility(
-              visible: widget.isPopFilter,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Gap(2),
-                  WayaButton(
-                    callback: () {
-                      WayaNav.toNamed('/filter');
-                    },
-                    centerWidget: Center(
-                      child: Icon(
-                        Icons.filter_list,
-                        size: 28,
-                        color: wayaTheme.colorScheme.customBlack,
-                      ),
+            visible: widget.isPopFilter,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const Gap(2),
+                WayaButton(
+                  callback: () {
+                    WayaNav.toNamed('/filter');
+                  },
+                  centerWidget: Center(
+                    child: Icon(
+                      Icons.filter_list,
+                      size: 28,
+                      color: wayaTheme.colorScheme.customBlack,
                     ),
-                    color: wayaTheme.colorScheme.transparent,
-                    height: 50,
-                    horizontalPadding: 8,
-                    border: Border.all(
-                        width: 1, color: wayaTheme.colorScheme.greyColor300),
-                  )
-                ],
-              ))
+                  ),
+                  color: wayaTheme.colorScheme.transparent,
+                  height: 46,
+                  horizontalPadding: 8,
+                  border: Border.all(
+                    width: 1,
+                    color: wayaTheme.colorScheme.greyColor300,
+                  ),
+                )
+              ],
+            ),
+          )
         ],
       ),
     );

@@ -33,7 +33,6 @@ class _EventTimeWidgetState extends ConsumerState<EventTimeWidget> {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(eventDateWidgetVmProvider(widget.uniqueKey));
 
-    // TODO: implement build
     return FormField<String>(
       validator: (value) {
         if (widget.time.isEmpty) {

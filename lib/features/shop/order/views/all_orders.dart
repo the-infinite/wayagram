@@ -39,26 +39,26 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     //final state = ref.watch(orderVmProvider);
 
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        GroupedWidgetHeader(
-            isVisible: false,
+    return Expanded(
+        child: PaginatedDataView<Order>(
+            uniqueKey: 'orders',
+            trailingWidget: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                   GroupedWidgetHeader(
+            isVisible: true,
             subTitle: 'View and manage your orders',
             title: 'Orders'),
-        const Gap(25),
+        const Gap(15),
         FilterWidget(
-          hintText: 'Search Orders',
+          hintText: 'Search Orders by ID, name, token, etc.',
           search: searchController,
         ),
-        const Gap(25),
-        PaginatedDataView<Order>(
-            uniqueKey: 'orders',
+        const Gap(15),
+              ],
+            ),
             emptyState: EmptyState(
                 assetImage:
                     WayaAssets.images.wallet.searchDocu.image(scale: 1.5),
@@ -67,7 +67,7 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
               count: 6,
             ),
             fetchData: ref.read(orderVmProvider.notifier).getOrders,
-            result: (data,s) {
+            result: (data, s) {
               final filteredOrder = WayaUtils.search<Order>(
                   data,
                   [
@@ -88,8 +88,6 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
                       order: filteredOrder[index],
                     );
                   });
-            })
-      ],
-    );
+            }));
   }
 }

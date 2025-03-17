@@ -5,7 +5,6 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -314,8 +313,20 @@ class ConversationWidget extends StatelessWidget {
                       ),
                     ),
                   )
-                else if (isMine)
+                else if (isMine && chat.lastMessage?.readAt != null)
                   WayaAssets.icons.cRead.svg(
+                    color: WayaColors.primary,
+                    height: 16,
+                    width: 16,
+                  )
+                else if (isMine && chat.lastMessage?.deliveredAt != null)
+                  WayaAssets.icons.cRead.svg(
+                    color: WayaColors.greyColor400,
+                    height: 16,
+                    width: 16,
+                  )
+                else if (isMine && chat.lastMessage?.createdAt != null)
+                  WayaAssets.icons.cSent.svg(
                     color: WayaColors.greyColor400,
                     height: 16,
                     width: 16,

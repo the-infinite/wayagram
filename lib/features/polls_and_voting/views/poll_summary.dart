@@ -3,28 +3,24 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/create_poll_state_model.dart';
+import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
-import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
+import '../../../shared/features/user/models/default.dart';
 import '../../auth/account_creation/vm/successful_setup_vm.dart';
-import 'polls_for_you.dart';
 
 class PollSummary extends ConsumerStatefulWidget {
   static const route = '/poll-summary';
@@ -41,27 +37,20 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
 
   String userType = "PERSONAL";
 
-  Map<String, dynamic> formData = {};
-
   @override
   Widget build(BuildContext context) {
 
     final viewModel = ref.watch(createPollVotingProvider);
-    final viewModel2 = ref.watch(createPollVotingProvider.notifier);
+    final poll = ref.watch(createPollVotingProvider.notifier);
     final wayaTheme = Theme.of(context);
     final setUp = ref.watch(successfulSetupVmProvider);
 
     String startDate = viewModel.startDate;
-    print('START DATE ==>>>$startDate');
     String endDate = viewModel.endDate;
-    print('END DARTE ==>> ${viewModel.endDate}');
     DateFormat format = DateFormat("yyyy-M-d");
     DateTime parsedDate = format.parse(startDate);
     DateTime parsedDate2 = format.parse(endDate);
     num daysLeft = parsedDate2.difference(parsedDate).inDays;
-    //print('Start Date is ${viewModel.startDate}');
-    //print(" ${DateFormat('yyyy-MM--dd').format(viewModel.startDate as DateTime)}");
-
     return WayaScaffold(
         title: "Polls Summary",
         isLoading: viewModel.isLoading,
@@ -71,8 +60,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-
-              if (viewModel.pollType == 'paid' && userType == "PERSONAL") {
+              if (viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.personal) {
 
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   WayaUtils.showNotice(
@@ -84,24 +72,34 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                       secondButtonText: 'Cancel',
                       icon: Image.asset('assets/images/cp-shop.png'));
                 });
-              } else {
-               await ref.read(createPollVotingProvider.notifier).createPoll(
-                  context,
-                  viewModel.pollTitle.text,
-                  viewModel.startDate,
-                  viewModel.endDate,
-                  viewModel.voteNumber.text,
-                  viewModel.pollDescription.text,
-                  viewModel.firstChoiceDescription.text,
-                  viewModel.votePrice.text
+              } if(viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.business){
+                await ref.read(createPollVotingProvider.notifier).createPoll(
+                    context,
+                    viewModel.pollTitle.text,
+                    viewModel.startDate,
+                    viewModel.endDate,
+                    viewModel.voteNumber.text,
+                    viewModel.pollDescription.text,
+                    viewModel.firstChoiceDescription.text,
+                    viewModel.votePrice.text,
+                    viewModel.pollType.toLowerCase()
                 );
-               //viewModel2.reset();
+                //poll.reset();
+              }if(viewModel.pollType == 'free' &&  ConversationState.self.accountType == UserAccountType.personal){
+                await ref.read(createPollVotingProvider.notifier).createFreePoll(
+                    context,
+                    viewModel.pollTitle.text,
+                    viewModel.startDate,
+                    viewModel.endDate,
+                    viewModel.voteNumber.text,
+                    viewModel.pollDescription.text,
+                    viewModel.firstChoiceDescription.text,
+                    viewModel.votePrice.text,
+                    viewModel.pollType.toLowerCase()
+                );
+                //poll.reset();
               }
-
-
-            }
-                : null,
-            //centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Create',),
+            } : null,
             height: 30,
             isLoading: viewModel.isLoading,
             text: 'Create',
@@ -136,9 +134,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                //21st of July\n2024
                 summary('Start Date',
-                    //formatDate(viewModel.startDate),
                     '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.startDate)}\n',
                     'Host', setUp.user?.user?.firstName?.capitalizeFirst ?? ''),
                 summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
@@ -162,8 +158,8 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               child: ListView.builder(
                   itemCount: viewModel.choices.length,
                   itemBuilder: (context, index){
-                    print('IMAGE PRINTING ==>> ${viewModel.choices[index].image?.absolute}');
-                    return presImage('${viewModel.choices[index].image?.absolute.path}', viewModel.choices[index].text.text.capitalizeFirst, context, );
+                    return presImage('${viewModel.choices[index].image?.absolute.path}',
+                      viewModel.choices[index].text.text.capitalizeFirst, context, viewModel.choices[index].image?.absolute.path == null);
                   }),
             )
           ],
@@ -239,7 +235,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     }
   }
 
-  presImage(img, name, ctx,){
+  presImage(img, name, ctx, chk){
     return Container(
       margin: EdgeInsets.only(bottom: 10,),
       padding: EdgeInsets.only(left: 20.w,  bottom: 0,),
@@ -251,7 +247,11 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
       child: Row(children: [
         ClipRRect(
             borderRadius: BorderRadius.circular(8),
-            child: Image.file(File(img), height: 66.h, width: 50.w,)),
+            child: chk?
+            //Image.file(File('assets/images/pages/image_placeholder.png'), height: 66.h, width: 50.w,):
+            Image.asset('assets/images/pages/image_placeholder.png',height: 66.h, width: 50.w,):
+            Image.file(File(img), height: 66.h, width: 50.w,),
+        ),
         const Gap(40),
         Text(
           name,
@@ -265,55 +265,55 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     );
   }
 
-  Widget createPoll(ctx,){
-    final wayaTheme = Theme.of(ctx);
-    return GestureDetector(
-      onTap: () {
-        WayaUtils.showModalSheet(
-          context,
-          child: PollsModal(),
-        );
-       // confirmPoll(context);
-      },
-      child: Row(
-        children: [
-          Container(
-            height: 35,
-            padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
-            decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.customPrimary,
-                borderRadius: BorderRadius.circular(10)),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Gap(5),
-                  Text(
-                    "Create",
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14),
-                  ),
-
-
-                ],
-              ),
-            ),
-          ),
-          const Gap(15)
-        ],
-      ),
-    );
-  }
+  // Widget createPoll(ctx,){
+  //   final wayaTheme = Theme.of(ctx);
+  //   return GestureDetector(
+  //     onTap: () {
+  //       WayaUtils.showModalSheet(
+  //         context,
+  //         child: PollsModal(url: '',),
+  //       );
+  //      // confirmPoll(context);
+  //     },
+  //     child: Row(
+  //       children: [
+  //         Container(
+  //           height: 35,
+  //           padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
+  //           decoration: BoxDecoration(
+  //               color: wayaTheme.colorScheme.customPrimary,
+  //               borderRadius: BorderRadius.circular(10)),
+  //           child: Center(
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               crossAxisAlignment: CrossAxisAlignment.center,
+  //               children: [
+  //                 const Gap(5),
+  //                 Text(
+  //                   "Create",
+  //                   style: TextStyle().wayaCopyWith(
+  //                       color: wayaTheme.colorScheme.white,
+  //                       fontWeight: FontWeight.w600,
+  //                       fontSize: 14),
+  //                 ),
+  //
+  //
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //         const Gap(15)
+  //       ],
+  //     ),
+  //   );
+  // }
   confirmPoll(BuildContext context) {
     WayaUtils.showNotice(
         context: context,
         title: 'Payment Information',
         message:
         'Waya will take a commission from the payment\nand the rest of the money will be paid into your\naccount at the end of post duration or its\nexpiry date.',
-        onPress: () => Navigator.of(context).pop(),
+        onPress: () => WayaNav.goBack(),
         icon: Image.asset('assets/images/d-code-invalid.png', height: 10,),
         buttonCenterWidget: Column(
           children: [
@@ -321,10 +321,10 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             const Gap(8),
             InkWell(
               onTap: (){
-                Navigator.of(context).pop();
+                WayaNav.goBack();
                 WayaUtils.showModalSheet(
                   context,
-                  child: PollsModal(),
+                  child: PollsModal(url: '',),
                 );
               },
               child: Text(

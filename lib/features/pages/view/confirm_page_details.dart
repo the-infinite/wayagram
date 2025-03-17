@@ -25,8 +25,10 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPageProvider);
     final viewModel2 = ref.watch(createPageProvider.notifier);
-    final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
     //final type  = ModalRoute.of(context)?.settings.arguments as String?;
+
+    print('DIALA PAGE ${ args['type']}');
     return WayaScaffold(
       title: "Confirm Details",
       isLoading: viewModel.isLoading,
@@ -37,11 +39,11 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
           callback: !viewModel.isLoading
               ? () async {
             await viewModel2.createPage(context, viewModel.pageName.text,
-                viewModel.pageDescription.text,   args['type'] == 'Public Page' ? false : true,
+                viewModel.pageDescription.text,   args['type'] == 'Public Page' ? true : false,
                 (args['coverImage'] as File).path, ( args['image'] as File).path );
             viewModel2.reset();
             WayaNav.toNamed("/successPage",
-                arguments: args['type']
+                //arguments: args['type']
             );
           } : null,
           height: 30,

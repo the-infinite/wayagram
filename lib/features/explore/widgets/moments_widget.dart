@@ -7,12 +7,16 @@ class MomentsWidget extends StatelessWidget {
   final UserMoments? moment;
   final bool isCreate;
   final VoidCallback? onTap;
+  final bool hasMoment;
   const MomentsWidget(
-      {super.key, this.isCreate = false, this.onTap, this.moment});
+      {super.key,
+      this.isCreate = false,
+      this.onTap,
+      this.hasMoment = false,
+      this.moment});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Stack(
       clipBehavior: Clip.none,
@@ -23,6 +27,21 @@ class MomentsWidget extends StatelessWidget {
             width: 70,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
+              gradient: hasMoment
+                  ? LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.center,
+                      colors: [
+                          Color(0xFFB43000),
+                          Color(0x99FFEF8C),
+                          Color(0xFFFF5D2E),
+                        ],
+                      stops: [
+                          0.0,
+                          0.5,
+                          1.0
+                        ])
+                  : null,
             ),
             child: Padding(
               padding: EdgeInsets.all(3),
@@ -64,46 +83,45 @@ class MomentsWidget extends StatelessWidget {
                 ),
               ))
         ] else if (moment != null) ...[
-         GestureDetector(
-          onTap:onTap,
-          child:  Container(
-            height: 70,
-            width: 70,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                  begin: Alignment.bottomCenter,
-                  end: Alignment.center,
-                  colors: [
-                    Color(0xFFB43000),
-                    Color(0x99FFEF8C),
-                    Color(0xFFFF5D2E),
-                  ],
-                  stops: [
-                    0.0,
-                    0.5,
-                    1.0
-                  ]),
-            ),
-            child: Padding(
-              padding: EdgeInsets.all(3),
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: wayaTheme.colorScheme.white,
-                ),
-                child: Center(
-                  child: WayaImage(
-                    imageUrl: moment!.moments[0].image,
-                    height: 55,
-                    width: 55,
-                    radius: BorderRadius.circular(75),
+          GestureDetector(
+            onTap: onTap,
+            child: Container(
+              height: 70,
+              width: 70,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.center,
+                    colors: [
+                      Color(0xFFB43000),
+                      Color(0x99FFEF8C),
+                      Color(0xFFFF5D2E),
+                    ],
+                    stops: [
+                      0.0,
+                      0.5,
+                      1.0
+                    ]),
+              ),
+              child: Padding(
+                padding: EdgeInsets.all(3),
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: wayaTheme.colorScheme.white,
+                  ),
+                  child: Center(
+                    child: WayaImage(
+                      imageUrl: moment!.moments[0].image,
+                      height: 55,
+                      width: 55,
+                      radius: BorderRadius.circular(75),
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-          
           )
         ]
       ],

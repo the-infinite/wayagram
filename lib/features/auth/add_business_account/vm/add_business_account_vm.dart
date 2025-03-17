@@ -21,7 +21,11 @@ class DocType {
   final String type;
   final String url;
 
-  DocType({required this.file, required this.type, required this.name, this.url = ''});
+  DocType(
+      {required this.file,
+      required this.type,
+      required this.name,
+      this.url = ''});
 }
 
 class AddBusinessAccountState {
@@ -184,9 +188,9 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
         if (context.mounted) {
           WayaUtils.showNotice(
               context: context,
-              title: 'KYC Documents Submitted \n Successfully',
+              title: 'KYC Documents Submitted Successfully',
               message:
-                  'Your documents are under review. We’ll notify you once the \n verification process is complete',
+                  'Your documents are under review. We’ll notify you once the verification process is complete',
               onPress: () => WayaNav.toNamed("/explore"),
               icon: Image.asset('assets/images/auth/doc-success.png'),
               buttonText: 'Go To HomePage');

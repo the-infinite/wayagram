@@ -23,8 +23,8 @@ class AddEventState {
   final String endTime;
   final String startDateString;
   final String endDateString;
-  final DocType? eventImage;
-  final MultipartFile? image;
+  final List<DocType> eventImage;
+  final String? image;
   final String userId;
   final bool isEditingMode;
   final String imageUrl;
@@ -47,7 +47,7 @@ class AddEventState {
       this.endDate = '',
       this.endTime = '',
       this.image,
-      this.eventImage,
+      this.eventImage = const [],
       this.startDateString = '',
       this.userId = '',
       this.isEditingMode = false,
@@ -78,9 +78,9 @@ class AddEventState {
       String? startTime,
       String? endDate,
       String? endTime,
-      DocType? eventImage,
+      List<DocType>? eventImage,
       String? startDateString,
-      MultipartFile? image,
+      String? image,
       String? userId,
       bool? isEditingMode,
       String? imageUrl,
@@ -170,6 +170,7 @@ class AddEventState {
         location: location.toLowerCase(),
         startDate: startDate,
         endDate: endDate,
+        description: description.text,
         endTime: endTime,
         startTime: startTime,
         eventType: eventType.toLowerCase(),
@@ -177,9 +178,9 @@ class AddEventState {
         privacyOption: privacyOption.toLowerCase(),
         image: image!,
         maxCapacity: maxCapacity!.text.isEmpty && isEditingMode
-            ? 0
+            ? null
             : maxCapacity!.text.isEmpty
-                ? 0
+                ? null
                 : int.parse(maxCapacity!.text),
         locationAddress: location == 'Physical' ? address.text : link.text,
         userId: userId);

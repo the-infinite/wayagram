@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class PinEntryBottomSheet extends StatefulWidget {
   const PinEntryBottomSheet({super.key});
@@ -33,7 +34,7 @@ class _PinEntryBottomSheetState extends State<PinEntryBottomSheet> {
     if (_pin.length == _pinLength) {
       // TODO: Submit PIN
       log('PIN submitted: $_pin');
-      Navigator.of(context).pop();
+      WayaNav.goBack();
     }
   }
 

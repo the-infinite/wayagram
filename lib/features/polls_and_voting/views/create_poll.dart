@@ -13,10 +13,11 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
+import 'package:wayagram/features/event/widgets/event_date_widget.dart';
 
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
-import '../data/model/create_poll_state_model.dart';
+import '../state/create_poll_state.dart';
 import '../data/poll_type_data.dart';
 
 class CreatePoll extends ConsumerStatefulWidget {
@@ -40,6 +41,10 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
+      onTapBackButton: (){
+        WayaNav.goBack();
+        ref.watch(createPollVotingProvider.notifier).reset();
+      },
         title: "Create Poll",
         isLoading: false,
         isScrollable: true,
@@ -49,8 +54,9 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
             callback: !viewModel.isLoading
                 ? () async {
               if (_formKey.currentState!.validate()) {
-             //Navigator.pop(context);
+             //WayaNav.goBack();
                 WayaNav.toNamed("/add-choices");
+
               }
             } : null,
             //centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Create Poll'),
@@ -230,7 +236,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          WayaSelectField(
+                          WayaSelectField<String>(
                               height: 0.3,
                               label: "Poll Type",
                               value: viewModel.pollType.capitalizeFirst,
@@ -239,7 +245,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                               items: pollTypes,
                               onSelected: (value) => ref
                                   .read(createPollVotingProvider.notifier)
-                                  .selectPollType(value.value)),
+                                  .selectPollType(value.first.value)),
                           if (formState.hasError && viewModel.pollType.isEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
@@ -264,7 +270,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          WayaSelectField(
+                          WayaSelectField<String>(
                               height: 0.3,
                               label: "Poll Type",
                               uniqueKey: 'poll_type',
@@ -323,7 +329,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                     ),
                     const Gap(15),
 
-                    FormField<String>(
+                   /* FormField<String>(
                       validator: (value) {
                         if (viewModel.startDate.isEmpty) {
                           return 'Start Date is required';
@@ -477,7 +483,27 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                           ],
                         );
                       },
-                    ),
+                    ),*/
+                    const Gap(10),
+                    EventDateWidget(
+                        uniqueKey: 'start-date',
+                        date: viewModel.startDate,
+                        formErrorMessage: "Date is required",
+                        hintText: 'Select Start Date',
+                        label: 'Select Start Date',
+                        selectDate: ref
+                            .read(createPollVotingProvider.notifier)
+                            .selectStartDate),
+                    const Gap(15),
+                    EventDateWidget(
+                        uniqueKey: 'end-date4',
+                        date: viewModel.endDate,
+                        formErrorMessage: "Date is required",
+                        hintText: 'Select End Date',
+                        label: 'Select End Date',
+                        selectDate: ref
+                            .read(createPollVotingProvider.notifier)
+                            .selectEndDate),
                     const Gap(10),
                     FormField<String>(validator: (value) {
                       return null;

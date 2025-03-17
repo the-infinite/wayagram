@@ -100,8 +100,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                             : null,
                         label: 'Email Address',
                       ),
-                      if (formState.hasError &&
-                          viewModel.emailController.text.isEmpty)
+                      if (formState.hasError)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
@@ -181,7 +180,9 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                   color: wayaTheme.colorScheme.primary500,
                   callback: !viewModel.isLoading
                       ? () async {
+
                           if (_formKey.currentState!.validate()) {
+                            print('TEST BUTTOn');
                             ref
                                 .read(loginVmProvider.notifier)
                                 .onSubmit(ref, isBusinessLogin: false);

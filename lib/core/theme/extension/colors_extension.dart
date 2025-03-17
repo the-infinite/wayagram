@@ -6,7 +6,7 @@ extension WayaColorSchemeExtension on ColorScheme {
   Color get primary200 => WayaColors.primary200;
   Color get primary300 => WayaColors.primary300;
   Color get primary500 => WayaColors.primary500;
-  Color get primar50 => WayaColors.primary50;
+  Color get primary50 => WayaColors.primary50;
   Color get customPrimary => WayaColors.customPrimary;
   Color get primary75 => WayaColors.primary75;
   Color get primaryBrown50 => WayaColors.primaryBrown50;
@@ -15,6 +15,7 @@ extension WayaColorSchemeExtension on ColorScheme {
   Color get onPrimary => WayaColors.onPrimary;
 
   // Error Colors
+  Color get error50 => WayaColors.error50;
   Color get error200 => WayaColors.error200;
   Color get error => WayaColors.error;
   Color get error500 => WayaColors.error500;
@@ -26,8 +27,8 @@ extension WayaColorSchemeExtension on ColorScheme {
   Color get success700 => WayaColors.success700;
 
   // pending color
- Color get pending50 => WayaColors.pending50;
-  Color get pending => WayaColors.pending;
+ Color get pending50 => const Color(0xFFFBF8DE);
+  Color get pending => const Color(0xFFF1B10E);
 
     // info color
  Color get info50 => WayaColors.info50;

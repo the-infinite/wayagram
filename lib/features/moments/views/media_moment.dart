@@ -20,14 +20,13 @@ class MediaMoment extends ConsumerWidget {
     final status = ref.watch(momentVmProvider);
     final wayaTheme = Theme.of(context);
 
-   //  print("wefwefwef ${status.mediaUrl}");
-
     return WillPopScope(
       onWillPop: () async {
         ref.read(momentVmProvider.notifier).setImagePickerState(true);
         return true;
       },
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: SafeArea(
           child: Container(
             color: wayaTheme.colorScheme.black,
@@ -95,35 +94,38 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
       return const Center(child: CircularProgressIndicator());
     }
 
-    return AspectRatio(
-      aspectRatio: _controller!.value.aspectRatio,
-      child: Stack(
-        alignment: Alignment.center,
-        children: [
-          VideoPlayer(_controller!),
-          GestureDetector(
-            onTap: () {
-              setState(() {
-                if (_controller!.value.isPlaying) {
-                  _controller!.pause();
-                } else {
-                  _controller!.play();
-                }
-              });
-            },
-            child: Container(
-              color: Colors.transparent,
-              child: Center(
-                child: Icon(
-                  _controller!.value.isPlaying ? Icons.pause : Icons.play_arrow,
-                  size: 60.0,
-                  color: Colors.white.withOpacity(0.7),
-                ),
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        Container(
+          color: Colors.black,
+          child: AspectRatio(
+            aspectRatio: _controller!.value.aspectRatio,
+            child: VideoPlayer(_controller!),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            setState(() {
+              if (_controller!.value.isPlaying) {
+                _controller!.pause();
+              } else {
+                _controller!.play();
+              }
+            });
+          },
+          child: Container(
+            color: Colors.transparent,
+            child: Center(
+              child: Icon(
+                _controller!.value.isPlaying ? Icons.pause : Icons.play_arrow,
+                size: 60.0,
+                color: Colors.white.withOpacity(0.7),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
@@ -133,7 +135,6 @@ Widget mediaPreview({
   required WidgetRef ref,
   required MomentState status,
 }) {
- 
   final wayaTheme = Theme.of(context);
 
   if (status.selectedFile == null && status.mediaUrl == null) {
@@ -186,17 +187,13 @@ Widget mediaPreview({
                   IconButton(
                     icon: SvgPicture.asset(WayaAssets.icons.mICrop.path),
                     onPressed: () {
-                      ref
-                          .read(momentVmProvider.notifier)
-                          .cropImage(context, ref);
+                      ref.read(momentVmProvider.notifier).cropImage(context, ref);
                     },
                   ),
                 IconButton(
                   icon: SvgPicture.asset(WayaAssets.icons.mICap.path),
                   onPressed: () {
-                    ref
-                        .read(momentVmProvider.notifier)
-                        .toggleCaptionVisibility();
+                    ref.read(momentVmProvider.notifier).toggleCaptionVisibility();
                   },
                 ),
               ],
@@ -211,30 +208,38 @@ Widget mediaPreview({
           left: 16,
           right: 16,
           bottom: 40,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: BoxDecoration(
-              color: wayaTheme.colorScheme.customBlack,
-              borderRadius: BorderRadius.circular(6),
-            ),
-            child: TextField(
-              style: status.textStyle.copyWith(
-                fontSize: 18,
-                color: wayaTheme.colorScheme.white,
+          child: GestureDetector(
+            onVerticalDragUpdate: (details) {
+              // detect downward swipe
+              if (details.primaryDelta! > 10) {
+                FocusScope.of(context).unfocus();
+              }
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: wayaTheme.colorScheme.customBlack,
+                borderRadius: BorderRadius.circular(6),
               ),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: 'Add a caption...',
-                hintStyle: status.textStyle.copyWith(
+              child: TextField(
+                style: status.textStyle.copyWith(
                   fontSize: 18,
-                  color: wayaTheme.colorScheme.greyColor300,
+                  color: wayaTheme.colorScheme.white,
                 ),
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Add a caption...',
+                  hintStyle: status.textStyle.copyWith(
+                    fontSize: 18,
+                    color: wayaTheme.colorScheme.greyColor300,
+                  ),
+                ),
+                onChanged: (value) {
+                  ref.read(momentVmProvider.notifier).updateCaption(value);
+                },
+                controller: TextEditingController(text: status.caption)
+                  ..selection = TextSelection.collapsed(offset: status.caption.length),
               ),
-              onChanged: (value) {
-                ref.read(momentVmProvider.notifier).updateCaption(value);
-              },
-              controller: TextEditingController(text: status.caption )
-          ..selection = TextSelection.collapsed(offset: status.caption.length),
             ),
           ),
         ),

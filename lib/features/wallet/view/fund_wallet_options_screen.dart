@@ -37,6 +37,8 @@ class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(walletFundingOptionsVmProvider);
     final wayaTheme = Theme.of(context);
+
+    final redirectRoute = ModalRoute.of(context)!.settings.arguments;
     return WayaScaffold(
       isLoading: viewModel.isLoading!,
       backgroundColor: wayaTheme.colorScheme.scaffoldColor,
@@ -72,8 +74,11 @@ class _FundWalletPageState extends ConsumerState<FundWalletOptionsScreen> {
                     //     builder: (context) {
                     //       return const FundAmountDialog(initialAmount: 0);
                     //     });
-                    WayaNav.toNamed(FundAccountScreen.route,
-                        arguments: {"name": e.name, "code": e.code});
+                    WayaNav.toNamed(FundAccountScreen.route, arguments: {
+                      "name": e.name,
+                      "code": e.code,
+                      'redirect': redirectRoute
+                    });
                   },
                 ),
               ),

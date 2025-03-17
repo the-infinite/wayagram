@@ -51,7 +51,7 @@ class WayaTextFormField extends StatefulWidget {
     this.line = 1,
     this.maxLines,
     this.isDense,
-    this.style = WayaTextStyles.labelMedium,
+    this.style ,
     this.maxLength,
     this.hasError = false,
     this.onTap,
@@ -120,6 +120,7 @@ class _AppFieldState extends State<WayaTextFormField> {
     final wayaTheme = Theme.of(context).colorScheme;
     Widget textFormField = TextFormField(
       readOnly: widget.isReadOnly ?? false,
+
       onTap: widget.onTap,
       onChanged: widget.onChanged,
       focusNode: _focusNode,
@@ -136,31 +137,40 @@ class _AppFieldState extends State<WayaTextFormField> {
       onFieldSubmitted: widget.onFieldSubmitted,
       textInputAction: widget.textInputAction,
       onSaved: widget.onSaved,
-      style: widget.style,
+      style: widget.style??WayaTextStyles.labelMedium,
       decoration: InputDecoration(
         isDense: widget.isDense,
         errorBorder: OutlineInputBorder(
-          borderSide: widget.showBorder ? BorderSide(color: wayaTheme.error200, width: 1.w) : BorderSide.none,
+          borderSide: widget.showBorder
+              ? BorderSide(color: wayaTheme.error200, width: 1.w)
+              : BorderSide.none,
           borderRadius: BorderRadius.circular(8.r),
         ),
         border: OutlineInputBorder(
           borderSide: widget.showBorder
-              ? BorderSide(color: widget.borderColor ?? wayaTheme.greyColor300, width: 1.w)
+              ? BorderSide(
+                  color: widget.borderColor ?? wayaTheme.greyColor300,
+                  width: 1.w)
               : BorderSide.none,
           borderRadius: BorderRadius.circular(8.r),
         ),
         enabledBorder: OutlineInputBorder(
           borderSide: widget.showBorder
-              ? BorderSide(color: widget.borderColor ?? wayaTheme.greyColor300, width: 1.w)
+              ? BorderSide(
+                  color: widget.borderColor ?? wayaTheme.greyColor300,
+                  width: 1.w)
               : BorderSide.none,
           borderRadius: BorderRadius.circular(8.r),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: widget.showBorder ? BorderSide(color: wayaTheme.primary, width: 1.w) : BorderSide.none,
+          borderSide: widget.showBorder
+              ? BorderSide(color: wayaTheme.primary, width: 1.w)
+              : BorderSide.none,
           borderRadius: BorderRadius.circular(8.r),
         ),
         contentPadding: widget.padding ?? EdgeInsets.fromLTRB(12, 1, 12, 1),
-        fillColor: widget.fillColor ?? Theme.of(context).colorScheme.transparent,
+        fillColor:
+            widget.fillColor ?? Theme.of(context).colorScheme.transparent,
         filled: true,
         prefixIcon: widget.prefixIcon,
         prefixIconColor: widget.prefixIconColor,
@@ -169,7 +179,9 @@ class _AppFieldState extends State<WayaTextFormField> {
             ? IconButton(
                 onPressed: () => toggleObscure(),
                 icon: Icon(
-                  isObscure ? Icons.visibility_off_outlined : Icons.visibility_outlined,
+                  isObscure
+                      ? Icons.visibility_off_outlined
+                      : Icons.visibility_outlined,
                   size: 20,
                   color: widget.suffixIconColor ?? wayaTheme.greyColor500,
                 ),
@@ -211,7 +223,7 @@ class _AppFieldState extends State<WayaTextFormField> {
               widget.helperText!,
               style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
                     fontSize: 13,
-                    color: wayaTheme.greyColor300,
+                    color: wayaTheme.greyColor400,
                   ),
             ),
           ),

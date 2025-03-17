@@ -12,6 +12,7 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
 class MomentViewers extends ConsumerStatefulWidget {
   final String momentId;
   const MomentViewers({super.key, required this.momentId});
@@ -31,7 +32,6 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final state = ref.watch(momentVmProvider);
 
@@ -54,7 +54,8 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
           SizedBox(
             height: 10,
           ),
-        Expanded(child:   PaginatedDataView<MomentViewer>(
+          Expanded(
+              child: PaginatedDataView<MomentViewer>(
             uniqueKey: 'moment-viewer',
             loadingState: SizedBox(
                 height: context.height * 0.2,
@@ -94,7 +95,6 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
     return Column(
       children: [
         SizedBox(
-         
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -109,10 +109,15 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
                         image: viewer.image,
                         radius: 25,
                       ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                          child: SvgPicture.asset(WayaAssets.icons.mSmallHeart.path, width: 16, height: 16,))
+                      if (viewer.likeMoment)
+                        Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: SvgPicture.asset(
+                              WayaAssets.icons.mSmallHeart.path,
+                              width: 16,
+                              height: 16,
+                            ))
                     ],
                   ),
                   SizedBox(
@@ -143,7 +148,7 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
                 ],
               ),
               Text(
-                  timeago.format(viewer.viewedAt),
+                timeago.format(viewer.viewedAt),
                 style: wayaTheme.textTheme.hintStyle,
               )
             ],

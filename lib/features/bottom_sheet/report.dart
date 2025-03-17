@@ -49,7 +49,6 @@ class _ReportEventState extends ConsumerState<Report> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
 
     return SingleChildScrollView(
@@ -163,9 +162,9 @@ class _ReportEventState extends ConsumerState<Report> {
                             reason: selectedStatus,
                             comment: comment.text,
                             context: context);
-                           setState(() {
+                        setState(() {
                           isLoading = false;
-                        }); 
+                        });
                       },
                       centerWidget: LoadingState(
                           loading: isLoading, text: "Submit Report")),
@@ -174,7 +173,8 @@ class _ReportEventState extends ConsumerState<Report> {
           const Gap(10),
           WayaButton(
               callback: () {
-                Navigator.of(context).pop();
+                WayaNav.goBack();
+            
               },
               textColor: wayaTheme.colorScheme.greyColor500,
               color: wayaTheme.colorScheme.transparent,

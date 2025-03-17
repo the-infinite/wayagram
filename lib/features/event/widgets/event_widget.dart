@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -7,12 +6,10 @@ import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
-import 'package:flutter/services.dart';
 
 class EventWidget extends ConsumerWidget {
   final EventDoc event;
@@ -20,8 +17,9 @@ class EventWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
+
+    print(event.image);
     return Column(
       children: [
         Container(
@@ -35,7 +33,8 @@ class EventWidget extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WayaImage(
-                  imageUrl: event.image,
+                  imageUrl:
+                     event.image,
                   height: 180.h,
                   width: double.infinity,
                   radius: BorderRadius.only(
@@ -135,7 +134,7 @@ class EventWidget extends ConsumerWidget {
                         callback: () {
                           WayaNav.toNamed(EventDetail.route, arguments: event);
                         },
-                        color: wayaTheme.colorScheme.primar50,
+                        color: wayaTheme.colorScheme.primary50,
                         textColor: wayaTheme.colorScheme.customPrimary,
                         text: "View Event",
                       ),

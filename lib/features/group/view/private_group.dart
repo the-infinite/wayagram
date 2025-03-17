@@ -15,9 +15,7 @@ import 'package:wayagram/features/group/view/approval_screen.dart';
 import 'package:wayagram/features/group/view/events.dart';
 import 'package:wayagram/features/group/view/group_post.dart';
 import 'package:wayagram/features/group/view/group_team.dart';
-import 'package:wayagram/features/group/view/mediaPost.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/pages/view/pages_for_you.dart';
 
 class PrivateGroup extends ConsumerStatefulWidget {
   static const route = '/privateGroup';
@@ -64,7 +62,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                   child: _buildActionNav(
                     context: context,
                     onTap: () {
-                      Navigator.pop(context);
+                      WayaNav.goBack();
                       WayaNav.toNamed('/groupSetting');
                     },
                     asset: SvgPicture.asset('assets/images/pages/setting.svg'),
@@ -89,7 +87,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                   child: _buildActionNav(
                     context: context,
                     onTap: () {
-                      Navigator.pop(context);
+                      WayaNav.goBack();
                     },
                     asset: SvgPicture.asset('assets/images/pages/flag.svg'),
                     text: "Repost",
@@ -102,13 +100,13 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                     context: context,
                     onTap: () {
                       viewGroupModel.deleteGroup(
-                          context, '', '${ConversationState.self.id}');
-                      Navigator.pop(context);
+                          context, '${args['groupId']}');
+                      WayaNav.toNamed('/groups');
                     },
                     asset: SvgPicture.asset(
                       'assets/images/pages/delete.svg',
                       color: wayaTheme.colorScheme.error500,
-                      height: 2,
+                      height: 16,
                     ),
                     text: "Delete Group",
                     color: wayaTheme.colorScheme.error500,
@@ -157,7 +155,9 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                   GestureDetector(
                     onTap: () {
                       WayaNav.toNamed('/editGroupInfo',
-                          arguments: '${args['groupId']}');
+                          arguments: args
+                         // '${args['groupId']}'
+                      );
                     },
                     child: Container(
                       margin: EdgeInsets.only(right: 20.w),
@@ -218,7 +218,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                         onPressed: ()=> WayaNav.toNamed('/membersScreen',
                             arguments: '${args['groupId']}')),
                     const Gap(10),
-                    actionType('0', 'Posts'),
+                    actionType('${ref.read(createGroupProvider).postCount}', 'Posts'),
                   ],
                 ),
                 const Gap(10),

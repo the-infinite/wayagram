@@ -14,12 +14,15 @@ import 'package:wayagram/features/event/data/repo/event_repository.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/shared/components/radio_select.dart';
+import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 class AddEventVm extends StateNotifier<AddEventState> {
   final Ref ref;
   final EventRepository _eventRepository;
+  final UploadFileRepository _uploadFileRepository;
   final WayaSecureDataSource _secureDataSource;
-  AddEventVm(this._secureDataSource, this._eventRepository, this.ref)
+  AddEventVm(this._uploadFileRepository, this._secureDataSource,
+      this._eventRepository, this.ref)
       : super(AddEventState());
 
   void reset() {
@@ -67,13 +70,18 @@ class AddEventVm extends StateNotifier<AddEventState> {
   }
 
   void addFile(File file) {
-    state = state.copyWith(
-        eventImage: DocType(
-            file: file, type: "event-image", name: file.path.split('/').last));
+    state = state.copyWith(eventImage: [
+      DocType(file: file, type: "event-image", name: file.path.split('/').last)
+    ]);
   }
 
   void removeFile() {
-    state = state.copyWith(eventImage: null);
+    List<DocType> e = List.from(state.eventImage);
+    e = e.where((i) => i.type != 'event-image').toList();
+    state = state.copyWith(eventImage: e);
+
+    print("efwefw");
+    print(state);
   }
 
   bool isStartDateAfterEndDate(String startDate, String endDate) {
@@ -96,7 +104,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
   Future<void> onSubmit({required BuildContext context}) async {
     try {
       // validate image
-      if (state.eventImage == null) {
+      if (state.eventImage.isEmpty) {
         WayaSnackBar.showToast("Add an Image");
         return;
       }
@@ -124,9 +132,10 @@ class AddEventVm extends StateNotifier<AddEventState> {
       }
 
       state = state.copyWith(isLoading: true);
-      final image = state.isEditingMode && state.eventImage!.file == null
-          ? await WayaHelpers.formattedImageFromUrl(state.eventImage!.url)
-          : await WayaHelpers.formattedImage(state.eventImage!.file!);
+      final image = state.isEditingMode && state.eventImage[0].file == null
+          ? state.eventImage[0].url
+          : await WayaUtils.uploadFile(
+              file: state.eventImage[0].file!, repository: _uploadFileRepository);
 
       state = state.copyWith(image: image);
       final userId = await _secureDataSource.getUserId();
@@ -145,7 +154,8 @@ class AddEventVm extends StateNotifier<AddEventState> {
               message:
                   "Your event is now live. Share it with your audience and start engaging with attendees today!",
               onPress: () {
-                Navigator.pushReplacementNamed(context, EventView.route);
+                WayaNav.replaceNamed(EventView.route);
+                // WayaNav.goBack();
               },
               buttonText: 'Go To Event Home Page',
               secondButtonText: 'Share Event Link',
@@ -159,7 +169,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
                 scale: 1.5,
               ));
         }
-        reset();
+        //reset();
       }
     } catch (error) {
       print(error);
@@ -195,11 +205,13 @@ class AddEventVm extends StateNotifier<AddEventState> {
         startTime: event.startTime,
         eventId: event.id,
         endTime: event.endTime,
-        eventImage: DocType(
-            file: null,
-            type: "event-image",
-            name: "uploaded image",
-            url: event.image));
+        eventImage: [
+          DocType(
+              file: null,
+              type: "event-image",
+              name: "uploaded image",
+              url: event.image)
+        ]);
     ref.read(radioSelectProvider("add-event").notifier).state =
         event.privacyOption.capitalizeFirst;
   }
@@ -207,5 +219,6 @@ class AddEventVm extends StateNotifier<AddEventState> {
 
 final addEventVmProvider =
     StateNotifierProvider<AddEventVm, AddEventState>((ref) {
-  return AddEventVm(WayaSecureDataSource(), EventRepository(), ref);
+  return AddEventVm(
+      UploadFileRepository(), WayaSecureDataSource(), EventRepository(), ref);
 });

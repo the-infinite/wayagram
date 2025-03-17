@@ -20,21 +20,16 @@ class ExploreOurServices extends ConsumerWidget {
         Text("Explore Our Services", style: wayaTheme.textTheme.titleLarge),
         const Gap(20),
         Container(
-          decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(15),
-              color: wayaTheme.colorScheme.white),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: wayaTheme.colorScheme.white),
           padding: const EdgeInsets.all(16.0),
           child: GridView.builder(
             shrinkWrap: true,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 1.5),
+                crossAxisCount: 3, mainAxisSpacing: 16, crossAxisSpacing: 16, childAspectRatio: 1.5),
             itemCount: viewModel.services.length,
-            itemBuilder: (context, index) {
-              return ServiceCard(service: viewModel.services[index]);
-            },
+            itemBuilder: (context, index) => ServiceCard(
+              service: viewModel.services[index],
+            ),
           ),
         ),
       ],

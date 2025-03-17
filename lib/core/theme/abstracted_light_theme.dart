@@ -26,7 +26,7 @@ final abstractedLightTheme = ThemeData(
 );
 
 AppBarTheme _appBarThemeData() {
-  return const AppBarTheme(
+  return  AppBarTheme(
       titleTextStyle: WayaTextStyles.titleLarge, elevation: 0, centerTitle: true, backgroundColor: WayaColors.white);
 }
 

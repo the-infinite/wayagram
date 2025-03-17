@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/features/shop/filter/constants/filter_options.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
 class BasicProductInfo extends ConsumerStatefulWidget {
   final Function gotoNextTab;
   final String uniqueKey;
-  const BasicProductInfo({super.key, required this.gotoNextTab, required this.uniqueKey});
+  const BasicProductInfo(
+      {super.key, required this.gotoNextTab, required this.uniqueKey});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -91,6 +95,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                         keyboardType: TextInputType.text,
                         controller: viewModel.productDescription,
                         hintText: 'Enter Product Description',
+                         padding: const EdgeInsets.all(12),
                         borderColor: formState.hasError &&
                                 viewModel.productDescription.text.isEmpty
                             ? wayaTheme.colorScheme.error
@@ -154,14 +159,15 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                     children: [
                       WayaPaginatedSelectField(
                           height: 0.3,
-                          uniqueKey: 'product-category',
-                          displayText: (item) => item.label,
+                          uniqueKey: "product-category",
+                          displayText: viewModel.selectedCategory,
                           fetchData:
                               ref.watch(shopVmProvider.notifier).allCategories,
                           label: "Product Category",
                           hintText: 'Select Product Category',
                           onSelected: (value) => ref
-                              .read(addProductProvider(widget.uniqueKey).notifier)
+                              .read(
+                                  addProductProvider(widget.uniqueKey).notifier)
                               .update(value, "productCategory")),
                       if (formState.hasError &&
                           viewModel.productCategory.isEmpty)
@@ -222,17 +228,20 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           height: 0.3,
                           uniqueKey: 'product-condition',
                           label: "Product Conditon",
                           value: viewModel.productCondition,
                           hintText: 'Select Product Condition',
-                          items:
-                              ref.read(addProductProvider(widget.uniqueKey).notifier).conditions,
+                          items: ref
+                              .read(
+                                  addProductProvider(widget.uniqueKey).notifier)
+                              .conditions,
                           onSelected: (value) => ref
-                              .read(addProductProvider(widget.uniqueKey).notifier)
-                              .update(value, "productCondition")),
+                              .read(
+                                  addProductProvider(widget.uniqueKey).notifier)
+                              .update(value.first, "productCondition")),
                       if (formState.hasError &&
                           viewModel.productCondition.isEmpty)
                         Padding(
@@ -244,6 +253,28 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                                 fontSize: 12),
                           ),
                         ),
+                    ],
+                  );
+                }),
+                const Gap(10),
+                FormField<String>(validator: (value) {
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaSelectField<List<Select>>(
+                          height: 0.3,
+                          uniqueKey: Uuid().v4(),
+                          label: "Product Color (Optional)",
+                          value: viewModel.productColor,
+                          hintText: 'Select Product Color',
+                          multi: true,
+                          items: FilterOptions.colorOptions,
+                          onSelected: (value) => ref
+                              .read(
+                                  addProductProvider(widget.uniqueKey).notifier)
+                              .updateColor(value)),
                     ],
                   );
                 }),
@@ -262,7 +293,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Inlcude Measurements",
+                        Text("Include Measurements",
                             style: wayaTheme.textTheme.titleMedium),
                         const Gap(6),
                         Text(

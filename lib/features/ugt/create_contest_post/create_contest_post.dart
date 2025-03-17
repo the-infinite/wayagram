@@ -1,0 +1,632 @@
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+// import 'package:get_thumbnail_video/index.dart';
+// import 'package:get_thumbnail_video/video_thumbnail.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
+
+class CreateContestPost extends StatefulHookConsumerWidget {
+  static const route = '/create-contest-post';
+  const CreateContestPost({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _CreateContestPostState();
+}
+
+class _CreateContestPostState extends ConsumerState<CreateContestPost> with SingleTickerProviderStateMixin {
+  PageController pageController = PageController(
+    initialPage: 0,
+  );
+  final textField = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
+
+  final ImagePicker _pickers = ImagePicker();
+  final List<MyMediaType> _selectedImages = [];
+
+  bool sel = false;
+
+  Future<void> _pickImages() async {
+    try {
+      final List<XFile> images = await _pickers.pickMultiImage(
+        imageQuality: 80, // Adjust image quality (0-100)
+        maxWidth: 1200, // Max width of images
+        limit: 5,
+        maxHeight: 1200, // Max height of images
+      );
+
+      if (images.isNotEmpty) {
+        setState(() {
+          _selectedImages.removeWhere((e) => e.type == false);
+          List<MyMediaType> listImage = images.take(5).map((e) => MyMediaType(path: e.path, type: false)).toList();
+          _selectedImages.addAll(listImage);
+        });
+      }
+    } catch (e) {
+      // Handle any errors here
+      debugPrint('Error picking images: $e');
+    }
+  }
+
+  File? _videoFile;
+
+  Future<void> pickVideo() async {
+    final XFile? pickedFile = await _pickers.pickVideo(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      //  setState(() {
+
+      //  Directory tempDir = await getTemporaryDirectory();
+
+      //  File tempVideo = File("${tempDir.path}/assets/my_video_thumb.png");
+      _videoFile = File(pickedFile.path);
+      /*  var myDat = await VideoThumbnail.thumbnailData(
+        video: pickedFile.path,
+        imageFormat: ImageFormat.JPEG,
+        maxHeight: 200,
+        maxWidth:
+            200, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
+        quality: 25,
+      );*/
+      //var file = await uint8ListToFile(myDat, "my_video_thumb.jpeg");
+      _selectedImages.removeWhere((e) => e.type == true);
+      setState(() {
+        //_selectedImages.add(MyMediaType(path: file.path, type: true));
+      });
+      // });
+    }
+  }
+
+  Future<File> uint8ListToFile(Uint8List uint8List, String fileName) async {
+    // Get the temporary directory
+    Directory tempDir = await getTemporaryDirectory();
+    String filePath = "${tempDir.path}/$fileName"; // Set file path
+
+    // Create the file and write the Uint8List data
+    File file = File(filePath);
+    await file.writeAsBytes(uint8List);
+
+    return file;
+  }
+
+  void _removeImage(int index) {
+    setState(() {
+      var model = _selectedImages[index];
+      if (model.type) {
+        _videoFile = null;
+      }
+      _selectedImages.removeAt(index);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    // final viewModel = ref.watch(createPageProvider);
+    final notifier = ref.read(votersContestNotifier.notifier);
+    final isLoading = useState(false);
+    final isEmptyTest = useState(false);
+
+    // final dynamic args = ModalRoute.of(context)?.settings.arguments;
+
+    return WayaScaffold(
+        resizeToAvoidBottomInset: true,
+        isLoading: isLoading.value,
+        isScrollable: false,
+        appBar: AppBar(
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SizedBox(
+                width: context.width * 0.15,
+                child: !isEmptyTest.value
+                    ? WayaButton(
+                        callback: isLoading.value
+                            ? () async {
+                                if (_formKey.currentState!.validate()) {}
+                              }
+                            : null,
+                        height: 30,
+                        text: 'Post',
+                        isLoading: isLoading.value,
+                        textStyle: WayaTextStyles.bodySmall.copyWith(
+                            fontSize: 12, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+                      )
+                    : WayaButton(
+                        callback: !isLoading.value
+                            ? () async {
+                                if (_formKey.currentState!.validate()) {
+                                  notifier.uploadCreatePost(ref, context, isLoading, textField.text, _selectedImages,
+                                      _videoFile, sel ? "public" : "private");
+                                }
+                              }
+                            : null,
+                        height: 30,
+                        text: 'Post',
+                        isLoading: isLoading.value,
+                        textStyle: WayaTextStyles.bodySmall.copyWith(
+                            fontSize: 12, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+                      ),
+              ),
+            ),
+          ],
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              onTap: () {
+                //  ref.watch(createPageProvider.notifier).reset();
+                WayaNav.goBack();
+              },
+              child: Image.asset(
+                'assets/images/pages/cancel.png',
+                height: 16.h,
+              ),
+            ),
+          ),
+        ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: SafeArea(
+                minimum: EdgeInsets.only(top: 10),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 125.h),
+                            child: WayaDp(
+                              radius: 15.r,
+                            ),
+                          ),
+                          Expanded(
+                            flex: 3,
+                            child: Form(
+                                key: _formKey,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    FormField<String>(validator: (value) {
+                                      if (textField.text.isEmpty) {
+                                        return 'Post content is required';
+                                      }
+
+                                      return null;
+                                    }, builder: (formState) {
+                                      return Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          WayaTextFormField(
+                                            line: 5,
+                                            showBorder: false,
+                                            onChanged: (value) {
+                                              print(value);
+                                              if (value.trim().isEmpty) {
+                                                print("ff   $value");
+                                                isEmptyTest.value = false;
+                                              } else {
+                                                print("bbb   $value");
+                                                isEmptyTest.value = true;
+                                              }
+                                            },
+                                            keyboardType: TextInputType.text,
+                                            controller: textField,
+                                            hintText: 'what is on your mind?',
+                                            borderColor: formState.hasError && textField.text.isEmpty
+                                                ? wayaTheme.colorScheme.error
+                                                : null,
+                                          ),
+                                          if (formState.hasError && textField.text.isEmpty)
+                                            Padding(
+                                              padding: const EdgeInsets.only(top: 5),
+                                              child: Text(
+                                                formState.errorText!,
+                                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                                              ),
+                                            ),
+                                        ],
+                                      );
+                                    }),
+                                    const Gap(10),
+                                  ],
+                                )),
+                          ),
+                        ],
+                      ),
+                      Container(
+                        decoration:
+                            BoxDecoration(borderRadius: BorderRadius.circular(15), color: wayaTheme.colorScheme.white),
+                        child: GridView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.only(left: 20),
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2, mainAxisSpacing: 16, crossAxisSpacing: 16, childAspectRatio: 1.5),
+                          itemCount: _selectedImages.length,
+                          itemBuilder: (context, index) {
+                            return Stack(
+                              alignment: Alignment.center,
+                              children: [
+                                // Video Thumbnail (Replace with Network or Asset Image)
+                                Container(
+                                  height: 100,
+                                  width: 168,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    image: DecorationImage(
+                                      image: FileImage(File(
+                                        _selectedImages[index].path,
+                                      )),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+
+                                // Play Button Overlay
+                                if (_selectedImages[index].type)
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white.withOpacity(0.7),
+                                    ),
+                                    padding: EdgeInsets.all(8),
+                                    child: Icon(
+                                      Icons.play_arrow,
+                                      size: 30,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                Positioned(
+                                  top: 8,
+                                  right: 4,
+                                  child: GestureDetector(
+                                    onTap: () => _removeImage(index),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        Icons.close,
+                                        size: 10,
+                                        color: Theme.of(context).colorScheme.primary,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+
+                            /*  Stack(
+                              children: [
+                                Container(
+                                  height: 100,
+                                  width: 168,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    image: DecorationImage(
+                                      image: FileImage(File(
+                                        _selectedImages[index],
+                                      )),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
+                                Positioned(
+                                  top: 4,
+                                  right: 4,
+                                  child: GestureDetector(
+                                    onTap: () => _removeImage(index),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        Icons.close,
+                                        size: 10,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ); */
+                          },
+                        ),
+                      ),
+                      //const Gap(350),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            Row(
+              children: [
+                InkWell(
+                  onTap: pickVideo,
+                  child: Image.asset(
+                    'assets/images/pages/sn.png',
+                    height: 32.h,
+                  ),
+                ),
+                const Gap(15),
+                InkWell(
+                  onTap: _pickImages,
+                  child: Image.asset(
+                    'assets/images/pages/gallery.png',
+                    height: 32.h,
+                  ),
+                ),
+                Spacer(),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      sel = !sel;
+                    });
+                    //showCustomDialog(context, sel);
+                  },
+                  child: Row(
+                    children: [
+                      Image.asset(
+                        sel ? 'assets/images/pages/post.png' : 'assets/images/pages/lock.png',
+                        height: 18.h,
+                      ),
+                      Gap(5),
+                      Text(
+                        sel ? 'Public post' : 'Private post',
+                        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                            fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ],
+        ));
+  }
+
+  void showCustomDialog(BuildContext context, chk) {
+    showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (BuildContext cxt) {
+        return Align(
+          alignment: Alignment.bottomCenter,
+          child: Padding(
+            padding: EdgeInsets.only(left: 10, bottom: 16),
+            child: SizedBox(
+              height: 120,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(14),
+                child: Material(
+                  color: Colors.white,
+                  shape: Border(
+                    left: BorderSide(width: 4, color: Colors.white),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      top: 10,
+                    ),
+                    child: Container(
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
+                      child: chk
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  height: 56.h,
+                                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary50),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Public',
+                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: Theme.of(context).colorScheme.primary),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Everybody can see and interact with this post',
+                                              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Theme.of(context).colorScheme.primary),
+                                            ),
+                                            Spacer(),
+                                            Padding(
+                                              padding: const EdgeInsets.only(right: 20),
+                                              child: GestureDetector(
+                                                onTap: () => WayaNav.goBack(),
+                                                child: Container(
+                                                  padding: const EdgeInsets.all(2),
+                                                  decoration: BoxDecoration(
+                                                    color: Theme.of(context).colorScheme.primary,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    size: 10,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Gap(10),
+                                Container(
+                                  decoration: BoxDecoration(color: Colors.white),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Private',
+                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: Theme.of(context).colorScheme.black),
+                                        ),
+                                        Text(
+                                          'Only your friends can see and interact with this post',
+                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color: Theme.of(context).colorScheme.greyColor500),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(color: Colors.white),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Public',
+                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: Theme.of(context).colorScheme.black),
+                                        ),
+                                        Text(
+                                          'Everybody can see and interact with this post',
+                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w400,
+                                              color: Theme.of(context).colorScheme.greyColor500),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                Gap(10),
+                                Container(
+                                  width: double.infinity,
+                                  height: 56.h,
+                                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary50),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          'Private',
+                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600,
+                                              color: Theme.of(context).colorScheme.primary),
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              'Only your friends can see and interact with this post',
+                                              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Theme.of(context).colorScheme.primary),
+                                            ),
+                                            Spacer(),
+                                            Padding(
+                                              padding: const EdgeInsets.only(right: 20),
+                                              child: GestureDetector(
+                                                onTap: () => WayaNav.goBack(),
+                                                child: Container(
+                                                  padding: const EdgeInsets.all(2),
+                                                  decoration: BoxDecoration(
+                                                    color: Theme.of(context).colorScheme.primary,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    size: 10,
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class MyMediaType {
+  final String path;
+  final bool type;
+
+  MyMediaType({required this.path, required this.type});
+
+  // Convert object to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'path': path,
+      'type': type,
+    };
+  }
+
+  // Create object from JSON
+  factory MyMediaType.fromJson(Map<String, dynamic> json) {
+    return MyMediaType(
+      path: json['path'],
+      type: json['type'],
+    );
+  }
+}

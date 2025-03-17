@@ -1,18 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
-import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
 
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/shop/widgets/product_card.dart';
-
-import '../../../../core/utils/waya_navigation.dart';
-import '../../vm/bid_vm.dart';
-
-import '../../widgets/request_card.dart';
-
+import 'package:wayagram/shared/features/quotation/view/all_buy_request.dart';
+import 'package:wayagram/shared/features/quotation/view/buy_request.dart';
 
 class MyRequests extends ConsumerStatefulWidget {
   const MyRequests({super.key});
@@ -22,58 +17,62 @@ class MyRequests extends ConsumerStatefulWidget {
 }
 
 class _MyRequestsState extends ConsumerState<MyRequests> {
-
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createRequestProvider.notifier).getBuyerRequest();
-    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(createRequestProvider);
     return Column(
       children: [
+        //? First, our widget for filtering the buy requests as a search.
         FilterWidget(search: TextEditingController(), hintText: 'Search Requests'),
+
+        // Some space.
         const Gap(25),
+
+        //? Second, a widget to
         GroupedWidgetHeader(
-            onTap: () {},
-            subTitle: 'Explore Categories & Best Offers',
-            title: 'Wayagram Deals'),
+          onTap: () {
+            WayaNav.toNamed(BuyerBuyRequestsScreen.route);
+          },
+          subTitle: 'Explore Categories & Best Offers',
+          title: 'Wayagram Deals',
+        ),
+
+        // Some space.
         const Gap(10),
-        CategoriesFilterWidget(setCategory: (value) => {}, ),
+
+        //? This is fine.
+        CategoriesFilterWidget(
+          setCategory: (value) => {},
+        ),
+
+        // Some more space.
         const Gap(25),
-        ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: viewModel.buyerRequest.length,
-            itemBuilder: (context, index) {
-              return RequestCard(product: viewModel.buyerRequest[index],
-                onTap: () {
-                  WayaNav.toNamed('/seeSeller-bids');
-                },);
-            }),
+
+        //? This is fine too.
+        const SharedUserBuyRequestsWidget(isExpanded: false),
+
+        // Some space.
         const Gap(25),
+
+        //? Then we can look at te buyer requests that a here.
         GroupedWidgetHeader(
-            onTap: () {},
-            subTitle: 'Explore Categories & Best Offers',
-            title: 'Recommended Products'),
+          onTap: () {
+            WayaNav.toNamed(BuyerBuyRequestsScreen.route);
+          },
+          subTitle: 'Explore Categories & Best Offers',
+          title: 'Recommended Products',
+        ),
+
+        // Some space.
         const Gap(25),
-        ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: viewModel.buyerRequest.length,
-            itemBuilder: (context, index) {
-              return RequestCard(product: viewModel.buyerRequest[index],
-                onTap: () {
-                  WayaNav.toNamed('/seeSeller-bids');
-                },);
-            }),
+
+        //? Now, for the user's quotation requests.
+        const SharedUserBuyRequestsWidget(isExpanded: false),
       ],
     );
   }
 }
-
-

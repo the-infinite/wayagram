@@ -1,23 +1,27 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
+import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/fetch_all_event_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
+import 'package:wayagram/features/group/data/model/group_popular_post_model.dart';
+import 'package:wayagram/features/group/data/model/group_post_model.dart';
 import 'package:wayagram/features/group/data/model/group_response.dart';
 import 'package:wayagram/features/group/data/model/join_request_model.dart';
 import 'package:wayagram/features/group/data/model/joined_group_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
 import 'package:wayagram/features/group/state/group_state.dart';
+import 'package:wayagram/features/group/view/groups.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/comment.dart';
@@ -34,7 +38,8 @@ class UploadedImage {
   final String file;
   final String fileName;
 
-  UploadedImage({required this.url, required this.file, required this.fileName});
+  UploadedImage(
+      {required this.url, required this.file, required this.fileName});
 }
 
 class GroupVm extends StateNotifier<GroupState> {
@@ -46,23 +51,28 @@ class GroupVm extends StateNotifier<GroupState> {
 
   final _logger = getLogger('GroupVm');
 
-  GroupVm(this.ref, this._picker, this._groupRepository,
-      this._localDataSource, this._secureDataSource,)
-      : super(GroupState()) {
-
-    state = state.copyWith(groupName: TextEditingController(text:'' ));
-    state = state.copyWith(groupDescription: TextEditingController(text:''));
-    state = state.copyWith(username: TextEditingController(text:''));
-
+  GroupVm(
+    this.ref,
+    this._picker,
+    this._groupRepository,
+    this._localDataSource,
+    this._secureDataSource,
+  ) : super(GroupState()) {
+    state = state.copyWith(groupName: TextEditingController(text: ''));
+    state = state.copyWith(groupDescription: TextEditingController(text: ''));
+    state = state.copyWith(username: TextEditingController(text: ''));
   }
 
-  void setGroup(List<GetAllGroupDocs>? docs){
-    if((docs?.length ?? 0) != 1){
-    return;
+  void setGroup(List<GetAllGroupDocs>? docs) {
+    if ((docs?.length ?? 0) != 1) {
+      return;
     }
-   final groupDoc  = docs!.first;
-    state = state.copyWith( name: groupDoc.name, desc: groupDoc.description,
-    profileImage: groupDoc.profileImage, coverImage: groupDoc.coverImage);
+    final groupDoc = docs!.first;
+    state = state.copyWith(
+        name: groupDoc.name,
+        desc: groupDoc.description,
+        profileImage: groupDoc.profileImage,
+        coverImage: groupDoc.coverImage);
   }
 
   void reset() {
@@ -81,16 +91,19 @@ class GroupVm extends StateNotifier<GroupState> {
     state = state.copyWith(roleType: value.toLowerCase());
   }
 
-  Future<GroupResponse?> createGroup(ctx, groupName, groupDesc, groupType, String coverImage, String profileImage) async {
-
-   final coverImageUrl =  await WayaFileRepository.instance.uploadFile(File(coverImage), );
-    final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage),);
+  Future<GroupResponse?> createGroup(ctx, groupName, groupDesc, groupType,
+      String coverImage, String profileImage) async {
+    final coverImageUrl = await WayaFileRepository.instance.uploadFile(
+      File(coverImage),
+    );
+    final profileImageUrl = await WayaFileRepository.instance.uploadFile(
+      File(profileImage),
+    );
 
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.createGroup(
-          groupName, groupDesc, groupType, coverImageUrl ?? '', profileImageUrl ??''
-         );
+      final response = await _groupRepository.createGroup(groupName, groupDesc,
+          groupType, coverImageUrl ?? '', profileImageUrl ?? '');
       state = state.copyWith(isLoading: false);
 
       //? If this is fine...
@@ -112,7 +125,8 @@ class GroupVm extends StateNotifier<GroupState> {
     return null;
   }
 
-  Future<void> createGroupPost(ctx, content, postType, List<XFile> images, postId) async {
+  Future<void> createGroupPost(
+      ctx, content, postType, List<XFile> images, postId) async {
     print("before the loop");
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
@@ -121,10 +135,15 @@ class GroupVm extends StateNotifier<GroupState> {
     for (XFile image in images) {
       print("In the loop ${image.name} ${image.path} ${image.mimeType}");
 
-      final uploadImageResponse = await _groupRepository.getUploadImage(image.name);
+      final uploadImageResponse =
+          await _groupRepository.getUploadImage(image.name);
 
-      MediaUploadModel mediaUploadModel = MediaUploadModel.fromJson(uploadImageResponse.data);
-      urls.add(UploadedImage(url: mediaUploadModel.data!.url!, file: image.path, fileName: image.name));
+      MediaUploadModel mediaUploadModel =
+          MediaUploadModel.fromJson(uploadImageResponse.data);
+      urls.add(UploadedImage(
+          url: mediaUploadModel.data!.url!,
+          file: image.path,
+          fileName: image.name));
       publicUrl.add(mediaUploadModel!.data!.publicUrl!);
     }
 
@@ -152,7 +171,8 @@ class GroupVm extends StateNotifier<GroupState> {
 
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.createGroupPost(content, publicUrl , postType, postId);
+      final response = await _groupRepository.createGroupPost(
+          content, publicUrl, postType, postId);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
@@ -178,15 +198,14 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-
-  Future<void> deleteGroup( ctx,  String postId,  String userId) async {
+  Future<void> deleteGroup(ctx, String postId) async {
     try {
-      final response =  await _groupRepository.deleteGroup(postId);
-      if(response.success && ctx.mounted){
+      final response = await _groupRepository.deleteGroup(postId);
+      if (response.success && ctx.mounted) {
         //getAllGroups();
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
-            content: Text('Post deleted successfully!'),
+            content: Text('Group deleted successfully!'),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),
@@ -194,15 +213,15 @@ class GroupVm extends StateNotifier<GroupState> {
       }
     } catch (e) {
       print(e);
-    } finally{
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
 
-  Future<void> followUser( ctx, String followingId) async {
+  Future<void> followUser(ctx, String followingId) async {
     try {
-      final response =  await _groupRepository.followUser(followingId);
-      if(response.success && ctx.mounted){
+      final response = await _groupRepository.followUser(followingId);
+      if (response.success && ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Followed successfully!'),
@@ -213,31 +232,35 @@ class GroupVm extends StateNotifier<GroupState> {
       }
     } catch (e) {
       print(e);
-    } finally{
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
 
-
-  Future<void> editGroup(ctx, groupName, groupDesc, groupType, String coverImage, String profileImage, String groupId) async {
-
-    final coverImageUrl =  await WayaFileRepository.instance.uploadFile(File(coverImage), );
-    final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage),);
+  Future<void> editGroup(ctx, groupName, groupDesc, groupType,
+      String coverImage, String profileImage, String groupId) async {
+    final coverImageUrl = await WayaFileRepository.instance.uploadFile(
+      File(coverImage),
+    );
+    final profileImageUrl = await WayaFileRepository.instance.uploadFile(
+      File(profileImage),
+    );
 
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.editGroup(
-          groupName, groupDesc, groupType, coverImageUrl ?? '', profileImageUrl ??'', groupId
-      );
+      final response = await _groupRepository.editGroup(groupName, groupDesc,
+          groupType, coverImageUrl ?? '', profileImageUrl ?? '', groupId);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
+        WayaNav.toNamed('/groups');
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
-            content: Text('Group info updated successfully!', style: TextStyle(
-                fontFamily: WayaConstants.fontFamily,
-                fontSize: 12
-            ),),
+            content: Text(
+              'Group info updated successfully!',
+              style:
+                  TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+            ),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),
@@ -257,12 +280,19 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<void> leaveGroup( ctx, {required String groupId}) async {
+  void prefillFunc(args){
+    state = state.copyWith(
+      groupName: TextEditingController(text: '${args['name']}'),
+      groupDescription: TextEditingController(text: '${args['desc']}'),
+    );
+  }
+
+  Future<void> leaveGroup(ctx, {required String groupId}) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.leaveGroup(groupId);
+      final response = await _groupRepository.leaveGroup(groupId);
       state = state.copyWith(isLoading: false);
-      if(response.success && ctx.mounted){
+      if (response.success && ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Exit group'),
@@ -273,17 +303,17 @@ class GroupVm extends StateNotifier<GroupState> {
       }
     } catch (e) {
       print(e);
-    } finally{
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
 
-  Future<void> joinGroup( ctx,  String groupId) async {
+  Future<void> joinGroup(ctx, String groupId) async {
     try {
-      state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.joinGroup(groupId);
-      state = state.copyWith(isLoading: false);
-      if(response.success && ctx.mounted){
+      state = state.copyWith(joinGroupLoading: true);
+      final response = await _groupRepository.joinGroup(groupId);
+      state = state.copyWith(joinGroupLoading: false);
+      if (response.success && ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Joined successfully!'),
@@ -294,17 +324,17 @@ class GroupVm extends StateNotifier<GroupState> {
       }
     } catch (e) {
       print(e);
-    } finally{
-      state = state.copyWith(isLoading: false);
+    } finally {
+      state = state.copyWith(joinGroupLoading: false);
     }
   }
 
-  Future<void> approveRequest( ctx,  String requestId) async {
+  Future<void> approveRequest(ctx, String requestId) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.approveJoinRequest(requestId);
+      final response = await _groupRepository.approveJoinRequest(requestId);
       state = state.copyWith(isLoading: false);
-      if(response.success && ctx.mounted){
+      if (response.success && ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Request approved successfully!'),
@@ -315,17 +345,17 @@ class GroupVm extends StateNotifier<GroupState> {
       }
     } catch (e) {
       print(e);
-    } finally{
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
 
-  Future<void> rejectRequest( ctx,  String requestId) async {
+  Future<void> rejectRequest(ctx, String requestId) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.rejectJoinRequest(requestId);
+      final response = await _groupRepository.rejectJoinRequest(requestId);
       state = state.copyWith(isLoading: false);
-      if(response.success && ctx.mounted){
+      if (response.success && ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Request declined successfully!'),
@@ -336,17 +366,19 @@ class GroupVm extends StateNotifier<GroupState> {
       }
     } catch (e) {
       print(e);
-    } finally{
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
 
-  Future<void> inviteUserToGroup( ctx, String groupId, String role, String targetId) async {
+  Future<void> inviteUserToGroup(
+      ctx, String groupId, String role, String targetId) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.inviteUserToGroup(groupId, role, targetId);
+      final response =
+          await _groupRepository.inviteUserToGroup(groupId, role, targetId);
       state = state.copyWith(isLoading: false);
-      if(response.success && ctx.mounted){
+      if (response.success && ctx.mounted) {
         // ScaffoldMessenger.of(ctx).showSnackBar(
         //   const SnackBar(
         //     content: Text('Request declined successfully!'),
@@ -354,10 +386,12 @@ class GroupVm extends StateNotifier<GroupState> {
         //     duration: Duration(seconds: 2),
         //   ),
         // );
+      }else{
+        WayaNav.goBack();
       }
     } catch (e) {
       print(e);
-    } finally{
+    } finally {
       state = state.copyWith(isLoading: false);
     }
   }
@@ -376,34 +410,29 @@ class GroupVm extends StateNotifier<GroupState> {
       if (response.success) {
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
         state = state.copyWith(getAllPost: responseModel.data?.docs);
-
-      } else {
-
-      }
+      } else {}
     } catch (e) {
-
-    } finally {
-
-    }
+      print(e);
+    } finally {}
   }
 
-  Future<void> getGroupPosts() async {
+  Future<void> getGroupPosts(String groupId) async {
     print('Fetching saved posts...');
 
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.getGroupPost();
+      final response = await _groupRepository.getGroupPost(groupId);
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        GetAllPost responseModel = GetAllPost.fromJson(response.data);
-        state = state.copyWith(getAllPost: responseModel.data?.docs);
-
-      } else {
+        GroupPostModel responseModel =GroupPostModel.fromJson(response.data);
+        GroupPostModel postModel =GroupPostModel.fromJson(response.data);
+        state = state.copyWith(groupPostdocs: responseModel.data?.docs,
+        postCount: postModel.data?.totalDocs);
 
       }
     } catch (e) {
-
+    print(e);
     } finally {
 
     }
@@ -423,9 +452,7 @@ class GroupVm extends StateNotifier<GroupState> {
       }
     } catch (e) {
       print(e);
-    } finally {
-
-    }
+    } finally {}
     return null;
   }
 
@@ -443,10 +470,25 @@ class GroupVm extends StateNotifier<GroupState> {
       }
     } catch (e) {
       print(e);
-    } finally {
-
-    }
+    } finally {}
     return null;
+  }
+
+  Future<void> getMyGroups() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.getMyGroups();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        GetAllGroups responseModel = GetAllGroups.fromJson(response.data);
+        state = state.copyWith(myGroups: responseModel.data?.docs);
+      } else {
+        print('Error: Status code ${response.statusCode}');
+      }
+    } catch (e) {
+      print(e);
+    } finally {}
+   
   }
 
   Future<void> getJoinedGroups() async {
@@ -455,16 +497,15 @@ class GroupVm extends StateNotifier<GroupState> {
       final response = await _groupRepository.getJoinedGroup();
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        JoinedGroupModel responseModel = JoinedGroupModel.fromJson(response.data);
+        JoinedGroupModel responseModel =
+            JoinedGroupModel.fromJson(response.data);
         state = state.copyWith(joinedGroup: responseModel.data?.docs);
       } else {
         print('Error: Status code ${response.statusCode}');
       }
     } catch (e) {
       print(e);
-    } finally {
-
-    }
+    } finally {}
     return null;
   }
 
@@ -474,16 +515,35 @@ class GroupVm extends StateNotifier<GroupState> {
       final response = await _groupRepository.getGroupMember(groupId);
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        AllGroupMemberModel responseModel = AllGroupMemberModel.fromJson(response.data);
+        AllGroupMemberModel responseModel =
+            AllGroupMemberModel.fromJson(response.data);
         state = state.copyWith(allGroupMemberDocs: responseModel.data?.docs);
       } else {
         print('Error: Status code ${response.statusCode}');
       }
     } catch (e) {
       print(e);
-    } finally {
+    } finally {}
+  }
 
-    }
+  Future<void> getPopularPosts() async {
+    print('Fetching popular posts...');
+
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.fetchPopularPost();
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        GroupPopularPostModel responseModel = GroupPopularPostModel.fromJson(response.data);
+        state = state.copyWith(groupPopularPostdocs: responseModel.data?.docs);
+      }
+    } catch (e) {
+     print(e);
+    } finally {}
   }
 
   Future<void> getRecommendedGroups() async {
@@ -492,16 +552,15 @@ class GroupVm extends StateNotifier<GroupState> {
       final response = await _groupRepository.recommendedGroup();
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        RecommendedGroupModel responseModel = RecommendedGroupModel.fromJson(response.data);
+        RecommendedGroupModel responseModel =
+            RecommendedGroupModel.fromJson(response.data);
         state = state.copyWith(recommendedGroupDocs: responseModel.data?.docs);
       } else {
         print('Error: Status code ${response.statusCode}');
       }
     } catch (e) {
       print(e);
-    } finally {
-
-    }
+    } finally {}
     return null;
   }
 
@@ -511,16 +570,14 @@ class GroupVm extends StateNotifier<GroupState> {
       final response = await _groupRepository.getEvent();
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        FetchAllEventModel responseModel = FetchAllEventModel.fromJson(response.data);
+        EventResponse responseModel = EventResponse.fromJson(response.data);
         state = state.copyWith(fetchAllEventDocs: responseModel.data?.docs);
       } else {
         print('Error: Status code ${response.statusCode}');
       }
     } catch (e) {
       print(e);
-    } finally {
-
-    }
+    } finally {}
   }
 
   Future<void> getJoinRequest(groupId) async {
@@ -529,141 +586,54 @@ class GroupVm extends StateNotifier<GroupState> {
       final response = await _groupRepository.joinRequest(groupId);
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        JoinRequestModel responseModel = JoinRequestModel.fromJson(response.data);
+        JoinRequestModel responseModel =
+            JoinRequestModel.fromJson(response.data);
         state = state.copyWith(docs: responseModel.data?.docs);
       } else {
         print('Error: Status code ${response.statusCode}');
       }
     } catch (e) {
       print(e);
+    } finally {}
+  }
+
+  Future<void> reportGroup(
+      {required String groupId,
+        required String reason,
+        String? comment,
+        required BuildContext context}) async {
+    try {
+      state = state.copyWith(isReportingGroup: true);
+      final response = await _groupRepository.reportGroup(
+          groupId, reason);
+
+      if (response.success && context.mounted) {
+        // show success modal
+        WayaNav.goBack();
+
+        if (context.mounted) {
+          await WayaUtils.showNotice(
+              context: context,
+              title: "Thank you for reporting",
+              onPress: () {
+                WayaNav.replaceNamed(Groups.route);
+              },
+              icon: Image.asset(
+                WayaAssets.images.eCheckEvent.path,
+                scale: 1.5,
+              ),
+              message:
+              'Your report has been submitted. Our team will review the issue and take appropriate action.',
+              buttonText: 'Go to Group Page');
+        }
+        print(response.data);
+      }
+    } catch (error) {
+      print(error);
     } finally {
-
+      state = state.copyWith(isReportingGroup: false);
     }
   }
-
-/*
-  Future<List<Comments>> getCommentsStream(String postId) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.getComment(postId);
-      state = state.copyWith(isLoading: false);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        FetchComment responseModel = FetchComment.fromJson(response.data);
-        state = state.copyWith(comments: responseModel.data?.comments);
-        return responseModel.data?.comments ?? [];
-      }
-    } catch (e) {
-      print(e);
-    }
-    state = state.copyWith(isLoading: false);
-    return [];
-  }
-
-
-  Future<void> commentOnPost(String postId, String content) async {
-    try {
-      final response = await _groupRepository.commentOnPost(postId, content);
-      if (response!.statusCode == 200 || response.statusCode == 201) {
-        getCommentsStream(postId);
-      }
-    }catch (e) {
-      print("Error: $e");
-    }
-  }
-
-  Future<void> deletePost( ctx, {required String postId, required String userId}) async {
-    try {
-      final response =  await _groupRepository.deletePost(postId);
-      if(response.success && ctx.mounted){
-        getAllPosts(userId);
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Post deleted successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    } catch (e) {
-      print(e);
-    } finally{
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
-  Future<void> repost( ctx, {required String postId}) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.repost(postId);
-      state = state.copyWith(isLoading: false);
-      if(response.success && ctx.mounted){
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Post reposted successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    } catch (e) {
-      print(e);
-    } finally{
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
-  Future<void> sharePost( ctx, {required String postId}) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.sharePost(postId);
-      state = state.copyWith(isLoading: false);
-      if(response.success && ctx.mounted){
-      }
-    } catch (e) {
-      print(e);
-    } finally{
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
-  Future<void> bookmarkPost( ctx, {required String postId}) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.bookMarkPost(postId);
-      state = state.copyWith(isLoading: false);
-      if(response.success && ctx.mounted){
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Post bookmarked successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    } catch (e) {
-      print(e);
-    } finally{
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
-  Future<void> likePost( ctx, {required String postId, required String userId}) async {
-    try {
-      //state = state.copyWith(isLoading: true);
-      final response =  await _groupRepository.likePost(postId);
-      //state = state.copyWith(isLoading: false);
-      if(response.success && ctx.mounted){
-        getAllPosts(userId);
-
-      }
-    } catch (e) {
-      print(e);
-    } finally{
-      //state = state.copyWith(isLoading: false);
-    }
-  }
-*/
-
 }
 
 final groupResponseProvider = StateProvider<GroupResponse?>((ref) => null);
@@ -677,6 +647,11 @@ final createGroupProvider = StateNotifierProvider<GroupVm, GroupState>((ref) {
   final groupRepository = ref.watch(groupProvider);
   final localDataSource = ref.watch(localDataSourceProvider);
 
-  return GroupVm(ref, ImagePicker(), groupRepository,
-    localDataSource, WayaSecureDataSource(), );
+  return GroupVm(
+    ref,
+    ImagePicker(),
+    groupRepository,
+    localDataSource,
+    WayaSecureDataSource(),
+  );
 });

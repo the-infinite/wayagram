@@ -9,19 +9,27 @@ class InventoryWidget extends StatelessWidget {
   final Color color;
   final String metrics;
 
-  const InventoryWidget({super.key, required this.metrics, required this.color, required this.title});
+  const InventoryWidget(
+      {super.key,
+      required this.metrics,
+      required this.color,
+      required this.title});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     final screenWidth = context.width;
 
     final titlefontSize = screenWidth * 0.030;
-    final metricFontSize = screenWidth * 0.050;
+
+    double baseMetricFontSize = screenWidth * 0.050;
+
+    double metricFontSize = baseMetricFontSize / (1 + (metrics.length * 0.04));
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-      decoration: BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
+      decoration:
+          BoxDecoration(color: color, borderRadius: BorderRadius.circular(10)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -38,7 +46,9 @@ class InventoryWidget extends StatelessWidget {
           Text(
             metrics,
             style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.customBlack, fontWeight: FontWeight.w600, fontSize: metricFontSize),
+                color: wayaTheme.colorScheme.customBlack,
+                fontWeight: FontWeight.w600,
+                fontSize: metricFontSize),
           ),
         ],
       ),

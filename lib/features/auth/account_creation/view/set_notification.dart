@@ -16,7 +16,7 @@ class SetNotification extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(setNotificationVmProvider);
+    final viewModel = ref.read(setNotificationVmProvider.notifier);
     return Scaffold(
         body: Padding(
       padding: WayaEdgeInsetsExtension.fromPercentage(

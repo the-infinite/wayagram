@@ -26,7 +26,7 @@ class PushNotifications {
 
     //? Second, initialize local notifications.
     try {
-      var androidInitialize = const AndroidInitializationSettings('@mipmap/launcher_icon');
+      var androidInitialize = const AndroidInitializationSettings('@mipmap/wayagram_ic');
       var iOSInitialize = const DarwinInitializationSettings();
       var initializationSettings = InitializationSettings(android: androidInitialize, iOS: iOSInitialize);
 

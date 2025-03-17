@@ -18,7 +18,7 @@ class BottomViewVm extends ChangeNotifier {
     BottomBarItem(icon: WayaAssets.icons.bDonation.path, label: 'Donations'),
     BottomBarItem(icon: WayaAssets.icons.bBid.path, label: 'Bid'),
     BottomBarItem(icon: WayaAssets.icons.bChat.path, label: 'Chat'),
-    BottomBarItem(icon: WayaAssets.icons.bMenu.path, label: 'Menu'),
+    BottomBarItem(icon: WayaAssets.icons.bMenu.path, label: 'More'),
   ];
 
 
