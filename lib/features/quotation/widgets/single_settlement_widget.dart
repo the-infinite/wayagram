@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
@@ -46,7 +47,7 @@ class SingleSettlementWidget extends ConsumerWidget {
                         Text(
                           "Payment From Buyer",
                           style: wayaTheme.textTheme.bodyMedium
-                              ?.copyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),
+                              ?.copyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
                         ),
 
                         // Some space.
@@ -64,7 +65,7 @@ class SingleSettlementWidget extends ConsumerWidget {
                             style: wayaTheme.textTheme.bodyMedium?.copyWith(
                               color: wayaTheme.colorScheme.success,
                               fontWeight: FontWeight.w500,
-                              fontSize: 11,
+                              fontSize: 11.sp,
                             ),
                           ),
                         ),
@@ -83,7 +84,7 @@ class SingleSettlementWidget extends ConsumerWidget {
                       style: wayaTheme.textTheme.bodyMedium?.copyWith(
                         color: wayaTheme.colorScheme.success,
                         fontWeight: FontWeight.w500,
-                        fontSize: 11,
+                        fontSize: 11.sp,
                       ),
                     ),
 
@@ -95,7 +96,7 @@ class SingleSettlementWidget extends ConsumerWidget {
                       "Aug 11, 2024",
                       style: wayaTheme.textTheme.bodyMedium?.copyWith(
                         color: wayaTheme.colorScheme.greyColor400,
-                        fontSize: 13,
+                        fontSize: 13.sp,
                       ),
                     )
                   ],

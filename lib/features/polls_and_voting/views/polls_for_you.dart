@@ -74,7 +74,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                             //' • ${formatTimeAgo('${poll.createdAt}')}',
                             ' • ${ WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 14,
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.w400,
                                 color: Theme.of(context).colorScheme.greyColor500 ),
                           ),
@@ -114,7 +114,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                               Text(
                                 '${e.description?.capitalizeFirst}',
                                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 12,
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w400,
                                     color: Theme.of(context).colorScheme.greyColor500 ),
                               ),),
@@ -122,7 +122,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                         Text(
                           '${poll.voteCount} ${poll.voteCount == 0 || poll.voteCount == 1 ? 'Vote' : 'Votes'} • $hoursLeft hours remaining',
                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).colorScheme.greyColor500 ),
                         ),
@@ -250,7 +250,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
               child: Text(
                 name,
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(ctx).colorScheme.primary600 ),
               ),
@@ -263,7 +263,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
               Text(
                 name,
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(ctx).colorScheme.primary600 ),
               ),
@@ -311,7 +311,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
               child: Text(
                 name,
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(ctx).colorScheme.primary600 ),
               ),
@@ -324,7 +324,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
               Text(
                 name,
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(ctx).colorScheme.primary600 ),
               ),
@@ -369,7 +369,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                 Text(
                   '$name  ',
                   style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(ctx).colorScheme.white ),
                 ),
@@ -381,7 +381,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                   Text(
                     name,
                     style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(ctx).colorScheme.primary600 ),
                   ),
@@ -395,14 +395,14 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
               Text(
                 '$votePercentage%',
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 20,
+                    fontSize: 20.sp,
                     fontWeight: FontWeight.w700,
                     color: Theme.of(ctx).colorScheme.black ),
               ),
               Text(
                 '$voteCount ${voteCount == '1'? 'vote' : 'votes'}',
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                     color: Theme.of(ctx).colorScheme.greyColor500 ),
               ),
@@ -435,7 +435,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
               color: color,
               fontFamily: WayaConstants.fontFamily,
               fontWeight: FontWeight.w400,
-              fontSize: 14,
+              fontSize: 14.sp,
             ),
           )
         ],

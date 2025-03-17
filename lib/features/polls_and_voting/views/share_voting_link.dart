@@ -70,7 +70,7 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink>  {
                         child: Text(
                           'Who is the current president of\nnigeria?',
                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 24,
+                              fontSize: 24.sp,
                               fontWeight: FontWeight.w700,
                               color: Theme.of(context).colorScheme.white ),
                           textAlign: TextAlign.center,
@@ -80,7 +80,7 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink>  {
                       Text(
                         'Fasas has participated in this poll and is recommending you take part in the poll',
                         style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w400,
                             color: Theme.of(context).colorScheme.white,
                         ),
@@ -140,14 +140,14 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink>  {
           Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
+            children:  [
               Text(
                 "Profile Progress",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
               ),
               Text(
                 "70% completed",
-                style: TextStyle(fontSize: 14, color: Colors.grey),
+                style: TextStyle(fontSize: 14.sp, color: Colors.grey),
               ),
             ],
           ),
@@ -190,7 +190,7 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink>  {
             Text(
               name,
               style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                   color: WayaColors.success),
             ),
@@ -246,7 +246,7 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink>  {
               child: Text(
                 name,
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(ctx).colorScheme.primary600 ),
               ),
@@ -259,7 +259,7 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink>  {
               Text(
                 name,
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(ctx).colorScheme.primary600 ),
               ),
@@ -344,7 +344,7 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink>  {
                 Text(
                   '$name  ',
                   style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(ctx).colorScheme.white ),
                 ),
@@ -356,7 +356,7 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink>  {
                   Text(
                     name,
                     style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(ctx).colorScheme.primary600 ),
                   ),
@@ -370,14 +370,14 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink>  {
               Text(
                 '$votePercentage%',
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 20,
+                    fontSize: 20.sp,
                     fontWeight: FontWeight.w700,
                     color: Theme.of(ctx).colorScheme.black ),
               ),
               Text(
                 '$voteCount votes',
                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                     color: Theme.of(ctx).colorScheme.greyColor500 ),
               ),

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
 class PinEntryBottomSheet extends StatefulWidget {
@@ -49,9 +50,9 @@ class _PinEntryBottomSheetState extends State<PinEntryBottomSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
+           Text(
             'Enter your PIN',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 24),
           GridView.builder(
@@ -77,8 +78,8 @@ class _PinEntryBottomSheetState extends State<PinEntryBottomSheet> {
               child: Center(
                 child: index < _pin.length
                     ? Text("*",
-                        style: const TextStyle(
-                          fontSize: 24,
+                        style:  TextStyle(
+                          fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
                         ))
                     : null,
@@ -105,7 +106,7 @@ class _PinEntryBottomSheetState extends State<PinEntryBottomSheet> {
                   );
                 } else if (index == 10) {
                   return _buildKeypadButton(
-                    child: const Text('0', style: TextStyle(fontSize: 20)),
+                    child:  Text('0', style: TextStyle(fontSize: 20.sp)),
                     onPressed: () => _addDigit('0'),
                   );
                 } else if (index == 11) {
@@ -115,7 +116,7 @@ class _PinEntryBottomSheetState extends State<PinEntryBottomSheet> {
                   );
                 } else {
                   return _buildKeypadButton(
-                    child: Text('${index + 1}', style: const TextStyle(fontSize: 24)),
+                    child: Text('${index + 1}', style:  TextStyle(fontSize: 24.sp)),
                     onPressed: () => _addDigit('${index + 1}'),
                   );
                 }

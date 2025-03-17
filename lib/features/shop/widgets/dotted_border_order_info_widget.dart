@@ -1,5 +1,6 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
@@ -32,14 +33,14 @@ class DottedBorderOrderInfoWidget extends StatelessWidget {
                       title,
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor400,
-                          fontSize: 13),
+                          fontSize: 13.sp),
                     ),
                     const Gap(6),
                     Text(
                       description,
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 14),
+                          fontSize: 14.sp),
                     )
                   ],
                 ),

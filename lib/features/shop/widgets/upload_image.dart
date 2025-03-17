@@ -67,7 +67,7 @@ class UploadImage extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: wayaTheme.textTheme.bodyMedium?.copyWith(
                     color: wayaTheme.colorScheme.customPrimary,
-                    fontSize: 13,
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -103,7 +103,7 @@ class UploadImage extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: wayaTheme.textTheme.bodyMedium?.copyWith(
                     color: wayaTheme.colorScheme.customPrimary,
-                    fontSize: 13,
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -194,7 +194,7 @@ class UploadLogo extends StatelessWidget {
                       child: Text(
                         "Upload Logo",
                         style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.white, fontSize: 13, fontWeight: FontWeight.w400),
+                            color: wayaTheme.colorScheme.white, fontSize: 13.sp, fontWeight: FontWeight.w400),
                       ),
                     )),
                   ),
@@ -250,7 +250,7 @@ class UploadProductImage extends StatelessWidget {
                       "Click to upload",
                       textAlign: TextAlign.center,
                       style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customPrimary, fontSize: 13, fontWeight: FontWeight.w500),
+                          color: wayaTheme.colorScheme.customPrimary, fontSize: 13.sp, fontWeight: FontWeight.w500),
                     ),
                   ),
                   const Gap(8),

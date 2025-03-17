@@ -50,7 +50,7 @@ class _PollsModalState extends ConsumerState<PollsModal> {
             Text(
               'Congratulations your\npoll is live!',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -80,11 +80,11 @@ class _PollsModalState extends ConsumerState<PollsModal> {
                   Clipboard.setData(ClipboardData(
                       text: widget.url));
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
+                     SnackBar(
                       content: Text(
                         'Link copied to clipboard',
                         style:
-                        TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                        TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
                       ),
                       backgroundColor: WayaColors.primary,
                       duration: Duration(seconds: 2),
@@ -190,7 +190,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
             Text(
               'Vote Option',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -203,7 +203,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
                     text: 'Select the number of votes you want to cast.  ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -211,7 +211,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
                     text: 'Each vote costs ₦${widget.voteFee}',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -240,7 +240,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
                   '${ref.read(createPollVotingProvider.notifier).formatAm(amount)}',
                   //amount,
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 48,
+                      fontSize: 48.sp,
                       fontWeight: FontWeight.w600,
                       color: amount == '0' ?Theme.of(context).colorScheme.greyColor400 : Theme.of(context).colorScheme.black),
                   textAlign: TextAlign.center,
@@ -349,7 +349,7 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
             Text(
               'Vote Option',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -362,7 +362,7 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
                     text: 'Are you sure you want to cast ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -370,7 +370,7 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
                     text: '${ref.read(createPollVotingProvider.notifier).formatAm(widget.amountPaid)} Votes ',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -378,7 +378,7 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
                     text: 'this would cost  ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -386,7 +386,7 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
                     text: '₦${ref.read(createPollVotingProvider.notifier).formatAm('${num.parse(widget.amountPaid)*num.parse(widget.voteFee)}')}',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -453,7 +453,7 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
             Text(
               'Thank you for voting!\nYour support means everything',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -514,7 +514,7 @@ class _VoteInsufficientModalState extends State<VoteInsufficientModal> {
             Text(
               'Insufficient Funds',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -589,7 +589,7 @@ class NumPadButton extends StatelessWidget {
               : Text(
             text!,
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 24.sp,
               color: Colors.grey.shade800,
             ),
           ),

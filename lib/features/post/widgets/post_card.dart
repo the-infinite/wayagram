@@ -104,7 +104,7 @@ class PostCard extends StatelessWidget {
                                 Text(
                                   '• $time',
                                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                      fontSize: 14,
+                                      fontSize: 14.sp,
                                       fontWeight: FontWeight.w400,
                                       color: Theme.of(context).colorScheme.greyColor500 ),
                                 ),
@@ -364,7 +364,7 @@ class PostCard extends StatelessWidget {
             style: TextStyle().wayaCopyWith(
                 color: color,
                 fontWeight: FontWeight.w500,
-                fontSize: 12),
+                fontSize: 12.sp),
           )
         ],
       ),

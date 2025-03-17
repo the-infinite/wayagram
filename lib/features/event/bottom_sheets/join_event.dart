@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -46,7 +47,7 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
             TextSpan(
                 text: WayaHelpers.formatPrice(widget.event.fee),
                 style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                    color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w500, fontSize: 15))
+                    color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w500, fontSize: 15.sp))
           ])),
           const Gap(30),
           Container(
@@ -60,7 +61,7 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
                 Text(
                   "Available Balance",
                   style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: wayaTheme.colorScheme.greyColor900,
                       ),
                 ),

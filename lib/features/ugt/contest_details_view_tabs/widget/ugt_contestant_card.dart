@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -82,7 +83,7 @@ class UgtContestantCard extends ConsumerWidget {
           trailing: SizedBox(
             width: 100,
             child: WayaButton(
-              fontSize: 14,
+              fontSize: 14.sp,
               color: WayaColors.primary50,
               textColor: WayaColors.primary500,
               callback: () {

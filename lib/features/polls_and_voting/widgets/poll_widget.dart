@@ -51,7 +51,7 @@ class PollWidget extends ConsumerWidget {
               Text(
                 "• ${WayaHelpers.formatTimeAgo('${poll.startDate}')}",
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                     color: Theme.of(context).colorScheme.greyColor500),
               ),
@@ -83,7 +83,7 @@ class PollWidget extends ConsumerWidget {
                           .textTheme
                           .bodyMedium!
                           .wayaCopyWith(
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
                               color:
                                   Theme.of(context).colorScheme.greyColor500),
@@ -96,7 +96,7 @@ class PollWidget extends ConsumerWidget {
           Text(
             '${poll.maxVotesPerUser ?? 0} Votes • $daysLeft hours remaining',
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.greyColor500),
           ),
@@ -153,7 +153,7 @@ class PollWidget extends ConsumerWidget {
                               .textTheme
                               .bodyMedium!
                               .wayaCopyWith(
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                   fontWeight: FontWeight.w600,
                                   color:
                                       Theme.of(context).colorScheme.primary600),

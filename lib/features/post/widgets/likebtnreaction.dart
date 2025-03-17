@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 
 class LikeButtonWithReactions extends StatefulWidget {
@@ -80,7 +81,7 @@ class _LikeButtonWithReactionsState extends State<LikeButtonWithReactions> {
         padding: const EdgeInsets.symmetric(horizontal: 4),
         child: Text(
           emoji,
-          style: const TextStyle(fontSize: 24),
+          style:  TextStyle(fontSize: 24.sp),
         ),
       ),
     );
@@ -101,7 +102,7 @@ class _LikeButtonWithReactionsState extends State<LikeButtonWithReactions> {
           Text(
             "Like",
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 16.sp,
               color: widget.isLiked ? Colors.red : Colors.black,
             ),
           ),

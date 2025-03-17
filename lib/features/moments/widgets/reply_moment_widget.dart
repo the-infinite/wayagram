@@ -65,14 +65,14 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
                     Border.all(width: 1, color: wayaTheme.colorScheme.white)),
             child: TextField(
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 12.sp,
                 color: wayaTheme.colorScheme.white,
               ),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: 'Reply Moment',
                 hintStyle: TextStyle(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   color: wayaTheme.colorScheme.white,
                 ),
               ),

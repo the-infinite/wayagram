@@ -74,7 +74,7 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
         ),
         subtitle: Text(subTitle,
           style: TextStyle().wayaCopyWith(
-              fontSize: 14,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.greyColor500 ),
         ),

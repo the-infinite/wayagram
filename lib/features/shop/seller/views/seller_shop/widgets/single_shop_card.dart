@@ -57,7 +57,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                   Text(
                     widget.shop.name.capitalizeFirst!,
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customBlack, fontSize: 14),
+                        color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
                   ),
                   const Gap(8),
                   Container(
@@ -74,7 +74,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                             ? wayaTheme.colorScheme.error
                             : wayaTheme.colorScheme.success,
                         fontWeight: FontWeight.w500,
-                        fontSize: 11,
+                        fontSize: 11.sp,
                       ),
                     ),
                   )
@@ -157,7 +157,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
             style: TextStyle().wayaCopyWith(
                 color: wayaTheme.colorScheme.customBlack,
                 fontWeight: FontWeight.w500,
-                fontSize: 12),
+                fontSize: 12.sp),
           )
         ],
       ),

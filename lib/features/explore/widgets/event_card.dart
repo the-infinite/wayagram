@@ -77,7 +77,7 @@ class EventCard extends ConsumerWidget {
                   height: 30,
                   textStyle: wayaTheme.textTheme.hintStyle.wayaCopyWith(
                       color: wayaTheme.colorScheme.white,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500),
                   radius: 6,
                 ),

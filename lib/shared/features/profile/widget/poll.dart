@@ -53,7 +53,7 @@ class SinglePollWidget extends ConsumerWidget {
               Text(
                 "• ${WayaHelpers.formatTimeAgo(poll.startDate.toIso8601String())}",
                 style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: wayaTheme.colorScheme.greyColor500,
                 ),
@@ -83,7 +83,7 @@ class SinglePollWidget extends ConsumerWidget {
                   ? Text(
                       description,
                       style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                        fontSize: 12,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
                         color: wayaTheme.colorScheme.greyColor500,
                       ),
@@ -96,7 +96,7 @@ class SinglePollWidget extends ConsumerWidget {
           Text(
             '${poll.maxVotesPerUser ?? 0} Votes • $daysLeft hours remaining',
             style: wayaTheme.textTheme.bodyMedium!
-                .copyWith(fontSize: 12, fontWeight: FontWeight.w400, color: wayaTheme.colorScheme.greyColor500),
+                .copyWith(fontSize: 12.sp, fontWeight: FontWeight.w400, color: wayaTheme.colorScheme.greyColor500),
           ),
           const Gap(10),
           // index == 0?
@@ -144,7 +144,7 @@ class SinglePollWidget extends ConsumerWidget {
                         Text(
                           choice.text,
                           style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                              fontSize: 14, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.primary600),
+                              fontSize: 14.sp, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.primary600),
                         ),
                       ],
                     )),

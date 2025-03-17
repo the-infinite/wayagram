@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 
 class ExportTransaction extends StatefulWidget {
@@ -70,18 +71,18 @@ class _ExportTransactionState extends State<ExportTransaction> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+           Text(
             'Export Transaction',
             style: TextStyle(
-              fontSize: 24,
+              fontSize: 24.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 20),
-          const Text(
+           Text(
             'Time Frame',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 16.sp,
               color: Colors.grey,
             ),
           ),
@@ -96,20 +97,20 @@ class _ExportTransactionState extends State<ExportTransaction> {
             ],
           ),
           const SizedBox(height: 20),
-          const Text(
+           Text(
             'Start Date',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 16.sp,
               color: Colors.grey,
             ),
           ),
           const SizedBox(height: 10),
           _buildDateField(context, true),
           const SizedBox(height: 20),
-          const Text(
+           Text(
             'End Date',
             style: TextStyle(
-              fontSize: 16,
+              fontSize: 16.sp,
               color: Colors.grey,
             ),
           ),
@@ -130,11 +131,11 @@ class _ExportTransactionState extends State<ExportTransaction> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text(
+              child:  Text(
                 'Export Transaction',
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),

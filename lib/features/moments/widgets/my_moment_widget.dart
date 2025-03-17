@@ -100,7 +100,7 @@ class MyMomentWidget extends ConsumerWidget {
                                   : 'No Caption',
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w600),
+                              fontSize: 14.sp, fontWeight: FontWeight.w600),
                         ),
                       ),
                       SizedBox(
@@ -111,7 +111,7 @@ class MyMomentWidget extends ConsumerWidget {
                           Text(
                             timeago.format(moment.updatedAt),
                             style: TextStyle(
-                                fontSize: 12,
+                                fontSize: 12.sp,
                                 color: wayaTheme.colorScheme.greyColor400,
                                 fontWeight: FontWeight.w400),
                           ),
@@ -159,7 +159,7 @@ class MyMomentWidget extends ConsumerWidget {
                       Text(
                         "${moment.totalViews} VIEWS",
                         style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w500),
+                            fontSize: 12.sp, fontWeight: FontWeight.w500),
                       )
                     ],
                   ),
@@ -266,7 +266,7 @@ class MyMomentActions extends StatelessWidget {
               style: TextStyle(
                   color: textColor ?? wayaTheme.colorScheme.customBlack,
                   fontWeight: FontWeight.w500,
-                  fontSize: 12))
+                  fontSize: 12.sp))
         ],
       ),
     );

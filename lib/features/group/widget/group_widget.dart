@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -57,7 +58,7 @@ class GroupWidget extends StatelessWidget {
               children: [
                 Text(name,
                     style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
                         color: Theme.of(context).colorScheme.black)),
                 Spacer(),
@@ -72,7 +73,7 @@ class GroupWidget extends StatelessWidget {
                                 height: 38,
                                 textStyle: TextStyle(
                                     color: wayaTheme.colorScheme.white,
-                                    fontSize: 12,
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w500),
                                 // radius: 6,
                               )
@@ -89,7 +90,7 @@ class GroupWidget extends StatelessWidget {
                                         .primary600),
                                 textStyle: wayaTheme.textTheme.bodyMedium!
                                     .wayaCopyWith(
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                         fontWeight: FontWeight.w600,
                                         color: Theme.of(context)
                                             .colorScheme
@@ -102,7 +103,7 @@ class GroupWidget extends StatelessWidget {
             subtitle: Text(
               count,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500),
             ),
@@ -113,7 +114,7 @@ class GroupWidget extends StatelessWidget {
             child: Text(
               desc,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500),
             ),

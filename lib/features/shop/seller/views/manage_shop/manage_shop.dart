@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
@@ -153,7 +154,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                     "View My Products",
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.customPrimary,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500),
                   )
                 ],
@@ -178,7 +179,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
             const Gap(15),
             Text("Quick Action",
                 style: TextStyle().wayaCopyWith(
-                    fontSize: 15,
+                    fontSize: 15.sp,
                     fontWeight: FontWeight.w600,
                     color: wayaTheme.colorScheme.customBlack)),
             const Gap(15),
@@ -252,7 +253,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
             const Gap(15),
             Text("Recent Orders",
                 style: TextStyle().wayaCopyWith(
-                    fontSize: 15,
+                    fontSize: 15.sp,
                     fontWeight: FontWeight.w600,
                     color: wayaTheme.colorScheme.customBlack)),
             const Gap(15),

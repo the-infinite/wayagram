@@ -154,7 +154,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                                .textTheme
                                                .bodyMedium!
                                                .wayaCopyWith(
-                                               fontSize: 14,
+                                               fontSize: 14.sp,
                                                fontWeight: FontWeight.w400,
                                                color: Theme.of(context)
                                                    .colorScheme
@@ -730,7 +730,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                       const Gap(10),
                       Text('${recommendedPage?.name?.capitalizeFirst}',
                           style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.w600,
                               color: Theme.of(context).colorScheme.black )),
                       const Gap(3),
@@ -740,7 +740,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                             .textTheme
                             .bodyMedium!
                             .wayaCopyWith(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w400,
                             color:
                             Theme.of(context).colorScheme.greyColor500),
@@ -755,7 +755,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                           text: 'Follow',
                           height: 30,
                           textStyle: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w600,
                               color: Theme.of(context).colorScheme.white ),
                         ),
@@ -834,7 +834,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                                 .textTheme
                                                 .bodyMedium!
                                                 .wayaCopyWith(
-                                                fontSize: 14,
+                                                fontSize: 14.sp,
                                                 fontWeight: FontWeight.w400,
                                                 color: Theme.of(context)
                                                     .colorScheme
@@ -1461,7 +1461,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                         .textTheme
                                         .bodyMedium!
                                         .wayaCopyWith(
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                         fontWeight: FontWeight.w500,
                                         color: Theme.of(context)
                                             .colorScheme
@@ -1572,7 +1572,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
                                           style: TextStyle(
                                               color:
                                                   wayaTheme.colorScheme.error,
-                                              fontSize: 12),
+                                              fontSize: 12.sp),
                                         ),
                                       ),
                                   ],
@@ -1689,7 +1689,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
               Text(
                 ' • ${time}h ago',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                     color: Theme.of(context).colorScheme.greyColor500),
               ),
@@ -1707,7 +1707,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
             child: Text(
               '48.6k Followers',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500),
             ),
@@ -1763,7 +1763,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
           Text(
             text,
             style: TextStyle().wayaCopyWith(
-                color: color, fontWeight: FontWeight.w500, fontSize: 12),
+                color: color, fontWeight: FontWeight.w500, fontSize: 12.sp),
           )
         ],
       ),

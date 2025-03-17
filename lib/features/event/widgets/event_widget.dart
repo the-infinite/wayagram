@@ -107,7 +107,7 @@ class EventWidget extends ConsumerWidget {
                               color: wayaTheme.colorScheme.pending50,
                               textStyle: wayaTheme.textTheme.hintStyle.copyWith(
                                   color: wayaTheme.colorScheme.pending,
-                                  fontSize: 12,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w500),
                               radius: 14,
                             ),

@@ -144,7 +144,7 @@ class _PagePostState extends ConsumerState<PagePost>
                                                   .textTheme
                                                   .bodyMedium!
                                                   .wayaCopyWith(
-                                                  fontSize: 14,
+                                                  fontSize: 14.sp,
                                                   fontWeight: FontWeight.w400,
                                                   color: Theme.of(context)
                                                       .colorScheme
@@ -482,7 +482,7 @@ class _PagePostState extends ConsumerState<PagePost>
                                               .textTheme
                                               .bodyMedium!
                                               .wayaCopyWith(
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                               fontWeight: FontWeight.w500,
                                               color: Theme.of(context)
                                                   .colorScheme
@@ -549,7 +549,7 @@ class _PagePostState extends ConsumerState<PagePost>
                                           style: TextStyle(
                                               color:
                                               wayaTheme.colorScheme.error,
-                                              fontSize: 12),
+                                              fontSize: 12.sp),
                                         ),
                                       ),
                                   ],
@@ -666,7 +666,7 @@ class _PagePostState extends ConsumerState<PagePost>
               Text(
                 ' • ${time}h ago',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w400,
                     color: Theme.of(context).colorScheme.greyColor500),
               ),
@@ -684,7 +684,7 @@ class _PagePostState extends ConsumerState<PagePost>
             child: Text(
               '48.6k Followers',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500),
             ),
@@ -740,7 +740,7 @@ class _PagePostState extends ConsumerState<PagePost>
           Text(
             text,
             style: TextStyle().wayaCopyWith(
-                color: color, fontWeight: FontWeight.w500, fontSize: 12),
+                color: color, fontWeight: FontWeight.w500, fontSize: 12.sp),
           )
         ],
       ),

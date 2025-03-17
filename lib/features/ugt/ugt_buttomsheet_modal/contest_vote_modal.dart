@@ -49,7 +49,7 @@ class _PollsModalState extends ConsumerState<PollsModal> {
             Text(
               'Congratulations your\npoll is live!',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -179,9 +179,9 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
+           Text(
             'Enter your PIN',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 24),
           GridView.builder(
@@ -207,8 +207,8 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
               child: Center(
                 child: index < _pin.length
                     ? Text("*",
-                        style: const TextStyle(
-                          fontSize: 24,
+                        style:  TextStyle(
+                          fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
                         ))
                     : null,
@@ -260,7 +260,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                 } else {
                   return _buildKeypadButton(
                     child: Text('${index + 1}',
-                        style: const TextStyle(fontSize: 24)),
+                        style:  TextStyle(fontSize: 24.sp)),
                     onPressed: () => _addDigit('${index + 1}'),
                   );
                 }
@@ -391,7 +391,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
             Text(
               'Vote Option',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -404,7 +404,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
                     text: 'Select the number of votes you want to cast.  ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -412,7 +412,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
                     text: 'Each vote costs ₦${widget.voteFee}',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -440,7 +440,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
                   '${ref.read(createPollVotingProvider.notifier).formatAm(amount)}',
                   //amount,
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 48,
+                      fontSize: 48.sp,
                       fontWeight: FontWeight.w600,
                       color: amount == '0'
                           ? Theme.of(context).colorScheme.greyColor400
@@ -559,7 +559,7 @@ class _ConfirmVoteOptionModalState
             Text(
               'Vote Option',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -572,7 +572,7 @@ class _ConfirmVoteOptionModalState
                     text: 'Are you sure you want to cast ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -581,7 +581,7 @@ class _ConfirmVoteOptionModalState
                         '${ref.read(createPollVotingProvider.notifier).formatAm(widget.amount)} Votes ',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -589,7 +589,7 @@ class _ConfirmVoteOptionModalState
                     text: 'this would cost  ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -598,7 +598,7 @@ class _ConfirmVoteOptionModalState
                         '₦${ref.read(createPollVotingProvider.notifier).formatAm('${num.parse(widget.amount) * num.parse(widget.voteFee)}')}',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -726,7 +726,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
             Text(
               'Vote Contestant',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -739,7 +739,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                     text: 'Are you sure you want to cast ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -747,7 +747,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                     text: '${widget.voteCount} Votes ',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -755,7 +755,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                     text: 'For ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -763,7 +763,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                     text: '${widget.candidateName} ',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -771,7 +771,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                     text: 'this would cost  ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -780,7 +780,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                         '₦${formatMoney('${num.parse(widget.voteCount) * num.parse(widget.voteFee)}')}?',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -805,7 +805,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                       'Available Balance',
                       style: TextStyle().wayaCopyWith(
                         // color: WayaColors.primary,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -828,7 +828,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                               'Wallet Balance',
                               style: TextStyle().wayaCopyWith(
                                 color: WayaColors.greyColor500,
-                                fontSize: 14,
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -838,7 +838,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                                   '₦${formatMoney(viewModel.data?.balance ?? "00")}',
                                   style: TextStyle().wayaCopyWith(
                                     color: Colors.black,
-                                    fontSize: 16,
+                                    fontSize: 16.sp,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -846,7 +846,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                                   ".00",
                                   style: TextStyle().wayaCopyWith(
                                     color: WayaColors.greyColor400,
-                                    fontSize: 12,
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -956,7 +956,7 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
                     text: 'Thank you for voting for ',
                     style: TextStyle().wayaCopyWith(
                       fontWeight: FontWeight.w700,
-                      fontSize: 24,
+                      fontSize: 24.sp,
                       color: Theme.of(context).colorScheme.black,
                     ),
                   ),
@@ -964,7 +964,7 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
                     text: widget.candidateName,
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
-                      fontSize: 24,
+                      fontSize: 24.sp,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -972,7 +972,7 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
                     text: '! Your support means everything',
                     style: TextStyle().wayaCopyWith(
                       color: Theme.of(context).colorScheme.black,
-                      fontSize: 24,
+                      fontSize: 24.sp,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -1040,7 +1040,7 @@ class _VoteInsufficientModalState extends State<VoteInsufficientModal> {
             Text(
               'Insufficient Funds',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -1116,7 +1116,7 @@ class NumPadButton extends StatelessWidget {
               : Text(
                   text!,
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 24.sp,
                     color: Colors.grey.shade800,
                   ),
                 ),

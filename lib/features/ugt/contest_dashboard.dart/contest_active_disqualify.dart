@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -262,7 +263,7 @@ InkWell _buildActionNav(
         Text(
           text,
           style: TextStyle().wayaCopyWith(
-              color: color, fontWeight: FontWeight.w500, fontSize: 12),
+              color: color, fontWeight: FontWeight.w500, fontSize: 12.sp),
         )
       ],
     ),

@@ -197,7 +197,7 @@ class _ViewFullMediaState extends ConsumerState<ViewFullMedia>
                                                     .textTheme
                                                     .bodyMedium!
                                                     .wayaCopyWith(
-                                                    fontSize: 14,
+                                                    fontSize: 14.sp,
                                                     fontWeight: FontWeight.w400,
                                                     color: Theme.of(context)
                                                         .colorScheme
@@ -442,7 +442,7 @@ class _ViewFullMediaState extends ConsumerState<ViewFullMedia>
                                               .textTheme
                                               .bodyMedium!
                                               .wayaCopyWith(
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                               fontWeight: FontWeight.w500,
                                               color: Theme.of(context)
                                                   .colorScheme
@@ -509,7 +509,7 @@ class _ViewFullMediaState extends ConsumerState<ViewFullMedia>
                                           style: TextStyle(
                                               color:
                                               wayaTheme.colorScheme.error,
-                                              fontSize: 12),
+                                              fontSize: 12.sp),
                                         ),
                                       ),
                                   ],
@@ -626,7 +626,7 @@ class _ViewFullMediaState extends ConsumerState<ViewFullMedia>
           Text(
             text,
             style: TextStyle().wayaCopyWith(
-                color: color, fontWeight: FontWeight.w500, fontSize: 12),
+                color: color, fontWeight: FontWeight.w500, fontSize: 12.sp),
           )
         ],
       ),

@@ -113,7 +113,7 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
                       "Have a problem?",
                       style: WayaTextStyles.titleLarge.copyWith(
                         fontWeight: FontWeight.w700,
-                        fontSize: 24,
+                        fontSize: 24.sp,
                       ),
                     ),
 

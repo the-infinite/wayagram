@@ -155,7 +155,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
                                           Text(
                                             '• ${formatTimeAgo('${post.createdAt}')}',
                                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                                fontSize: 14,
+                                                fontSize: 14.sp,
                                                 fontWeight: FontWeight.w400,
                                                 color: Theme.of(context).colorScheme.greyColor500),
                                           ),
@@ -446,7 +446,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
                                           Text(
                                             '• ${formatTimeAgo('${post.createdAt}')}',
                                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                                fontSize: 14,
+                                                fontSize: 14.sp,
                                                 fontWeight: FontWeight.w400,
                                                 color: Theme.of(context).colorScheme.greyColor500),
                                           ),
@@ -722,7 +722,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
                                         Text(
                                           '• ${formatTimeAgo('${data?[index].createdAt}')}',
                                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 12,
+                                              fontSize: 12.sp,
                                               fontWeight: FontWeight.w500,
                                               color: Theme.of(context).colorScheme.greyColor500),
                                         ),
@@ -780,7 +780,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
                                         padding: const EdgeInsets.only(top: 5),
                                         child: Text(
                                           formState.errorText!,
-                                          style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                                          style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                                         ),
                                       ),
                                   ],
@@ -892,7 +892,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
               Text(
                 ' • ${time}h ago',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+                    fontSize: 14.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
               ),
               Spacer(),
               Image.asset(
@@ -908,7 +908,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
             child: Text(
               '48.6k Followers',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+                  fontSize: 14.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
             ),
           ),
         ),

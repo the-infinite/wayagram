@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -31,7 +32,7 @@ class PreviewAddedEvent extends ConsumerWidget {
           "Event Thumbnail",
           style: TextStyle().wayaCopyWith(
             color: wayaTheme.colorScheme.customBlack,
-            fontSize: 16,
+            fontSize: 16.sp,
           ),
         ),
         const Gap(15),

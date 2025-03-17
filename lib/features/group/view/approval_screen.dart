@@ -94,7 +94,7 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen>
                               Text(
                                  '${group?.user?.firstName} ${group?.user?.lastName}',
                                   style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                      fontSize: 14,
+                                      fontSize: 14.sp,
                                       fontWeight: FontWeight.w600,
                                       color: Theme.of(context).colorScheme.black ),),
                               Gap(5),
@@ -104,7 +104,7 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen>
                                     .textTheme
                                     .bodyMedium!
                                     .wayaCopyWith(
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                         fontWeight: FontWeight.w400,
                                         color: Theme.of(context)
                                             .colorScheme
@@ -128,7 +128,7 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen>
                                     textStyle: TextStyle().wayaCopyWith(
                                       color: wayaTheme.colorScheme.success,
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 12,
+                                      fontSize: 12.sp,
                                     ),
                                     isLoading: viewModel.isLoading,
                                     height: 32.h,
@@ -148,7 +148,7 @@ class _ApprovalScreenState extends ConsumerState<ApprovalScreen>
                                     textStyle: TextStyle().wayaCopyWith(
                                       color: wayaTheme.colorScheme.success,
                                       fontWeight: FontWeight.w600,
-                                      fontSize: 12,
+                                      fontSize: 12.sp,
                                     ),
                                     isLoading: viewModel.isLoading,
                                     height: 32.h,

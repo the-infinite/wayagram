@@ -56,7 +56,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                 "Need Support?",
                 style: theme.textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.w700,
-                  fontSize: 24,
+                  fontSize: 24.sp,
                 ),
               ),
             ),
@@ -109,7 +109,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                         formState.errorText!,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.error,
-                          fontSize: 12,
+                          fontSize: 12.sp,
                         ),
                       ),
                     ),
@@ -155,7 +155,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                         formState.errorText!,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.error,
-                          fontSize: 12,
+                          fontSize: 12.sp,
                         ),
                       ),
                     ),
@@ -183,7 +183,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                     Text(
                       "Phone Number",
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: theme.colorScheme.greyColor900,
                       ),
                     ),
@@ -251,7 +251,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                           formState.errorText!,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.error,
-                            fontSize: 12,
+                            fontSize: 12.sp,
                           ),
                         ),
                       ),
@@ -299,7 +299,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                           formState.errorText!,
                           style: theme.textTheme.bodyMedium?.copyWith(
                             color: theme.colorScheme.error,
-                            fontSize: 12,
+                            fontSize: 12.sp,
                           ),
                         ),
                       ),
@@ -344,7 +344,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                         formState.errorText!,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.error,
-                          fontSize: 12,
+                          fontSize: 12.sp,
                         ),
                       ),
                     ),

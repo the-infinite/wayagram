@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -35,7 +36,7 @@ class ApplicationProductDetails extends ConsumerWidget {
             Text(
               "Product Thumbnail",
               style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     color: wayaTheme.colorScheme.greyColor900,
                   ),
             ),
@@ -60,7 +61,7 @@ class ApplicationProductDetails extends ConsumerWidget {
             Text(
               "Front, Left, Right, and Back View",
               style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     color: wayaTheme.colorScheme.greyColor900,
                   ),
             ),

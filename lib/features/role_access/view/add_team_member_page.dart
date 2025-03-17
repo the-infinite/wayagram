@@ -73,7 +73,7 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                   text: 'Add user',
                   isLoading: isLoading.value,
                   textStyle: WayaTextStyles.bodySmall.copyWith(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.white),
                 )),
@@ -143,7 +143,7 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -180,7 +180,7 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -216,7 +216,7 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
