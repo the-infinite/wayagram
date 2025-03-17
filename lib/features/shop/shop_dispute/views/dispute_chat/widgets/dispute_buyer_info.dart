@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -55,7 +56,7 @@ class DisputeBuyerInfo extends StatelessWidget {
             verticalPadding: 4,
             textStyle: wayaTheme.textTheme.labelSmall?.copyWith(
               color: wayaTheme.colorScheme.white,
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.bold,
             ),
           ),

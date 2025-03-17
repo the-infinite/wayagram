@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 // Add this import for GetX
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -74,12 +75,12 @@ class _BottomViewState extends ConsumerState<BottomView> {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .copyWith(fontSize: 16, color: Theme.of(context).colorScheme.customBlack),
+                  .copyWith(fontSize: 16.sp, color: Theme.of(context).colorScheme.customBlack),
             ),
             content: Text(
               'Are you sure you want to exit?',
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  fontSize: 14, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor700),
+                  fontSize: 14.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor700),
             ),
             actions: <Widget>[
               SizedBox(
@@ -171,12 +172,12 @@ class _BottomViewState extends ConsumerState<BottomView> {
             type: BottomNavigationBarType.fixed,
             selectedLabelStyle: TextStyle().wayaCopyWith(
               color: wayaTheme.colorScheme.customPrimary,
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
             ),
             unselectedLabelStyle: TextStyle().wayaCopyWith(
               color: wayaTheme.colorScheme.customBlack,
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
             ),
             items: bottomNavigationItem,

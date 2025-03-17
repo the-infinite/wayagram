@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -79,7 +80,9 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -109,7 +112,9 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -138,7 +143,9 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -173,7 +180,9 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -200,7 +209,9 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -228,7 +239,9 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(
+                                  color: wayaTheme.colorScheme.error,
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -326,7 +339,9 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -365,7 +380,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -397,8 +412,9 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Privacy Option",
-                        style: wayaTheme.textTheme.bodyMedium!
-                            .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customBlack)),
+                        style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                            fontSize: 14.sp,
+                            color: wayaTheme.colorScheme.customBlack)),
                     const Gap(6),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -407,7 +423,10 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                           child: RadioSelect(
                             title: Text("Public",
                                 style: wayaTheme.textTheme.titleMedium!
-                                    .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customBlack)),
+                                    .wayaCopyWith(
+                                        fontSize: 14.sp,
+                                        color:
+                                            wayaTheme.colorScheme.customBlack)),
                             value: 'Public',
                             groupedValue: selectedOption,
                             onChanged: (value) {
@@ -421,7 +440,10 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                             child: RadioSelect(
                           title: Text("Private",
                               style: wayaTheme.textTheme.titleMedium!
-                                  .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customBlack)),
+                                  .wayaCopyWith(
+                                      fontSize: 14.sp,
+                                      color:
+                                          wayaTheme.colorScheme.customBlack)),
                           value: 'Private',
                           groupedValue: selectedOption,
                           onChanged: (value) {

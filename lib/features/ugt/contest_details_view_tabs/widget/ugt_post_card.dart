@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -119,10 +120,9 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                             const Gap(8),
                             Text(
                               WayaHelpers.formatTimeAgo(createdDate),
-                              style:  WayaTextStyles.hintStyleBold
-                                    .wayaCopyWith(
-                                        color: WayaColors.greyColor500,
-                                        fontWeight: FontWeight.w400),
+                              style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                                  color: WayaColors.greyColor500,
+                                  fontWeight: FontWeight.w400),
                             ),
                           ],
                         ),
@@ -206,19 +206,35 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
 
               MediaCard(
                   //just a random id
-                  ontap: (String url) {
-                    WayaNav.toNamed("/view-media-full-page", arguments: {
-                      "url": url,
-                      "title":
-                          widget.contestApplicant?.contestApplicant?.fullName ??
-                              "",
-                      "createdAt": widget.post.createdAt,
-                      "likeCount": widget.post.likes,
-                      "isLike": widget.post.hasLiked,
-                      "discription": widget.post.description,
-                      "shareCount": widget.post.shares,
-                      "type": MyFullMediaType.image
-                    });
+                  ontap: (String url, MyFullMediaType type) {
+                    if (type == MyFullMediaType.image) {
+                      WayaNav.toNamed("/view-media-full-page", arguments: {
+                        "url": url,
+                        "title": widget
+                                .contestApplicant?.contestApplicant?.fullName ??
+                            "",
+                        "createdAt": widget.post.createdAt,
+                        "likeCount": widget.post.likes,
+                        "isLike": widget.post.hasLiked,
+                          "showDescription":false,
+                        "discription": widget.post.description,
+                        "shareCount": widget.post.shares,
+                        "type": MyFullMediaType.image
+                      });
+                    }else{
+                        WayaNav.toNamed("/view-media-full-page", arguments: {
+                        "url": url,
+                        "title": widget.contestApplicant?.contestApplicant?.fullName ?? "",
+                        "createdAt": widget.post.createdAt,
+                        "likeCount": widget.post.likes,
+                        "isLike": widget.post.hasLiked,
+                          "showDescription":false,
+                        "discription": widget.post.description,
+                        "shareCount": widget.post.shares,
+                        "type": MyFullMediaType.video
+                      });
+
+                    }
                   },
                   mediaUrls: [
                     // post.mediaContent![0].url!,
@@ -306,7 +322,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                     ],
                   ),
                   WayaButton(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     callback: () {
                       WayaUtils.showModalSheet(
                         context,

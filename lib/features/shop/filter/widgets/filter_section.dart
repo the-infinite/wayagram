@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -69,7 +70,7 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
                         "Collapse",
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
-                            fontSize: 14),
+                            fontSize: 14.sp),
                       )
                     ],
                   ),
@@ -95,7 +96,7 @@ class _FilterSectionState extends ConsumerState<FilterSection> {
                       Text("Enlarge",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 14))
+                              fontSize: 14.sp))
                     ],
                   ),
                 ),

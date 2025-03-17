@@ -75,7 +75,7 @@ class _BuyerDisputeAddEvidenceModalState extends ConsumerState<BuyerDisputeAddEv
                   "Add Evidence",
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    fontSize: 24,
+                    fontSize: 24.sp,
                   ),
                 ),
 
@@ -85,7 +85,7 @@ class _BuyerDisputeAddEvidenceModalState extends ConsumerState<BuyerDisputeAddEv
                 Text(
                   "Add evidence to support your dispute claims",
                   style: theme.textTheme.descriptionStyle.copyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
                 ),
 
@@ -97,7 +97,7 @@ class _BuyerDisputeAddEvidenceModalState extends ConsumerState<BuyerDisputeAddEv
                   style: theme.textTheme.descriptionStyle.copyWith(
                     color: theme.colorScheme.customBlack,
                     fontWeight: FontWeight.w500,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                   ),
                 ),
 
@@ -156,7 +156,7 @@ class _BuyerDisputeAddEvidenceModalState extends ConsumerState<BuyerDisputeAddEv
                               formState.errorText!,
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.error,
-                                fontSize: 12,
+                                fontSize: 12.sp,
                               ),
                             ),
                           ),

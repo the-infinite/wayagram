@@ -1,6 +1,7 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
@@ -60,7 +61,7 @@ class Checkout extends ConsumerWidget {
                 RadioSelect(
                   title: Text("Delivery",
                       style: wayaTheme.textTheme.titleMedium!.wayaCopyWith(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           color: wayaTheme.colorScheme.customBlack)),
                   value: 'Delivery',
                   groupedValue: selectedOption,
@@ -71,7 +72,7 @@ class Checkout extends ConsumerWidget {
                 RadioSelect(
                   title: Text("Pick-up",
                       style: wayaTheme.textTheme.titleMedium!.wayaCopyWith(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           color: wayaTheme.colorScheme.customBlack)),
                   value: 'Pickup',
                   groupedValue: selectedOption,
@@ -111,7 +112,7 @@ class Checkout extends ConsumerWidget {
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.customPrimary,
                         fontWeight: FontWeight.w600,
-                        fontSize: 16),
+                        fontSize: 16.sp),
                   ),
                 ],
               ),
@@ -159,14 +160,14 @@ class Checkout extends ConsumerWidget {
                       "Sub Total",
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor400,
-                          fontSize: 13),
+                          fontSize: 13.sp),
                     ),
                     const Gap(6),
                     Text(
                       WayaHelpers.formatPrice(subTotal ?? 0),
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 14),
+                          fontSize: 14.sp),
                     )
                   ],
                 ),
@@ -193,14 +194,14 @@ class Checkout extends ConsumerWidget {
                       "Delivery Charges",
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor400,
-                          fontSize: 13),
+                          fontSize: 13.sp),
                     ),
                     const Gap(6),
                     Text(
                       WayaHelpers.formatPrice(deliveryCharge),
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 14),
+                          fontSize: 14.sp),
                     )
                   ],
                 ),
@@ -227,14 +228,14 @@ class Checkout extends ConsumerWidget {
                       "Total",
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor400,
-                          fontSize: 13),
+                          fontSize: 13.sp),
                     ),
                     const Gap(6),
                     Text(
                       WayaHelpers.formatPrice(subTotal! + deliveryCharge),
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 18),
+                          fontSize: 18.sp),
                     )
                   ],
                 ),
@@ -267,14 +268,14 @@ class Checkout extends ConsumerWidget {
                           "Wayagram Wallet",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 16),
+                              fontSize: 16.sp),
                         ),
                         const Gap(6),
                         Text(
                           "This transaction will be deducted from \n your wallet  balance",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.greyColor400,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         )
                       ],
                     )
@@ -322,7 +323,7 @@ class Checkout extends ConsumerWidget {
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.greyColor500,
                             fontWeight: FontWeight.normal,
-                            fontSize: 14),
+                            fontSize: 14.sp),
                       ),
                     ),
                     Positioned(
@@ -331,7 +332,7 @@ class Checkout extends ConsumerWidget {
                           WayaHelpers.formatPrice(subTotal + deliveryCharge),
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 18),
+                              fontSize: 18.sp),
                         ))
                   ],
                 )),

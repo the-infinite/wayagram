@@ -82,7 +82,7 @@ class _MutualsState extends ConsumerState<Mutuals> with SingleTickerProviderStat
                     subtitle: Text(
                       index.isEven ? '@maleek2024' : '@chukwudi2024',
                       style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                          fontSize: 12, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+                          fontSize: 12.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
                     ),
                   ),
                   //Gap(10),
@@ -92,7 +92,7 @@ class _MutualsState extends ConsumerState<Mutuals> with SingleTickerProviderStat
                         ? '🌍 Adventurous soul | Espresso lover ☕ | Gadget aficionado 💻 | Documenting my journeys and life lessons! ✨'
                         : '✈️ Wanderlust-driven | Tea connoisseur 🍵 | Tech enthusiast 💻 | Exploring the world and sharing my stories! 🌟',
                     style: Theme.of(context).textTheme.displaySmall!.wayaCopyWith(
-                        fontSize: 12, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+                        fontSize: 12.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
                   ),
                 ],
               ),

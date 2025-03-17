@@ -179,7 +179,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                                         "WayaGram User",
                                     maxLines: 1,
                                     style: WayaTextStyles.titleMedium.copyWith(
-                                      fontSize: 15,
+                                      fontSize: 15.sp,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -196,7 +196,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                                         fontWeight: FontWeight.normal,
                                         overflow: TextOverflow.ellipsis,
                                         color: WayaColors.greyColor500,
-                                        fontSize: 13,
+                                        fontSize: 13.sp,
                                       ),
                                     ),
                                 ],
@@ -229,7 +229,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                                     "$daysLeft ${daysLeft > 1 ? 'Days' : 'Day'} left",
                                     style: theme.textTheme.hintStyle.copyWith(
                                         color: theme.colorScheme.customPrimary,
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                         fontWeight: FontWeight.w500),
                                   )
                                 ],
@@ -260,7 +260,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                               height: null,
                               textStyle: theme.textTheme.descriptionStyle
                                   .copyWith(
-                                      fontSize: 14,
+                                      fontSize: 14.sp,
                                       fontWeight: FontWeight.normal),
                               text: "Escalate to mediator",
                               horizontalPadding: 8,
@@ -303,7 +303,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                         "Send the first message",
                         style: WayaTextStyles.titleLarge.copyWith(
                           fontWeight: FontWeight.w700,
-                          fontSize: 24,
+                          fontSize: 24.sp,
                         ),
                       ),
 
@@ -445,7 +445,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                               ? theme.colorScheme.success
                               : theme.colorScheme.error700,
                       fontWeight: FontWeight.w500,
-                      fontSize: 11),
+                      fontSize: 11.sp),
                 ),
               )
             ],

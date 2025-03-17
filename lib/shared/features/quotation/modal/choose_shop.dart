@@ -73,7 +73,7 @@ class _ChooseShopModalState extends State<ChooseShopModal> {
             Text(
               "Please choose the shop you wish to start bidding as",
               style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w400,
                 color: wayaTheme.colorScheme.greyColor500,
               ),

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -660,10 +661,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
           page: 1,
         );
         ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
+           SnackBar(
             content: Text(
               'Poll deleted successfully!',
-              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
             ),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),

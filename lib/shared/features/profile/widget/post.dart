@@ -163,7 +163,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                 Text(
                                   formatTimeAgo('${widget.data.createdAt}'),
                                   style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                                    fontSize: 14,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.w400,
                                     color: wayaTheme.colorScheme.greyColor500,
                                   ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -48,8 +49,8 @@ class WayaNoticeModal extends StatelessWidget {
             textAlign: TextAlign.center,
             softWrap: true,
             maxLines: 3,
-            style: const TextStyle(
-              fontSize: 20,
+            style:  TextStyle(
+              fontSize: 20.sp,
               fontWeight: FontWeight.bold,
             ),
           ),

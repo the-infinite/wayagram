@@ -49,7 +49,7 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
         children: [
           Text(
             "Moment Viewers",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.w600),
+            style: TextStyle(fontSize: 22.sp, fontWeight: FontWeight.w600),
           ),
           SizedBox(
             height: 10,
@@ -68,7 +68,7 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
                 child: Text(
                   "No Viewer",
                   style: TextStyle(
-                      color: wayaTheme.colorScheme.greyColor300, fontSize: 14),
+                      color: wayaTheme.colorScheme.greyColor300, fontSize: 14.sp),
                 ),
               ),
             ),

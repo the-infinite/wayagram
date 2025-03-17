@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -62,7 +63,7 @@ class _WayaPaginatedSelectFieldState
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Text(widget.label!,
-                style: wayaTheme.textTheme.bodyMedium?.copyWith(fontSize: 14)),
+                style: wayaTheme.textTheme.bodyMedium?.copyWith(fontSize: 14.sp)),
           ),
         WayaButton(
           callback: () async {
@@ -101,7 +102,7 @@ class _WayaPaginatedSelectFieldState
                             .textTheme
                             .bodyMedium
                             ?.wayaCopyWith(
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               color: widget.displayText == null
                                   ? wayaTheme.colorScheme.greyColor300
                                   : wayaTheme.colorScheme.customBlack,

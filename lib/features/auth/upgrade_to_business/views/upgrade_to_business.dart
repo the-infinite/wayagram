@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -81,7 +82,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -119,7 +120,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -154,7 +155,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -188,7 +189,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -212,7 +213,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               .textTheme
                               .bodyMedium
                               ?.wayaCopyWith(
-                                fontSize: 14,
+                                fontSize: 14.sp,
                                 color: wayaTheme.colorScheme.greyColor900,
                               ),
                         ),
@@ -269,7 +270,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -303,7 +304,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -341,7 +342,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                                   formState.errorText!,
                                   style: TextStyle(
                                       color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
+                                      fontSize: 12.sp),
                                 ),
                               ),
                           ],
@@ -376,7 +377,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                                     formState.errorText!,
                                     style: TextStyle(
                                         color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
+                                        fontSize: 12.sp),
                                   ),
                                 ),
                             ],
@@ -415,7 +416,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],

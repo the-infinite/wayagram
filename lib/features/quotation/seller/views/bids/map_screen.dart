@@ -99,7 +99,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     "Bids Around You",
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.customBlack,
-                      fontSize: 20,
+                      fontSize: 20.sp,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -134,7 +134,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     "Bids Around You",
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.customBlack,
-                      fontSize: 20,
+                      fontSize: 20.sp,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
@@ -143,7 +143,7 @@ class _MapScreenState extends ConsumerState<MapScreen> {
                     "Explore open opportunities nearby and submit your best offers to get started",
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.greyColor500,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w400,
                     ),
                   ),

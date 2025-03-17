@@ -44,7 +44,7 @@ class BuyerDisputeFailureModal extends StatelessWidget {
               'Unable to submit your dispute',
               textAlign: TextAlign.center,
               style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                fontSize: 24,
+                fontSize: 24.sp,
                 fontWeight: FontWeight.w700,
                 color: wayaTheme.colorScheme.black,
               ),

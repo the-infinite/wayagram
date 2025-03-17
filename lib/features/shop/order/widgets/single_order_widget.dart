@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
@@ -55,7 +56,7 @@ class SingleOrderWidget extends ConsumerWidget {
                           "Order #${order.id.substring(0, 6)}",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         ),
                         const Gap(8),
                         _buildOrderStatus(
@@ -78,7 +79,7 @@ class SingleOrderWidget extends ConsumerWidget {
                           color: isSeller
                               ? wayaTheme.colorScheme.success
                               : wayaTheme.colorScheme.error700,
-                          fontSize: 13),
+                          fontSize: 13.sp),
                     ),
                     const Gap(8),
                     Text(
@@ -86,7 +87,7 @@ class SingleOrderWidget extends ConsumerWidget {
                           order.updatedAt.toIso8601String()),
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor400,
-                          fontSize: 13),
+                          fontSize: 13.sp),
                     )
                   ],
                 )
@@ -138,7 +139,7 @@ class SingleOrderWidget extends ConsumerWidget {
         style: TextStyle().wayaCopyWith(
           color: textColor,
           fontWeight: FontWeight.w500,
-          fontSize: 11,
+          fontSize: 11.sp,
         ),
       ),
     );

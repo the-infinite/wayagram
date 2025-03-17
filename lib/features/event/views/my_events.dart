@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -100,7 +101,7 @@ class _MyEventState extends ConsumerState<MyEvents> {
                 Text(
                   "Create an Event",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customPrimary, fontSize: 14, fontWeight: FontWeight.w500),
+                      color: wayaTheme.colorScheme.customPrimary, fontSize: 14.sp, fontWeight: FontWeight.w500),
                 )
               ],
             ),

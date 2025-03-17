@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -67,7 +68,7 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
                     child: Text("The PINs don't match. Pls try again",
                         style: TextStyle().wayaCopyWith(
                           fontWeight: FontWeight.w400,
-                          fontSize: 13,
+                          fontSize: 13.sp,
                           color: wayaTheme.colorScheme.error500,
                         )))
               ],
@@ -91,7 +92,7 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
                   child: Text(
                     "Skip for now",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary, fontSize: 14, fontWeight: FontWeight.w600),
+                        color: wayaTheme.colorScheme.customPrimary, fontSize: 14.sp, fontWeight: FontWeight.w600),
                   ),
                 )),
                 const Gap(20),

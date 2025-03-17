@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -200,7 +201,7 @@ class WayaActionNav extends StatelessWidget {
             style: wayaTheme.textTheme.bodyMedium?.copyWith(
               color: color,
               fontWeight: FontWeight.w500,
-              fontSize: 12,
+              fontSize: 12.sp,
             ),
           )
         ],
@@ -621,7 +622,7 @@ class WayaActionButton extends StatelessWidget {
               maxLines: 2,
               textAlign: TextAlign.center,
               style: theme.textTheme.descriptionStyle.copyWith(
-                fontSize: 13,
+                fontSize: 13.sp,
               ),
             )
           ],

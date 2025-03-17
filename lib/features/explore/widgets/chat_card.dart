@@ -86,7 +86,7 @@ class ChatCard extends ConsumerWidget {
                             "10",
                             style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
                               color: wayaTheme.colorScheme.white,
-                              fontSize: 10,
+                              fontSize: 10.sp,
                               fontWeight: FontWeight.w500,
                             ),
                           ),

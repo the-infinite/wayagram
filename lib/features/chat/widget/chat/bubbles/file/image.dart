@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/helpers/files.dart';
@@ -145,7 +146,7 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                             textAlign: TextAlign.center,
                             style: WayaTextStyles.bodySmall.copyWith(
                               color: WayaColors.primary,
-                              fontSize: 14,
+                              fontSize: 14.sp,
                             ),
                           ),
                         ],

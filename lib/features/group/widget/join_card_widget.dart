@@ -51,7 +51,7 @@ class _JoinCardWidgetState extends State<JoinCardWidget> {
           Text(
               widget.groupName,
               style:  wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.black )),
           const Gap(3),
@@ -61,7 +61,7 @@ class _JoinCardWidgetState extends State<JoinCardWidget> {
                 .textTheme
                 .bodyMedium!
                 .wayaCopyWith(
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w400,
                 color:
                 Theme.of(context).colorScheme.greyColor500),
@@ -84,7 +84,7 @@ class _JoinCardWidgetState extends State<JoinCardWidget> {
               textStyle: TextStyle().wayaCopyWith(
                 color: wayaTheme.colorScheme.primary,
                 fontWeight: FontWeight.w600,
-                fontSize: 12,
+                fontSize: 12.sp,
               ),
               isLoading: isLoading,
               height: 28.h,

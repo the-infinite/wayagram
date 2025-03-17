@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
@@ -66,7 +67,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
                   "Fund your Wallet",
                   style: TextStyle().wayaCopyWith(
                       color: Theme.of(context).colorScheme.white,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500),
                 )
               ],
@@ -122,7 +123,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
                 "Track your delivery here",
                 style: TextStyle().wayaCopyWith(
                     color: Theme.of(context).colorScheme.white,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500),
               )
             ],

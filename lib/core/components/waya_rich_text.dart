@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -28,7 +29,7 @@ class WayaRichText extends StatelessWidget {
     return RichText(
       text: TextSpan(
         style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-          fontSize: 18.0,
+          fontSize: 18.0.sp,
           color: wayaTheme.colorScheme.black,
         ),
         children: texts ??

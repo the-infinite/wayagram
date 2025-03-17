@@ -112,7 +112,7 @@ class _AttendeeWidgetState extends ConsumerState<AttendeeWidget> {
                             textStyle: wayaTheme.textTheme.hintStyle
                                 .wayaCopyWith(
                                     color: wayaTheme.colorScheme.white,
-                                    fontSize: 12,
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w500),
                             radius: 6,
                           ),
@@ -135,7 +135,7 @@ class _AttendeeWidgetState extends ConsumerState<AttendeeWidget> {
                             height: 30,
                             textStyle: wayaTheme.textTheme.hintStyle
                                 .wayaCopyWith(
-                                    fontSize: 12, fontWeight: FontWeight.w500),
+                                    fontSize: 12.sp, fontWeight: FontWeight.w500),
                             radius: 5,
                             color: wayaTheme.colorScheme.transparent,
                             border: Border.all(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -53,8 +54,8 @@ class _UpdateStatusState extends State<UpdateStatus> {
           children: [
             Text(
               widget.title,
-              style: const TextStyle(
-                fontSize: 20,
+              style:  TextStyle(
+                fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -115,7 +116,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                           color: isDisabled
                               ? wayaTheme.colorScheme.greyColor400
                               : wayaTheme.colorScheme.customBlack,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                         ),
                       ),
                       onTap: isDisabled

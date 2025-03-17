@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -101,7 +102,7 @@ class _MyBubbleWidget extends StatelessWidget {
                                     Text(
                                       "Forwarded",
                                       style: WayaTextStyles.bodySemiBold.copyWith(
-                                        fontSize: 13,
+                                        fontSize: 13.sp,
                                         color: WayaColors.white,
                                       ),
                                     ),
@@ -135,7 +136,7 @@ class _MyBubbleWidget extends StatelessWidget {
                                     Text(
                                       "Edited",
                                       style: WayaTextStyles.bodySemiBold.copyWith(
-                                        fontSize: 13,
+                                        fontSize: 13.sp,
                                         color: WayaColors.white,
                                       ),
                                     ),
@@ -181,7 +182,7 @@ class _MyBubbleWidget extends StatelessWidget {
                               _ => Text(
                                   data.contentDescription,
                                   style: WayaTextStyles.bodyMedium.copyWith(
-                                    fontSize: 15,
+                                    fontSize: 15.sp,
                                     fontWeight: FontWeight.normal,
                                     color: WayaColors.white,
                                   ),
@@ -305,7 +306,7 @@ class _YourBubbleWidget extends StatelessWidget {
                             Text(
                               "Forwarded",
                               style: WayaTextStyles.bodySemiBold.copyWith(
-                                fontSize: 13,
+                                fontSize: 13.sp,
                                 color: WayaColors.primary600,
                               ),
                             ),
@@ -339,7 +340,7 @@ class _YourBubbleWidget extends StatelessWidget {
                             Text(
                               "Edited",
                               style: WayaTextStyles.bodySemiBold.copyWith(
-                                fontSize: 13,
+                                fontSize: 13.sp,
                                 color: WayaColors.primary600,
                               ),
                             ),
@@ -385,7 +386,7 @@ class _YourBubbleWidget extends StatelessWidget {
                       _ => Text(
                           data.contentDescription,
                           style: WayaTextStyles.bodyMedium.copyWith(
-                            fontSize: 15,
+                            fontSize: 15.sp,
                             fontWeight: FontWeight.normal,
                             color: WayaColors.black,
                           ),
@@ -555,7 +556,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                   ),
                   text: "Reply",
                   textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                    fontSize: 13,
+                    fontSize: 13.sp,
                   ),
                 ),
 
@@ -580,7 +581,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                   ),
                   text: "Forward",
                   textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                    fontSize: 13,
+                    fontSize: 13.sp,
                   ),
                 ),
 
@@ -606,7 +607,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                     ),
                     text: "Copy",
                     textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                      fontSize: 13,
+                      fontSize: 13.sp,
                     ),
                   ),
 
@@ -632,7 +633,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                     ),
                     text: "Edit",
                     textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                      fontSize: 13,
+                      fontSize: 13.sp,
                     ),
                   ),
 
@@ -658,7 +659,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                     ),
                     text: "Delete for me",
                     textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                      fontSize: 13,
+                      fontSize: 13.sp,
                     ),
                   ),
 
@@ -702,7 +703,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                     ),
                     text: "Unsend",
                     textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                      fontSize: 13,
+                      fontSize: 13.sp,
                     ),
                   ),
 
@@ -939,7 +940,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                 WayaTextStrip(
                   WayaDateHelper.getSocialDate(widget.data.createdAt),
                   style: WayaTextStyles.bodyMedium.copyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
                 ),
 
@@ -965,7 +966,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                       "Reply",
                       style: WayaTextStyles.bodySemiBold.copyWith(
                         color: WayaColors.primary,
-                        fontSize: 13,
+                        fontSize: 13.sp,
                       ),
                     ),
                   ],

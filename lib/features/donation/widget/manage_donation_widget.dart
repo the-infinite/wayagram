@@ -97,7 +97,7 @@ class ManageDonationWidget extends ConsumerWidget {
                                     text,
                                     style: TextStyle().wayaCopyWith(
                                         color: wayaTheme.colorScheme.customPrimary,
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                         fontWeight: FontWeight.w500),
                                   ),
                                 ],

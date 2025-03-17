@@ -675,7 +675,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
                   text: 'Edit Post',
                   isLoading: viewModel.isLoading,
                   textStyle: WayaTextStyles.bodySmall.copyWith(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.white ),
                 ) :
@@ -696,7 +696,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
                   text: 'Update Post',
                   isLoading: viewModel.isLoading,
                   textStyle: WayaTextStyles.bodySmall.copyWith(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.white ),
                 ),
@@ -765,7 +765,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
                                   formState.errorText!,
                                   style: TextStyle(
                                       color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
+                                      fontSize: 12.sp),
                                 ),
                               ),
                           ],
@@ -827,7 +827,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
                     Text(
                       sel ?'Public post' : 'Private post',
                       style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                           color: Theme.of(context).colorScheme.primary ),
                     ),

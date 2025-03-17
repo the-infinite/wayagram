@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -185,17 +186,32 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
 
               ), */
               MediaCard(
-                  ontap: (String url) {
-                    WayaNav.toNamed("/view-media-full-page", arguments: {
-                      "url": url,
-                      "title": widget.post.contestApplication?.fullName ?? "",
-                      "createdAt": widget.post.createdAt,
-                      "likeCount": widget.post.likes,
-                      "isLike": widget.post.hasLiked,
-                      "discription": widget.post.description,
-                      "shareCount": widget.post.shares,
-                      "type": MyFullMediaType.image
-                    });
+                  ontap: (String url, MyFullMediaType type) {
+                    if (type == MyFullMediaType.image) {
+                      WayaNav.toNamed("/view-media-full-page", arguments: {
+                        "url": url,
+                        "title": widget.post.contestApplication?.fullName ?? "",
+                        "createdAt": widget.post.createdAt,
+                        "likeCount": widget.post.likes,
+                        "isLike": widget.post.hasLiked,
+                        "showDescription": true,
+                        "discription": widget.post.description,
+                        "shareCount": widget.post.shares,
+                        "type": MyFullMediaType.image
+                      });
+                    } else {
+                      WayaNav.toNamed("/view-media-full-page", arguments: {
+                        "url": url,
+                        "title": widget.post.contestApplication?.fullName ?? "",
+                        "createdAt": widget.post.createdAt,
+                        "likeCount": widget.post.likes,
+                        "isLike": widget.post.hasLiked,
+                        "showDescription": true,
+                        "discription": widget.post.description,
+                        "shareCount": widget.post.shares,
+                        "type": MyFullMediaType.video
+                      });
+                    }
                   },
                   mediaUrls: [
                     ...widget.post.mediaContent!
@@ -284,16 +300,43 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                     ],
                   ),
                   WayaButton(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     height: 40,
                     callback: () {
-                    //  print(widget.model.endDate ?? "");
+                      //  print(widget.model.endDate ?? "");
                       if (isPresentIsPast(widget.model.endDate ?? "")) {
                         WayaSnackBar.showToast("Contest has ended");
                         return;
                       }
 
-                      WayaUtils.showModalSheet(
+                        if (widget.model.entryType?.toLowerCase() == "free") {
+                   
+                        WayaUtils.showModalSheet(
+                          context,
+                          child: ConfirmVoteOptionModal(
+                            amount: "1",
+                            voteFee: "0",
+                            isFree: true,
+                            model: ContestVoteModel(
+                                contestId: widget.post.contestId ?? "",
+                                contestantId:
+                                    widget.post.contestantProfileId ?? "",
+                                hostUserId: widget.model.profileId ?? "",
+                                amount: "0",
+                                numberOfVotes: "0",
+                                profileId: "",
+                                type: widget.model.entryType?.toLowerCase()),
+                            candidateName:
+                                widget.post.contestApplication?.fullName ??
+                                    "Name",
+                            votingLink: "votingLink",
+                          ),
+                        );
+
+                        return;
+                      }
+
+                        WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(
                           voteFee:

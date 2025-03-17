@@ -56,7 +56,7 @@ class _StartConversationModalState extends State<StartConversationModal> {
                     "Send New Message",
                     style: WayaTextStyles.titleLarge.copyWith(
                       fontWeight: FontWeight.bold,
-                      fontSize: 24,
+                      fontSize: 24.sp,
                     ),
                   ),
 
