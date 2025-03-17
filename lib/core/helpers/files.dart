@@ -296,6 +296,30 @@ class WayaFileHelper {
     return directory.parent;
   }
 
+  /// Returns a Future that resolves to the media storage directory for the
+  /// application.
+  ///
+  /// The media directory is used for storing various media files like images,
+  /// videos, and other media content used by the application. This is where all
+  /// the downloaded media by users should go to.
+  ///
+  /// This is an asynchronous operation that needs to be awaited when called.
+  ///
+  /// Returns:
+  ///   * [Directory] - A [Future<Directory>] pointing to the media storage location
+  static Future<Directory> getReportsDirectory() async {
+    final base = await _getBaseStorageDirectory();
+    var directory = Directory("${base.absolute.path}/Debug");
+
+    //? Then print this out.
+    if (!await directory.exists()) {
+      directory = await directory.create(recursive: true);
+    }
+
+    //? This is fine.
+    return directory.parent;
+  }
+
   /// Returns a Future that resolves to the audio storage directory for the
   /// application.
   ///

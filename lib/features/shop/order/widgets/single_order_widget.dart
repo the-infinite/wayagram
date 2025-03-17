@@ -19,6 +19,9 @@ class SingleOrderWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+
+  print("wefwefwefew ${order.deliveryType} ${order.pickupStatusHistory.isNotEmpty ? order.pickupStatusHistory.last.status : 'No Status'}");
+
     // final viewModel = ref.watch(singleOrderWigdetViewModelProvider);
     return GestureDetector(
       onTap: () {
@@ -57,8 +60,10 @@ class SingleOrderWidget extends ConsumerWidget {
                         const Gap(8),
                         _buildOrderStatus(
                             context: context,
-                            status: order.deliveryType == 'Pickup' ? order.pickupStatusHistory.last.status : order.deliveryStatusHistory.last.status,
-                            deliveryType: order.deliveryType!)
+                            status: order.deliveryType == 'Pickup'
+                                ? order.pickupStatusHistory.isNotEmpty ? order.pickupStatusHistory.last.status : 'No Status'
+                                : order.deliveryStatusHistory.isNotEmpty ? order.deliveryStatusHistory.last.status : 'No Status',
+                            deliveryType: "")
                       ],
                     )
                   ],
@@ -70,7 +75,10 @@ class SingleOrderWidget extends ConsumerWidget {
                     Text(
                       "${isSeller ? '+' : '-'}${WayaHelpers.formatPrice(double.parse(order.total).toInt())}",
                       style: TextStyle().wayaCopyWith(
-                          color:isSeller ? wayaTheme.colorScheme.success: wayaTheme.colorScheme.error700, fontSize: 13),
+                          color: isSeller
+                              ? wayaTheme.colorScheme.success
+                              : wayaTheme.colorScheme.error700,
+                          fontSize: 13),
                     ),
                     const Gap(8),
                     Text(

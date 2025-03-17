@@ -6,14 +6,11 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/repo/message.dart';
 import 'package:wayagram/features/chat/state/chat.dart';
-import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/repo/shop_dispute_repository.dart';
 
 class ChatNotifier extends StateNotifier<ChatState> {
   final repo = MessageRepository();
-
-  final shopdisputerepo = ShopDisputeRepository();
+  final shopDisputeRepo = ShopDisputeRepository();
 
   ChatNotifier(super.state);
 
@@ -41,8 +38,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     final result = <MessageModel>[];
 
     //? This is fine.
-    final response =
-        await repo.getMessages(state.chat!.id, state.limit, state.page);
+    final response = await repo.getMessages(state.chat!.id, state.limit, state.page);
 
     //? This is fine.
     if (response.success) {
@@ -50,14 +46,10 @@ class ChatNotifier extends StateNotifier<ChatState> {
       final data = response.data['data'];
 
       //? Parse the conversations as they are in the response object...
-      final docs =
-          (data['docs'] as List).map((doc) => MessageModel.fromJson(doc));
+      final docs = (data['docs'] as List).map((doc) => MessageModel.fromJson(doc));
 
       //? This is fine.
-      result.addAll(docs
-          .where((msg) => msg.myStatus?.status != MessageStatusCode.deleted)
-          .toList()
-          .reversed);
+      result.addAll(docs.where((msg) => msg.myStatus?.status != MessageStatusCode.deleted).toList().reversed);
 
       //? If the previous page had a next page, offload them onto this place.
       if (!reset && state.hasNextPage) {
@@ -142,8 +134,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
   /// A helper function used to send a message to a given chat. The multipart
   /// file specification
-  Future<MessageModel?> sendMessage(SendMessageDto message,
-      [String? originalId]) async {
+  Future<MessageModel?> sendMessage(SendMessageDto message, [String? originalId]) async {
     final messageId = originalId ?? WayaValueHelper.createUid();
 
     //? If this is not an attempt to resend...
@@ -152,20 +143,17 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       //? Tell the listeners that this has been updated to first add the message to
       //? our list of messages.
-      state = state.copyWith(
-          messages: [...state.messages, placeholder], isLoading: true);
+      state = state.copyWith(messages: [...state.messages, placeholder], isLoading: true);
     }
 
     //? Else, we just flag this message as something that is not an error.
     else {
       final conversation = state.messages;
-      final found =
-          conversation.lastIndexWhere((message) => message.id == messageId);
+      final found = conversation.lastIndexWhere((message) => message.id == messageId);
 
       //? Now, replace this.
       if (found != -1) {
-        conversation[found] =
-            conversation[found].copyWith(false, message.originalMessage);
+        conversation[found] = conversation[found].copyWith(false, message.originalMessage);
       }
 
       //? Now update the UI with our changes...
@@ -181,8 +169,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
       if (response.success) {
         final result = MessageModel.fromJson(response.data['data']);
         final conversation = state.messages;
-        final found =
-            conversation.lastIndexWhere((message) => message.id == messageId);
+        final found = conversation.lastIndexWhere((message) => message.id == messageId);
 
         //? Now, replace this.
         if (found != -1) {
@@ -193,8 +180,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
         state = state.copyWith(messages: [...conversation], isLoading: false);
 
         // Notify everyone of it.
-        WayaSocketController.instance
-            .emit(WayaChatSocketArgs.sendMessage(state.chat!.id, result.id));
+        WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chat!.id, result.id));
 
         //? Return the result.
         return result;
@@ -203,13 +189,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
       //? Turn this into an error.
       else {
         final conversation = state.messages;
-        final found =
-            conversation.lastIndexWhere((message) => message.id == messageId);
+        final found = conversation.lastIndexWhere((message) => message.id == messageId);
 
         //? Now, replace this.
         if (found != -1) {
-          conversation[found] =
-              conversation[found].copyWith(true, message.originalMessage);
+          conversation[found] = conversation[found].copyWith(true, message.originalMessage);
         }
 
         //? Now update the UI with our changes...
@@ -217,13 +201,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
       }
     } catch (_) {
       final conversation = state.messages;
-      final found =
-          conversation.lastIndexWhere((message) => message.id == messageId);
+      final found = conversation.lastIndexWhere((message) => message.id == messageId);
 
       //? Now, replace this.
       if (found != -1) {
-        conversation[found] =
-            conversation[found].copyWith(true, message.originalMessage);
+        conversation[found] = conversation[found].copyWith(true, message.originalMessage);
       }
 
       //? Now update the UI with our changes...
@@ -253,8 +235,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
       getMessages(true);
 
       // This is fine.
-      WayaSocketController.instance
-          .emit(WayaChatSocketArgs.markAllAsRead(state.chat!.id));
+      WayaSocketController.instance.emit(WayaChatSocketArgs.markAllAsRead(state.chat!.id));
     }
 
     //? This is fine.
@@ -283,8 +264,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? If this was fine...
     if (response.success) {
       //? If this was read.
-      WayaSocketController.instance
-          .emit(WayaChatSocketArgs.sendMessage(state.chat!.id, id));
+      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chat!.id, id));
 
       // Now, pull all messages.
       getMessage(id);
@@ -301,8 +281,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? If this was fine...
     if (response.success) {
       //? If this was read.
-      WayaSocketController.instance
-          .emit(WayaChatSocketArgs.sendMessage(state.chat!.id, id));
+      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chat!.id, id));
 
       // Now, pull all messages.
       getMessage(id);
@@ -320,8 +299,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     if (response.success) {
       // Notify everyone of it.
       if (action == MessageDeleteAction.deleteForEveryone) {
-        WayaSocketController.instance
-            .emit(WayaChatSocketArgs.deleteMessage(state.chat!.id, id));
+        WayaSocketController.instance.emit(WayaChatSocketArgs.deleteMessage(state.chat!.id, id));
       }
 
       // Remove this.
@@ -339,8 +317,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? If this succeeded...
     if (response.success) {
       // Notify everyone of it.
-      WayaSocketController.instance
-          .emit(WayaChatSocketArgs.sendMessage(state.chat!.id, id));
+      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chat!.id, id));
 
       // This is fine.
       getMessage(id);
@@ -357,8 +334,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? If this succeeded...
     if (response.success) {
       // Notify everyone of it.
-      WayaSocketController.instance
-          .emit(WayaChatSocketArgs.sendMessage(state.chat!.id, id));
+      WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chat!.id, id));
 
       // This is fine.
       getMessage(id);
@@ -382,33 +358,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
       messages: [],
     );
   }
-
-  /// A helper function to open a shop dispute ticket
-  Future<void> openTicket(
-      {required String reason,
-      required String deliveryToken,
-      List<OrderItem>? orderedItem,
-      String? sellerId,
-      required String reference}) async {
-    try {
-      final response = await shopdisputerepo.openTicket(
-          reasonCategory: reason,
-          details: "details",
-          deliveryToken: deliveryToken,
-          orderedItem: orderedItem,
-          userId: ConversationState.self.id,
-          disputeType: "shop",
-          sellerId: sellerId,
-          reference: reference);
-      if (response.success) {
-        print(response.data);
-      }
-    } catch (error) {
-      print(error);
-    }
-  }
 }
 
-final chatProvider = StateNotifierProvider<ChatNotifier, ChatState>((ref) {
-  return ChatNotifier(ChatState.initial);
-});
+final chatProvider = StateNotifierProvider<ChatNotifier, ChatState>(
+  (ref) => ChatNotifier(ChatState.initial),
+);

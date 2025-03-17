@@ -293,7 +293,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Inlcude Measurements",
+                        Text("Include Measurements",
                             style: wayaTheme.textTheme.titleMedium),
                         const Gap(6),
                         Text(

@@ -86,7 +86,7 @@ class CreateShopState {
 
   CreateShopModel get createShopModel {
     return CreateShopModel(
-        phone: "+234${phone.text}",
+        phone: phone.text,
         address: address.text,
         email: email.text,
         description: description.text,

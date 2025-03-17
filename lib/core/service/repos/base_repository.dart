@@ -8,8 +8,13 @@ abstract class BaseRepository {
 
   BaseRepository() : httpClient = DioHttpClient();
 
-  Future<WayaRequestResponse> get(String route, {Map<String, dynamic>? params, bool useBase = true}) {
-    return httpClient.getHttp(route, params: params, useBase: useBase);
+  Future<WayaRequestResponse> get(
+    String route, {
+    Map<String, dynamic>? params,
+    bool useBase = true,
+    bool showErrors = false,
+  }) {
+    return httpClient.getHttp(route, params: params, useBase: useBase, showErrors: showErrors);
   }
 
   Future<WayaRequestResponse> post(
@@ -20,6 +25,7 @@ abstract class BaseRepository {
     bool formEncoded = false,
     void Function({int count, int total})? onSendProgress,
     void Function({int count, int total})? onRecieveProgress,
+    bool showErrors = false,
   }) {
     return httpClient.postHttp(
       route,
@@ -29,6 +35,7 @@ abstract class BaseRepository {
       formEncoded: formEncoded,
       onSendProgress: onSendProgress,
       onRecieveProgress: onRecieveProgress,
+      showErrors: showErrors,
     );
   }
 
@@ -47,6 +54,7 @@ abstract class BaseRepository {
     bool isWgUrl = true,
     bool isBinary = false,
     bool formEncoded = false,
+    bool showErrors = false,
   }) {
     return httpClient.putHttp(
       route,
@@ -58,6 +66,7 @@ abstract class BaseRepository {
       isWgUrl: isWgUrl,
       formEncoded: formEncoded,
       isBinary: isBinary,
+      showErrors: showErrors,
     );
   }
 
@@ -67,11 +76,29 @@ abstract class BaseRepository {
     Map<String, dynamic>? params,
     bool formdata = false,
     bool formEncoded = false,
+    bool showErrors = false,
   }) {
-    return httpClient.patchHttp(route, body, params: params, formdata: formdata, formEncoded: formEncoded);
+    return httpClient.patchHttp(
+      route,
+      body,
+      params: params,
+      formdata: formdata,
+      formEncoded: formEncoded,
+      showErrors: showErrors,
+    );
   }
 
-  Future<WayaRequestResponse> delete(String route, {dynamic body, Map<String, dynamic>? params}) {
-    return httpClient.deleteHttp(route, params: params, body: body);
+  Future<WayaRequestResponse> delete(
+    String route, {
+    dynamic body,
+    Map<String, dynamic>? params,
+    bool showErrors = false,
+  }) {
+    return httpClient.deleteHttp(
+      route,
+      params: params,
+      body: body,
+      showErrors: showErrors,
+    );
   }
 }

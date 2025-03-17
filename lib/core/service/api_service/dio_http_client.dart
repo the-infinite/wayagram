@@ -1,14 +1,18 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/interface/waya_http_client_interface.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/service/api_service/dio_exceptions.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/core/utils/waya_constants.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 typedef WayaDownloadListener = void Function(double done, int totalSize);
 
@@ -67,6 +71,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     bool formdata = false,
     dynamic token,
     bool useBase = true,
+    bool showErrors = false,
   }) {
     final completer = Completer<WayaRequestResponse>();
     final repeater = RequestRepeater(
@@ -84,6 +89,7 @@ class DioHttpClient implements WayaHttpClientInterface {
             queryParameters: params,
           ),
           repeater,
+          showErrors,
         );
 
         //? After that, then complete with the result.
@@ -100,12 +106,16 @@ class DioHttpClient implements WayaHttpClientInterface {
   }
 
   @override
-  Future<WayaRequestResponse> postHttp(String route, dynamic body,
-      {Map<String, dynamic>? params,
-      bool formdata = false,
-      bool formEncoded = false,
-      void Function({int count, int total})? onSendProgress,
-      void Function({int count, int total})? onRecieveProgress}) {
+  Future<WayaRequestResponse> postHttp(
+    String route,
+    dynamic body, {
+    Map<String, dynamic>? params,
+    bool formdata = false,
+    bool formEncoded = false,
+    void Function({int count, int total})? onSendProgress,
+    void Function({int count, int total})? onRecieveProgress,
+    bool showErrors = false,
+  }) {
     final completer = Completer<WayaRequestResponse>();
     final repeater = RequestRepeater(
       repeat: (repeater) async {
@@ -158,6 +168,7 @@ class DioHttpClient implements WayaHttpClientInterface {
             queryParameters: params,
           ),
           repeater,
+          showErrors,
         );
 
         //? Now, complete this with the awaited result.
@@ -226,6 +237,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     bool isAuth = true,
     bool isBinary = false,
     bool formEncoded = false,
+    bool showErrors = false,
   }) {
     final completer = Completer<WayaRequestResponse>();
     final repeater = RequestRepeater(
@@ -265,6 +277,7 @@ class DioHttpClient implements WayaHttpClientInterface {
             queryParameters: params,
           ),
           repeater,
+          showErrors,
         );
 
         //? After that, then complete with the result.
@@ -289,6 +302,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     Map<String, dynamic>? params,
     bool formdata = false,
     bool formEncoded = false,
+    bool showErrors = false,
   }) async {
     final completer = Completer<WayaRequestResponse>();
     final repeater = RequestRepeater(
@@ -310,6 +324,7 @@ class DioHttpClient implements WayaHttpClientInterface {
             queryParameters: params,
           ),
           repeater,
+          showErrors,
         );
 
         //? After that, then complete with the result.
@@ -330,6 +345,7 @@ class DioHttpClient implements WayaHttpClientInterface {
     String route, {
     Object? body,
     Map<String, dynamic>? params,
+    bool showErrors = false,
   }) async {
     final completer = Completer<WayaRequestResponse>();
     final repeater = RequestRepeater(
@@ -344,6 +360,7 @@ class DioHttpClient implements WayaHttpClientInterface {
             queryParameters: params,
           ),
           repeater,
+          showErrors,
         );
 
         //? After that, then complete with the result.
@@ -360,9 +377,10 @@ class DioHttpClient implements WayaHttpClientInterface {
   }
 
   Future<WayaRequestResponse> _makeRequest(Future<Response> future, RequestRepeater repeater,
-      [bool showErrors = true, int depth = 3]) async {
+      [bool showErrors = false, int depth = 3]) async {
     try {
       final response = await future;
+      _logger.i('Request URI: ${response.requestOptions.uri.toString()}');
       _logger.i('data: ${response.data}');
       return WayaRequestResponse(
         data: response.data,
@@ -381,9 +399,6 @@ class DioHttpClient implements WayaHttpClientInterface {
 
           //? Then try again.
           if (success && depth > 0) {
-            // @sekani50, this code is faulty because it would retry the request
-            // infinitely using the already configured headers.
-
             return repeater.repeat(repeater);
           }
 
@@ -400,16 +415,29 @@ class DioHttpClient implements WayaHttpClientInterface {
         } catch (_) {}
         _logger.e('message: $message, ${e.response?.data}');
 
-        // This is fine
-        if (showErrors && !WayaConstants.isProduction) {
-          // debugPrint(message);
-          /*   _snackBarService.showCustomSnackbar(
-            message: message,
-            variant: SnackbarType.failure,
-          ); */
+        //? If this should show errors.
+        if (showErrors) {
+          WayaUtils.showModalSheet(WayaNav.context, child: WayaErrorDialog(title: message));
+        }
+
+        //? If this is in the staging environment.
+        if (!WayaConstants.isProduction) {
+          WayaDebugConsoleController.instance.addDebugEvent(
+            WayaDebugEvent(
+              type: WayaDebugEventType.http,
+              module: WayaDebugEventModule.unknown,
+              message: e.response?.data['errors'] != null
+                  ? e.response?.data['errors'][0]
+                  : e.response?.data['message'] ?? e.message ?? e.toString(),
+              raw: e,
+              stackTrace: e.stackTrace,
+              timestamp: DateTime.now(),
+            ),
+          );
         }
       }
 
+      //? Handle this error.
       return WayaHttpException.handleDioError(e);
     }
   }
@@ -432,7 +460,7 @@ class DioHttpClient implements WayaHttpClientInterface {
       final newRefreshToken = response.data['data']['token']['refreshToken'];
       _logger.i("New token acquired");
 
-      //> persit the tokens
+      //> persist the tokens
       await secureDataSource.saveToken(newToken);
       await secureDataSource.saveRefreshToken(newRefreshToken);
       return true;

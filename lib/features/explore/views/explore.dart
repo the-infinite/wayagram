@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -111,7 +112,7 @@ class _ExploreState extends ConsumerState<Explore> {
                     onTap: () {
                       WayaNav.toNamed('/general-settings');
                     },
-                    radius: 18,
+                    radius: 18.r,
                   ),
                 ],
               ),

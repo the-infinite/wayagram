@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/repo/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
@@ -187,12 +191,51 @@ class ConversationVm extends StateNotifier<ConversationState> {
     return null;
   }
 
+  /// Helper function used to retrieve the list of all users blocked by the
+  /// current user.
+  Future<List<ChatUser>> getBlockedUsers() async {
+    final result = <ChatUser>[];
+
+    //? First, we try to get blocked users.
+    try {
+      final response = await repo.getBlockedUsers();
+
+      //? This is fine.
+      if (response.success) {
+        //? The data.
+        final data = (response.data['data'] as List);
+        result.addAll(data.map((user) => ChatUser.fromJson(user)));
+
+        //? Update state.
+        state = state.copyWith(
+          blocked: result,
+          isLoading: false,
+        );
+      }
+
+      //? Since it failed.
+      else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.chats,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //* Return the result.
+    return result;
+  }
+
   /// Helper function used to block or unblock a user as the case may be.
   Future<bool> blockOrUnblockUser(String id) async {
     final response = await repo.blockOrUnblockUser(id);
 
     //? This is fine.
-    if (response.success) {}
+    if (response.success) await getBlockedUsers();
 
     //? Return whether or not this is true.
     return response.success;
@@ -239,6 +282,18 @@ class ConversationVm extends StateNotifier<ConversationState> {
 
     //? Return whether or not this is true.
     return response.success;
+  }
+
+  /// Helper function used to report a user.
+  Future<bool> reportUser(String id) async {
+    WayaSnackBar.showToast("This API does not exist yet");
+    return false;
+  }
+
+  /// Helper function used to mute/unmute a user.
+  Future<bool> muteOrUnmuteUser(String id) async {
+    WayaSnackBar.showToast("This API does not exist yet");
+    return false;
   }
 
   /// Helper function used to get the list of all chats that have been archived

@@ -120,31 +120,30 @@ class AddProductVm extends StateNotifier<AddProductState> {
   }
 
   bool validateFields() {
-  if (state.productName.text.trim().isEmpty) {
-    WayaSnackBar.showToast("Product name is required");
-    return false;
-  }
-  if (state.productDescription.text.trim().isEmpty) {
-    WayaSnackBar.showToast("Product description is required");
-    return false;
-  }
-  if (state.pricePerUnit.text.trim().isEmpty) {
-    WayaSnackBar.showToast("Price is required");
-    return false;
-  }
-  if (state.selectedCategory == null) {
-    WayaSnackBar.showToast("Please select a category");
-    return false;
-  }
+    if (state.productName.text.trim().isEmpty) {
+      WayaSnackBar.showToast("Product name is required");
+      return false;
+    }
+    if (state.productDescription.text.trim().isEmpty) {
+      WayaSnackBar.showToast("Product description is required");
+      return false;
+    }
+    if (state.pricePerUnit.text.trim().isEmpty) {
+      WayaSnackBar.showToast("Price is required");
+      return false;
+    }
+    if (state.selectedCategory == null) {
+      WayaSnackBar.showToast("Please select a category");
+      return false;
+    }
 
-  if (state.productCondition.trim().isEmpty) {
-    WayaSnackBar.showToast("Product condition is required");
-    return false;
+    if (state.productCondition.trim().isEmpty) {
+      WayaSnackBar.showToast("Product condition is required");
+      return false;
+    }
+
+    return true;
   }
-
-  return true; 
-}
-
 
   Future<void> onSubmit(BuildContext context) async {
     try {
@@ -156,6 +155,10 @@ class AddProductVm extends StateNotifier<AddProductState> {
           state.pickUpAddress.text.isEmpty) {
         WayaSnackBar.showToast("Kindly add a pickup address");
         return;
+      }
+
+      if (state.pickUpOption == "Delivery") {
+        state = state.copyWith(pickUpAddress: TextEditingController(text: ''));
       }
 
       if (state.pricePerUnit.text.isEmpty) {
@@ -277,10 +280,16 @@ class AddProductVm extends StateNotifier<AddProductState> {
   Future<void> deleteProduct(
       {required String shopId, required String productId}) async {
     try {
+      state = state.copyWith(isDeleting: true);
       final response = await _shopRepository.deleteProductRequest(
           shopId: shopId, productId: productId);
+      if (response.success) {
+        WayaNav.replaceNamed(ManageShop.route);
+      }
     } catch (e) {
       print(e);
+    } finally {
+      state = state.copyWith(isDeleting: true);
     }
   }
 

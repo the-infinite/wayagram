@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
+import 'package:wayagram/shared/features/follow/state/default.dart';
 import 'package:wayagram/shared/features/follow/vm/default.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
@@ -24,6 +25,11 @@ class FollowUserWidget extends ConsumerStatefulWidget {
 }
 
 class _UserWidgetState extends ConsumerState<FollowUserWidget> {
+  late final userFollowProvider = FollowProvider(
+    (ref) => FollowNotifier(FollowState.initial.copyWith(
+      userId: widget.userId,
+    )),
+  );
   late final followNotifier = ref.watch(userFollowProvider.notifier);
   FollowStatusModel? _followStatus;
 
@@ -58,7 +64,7 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
           : Padding(
               padding: const EdgeInsets.only(bottom: 10),
               child: InkWell(
-                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(data.$1.id)),
+                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(data.$1.id, 'profile')),
                 borderRadius: BorderRadius.circular(12.r),
                 splashColor: theme.colorScheme.primary.withAlpha(30),
                 focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
@@ -98,20 +104,22 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                               //? the current user.
                               if (widget.userId != ConversationState.self.id)
                                 GestureDetector(
-                                  onTap: () async {
-                                    //? If this user is following this one.
-                                    if (_followStatus?.isUserFollowing == true) {
-                                      await followNotifier.unfollowUser(data.$1.id);
-                                    }
+                                  onTap: _followStatus == null
+                                      ? null
+                                      : () async {
+                                          //? If this user is following this one.
+                                          if (_followStatus!.isUserFollowing) {
+                                            await followNotifier.unfollowUser(data.$1.id);
+                                          }
 
-                                    //? Since I am not yet following this user...
-                                    else {
-                                      await followNotifier.followUser(data.$1.id);
-                                    }
+                                          //? Since I am not yet following this user...
+                                          else {
+                                            await followNotifier.followUser(data.$1.id);
+                                          }
 
-                                    //? Update this.
-                                    await _getFollowState();
-                                  },
+                                          //? Update this.
+                                          await _getFollowState();
+                                        },
                                   child: Container(
                                     margin: EdgeInsets.only(right: 20.w),
                                     padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),

@@ -1,4 +1,6 @@
 import 'package:logger/logger.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/shared/features/shop/model/default.dart';
@@ -48,7 +50,12 @@ class ShopResource {
         _vendorsCache[userId] = result;
       }
     } catch (e) {
-      print(e);
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.shops,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     //? This is fine.
@@ -59,6 +66,28 @@ class ShopResource {
   /// selected shop. It is useful because it would help us a lot. A whole lot.
   static void setShop(ShopModel shop) {
     _current = shop;
+  }
+
+  /// Helper function used to get all the shops for a given vendor, and then
+  /// assign the one that is currently active to the first one.
+  static Future<void> configureShop(String id) async {
+    //? If there is a shop already set, leave.
+    if (_current != null) return;
+
+    //? Now, try to setup a shop.
+    try {
+      final shops = await getShopsForVendor(ConversationState.self.id);
+      setShop(shops.first);
+      await _logger.init;
+      _logger.i("User shops initialized", time: DateTime.now());
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.shops,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
   }
 
   /// Helper function used to get all the details of a shop using its ID so we

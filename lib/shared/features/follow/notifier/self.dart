@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
@@ -23,13 +24,13 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     this.value = value;
   }
 
-  Future<List<FollowModel>> getFollowersOf(String id) async {
+  Future<List<FollowModel>> getFollowersOf() async {
     final result = <FollowModel>[];
 
     //? This is wonderful.
     try {
       // This is fine too.
-      final response = await repo.getFollowers(id, state.followersNextPage ?? state.followersPage, state.limit);
+      final response = await repo.getFollowers(ConversationState.self.id, state.followersNextPage ?? state.followersPage, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -60,19 +61,24 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     return result;
   }
 
-  Future<List<FollowModel>> getUsersFollowing(String id) async {
+  Future<List<FollowModel>> getUsersFollowing() async {
     final result = <FollowModel>[];
 
     //? This is wonderful.
     try {
       // This is fine too.
-      final response = await repo.getFollowing(id, state.followingNextPage ?? state.followingPage, state.limit);
+      final response = await repo.getFollowing(ConversationState.self.id, state.followingNextPage ?? state.followingPage, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -103,7 +109,12 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     return result;
@@ -122,7 +133,12 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     //? This is fine.
@@ -153,7 +169,12 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     //? This is fine.
@@ -183,19 +204,24 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     //? This is fine.
     return false;
   }
 
-  Future<void> getIfEmpty(String id) async {
+  Future<void> getIfEmpty() async {
     //? If this user has not loaded followers yet.
-    if (state.followers.isEmpty) await getFollowersOf(id);
+    if (state.followers.isEmpty) await getFollowersOf();
 
     //? If this user has not loaded following yet.
-    if (state.following.isEmpty) await getUsersFollowing(id);
+    if (state.following.isEmpty) await getUsersFollowing();
   }
 
   bool isUserFollowing(String id) {

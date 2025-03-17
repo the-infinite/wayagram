@@ -21,9 +21,8 @@ class _WayaPreloaderOverlayState extends State<WayaPreloaderOverlay> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
-        await Future.delayed(const Duration(milliseconds: 350));
         _timer = Timer.periodic(
-          const Duration(milliseconds: 750),
+          const Duration(milliseconds: 500),
           (timer) {
             //? If this is showing only the first icon
             if (step == 1) {
@@ -54,7 +53,6 @@ class _WayaPreloaderOverlayState extends State<WayaPreloaderOverlay> {
     _timer?.cancel();
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
-        await Future.delayed(const Duration(milliseconds: 350));
         _timer = Timer.periodic(
           const Duration(milliseconds: 500),
           (timer) {
@@ -120,7 +118,7 @@ class _WayaPreloaderOverlayState extends State<WayaPreloaderOverlay> {
                   ),
                   crossFadeState: state,
                   duration: const Duration(
-                    milliseconds: 350,
+                    milliseconds: 200,
                   ),
                 );
               },
@@ -140,7 +138,7 @@ class _WayaPreloaderOverlayState extends State<WayaPreloaderOverlay> {
                   ),
                   crossFadeState: state,
                   duration: const Duration(
-                    milliseconds: 350,
+                    milliseconds: 200,
                   ),
                 );
               },

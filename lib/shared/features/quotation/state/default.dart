@@ -20,6 +20,14 @@ class BidDashboardModel {
       won: json["won"],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'opened': opened,
+      'closed': closed,
+      'won': won,
+    };
+  }
 }
 
 class QuotationsState {
@@ -155,5 +163,29 @@ class QuotationsState {
       requestStatus: requestStatus ?? this.requestStatus,
       overview: overview ?? this.overview,
     );
+  }
+
+  String toJsonString() {
+    return {
+      'hasLoadedBids': hasLoadedBids,
+      'hasLoadedRequests': hasLoadedRequests,
+      'limit': limit,
+      'isUser': isUser,
+      'isLoadingBids': isLoadingBids,
+      'bidPage': bidPage,
+      'bidPages': bidPages,
+      'totalBids': totalBids,
+      'hasNextBid': hasNextBid,
+      'bids': bids.map((bid) => bid.toJson()).toList(),
+      'bidStatus': bidStatus,
+      'isLoadingRequests': isLoadingRequests,
+      'requestPage': requestPage,
+      'requestPages': requestPages,
+      'totalRequests': totalRequests,
+      'hasNextRequest': hasNextRequest,
+      'requests': requests.map((request) => request.toJson()).toList(),
+      'requestStatus': requestStatus,
+      'overview': overview?.toJson(),
+    }.toString();
   }
 }

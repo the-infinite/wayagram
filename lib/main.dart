@@ -11,6 +11,7 @@ import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/helpers/deep_linking_listener.dart';
 import 'package:wayagram/core/service/notification_service.dart';
@@ -31,23 +32,75 @@ void main() async {
   //? errors here.
   if (!kDebugMode) {
     FlutterError.onError = (errorDetails) {
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      //? If this is production.
+      if (WayaConstants.isProduction) {
+        FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+      }
+
+      //? Since it is not.
+      else {
+        WayaDebugConsoleController.instance.addDebugEvent(
+          WayaDebugEvent(
+            type: WayaDebugEventType.flutter,
+            module: WayaDebugEventModule.unknown,
+            message: errorDetails.summary.toDescription(),
+            raw: errorDetails,
+            stackTrace: errorDetails.stack,
+            timestamp: DateTime.now(),
+          ),
+        );
+      }
     };
 
     //* For async errors.
     PlatformDispatcher.instance.onError = (error, stack) {
-      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      //? If this is production.
+      if (WayaConstants.isProduction) {
+        FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      }
+
+      //? Since it is not.
+      else {
+        WayaDebugConsoleController.instance.addDebugEvent(
+          WayaDebugEvent(
+            type: WayaDebugEventType.runtime,
+            module: WayaDebugEventModule.unknown,
+            message: error.toString().split("\n").first.trim(),
+            raw: error,
+            stackTrace: stack,
+            timestamp: DateTime.now(),
+          ),
+        );
+      }
       return true;
     };
 
     //* For errors outside of flutter...
     Isolate.current.addErrorListener(RawReceivePort((pair) async {
       final List<dynamic> errorAndStacktrace = pair;
-      await FirebaseCrashlytics.instance.recordError(
-        errorAndStacktrace.first,
-        errorAndStacktrace.last,
-        fatal: true,
-      );
+
+      //? If this is production.
+      if (WayaConstants.isProduction) {
+        await FirebaseCrashlytics.instance.recordError(
+          errorAndStacktrace.first,
+          errorAndStacktrace.last,
+          fatal: true,
+        );
+      }
+
+      //? Since it is not.
+      else {
+        WayaDebugConsoleController.instance.addDebugEvent(
+          WayaDebugEvent(
+            type: WayaDebugEventType.runtime,
+            module: WayaDebugEventModule.unknown,
+            message: errorAndStacktrace.first.toString().split("\n").first.trim(),
+            raw: errorAndStacktrace.first,
+            stackTrace: StackTrace.fromString(errorAndStacktrace.last.toString()),
+            timestamp: DateTime.now(),
+          ),
+        );
+      }
     }).sendPort);
   }
 
@@ -102,6 +155,7 @@ class _WayagramState extends ConsumerState<Wayagram> {
         valueListenable: WayaPreloaderController.instance.notifier,
         builder: (context, showPreloader, _) {
           return Stack(
+            fit: StackFit.passthrough,
             children: [
               //? First, the widget that is being laid out.
               child!,

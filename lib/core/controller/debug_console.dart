@@ -7,9 +7,9 @@ enum WayaDebugEventType {
   /// network request.
   http,
 
-  /// The error is a fatal error. Which means it is happening because of some very
-  /// bad unhandled exception.
-  fatal,
+  /// The error is a flutter error. Which means it is happening because of some 
+  /// odd and unhandled exception in the WidgetTree.
+  flutter,
 
   /// The error is a logical error which means a condition that should otherwise
   /// never be, is somehow true.
@@ -75,15 +75,37 @@ enum WayaDebugEventModule {
   promotion,
 }
 
-class WayaDebugEvent {}
+class WayaDebugEvent {
+  final WayaDebugEventType type;
+  final WayaDebugEventModule module;
+  final String message;
+  final Object? raw;
+  final StackTrace? stackTrace;
+  final DateTime timestamp;
+  final read = ValueNotifier(false);
+
+  // Construct.
+  WayaDebugEvent({
+    required this.type,
+    required this.module,
+    required this.message,
+    required this.raw,
+    required this.stackTrace,
+    required this.timestamp,
+  });
+}
 
 class WayaDebugConsoleController {
   static final instance = WayaDebugConsoleController._();
+  final errors = <WayaDebugEvent>[];
 
   /// A value notifier that is used to refresh the debug console component.
   final refreshNotifier = ValueNotifier(0);
   var _awaiter = Completer<void>();
   bool visible = false;
+
+  /// Helper function used to get the total count of all unread messages.
+  int get unreadCount => errors.where((error) => !error.read.value).length;
 
   // Construct.
   WayaDebugConsoleController._();
@@ -116,5 +138,55 @@ class WayaDebugConsoleController {
   /// when there is no problem you are trying to investigate.
   void refresh() {
     refreshNotifier.value = refreshNotifier.value + 1;
+  }
+
+  /// A function that is used to mark a given debug log as read using its index.
+  void markAsRead(int index) {
+    //? Now, we resolve this issue.
+    if (index >= errors.length) return;
+
+    //? Since we can, try to resolve this issue.
+    errors[index].read.value = true;
+  }
+
+  /// A function that is used to mark all messages past the unread starting
+  /// point as read.
+  void markAllAsRead() {
+    //? For each message we have that is unread...
+    for (int i = 0; i < errors.length; i++) {
+      errors[i].read.value = true;
+    }
+
+    //? Refresh this.
+    refresh();
+  }
+
+  /// A function used to add a new debug event so it becomes visible to the
+  /// people who can view the debug message.
+  void addDebugEvent(WayaDebugEvent event) {
+    errors.insert(0, event);
+    refresh();
+  }
+
+  /// A function used to add a new exception to the list of errors. Care and
+  /// attention should be paid while using this function because it is kind of
+  /// a wrapper around its more complicated predecessor.
+  void addException(
+    String message,
+    dynamic error,
+    WayaDebugEventModule module, [
+    StackTrace? stackTrace,
+    WayaDebugEventType type = WayaDebugEventType.exception,
+  ]) {
+    addDebugEvent(
+      WayaDebugEvent(
+        type: type,
+        module: module,
+        message: message,
+        raw: error,
+        stackTrace: stackTrace,
+        timestamp: DateTime.now(),
+      ),
+    );
   }
 }

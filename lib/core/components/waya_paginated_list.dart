@@ -21,6 +21,12 @@ class WayaPaginatedListView<T> extends StatefulWidget {
   /// Should this fetch something, or should it wait in this instance?
   final bool shouldFetch;
 
+  /// Is this already empty?
+  final bool isEmpty;
+
+  /// The widget to show when this is empty.
+  final Widget? whenEmpty;
+
   /// The scroll controller we should use.
   final ScrollController? controller;
 
@@ -71,6 +77,7 @@ class WayaPaginatedListView<T> extends StatefulWidget {
     required this.itemCount,
     required this.isAtEnd,
     required this.handler,
+    this.isEmpty = false,
     this.reverse = false,
     this.physics = const BouncingScrollPhysics(),
     this.direction = Axis.vertical,
@@ -80,6 +87,7 @@ class WayaPaginatedListView<T> extends StatefulWidget {
     this.primary = false,
     this.controller,
     this.onFetch,
+    this.whenEmpty,
     this.child,
   });
 
@@ -190,6 +198,11 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
           child: ValueListenableBuilder(
             valueListenable: _itemsNotifier,
             builder: (context, redraws, _) {
+              //? If this is empty and can show something in such a case...
+              if (widget.isEmpty && widget.whenEmpty != null) {
+                return widget.whenEmpty!;
+              }
+
               //? Now, build and return the widgets.
               return Flex(
                 crossAxisAlignment: CrossAxisAlignment.stretch,

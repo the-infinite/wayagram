@@ -45,7 +45,7 @@ class CreateShopVm extends StateNotifier<CreateShopState> {
       state = state.copyWith(isLoading: true);
       if (hasNoShop == true) {
         final String imageUrl =
-            "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1736968175/e-shop_rlniqm.png";
+            "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1742170216/m-shop_jcpp32.svg";
         state = state.copyWith(logo: imageUrl);
       }
 

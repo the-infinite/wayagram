@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
 import 'package:wayagram/shared/features/follow/repo/default.dart';
 import 'package:wayagram/shared/features/follow/state/default.dart';
@@ -46,7 +46,12 @@ class FollowNotifier extends StateNotifier<FollowState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     return result;
@@ -89,7 +94,12 @@ class FollowNotifier extends StateNotifier<FollowState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     return result;
@@ -108,7 +118,12 @@ class FollowNotifier extends StateNotifier<FollowState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     //? This is fine.
@@ -121,25 +136,15 @@ class FollowNotifier extends StateNotifier<FollowState> {
       // This is fine too.
       final response = await repo.followUser(id);
 
-      // If this was fine...
-      if (response.success) {
-        final user = FollowModel(
-          id: WayaValueHelper.createUid(),
-          followerId: ConversationState.self.id,
-          followingId: id,
-          followedBack: false,
-          status: FollowRelationship.accepted,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        );
-        final list = [...state.following, user];
-        state = state.copyWith(following: list);
-        return true;
-      }
-
       //? After getting these posts...
+      return response.success;
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     //? This is fine.
@@ -152,24 +157,15 @@ class FollowNotifier extends StateNotifier<FollowState> {
       // This is fine too.
       final response = await repo.unFollowUser(id);
 
-      // If this was fine...
-      if (response.success) {
-        final index = state.following.indexWhere((user) => user.followingId == id);
-        final list = state.following;
-
-        //? This is fine.
-        if (index != -1) {
-          list.removeAt(index);
-          state = state.copyWith(following: [...list]);
-        }
-
-        //? Return here.
-        return true;
-      }
-
       //? After getting these posts...
+      return response.success;
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     //? This is fine.
@@ -196,8 +192,4 @@ class FollowNotifier extends StateNotifier<FollowState> {
 }
 
 typedef FollowProvider = StateNotifierProvider<FollowNotifier, FollowState>;
-
-final userFollowProvider = FollowProvider(
-  (ref) => FollowNotifier(FollowState.initial),
-);
 
