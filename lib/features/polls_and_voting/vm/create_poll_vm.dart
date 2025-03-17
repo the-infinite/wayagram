@@ -661,10 +661,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
           page: 1,
         );
         ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
+           SnackBar(
             content: Text(
               'Poll deleted successfully!',
-              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
             ),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),

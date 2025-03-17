@@ -54,7 +54,7 @@ class GroupWidget extends StatelessWidget {
                 children: [
                   Text(name,
                       style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.black)),
+                          fontSize: 14.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.black)),
                   Spacer(),
                   chk
                       ? SizedBox(

@@ -43,7 +43,7 @@ class _PollsModalState extends ConsumerState<PollsModal> {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .wayaCopyWith(fontSize: 24, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
+                  .wayaCopyWith(fontSize: 24.sp, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
@@ -67,10 +67,10 @@ class _PollsModalState extends ConsumerState<PollsModal> {
               callback: () async {
                 Clipboard.setData(ClipboardData(text: widget.url));
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                   SnackBar(
                     content: Text(
                       'Link copied to clipboard',
-                      style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                      style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
                     ),
                     backgroundColor: WayaColors.primary,
                     duration: Duration(seconds: 2),
@@ -184,7 +184,7 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .wayaCopyWith(fontSize: 24, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
+                  .wayaCopyWith(fontSize: 24.sp, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
@@ -348,7 +348,7 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .wayaCopyWith(fontSize: 24, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
+                  .wayaCopyWith(fontSize: 24.sp, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
@@ -455,7 +455,7 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .wayaCopyWith(fontSize: 24, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
+                  .wayaCopyWith(fontSize: 24.sp, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
@@ -519,7 +519,7 @@ class _VoteInsufficientModalState extends State<VoteInsufficientModal> {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .wayaCopyWith(fontSize: 24, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
+                  .wayaCopyWith(fontSize: 24.sp, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
@@ -590,7 +590,7 @@ class NumPadButton extends StatelessWidget {
               : Text(
                   text!,
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 24.sp,
                     color: Colors.grey.shade800,
                   ),
                 ),

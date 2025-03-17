@@ -361,6 +361,254 @@ class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProvider
     );
   }
 
+  void showCommentBox(BuildContext context, postId) {
+    @override
+    final _formKey = GlobalKey<FormState>();
+    final wayaTheme = Theme.of(context);
+    final viewModel = ref.watch(createPageProvider);
+    final viewModel2 = ref.read(createPageProvider.notifier);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+    });
+
+    print('ShowCommentBox ${ref.read(createPageProvider.notifier).getCommentsStream(postId)}');
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true, // Makes the keyboard push up the bottom sheet
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Container(
+            height: 450.h,
+            padding: EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('All Comments',
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                    )),
+                Gap(20),
+
+                Expanded(
+                    child:
+                    WayaFutureSubscriber(
+                        future:  ref.read(createCommentProvider.notifier).getCommentsStream(postId),
+                        suspense:(_) => Center(child: CircularProgressIndicator(),),
+                        error: (_, error, __)=>Center(child: CircularProgressIndicator(),),
+                        builder: (_, data){
+                          return data!.isEmpty? Center(child: Text('No comments yet.')): ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: data?.length ?? 0,
+                            itemBuilder: (context, index) {
+                              String formatTimeAgo(String dateString) {
+                                DateTime dateTime = DateTime.parse(dateString); // Convert string to DateTime
+                                return timeago
+                                    .format(dateTime); // Convert to "time ago" format
+                              }
+                              return Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 20.h, horizontal: 15.w),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        circleImage(
+                                          radius: 10.r,
+                                          data?[index].user
+                                              ?.profilePicture ??
+                                              '',
+                                        ),
+                                        Gap(10),
+                                        Text(
+                                          '${data?[index].user?.firstName} ${data?[index].user?.lastName}',
+                                          style: TextStyle(
+                                            fontFamily: WayaConstants.fontFamily,
+                                            fontSize: 12.sp,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        Gap(10),
+                                        Text(
+                                          '• ${formatTimeAgo('${data?[index].createdAt}')}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .wayaCopyWith(
+                                              fontSize: 12.sp,
+                                              fontWeight: FontWeight.w500,
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .greyColor500),
+                                        ),
+                                      ],
+                                    ),
+                                    Gap(10),
+                                    Row(
+                                      children: [
+                                        Text(
+                                          '${data?[index].content?.capitalizeFirst}',
+                                          style: TextStyle(
+                                            //fontFamily: WayaConstants.fontFamily,
+                                            fontSize: 12.sp,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w200,
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Row(
+                                          children: [
+                                            /*LikeButtonWithReactions(
+                    // isLiked: post.isLiked,
+                    // onLike: onLike,
+                    // onReact: onReact ?? (react){},
+
+                    isLiked: post.likeCount,
+                    onLike: onLike,
+                    onReact: onReact ?? (react){},
+
+                    // onLike: (String? reaction) async {
+                    //   viewModel.likePost(, reaction: reaction);
+                    // },
+                    // onReact: (String reaction) {
+                    //   viewModel.likePost(post, reaction: reaction);
+                    // },
+                    // onComment: () {
+                    //   viewModel.commentPost2(post);
+                    // },
+                  ),*/
+                                            actionType(
+                                                'Likes',
+                                                'assets/images/pages/like2.png', onPressed: () {
+                                              // viewModel2.likePost(context, postId: '${post.id}',
+                                              //     userId: '${ConversationState.self.id}');
+                                            },
+                                                color:  WayaColors.greyColor500
+                                              //: WayaColors.primary
+                                            ),
+                                            actionType(' Comments',
+                                                'assets/images/pages/comment2.png', onPressed: () {
+                                                  //showCommentBox(context, post.id);
+
+                                                }),
+
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          );
+                        })
+
+                ),
+                Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: WayaDp(
+                        radius: 20,
+                      ),
+                    ),
+                    Gap(10),
+                    Expanded(
+                      flex: 2,
+                      child: Form(
+                          key: _formKey,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              FormField<String>(validator: (value) {
+                                return null;
+                              }, builder: (formState) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    WayaTextFormField(
+                                      showBorder: true,
+                                      keyboardType: TextInputType.text,
+                                      controller: viewModel.content,
+                                      hintText: 'Write comment here',
+                                      borderColor: formState.hasError &&
+                                          viewModel.content.text.isEmpty
+                                          ? wayaTheme.colorScheme.error
+                                          : null,
+                                    ),
+                                    if (formState.hasError &&
+                                        viewModel.content.text.isEmpty)
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text(
+                                          formState.errorText!,
+                                          style: TextStyle(
+                                              color:
+                                              wayaTheme.colorScheme.error,
+                                              fontSize: 12.sp),
+                                        ),
+                                      ),
+                                  ],
+                                );
+                              }),
+                              Gap(20),
+                            ],
+                          )),
+                    ),
+                    Gap(10),
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: SizedBox(
+                        width: 50,
+                        child: WayaButton(
+                          centerWidget: Image.asset(
+                            'assets/images/pages/send_ic.png',
+                            height: 25.h,
+                          ),
+                          callback: !viewModel.isLoading
+                              ? () async {
+                            if (_formKey.currentState!.validate()) {
+                              await ref
+                                  .watch(createPageProvider.notifier)
+                                  .commentOnPost(
+                                postId,
+                                viewModel.content.text,
+                              );
+                              ref
+                                  .watch(createPageProvider.notifier)
+                                  .reset();
+                              //WayaNav.goBack();
+                            }
+                          }
+                              : null,
+                          height: 50,
+                          isLoading: viewModel.isLoading,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   Future<void> _launchUrl(String link) async {
     final Uri url = Uri.parse(link);
     if (!await launchUrl(url)) {

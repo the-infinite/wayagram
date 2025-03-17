@@ -76,7 +76,7 @@ class EventCard extends ConsumerWidget {
                     text: event.userId == userId ? 'View' : 'Register',
                     height: 30,
                     textStyle: wayaTheme.textTheme.hintStyle
-                        .wayaCopyWith(color: wayaTheme.colorScheme.white, fontSize: 12, fontWeight: FontWeight.w500),
+                        .wayaCopyWith(color: wayaTheme.colorScheme.white, fontSize: 12.sp, fontWeight: FontWeight.w500),
                     radius: 6,
                   ),
                 )

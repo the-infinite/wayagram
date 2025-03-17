@@ -224,14 +224,14 @@ Widget mediaPreview({
               ),
               child: TextField(
                 style: status.textStyle.copyWith(
-                  fontSize: 18,
+                  fontSize: 18.sp,
                   color: wayaTheme.colorScheme.white,
                 ),
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   hintText: 'Add a caption...',
                   hintStyle: status.textStyle.copyWith(
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     color: wayaTheme.colorScheme.greyColor300,
                   ),
                 ),

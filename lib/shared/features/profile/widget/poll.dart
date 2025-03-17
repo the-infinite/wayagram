@@ -162,7 +162,7 @@ class SinglePollWidget extends ConsumerWidget {
                           Text(
                             choice.text,
                             style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                                fontSize: 14, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.primary600),
+                                fontSize: 14.sp, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.primary600),
                           ),
                         ],
                       )),

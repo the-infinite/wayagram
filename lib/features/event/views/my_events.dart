@@ -101,7 +101,7 @@ class _MyEventState extends ConsumerState<MyEvents> {
                 Text(
                   "Create an Event",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customPrimary, fontSize: 14, fontWeight: FontWeight.w500),
+                      color: wayaTheme.colorScheme.customPrimary, fontSize: 14.sp, fontWeight: FontWeight.w500),
                 )
               ],
             ),
