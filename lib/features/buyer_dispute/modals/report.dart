@@ -22,8 +22,9 @@ import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 class ReportDisputeModal extends ConsumerStatefulWidget {
   final Order order;
   final String disputeId;
+  final String tobeEscalatedBy;
   const ReportDisputeModal(
-      {super.key, required this.order, required this.disputeId});
+      {super.key, required this.order, required this.disputeId, required  this.tobeEscalatedBy});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -41,11 +42,11 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
   List<DocType> mediaDoc = [];
 
   void addFile(File file) {
-  setState(() {
+    setState(() {
       mediaDoc = [
-      DocType(file: file, type: "evidence", name: file.path.split('/').last)
-    ];
-  });
+        DocType(file: file, type: "evidence", name: file.path.split('/').last)
+      ];
+    });
   }
 
   void removeFile() {
@@ -71,6 +72,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
         reference: widget.order.id,
         sellerId: widget.order.vendorId,
         disputeId: widget.disputeId,
+        tobeEscalatedBy: widget.tobeEscalatedBy,
         mediaDoc: mediaDoc.isNotEmpty ? mediaDoc[0] : null,
         details: details);
 

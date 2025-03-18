@@ -247,9 +247,14 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                                           .metadata
                                           .orderedItem);
                                       final id = disputeState.dispute!.id;
+                                      final bool isBuyer =
+                                          disputeState.dispute!.sellerId !=
+                                              ConversationState.self.id;
                                       escalateToMediator(
                                           context: context,
                                           order: order,
+                                          tobeEscalatedBy:
+                                              isBuyer ? "buyer" : "seller",
                                           disputeId: id);
                                     },
                               height: null,
@@ -471,6 +476,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
   void escalateToMediator(
       {required BuildContext context,
       required Order order,
+      required String tobeEscalatedBy,
       required String disputeId}) async {
     await WayaUtils.showNotice(
         context: context,
@@ -483,9 +489,9 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
 
           await WayaUtils.showModalSheet(context,
               child: ReportDisputeModal(
-                order: order,
-                disputeId: disputeId,
-              ));
+                  order: order,
+                  disputeId: disputeId,
+                  tobeEscalatedBy: tobeEscalatedBy));
         },
         message:
             "Please confirm whether you’d like to escalate this dispute to a mediator. This cannot be undone when confirmed",

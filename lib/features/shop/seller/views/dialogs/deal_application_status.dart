@@ -107,7 +107,7 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
                     child: AboutProductApplication(
                         title: 'Submission Date',
                         content: WayaHelpers.formatDateString(
-                            widget.product.updatedAt)),
+                            widget.product.updatedAt.toIso8601String())),
                   ),
                   const Gap(2),
                   Expanded(

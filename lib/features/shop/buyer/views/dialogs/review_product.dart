@@ -17,11 +17,11 @@ import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/product_review_widget.dart';
 
 class ReviewProduct extends ConsumerStatefulWidget {
-  final String productId;
+  final String shopId;
 
   const ReviewProduct({
     super.key,
-    required this.productId,
+    required this.shopId,
   });
 
   @override
@@ -67,7 +67,7 @@ class _ReviewProductState extends ConsumerState<ReviewProduct> {
               ),
               const Gap(14),
               Text(
-                " Help other buyers by sharing your thoughts about the product and service. Your feedback matters!",
+                " Help other buyers by sharing your thoughts about the shop product and service. Your feedback matters!",
                 textAlign: TextAlign.center,
                 style: wayaTheme.textTheme.descriptionStyle,
               ),
@@ -102,7 +102,7 @@ class _ReviewProductState extends ConsumerState<ReviewProduct> {
                     "Write your review here, (e.g product quality, delivery experience, customer support)",
                 line: 5,
                 padding: const EdgeInsets.all(12),
-                label: "What do you think of the product?",
+                label: "What do you think of the shop?",
               ),
               const Gap(24),
               WayaButton(
@@ -113,7 +113,7 @@ class _ReviewProductState extends ConsumerState<ReviewProduct> {
                         }
 
                         ref.read(shopVmProvider.notifier).reviewProduct(
-                            shopId: widget.productId,
+                            shopId: widget.shopId,
                             review: _controller.text,
                             score: rating > 1 ? rating - 1 : 0,
                             raterId: ConversationState.self.id,
