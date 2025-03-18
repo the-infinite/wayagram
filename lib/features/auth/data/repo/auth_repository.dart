@@ -23,6 +23,12 @@ class AuthRepository extends BaseRepository {
         {"email": email, "purpose": 'REGISTER_USER'});
   }
 
+    Future<WayaRequestResponse> oauth(String token, String authType) {
+    return post('$serviceUrl/client/auth/login/oauth',
+        {"oauthProvider": authType, "token": token});
+  }
+
+
   Future<WayaRequestResponse> verifyEmail(String email) {
     return post(
         '$serviceUrl/client/auth/password/reset-password', {"email": email},

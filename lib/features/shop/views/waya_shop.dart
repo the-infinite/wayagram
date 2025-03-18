@@ -41,7 +41,7 @@ class _WayaShopState extends ConsumerState<WayaShop>
       isScrollable: false,
       progressIndicator: loadingState(context: context),
       onTapBackButton: () =>
-          WayaNav.toNamed( BottomView.route, arguments: 0),
+          WayaNav.toNamed( BottomView.route, arguments: 0, preventDuplicates: false),
       title: 'Shop',
       appBarTrailing: WayaCartIcon(),
       body: Column(
