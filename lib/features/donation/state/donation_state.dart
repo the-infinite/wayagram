@@ -28,6 +28,7 @@ class DonationState{
     final CreateDonationResponse? createDonationResponse;
     List<AllDonationDocs>? allDonationDocs;
     List<MyDonationDocs>? myDonationDocs;
+    List<MyDonationDocs>? approvedDonations;
 
     final bool isLoading;
     final bool showAmountRaised;
@@ -44,6 +45,7 @@ class DonationState{
     TextEditingController? details,
       this.allDonationDocs = const [],
       this.myDonationDocs = const [],
+      this.approvedDonations = const [],
       this.donationImage = const [],
       this.image,
       this.startDate = '',
@@ -79,6 +81,7 @@ class DonationState{
     TextEditingController? details,
       List<AllDonationDocs>? allDonationDocs,
       List<MyDonationDocs>? myDonationDocs,
+      List<MyDonationDocs>? approvedDonations,
       List<DocType>? donationImage,
       MultipartFile? image,
       String? privacyOption,
@@ -121,6 +124,7 @@ class DonationState{
       showNumberOfDonors: showNumberOfDonors ?? this.showNumberOfDonors,
       allDonationDocs: allDonationDocs ?? this.allDonationDocs,
       myDonationDocs: myDonationDocs ?? this.myDonationDocs,
+      approvedDonations: approvedDonations ?? this.approvedDonations,
       createDonationResponse: createDonationResponse ?? this.createDonationResponse,
     );
   }
