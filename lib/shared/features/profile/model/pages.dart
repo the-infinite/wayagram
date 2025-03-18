@@ -12,7 +12,7 @@ class PageModel {
   final String description;
   final bool isPublic;
   final String? coverImage;
-  final List<String> categories;
+  final List<String>? categories;
   final String? url;
   final String? profileImage;
   final DateTime? deletedAt;

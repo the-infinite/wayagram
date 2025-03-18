@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
 import 'package:wayagram/shared/features/profile/repo/default.dart';
 import 'package:wayagram/shared/features/profile/state/default.dart';
@@ -8,8 +10,8 @@ class PostNotifier extends StateNotifier<PostState> {
   PostNotifier(super.state);
 
   /// An API used to fetch all the posts for a given user.
-  Future<List<Post>> getPostsForUser(String id) async {
-    final result = <Post>[];
+  Future<List<PostModel>> getPostsForUser(String id) async {
+    final result = <PostModel>[];
 
     try {
       // This is fine too.
@@ -20,7 +22,7 @@ class PostNotifier extends StateNotifier<PostState> {
         final data = response.data["data"];
 
         //? Parse the posts as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => Post.fromJson(doc));
+        final docs = (data['docs'] as List).map((doc) => PostModel.fromJson(doc));
 
         //? Now, add these to what we have here.
         result.addAll(docs);
@@ -44,7 +46,12 @@ class PostNotifier extends StateNotifier<PostState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.posts,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     // That's fine.
@@ -56,4 +63,3 @@ class PostNotifier extends StateNotifier<PostState> {
     state = PostState.initial;
   }
 }
-

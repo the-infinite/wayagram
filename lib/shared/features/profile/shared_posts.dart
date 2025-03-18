@@ -6,7 +6,6 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
-import 'package:wayagram/features/post/model/post_reponse_model.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 import 'package:gap/gap.dart';
 
@@ -34,10 +33,6 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(servicesProvider);
 
-    List<Post> posts = widget.isExpanded
-        ? state.topPosts
-        : state.topPosts.sublist(0, min(state.topPosts.length, 3));
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -55,23 +50,18 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: category.posts.length,
-              itemBuilder: (context, index) {
-                return WayaPostWidget(
-                  data: category.posts[index],
-                  index: index,
-                );
-              },
+              itemBuilder: (context, index) => WayaPostWidget(
+                data: category.posts[index],
+                index: index,
+              ),
             ),
             if (category.hasNextPage)
               WayaButton(
                 callback: () {
-                  ref
-                      .read(servicesProvider.notifier)
-                      .loadMorePosts(category.categoryName);
+                  ref.read(servicesProvider.notifier).loadMorePosts(category.categoryName);
                 },
                 text: 'See More Post',
-                border: Border.all(
-                    width: 1, color: wayaTheme.colorScheme.greyColor200),
+                border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor200),
                 height: 36,
                 color: wayaTheme.colorScheme.transparent,
                 textColor: wayaTheme.colorScheme.customPrimary,
@@ -89,39 +79,14 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
           ListView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: posts.length,
-            itemBuilder: (context, index) {
-              return WayaPostWidget(
-                data: posts[index],
-                index: index,
-              );
-            },
+            itemCount: widget.isExpanded ? state.topPosts.length : min(state.topPosts.length, 3),
+            itemBuilder: (context, index) => WayaPostWidget(
+              data: state.topPosts[index],
+              index: index,
+            ),
           ),
         ],
       ],
     );
   }
 }
-
-/**
- 
-        //? If there are posts to show and this is full view...
-        if (state.posts.isNotEmpty && widget.isExpanded) ...[
-          Text(
-            "Based on your Interest",
-            style: wayaTheme.textTheme.bodyMedium,
-          ),
-          const Gap(10),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: posts.length,
-            itemBuilder: (context, index) {
-              return WayaPostWidget(
-                data: posts[index],
-                index: index,
-              );
-            },
-          ),
-        ],
- */
