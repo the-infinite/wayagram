@@ -592,7 +592,7 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProv
 
         //? Finally, the mute button.
         Padding(
-          padding: EdgeInsets.only(right: 15.w, bottom: 25.h),
+          padding: EdgeInsets.only(right: 15.w, bottom: 65.h),
           child: FadeTransition(
             opacity: Tween<double>(
               begin: 1,

@@ -243,6 +243,56 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
 
                 // Some space.
                 SizedBox(height: 5.h),
+
+                //? Now, the request body.
+                ClipPath(
+                  clipper: ShapeBorderClipper(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
+                  child: ColoredBox(
+                    color: theme.colorScheme.scaffoldColor,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      child: Text(
+                        "Body: ${(widget.event.raw as DioException?)?.requestOptions.data?.toString() ?? "N/A"}",
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.greyColor400,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Some space.
+                SizedBox(height: 5.h),
+
+                //? Now, the response body.
+                ClipPath(
+                  clipper: ShapeBorderClipper(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
+                  child: ColoredBox(
+                    color: theme.colorScheme.scaffoldColor,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      child: Text(
+                        "Response: ${(widget.event.raw as DioException?)?.response?.data?.toString() ?? "N/A"}",
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.greyColor400,
+                          fontSize: 12.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                // Some space.
+                SizedBox(height: 5.h),
               ],
 
               //? Seventh, some data relevant to the optional type this is.

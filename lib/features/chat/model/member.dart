@@ -29,7 +29,7 @@ class ChatUser {
   final bool canSeeReadReceipt;
   final bool canSeeProfilePicture;
   final bool canSeeProfileDescription;
-  final bool isShop;
+  final bool? isShop;
   final DateTime createdAt;
   final DateTime updatedAt;
 

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/widgets/about_event.dart';
 import 'package:gap/gap.dart';
@@ -55,10 +56,15 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                       metrics: "${viewModel.singleEvent?.noOfAttendees ?? 0}",
                       color: Color(0xffE7F6EC),
                       title: "Total Attendees"),
-                  InventoryWidget(
+
+                  //? Show the option to view total revenue of this event only when
+                  //? the organizer is the logged in user.
+                  if (viewModel.singleEvent?.userId == ConversationState.self.id)
+                    InventoryWidget(
                       metrics: WayaHelpers.formatPrice(viewModel.singleEvent?.totalRevenue ?? 0),
                       color: Color(0xffFEF6E7),
-                      title: "Total Revenue")
+                      title: "Total Revenue",
+                    )
                 ],
               ),
               const Gap(15),
@@ -96,7 +102,7 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                   Expanded(
                     child: AboutEvent(
                         title: 'Start Date',
-                        content: WayaHelpers.formatDateMonthYear(viewModel.singleEvent!.startDate)),
+                        content: WayaDateHelper.getDailyTimestamp(viewModel.singleEvent!.startDate)),
                   ),
                   Expanded(
                     child: AboutEvent(
@@ -110,7 +116,7 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                 children: [
                   Expanded(
                     child: AboutEvent(
-                        title: 'EndDate', content: WayaHelpers.formatDateMonthYear(viewModel.singleEvent!.endDate)),
+                        title: 'End Date', content: WayaDateHelper.getDailyTimestamp(viewModel.singleEvent!.endDate)),
                   ),
                   Expanded(
                     child: AboutEvent(
