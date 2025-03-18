@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/features/event/data/model/event_attendee_response_model.dart';
-import 'package:wayagram/features/event/widgets/attendee_widget.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
+import 'package:wayagram/features/explore/search/widgets/user_widget.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
 class EventAttendees extends ConsumerStatefulWidget {
@@ -16,39 +15,33 @@ class EventAttendees extends ConsumerStatefulWidget {
 }
 
 class _EventAttendeesState extends ConsumerState<EventAttendees> {
- 
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
-   
-    child: 
-        PaginatedDataView<Doc>(
-          uniqueKey: 'attendees',
-          loadingState:SizedBox(
-            height: context.height * 0.2,
-             child: Center(
+        child: PaginatedDataView<Doc>(
+      uniqueKey: 'attendees',
+      loadingState: SizedBox(
+          height: context.height * 0.2,
+          child: Center(
             child: CircularProgressIndicator(),
           )),
-          emptyState: SizedBox(
-            height: context.height * 0.2,
-            child: Center(
-            child: Text("No registered attendee for this event"),
+      emptyState: SizedBox(
+        height: context.height * 0.2,
+        child: Center(
+          child: Text("No registered attendee for this event"),
+        ),
+      ),
+      fetchData: ref.read(eventVmProvider.notifier).getAttendees,
+      result: (data, scroll) {
+        return ListView.builder(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          itemCount: data.length,
+          itemBuilder: (context, index) => FollowUserWidget(
+            userId: data[index].userId,
           ),
-          ),
-          fetchData: ref.read(eventVmProvider.notifier).getAttendees,
-          result: (data, scroll) {
-            return ListView.builder(
-           // controller: scroll,
-    physics: const NeverScrollableScrollPhysics(), 
-    shrinkWrap: true,
-                itemCount: data.length,
-                itemBuilder: (context, index) {
-                  return AttendeeWidget(attendee: data[index]);
-                });
-          },
-        )
-      
-    );
+        );
+      },
+    ));
   }
 }
