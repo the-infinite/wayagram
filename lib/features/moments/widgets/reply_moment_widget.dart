@@ -34,13 +34,17 @@ class ReplyMomentWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ReplyMomentWidgetState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ReplyMomentWidgetState();
 }
 
 class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
   late final notifier = ref.read(replyMomentVmProvider(widget.uniqueKey).notifier);
   late final chatNotifier = ref.read(chatProvider.notifier);
   late final conversationNotifier = ref.read(conversationProvider.notifier);
+
+  Map<String, bool> likedMoments = {};
+
   @override
   void initState() {
     super.initState();
@@ -51,7 +55,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(replyMomentVmProvider(widget.uniqueKey));
     final size = MediaQuery.sizeOf(context);
-
+    bool isLiked = likedMoments[widget.moment.id] ?? false;
     //? Now move forward.
     return Container(
       width: size.width,
@@ -164,14 +168,21 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
           else
             GestureDetector(
               onTap: () {
-                notifier.toggleLiked();
+                setState(() {
+                  likedMoments[widget.moment.id] =
+                      !(likedMoments[widget.moment.id] ?? false);
+                });
+                notifier.toggleLiked(likedMoments[widget.moment.id]!,
+                    widget.moment.id, widget.moment.userId);
               },
               child: Container(
                 width: 45,
                 height: 45,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: state.isLiked ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.transparent,
+                  color: isLiked
+                      ? wayaTheme.colorScheme.customPrimary
+                      : wayaTheme.colorScheme.transparent,
                   border: Border.all(
                     width: 1,
                     color: wayaTheme.colorScheme.white,
@@ -203,7 +214,12 @@ class ReplyMomentState {
     this.comment = '',
   });
 
-  ReplyMomentState copyWith({bool? isLiked, bool? isComment, MomentData? moment, bool? isLoading, String? comment}) {
+  ReplyMomentState copyWith(
+      {bool? isLiked,
+      bool? isComment,
+      MomentData? moment,
+      bool? isLoading,
+      String? comment}) {
     return ReplyMomentState(
       isComment: isComment ?? this.isComment,
       isLiked: isLiked ?? this.isLiked,
@@ -214,7 +230,9 @@ class ReplyMomentState {
   }
 }
 
-final replyMomentVmProvider = StateNotifierProvider.family<ReplyMomentVm, ReplyMomentState, String>((ref, uniqueKey) {
+final replyMomentVmProvider =
+    StateNotifierProvider.family<ReplyMomentVm, ReplyMomentState, String>(
+        (ref, uniqueKey) {
   return ReplyMomentVm(MomentRepository(), WayaSecureDataSource(), ref);
 });
 
@@ -223,33 +241,35 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
   final WayaSecureDataSource _secureDataSource;
   final MomentRepository _momentRepository;
 
-  ReplyMomentVm(this._momentRepository, this._secureDataSource, this.ref) : super(ReplyMomentState());
+  ReplyMomentVm(this._momentRepository, this._secureDataSource, this.ref)
+      : super(ReplyMomentState());
 
-  void initialize(MomentData moment) {
-    state = state.copyWith(moment: moment);
+  void initialize() {
+    state = state.copyWith(isLiked: false);
   }
 
   void updateComment(String comment) {
     state = state.copyWith(comment: comment);
   }
 
-  void isCommented(bool isComment) async {
+  void isCommented(bool isComment, String id, String userId) async {
     state = state.copyWith(isComment: isComment);
-    await postSingleUserMoment(moment: state.moment!);
+    await postSingleUserMoment(momentId: id, userId: userId);
   }
 
-  void toggleLiked() async {
-    state = state.copyWith(isLiked: !state.isLiked);
-    await postSingleUserMoment(moment: state.moment!);
+  void toggleLiked(bool liked, String id, String userId) async {
+    state = state.copyWith(isLiked: liked);
+    await postSingleUserMoment(momentId: id, userId: userId);
   }
 
-  Future<void> postSingleUserMoment({required MomentData moment}) async {
+  Future<void> postSingleUserMoment(
+      {required String momentId, required String userId}) async {
     try {
       final profileId = await _secureDataSource.getUserId();
-      if (profileId == moment.userId) return;
+      if (profileId == userId) return;
       final response = await _momentRepository.viewMoments(
         profileId: profileId!,
-        momentId: moment.id,
+        momentId: momentId,
         likeMoment: state.isLiked,
         comment: state.isComment,
       );

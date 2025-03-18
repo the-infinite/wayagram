@@ -301,6 +301,7 @@ class WayaAppRoutes {
     SellerBuyRequestsScreen.route: () => SellerBuyRequestsScreen(),
     BuyerBuyRequestsScreen.route: () => BuyerBuyRequestsScreen(),
     RoleAccessPage.route: () => RoleAccessPage(),
+    
     AddTeamMemberPage.route: () => AddTeamMemberPage(),
     MemberDetailsPage.route: () => MemberDetailsPage(),
     VerifyEmail.route: () => VerifyEmail()

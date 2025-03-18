@@ -20,6 +20,8 @@ class ContestRepo extends BaseRepository {
     return post('$serviceUrl2/contests/create', payLoad, formdata: false);
   }
 
+
+
     Future<WayaRequestResponse> editContest(String contestId,payLoad) {
     return patch('$serviceUrl2/contests/edit-contest/$contestId', payLoad, formdata: false);
   }
@@ -134,6 +136,11 @@ class ContestRepo extends BaseRepository {
   Future<WayaRequestResponse> fetchVoteStatsContest(String contestId) {
     return get('$serviceUrl2/statistics/votes-stats?contestId=$contestId');
   }
+
+    Future<WayaRequestResponse> deletePost(String postId) {
+    return delete('$serviceUrl2/gallery/$postId/delete');
+  }
+  
 
 
   /*Future<WayaRequestResponse> createContestController({

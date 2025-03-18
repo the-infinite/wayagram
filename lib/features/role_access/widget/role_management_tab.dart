@@ -7,7 +7,9 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/role_access/view/add_team_member_page.dart';
 import 'package:wayagram/features/role_access/view/member_details_page.dart';
+import 'package:wayagram/features/role_access/vm/role_access_vm.dart';
 import 'package:wayagram/features/role_access/widget/role_access_card.dart';
+import 'package:wayagram/features/role_access/widget/role_management_card.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
@@ -26,17 +28,18 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
   void initState() {
     super.initState();
   }
-  
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final viewModel = ref.watch(roleAccessVm);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         WayaButton(
           callback: () {
+            ref.read(editingRoleMemberProvider.notifier).state = false;
             WayaNav.toNamed(AddTeamMemberPage.route);
           },
           color: wayaTheme.colorScheme.primary50,
@@ -47,23 +50,24 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
         /*   if (posts.isEmpty) emptyWidget(),
         if (postNotifier.isLoading) Center(child: CircularProgressIndicator()),
         if (posts.isNotEmpty) */
-
+        if (viewModel.isLoading == true)
+          Center(child: CircularProgressIndicator()),
+        if (viewModel.listRoleManagement.isEmpty) emptyWidget(),
         ListView.builder(
           shrinkWrap: true,
-          itemCount: users.length,
+          physics: BouncingScrollPhysics(),
+          itemCount: viewModel.listRoleManagement.length,
           itemBuilder: (context, index) {
-            final user = users[index];
+            final user = viewModel.listRoleManagement[index];
             return GestureDetector(
-              onTap: () {
-                WayaNav.toNamed(MemberDetailsPage.route);
-              },
-              child: RoleAccessCard(
-                user: user,
-                showImage: false,
-              ),
-            );
+                onTap: () {
+                  // ref.read(selectedRoleMemberProvider.notifier).state = user;
+                  // WayaNav.toNamed(MemberDetailsPage.route);
+                },
+                child: RoleManagementCard(user: user));
           },
         ),
+        Gap(50)
       ],
     );
   }
@@ -71,16 +75,11 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc: ConversationState.self.accountType == UserAccountType.business
-            ? "You don’t have any active contest here. Create a \n contest and have different participant"
-            : "You don’t have any active contest here. Create a \n Business account to access more features",
-        title: "No Contest Created",
-        buttonText: "Host a Contest",
-        hideButton: true,
-        onTap: () {
-          ivalidateUGTVM(ref);
-          WayaNav.toNamed("/create-contest");
-        });
+        desc: "No Member added yet",
+        title: "Role & Access",
+        buttonText: "",
+        hideButton: false,
+        onTap: () {});
   }
 
   @override

@@ -13,6 +13,7 @@ import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_validators.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
+import 'package:wayagram/features/role_access/view/role_access_page.dart';
 import 'package:wayagram/features/role_access/vm/role_access_vm.dart';
 
 class AddTeamMemberPage extends StatefulHookConsumerWidget {
@@ -29,6 +30,8 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final rollAccessNotifier = ref.read(roleAccessVm.notifier);
+    final isEditing = ref.read(editingRoleMemberProvider);
+    final viewModelSelected = ref.watch(selectedRoleMemberProvider);
     final viewModel = ref.watch(roleAccessVm);
     final isLoading = useState(false);
     //final isEmptyTest = useState(true);
@@ -44,13 +47,32 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
       rollAccessNotifier.getRoles();
       rollAccessNotifier.getShops();
       rollAccessNotifier.email.text = "";
+      if (isEditing) {
+        rollAccessNotifier.email.text = viewModelSelected?.email ?? "";
+        rolePicker.value =
+            viewModelSelected?.roles?.first.roleName ?? "Select Role";
+
+        shopId.value = viewModelSelected?.shopId ?? "";
+        roleId.value = viewModelSelected?.roles?.first.roleId ?? "";
+
+        for (var model in viewModel.listShop) {
+          if (model.value == viewModelSelected?.shopId) {
+            shopPicker.value = model.label;
+          }
+        }
+
+        // shopPicker.value = viewModelSelected?.roles?.first?.roleName ?? "Select Role";
+      }
+
       return null;
     }, []);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
-      title: "Add New Team Member",
+      //color: Colors.black,
+     // title: isEditing ? "Update Member" : "Add New Team Member",
       appBar: AppBar(
+        title: Text(isEditing ? "Update Member" : "Add New Team Member"),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
@@ -64,13 +86,22 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                           if (_formKey.currentState!.validate()) {
                             print("i dey hereeee qwqqqqqq");
                             rollAccessNotifier.addTeamMember(
-                                isLoading, shopId.value, roleId.value, () {
-                              WayaNav.goBack();
+                                isLoading,
+                                shopId.value,
+                                roleId.value,
+                                viewModelSelected?.id ?? "",
+                                isEditing, () {
+                              if (isEditing) {
+                                WayaNav.removeAllUntil(
+                                    RoleAccessPage(), "/role-access-page");
+                              } else {
+                                WayaNav.goBack();
+                              }
                             });
                           }
                         },
                   height: 30,
-                  text: 'Add user',
+                  text: isEditing ? "Update" : 'Add user',
                   isLoading: isLoading.value,
                   textStyle: WayaTextStyles.bodySmall.copyWith(
                       fontSize: 12.sp,

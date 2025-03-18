@@ -78,6 +78,16 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     state = state.copyWith(choices: allChoices);
   }
 
+  void removeChoice() {
+    List<Choice> allChoices = [];
+    allChoices = List.from(state.choices);
+
+    allChoices
+        .remove(Choice(image: null, description: TextEditingController(text: ''), text: TextEditingController(text: '')));
+
+    state = state.copyWith(choices: allChoices);
+  }
+
   void reset() {
     state = CreatePollVotingState();
   }
