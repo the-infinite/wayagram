@@ -114,8 +114,7 @@ void main() async {
   // TODO: Switch to native splash screens when possible.
 
   //? Fifth, configure our visibility detector.
-  VisibilityDetectorController.instance.updateInterval =
-      const Duration(milliseconds: 50);
+  VisibilityDetectorController.instance.updateInterval = const Duration(milliseconds: 50);
 
   //? Finally, run the app.
   //? added DeepLinkListener to listen to incoming deepLinking urls
@@ -143,7 +142,7 @@ class _WayagramState extends ConsumerState<Wayagram> {
       splitScreenMode: true,
     );
 
-   return  GetMaterialApp(
+    return GetMaterialApp(
       initialRoute: '/',
       title: WayaConstants.appName,
       theme: WayaTheme.lightTheme,
@@ -153,20 +152,18 @@ class _WayagramState extends ConsumerState<Wayagram> {
       getPages: WayaAppRoutes.getPages,
       builder: (context, child) => ValueListenableBuilder(
         valueListenable: WayaPreloaderController.instance.notifier,
-        builder: (context, showPreloader, _) {
-          return Stack(
-            children: [
-              //? First, the widget that is being laid out.
-              child!,
+        builder: (context, showPreloader, _) => Stack(
+          children: [
+            //? First, the widget that is being laid out.
+            child!,
 
-              //? Second, our preloader widget.
-              if (showPreloader) WayaPreloaderOverlay(),
+            //? Second, our preloader widget.
+            if (showPreloader) WayaPreloaderOverlay(),
 
-              //? Third, the debug console.
-              if (!WayaConstants.isProduction) WayaDebugConsole(),
-            ],
-          );
-        },
+            //? Third, the debug console.
+            if (!WayaConstants.isProduction) WayaDebugConsole(),
+          ],
+        ),
       ),
     );
   }
