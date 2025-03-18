@@ -68,6 +68,7 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
       state.copyWith(lgas: []);
       state = state.copyWith(lga: '');
     }
+      await fetchLGA(value.value, 'NG');
     await fetchCities(value.value, 'NG');
   }
 
@@ -90,14 +91,11 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
     state = state.copyWith(lga: value.value);
   }
 
-  Future<void> selectCity(Select value) async {
-    String _city = state.city;
+  void selectCity(Select value) {
+
     state = state.copyWith(city: value.label);
-    await fetchLGA(value.value, 'NG');
-    if (_city.isNotEmpty && value.label != _city) {
-      state = state.copyWith(lgas: []);
-      state = state.copyWith(lga: '');
-    }
+  
+  
   }
 
   Future<void> fetchCities(String stateCode, String countryCode) async {
@@ -223,7 +221,7 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
       state = state.copyWith(isLoading: true);
       final accountState = ref.watch(selectAccountProvider);
       final bool isPersonal = accountState.selectedType!.type == 'PERSONAL';
-      print("isPersonal $isPersonal");
+     // print("isPersonal $isPersonal");
       final response = await _authRepository.register(Register(
         email: state.email.text,
         password: state.password.text,
