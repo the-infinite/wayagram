@@ -120,6 +120,7 @@ class MessageModel {
   final bool isReply;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? momentId;
   final List<MessageStatus>? status;
   final List<MessageMedia>? media;
   final List<MessageReaction>? messageReaction;
@@ -152,6 +153,7 @@ class MessageModel {
     required this.contacts,
     required this.isDeleted,
     required this.isDeletedBySender,
+    required this.momentId,
     this.isError,
     this.dto,
   });
@@ -219,6 +221,7 @@ class MessageModel {
       dto: dto,
       originalMessageId: replyTo?.id ?? originalMessageId,
       originalMessage: replyTo ?? originalMessage,
+      momentId: momentId,
       forwardedFrom: forwardedFrom,
       isReply: isReply,
       createdAt: createdAt,

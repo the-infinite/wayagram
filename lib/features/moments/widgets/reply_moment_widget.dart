@@ -8,6 +8,11 @@ import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/dto/chat.dart';
+import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/model/message.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
+import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/data/repo/moment_repository.dart';
 
@@ -16,6 +21,7 @@ class ReplyMomentWidget extends ConsumerStatefulWidget {
   final MomentData moment;
   final Function() pause;
   final Function() continues;
+  final TextEditingController textController;
 
   // Construct.
   const ReplyMomentWidget({
@@ -24,6 +30,7 @@ class ReplyMomentWidget extends ConsumerStatefulWidget {
     required this.moment,
     required this.continues,
     required this.pause,
+    required this.textController,
   });
 
   @override
@@ -32,13 +39,10 @@ class ReplyMomentWidget extends ConsumerStatefulWidget {
 
 class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
   late final notifier = ref.read(replyMomentVmProvider(widget.uniqueKey).notifier);
-
+  late final chatNotifier = ref.read(chatProvider.notifier);
+  late final conversationNotifier = ref.read(conversationProvider.notifier);
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifier.initialize(widget.moment);
-      notifier.postSingleUserMoment(moment: widget.moment);
-    });
     super.initState();
   }
 
@@ -57,20 +61,42 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            child: Container(
+            child: SizedBox(
               height: 45,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
-              decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.transparent,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(width: 1, color: wayaTheme.colorScheme.white)),
               child: TextField(
+                controller: widget.textController,
+                onTap: () {
+                  widget.pause();
+                },
+                onTapOutside: (event) {
+                  widget.continues();
+                },
                 style: TextStyle(
                   fontSize: 12,
                   color: wayaTheme.colorScheme.white,
                 ),
                 decoration: InputDecoration(
-                  border: InputBorder.none,
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(2000),
+                    borderSide: BorderSide(
+                      width: 1,
+                      color: wayaTheme.colorScheme.white,
+                    ),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(2000),
+                    borderSide: BorderSide(
+                      width: 1,
+                      color: wayaTheme.colorScheme.white,
+                    ),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(2000),
+                    borderSide: BorderSide(
+                      width: 1,
+                      color: wayaTheme.colorScheme.white,
+                    ),
+                  ),
                   hintText: 'Reply Moment',
                   hintStyle: TextStyle(
                     fontSize: 14,
@@ -79,7 +105,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
                 ),
                 onChanged: (value) {
                   widget.pause();
-                  notifier.updateComment(value);
+                  notifier.updateComment(value.trim());
                 },
               ),
             ),
@@ -98,8 +124,34 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
               child: WayaButton(
                 height: 40,
                 radius: 40,
-                callback: () {
-                  notifier.isCommented(true);
+                callback: () async {
+                  final chat = await conversationNotifier.startChat(ChatType.personal, [widget.moment.userId]);
+
+                  //? Since this is fine...
+                  if (chat != null) {
+                    //? If we could make this chat our focus.
+                    chatNotifier.setChat(chat);
+
+                    //? This is fine too.
+                    final message = await chatNotifier.sendMessage(
+                      SendMessageDto(
+                        chatId: chat.id,
+                        type: MessageType.text,
+                        originalMessage: null,
+                        originalMessageId: null,
+                        content: state.comment,
+                        contacts: null,
+                        media: null,
+                        momentId: widget.moment.id,
+                      ),
+                    );
+
+                    //? Now, let us check if there are messages configured.
+                    if (message != null) {
+                      widget.textController.clear();
+                      WayaSnackBar.showToast("Your reply has been sent successfully");
+                    }
+                  }
                   widget.continues();
                 },
                 centerWidget: Center(
@@ -143,16 +195,22 @@ class ReplyMomentState {
   final String comment;
   final MomentData? moment;
 
-  ReplyMomentState(
-      {this.isComment = false, this.isLiked = false, this.isLoading = false, this.moment, this.comment = ''});
+  ReplyMomentState({
+    this.isComment = false,
+    this.isLiked = false,
+    this.isLoading = false,
+    this.moment,
+    this.comment = '',
+  });
 
   ReplyMomentState copyWith({bool? isLiked, bool? isComment, MomentData? moment, bool? isLoading, String? comment}) {
     return ReplyMomentState(
-        isComment: isComment ?? this.isComment,
-        isLiked: isLiked ?? this.isLiked,
-        comment: comment ?? this.comment,
-        moment: moment ?? this.moment,
-        isLoading: isLoading ?? this.isLoading);
+      isComment: isComment ?? this.isComment,
+      isLiked: isLiked ?? this.isLiked,
+      comment: comment ?? this.comment,
+      moment: moment ?? this.moment,
+      isLoading: isLoading ?? this.isLoading,
+    );
   }
 }
 
