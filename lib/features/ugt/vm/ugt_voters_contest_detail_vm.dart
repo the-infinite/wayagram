@@ -106,6 +106,23 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
+  Future<bool> deletePost(ValueNotifier<bool> isLoading, String postId,
+      String contestId, VoidCallback onTap) async {
+    final response = await _contestRepository.deletePost(postId);
+    isLoading.value = false;
+    if (response.success) {
+      onTap();
+      WayaSnackBar.showToast("Post Deleted Successfully", showSuccess: true);
+      fetchAllContestPosts(contestId);
+      return true;
+    } else {
+      WayaSnackBar.showToast(
+        "Please try again later",
+      );
+      return false;
+    }
+  }
+
   Future<bool> payForPaidContest(
       ValueNotifier<bool> isLoading, Map<String, String> map) async {
     final response = await _contestRepository.payForPaidContest(map);
@@ -272,6 +289,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       //print(e);
     } finally {}
   }
+
 
   void searchList(String value) {
     if (value.trim().isEmpty) {

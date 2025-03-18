@@ -4,16 +4,18 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/role_access/data/model/role_member.dart';
+import 'package:wayagram/features/role_access/data/model/shop_model.dart';
 
 class RoleAccessCard extends StatelessWidget {
-  final Map<String, dynamic> user;
+  final ShopMember user;
   final bool showImage;
 
   const RoleAccessCard({super.key, required this.user, this.showImage = true});
 
   @override
   Widget build(BuildContext context) {
-    bool isCurrentUser = user["isCurrentUser"] ?? false;
+    // bool isCurrentUser = user["isCurrentUser"] ?? false;
     final wayaTheme = Theme.of(context);
     return Card(
       elevation: 0.2,
@@ -29,20 +31,21 @@ class RoleAccessCard extends StatelessWidget {
             // Profile Avatar or Initials
             if (showImage)
               Container(
-                child: user["image"] != null
+                child: /* user != null
                     ? CircleAvatar(
                         backgroundImage: NetworkImage(user["image"]),
                         radius: 20,
                       )
-                    : CircleAvatar(
-                        backgroundColor: Colors.pink[100],
-                        radius: 20,
-                        child: Text(
-                          getInitials(user["name"]),
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, color: Colors.black),
-                        ),
-                      ),
+                    : */
+                    CircleAvatar(
+                  backgroundColor: Colors.pink[100],
+                  radius: 20,
+                  child: Text(
+                    getInitials(user.email ?? ""),
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.black),
+                  ),
+                ),
               ),
             SizedBox(width: 12),
             // Name and Role
@@ -51,15 +54,15 @@ class RoleAccessCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    user["name"],
+                    user.email ?? "",
                     style: WayaTextStyles.bodyBold,
                   ),
-                  if (isCurrentUser)
+                  if (user.email == "me")
                     Container(
                       padding:
                           EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                       decoration: BoxDecoration(
-                        color: user["status"] == "Active"
+                        color: user.isActive == true
                             ? Colors.green[100]
                             : Colors.orange[100],
                         borderRadius: BorderRadius.circular(12),
@@ -70,7 +73,7 @@ class RoleAccessCard extends StatelessWidget {
                           WayaAssets.icons.crown.svg(),
                           SizedBox(width: 4),
                           Text(
-                            user["role"],
+                            user.email ?? "",
                             style: WayaTextStyles.hintStyleBold.copyWith(
                                 color: Colors.green,
                                 fontWeight: FontWeight.bold),
@@ -80,7 +83,7 @@ class RoleAccessCard extends StatelessWidget {
                     )
                   else
                     Text(
-                      user["role"],
+                      user.roles?.first.roleName ?? "",
                       style: WayaTextStyles.hintStyleBold.wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor700),
                     ),
@@ -91,14 +94,14 @@ class RoleAccessCard extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
               decoration: BoxDecoration(
-                color: user["status"] == "Active"
+                color: user.isActive == true
                     ? Colors.green[100]
                     : Colors.orange[100],
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Text(user["status"],
+              child: Text(user.isActive == true ? "Active" : "Deactivated",
                   style: WayaTextStyles.hintStyleSemiBold.copyWith(
-                      color: user["status"] == "Active"
+                      color: user.isActive == true
                           ? Colors.green[700]
                           : Colors.orange[700],
                       fontWeight: FontWeight.bold)),

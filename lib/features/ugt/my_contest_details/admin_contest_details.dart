@@ -132,7 +132,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
+              /*   Container(
                 decoration: BoxDecoration(
                   color: getColor(false,
                       "You have 5 images and 1 video uploads left today"), // Background color
@@ -155,7 +155,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                     ),
                   ),
                 ),
-              ),
+              ), */
               const Gap(10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
