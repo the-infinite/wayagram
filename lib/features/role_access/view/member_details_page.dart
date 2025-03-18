@@ -9,6 +9,10 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/role_access/view/add_team_member_page.dart';
+import 'package:wayagram/features/role_access/vm/role_access_vm.dart';
+import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_contestant_card.dart';
 
 class MemberDetailsPage extends StatefulHookConsumerWidget {
   static const route = '/role-access-member-page';
@@ -24,13 +28,9 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
   bool bidQuotation = true;
   bool walletTransactions = true;
 
-  Map<String, bool> userManagementField = {
-    "View": true,
-    "Create": true,
-    "Edit": false,
-  };
+  Map<String, bool> userManagementField = {};
 
-  Map<String, bool> productInventoryManagementField = {
+/*   Map<String, bool> productInventoryManagementField = {
     "View": true,
     "Create": true,
     "Edit": false,
@@ -45,23 +45,61 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
     "View": true,
     "Transaction History": false,
   };
-
+ */
   @override
   Widget build(BuildContext context) {
     final isLoading = useState(false);
+    final viewModel = ref.watch(selectedRoleMemberProvider);
+    final notifier = ref.read(roleAccessVm.notifier);
     final wayaTheme = Theme.of(context);
+
+    useEffect(() {
+      userManagementField.clear();
+      var list =
+          viewModel?.roles?.first.permissionsWithActions?.first.actions ?? [];
+      for (var model in list) {
+        userManagementField[model.actionName ?? ""] = true;
+      }
+      return null;
+    }, []);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
-      title: "Add New Team Member",
+      title: "Member Details",
+      floatingActionButton: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          WayaButton(
+            callback: () {
+              notifier.activateDeactivateShopMember(
+                  isLoading, viewModel?.id ?? "", viewModel?.isActive ?? false,
+                  () {
+                WayaNav.goBack();
+              });
+            },
+            color: wayaTheme.colorScheme.primary50,
+            text: "   Deactivate Role   ",
+            isLoading: isLoading.value,
+            leadingIcon: WayaAssets.icons.caution.svg(),
+            textColor: wayaTheme.colorScheme.customPrimary,
+          ),
+        ],
+      ),
       appBar: AppBar(
         backgroundColor: Colors.white,
+        title: Text("Member Details"),
         actions: [
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: SizedBox(
                 width: context.width * 0.15,
-                child: WayaAssets.icons.genSet.edit.svg()),
+                child: GestureDetector(
+                    onTap: () {
+                      ref.read(editingRoleMemberProvider.notifier).state = true;
+                      WayaNav.toNamed(AddTeamMemberPage.route);
+                    },
+                    child: WayaAssets.icons.genSet.edit.svg())),
           ),
         ],
         leading: WayaBackButton(
@@ -71,27 +109,32 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildInfoTile(context, "Full Name", "Temitope Adebayo"),
-          _buildInfoTile(context, "Email Address", "olumaleek@gmail.com"),
-          _buildInfoTile(context, "Role", "Manager"),
-          _buildInfoTile(context, "Last Active", "12 October 2024 12:00PM"),
-          _buildStatusTile("Status", "Active"),
+          // _buildInfoTile(context, "Full Name", viewModel?.email??""),
+          _buildInfoTile(context, "Email Address", viewModel?.email ?? ""),
+          _buildInfoTile(
+              context, "Role", viewModel?.roles?.first.roleName ?? ""),
+          _buildInfoTile(
+              context, "Last Active", formatDate(viewModel?.updatedAt ?? "")),
+          _buildStatusTile(
+              "Status", viewModel?.isActive == true ? "Active" : "Deactivated"),
           Gap(20),
           Text("User Permissions",
               style: WayaTextStyles.hintStyleBold
                   .wayaCopyWith(color: wayaTheme.colorScheme.greyColor700)),
           // Gap(20),
 
-          _buildPermissionTile(context, "User Management", userManagement,
+          _buildPermissionTile(
+              context, viewModel?.roles?.first.roleName ?? "", userManagement,
               (val) {
-            setState(() {
+            /*  setState(() {
               userManagement = val;
               for (var key in userManagementField.keys) {
                 userManagementField[key] = userManagement;
               }
-            });
+            }); */
           }),
-          if (userManagement)
+          _buildPermissionOptions(context, userManagementField),
+          /* if (userManagement)
             _buildPermissionOptions(context, userManagementField),
 
           _buildPermissionTile(
@@ -128,9 +171,8 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
           }),
           if (walletTransactions)
             _buildPermissionOptions(context, walletTransactionField),
-          //  if (walletTransactions) _buildPermissionOptions(),
-          SizedBox(height: 20),
-          theButtons(context)
+          //  if (walletTransactions) _buildPermissionOptions(), */
+          //  Spacer(),
         ],
       ),
     );
@@ -207,7 +249,7 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
             Text(title, style: WayaTextStyles.bodyBold),
             Switch(
                 value: value,
-                onChanged: onChanged,
+                onChanged: (vale) {},
                 activeColor: wayaTheme.colorScheme.primary),
           ],
         ),
@@ -218,57 +260,49 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
   Widget _buildPermissionOptions(
       BuildContext context, Map<String, bool> permissions) {
     final wayaTheme = Theme.of(context);
-    return Padding(
-      padding: EdgeInsets.only(left: 10, top: 4, bottom: 10, right: 10),
-      child: Row(
-        spacing: 10,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: permissions.keys.map((key) {
+
+    return Wrap(
+      children: [
+        ...permissions.keys.map((key) {
           return Row(
             mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Checkbox(
                 value: permissions[key],
                 onChanged: (val) {
-                  setState(() => permissions[key] = val!);
+                  // setState(() => permissions[key] = val!);
                 },
                 activeColor: wayaTheme.colorScheme.primary,
               ),
               Text(key, style: WayaTextStyles.bodyBold),
+              Gap(30)
             ],
           );
-        }).toList(),
+        }), /*  Padding(
+      padding: EdgeInsets.only(left: 10, top: 4, bottom: 10, right: 10),
+      child: Row(
+        spacing: 10,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: 
       ),
+    ) */
+      ],
     );
   }
 
   Widget theButtons(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: WayaButton(
-            callback: () {
-              //WayaNav.toNamed(AddTeamMemberPage.route);
-            },
-            color: wayaTheme.colorScheme.primary50,
-            text: "Deactivate Role",
-            leadingIcon: WayaAssets.icons.caution.svg(),
-            textColor: wayaTheme.colorScheme.customPrimary,
-          ),
-        ),
-        Gap(10),
-        Expanded(
-          child: WayaButton(
-            callback: () {
-              // WayaNav.toNamed(AddTeamMemberPage.route);
-            },
-            color: wayaTheme.colorScheme.error50,
-            text: "Delete Role",
-            leadingIcon: Icon(Icons.delete_outlined,
-                color: wayaTheme.colorScheme.primary600),
-            textColor: wayaTheme.colorScheme.error500,
-          ),
+        WayaButton(
+          callback: () {},
+          color: wayaTheme.colorScheme.primary50,
+          text: "   Deactivate Role   ",
+          leadingIcon: WayaAssets.icons.caution.svg(),
+          textColor: wayaTheme.colorScheme.customPrimary,
         ),
       ],
     );

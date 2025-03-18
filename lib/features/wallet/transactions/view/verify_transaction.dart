@@ -50,7 +50,7 @@ class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScree
     if (state.verified!) {
       Future.delayed(const Duration(seconds: 2), () {
         if (context.mounted) {
-          WayaNav.removeUntilNamed(WalletPage.route, predicate: (route) => route.settings.name == "/general-settings");
+          WayaNav.removeAllUntil(WalletPage(), "/explore");
         }
       });
     }

@@ -1,10 +1,14 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/moments/data/moment_helper/moment_helper_funcs.dart';
@@ -23,7 +27,6 @@ import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wayagram/features/moments/data/model/moment_viewer_response_model.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
-import 'package:wayagram/features/moments/data/model/folllowed_user_moments_model.dart';
 
 class MomentVm extends StateNotifier<MomentState> {
   final Ref ref;
@@ -50,14 +53,14 @@ class MomentVm extends StateNotifier<MomentState> {
 
   void reset() {
     state = MomentState(
-        backgroundColor: const Color(0xFF1D2939),
-        textStyle: GoogleFonts.roboto(
-          fontSize: 32.sp,
-          color: Colors.white,
-          fontWeight: FontWeight.w500,
-        ),
-        moments: state.moments,
-        myMoments: state.myMoments);
+      backgroundColor: const Color(0xFF1D2939),
+      textStyle: GoogleFonts.roboto(
+        fontSize: 32.sp,
+        color: Colors.white,
+        fontWeight: FontWeight.w500,
+      ),
+      myMoments: state.myMoments,
+    );
   }
 
   void updateBackgroundColor(Color color) {
@@ -66,7 +69,6 @@ class MomentVm extends StateNotifier<MomentState> {
 
   void updateTextStyle(TextStyle style) {
     state = state.copyWith(textStyle: style);
-    print(style);
   }
 
   void updateText(String text) {
@@ -80,14 +82,6 @@ class MomentVm extends StateNotifier<MomentState> {
   void updateCaption(String caption) {
     state = state.copyWith(caption: caption);
   }
-
-  // void updateComment(String comment) {
-  //   state = state.copyWith(comment: comment, isComment: comment.isNotEmpty);
-  // }
-
-  // void toggleLiked() {
-  //   state = state.copyWith(isLiked: !state.isLiked);
-  // }
 
   void setSelectedFile(File? asset) {
     MediaType? mediaType;
@@ -193,8 +187,11 @@ class MomentVm extends StateNotifier<MomentState> {
             );
             WayaNav.toNamed(MediaMoment.route);
           }
-        } else {
-          print('Unsupported file type: ${file.extension}');
+        }
+
+        //? This is fine.
+        else {
+          WayaUtils.showModalSheet(context, child: WayaErrorDialog(title: 'Unsupported file type: ${file.extension}'));
         }
       } else {
         state = state.copyWith(
@@ -203,7 +200,12 @@ class MomentVm extends StateNotifier<MomentState> {
         );
       }
     } catch (e) {
-      print("Failed to pick media: $e");
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.moments,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 
@@ -344,8 +346,13 @@ class MomentVm extends StateNotifier<MomentState> {
         WayaNav.replaceNamed(MyMoments.route);
         // WayaNav.toNamed(MyMoments.route);
       }
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.moments,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     } finally {
       state = state.copyWith(isCreatingMoment: false);
     }
@@ -362,14 +369,19 @@ class MomentVm extends StateNotifier<MomentState> {
         MomentResponseModel responseModel = MomentResponseModel.fromJson(response.data);
 
         moments = responseModel.data.docs;
-        moments.where((m) => m.active).toList();
+        moments = moments.reversed.where((m) => m.active).toList();
         hasNextPage = responseModel.data.hasNextPage;
         state = state.copyWith(myMoments: moments);
       }
 
       return PaginatedResult(hasNextPage: hasNextPage, items: moments);
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.moments,
+        WayaDebugHelpers.getStackTrace(e),
+      );
       return null;
     } finally {
       state = state.copyWith(isLoadingUserMoments: false);
@@ -407,8 +419,13 @@ class MomentVm extends StateNotifier<MomentState> {
       }
 
       return PaginatedResult(hasNextPage: hasNextPage, items: momentViewers);
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.moments,
+        WayaDebugHelpers.getStackTrace(e),
+      );
       return null;
     } finally {
       state = state.copyWith(isLoadingUserMoments: false);
@@ -427,8 +444,13 @@ class MomentVm extends StateNotifier<MomentState> {
 
         state = state.copyWith(myMoments: moments.where((m) => m.id != momentId).toList());
       }
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.moments,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 
@@ -455,8 +477,13 @@ class MomentVm extends StateNotifier<MomentState> {
             buttonText: 'Dismiss');
         print(response.data);
       }
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.moments,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     } finally {
       state = state.copyWith(isReportingMoment: false);
     }
@@ -479,20 +506,6 @@ class MomentVm extends StateNotifier<MomentState> {
   //     print(error);
   //   }
   // }
-
-// moments of the user I am follwing
-  Future<void> getAllMoments() async {
-    try {
-      final response = await _momentRepository.getAllMoments();
-
-      if (response.success) {
-        FolllowedUserMomentsModel responseModel = FolllowedUserMomentsModel.fromJson(response.data);
-        state = state.copyWith(moments: responseModel.data);
-      }
-    } catch (error) {
-      print(error);
-    }
-  }
 
   void initializeEditMoment(MomentData moment) async {
     state = state.copyWith(

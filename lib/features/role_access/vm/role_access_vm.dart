@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/role_access/data/model/role_management_model.dart';
+import 'package:wayagram/features/role_access/data/model/role_member.dart';
 import 'package:wayagram/features/role_access/data/model/roles_model.dart';
 import 'package:wayagram/features/role_access/data/model/shop_model.dart';
 import 'package:wayagram/features/role_access/data/role_access_repo.dart';
@@ -54,6 +57,7 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
       ShopModelBase responseModel = ShopModelBase.fromJson(response.data);
 
       state = state.copyWith(
+          originalListShop: responseModel.data?.shops ?? [],
           listShop: getShopsSelect(responseModel.data?.shops ?? []));
 
       // contestList = responseModel.data?.docs ?? [];
@@ -67,6 +71,8 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
     ValueNotifier<bool> isLoading,
     String shopId,
     String roleId,
+    String memberId,
+    bool isEditing,
     VoidCallback onTap,
   ) async {
     isLoading.value = true;
@@ -78,14 +84,56 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
       "roles": [roleId]
     };
     print(map);
-    final response = await _roleAccessRepository.addTeamMember(map);
+    WayaRequestResponse response;
+    if(isEditing){
+
+     response = await _roleAccessRepository.editMember(memberId,map);
+    }else{
+     response = await _roleAccessRepository.addTeamMember(map);
+
+    }
     isLoading.value = false;
 
     if (response.success) {
       onTap();
       WayaSnackBar.showToast("Team Member added", showSuccess: true);
+      getAllMembers();
     } else {
       WayaSnackBar.showToast("Unable to add member, please try again later");
+    }
+  }
+
+  Future<void> getAllMembers() async {
+    state = state.copyWith(isLoading: true);
+    final response = await _roleAccessRepository
+        .getMemberList(_localDataSource.getUserId().toString());
+    state = state.copyWith(isLoading: false);
+    if (response.success == true) {
+      ShopMemberBase responseModel = ShopMemberBase.fromJson(response.data);
+
+      state = state.copyWith(listMember: responseModel.data?.docs ?? []);
+
+      // contestList = responseModel.data?.docs ?? [];
+    } else {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> getRoleManagementMemberList() async {
+    state = state.copyWith(isLoading: true);
+    final response = await _roleAccessRepository
+        .getRoleManagementMemberList(_localDataSource.getUserId().toString());
+    state = state.copyWith(isLoading: false);
+    if (response.success == true) {
+      RoleManagementModelBase responseModel =
+          RoleManagementModelBase.fromJson(response.data);
+
+      state =
+          state.copyWith(listRoleManagement: responseModel.data?.roles ?? []);
+
+      // contestList = responseModel.data?.docs ?? [];
+    } else {
+      state = state.copyWith(isLoading: false);
     }
   }
 
@@ -104,7 +152,33 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
           label: entries.value.name ?? "id");
     }).toList();
   }
+
+  Future<bool> activateDeactivateShopMember(ValueNotifier<bool> isLoading,
+      String shopMemberId, bool isActive, VoidCallback onTap) async {
+    final response = await _roleAccessRepository
+        .activateDeactivateShopMember(shopMemberId, {"isActive": !isActive});
+    isLoading.value = false;
+    getAllMembers();
+    if (response.success) {
+      onTap();
+      WayaSnackBar.showToast("Member Status Updated", showSuccess: true);
+      return true;
+    } else {
+      WayaSnackBar.showToast(
+        "Please try again later unable to update status",
+      );
+      return false;
+    }
+  }
 }
+
+final selectedRoleMemberProvider = StateProvider<ShopMember?>((ref) {
+  return null;
+});
+
+final editingRoleMemberProvider = StateProvider<bool>((ref) {
+  return false;
+});
 
 final roleAccessVm = StateNotifierProvider<RoleAccessVm, RoleAccessState>(
   (ref) {

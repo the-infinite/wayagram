@@ -5,6 +5,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
 import 'package:wayagram/shared/features/follow/repo/default.dart';
 import 'package:wayagram/shared/features/follow/state/default.dart';
+import 'package:wayagram/shared/features/moments/notifier/default.dart';
 
 class UserFollowerNotifier extends ValueNotifier<FollowState> {
   final repo = FollowRepository.instance;
@@ -30,7 +31,8 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     //? This is wonderful.
     try {
       // This is fine too.
-      final response = await repo.getFollowers(ConversationState.self.id, state.followersNextPage ?? state.followersPage, state.limit);
+      final response = await repo.getFollowers(
+          ConversationState.self.id, state.followersNextPage ?? state.followersPage, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -78,7 +80,8 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     //? This is wonderful.
     try {
       // This is fine too.
-      final response = await repo.getFollowing(ConversationState.self.id, state.followingNextPage ?? state.followingPage, state.limit);
+      final response = await repo.getFollowing(
+          ConversationState.self.id, state.followingNextPage ?? state.followingPage, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -164,6 +167,7 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
         );
         final list = [...state.following, user];
         state = state.copyWith(following: list);
+        otherUserMoments.getAllMoments();
         return true;
       }
 
@@ -197,6 +201,9 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
           list.removeAt(index);
           state = state.copyWith(following: [...list]);
         }
+
+        //? This is fine.
+        otherUserMoments.getAllMoments();
 
         //? Return here.
         return true;

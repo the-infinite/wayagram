@@ -27,7 +27,7 @@ class PostEngagementMonitor extends StateNotifier<void> {
     _engagementNotifier.monitorPostHashTag(ServiceType.posts, tag, points);
   }
 
-  Map<String, int> getAlltags() {
+  Map<String, int> getAllTags() {
     return _engagementNotifier.state[ServiceType.posts]!.getAllPosttags();
   }
 

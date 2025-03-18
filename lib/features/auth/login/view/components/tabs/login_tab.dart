@@ -33,7 +33,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
       children: [
         WayaButton(
           color: wayaTheme.colorScheme.secondaryColor,
-          callback: () {},
+          callback: ref.read(loginVmProvider.notifier).signinWithGoogle,
           leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
           text: "Continue with Google",
           textColor: wayaTheme.colorScheme.black,

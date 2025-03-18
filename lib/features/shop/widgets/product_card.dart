@@ -121,10 +121,11 @@ class ProductCard extends ConsumerWidget {
                   SizedBox(height: 3),
                   Text(
                     "₦${product.price}",
-                    style: TextStyle().wayaCopyWith(
+                    style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: wayaTheme.colorScheme.greyColor400,
                         fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
                         color: wayaTheme.colorScheme.greyColor400),
                   ),
                 ],
@@ -135,12 +136,12 @@ class ProductCard extends ConsumerWidget {
                   ? WayaHelpers.calculatedDiscountPrice(
                       product.price, product.discountPercentage)
                   : "₦${product.price}",
-              style: TextStyle(
+              style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary
                       : wayaTheme.colorScheme.customBlack,
                   fontSize: 14.sp,
-                  fontWeight: FontWeight.w500)),
+                  fontWeight: FontWeight.w600)),
           Visibility(
               visible: canbeAddedTocart,
               child: Column(
@@ -165,14 +166,14 @@ class ProductCard extends ConsumerWidget {
                     },
                     height: 38,
                     radius: 6,
-                    color: wayaTheme.colorScheme.greyColor300,
+                    color: wayaTheme.colorScheme.primary50,
                     centerWidget: Text(
                       'Add To Cart',
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customBlack,
+                      style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
+                          color: wayaTheme.colorScheme.customPrimary,
                           fontSize: 14.sp),
                     ),
-                    textColor: wayaTheme.colorScheme.customBlack,
+                    textColor: wayaTheme.colorScheme.customPrimary,
                   )
                 ],
               )),
@@ -187,14 +188,14 @@ class ProductCard extends ConsumerWidget {
                     },
                     height: 38,
                     radius: 6,
-                    color: wayaTheme.colorScheme.greyColor300,
+                    color: wayaTheme.colorScheme.primary50,
                     centerWidget: Text(
                       'Manage Product',
                       style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customBlack,
+                          color: wayaTheme.colorScheme.customPrimary,
                           fontSize: 14.sp),
                     ),
-                    textColor: wayaTheme.colorScheme.customBlack,
+                    textColor: wayaTheme.colorScheme.customPrimary,
                   )
                 ],
               )),

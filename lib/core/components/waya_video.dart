@@ -352,7 +352,8 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProv
     final controlsView = switch (widget.controls) {
       WayaVideoControls.content => contentVideoControls(),
       WayaVideoControls.message => messageVideoControls(),
-      _ => fullScreenVideoControls(),
+      WayaVideoControls.full => fullScreenVideoControls(),
+      WayaVideoControls.none => const SizedBox(),
     };
 
     //? If this is for content...

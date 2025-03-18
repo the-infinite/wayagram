@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
+import 'package:wayagram/shared/features/follow/notifier/self.dart';
 import 'package:wayagram/shared/features/follow/state/default.dart';
 import 'package:wayagram/shared/features/follow/vm/default.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
@@ -109,12 +110,12 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                                       : () async {
                                           //? If this user is following this one.
                                           if (_followStatus!.isUserFollowing) {
-                                            await followNotifier.unfollowUser(data.$1.id);
+                                            await myFollowProvider.unfollowUser(data.$1.id);
                                           }
 
                                           //? Since I am not yet following this user...
                                           else {
-                                            await followNotifier.followUser(data.$1.id);
+                                            await myFollowProvider.followUser(data.$1.id);
                                           }
 
                                           //? Update this.

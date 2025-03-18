@@ -1,12 +1,17 @@
 import 'dart:convert';
+
+import 'package:wayagram/shared/features/profile/model/groups.dart';
+
 RecommendedGroupModel recommendedGroupModelFromJson(String str) => RecommendedGroupModel.fromJson(json.decode(str));
 String recommendedGroupModelToJson(RecommendedGroupModel data) => json.encode(data.toJson());
+
 class RecommendedGroupModel {
   RecommendedGroupModel({
-      this.message, 
-      this.status, 
-      this.statusCode,
-      this.data,});
+    this.message,
+    this.status,
+    this.statusCode,
+    this.data,
+  });
 
   RecommendedGroupModel.fromJson(dynamic json) {
     message = json['message'];
@@ -18,15 +23,18 @@ class RecommendedGroupModel {
   bool? status;
   num? statusCode;
   Data? data;
-RecommendedGroupModel copyWith({  String? message,
-  bool? status,
-  num? statusCode,
-  Data? data,
-}) => RecommendedGroupModel(  message: message ?? this.message,
-  status: status ?? this.status,
-  statusCode: statusCode ?? this.statusCode,
-  data: data ?? this.data,
-);
+  RecommendedGroupModel copyWith({
+    String? message,
+    bool? status,
+    num? statusCode,
+    Data? data,
+  }) =>
+      RecommendedGroupModel(
+        message: message ?? this.message,
+        status: status ?? this.status,
+        statusCode: statusCode ?? this.statusCode,
+        data: data ?? this.data,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['message'] = message;
@@ -37,29 +45,30 @@ RecommendedGroupModel copyWith({  String? message,
     }
     return map;
   }
-
 }
 
 Data dataFromJson(String str) => Data.fromJson(json.decode(str));
 String dataToJson(Data data) => json.encode(data.toJson());
+
 class Data {
   Data({
-      this.docs, 
-      this.totalDocs, 
-      this.limit, 
-      this.page, 
-      this.totalPages, 
-      this.hasNextPage, 
-      this.nextPage, 
-      this.hasPrevPage, 
-      this.prevPage, 
-      this.pagingCounter,});
+    this.docs,
+    this.totalDocs,
+    this.limit,
+    this.page,
+    this.totalPages,
+    this.hasNextPage,
+    this.nextPage,
+    this.hasPrevPage,
+    this.prevPage,
+    this.pagingCounter,
+  });
 
   Data.fromJson(dynamic json) {
     if (json['docs'] != null) {
       docs = [];
       json['docs'].forEach((v) {
-        docs?.add(RecommendedGroupDocs.fromJson(v));
+        docs?.add(GroupModel.fromJson(v));
       });
     }
     totalDocs = json['totalDocs'];
@@ -72,7 +81,7 @@ class Data {
     prevPage = json['prevPage'];
     pagingCounter = json['pagingCounter'];
   }
-  List<RecommendedGroupDocs>? docs;
+  List<GroupModel>? docs;
   num? totalDocs;
   num? limit;
   num? page;
@@ -82,27 +91,30 @@ class Data {
   bool? hasPrevPage;
   dynamic prevPage;
   num? pagingCounter;
-Data copyWith({  List<RecommendedGroupDocs>? docs,
-  num? totalDocs,
-  num? limit,
-  num? page,
-  num? totalPages,
-  bool? hasNextPage,
-  num? nextPage,
-  bool? hasPrevPage,
-  dynamic prevPage,
-  num? pagingCounter,
-}) => Data(  docs: docs ?? this.docs,
-  totalDocs: totalDocs ?? this.totalDocs,
-  limit: limit ?? this.limit,
-  page: page ?? this.page,
-  totalPages: totalPages ?? this.totalPages,
-  hasNextPage: hasNextPage ?? this.hasNextPage,
-  nextPage: nextPage ?? this.nextPage,
-  hasPrevPage: hasPrevPage ?? this.hasPrevPage,
-  prevPage: prevPage ?? this.prevPage,
-  pagingCounter: pagingCounter ?? this.pagingCounter,
-);
+  Data copyWith({
+    List<GroupModel>? docs,
+    num? totalDocs,
+    num? limit,
+    num? page,
+    num? totalPages,
+    bool? hasNextPage,
+    num? nextPage,
+    bool? hasPrevPage,
+    dynamic prevPage,
+    num? pagingCounter,
+  }) =>
+      Data(
+        docs: docs ?? this.docs,
+        totalDocs: totalDocs ?? this.totalDocs,
+        limit: limit ?? this.limit,
+        page: page ?? this.page,
+        totalPages: totalPages ?? this.totalPages,
+        hasNextPage: hasNextPage ?? this.hasNextPage,
+        nextPage: nextPage ?? this.nextPage,
+        hasPrevPage: hasPrevPage ?? this.hasPrevPage,
+        prevPage: prevPage ?? this.prevPage,
+        pagingCounter: pagingCounter ?? this.pagingCounter,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (docs != null) {
@@ -119,28 +131,28 @@ Data copyWith({  List<RecommendedGroupDocs>? docs,
     map['pagingCounter'] = pagingCounter;
     return map;
   }
-
 }
 
 RecommendedGroupDocs docsFromJson(String str) => RecommendedGroupDocs.fromJson(json.decode(str));
 String docsToJson(RecommendedGroupDocs data) => json.encode(data.toJson());
+
 class RecommendedGroupDocs {
   RecommendedGroupDocs({
-      this.id, 
-      this.name, 
-      this.ownerId, 
-      this.memberCount, 
-      this.description, 
-      this.isOpen, 
-      this.categories, 
-      this.url, 
-      this.isPrivate, 
-      this.coverImage, 
-      this.profileImage, 
-      this.deletedAt, 
-      this.createdAt, 
-      this.updatedAt, 
-      });
+    this.id,
+    this.name,
+    this.ownerId,
+    this.memberCount,
+    this.description,
+    this.isOpen,
+    this.categories,
+    this.url,
+    this.isPrivate,
+    this.coverImage,
+    this.profileImage,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   RecommendedGroupDocs.fromJson(dynamic json) {
     id = json['id'];
@@ -174,35 +186,38 @@ class RecommendedGroupDocs {
   dynamic deletedAt;
   String? createdAt;
   String? updatedAt;
-  RecommendedGroupDocs copyWith({  String? id,
-  String? name,
-  dynamic ownerId,
-  num? memberCount,
-  String? description,
-  bool? isOpen,
-  dynamic categories,
-  dynamic url,
-  bool? isPrivate,
-  String? coverImage,
-  String? profileImage,
-  dynamic deletedAt,
-  String? createdAt,
-  String? updatedAt,
-}) => RecommendedGroupDocs(  id: id ?? this.id,
-  name: name ?? this.name,
-  ownerId: ownerId ?? this.ownerId,
-  memberCount: memberCount ?? this.memberCount,
-  description: description ?? this.description,
-  isOpen: isOpen ?? this.isOpen,
-  categories: categories ?? this.categories,
-  url: url ?? this.url,
-  isPrivate: isPrivate ?? this.isPrivate,
-  coverImage: coverImage ?? this.coverImage,
-  profileImage: profileImage ?? this.profileImage,
-  deletedAt: deletedAt ?? this.deletedAt,
-  createdAt: createdAt ?? this.createdAt,
-  updatedAt: updatedAt ?? this.updatedAt,
-);
+  RecommendedGroupDocs copyWith({
+    String? id,
+    String? name,
+    dynamic ownerId,
+    num? memberCount,
+    String? description,
+    bool? isOpen,
+    dynamic categories,
+    dynamic url,
+    bool? isPrivate,
+    String? coverImage,
+    String? profileImage,
+    dynamic deletedAt,
+    String? createdAt,
+    String? updatedAt,
+  }) =>
+      RecommendedGroupDocs(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        ownerId: ownerId ?? this.ownerId,
+        memberCount: memberCount ?? this.memberCount,
+        description: description ?? this.description,
+        isOpen: isOpen ?? this.isOpen,
+        categories: categories ?? this.categories,
+        url: url ?? this.url,
+        isPrivate: isPrivate ?? this.isPrivate,
+        coverImage: coverImage ?? this.coverImage,
+        profileImage: profileImage ?? this.profileImage,
+        deletedAt: deletedAt ?? this.deletedAt,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -223,5 +238,4 @@ class RecommendedGroupDocs {
     map['updated_at'] = updatedAt;
     return map;
   }
-
 }

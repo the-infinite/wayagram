@@ -16,6 +16,7 @@ class SendMessageDto {
   final String chatId;
   final String? originalMessageId;
   final String? content;
+  final String? momentId;
   final MessageModel? originalMessage;
   final List<String>? media;
   final List<String>? contacts;
@@ -28,6 +29,7 @@ class SendMessageDto {
     required this.content,
     required this.media,
     required this.contacts,
+    required this.momentId,
   });
 
   factory SendMessageDto.fromJson(Map<String, dynamic> json) => _$SendMessageDtoFromJson(json);
@@ -43,6 +45,7 @@ class SendMessageDto {
     map['media'] = media ?? [];
     map['chatId'] = chatId;
     if (originalMessageId?.isNotEmpty ?? false) map['originalMessageId'] = originalMessageId;
+    if (momentId?.isNotEmpty ?? false) map['momentId'] = momentId;
     if (content?.isNotEmpty ?? false) map['content'] = content;
     map['messageType'] = type.name;
     map['senderId'] = ConversationState.self.id;
@@ -56,6 +59,7 @@ class SendMessageDto {
         isDeletedBySender: false,
         chatId: chatId,
         content: content,
+        momentId: momentId,
         media: media
             ?.map(
               (file) => MessageMedia(
@@ -146,6 +150,7 @@ class SendMessageDto {
     return SendMessageDto(
       chatId: chatId,
       type: usedType,
+      momentId: momentId,
       originalMessageId: originalMessageId,
       originalMessage: originalMessage,
       content: content,
@@ -169,6 +174,7 @@ class SendMessageDto {
         originalMessageId: i != 0 ? null : originalMessageId,
         originalMessage: i != 0 ? null : originalMessage,
         content: i != 0 ? null : content,
+        momentId: i != 0 ? null : momentId,
         media: [file],
         contacts: contacts,
       ));
