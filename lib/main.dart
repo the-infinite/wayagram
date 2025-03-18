@@ -155,7 +155,6 @@ class _WayagramState extends ConsumerState<Wayagram> {
         valueListenable: WayaPreloaderController.instance.notifier,
         builder: (context, showPreloader, _) {
           return Stack(
-            fit: StackFit.passthrough,
             children: [
               //? First, the widget that is being laid out.
               child!,
