@@ -113,6 +113,14 @@ class PageRepository extends BaseRepository {
     return post("$serviceUrl/moderation", payload);
   }
 
+  Future<WayaRequestResponse> reportPost(String postId, String reason) {
+    final payload = {
+      "postId": postId,
+      "reason": reason
+    };
+    return post("$serviceUrl/posts/report", payload);
+  }
+
   // Future<WayaRequestResponse> likePost(postId) {
   //   return post("$serviceUrl/posts/$postId/likes");
   // }
@@ -186,7 +194,7 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getAllPages(ownerId) {
-    return get("$serviceUrl/pages?limit=500&ownerId=$ownerId");
+    return get("$serviceUrl/pages?limit=500&ownerId=$ownerId&orderBy=createdAt&orderDirection=DESC");
   }
 
 

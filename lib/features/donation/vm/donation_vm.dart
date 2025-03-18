@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
@@ -16,6 +17,8 @@ import 'package:wayagram/features/donation/data/repo/donation_repository.dart';
 import 'package:wayagram/features/donation/donation_modal/donation_modal.dart';
 import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/model/create_donation_response.dart';
+import 'package:wayagram/features/donation/model/kyc_model.dart';
+import 'package:wayagram/features/donation/model/login_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/state/donation_state.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
@@ -59,15 +62,20 @@ class DonationVm extends StateNotifier<DonationState> {
   }
 
 
-
   void addFile(File file) {
-    state = state.copyWith(
-        donationImage: DocType(
-            file: file, type: "donation-image", name: file.path.split('/').last));
+    state = state.copyWith(donationImage: [
+      DocType(file: file, type: "donation-image", name: file.path.split('/').last)
+    ]);
   }
 
+
   void removeFile() {
-    state = state.copyWith(donationImage: null);
+    List<DocType> e = List.from(state.donationImage);
+    e = e.where((i) => i.type != 'donation-image').toList();
+    state = state.copyWith(donationImage: e);
+
+    print("efwefw");
+    print(state);
   }
 
   bool isStartDateAfterEndDate(String startDate, String endDate) {
@@ -92,7 +100,7 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.donate(campaignId, amount, message);
       state = state.copyWith(isLoading: false);
-      Navigator.of(ctx).pop();
+      WayaNav.goBack();
       if (response.success && ctx.mounted) {
         WayaUtils.showModalSheet(
           ctx,
@@ -149,11 +157,11 @@ class DonationVm extends StateNotifier<DonationState> {
     } else if( response.data['error'] == 'User hasn\'t set wallet pin yet'){
 
       ScaffoldMessenger.of(ctx).showSnackBar(
-        const SnackBar(
+         SnackBar(
           content: Text(
             'Kindly set your wallet pin',
             style:
-            TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+            TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
           ),
           backgroundColor: WayaColors.primary,
           duration: Duration(seconds: 2),
@@ -176,11 +184,11 @@ class DonationVm extends StateNotifier<DonationState> {
       //? If this is fine...
       if (response.success && ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
+           SnackBar(
             content: Text(
               'Minimum amount updated successfully!',
               style:
-              TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+              TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
             ),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
@@ -204,7 +212,7 @@ class DonationVm extends StateNotifier<DonationState> {
   Future<void> onSubmit(title, description, solution, impact, targetAmount, minimumAmount, privacy, expirationDate, image, startDate, {required BuildContext context}) async {
     try {
       // validate image
-      if (state.donationImage == null) {
+      if (state.donationImage.isEmpty) {
         WayaSnackBar.showToast("Add an Image");
         return;
       }
@@ -232,10 +240,10 @@ class DonationVm extends StateNotifier<DonationState> {
       // }
 
       state = state.copyWith(isLoading: true);
-      final image =  state.donationImage!.file == null
-          ? state.donationImage!.url
+      final image =  state.donationImage[0].file == null
+          ? state.donationImage[0].url
           : await WayaUtils.uploadFile(
-          file: state.donationImage!.file!, repository: _uploadFileRepository);
+          file: state.donationImage[0].file!, repository: _uploadFileRepository);
 
       final response = await _donationRepository.createCampaign(title, description,
           solution, impact,
@@ -273,6 +281,63 @@ class DonationVm extends StateNotifier<DonationState> {
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
         state = state.copyWith(myDonationDocs: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      print(e);
+    } finally {}
+  }
+
+  Future<void> getHostedDonation() async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _donationRepository.getHostedDonation(ConversationState.self.id);
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
+        state = state.copyWith(myDonationDocs: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      print(e);
+    } finally {}
+  }
+
+  Future<void> getAppliedDonation() async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _donationRepository.getAppliedDonation(ConversationState.self.id);
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
+        state = state.copyWith(myDonationDocs: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      print(e);
+    } finally {}
+  }
+
+  Future<void> getMyKYC() async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _donationRepository.getMyKYC(ConversationState.self.id);
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        KycModel responseModel = KycModel.fromJson(response.data);
+        LoginResponse loginResponse = LoginResponse.fromJson(response.data);
+        state = state.copyWith(kycStatus: responseModel.data?.status,
+        accountType: loginResponse.data?.userdata?.business,
+        kycMessage: responseModel.message);
       } else {}
     } catch (e) {
       print(e);

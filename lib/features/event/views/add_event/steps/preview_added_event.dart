@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -24,14 +24,13 @@ class PreviewAddedEvent extends ConsumerWidget {
       children: [
         Text("Review Event Details", style: wayaTheme.textTheme.titleLarge),
         const Gap(5),
-        Text("Review your event details before submission",
-            style: wayaTheme.textTheme.hintStyle),
+        Text("Review your event details before submission", style: wayaTheme.textTheme.hintStyle),
         const Gap(30),
         Text(
           "Event Thumbnail",
           style: TextStyle().wayaCopyWith(
             color: wayaTheme.colorScheme.customBlack,
-            fontSize: 16,
+            fontSize: 16.sp,
           ),
         ),
         const Gap(15),
@@ -68,25 +67,21 @@ class PreviewAddedEvent extends ConsumerWidget {
         const Gap(15),
         AboutEvent(title: 'Organizer Name', content: viewModel.organizer.text),
         const Gap(15),
-        AboutEvent(
-            title: "Event Description", content: viewModel.description.text),
+        AboutEvent(title: "Event Description", content: viewModel.description.text),
         const Gap(15),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutEvent(
-                  title: 'Event Location', content: viewModel.location),
+              child: AboutEvent(title: 'Event Location', content: viewModel.location),
             ),
             if (viewModel.location == 'Physical')
               Expanded(
-                child: AboutEvent(
-                    title: 'Event Address', content: viewModel.address.text),
+                child: AboutEvent(title: 'Event Address', content: viewModel.address.text),
               ),
             if (viewModel.location == 'Virtual')
               Expanded(
-                child: AboutEvent(
-                    title: 'Virtual Event Link', content: viewModel.link.text),
+                child: AboutEvent(title: 'Virtual Event Link', content: viewModel.link.text),
               ),
           ],
         ),
@@ -100,12 +95,10 @@ class PreviewAddedEvent extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child:
-                  AboutEvent(title: 'Start Date', content: viewModel.startDate),
+              child: AboutEvent(title: 'Start Date', content: viewModel.startDate),
             ),
             Expanded(
-              child:
-                  AboutEvent(title: 'Start Time', content: viewModel.startTime),
+              child: AboutEvent(title: 'Start Time', content: viewModel.startTime),
             ),
           ],
         ),
@@ -130,14 +123,22 @@ class PreviewAddedEvent extends ConsumerWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child:
-                  AboutEvent(title: 'Event Type', content: viewModel.eventType),
-            ),
+            //? The type of this event.
             Expanded(
               child: AboutEvent(
-                  title: 'Event Fee', content: viewModel.eventFee.text),
+                title: 'Event Type',
+                content: viewModel.eventType,
+              ),
             ),
+
+            //? This is the event fee.
+            if (viewModel.eventType == 'Paid')
+              Expanded(
+                child: AboutEvent(
+                  title: 'Event Fee',
+                  content: viewModel.eventFee.text,
+                ),
+              ),
           ],
         ),
         const Gap(10),
@@ -145,27 +146,20 @@ class PreviewAddedEvent extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutEvent(
-                  title: 'Maximum Capacity',
-                  content: viewModel.maxCapacity!.text),
+              child: AboutEvent(title: 'Maximum Capacity', content: viewModel.maxCapacity!.text),
             ),
             Expanded(
-              child: AboutEvent(
-                  title: 'Privacy Settings', content: viewModel.privacyOption),
+              child: AboutEvent(title: 'Privacy Settings', content: viewModel.privacyOption),
             ),
           ],
         ),
         const Gap(30),
         WayaButton(
             centerWidget: LoadingState(
-                loading: viewModel.isLoading,
-                text:
-                    viewModel.isEditingMode ? "Update Event" : "Create Event"),
+                loading: viewModel.isLoading, text: viewModel.isEditingMode ? "Update Event" : "Create Event"),
             callback: !viewModel.isLoading
                 ? () {
-                    ref
-                        .read(addEventVmProvider.notifier)
-                        .onSubmit(context: context);
+                    ref.read(addEventVmProvider.notifier).onSubmit(context: context);
                   }
                 : null),
         const Gap(8),
@@ -173,8 +167,7 @@ class PreviewAddedEvent extends ConsumerWidget {
             text: 'Go Back',
             color: wayaTheme.colorScheme.transparent,
             textColor: wayaTheme.colorScheme.customBlack,
-            border:
-                Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+            border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
               gotoPreviousTab();
             })

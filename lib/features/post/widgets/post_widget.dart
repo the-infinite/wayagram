@@ -680,7 +680,7 @@ class PostWidget extends ConsumerWidget {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                WayaNav.goBack(); // Close the dialog
               },
               child: const Text('Close'),
             ),
@@ -699,7 +699,7 @@ class PostWidget extends ConsumerWidget {
     if (matches.isEmpty) {
       return Text(
         text,
-        style: TextStyle(fontSize: 16),
+        style: TextStyle(fontSize: 16.sp),
       );
     }
 

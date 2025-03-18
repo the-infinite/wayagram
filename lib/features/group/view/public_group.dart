@@ -74,7 +74,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
       padding: EdgeInsets.zero,
       onTapBackButton: (){
         WayaNav.toNamed('/groups');
-       // Navigator.pushNamed(context, BottomView.route, arguments: 5);
+       // WayaNav.toNamed( BottomView.route, arguments: 5);
       },
       isLoading: viewModel.isLoading,
       isScrollable: true,
@@ -98,7 +98,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                     child: _buildActionNav(
                         context: context,
                         onTap: () {
-                          Navigator.pop(context);
+                          WayaNav.goBack();
                           //WayaNav.toNamed('/groupSetting');
 
                         },
@@ -123,7 +123,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                     child: _buildActionNav(
                         context: context,
                         onTap: () async{
-                          Navigator.pop(context);
+                          WayaNav.goBack();
                           await WayaUtils.showModalSheet(context,
                               child: ReportGroup(
                                   statuses: groupReport,
@@ -140,13 +140,16 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                     child: _buildActionNav(
                         context: context,
                         onTap: () {
-                          viewModel2.leaveGroup(context, groupId: '${args['groupId']}',);
-                          Navigator.pop(context);
+                          //viewModel2.leaveGroup(context, groupId: '${args['groupId']}',);
+                          viewModel2.deleteGroup(context, '${args['groupId']}',);
+                          WayaNav.goBack();
 
                         },
-                        asset: SvgPicture.asset('assets/images/pages/door_open.svg',
+                        asset: SvgPicture.asset(
+                          'assets/images/pages/delete.svg',
+                          //'assets/images/pages/door_open.svg',
                           color: wayaTheme.colorScheme.error500, height: 20,),
-                        text: "  Leave Group",
+                        text: "  Delete Group",
                         color: wayaTheme.colorScheme.error500),
                   )
                 ];
@@ -243,7 +246,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                 '${args['desc']}',
                 //'${viewModel.desc?.capitalizeFirst}',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                     color: Theme.of(context).colorScheme.greyColor500 ),
               ),
@@ -320,7 +323,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
           Text(
             txt2,
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.greyColor500 ),
           ),
@@ -348,7 +351,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
           Text(
             text,
             style: TextStyle().wayaCopyWith(
-                color: color, fontWeight: FontWeight.w500, fontSize: 12),
+                color: color, fontWeight: FontWeight.w500, fontSize: 12.sp),
           )
         ],
       ),

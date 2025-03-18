@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
@@ -19,6 +20,9 @@ class SingleOrderWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+
+  print("wefwefwefew ${order.deliveryType} ${order.pickupStatusHistory.isNotEmpty ? order.pickupStatusHistory.last.status : 'No Status'}");
+
     // final viewModel = ref.watch(singleOrderWigdetViewModelProvider);
     return GestureDetector(
       onTap: () {
@@ -52,13 +56,15 @@ class SingleOrderWidget extends ConsumerWidget {
                           "Order #${order.id.substring(0, 6)}",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         ),
                         const Gap(8),
                         _buildOrderStatus(
                             context: context,
-                            status: order.deliveryType == 'Pickup' ? order.pickupStatusHistory.last.status : order.deliveryStatusHistory.last.status,
-                            deliveryType: order.deliveryType!)
+                            status: order.deliveryType == 'Pickup'
+                                ? order.pickupStatusHistory.isNotEmpty ? order.pickupStatusHistory.last.status : 'No Status'
+                                : order.deliveryStatusHistory.isNotEmpty ? order.deliveryStatusHistory.last.status : 'No Status',
+                            deliveryType: "")
                       ],
                     )
                   ],
@@ -70,7 +76,10 @@ class SingleOrderWidget extends ConsumerWidget {
                     Text(
                       "${isSeller ? '+' : '-'}${WayaHelpers.formatPrice(double.parse(order.total).toInt())}",
                       style: TextStyle().wayaCopyWith(
-                          color:isSeller ? wayaTheme.colorScheme.success: wayaTheme.colorScheme.error700, fontSize: 13),
+                          color: isSeller
+                              ? wayaTheme.colorScheme.success
+                              : wayaTheme.colorScheme.error700,
+                          fontSize: 13.sp),
                     ),
                     const Gap(8),
                     Text(
@@ -78,7 +87,7 @@ class SingleOrderWidget extends ConsumerWidget {
                           order.updatedAt.toIso8601String()),
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor400,
-                          fontSize: 13),
+                          fontSize: 13.sp),
                     )
                   ],
                 )
@@ -130,7 +139,7 @@ class SingleOrderWidget extends ConsumerWidget {
         style: TextStyle().wayaCopyWith(
           color: textColor,
           fontWeight: FontWeight.w500,
-          fontSize: 11,
+          fontSize: 11.sp,
         ),
       ),
     );

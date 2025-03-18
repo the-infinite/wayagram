@@ -1,44 +1,41 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 class UpcomingWidget extends StatelessWidget {
   final String title;
   final String content;
   final bool status;
   final bool isFromDetailsPage;
-  const UpcomingWidget(
-      {super.key,
-      required this.title,
-      required this.content,
-      this.status = false,
-      this.isFromDetailsPage = false,
-      });
+  const UpcomingWidget({
+    super.key,
+    required this.title,
+    required this.content,
+    this.status = false,
+    this.isFromDetailsPage = false,
+  });
 
   @override
   Widget build(BuildContext context) {
+     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: TextStyle().wayaCopyWith(
-              color: Theme.of(context).colorScheme.greyColor300,
-              fontSize: 13,
-            )),
+        SizedBox(
+          width: isFromDetailsPage ? null : context.width * 0.15,
+          child: Text(title,
+              style: wayaTheme.textTheme.bodyMedium),
+        ),
         const Gap(5),
         if (!status)
           SizedBox(
-            width: isFromDetailsPage?null :context.width * 0.15,
+            width: isFromDetailsPage ? null : context.width * 0.15,
             child: Text(content,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle().wayaCopyWith(
-                  color: Theme.of(context).colorScheme.customBlack,
-                  fontSize: 10,
-                )),
+                // overflow: TextOverflow.ellipsis,
+                style:wayaTheme.textTheme.bodyMedium),
           ),
         if (status)
           Container(
@@ -53,7 +50,7 @@ class UpcomingWidget extends StatelessWidget {
                   content,
                   style: TextStyle(
                       color: getColor(true, content.toLowerCase()),
-                      fontSize: 10),
+                      fontSize: 10.sp),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -62,6 +59,8 @@ class UpcomingWidget extends StatelessWidget {
       ],
     );
   }
+
+  
 
   Color getColor(bool isText, String text) {
     if (text == "pending") {

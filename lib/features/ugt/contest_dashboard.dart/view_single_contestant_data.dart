@@ -15,9 +15,13 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contestant_reject_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/video_player.dart';
+import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 
 import '../../../core/components/waya_scaffold.dart';
@@ -35,6 +39,11 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    var model = ref.watch(selectedApplicantProfile);
+    var selectedContestModel =
+        ref.watch(selectedContestProvider.notifier).state;
+    var viewModel = ref.watch(votersContestNotifier.notifier);
+    var isLoading = useState(false);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -49,12 +58,12 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
 
             Text("Application submission",
                 style: wayaTheme.textTheme.displaySmall!
-                    .wayaCopyWith(fontWeight: FontWeight.w700, fontSize: 24)),
+                    .wayaCopyWith(fontWeight: FontWeight.w700, fontSize: 24.sp)),
             const Gap(5),
             Text(
                 "View all the details submitted by the contestant to enter for the contest",
                 style: wayaTheme.textTheme.hintStyle
-                    .wayaCopyWith(fontSize: 16, fontWeight: FontWeight.w400)),
+                    .wayaCopyWith(fontSize: 16.sp, fontWeight: FontWeight.w400)),
             //  Text("Your Bio", style: wayaTheme.textTheme.bodyMedium),
             const Gap(20),
 
@@ -63,10 +72,10 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _singleWidget(context, "Name", "RUFAI MALEEK"),
+                _singleWidget(context, "Name", model?.fullName ?? ""),
+                _singleWidget(context, "Email Address", model?.email ?? ""),
                 _singleWidget(
-                    context, "Email Address", "olutomiwarufai@ mail.com"),
-                _singleWidget(context, "Phone Number", "+234813151709"),
+                    context, "Phone Number", model?.phoneNumber ?? ""),
               ],
             ),
             SizedBox(height: 20),
@@ -74,9 +83,9 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _singleWidget(context, "Address", "64,Lekki expressway"),
-                _singleWidget(context, "State", "Lagos State"),
-                _singleWidget(context, "University", "Lagos State University"),
+                _singleWidget(context, "Address", model?.address ?? ""),
+                _singleWidget(context, "State", model?.state ?? ""),
+                //  _singleWidget(context, "University", "Lagos State University"),
               ],
             ),
             SizedBox(height: 20),
@@ -84,18 +93,57 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _singleWidget(context, "Talent Category", "Music & Arts"),
+                _singleWidget(context, "Talent Category",
+                    selectedContestModel?.categoryName ?? ""),
                 _singleWidget(context, "Description of Talent",
-                    '''The Best University Musician 2024 talent show is a celebration of extraordinary musical talent from our campus. Participants will showcase their unique skills, whether it's singing, playing an instrument, or composing original pieces.''',
+                    selectedContestModel?.description ?? "",
                     longer: true),
               ],
             ),
             SizedBox(height: 20),
-            Text("School ID or Acceptance Letter",
-                style: wayaTheme.textTheme.displaySmall!
-                    .wayaCopyWith(fontWeight: FontWeight.w500, fontSize: 14)),
-            const Gap(5),
-            VideoThumbnailPlayer(
+            ...model?.applicationData?.entries.map((entry) {
+                  if (!isValidUrl(entry.value)) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(entry.key,
+                            style: wayaTheme.textTheme.displaySmall!
+                                .wayaCopyWith(
+                                    fontWeight: FontWeight.w500, fontSize: 16.sp)),
+                        const Gap(5),
+                        Text(entry.value,
+                            style: wayaTheme.textTheme.displaySmall!
+                                .wayaCopyWith(
+                                    fontWeight: FontWeight.w500, fontSize: 14.sp)),
+                        const Gap(5),
+                      ],
+                    );
+                  } else {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text(entry.key,
+                            style: wayaTheme.textTheme.displaySmall!
+                                .wayaCopyWith(
+                                    fontWeight: FontWeight.w500, fontSize: 16.sp)),
+                        const Gap(5),
+                        WayaImage(
+                          imageUrl: entry.key,
+                          height: 200,
+                          width: context.width,
+                          fit: BoxFit.cover,
+                          radius: BorderRadius.circular(10),
+                        )
+                      ],
+                    );
+                  }
+                  //  return Text("${entry.key} scored ${entry.value}");
+                }).toList() ??
+                [],
+
+            /*  VideoThumbnailPlayer(
               imageUrl: "",
               videoUrl: "",
             ),
@@ -107,19 +155,36 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
             VideoThumbnailPlayer(
               imageUrl: "",
               videoUrl: "",
-            ),
-            const Gap(5),
+            ), */
+            const Gap(25),
             WayaButton(
-              callback: () {
-                WayaUtils.showModalSheet(
-                  context,
-                  child: SuccessfulModal(
-                      "Submission approved",
-                      "You have approved the submission for this contestant. Contestant will receive a notification on their application status",
-                      false, () {
-                    WayaNav.removeUntilNamed('/manage-application-contest');
-                  }),
-                );
+              callback: () async {
+                bool isPass = await ref
+                    .read(votersContestNotifier.notifier)
+                    .acceptRejectContestant(
+                        isLoading, model?.id ?? "", model?.contestId ?? "", {
+                  "status": "APPROVED",
+                });
+                if (isPass) {
+                  WayaUtils.showModalSheet(
+                    context,
+                    child: SuccessfulModal(
+                        title: "Submission approved",
+                        subtitle:
+                            "You have approved the submission for this contestant. Contestant will receive a notification on their application status",
+                        showCopyLink: false,
+                        buttonText: null,
+                        onTap: (_, __) {
+                          WayaNav.removeAllUntil(AdminContestDetails(),
+                              '/upcoming-manage-contest-details');
+                          /*  WayaNav.removeUntilNamed(
+                              '/contest-mydashboard-profile-page'); */
+                        }),
+                  );
+                } else {
+                  WayaSnackBar.showToast(
+                      "Please try again, unable to send request");
+                }
               },
               centerWidget:
                   LoadingState(loading: false, text: 'Approve submission'),
@@ -129,10 +194,32 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                // Navigator.of(context).pop();
+                // WayaNav.goBack();
                 WayaUtils.showModalSheet(
                   context,
-                  child: ContestantRejectModal(),
+                  child: ContestantRejectModal(
+                    onTap: (value, myReason) async {
+                      bool isPass = await ref
+                          .read(votersContestNotifier.notifier)
+                          .acceptRejectContestant(
+                              value, model?.id ?? "", model?.contestId ?? "", {
+                        "status": "REJECTED",
+                        "rejectedReason": myReason,
+                      });
+                      if (isPass) {
+                        WayaSnackBar.showToast("Rejected sent successfully!");
+                        /*  viewModel
+                            .fetchAllContestApplicant(model?.contestId ?? ""); */
+                        /*  WayaNav.removeUntilNamed(
+                            '/contest-mydashboard-profile-page'); */
+                        WayaNav.removeAllUntil(AdminContestDetails(),
+                            '/upcoming-manage-contest-details');
+                      } else {
+                        WayaSnackBar.showToast(
+                            "Please try again, unable to send request");
+                      }
+                    },
+                  ),
                 );
               },
               text: "Reject submission",
@@ -154,14 +241,14 @@ Widget _singleWidget(BuildContext context, String title, String subTitle,
       Text(title,
           style: wayaTheme.textTheme.displaySmall!.wayaCopyWith(
               fontWeight: FontWeight.w700,
-              fontSize: 14,
+              fontSize: 14.sp,
               color: wayaTheme.colorScheme.greyColor900)),
       const Gap(5),
       SizedBox(
         width: longer ? context.width * 0.5 : context.width * 0.2,
         child: Text(subTitle,
             style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
                 color: wayaTheme.colorScheme.greyColor900)),
       ),
@@ -178,7 +265,8 @@ Color getColor(bool isText, String text) {
     } */
 }
 
-String formatMoney(String value) {
-  final oCcy = NumberFormat("#,##0.00", "en_US");
-  return oCcy.format(double.parse(value));
+bool isValidUrl(String text) {
+  final urlPattern = r"^(https?:\/\/)?([\w.-]+)\.([a-z]{2,6})([\/\w .-]*)*\/?$";
+  final regex = RegExp(urlPattern, caseSensitive: false);
+  return regex.hasMatch(text);
 }

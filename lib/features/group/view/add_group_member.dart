@@ -52,7 +52,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
       isLoading: viewModel.isLoading,
       isScrollable: true,
       onTapBackButton: (){
-        Navigator.pop(context);
+        WayaNav.goBack();
         ref.watch(createGroupProvider.notifier).reset();
       },
       appBarTrailing: Padding(
@@ -68,7 +68,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
           text: 'Add User',
           isLoading: viewModel.isLoading,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
         ): WayaButton(
@@ -78,14 +78,14 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
               await team.inviteUserToGroup(context, args['groupId'], viewModel.roleType, 'targetId');
               showCustomDialog(context, 'Success! ${viewModel.username} has been added as a\nModerator','You can now collaborate seamlessly and\nmanage the page together.');
               ref.watch(createGroupProvider.notifier).reset();
-              Navigator.pop(context);
+              WayaNav.goBack();
             }
           } : null,
           height: 30,
           text: 'Add User',
           isLoading: viewModel.isLoading,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
 
@@ -110,47 +110,12 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                /*  FormField<String>(validator: (value) {
-                    if (viewModel.username.text.isEmpty) {
-                      return 'Username/Email is required';
-                    }
 
-                    return null;
-                  }, builder: (formState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        WayaTextFormField(
-                          keyboardType: TextInputType.text,
-                          controller: viewModel.username,
-                          hintText: 'Enter username/ Email address',
-                          borderColor: formState.hasError &&
-                              viewModel.username.text.isEmpty
-                              ? wayaTheme.colorScheme.error
-                              : null,
-                          label: 'Username/Email address',
-                        ),
-                        if (formState.hasError &&
-                            viewModel.username.text.isEmpty
-                        )
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
-                            ),
-                          ),
-                      ],
-                    );
-                  }),
-                  const Gap(20),*/
                   WayaConfirmationView(
                     debounceTimer: const Duration(milliseconds: 20),
                     getResult: ref.read(userSearchProvider.notifier).getUserByEmail,
                     getText: (user) => user?.fullname ?? "User not found",
-                    backgroundColor: wayaTheme.colorScheme.primar50,
+                    backgroundColor: wayaTheme.colorScheme.primary50,
                     searchController: viewModel.username,
                     buttonTextStyle: wayaTheme.textTheme.bodyBold.copyWith(
                       color: wayaTheme.colorScheme.primary,
@@ -184,7 +149,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -333,14 +298,14 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                               InkWell(
                                   onTap:(){
                                     WayaNav.toNamed('/groups');
-                                    //Navigator.of(cxt).pop();
+                                    //WayaNav.goBack();
                                   },
                                   child: Image.asset('assets/images/pages/success.png', height: 32, width: 32,)),
                               Gap(10),
                               Text(
                                 title,
                                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 14,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.w600,
                                     color: Theme.of(context).colorScheme.black ),
                               ),
@@ -348,7 +313,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
 
                               InkWell(
                                   onTap:(){
-                                    Navigator.of(cxt).pop();
+                                    WayaNav.goBack();
                                   },
                                   child: Image.asset('assets/images/pages/x.png', height: 11, width: 11,)),
                               SizedBox(
@@ -362,7 +327,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                             child: Text(
                               subTitle,
                               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                   fontWeight: FontWeight.w400,
                                   color: Theme.of(context).colorScheme.greyColor500 ),
                             ),

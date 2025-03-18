@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -100,15 +101,14 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                             : null,
                         label: 'Email Address',
                       ),
-                      if (formState.hasError &&
-                          viewModel.emailController.text.isEmpty)
+                      if (formState.hasError)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -159,7 +159,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -172,7 +172,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                     onTap: () => WayaNav.toNamed('/forgot-password'),
                     child: Text('Forgot Password?',
                         style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             color: wayaTheme.colorScheme.customPrimary)),
                   ),
                 ),
@@ -181,7 +181,9 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                   color: wayaTheme.colorScheme.primary500,
                   callback: !viewModel.isLoading
                       ? () async {
+
                           if (_formKey.currentState!.validate()) {
+                            print('TEST BUTTOn');
                             ref
                                 .read(loginVmProvider.notifier)
                                 .onSubmit(ref, isBusinessLogin: false);
@@ -305,7 +307,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -356,7 +358,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -369,7 +371,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                     onTap: () => WayaNav.toNamed('/forgot-password'),
                     child: Text('Forgot Password?',
                         style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             color: wayaTheme.colorScheme.customPrimary)),
                   ),
                 ),

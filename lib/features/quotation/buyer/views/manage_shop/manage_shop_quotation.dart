@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:svg_flutter/svg.dart';
@@ -40,7 +41,7 @@ class ManageShopQuotation extends ConsumerWidget {
         Text(
           "My Shop",
           style: TextStyle().wayaCopyWith(
-            fontSize: 15,
+            fontSize: 15.sp,
             fontWeight: FontWeight.w600,
             color: wayaTheme.colorScheme.customBlack,
           ),
@@ -71,7 +72,7 @@ class ManageShopQuotation extends ConsumerWidget {
         Text(
           "Shared Shop",
           style: TextStyle().wayaCopyWith(
-            fontSize: 15,
+            fontSize: 15.sp,
             fontWeight: FontWeight.w600,
             color: wayaTheme.colorScheme.customBlack,
           ),
@@ -119,7 +120,7 @@ class ManageShopQuotation extends ConsumerWidget {
                 "Shop Dashboard",
                 style: TextStyle().wayaCopyWith(
                   //color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -136,7 +137,7 @@ class ManageShopQuotation extends ConsumerWidget {
                 "Quotation Dashboard",
                 style: TextStyle().wayaCopyWith(
                   //color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),

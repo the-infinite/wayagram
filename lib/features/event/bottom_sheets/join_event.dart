@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -22,16 +22,15 @@ class JoinEvent extends ConsumerStatefulWidget {
 }
 
 class _JoinEventState extends ConsumerState<JoinEvent> {
+  late final notifier = ref.read(eventVmProvider.notifier);
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-
     final wayaTheme = Theme.of(context);
     final walletState = ref.watch(walletVmProvider);
     final eventState = ref.watch(eventVmProvider);
     final walletBalance = walletState.data?.balance ?? '0';
-    final isInsufficientBalance =
-        double.parse(walletBalance).toInt() < widget.event.fee;
+    final isInsufficientBalance = double.parse(walletBalance).toInt() < widget.event.fee;
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
       child: Column(
@@ -42,23 +41,18 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
           RichText(
               text: TextSpan(children: [
             TextSpan(
-                text:
-                    "Are you sure you want to join this event, this would cost ",
+                text: "Are you sure you want to join this event, this would cost ",
                 style: wayaTheme.textTheme.hintStyle),
             TextSpan(
                 text: WayaHelpers.formatPrice(widget.event.fee),
                 style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                    color: wayaTheme.colorScheme.customPrimary,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 15))
+                    color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w500, fontSize: 15.sp))
           ])),
           const Gap(30),
           Container(
             padding: EdgeInsets.all(12),
             width: double.infinity,
-            decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.primar50,
-                borderRadius: BorderRadius.circular(12)),
+            decoration: BoxDecoration(color: wayaTheme.colorScheme.primary50, borderRadius: BorderRadius.circular(12)),
             child: Center(
                 child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -66,7 +60,7 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
                 Text(
                   "Available Balance",
                   style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: wayaTheme.colorScheme.greyColor900,
                       ),
                 ),
@@ -74,18 +68,14 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
                 Container(
                   width: double.infinity,
                   padding: EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.white,
-                      borderRadius: BorderRadius.circular(12)),
+                  decoration:
+                      BoxDecoration(color: wayaTheme.colorScheme.white, borderRadius: BorderRadius.circular(12)),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                          isInsufficientBalance
-                              ? "Insufficient Balance"
-                              : "Wallet Balance",
+                      Text(isInsufficientBalance ? "Insufficient Balance" : "Wallet Balance",
                           style: isInsufficientBalance
-                              ? wayaTheme.textTheme.errorhintStyle
+                              ? wayaTheme.textTheme.errorHintStyle
                               : wayaTheme.textTheme.hintStyle),
                       const Gap(3),
                       WayaAmountFormatter(
@@ -103,32 +93,27 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
           const Gap(30),
           WayaButton(
             callback: !eventState.isJoiningEvent
-                ? () {
+                ? () async {
                     if (isInsufficientBalance) {
-                      return WayaNav.toNamed(FundWalletOptionsScreen.route,
-                          arguments: '/events');
+                      await WayaNav.toNamed(FundWalletOptionsScreen.route, arguments: '/events');
+                      return;
                     }
-                    ref.read(eventVmProvider.notifier).joinEvent(
-                        eventId: widget.event.id,
-                        context: context,
-                        event: widget.event);
+                    notifier.joinEvent(eventId: widget.event.id, context: context, event: widget.event);
                   }
                 : null,
             centerWidget: LoadingState(
-                loading: eventState.isJoiningEvent,
-                text:
-                    isInsufficientBalance ? "Fund Wallet" : "Yes, Join Event"),
+              loading: eventState.isJoiningEvent,
+              text: isInsufficientBalance ? "Fund Wallet" : "Yes, Join Event",
+            ),
           ),
           const Gap(10),
           WayaButton(
-              callback: () {
-                Navigator.of(context).pop();
-              },
-              textColor: wayaTheme.colorScheme.greyColor500,
-              color: wayaTheme.colorScheme.transparent,
-              border: Border.all(
-                  color: wayaTheme.colorScheme.greyColor500, width: 1),
-              text: 'Go Back')
+            callback: () => WayaNav.goBack(),
+            textColor: wayaTheme.colorScheme.greyColor500,
+            color: wayaTheme.colorScheme.transparent,
+            border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+            text: 'Go Back',
+          )
         ],
       ),
     );

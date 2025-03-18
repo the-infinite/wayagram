@@ -12,6 +12,7 @@ import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 import '../../../core/components/waya_scaffold.dart';
 
@@ -28,6 +29,8 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final viewModel = ref.read(votersContestNotifier);
+
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -45,7 +48,7 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
               children: [
                 Text("Overview",
                     style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
                         color: Colors.black)),
               ],
@@ -81,7 +84,31 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
               padding: EdgeInsets.all(10),
               child: Column(
                 children: [
-                  GestureDetector(
+                    ListView.builder(
+                    // controller: _scrollController,
+                    shrinkWrap: true,
+                    itemCount: viewModel.myContestApplicantList.length > 6
+                        ? 6
+                        : viewModel.myContestApplicantList.length,
+                    itemBuilder: (context, index) {
+                      if (viewModel.isLoading!) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+
+                      final post = viewModel.myContestApplicantList[index];
+                      return GestureDetector(
+                        onTap: () {
+                          ref.read(selectedApplicantProfile.notifier).state =
+                              post;
+
+                          WayaNav.toNamed('/view-contestant-single-data');
+                        },
+                        child: _buildStateItem(
+                            context, post.fullName ?? "", "View application"),
+                      );
+                    },
+                  ),
+                  /* GestureDetector(
                     onTap: () {
                       WayaNav.toNamed('/view-contestant-single-data');
                     },
@@ -91,7 +118,7 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
                   Gap(20),
                   _buildStateItem(context, "Oluchi Obiano", "View application"),
                   Gap(20),
-                  _buildStateItem(context, "Sadiya Wakili", "View application"),
+                  _buildStateItem(context, "Sadiya Wakili", "View application"), */
                 ],
               ),
             ),
@@ -124,7 +151,7 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
               children: [
                 Text(title,
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+                    style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
                 Container(
                     width: 50.w, // Must be equal to height for a perfect circle
                     height: 50.w,
@@ -142,7 +169,7 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
             ),
             Gap(10),
             Text(value,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -159,12 +186,12 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
             style: TextStyle(
                 fontWeight: FontWeight.w500,
                 color: Colors.black,
-                fontSize: 16)),
+                fontSize: 16.sp)),
         Row(
           children: [
             Text(contestants,
                 style: TextStyle(
-                    color: wayaTheme.colorScheme.greyColor700, fontSize: 14)),
+                    color: wayaTheme.colorScheme.greyColor700, fontSize: 14.sp)),
             Gap(10),
             Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
             Gap(10)
@@ -182,9 +209,4 @@ Color getColor(bool isText, String text) {
     } else {
       return isText ? Color(0xff865503) : Color(0xffFEF6E7);
     } */
-}
-
-String formatMoney(String value) {
-  final oCcy = NumberFormat("#,##0.00", "en_US");
-  return oCcy.format(double.parse(value));
 }

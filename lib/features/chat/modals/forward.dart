@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -114,7 +115,7 @@ class _ForwardMessageModalState extends State<ForwardMessageModal> with SingleTi
                                 "Forward to",
                                 style: WayaTextStyles.titleLarge.copyWith(
                                   fontWeight: FontWeight.bold,
-                                  fontSize: 24,
+                                  fontSize: 24.sp,
                                 ),
                               ),
 

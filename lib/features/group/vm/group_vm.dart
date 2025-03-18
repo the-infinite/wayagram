@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
@@ -198,14 +199,14 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<void> deleteGroup(ctx, String postId, String userId) async {
+  Future<void> deleteGroup(ctx, String postId) async {
     try {
       final response = await _groupRepository.deleteGroup(postId);
       if (response.success && ctx.mounted) {
         //getAllGroups();
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
-            content: Text('Post deleted successfully!'),
+            content: Text('Group deleted successfully!'),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),
@@ -255,11 +256,11 @@ class GroupVm extends StateNotifier<GroupState> {
       if (response.success && ctx.mounted) {
         WayaNav.toNamed('/groups');
         ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
+           SnackBar(
             content: Text(
               'Group info updated successfully!',
               style:
-                  TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                  TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
             ),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
@@ -310,9 +311,9 @@ class GroupVm extends StateNotifier<GroupState> {
 
   Future<void> joinGroup(ctx, String groupId) async {
     try {
-      //state = state.copyWith(isLoading: true);
+      state = state.copyWith(joinGroupLoading: true);
       final response = await _groupRepository.joinGroup(groupId);
-      //state = state.copyWith(isLoading: false);
+      state = state.copyWith(joinGroupLoading: false);
       if (response.success && ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
@@ -325,7 +326,7 @@ class GroupVm extends StateNotifier<GroupState> {
     } catch (e) {
       print(e);
     } finally {
-     // state = state.copyWith(isLoading: false);
+      state = state.copyWith(joinGroupLoading: false);
     }
   }
 
@@ -387,7 +388,7 @@ class GroupVm extends StateNotifier<GroupState> {
         //   ),
         // );
       }else{
-        Navigator.pop(ctx);
+        WayaNav.goBack();
       }
     } catch (e) {
       print(e);
@@ -604,13 +605,12 @@ class GroupVm extends StateNotifier<GroupState> {
         required BuildContext context}) async {
     try {
       state = state.copyWith(isReportingGroup: true);
-      final userId = await _secureDataSource.getUserId();
       final response = await _groupRepository.reportGroup(
           groupId, reason);
 
       if (response.success && context.mounted) {
         // show success modal
-        Navigator.of(context).pop();
+        WayaNav.goBack();
 
         if (context.mounted) {
           await WayaUtils.showNotice(

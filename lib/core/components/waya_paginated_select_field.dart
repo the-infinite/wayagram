@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
 
 class WayaPaginatedSelectField extends ConsumerStatefulWidget {
@@ -61,11 +63,11 @@ class _WayaPaginatedSelectFieldState
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Text(widget.label!,
-                style: wayaTheme.textTheme.bodyMedium?.copyWith(fontSize: 14)),
+                style: wayaTheme.textTheme.bodyMedium?.copyWith(fontSize: 14.sp)),
           ),
         WayaButton(
           callback: () async {
-             await showModalBottomSheet(
+            await showModalBottomSheet(
               context: context,
               builder: (context) {
                 return PaginatedBottomSheet(
@@ -74,15 +76,12 @@ class _WayaPaginatedSelectFieldState
                   displayText: widget.displayText,
                   uniqueKey: widget.uniqueKey,
                   onSelected: (value) {
-                    
-              widget.onSelected(value);
-                    Navigator.pop(context);
+                    widget.onSelected(value);
+                    WayaNav.goBack();
                   },
                 );
               },
             );
-
-           
           },
           horizontalPadding: 0,
           color: wayaTheme.colorScheme.transparent,
@@ -103,7 +102,7 @@ class _WayaPaginatedSelectFieldState
                             .textTheme
                             .bodyMedium
                             ?.wayaCopyWith(
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               color: widget.displayText == null
                                   ? wayaTheme.colorScheme.greyColor300
                                   : wayaTheme.colorScheme.customBlack,
@@ -261,6 +260,7 @@ class WayaPaginatedSelectFieldNotifier
           totalPages: result.totalPages,
           isLoading: false,
         );
+       //   print("itwems hjbjbkjnkjnknkn ${result.items}");
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -285,6 +285,7 @@ class WayaPaginatedSelectFieldNotifier
           totalPages: result.totalPages,
           isLoading: false,
         );
+      
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -297,8 +298,6 @@ class WayaPaginatedSelectFieldNotifier
   void setFocus(bool isFocused) {
     state = state.copyWith(isFocused: isFocused);
   }
-
- 
 }
 
 final paginatedSelectFieldNotifierProvider = StateNotifierProvider.family<

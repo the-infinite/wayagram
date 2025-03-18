@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
@@ -23,18 +25,18 @@ class OrderInfoWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            title,
+            title.capitalize!,
             style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.greyColor500, fontSize: 11),
+                color: wayaTheme.colorScheme.greyColor500, fontSize: 11.sp),
           ),
         
          Container(
           constraints: BoxConstraints(maxWidth: 150),
           child:  Text(
-           description,
+           description.capitalize!,
            textAlign: TextAlign.start,
             style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.greyColor500, fontSize: 13),
+                color: wayaTheme.colorScheme.greyColor500, fontSize: 13.sp),
           ),
          )
         ],

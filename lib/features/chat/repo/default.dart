@@ -1,5 +1,6 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/features/chat/dto/default.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 
@@ -15,6 +16,14 @@ class ChatRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getConversation(String id) {
     return get("$serviceUrl/client/chat/retrieve/$id");
+  }
+
+  Future<WayaRequestResponse> getBlockedUsers() {
+    return get("$serviceUrl/client/chat-user/block");
+  }
+
+  Future<WayaRequestResponse> updateChatSettings(PrivacySettingsDto dto) {
+    return patch("$serviceUrl/client/chat-user/settings", dto.toJson());
   }
 
   Future<WayaRequestResponse> getAllConversations([int limit = 100, int page = 1]) {

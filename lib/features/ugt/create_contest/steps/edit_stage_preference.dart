@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -62,6 +63,9 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
           model.numPostPerWeek ?? "";
       _contestController.contestPrizeWinnerTextController.text =
           model.priceWinner ?? "";
+
+      _contestController.contestvoteCountToQualifyTextController.text =
+          model.priceWinner ?? "";
       return null;
     }, []);
     //  final priceWinner = useState(model.priceWinner ?? "");
@@ -110,7 +114,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -142,7 +146,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             .read(contestNotifierProvider.notifier)
                             .ugtPaymentType(),
                         onSelected: (value) {
-                          if (value.first.label == "Free") {
+                          if (value.first.label.toLowerCase() == "free") {
                             _contestController.entryAmountController.text = "0";
                           }
                           entryType.value = value.first.label;
@@ -157,13 +161,13 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
                   );
                 }),
-                if (entryType.value != "Free")
+                if (entryType.value.toLowerCase() != "free")
                   FormField<String>(validator: (value) {
                     if (_contestController.entryAmountController.text.isEmpty) {
                       return 'Entry Amount is required';
@@ -178,7 +182,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           controller: _contestController.entryAmountController,
                           keyboardType: TextInputType.number,
                           hintText: "0 NGN",
-                          isReadOnly: entryType.value == "Free",
+                          isReadOnly: entryType.value.toLowerCase() == "free",
                           label: "Entry Amount",
                           inputFormatters: [
                             CurrencyTextInputFormatter.currency(
@@ -199,7 +203,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -248,7 +252,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -297,7 +301,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -340,7 +344,50 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(15),
+                FormField<String>(validator: (value) {
+                  if (_contestController
+                      .contestvoteCountToQualifyTextController.text.isEmpty) {
+                    return 'Vote Counts to Qualify is required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaTextFormField(
+                        keyboardType: TextInputType.number,
+                        controller: _contestController
+                            .contestvoteCountToQualifyTextController,
+                        hintText: "Enter Vote Counts to Qualify",
+                        label: "Vote Counts to Qualify",
+                        borderColor: formState.hasError &&
+                                _contestController
+                                    .contestvoteCountToQualifyTextController
+                                    .text
+                                    .isEmpty
+                            ? wayaTheme.colorScheme.error
+                            : null,
+                      ),
+                      if (formState.hasError &&
+                          _contestController
+                              .contestvoteCountToQualifyTextController
+                              .text
+                              .isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText ?? "",
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -386,7 +433,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -409,6 +456,10 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           keyboardType: TextInputType.number,
                           controller: _contestController
                               .contestPrizeWinnerTextController,
+                          inputFormatters: [
+                            CurrencyTextInputFormatter.currency(
+                                name: 'NGN', symbol: 'NGN', locale: 'en_NG')
+                          ],
                           hintText: "Enter Winners price",
                           label: "Prize for the Winner? ",
                           borderColor: formState.hasError &&
@@ -428,7 +479,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -497,7 +548,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
               Text(
                 "Review and approve post before going live",
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   color: isSwitched.value ? Colors.black : Colors.grey,
                 ),
               ),
@@ -509,7 +560,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
               if (priceForWinner.value == "No") {
                 _contestController.contestPrizeWinnerTextController.text = "0";
               }
-              if (entryType.value != "Free") {
+              if (entryType.value.toLowerCase() != "free") {
                 _contestController.entryAmountController.text = "0";
               }
               if (_formKey.currentState!.validate()) {
@@ -529,11 +580,13 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             .contestPrizeWinnerTextController.text,
                         entryType: entryType.value,
                         reviewApprovePost: isSwitched.value,
+                        voteCountToQualify: _contestController
+                            .contestvoteCountToQualifyTextController.text,
                         entryAmount:
                             _contestController.entryAmountController.text,
                         numPostPerWeek: _contestController
                             .contestNumberPostsPerWeekTextController.text));
-                Navigator.pop(context);
+                WayaNav.goBack();
               }
               /*  if (_formKey.currentState!.validate()) {
                 ref.read(stateContactProvider.notifier).state = ref
@@ -567,7 +620,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
               border: Border.all(
                   width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-                Navigator.pop(context);
+                WayaNav.goBack();
               })
         ],
       ),

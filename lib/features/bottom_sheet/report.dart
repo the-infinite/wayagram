@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -57,7 +58,7 @@ class _ReportEventState extends ConsumerState<Report> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Report ",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
           const Gap(5),
           Text(
               maxLines: 3,
@@ -122,7 +123,7 @@ class _ReportEventState extends ConsumerState<Report> {
                                     widget.statuses[index]),
                                 style: TextStyle().wayaCopyWith(
                                     color: wayaTheme.colorScheme.customBlack,
-                                    fontSize: 14),
+                                    fontSize: 14.sp),
                               ),
                               onTap: () {
                                 setState(() {
@@ -162,9 +163,9 @@ class _ReportEventState extends ConsumerState<Report> {
                             reason: selectedStatus,
                             comment: comment.text,
                             context: context);
-                           setState(() {
+                        setState(() {
                           isLoading = false;
-                        }); 
+                        });
                       },
                       centerWidget: LoadingState(
                           loading: isLoading, text: "Submit Report")),
@@ -173,7 +174,8 @@ class _ReportEventState extends ConsumerState<Report> {
           const Gap(10),
           WayaButton(
               callback: () {
-                Navigator.of(context).pop();
+                WayaNav.goBack();
+            
               },
               textColor: wayaTheme.colorScheme.greyColor500,
               color: wayaTheme.colorScheme.transparent,

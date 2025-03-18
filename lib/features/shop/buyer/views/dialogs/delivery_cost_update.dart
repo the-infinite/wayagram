@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
 
 class DeliveryCostUpdate extends StatelessWidget {
@@ -121,14 +122,15 @@ class DeliveryCostUpdate extends StatelessWidget {
                 const Gap(24),
                 WayaButton(
                     callback: () {
-                      // Navigator.of(context).pop();
+                      // WayaNav.goBack();
                       onPress();
                     },
                     text: "Accept Cost"),
                 const Gap(10),
                 WayaButton(
                     callback: () {
-                      Navigator.of(context).pop();
+                       WayaNav.goBack();
+                  
                     },
                     textColor: wayaTheme.colorScheme.greyColor500,
                     color: wayaTheme.colorScheme.transparent,

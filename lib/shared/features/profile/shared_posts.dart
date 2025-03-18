@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
@@ -21,7 +22,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(servicesProvider.notifier).getEngagedPost();
+      // ref.read(servicesProvider.notifier).getEngagedPost();
       ref.read(servicesProvider.notifier).getPosts();
       ref.read(servicesProvider.notifier).fetchPostsByCategory();
     });
@@ -40,28 +41,6 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-     
-
-        //? If there are posts to show and this is full view...
-        if (state.posts.isNotEmpty && widget.isExpanded) ...[
-          Text(
-            "Based on your Interest",
-            style: wayaTheme.textTheme.bodyMedium,
-          ),
-          const Gap(10),
-          ListView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: posts.length,
-            itemBuilder: (context, index) {
-              return WayaPostWidget(
-                data: posts[index],
-                index: index,
-              );
-            },
-          ),
-        ],
-
         //? If there are categorized posts to show.
         if (state.categorizedPosts.isNotEmpty && widget.isExpanded) ...[
           for (var category in state.categorizedPosts) ...[
@@ -69,10 +48,7 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
               padding: const EdgeInsets.only(top: 12.0, bottom: 6.0),
               child: Text(
                 category.categoryName,
-                style: TextStyle(
-                    color: wayaTheme.colorScheme.greyColor600,
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold),
+                style: wayaTheme.textTheme.descriptionStyle,
               ),
             ),
             ListView.builder(
@@ -103,11 +79,11 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
           ],
         ],
 
-           //? Just if there are some top rated posts to show.
+        //? Just if there are some top rated posts to show.
         if (state.topPosts.isNotEmpty) ...[
           Text(
             "Recommended For You",
-            style: wayaTheme.textTheme.bodyMedium,
+            style: widget.isExpanded ? wayaTheme.textTheme.descriptionStyle : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
           ListView.builder(
@@ -126,3 +102,26 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
     );
   }
 }
+
+/**
+ 
+        //? If there are posts to show and this is full view...
+        if (state.posts.isNotEmpty && widget.isExpanded) ...[
+          Text(
+            "Based on your Interest",
+            style: wayaTheme.textTheme.bodyMedium,
+          ),
+          const Gap(10),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: posts.length,
+            itemBuilder: (context, index) {
+              return WayaPostWidget(
+                data: posts[index],
+                index: index,
+              );
+            },
+          ),
+        ],
+ */

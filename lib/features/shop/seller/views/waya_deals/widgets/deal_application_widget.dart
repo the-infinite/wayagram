@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -85,7 +86,7 @@ class _DealApplicationWidgetState extends ConsumerState<DealApplicationWidget> {
                             style: TextStyle().wayaCopyWith(
                                 color: wayaTheme.colorScheme.customBlack,
                                 fontWeight: FontWeight.w500,
-                                fontSize: 14),
+                                fontSize: 14.sp),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -99,7 +100,7 @@ class _DealApplicationWidgetState extends ConsumerState<DealApplicationWidget> {
                                       ? wayaTheme.colorScheme.pending
                                       : wayaTheme.colorScheme.error,
                               fontWeight: FontWeight.w500,
-                              fontSize: 11),
+                              fontSize: 11.sp),
                         )
                       ],
                     )

@@ -1,12 +1,15 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 
 class WayaVideoController {
   VideoPlayerController? _controller;
+  void Function(bool)? _onPlaybackChanged;
   final _isPlaying = ValueNotifier(false);
   final _isMuted = ValueNotifier(false);
   final bool autoplay;
@@ -53,6 +56,7 @@ class WayaVideoController {
     return _controller!.pause().then(
       (_) {
         _isPlaying.value = false;
+        _onPlaybackChanged?.call(false);
       },
     ).catchError(
       (e) {
@@ -65,6 +69,7 @@ class WayaVideoController {
     return _controller!.play().then(
       (_) {
         _isPlaying.value = true;
+        _onPlaybackChanged?.call(true);
       },
     ).catchError(
       (e) {
@@ -118,6 +123,10 @@ enum WayaVideoControls {
   /// This is a video that is being played in the app's default video player
   /// screen. It should have
   full,
+
+  /// This is a video that should have zero controls. This allows you to override
+  /// the controls by making yours, or to just control video playback with code.
+  none,
 }
 
 class WayaVideoWidget extends StatefulWidget {
@@ -151,7 +160,12 @@ class WayaVideoWidget extends StatefulWidget {
     required WayaVideoControls controls,
     VideoPlayerOptions? options,
     Future<ClosedCaptionFile>? subtitles,
+    void Function(bool)? onPlaybackChanged,
   }) {
+    //? Handle the change of playback state.
+    controller._onPlaybackChanged = onPlaybackChanged;
+
+    //? Return a video widget that is meant for device files.
     return WayaVideoWidget._(
       file: file,
       controller: controller,
@@ -169,7 +183,12 @@ class WayaVideoWidget extends StatefulWidget {
     required WayaVideoControls controls,
     VideoPlayerOptions? options,
     Future<ClosedCaptionFile>? subtitles,
+    void Function(bool)? onPlaybackChanged,
   }) {
+    //? Handle the change of playback state.
+    controller._onPlaybackChanged = onPlaybackChanged;
+
+    //? Return a video widget that is meant for network videos.
     return WayaVideoWidget._(
       networkUrl: uri,
       controller: controller,
@@ -187,7 +206,12 @@ class WayaVideoWidget extends StatefulWidget {
     required WayaVideoControls controls,
     VideoPlayerOptions? options,
     Future<ClosedCaptionFile>? subtitles,
+    void Function(bool)? onPlaybackChanged,
   }) {
+    //? Handle the change of playback state.
+    controller._onPlaybackChanged = onPlaybackChanged;
+
+    //? Return a video widget that is meant for assets.
     return WayaVideoWidget._(
       asset: path,
       controller: controller,
@@ -201,6 +225,7 @@ class WayaVideoWidget extends StatefulWidget {
 class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProviderStateMixin {
   AnimationController? animationController;
   bool _controlsHidden = false;
+  Timer? _timer;
 
   void _initializeController() {
     widget.controller._controller ??= (widget.networkUrl != null
@@ -259,11 +284,52 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProv
     super.dispose();
   }
 
+  void _startAnimationRecomputation() async {
+    //? Cancel the previous timer.
+    _timer?.cancel();
+
+    //? First, wait for 5 seconds.
+    _timer = Timer(
+      const Duration(seconds: 6),
+      () async {
+        //? Second, hide the controls on the screen.
+        _hideControls();
+      },
+    );
+  }
+
+  void _unhideControls() async {
+    if (!_controlsHidden) return;
+    try {
+      //? First, unhide the controls
+      if (mounted) {
+        setState(() {
+          _controlsHidden = false;
+        });
+      }
+
+      //? Then, make this visible.
+      animationController!.reverse();
+    } catch (_) {}
+  }
+
+  void _hideControls() async {
+    if (_controlsHidden) return;
+    try {
+      //? First, play the animation to hide the controls.
+      await animationController!.forward();
+
+      //? Now, ensure they stay hidden.
+      if (mounted) {
+        setState(() {
+          _controlsHidden = true;
+        });
+      }
+    } catch (_) {}
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Get the theme here.
-    final theme = Theme.of(context);
-
     //? If these are not initialized, initialize them.
     _initializeController();
 
@@ -282,27 +348,19 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProv
           )
         : const SizedBox();
 
+    //? The widget that is used to control the contents of this widget.
+    final controlsView = switch (widget.controls) {
+      WayaVideoControls.content => contentVideoControls(),
+      WayaVideoControls.message => messageVideoControls(),
+      WayaVideoControls.full => fullScreenVideoControls(),
+      WayaVideoControls.none => const SizedBox(),
+    };
+
     //? If this is for content...
-    if (widget.controls == WayaVideoControls.content) {
+    if (widget.controls != WayaVideoControls.none) {
       //? Every time this changes, leave the controls on screen for
       //? a while then leave.
-      () async {
-        //? First, wait for 5 seconds.
-        await Future.delayed(const Duration(seconds: 6));
-
-        //? Second, hide the controls on the screen.
-        try {
-          animationController!.forward().then(
-            (_) {
-              if (mounted) {
-                setState(() {
-                  _controlsHidden = true;
-                });
-              }
-            },
-          );
-        } catch (_) {}
-      }();
+      _startAnimationRecomputation();
 
       //? Then return the widget.
       return Stack(
@@ -310,136 +368,285 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProv
           //? First, the video view in the background.
           composition,
 
-          //? Second, the clickable area of the screen that is used to switch
+          //? Second, the very thin overlay that goes on top of our video
+          //? controls such that it makes the controls more visible.
+          if (!_controlsHidden)
+            Positioned.fill(
+              child: ColoredBox(
+                color: Colors.black12,
+              ),
+            ),
+
+          //? Third, the clickable area of the screen that is used to switch
           //? hide or unhide the buttons.
           GestureDetector(
-            onTap: () {
-              //? First, unhide the controls
-              animationController!.reverse().then(
-                (_) {
-                  //? Now, reset the entire page.
-                  if (mounted) {
-                    setState(() {
-                      _controlsHidden = false;
-                    });
-                  }
-                },
-              );
-            },
+            onTap: _controlsHidden ? _unhideControls : _hideControls,
             onDoubleTap: () {
               //? On double tap this thing, pause if this is playing.
               if (widget.controller.isPlaying) {
                 widget.controller.pause();
+                _hideControls();
               }
 
               //? Play if this is paused.
               else {
                 widget.controller.play();
+                _hideControls();
               }
             },
           ),
 
-          //? Third, the play button.
-          Center(
-            child: FadeTransition(
-              opacity: Tween<double>(
-                begin: 1,
-                end: 0,
-              ).animate(
-                CurvedAnimation(
-                  curve: Curves.decelerate,
-                  parent: animationController!,
-                ),
-              ),
-              child: ValueListenableBuilder(
-                valueListenable: widget.controller._isPlaying,
-                builder: (context, isPlaying, _) {
-                  //? Build the button.
-                  return _controlsHidden
-                      ? const SizedBox()
-                      : IconButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: isPlaying
-                              ? () {
-                                  widget.controller.pause();
-                                }
-                              : () {
-                                  widget.controller.play();
-                                },
-                          constraints: BoxConstraints(
-                            minHeight: 0,
-                            minWidth: 0,
-                          ),
-                          style: IconButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            padding: EdgeInsets.all(10),
-                          ),
-                          icon: SvgPicture.asset(
-                            isPlaying ? WayaAssets.icons.cPause.path : WayaAssets.icons.cPlay.path,
-                            height: 26,
-                            width: 26,
-                            color: theme.colorScheme.primary,
-                          ),
-                        );
-                },
-              ),
+          //? Finally, the controls.
+          if (!_controlsHidden)
+            Positioned.fill(
+              child: controlsView,
             ),
-          ),
-
-          //? Finally, the mute button.
-          Positioned(
-            right: 10,
-            bottom: 10,
-            child: FadeTransition(
-              opacity: Tween<double>(
-                begin: 1,
-                end: 0,
-              ).animate(
-                CurvedAnimation(
-                  curve: Curves.decelerate,
-                  parent: animationController!,
-                ),
-              ),
-              child: ValueListenableBuilder(
-                valueListenable: widget.controller._isMuted,
-                builder: (context, isMuted, _) {
-                  return _controlsHidden
-                      ? const SizedBox()
-                      : IconButton(
-                          padding: EdgeInsets.zero,
-                          onPressed: isMuted
-                              ? () {
-                                  widget.controller.setVolume(1);
-                                }
-                              : () {
-                                  widget.controller.setVolume(0);
-                                },
-                          constraints: BoxConstraints(
-                            minHeight: 0,
-                            minWidth: 0,
-                          ),
-                          style: IconButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            padding: EdgeInsets.all(2),
-                          ),
-                          icon: SvgPicture.asset(
-                            isMuted ? WayaAssets.icons.actionVolumeMute.path : WayaAssets.icons.actionVolumeUnmute.path,
-                            height: 20,
-                            width: 20,
-                            color: theme.colorScheme.primary,
-                          ),
-                        );
-                },
-              ),
-            ),
-          )
         ],
       );
     }
 
     //? Since this has no complex controls, just return the composition widget.
     return composition;
+  }
+
+  /// The video controls used primarily in message views. Kind of handy for that
+  /// particular application since it has minimal controls while featuring
+  /// basically all abilities you might need.
+  Widget messageVideoControls() {
+    // Get the theme here.
+    final theme = Theme.of(context);
+
+    //? Now, return this.
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        //? First,  dummy child to just center the play button.
+        const SizedBox(),
+
+        //? For the button here.
+        Center(
+          child: FadeTransition(
+            opacity: Tween<double>(
+              begin: 1,
+              end: 0,
+            ).animate(
+              CurvedAnimation(
+                curve: Curves.decelerate,
+                parent: animationController!,
+              ),
+            ),
+            child: ValueListenableBuilder(
+              valueListenable: widget.controller._isPlaying,
+              builder: (context, isPlaying, _) {
+                //? Build the button.
+                return _controlsHidden
+                    ? const SizedBox()
+                    : IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: isPlaying
+                            ? () {
+                                animationController?.reset();
+                                _startAnimationRecomputation();
+                                widget.controller.pause();
+                              }
+                            : () {
+                                animationController?.reset();
+                                _startAnimationRecomputation();
+                                widget.controller.play();
+                              },
+                        constraints: BoxConstraints(
+                          minHeight: 0,
+                          minWidth: 0,
+                        ),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          padding: EdgeInsets.all(10),
+                        ),
+                        icon: SvgPicture.asset(
+                          isPlaying ? WayaAssets.icons.cPause.path : WayaAssets.icons.cPlay.path,
+                          height: 26,
+                          width: 26,
+                          color: theme.colorScheme.primary,
+                        ),
+                      );
+              },
+            ),
+          ),
+        ),
+
+        //? Finally, the mute button.
+        FadeTransition(
+          opacity: Tween<double>(
+            begin: 1,
+            end: 0,
+          ).animate(
+            CurvedAnimation(
+              curve: Curves.decelerate,
+              parent: animationController!,
+            ),
+          ),
+          child: ValueListenableBuilder(
+            valueListenable: widget.controller._isMuted,
+            builder: (context, isMuted, _) {
+              return _controlsHidden
+                  ? const SizedBox()
+                  : IconButton(
+                      padding: EdgeInsets.zero,
+                      onPressed: isMuted
+                          ? () {
+                              widget.controller.setVolume(1);
+                            }
+                          : () {
+                              widget.controller.setVolume(0);
+                            },
+                      constraints: BoxConstraints(
+                        minHeight: 0,
+                        minWidth: 0,
+                      ),
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                        padding: EdgeInsets.all(2),
+                      ),
+                      icon: SvgPicture.asset(
+                        isMuted ? WayaAssets.icons.actionVolumeMute.path : WayaAssets.icons.actionVolumeUnmute.path,
+                        height: 20,
+                        width: 20,
+                        color: theme.colorScheme.primary,
+                      ),
+                    );
+            },
+          ),
+        )
+      ],
+    );
+  }
+
+  /// The video controls used primarily in content. So is used in moments, posts,
+  /// and so on. Useful because it should contain volume, playback, speed, and
+  /// seek controls.
+  Widget contentVideoControls() {
+    // Get the theme here.
+    final theme = Theme.of(context);
+
+    //? Now, return this.
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        //? First,  dummy child to just center the play button.
+        const SizedBox(),
+
+        //? For the button here.
+        Center(
+          child: FadeTransition(
+            opacity: Tween<double>(
+              begin: 1,
+              end: 0,
+            ).animate(
+              CurvedAnimation(
+                curve: Curves.decelerate,
+                parent: animationController!,
+              ),
+            ),
+            child: ValueListenableBuilder(
+              valueListenable: widget.controller._isPlaying,
+              builder: (context, isPlaying, _) {
+                //? Build the button.
+                return _controlsHidden
+                    ? const SizedBox()
+                    : IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: isPlaying
+                            ? () {
+                                animationController?.reset();
+                                _startAnimationRecomputation();
+                                widget.controller.pause();
+                              }
+                            : () {
+                                animationController?.reset();
+                                _startAnimationRecomputation();
+                                widget.controller.play();
+                              },
+                        constraints: BoxConstraints(
+                          minHeight: 0,
+                          minWidth: 0,
+                        ),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          padding: EdgeInsets.all(10),
+                        ),
+                        icon: SvgPicture.asset(
+                          isPlaying ? WayaAssets.icons.cPause.path : WayaAssets.icons.cPlay.path,
+                          height: 26,
+                          width: 26,
+                          color: theme.colorScheme.primary,
+                        ),
+                      );
+              },
+            ),
+          ),
+        ),
+
+        //? Finally, the mute button.
+        Padding(
+          padding: EdgeInsets.only(right: 15.w, bottom: 65.h),
+          child: FadeTransition(
+            opacity: Tween<double>(
+              begin: 1,
+              end: 0,
+            ).animate(
+              CurvedAnimation(
+                curve: Curves.decelerate,
+                parent: animationController!,
+              ),
+            ),
+            child: ValueListenableBuilder(
+              valueListenable: widget.controller._isMuted,
+              builder: (context, isMuted, _) {
+                return _controlsHidden
+                    ? const SizedBox()
+                    : IconButton(
+                        padding: EdgeInsets.zero,
+                        onPressed: isMuted
+                            ? () {
+                                widget.controller.setVolume(1);
+                              }
+                            : () {
+                                widget.controller.setVolume(0);
+                              },
+                        constraints: BoxConstraints(
+                          minHeight: 0,
+                          minWidth: 0,
+                        ),
+                        style: IconButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          padding: EdgeInsets.all(2),
+                        ),
+                        icon: SvgPicture.asset(
+                          isMuted ? WayaAssets.icons.actionVolumeMute.path : WayaAssets.icons.actionVolumeUnmute.path,
+                          height: 20,
+                          width: 20,
+                          color: theme.colorScheme.primary,
+                        ),
+                      );
+              },
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  /// The video controls used when a user is interacting with the FULL view of a
+  /// video. Should contain as much playback controls as is allowed, and possible.
+  /// Expects that the height of the video is full screen so you would immediately
+  /// notice its layout is optimized for such.
+  Widget fullScreenVideoControls() {
+    return const SizedBox();
   }
 }

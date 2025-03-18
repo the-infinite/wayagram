@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
@@ -33,33 +32,20 @@ class _EventDetailState extends ConsumerState<EventDetail> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final EventDoc event =
-          ModalRoute.of(context)!.settings.arguments as EventDoc;
+      final EventDoc event = ModalRoute.of(context)!.settings.arguments as EventDoc;
       ref.read(eventVmProvider.notifier).getSingleEvent(event);
-
       final provider = ref.read(eventEngagementProvider.notifier);
-
       provider.startViewingEvent();
-
       provider.addLocation(event.location, EventPoint.viewEvent.value);
       provider.addEventType(event.eventType, EventPoint.viewEvent.value);
     });
   }
 
-  // // Stop tracking when the page is closed
-  // @override
-  // void dispose() {
-  //   ref.read(eventEngagementProvider.notifier).stopViewingEvent();
-
-  //   super.dispose();
-  // }
-
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(eventVmProvider);
     final wayaTheme = Theme.of(context);
-    final EventDoc event =
-        ModalRoute.of(context)!.settings.arguments as EventDoc;
+    final EventDoc event = ModalRoute.of(context)!.settings.arguments as EventDoc;
     return WayaScaffold(
         isLoading: false,
         isScrollable: false,
@@ -82,6 +68,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                 WayaTabButton(
                   isSelected: _selectedIndex == 0,
                   text: 'Event Details',
+                  
                   onTap: () => setState(() => _selectedIndex = 0),
                 ),
                 WayaTabButton(
@@ -229,12 +216,12 @@ class EventDetailAction extends StatelessWidget {
           return [
             PopupMenuItem<int>(
               value: 0,
-              child: _buildActionNav(
+              onTap: () {
+                Share.share("https://example.com");
+              },
+              child: WayaActionNav(
                   context: context,
-                  onTap: () {
-                    Share.share("https://example.com");
-                    Navigator.pop(context);
-                  },
+                  color: wayaTheme.colorScheme.customBlack,
                   asset: Icon(
                     Icons.share,
                     size: 22,
@@ -242,54 +229,27 @@ class EventDetailAction extends StatelessWidget {
                   ),
                   text: "Share Event"),
             ),
-            if( !isUser)
-            PopupMenuItem<int>(
-              value: 1,
-              child: _buildActionNav(
+            if (!isUser)
+              PopupMenuItem<int>(
+                value: 1,
+                onTap: () async {
+                  await WayaUtils.showModalSheet(
+                    context,
+                    child: ReportEvent(statuses: eventReport, currentStatus: "", eventId: eventId),
+                  );
+                },
+                child: WayaActionNav(
                   context: context,
-                  onTap: () async {
-                    Navigator.pop(context);
-                    await WayaUtils.showModalSheet(context,
-                        child: ReportEvent(
-                            statuses: eventReport,
-                            currentStatus: "",
-                            eventId: eventId));
-                  },
+                  color: wayaTheme.colorScheme.customBlack,
                   asset: Icon(
                     Icons.flag_outlined,
                     size: 22,
                     color: wayaTheme.colorScheme.customBlack,
                   ),
-                  text: "Report Event"),
-            ),
+                  text: "Report Event",
+                ),
+              ),
           ];
         });
-  }
-
-  InkWell _buildActionNav(
-      {required BuildContext context,
-      required VoidCallback onTap,
-      required Widget asset,
-      required String text}) {
-    final wayaTheme = Theme.of(context);
-    return InkWell(
-      onTap: onTap,
-      splashFactory: NoSplash.splashFactory,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          asset,
-          const Gap(4),
-          Text(
-            text,
-            style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.customBlack,
-                fontWeight: FontWeight.w500,
-                fontSize: 12),
-          )
-        ],
-      ),
-    );
   }
 }

@@ -46,7 +46,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
       isLoading: viewModel.isLoading,
       isScrollable: true,
       onTapBackButton: (){
-        Navigator.pop(context);
+        WayaNav.goBack();
         ref.watch(createGroupProvider.notifier).reset();
       },
       appBarTrailing: Padding(
@@ -62,7 +62,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
           text: 'Add User',
           isLoading: viewModel.isLoading,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
         ): WayaButton(
@@ -72,14 +72,14 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
               await team.updateTeamMember(context, '', 'pageId','memberId');
               showCustomDialog(context, 'Success! ${viewModel.username} has been added as a\nModerator','You can now collaborate seamlessly and\nmanage the page together.');
               ref.watch(createGroupProvider.notifier).reset();
-              Navigator.pop(context);
+              WayaNav.goBack();
             }
           } : null,
           height: 30,
           text: 'Add User',
           isLoading: viewModel.isLoading,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
 
@@ -133,7 +133,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -167,7 +167,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -315,14 +315,14 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                            children: [
                              InkWell(
                                  onTap:(){
-                                   Navigator.of(cxt).pop();
+                                   WayaNav.goBack();
                                  },
                                  child: Image.asset('assets/images/pages/success.png', height: 32, width: 32,)),
                              Gap(10),
                              Text(
                                title,
                                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                   fontSize: 14,
+                                   fontSize: 14.sp,
                                    fontWeight: FontWeight.w600,
                                    color: Theme.of(context).colorScheme.black ),
                              ),
@@ -330,7 +330,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
 
                              InkWell(
                                  onTap:(){
-                                   Navigator.of(cxt).pop();
+                                   WayaNav.goBack();
                                  },
                                  child: Image.asset('assets/images/pages/x.png', height: 11, width: 11,)),
                              SizedBox(
@@ -344,7 +344,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                            child: Text(
                              subTitle,
                              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                 fontSize: 14,
+                                 fontSize: 14.sp,
                                  fontWeight: FontWeight.w400,
                                  color: Theme.of(context).colorScheme.greyColor500 ),
                            ),

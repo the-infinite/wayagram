@@ -3,6 +3,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/more/data/model/more_option_model.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/support/modal/default.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
@@ -41,7 +42,7 @@ class MoreVm {
         content: "Buy and sell product from the convince of your home or store",
         title: "Shop",
         onTap: () {
-          WayaNav.offNamed(BottomView.route, arguments: 1);
+          WayaNav.removeUntilNamed(BottomView.route, arguments: 1);
         },
       ),
       MoreOptionModel(
@@ -49,7 +50,7 @@ class MoreVm {
         content: "Create groups and manage who is following you and who you follow.",
         title: "Get Quotation",
         onTap: () {
-          WayaNav.offNamed(BottomView.route, arguments: 3);
+          WayaNav.removeUntilNamed(BottomView.route, arguments: 3);
         },
       ),
       MoreOptionModel(
@@ -87,7 +88,7 @@ class MoreVm {
         content: "Create Donation Posts and also help people in need",
         title: "Donation",
         onTap: () {
-          WayaNav.offNamed(BottomView.route, arguments: 2);
+          WayaNav.removeUntilNamed(BottomView.route, arguments: 2);
         },
       ),
       MoreOptionModel(
@@ -101,7 +102,7 @@ class MoreVm {
         content: "Manage your following, followers in one place.",
         title: "Followers & Following",
         onTap: () {
-          WayaNav.toNamed('/mutualPage', arguments: 'more');
+          WayaNav.toNamed('/follow/relationships/self', arguments: 'more');
         },
       ),
       MoreOptionModel(
@@ -123,7 +124,15 @@ class MoreVm {
         content: "Chat and call your family and friends",
         title: "Chat & Call",
         onTap: () {
-          WayaNav.offNamed(BottomView.route, arguments: 4);
+          WayaNav.removeUntilNamed(BottomView.route, arguments: 4);
+        },
+      ),
+      MoreOptionModel(
+        asset: WayaAssets.icons.mChat.path,
+        content: "If you believe there’s an error or issue within the app, please submit a dispute.",
+        title: "Disputes",
+        onTap: () {
+          WayaNav.toNamed(SellerDispute.route);
         },
       ),
     ];

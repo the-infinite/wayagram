@@ -14,12 +14,13 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
+import '../../../shared/features/user/models/default.dart';
 import '../../auth/account_creation/vm/successful_setup_vm.dart';
-import 'polls_for_you.dart';
 
 class PollSummary extends ConsumerStatefulWidget {
   static const route = '/poll-summary';
@@ -30,19 +31,11 @@ class PollSummary extends ConsumerStatefulWidget {
 }
 
 class _PollSummaryState extends ConsumerState<PollSummary>  {
-  CreatePollVotingState? viewModel;
-
-
-
-  String userType = "PERSONAL";
-
-  Map<String, dynamic> formData = {};
 
   @override
   Widget build(BuildContext context) {
 
     final viewModel = ref.watch(createPollVotingProvider);
-    final poll = ref.watch(createPollVotingProvider.notifier);
     final wayaTheme = Theme.of(context);
     final setUp = ref.watch(successfulSetupVmProvider);
 
@@ -61,8 +54,8 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-              if (viewModel.pollType == 'paid' && userType == "PERSONAL") {
-          print('MY POLLING');
+              if (viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.personal) {
+
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   WayaUtils.showNotice(
                       context: context,
@@ -73,20 +66,20 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                       secondButtonText: 'Cancel',
                       icon: Image.asset('assets/images/cp-shop.png'));
                 });
-              } if(viewModel.pollType == 'paid' && userType != "PERSONAL"){
-               await ref.read(createPollVotingProvider.notifier).createPoll(
-                  context,
-                  viewModel.pollTitle.text,
-                  viewModel.startDate,
-                  viewModel.endDate,
-                  viewModel.voteNumber.text,
-                  viewModel.pollDescription.text,
-                  viewModel.firstChoiceDescription.text,
-                  viewModel.votePrice.text,
-                 viewModel.pollType.toLowerCase()
+              } if(viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.business){
+                await ref.read(createPollVotingProvider.notifier).createPoll(
+                    context,
+                    viewModel.pollTitle.text,
+                    viewModel.startDate,
+                    viewModel.endDate,
+                    viewModel.voteNumber.text,
+                    viewModel.pollDescription.text,
+                    viewModel.firstChoiceDescription.text,
+                    viewModel.votePrice.text,
+                    viewModel.pollType.toLowerCase()
                 );
-               //poll.reset();
-              }if(viewModel.pollType == 'free' ){
+                //poll.reset();
+              }if(viewModel.pollType == 'free' &&  ConversationState.self.accountType == UserAccountType.personal){
                 await ref.read(createPollVotingProvider.notifier).createFreePoll(
                     context,
                     viewModel.pollTitle.text,
@@ -106,7 +99,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             text: 'Create',
             horizontalPadding: 12,
             textStyle: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.white ),
           )
@@ -124,7 +117,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             Text(
               '${viewModel.pollDescription.text.capitalizeFirst}',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),
@@ -137,7 +130,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               children: [
                 summary('Start Date',
                     '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.startDate)}\n',
-                    'Host', setUp.user?.user?.firstName?.capitalizeFirst ?? ''),
+                    'Host', setUp.user?.user?.firstName.capitalizeFirst ?? ''),
                 summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
                 summary('Poll Type', '${viewModel.pollType.capitalizeFirst}\n', 'Prize per vote', '₦${viewModel.votePrice.text}'
                 ),
@@ -149,7 +142,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             Text(
               'Choices',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
                   color: Theme.of(context).colorScheme.greyColor900 ),
             ),
@@ -159,7 +152,6 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               child: ListView.builder(
                   itemCount: viewModel.choices.length,
                   itemBuilder: (context, index){
-                    print('IMAGE PRINTING ==>> ${viewModel.choices[index].image?.absolute}');
                     return presImage('${viewModel.choices[index].image?.absolute.path}',
                       viewModel.choices[index].text.text.capitalizeFirst, context, viewModel.choices[index].image?.absolute.path == null);
                   }),
@@ -175,7 +167,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         Text(
           title,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.greyColor600 ),
         ),
@@ -183,7 +175,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         Text(
           subTitle,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.black ),
         ),
@@ -191,7 +183,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         Text(
           title2,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.greyColor600 ),
         ),
@@ -199,7 +191,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         Text(
           subTitle2,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.black ),
         ),
@@ -250,15 +242,15 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: chk?
-            //Image.file(File('assets/images/pages/image_placeholder.png'), height: 66.h, width: 50.w,):
-            Image.asset('assets/images/pages/image_placeholder.png',height: 66.h, width: 50.w,):
+            //Image.asset('assets/images/pages/image_placeholder.png',height: 66.h, width: 50.w,):
+            Container():
             Image.file(File(img), height: 66.h, width: 50.w,),
         ),
         const Gap(40),
         Text(
           name,
           style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 20,
+              fontSize: 20.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(ctx).colorScheme.primary600 ),
         ),
@@ -267,55 +259,55 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     );
   }
 
-  Widget createPoll(ctx,){
-    final wayaTheme = Theme.of(ctx);
-    return GestureDetector(
-      onTap: () {
-        WayaUtils.showModalSheet(
-          context,
-          child: PollsModal(),
-        );
-       // confirmPoll(context);
-      },
-      child: Row(
-        children: [
-          Container(
-            height: 35,
-            padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
-            decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.customPrimary,
-                borderRadius: BorderRadius.circular(10)),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const Gap(5),
-                  Text(
-                    "Create",
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14),
-                  ),
-
-
-                ],
-              ),
-            ),
-          ),
-          const Gap(15)
-        ],
-      ),
-    );
-  }
+  // Widget createPoll(ctx,){
+  //   final wayaTheme = Theme.of(ctx);
+  //   return GestureDetector(
+  //     onTap: () {
+  //       WayaUtils.showModalSheet(
+  //         context,
+  //         child: PollsModal(url: '',),
+  //       );
+  //      // confirmPoll(context);
+  //     },
+  //     child: Row(
+  //       children: [
+  //         Container(
+  //           height: 35,
+  //           padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
+  //           decoration: BoxDecoration(
+  //               color: wayaTheme.colorScheme.customPrimary,
+  //               borderRadius: BorderRadius.circular(10)),
+  //           child: Center(
+  //             child: Row(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               crossAxisAlignment: CrossAxisAlignment.center,
+  //               children: [
+  //                 const Gap(5),
+  //                 Text(
+  //                   "Create",
+  //                   style: TextStyle().wayaCopyWith(
+  //                       color: wayaTheme.colorScheme.white,
+  //                       fontWeight: FontWeight.w600,
+  //                       fontSize: 14),
+  //                 ),
+  //
+  //
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //         const Gap(15)
+  //       ],
+  //     ),
+  //   );
+  // }
   confirmPoll(BuildContext context) {
     WayaUtils.showNotice(
         context: context,
         title: 'Payment Information',
         message:
         'Waya will take a commission from the payment\nand the rest of the money will be paid into your\naccount at the end of post duration or its\nexpiry date.',
-        onPress: () => Navigator.of(context).pop(),
+        onPress: () => WayaNav.goBack(),
         icon: Image.asset('assets/images/d-code-invalid.png', height: 10,),
         buttonCenterWidget: Column(
           children: [
@@ -323,16 +315,16 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             const Gap(8),
             InkWell(
               onTap: (){
-                Navigator.of(context).pop();
+                WayaNav.goBack();
                 WayaUtils.showModalSheet(
                   context,
-                  child: PollsModal(),
+                  child: PollsModal(url: '',),
                 );
               },
               child: Text(
                 'Ok, I Agree',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                     color: Theme.of(context).colorScheme.greyColor500 ),
               ),

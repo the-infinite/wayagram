@@ -10,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
@@ -27,9 +28,6 @@ class AddChoices extends ConsumerStatefulWidget {
 class _AddChoicesState extends ConsumerState<AddChoices> {
   final _formKey = GlobalKey<FormState>();
 
-  Map<String, dynamic> formData = {};
-
-
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
@@ -43,16 +41,21 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
           padding: const EdgeInsets.only(right: 20),
           child: WayaButton(
             callback: !viewModel.isLoading
-                ? () async {
-              print('Add cHOICES ==>>>');
-              if (_formKey.currentState!.validate()) {
+                ? () {
 
+              if (_formKey.currentState!.validate()) {
+                print('Add cHOICES ==>>>');
                 WayaNav.toNamed("/poll-summary");
               }
             } : null,
-            centerWidget: LoadingState(
-                loading: viewModel.isLoading, text: 'Create Poll'),
             height: 30,
+            text: 'Create Poll',
+            isLoading: viewModel.isLoading,
+            horizontalPadding: 12,
+            textStyle: WayaTextStyles.bodySmall.copyWith(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).colorScheme.white ),
           ),
         ),*/
         createPoll(context),
@@ -68,7 +71,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
             Text(
               '${viewModel.pollDescription.text.capitalizeFirst}',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500),
             ),
@@ -122,7 +125,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                                         formState.errorText!,
                                         style: TextStyle(
                                             color: wayaTheme.colorScheme.error,
-                                            fontSize: 12),
+                                            fontSize: 12.sp),
                                       ),
                                     ),
                                 ],
@@ -132,7 +135,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                             FormField<String>(validator: (value) {
                               if (viewModel
                                   .choices[index].description.text.isEmpty) {
-                                return '';
+                                return 'Description ${index + 1} is required';
                               }
 
                               return null;
@@ -161,7 +164,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                                         formState.errorText!,
                                         style: TextStyle(
                                             color: wayaTheme.colorScheme.error,
-                                            fontSize: 12),
+                                            fontSize: 12.sp),
                                       ),
                                     ),
                                 ],
@@ -187,7 +190,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                                         Text(
                                           'Add Image/Video',
                                           style: Theme.of(context).textTheme.bodyMedium!
-                                              .wayaCopyWith(fontSize: 14,
+                                              .wayaCopyWith(fontSize: 14.sp,
                                                   fontWeight: FontWeight.w400,
                                                   color: Theme.of(context).colorScheme.customBlack200),
                                         ),
@@ -236,7 +239,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                 Text(
                   'Add Another Choice',
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.black),
                 ),
@@ -248,7 +251,8 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                 ),
               ],
             ),
-           )
+           ),
+
           ],
         ));
   }
@@ -259,6 +263,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
     final wayaTheme = Theme.of(ctx);
     return GestureDetector(
       onTap: () {
+
         WayaNav.toNamed("/poll-summary");
       },
       child: Row(
@@ -280,7 +285,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.white,
                         fontWeight: FontWeight.w600,
-                        fontSize: 12),
+                        fontSize: 12.sp),
                   ),
                 ],
               ),

@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
@@ -47,14 +48,11 @@ class DeliveryCostRequest extends ConsumerWidget {
               Text(
                 "Delivery Cost Request",
                 textAlign: TextAlign.start,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: wayaTheme.textTheme.headlineMedium
               ),
               const Gap(12),
               Text(
-                "Add delivery address this order so the seller can review and send the delivery cost for it.",
+                "Add delivery address this to order so the seller can review and send the delivery cost for it.",
                 textAlign: TextAlign.start,
                 style: WayaTextStyles.descriptionStyle,
               ),
@@ -75,7 +73,7 @@ class DeliveryCostRequest extends ConsumerWidget {
                     ),
                     const Gap(6),
                     Text(
-                      shopName,
+                      shopName.capitalizeFirst!,
                       style: wayaTheme.textTheme.labelMedium,
                     )
                   ],
@@ -133,14 +131,15 @@ class DeliveryCostRequest extends ConsumerWidget {
 
                           ref.read(cartVmProvider.notifier).deliveryRequest(
                               shopId: shopId, address: _controller.text);
-                          Navigator.pop(context);
+                          WayaNav.goBack();
                         }
                       : null,
                   text: "Request Delivery Cost"),
               const Gap(10),
               WayaButton(
                   callback: () {
-                    Navigator.of(context).pop();
+                     WayaNav.goBack();
+             
                   },
                   textColor: wayaTheme.colorScheme.greyColor500,
                   color: wayaTheme.colorScheme.transparent,

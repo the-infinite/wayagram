@@ -25,7 +25,7 @@ class AddProductState {
   final String productCategory;
   final Select? selectedCategory;
   final String productId;
-
+  final bool isDeleting;
   final String productType;
 
   final String productCondition;
@@ -53,6 +53,7 @@ class AddProductState {
       TextEditingController? pickUpAddress,
       TextEditingController? deliveryPrice,
       this.productCategory = '',
+      this.isDeleting = false,
       this.selectedCategory,
       this.productColor = const [],
       this.selectedColor = '',
@@ -102,6 +103,7 @@ class AddProductState {
       TextEditingController? productHeight,
       TextEditingController? productDepth,
       TextEditingController? stockQuantity,
+      bool? isDeleting,
       String? productCategory,
       Select? selectedCategory,
       bool? isEditMode,
@@ -156,6 +158,7 @@ class AddProductState {
         discountPercentage: discountPercentage ?? this.discountPercentage,
         selectedCategory: selectedCategory ?? this.selectedCategory,
         isLoading: isLoading ?? this.isLoading,
+        isDeleting: isDeleting ?? this.isDeleting,
         allDiscountTypes: allDiscountTypes ?? this.allDiscountTypes,
         selectedDiscountType: selectedDiscountType ?? this.selectedDiscountType,
         totalNoOfDiscountPages:
@@ -179,6 +182,7 @@ class AddProductState {
         height: productHeight.text,
         width: productWidth.text,
         depth: productDepth.text,
+        color: selectedColor,
         pickupAddress: pickUpAddress.text,
         deliveryCharge: includeDeliveryFee,
         materialType: materialType.text,

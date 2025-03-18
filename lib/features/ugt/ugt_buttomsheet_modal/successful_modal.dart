@@ -2,29 +2,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 
 import '../../../core/components/waya_buttons.dart';
-import '../../../core/components/waya_select_field.dart';
-import '../../../core/components/waya_text_form_field.dart';
-import '../../../core/utils/waya_navigation.dart';
 
-class SuccessfulModal extends StatefulWidget {
+
+class SuccessfulModal extends StatefulHookConsumerWidget {
   final String title;
   final String subtitle;
+  final String? buttonText;
   final bool showCopyLink;
-  final VoidCallback onTap;
+  final Function( BuildContext,WidgetRef) onTap;
   const SuccessfulModal(
-      this.title, this.subtitle, this.showCopyLink, this.onTap,
-      {super.key});
+      {required this.title,
+      required this.subtitle,
+      required this.showCopyLink,
+      this.buttonText,
+      required this.onTap,
+      super.key});
 
   @override
-  State<SuccessfulModal> createState() => _SuccessfulModalState();
+  ConsumerState<SuccessfulModal> createState() => _SuccessfulModalState();
 }
 
-class _SuccessfulModalState extends State<SuccessfulModal> {
+class _SuccessfulModalState extends ConsumerState<SuccessfulModal> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -47,8 +50,11 @@ class _SuccessfulModalState extends State<SuccessfulModal> {
             ),
             SizedBox(height: 17.h),
             WayaButton(
-              callback: widget.onTap,
-              text: "Manage Contest",
+              callback: () {
+                // WayaNav.goBack();
+                widget.onTap(context,ref);
+              },
+              text: widget.buttonText ?? "Manage Contest",
             ),
             const Gap(10),
             if (widget.showCopyLink)

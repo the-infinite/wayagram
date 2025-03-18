@@ -19,6 +19,11 @@ import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
 
+import '../../../shared/features/user/models/default.dart';
+import '../../auth/upgrade_to_business/views/upgrade_to_business.dart';
+import '../../chat/state/default.dart';
+import '../../kyc/view/kyc_update.dart';
+
 class DonationManagement extends ConsumerStatefulWidget {
   static const route = '/donationManagement';
   const DonationManagement({super.key,});
@@ -47,7 +52,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
             args['title'],
             style: TextStyle().wayaCopyWith(
                 color: wayaTheme.colorScheme.black,
-                fontSize: 24,
+                fontSize: 24.sp,
                 fontWeight: FontWeight.w700),
           ),
           Gap(10),
@@ -60,9 +65,9 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
           Gap(10),
           EngagementRange(
               topLeft: "${WayaHelpers.formatPrice(int.parse('${args['amountRaised']}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount']}'))}",
-              bottomLeft: "0 Donations",
+              bottomLeft: "${args['donationCount']} Donations",
               bottomRight: "${args['daysLeft']} days left",
-              range: 0.4),
+              range: 0.0,),
           Gap(10),
           Row(children: [
             Expanded(child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['amountRaised']}')), 'Amount Raised', wayaTheme.colorScheme.success50),),
@@ -75,13 +80,13 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
             "Donation Information",
             style: TextStyle().wayaCopyWith(
                 color: wayaTheme.colorScheme.greyColor400,
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w400),
           ),
           Gap(20),
           _reviewText('Cause Title', '${args['title']}'),
           Gap(10),
-          _reviewText('Cause  Description', '${args['desc']}'),
+          _reviewText('Cause Description', '${args['desc']}'),
           Gap(10),
           _reviewText('Proposed Solution', '${args['solution']}'),
           Gap(10),
@@ -133,12 +138,44 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
                   color: wayaTheme.colorScheme.primary500,
                   textStyle: TextStyle(color: wayaTheme.colorScheme.white),
                   callback: () {
-                    WayaUtils.showModalSheet(
-                      context,
-                      child: DonationAmountSetupModal(
-                        id: args['id'],
-                      ),
-                    );
+
+                    if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
+                      WayaUtils.showNotice(
+                          context: context,
+                          title: "Update KYC Information ",
+                          message: 'You must complete KYC verification before setting minimum amount.',
+                          onPress: () {
+                            WayaNav.goBack();
+                            WayaNav.toNamed('/kycUpdate', arguments: {
+                              'kyc': '${viewModel.kycStatus}'
+                            });
+                          },
+                          buttonText: 'Update KYC',
+                          secondButtonText: 'Cancel',
+                          icon: Image.asset('assets/images/cp-shop.png'));
+                    } else if (ConversationState.self.accountType == UserAccountType.personal) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        WayaUtils.showNotice(
+                            context: context,
+                            title: "You don't have a Business Account",
+                            message: 'Please upgrade to a business account to create a donation post',
+                            onPress: () {
+                              WayaNav.goBack();
+                              WayaNav.toNamed(UpgradeToBusiness.route);
+                            },
+                            buttonText: 'Upgrade to Business',
+                            secondButtonText: 'Cancel',
+                            icon: Image.asset('assets/images/cp-shop.png'));
+                      });
+                    } else{
+                      WayaUtils.showModalSheet(
+                        context,
+                        child: DonationAmountSetupModal(
+                          id: args['id'],
+                        ),
+                      );
+                    }
+
                   }),
             )
           ],),
@@ -159,7 +196,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
             child:  Text(
               name,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),
@@ -170,7 +207,7 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
             child: Text(
               number,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.black ),
             ),
@@ -188,13 +225,13 @@ class _DonationManagementState extends ConsumerState<DonationManagement> with Si
       children: [
         Text(title,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 14,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.greyColor500),),
 
         Text(subTitle,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 16,
+              fontSize: 16.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.black),),
       ],);

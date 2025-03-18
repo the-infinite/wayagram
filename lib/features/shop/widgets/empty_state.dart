@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -51,7 +52,7 @@ class EmptyState extends StatelessWidget {
                  buttontext!,
                   style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.white,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500),
                 )
               ],

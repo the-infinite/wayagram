@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'waya_observable_scroll.dart' show WayaObservableScrollController;
 
 class WayaPaginatedListView<T> extends StatefulWidget {
   /// The first page that you plan to start this scrollview from. It can change
@@ -18,6 +20,12 @@ class WayaPaginatedListView<T> extends StatefulWidget {
 
   /// Should this fetch something, or should it wait in this instance?
   final bool shouldFetch;
+
+  /// Is this already empty?
+  final bool isEmpty;
+
+  /// The widget to show when this is empty.
+  final Widget? whenEmpty;
 
   /// The scroll controller we should use.
   final ScrollController? controller;
@@ -41,6 +49,9 @@ class WayaPaginatedListView<T> extends StatefulWidget {
   /// it would be possible to actually show content to the user.
   final Widget Function(BuildContext context, int index) builder;
 
+  /// The handler for this observable scroll view.
+  final WayaObservableScrollController handler;
+
   /// A widget that should be placed after all items in this list.
   final Widget? child;
 
@@ -61,19 +72,22 @@ class WayaPaginatedListView<T> extends StatefulWidget {
   const WayaPaginatedListView({
     super.key,
     required this.nextPage,
-    required this.reverse,
     required this.getPage,
     required this.builder,
-    required this.physics,
-    required this.direction,
     required this.itemCount,
     required this.isAtEnd,
+    required this.handler,
+    this.isEmpty = false,
+    this.reverse = false,
+    this.physics = const BouncingScrollPhysics(),
+    this.direction = Axis.vertical,
     this.padding = EdgeInsets.zero,
     this.scrollNotice = 0,
     this.shouldFetch = true,
     this.primary = false,
     this.controller,
     this.onFetch,
+    this.whenEmpty,
     this.child,
   });
 
@@ -89,31 +103,27 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
   @override
   void initState() {
     if (widget.shouldFetch) {
-      _scrollController.addListener(
-        () {
-          final target = _scrollController.position.maxScrollExtent - widget.scrollNotice;
-          final current = _scrollController.offset;
-
-          //? Stop if this is at the end.
-          if (widget.isAtEnd) {
-            debugPrint("paginated-list-widget> End");
-          }
-
-          //? If we should scroll.
-          else if (current >= target) {
-            debugPrint("paginated-list-widget> Fetching (T: $target, X: $current)");
-            _getPage(widget.nextPage);
-          }
-
-          //? Since we cannot scroll...
-          else {}
-        },
-      );
-
       //? When fetching this is fine.
       WidgetsBinding.instance.addPostFrameCallback(
         (_) async {
           await _getPage(widget.nextPage);
+
+          //? Add this listener to this one.
+          _scrollController.addListener(
+            () {
+              final target = _scrollController.position.maxScrollExtent - widget.scrollNotice;
+              final current = _scrollController.offset;
+
+              //? Stop if this is at the end.
+              if (widget.isAtEnd || !widget.shouldFetch || widget.handler.hasScrolled) return;
+
+              //? If we should scroll.
+              if (current >= target) {
+                debugPrint("paginated-list-builder> Fetching because (T: $target, X: $current)");
+                _getPage(widget.nextPage);
+              }
+            },
+          );
         },
       );
     }
@@ -137,21 +147,32 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
   }
 
   Future<void> _getPage(int page) async {
+    /// Skip this.
     try {
       //? We are currently loading this up.
+      widget.handler.hasScrolled = true;
       _loadingController.value = true;
 
       //? Get the items on the current page.
-      final result = await widget.getPage(page);
+      debounce(
+        () => widget.getPage(page),
+        key: "paginated-list-builder-${widget.handler.hashCode}",
+        onFinish: (result) {
+          //? This has not scrolled anymore.
+          widget.handler.hasScrolled = false;
 
-      //? If there is an on-fetch callback we CAN call...
-      if (result.isNotEmpty && widget.onFetch != null) {
-        widget.onFetch!.call(page, result);
-      }
+          //? If there is an on-fetch callback we CAN call...
+          if (result.isNotEmpty && widget.onFetch != null) {
+            widget.onFetch!.call(page, result);
+          }
 
-      //? Now, notify the listeners of a change in state.
-      _itemsNotifier.value = _itemsNotifier.value + 1;
-      _loadingController.value = false;
+          //? Now, notify the listeners of a change in state.
+          try {
+            _itemsNotifier.value = _itemsNotifier.value + 1;
+          } catch (_) {}
+          _loadingController.value = false;
+        },
+      )();
     } catch (_) {}
   }
 
@@ -177,6 +198,11 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
           child: ValueListenableBuilder(
             valueListenable: _itemsNotifier,
             builder: (context, redraws, _) {
+              //? If this is empty and can show something in such a case...
+              if (widget.isEmpty && widget.whenEmpty != null) {
+                return widget.whenEmpty!;
+              }
+
               //? Now, build and return the widgets.
               return Flex(
                 crossAxisAlignment: CrossAxisAlignment.stretch,

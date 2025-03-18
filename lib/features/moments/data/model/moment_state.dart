@@ -2,10 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
-import 'package:wayagram/features/moments/data/model/folllowed_user_moments_model.dart';
 
 enum StatusType { text, media }
-
 enum MediaType { image, video }
 
 class MomentState {
@@ -23,53 +21,52 @@ class MomentState {
   final bool isCreatingMoment;
   final bool isLoadingUserMoment;
   final List<MomentData> myMoments;
-  final List<UserMoments> moments;
   final bool isReportingMoment;
   final String userId;
   final bool isEditingMode;
   final String momentId;
 
-  MomentState(
-      {required this.backgroundColor,
-      required this.textStyle,
-      this.text = '',
-      this.selectedFile,
-      this.type = StatusType.text,
-      this.mediaType,
-      this.caption = '',
-      this.isCreatingMoment = false,
-      this.isImagePickerOpen = false,
-      this.showCaption = false,
-      this.isLoadingUserMoment = false,
-      this.myMoments = const [],
-      this.userId = '',
-      this.moments = const [],
-      this.isEditingMode = false,
-      this.isReportingMoment = false,
-      this.mediaUrl = '',
-      this.momentId = '',
-      this.isLoadingUserMoments = false});
+  MomentState({
+    required this.backgroundColor,
+    required this.textStyle,
+    this.text = '',
+    this.selectedFile,
+    this.type = StatusType.text,
+    this.mediaType,
+    this.caption = '',
+    this.isCreatingMoment = false,
+    this.isImagePickerOpen = false,
+    this.showCaption = false,
+    this.isLoadingUserMoment = false,
+    this.myMoments = const [],
+    this.userId = '',
+    this.isEditingMode = false,
+    this.isReportingMoment = false,
+    this.mediaUrl = '',
+    this.momentId = '',
+    this.isLoadingUserMoments = false,
+  });
 
-  MomentState copyWith(
-      {Color? backgroundColor,
-      TextStyle? textStyle,
-      String? text,
-      StatusType? type,
-      File? selectedFile,
-      bool? showCaption,
-      bool? isImagePickerOpen,
-      MediaType? mediaType,
-      bool? isLoadingUserMoments,
-      String? caption,
-      String? userId,
-      bool? isLoadingUserMoment,
-      List<MomentData>? myMoments,
-      bool? isEditingMode,
-      String? momentId,
-      String? mediaUrl,
-      bool? isReportingMoment,
-      List<UserMoments>? moments,
-      bool? isCreatingMoment}) {
+  MomentState copyWith({
+    Color? backgroundColor,
+    TextStyle? textStyle,
+    String? text,
+    StatusType? type,
+    File? selectedFile,
+    bool? showCaption,
+    bool? isImagePickerOpen,
+    MediaType? mediaType,
+    bool? isLoadingUserMoments,
+    String? caption,
+    String? userId,
+    bool? isLoadingUserMoment,
+    List<MomentData>? myMoments,
+    bool? isEditingMode,
+    String? momentId,
+    String? mediaUrl,
+    bool? isReportingMoment,
+    bool? isCreatingMoment,
+  }) {
     return MomentState(
         backgroundColor: backgroundColor ?? this.backgroundColor,
         textStyle: textStyle ?? this.textStyle,
@@ -83,7 +80,6 @@ class MomentState {
         type: type ?? this.type,
         userId: userId ?? this.userId,
         isEditingMode: isEditingMode ?? this.isEditingMode,
-        moments: moments ?? this.moments,
         mediaUrl: mediaUrl ?? this.mediaUrl,
         momentId: momentId ?? this.momentId,
         isReportingMoment: isReportingMoment ?? this.isReportingMoment,

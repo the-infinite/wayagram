@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details.dart';
 
 class SingleShopWidget extends ConsumerWidget {
   // final Order order;
@@ -48,9 +47,9 @@ class SingleShopWidget extends ConsumerWidget {
                       children: [
                         Text(
                           "Bola Hairs Shop",
-                          style: TextStyle().wayaCopyWith(
+                          style: wayaTheme.textTheme.bodyMedium?.copyWith(
                               color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         ),
                         const Gap(8),
                         Container(
@@ -60,10 +59,10 @@ class SingleShopWidget extends ConsumerWidget {
                               borderRadius: BorderRadius.circular(6)),
                           child: Text(
                             "Active",
-                            style: TextStyle().wayaCopyWith(
+                            style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                 color: wayaTheme.colorScheme.success,
                                 fontWeight: FontWeight.w500,
-                                fontSize: 11),
+                                fontSize: 11.sp),
                           ),
                         )
                       ],
@@ -121,6 +120,7 @@ class SingleShopWidgetViewModel extends ChangeNotifier {
   }
 
   Future<void> popUpMenu(BuildContext context) async {
+    final wayaTheme  = Theme.of(context);
     await showMenu(
       context: context,
       elevation: 4,
@@ -142,9 +142,9 @@ class SingleShopWidgetViewModel extends ChangeNotifier {
               const Gap(10),
               Text(
                 "Shop Dashboard",
-                style: TextStyle().wayaCopyWith(
+                style: wayaTheme.textTheme.bodyMedium?.copyWith(
                   //color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -160,9 +160,9 @@ class SingleShopWidgetViewModel extends ChangeNotifier {
               const Gap(10),
               Text(
                 "Quotation Dashboard",
-                style: TextStyle().wayaCopyWith(
+                style: wayaTheme.textTheme.bodyMedium?.copyWith(
                   //color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                 ),
               ),

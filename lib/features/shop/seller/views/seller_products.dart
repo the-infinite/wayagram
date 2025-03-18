@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:uuid/uuid.dart';
@@ -69,7 +70,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                               arguments:
                                   AddProductArg(uniqueKey: Uuid().v4()));
                         },
-                        color: wayaTheme.colorScheme.primar50,
+                        color: wayaTheme.colorScheme.primary50,
                         centerWidget: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -85,7 +86,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                               "Add New Product",
                               style: TextStyle().wayaCopyWith(
                                   color: wayaTheme.colorScheme.customPrimary,
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                   fontWeight: FontWeight.w500),
                             )
                           ],
@@ -196,7 +197,7 @@ class SellerProductEmptyState extends StatelessWidget {
         ),
         const Gap(25),
         Text(
-          "Your shop is empty. Start adding products to \n showcase your items.",
+          "Your shop is empty. Start adding products to showcase your items.",
           textAlign: TextAlign.center,
           style: wayaTheme.textTheme.descriptionStyle,
         ),
@@ -216,7 +217,7 @@ class SellerProductEmptyState extends StatelessWidget {
                 "Add New Product",
                 style: TextStyle().wayaCopyWith(
                     color: wayaTheme.colorScheme.white,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500),
               )
             ],
@@ -268,7 +269,7 @@ class SellerShopEmptyState extends StatelessWidget {
                   "Create Shop",
                   style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.white,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500),
                 )
               ],

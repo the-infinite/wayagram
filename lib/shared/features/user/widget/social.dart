@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
@@ -64,7 +65,7 @@ class SocialUserWidget extends StatelessWidget {
                         fontWeight: FontWeight.normal,
                         overflow: TextOverflow.ellipsis,
                         color: WayaColors.greyColor500,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                       ),
                     ),
                 ],
@@ -137,7 +138,7 @@ class SocialUserSelectionWidget extends StatelessWidget {
                         fontWeight: FontWeight.normal,
                         overflow: TextOverflow.ellipsis,
                         color: WayaColors.greyColor500,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                       ),
                     ),
                 ],

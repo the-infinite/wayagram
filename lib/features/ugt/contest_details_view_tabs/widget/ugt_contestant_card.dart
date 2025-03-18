@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -13,8 +14,10 @@ import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
+import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
-
 
 class UgtContestantCard extends ConsumerWidget {
   final Contest model;
@@ -40,8 +43,9 @@ class UgtContestantCard extends ConsumerWidget {
           ),
           title: GestureDetector(
             onTap: () {
-               ref.read(selectedContestantProfile.notifier).state =
-                            contestantData;
+              ref.read(selectedContestantProfile.notifier).state =
+                  contestantData;
+              ref.read(selectedContestProvider.notifier).state = model;
               WayaNav.toNamed(
                 '/contest-profile-page',
               );
@@ -49,16 +53,24 @@ class UgtContestantCard extends ConsumerWidget {
             child: Row(
               children: [
                 ClipRRect(
-                  borderRadius:
-                      BorderRadius.circular(45), // Adjust the radius as needed
-                  child: Image.network(
+                    borderRadius: BorderRadius.circular(
+                        45), // Adjust the radius as needed
+                    child: WayaImage(
+                      imageUrl: contestantData.profilePhoto ?? "",
+                      height: 45,
+                      width: 45,
+                      fit: BoxFit.cover,
+                      radius: BorderRadius.circular(45),
+                    )
+
+                    /*   Image.network(
                     contestantData.profilePhoto ?? "",
                     height: 45,
                     width: 45,
                     fit: BoxFit
                         .cover, // Ensures the image covers the area properly
-                  ),
-                ),
+                  ), */
+                    ),
                 Gap(10),
                 Text(
                   contestantData.contestApplicant?.fullName ?? "Name",
@@ -71,18 +83,46 @@ class UgtContestantCard extends ConsumerWidget {
           trailing: SizedBox(
             width: 100,
             child: WayaButton(
-              fontSize: 14,
+              fontSize: 14.sp,
               color: WayaColors.primary50,
               textColor: WayaColors.primary500,
               callback: () {
-                //VoteSuccessModal
-                //ConfirmVoteOptionModal
-                //VoteOptionModal
-                //PollsModal
+                if (isPresentIsPast(model.endDate ?? "")) {
+                  WayaSnackBar.showToast("Contest has ended");
+                  return;
+                }
+
+                if (model.entryType?.toLowerCase() == "free") {
+                  WayaUtils.showModalSheet(
+                    context,
+                    child: ConfirmVoteOptionModal(
+                      amount: "1",
+                      voteFee: "0",
+                      isFree: true,
+                      model: ContestVoteModel(
+                          contestId: contestantData.contestId ?? "",
+                          contestantId: contestantData.id ?? "",
+                          hostUserId: contestantData.profileId ?? "",
+                          amount: "0",
+                          numberOfVotes: "0",
+                          profileId: "",
+                          type: model.entryType?.toLowerCase()),
+                      candidateName:
+                          contestantData.contestApplicant?.fullName ?? "Name",
+                      votingLink: "votingLink",
+                    ),
+                  );
+
+                  return;
+                }
+
+               
                 WayaUtils.showModalSheet(
                   context,
                   child: VoteOptionModal(
                     voteFee: model.amountPerVote?.toString() ?? "0",
+                    isFree:
+                        model.entryType?.toLowerCase() == "free" ? true : false,
                     //   amountPaid: "89",
                     model: ContestVoteModel(
                         contestId: contestantData.contestId ?? "",
@@ -91,7 +131,7 @@ class UgtContestantCard extends ConsumerWidget {
                         amount: "0",
                         numberOfVotes: "0",
                         profileId: "",
-                        type: model.type ?? ""),
+                        type: model.entryType?.toLowerCase()),
 
                     candidateName:
                         contestantData.contestApplicant?.fullName ?? "Name",

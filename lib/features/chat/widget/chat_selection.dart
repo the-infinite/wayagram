@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/model/default.dart';
@@ -82,7 +83,7 @@ class SelectConversationWidget extends StatelessWidget {
                           fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
                           overflow: TextOverflow.ellipsis,
                           color: unread < 1 ? WayaColors.greyColor400 : WayaColors.greyColor500,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                         ),
                       ),
                   ],

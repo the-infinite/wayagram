@@ -1,6 +1,9 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -8,6 +11,9 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
+import 'package:wayagram/features/quotation/seller/views/bids/see_seller_bids.dart';
+import 'package:wayagram/shared/features/quotation/modal/choose_shop.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 
@@ -30,11 +36,15 @@ class QuotationBuyRequestWidget extends StatefulWidget {
 
 class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
   final timeNotifier = ValueNotifier(Duration.zero);
-  late final Timer timer;
+  final loadingController = ValueNotifier(false);
+  Timer? timer;
+  late final isClosed = [BuyRequestStatus.cancelled, BuyRequestStatus.closed].contains(widget.data.status);
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (isClosed) return;
+
       //? If the status is not started, then we need to calculate the time left
       //? until the bid starts.
       if (widget.data.status == BuyRequestStatus.notStarted) {
@@ -53,9 +63,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
 
         //? Update this guy in the list.
         if (eval.isNegative) {
-          await widget.notifier.getBuyRequest(widget.data.id).then((_) {
-            timer.cancel();
-          });
+          await widget.notifier.getBuyRequest(widget.data.id);
           return;
         }
 
@@ -69,13 +77,44 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
   @override
   void dispose() {
     timeNotifier.dispose();
-    timer.cancel();
+    timer?.cancel();
     super.dispose();
   }
 
-  Future<void> _placeBid() async {}
+  Future<void> _placeBid() async {
+    final amount = await WayaUtils.showModalSheet<double>(
+      context,
+      child: EditOfferModal(
+        delta: widget.data.bidStartingAmount >= 3000000
+            ? 25000
+            : widget.data.bidStartingAmount >= 200000
+                ? 5000
+                : 1000,
+      ),
+    );
 
-  Future<void> _viewBids() async {}
+    //! If this was dismissed before an amount was even calculated...
+    if (amount == null) return;
+
+    //? Which shop is the user sending the bid as?
+    final shopId = await WayaUtils.showModalSheet(context, child: ChooseShopModal());
+
+    //! If the shop was not selected.
+    if (shopId == null) return;
+
+    //? Now, send the bid.
+    final result = await widget.notifier.sendBid(widget.data.id, amount, shopId);
+
+    //! Since bidding failed, you can leave.
+    if (result == null) return;
+
+    //* Okay, since bidding was fine, we throw a pizza party.
+    WayaNav.toNamed(SeeSellerBids.route);
+  }
+
+  Future<void> _viewBids() async {
+    WayaNav.toNamed(WayaAppRoutes.getBuyerBidsRoute(widget.data.id));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,35 +139,46 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Container(
-                padding: EdgeInsets.all(10),
-                width: 110,
+                padding: EdgeInsets.only(left: 10, top: 10, right: 16, bottom: 10),
                 decoration: BoxDecoration(
-                  color: widget.data.status == BuyRequestStatus.notStarted
-                      ? wayaTheme.colorScheme.pending.withAlpha(30)
-                      : wayaTheme.colorScheme.success50,
+                  color: switch (widget.data.status) {
+                    BuyRequestStatus.notStarted => wayaTheme.colorScheme.pending.withAlpha(30),
+                    BuyRequestStatus.active => wayaTheme.colorScheme.success50,
+                    _ => wayaTheme.colorScheme.error.withAlpha(30),
+                  },
                   borderRadius: BorderRadius.circular(40),
                 ),
                 child: Row(
                   spacing: 5,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     //? The icons.
                     WayaAssets.icons.bBid.svg(
                       colorFilter: ColorFilter.mode(
-                        widget.data.status == BuyRequestStatus.notStarted
-                            ? wayaTheme.colorScheme.pending
-                            : wayaTheme.colorScheme.success,
+                        switch (widget.data.status) {
+                          BuyRequestStatus.notStarted => wayaTheme.colorScheme.pending,
+                          BuyRequestStatus.active => wayaTheme.colorScheme.success,
+                          _ => wayaTheme.colorScheme.error,
+                        },
                         BlendMode.srcIn,
                       ),
                     ),
 
                     //? The status description text.
                     Text(
-                      widget.data.status == BuyRequestStatus.notStarted ? "Not Started" : "Open Bid",
+                      switch (widget.data.status) {
+                        BuyRequestStatus.notStarted => "Not Started",
+                        BuyRequestStatus.active => "Open Bid",
+                        BuyRequestStatus.cancelled => "Cancelled",
+                        BuyRequestStatus.closed => "Closed",
+                      },
                       style: wayaTheme.textTheme.descriptionStyle.copyWith(
-                        color: widget.data.status == BuyRequestStatus.notStarted
-                            ? wayaTheme.colorScheme.pending
-                            : wayaTheme.colorScheme.success,
-                        fontSize: 14,
+                        color: switch (widget.data.status) {
+                          BuyRequestStatus.notStarted => wayaTheme.colorScheme.pending,
+                          BuyRequestStatus.active => wayaTheme.colorScheme.success,
+                          _ => wayaTheme.colorScheme.error,
+                        },
+                        fontSize: 14.sp,
                       ),
                     )
                   ],
@@ -177,16 +227,21 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
                     text: TextSpan(
                       children: [
                         TextSpan(
-                          text: widget.data.status == BuyRequestStatus.notStarted
-                              ? 'Bidding Starts in '
-                              : 'Bidding Ends in ',
+                          text: switch (widget.data.status) {
+                            BuyRequestStatus.notStarted => 'Bidding Starts in ',
+                            BuyRequestStatus.active => 'Bidding Ends in ',
+                            BuyRequestStatus.cancelled => 'Bidding Cancelled ',
+                            BuyRequestStatus.closed => 'Bidding Closed ',
+                          },
                           style: wayaTheme.textTheme.hintStyle,
                         ),
                         TextSpan(
-                          text: WayaDateHelper.convertDurationToCountdown(timeNotifier.value),
+                          text: isClosed
+                              ? WayaDateHelper.getSocialDate(widget.data.updatedAt)
+                              : WayaDateHelper.convertDurationToCountdown(timeNotifier.value),
                           style: wayaTheme.textTheme.descriptionStyle.copyWith(
                             color: wayaTheme.colorScheme.customPrimary,
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -211,7 +266,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
                       text: '₦ ${widget.data.bidStartingAmount}',
                       style: wayaTheme.textTheme.bodyBold.copyWith(
                         color: wayaTheme.colorScheme.black,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -223,11 +278,12 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
               const Gap(20),
 
               //? The button that we use to place a bid.
-              WayaButton(
+              WayaProgressiveButton(
                 callback: widget.data.buyerId == ConversationState.self.id ? _viewBids : _placeBid,
                 text: widget.data.buyerId == ConversationState.self.id ? 'View Bids' : 'Place Bid',
                 height: 48,
                 isDisabled: widget.data.status != BuyRequestStatus.active,
+                notifier: loadingController,
               ),
             ],
           ),

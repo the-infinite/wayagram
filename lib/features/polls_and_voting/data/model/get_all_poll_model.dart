@@ -96,8 +96,8 @@ class GetAllPollData {
     feePerVote = json['feePerVote'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
+    // createdAt = json['created_at'];
+    // updatedAt = json['updated_at'];
     if (json['choices'] != null) {
       choices = [];
       json['choices'].forEach((v) {
@@ -166,8 +166,8 @@ class GetAllPollData {
     map['feePerVote'] = feePerVote;
     map['createdAt'] = createdAt;
     map['updatedAt'] = updatedAt;
-    map['created_at'] = createdAt;
-    map['updated_at'] = updatedAt;
+    // map['created_at'] = createdAt;
+    // map['updated_at'] = updatedAt;
     if (choices != null) {
       map['choices'] = choices?.map((v) => v.toJson()).toList();
     }
@@ -432,8 +432,6 @@ class Choices {
     order = json['order'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
   }
   String? id;
   String? pollId;
@@ -470,8 +468,6 @@ Choices copyWith({  String? id,
     map['order'] = order;
     map['createdAt'] = createdAt;
     map['updatedAt'] = updatedAt;
-    map['created_at'] = createdAt;
-    map['updated_at'] = updatedAt;
     return map;
   }
 

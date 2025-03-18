@@ -9,27 +9,26 @@ import 'package:intl/intl.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disqualify.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_contestants.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_gallery.dart.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_leaderboard.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/for_you_contest.dart';
-import 'package:wayagram/features/ugt/my_contest_details/my_contest_details.dart';
+import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_post_all.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
-import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/admin_card.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 
 import '../../../core/components/waya_scaffold.dart';
-import '../widgets/about_ugt_widget.dart';
-import '../widgets/status_ongoing.dart';
 
 class AdminContestDetails extends StatefulHookConsumerWidget {
   static const route = '/upcoming-manage-contest-details';
@@ -45,11 +44,20 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     useEffect(() {
-      ref.read(votersContestNotifier.notifier).getContestantProfileVoteDetails(
-          ref.read(selectedContestProvider.notifier).state.id ?? "");
+      String contestId =
+          ref.read(selectedContestProvider.notifier).state?.id ?? "";
+      ref
+          .read(votersContestNotifier.notifier)
+          .getContestantProfileVoteDetails(contestId);
+
+      ref.read(votersContestNotifier.notifier).fetchAllContestPosts(contestId);
+      ref
+          .read(votersContestNotifier.notifier)
+          .fetchAllContestApplicant(contestId);
       return null;
     }, []);
     var viewModel = ref.watch(votersContestNotifier);
+    var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
     var model = ref.watch(selectedContestProvider.notifier).state;
     final selectedViewIndex = useState(0);
     return WayaScaffold(
@@ -59,17 +67,17 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
       appBarTrailing: Row(
         children: [
           //  Image.asset("assets/images/vector.png"),
-          PopupMenuButton(
+          /*    PopupMenuButton(
             onSelected: (value) {},
             position: PopupMenuPosition.under,
-            itemBuilder: (context) {
+            itemBuilder: (context1) {
               return [
                 PopupMenuItem<int>(
                   value: 0,
                   child: _buildActionNav(
                       context: context,
                       onTap: () {
-                        Navigator.pop(context);
+                        WayaNav.goBack();
                         WayaNav.toNamed('/contest-mydashboard-profile-page');
                       },
                       asset: SvgPicture.asset('assets/images/pages/flag.svg'),
@@ -88,7 +96,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                             duration: Duration(seconds: 2),
                           ),
                         );
-                        Navigator.pop(context);
+                        WayaNav.goBack();
                         WayaNav.toNamed('/pages');
                       },
                       asset: SvgPicture.asset(
@@ -103,21 +111,15 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
             },
             child: Image.asset("assets/images/vector.png"),
           ),
-
+ */
           const Gap(20),
           ClipRRect(
             borderRadius: BorderRadius.circular(45),
-            child: Image.network(
-              model.uploadCoverImages ?? "",
+            child: WayaImage(
+              imageUrl: model?.uploadCoverImages ?? "",
               height: 45,
               width: 45,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  height: 45,
-                  width: 45,
-                  color: wayaTheme.colorScheme.greyColor400,
-                );
-              },
+
               fit: BoxFit.cover, // Ensures the image covers the area properly
             ),
           ),
@@ -125,7 +127,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(0),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,8 +148,8 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         "You have 5 images and 1 video uploads left today",
                         style: TextStyle(
                             color: getColor(
-                                true, model.status?.toLowerCase() ?? ""),
-                            fontSize: 12),
+                                true, model?.status?.toLowerCase() ?? ""),
+                            fontSize: 12.sp),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -158,7 +160,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(model.title ?? "Title",
+                  Text(model?.title ?? "Title",
                       style: wayaTheme.textTheme.titleLarge),
                   Container(
                     decoration: BoxDecoration(
@@ -176,7 +178,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                           child: Text(
                             "Live",
                             style: TextStyle(
-                                color: Color(0xff036B26), fontSize: 12),
+                                color: Color(0xff036B26), fontSize: 12.sp),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -189,15 +191,16 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
               ClipRRect(
                 borderRadius:
                     BorderRadius.circular(16), // Adjust the radius as needed
-                child: model.uploadCoverImages == null
+                child: model?.uploadCoverImages == null
                     ? Image.asset(
                         'assets/images/frameuni.png',
                         height: 200,
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
                       )
-                    : Image.network(
-                        model.uploadCoverImages ?? "",
+                    : WayaImage(
+                        imageUrl: model?.uploadCoverImages ?? "",
+                        width: context.width,
                         height: 200,
                         fit: BoxFit
                             .cover, // Ensures the image covers the area properly
@@ -207,119 +210,144 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
               Text("Contest Description",
                   style: wayaTheme.textTheme.bodyMedium),
               const Gap(5),
-              Text(model.description ?? "Description",
-                  style: wayaTheme.textTheme.hintStyle),
+              Text(model?.description ?? "Description",
+                  style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                      color: WayaColors.greyColor500,
+                      fontWeight: FontWeight.w400)),
               const Gap(20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UpcomingWidget(
+                  UpcomingWidgetAdmin(
                       title: "Start Date",
-                      content: formatDate(model.startDate ?? "")),
+                      content: formatDate(model?.startDate ?? "")),
                   const Gap(20),
-                  UpcomingWidget(
+                  UpcomingWidgetAdmin(
                       title: "End Date",
-                      content: formatDate(model.endDate ?? "")),
+                      content: formatDate(model?.endDate ?? "")),
                   const Gap(20),
-                  UpcomingWidget(
-                      title: "Entry Type", content: model.entryType ?? ""),
+                  UpcomingWidgetAdmin(
+                      title: "Entry Type", content: model?.entryType ?? ""),
                   const Gap(20),
-                  UpcomingWidget(
-                      title: "Duration", content: model.durationType ?? ""),
+                  UpcomingWidgetAdmin(
+                      title: "Duration",
+                      content: getRealDateDiffBtwDate(
+                          model?.startDate ?? "", model?.endDate ?? "")),
                 ],
               ),
               const Gap(10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  UpcomingWidget(
+                  UpcomingWidgetAdmin(
                       title: "Total Stages",
-                      content: model.multipleStages ?? ""),
+                      content: model?.multipleStages ?? ""),
                   const Gap(20),
-                  UpcomingWidget(
-                      title: "Category", content: model.categoryName ?? ""),
+                  UpcomingWidgetAdmin(
+                      title: "Category", content: model?.categoryName ?? ""),
                   const Gap(20),
-                  UpcomingWidget(
-                      title: "Prize", content: model.winnerPrize ?? ""),
+                  UpcomingWidgetAdmin(
+                      title: "Prize",
+                      content:
+                          "₦${formatMoney(model?.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
                   const Gap(20),
-                  UpcomingWidget(title: "Host", content: "Host"),
+                  UpcomingWidgetAdmin(title: "Host", content: "Host"),
                 ],
               ),
               const Gap(20),
-              Text("View Full Details",
+              if (viewModelNotifier.getLoggedInUserId() == model?.profileId)
+                WayaButton(
+                  callback: () {
+                    WayaNav.toNamed('/contest-mydashboard-profile-page');
+                  },
+                  color: wayaTheme.colorScheme.primary50,
+                  text: "View Contest Dashboard",
+                  textColor: wayaTheme.colorScheme.customPrimary,
+                ),
+              /*  Text("View Full Details",
                   style: wayaTheme.textTheme.bodyMedium
                       ?.wayaCopyWith(color: wayaTheme.colorScheme.primary500)),
+              const Gap(15), */
               const Gap(15),
-              Text("Top Contestants", style: wayaTheme.textTheme.bodyMedium),
+              Text("Top Contestants",
+                  style: wayaTheme.textTheme.bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.bold)),
               const Gap(15),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  if (viewModel.myContestList!.length >= 2)
+                  if (viewModel.myContestList.length >= 2)
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
-                              viewModel.myContestList?[1];
+                              viewModel.myContestList[1];
+                          viewModelNotifier.updateContestId(model?.id);
+                          ref.read(selectedContestProvider.notifier).state =
+                              model;
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
                         },
                         child: AdminCard(
-                          imageUrl: viewModel.myContestList?[1].profilePhoto ??
+                          imageUrl: viewModel.myContestList[1].profilePhoto ??
                               "", // Change to your image path
                           rank: "2",
-                          name: viewModel.myContestList?[1].contestApplicant
+                          name: viewModel.myContestList[1].contestApplicant
                                   ?.fullName ??
                               "",
-                          votes: "${viewModel.myContestList?[1].votes} Votes",
+                          votes: "${viewModel.myContestList[1].votes} Votes",
                         ),
                       ),
                     ),
-                  if (viewModel.myContestList!.isNotEmpty)
+                  if (viewModel.myContestList.isNotEmpty)
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
-                              viewModel.myContestList?[0];
+                              viewModel.myContestList[0];
+                          ref.read(selectedContestProvider.notifier).state =
+                              model;
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
                         },
                         child: AdminCard(
-                          imageUrl: viewModel.myContestList?[0].profilePhoto ??
+                          imageUrl: viewModel.myContestList[0].profilePhoto ??
                               "", // Change to your image path
                           rank: "1",
                           isCenter: true,
                           radius: 40,
-                          name: viewModel.myContestList?[0].contestApplicant
+                          name: viewModel.myContestList[0].contestApplicant
                                   ?.fullName ??
                               "",
-                          votes: "${viewModel.myContestList?[0].votes} Votes",
+                          votes: "${viewModel.myContestList[0].votes} Votes",
                         ),
                       ),
                     ),
-                  if (viewModel.myContestList!.length >= 3)
+                  if (viewModel.myContestList.length >= 3)
                     Expanded(
                       child: GestureDetector(
                         onTap: () {
                           ref.read(selectedContestantProfile.notifier).state =
-                              viewModel.myContestList?[2];
+                              viewModel.myContestList[2];
+                          ref.read(selectedContestProvider.notifier).state =
+                              model;
                           WayaNav.toNamed(
                             '/contest-profile-page',
                           );
                         },
                         child: AdminCard(
                           imageUrl:
-                              viewModel.myContestList?[2].profilePhoto ?? "",
+                              viewModel.myContestList[2].profilePhoto ?? "",
                           rank: "3",
-                          name: viewModel.myContestList?[2].contestApplicant
+                          name: viewModel.myContestList[2].contestApplicant
                                   ?.fullName ??
                               "",
-                          votes: "${viewModel.myContestList?[2].votes} Votes",
+                          votes: "${viewModel.myContestList[2].votes} Votes",
                         ),
                       ),
                     ),
@@ -346,19 +374,19 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                     text: 'Contestants',
                     onTap: () => selectedViewIndex.value = 2,
                   ),
-                  WayaTabButton(
+                  /*  WayaTabButton(
                     isSelected: selectedViewIndex.value == 3,
                     isLongerTab: true,
                     text: 'Gallery',
                     onTap: () => selectedViewIndex.value = 3,
-                  ),
+                  ), */
                 ],
               ),
               const Gap(10),
-              if (selectedViewIndex.value == 0) UgtDetailsPost(),
-              if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(model),
-              if (selectedViewIndex.value == 2) UgtDetailsContestants(model),
-              if (selectedViewIndex.value == 3) UgtDetailsGallery(model),
+              if (selectedViewIndex.value == 0) UgtPostAllContestant(model!),
+              if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(model!),
+              if (selectedViewIndex.value == 2) UgtDetailsContestants(model!),
+              //  if (selectedViewIndex.value == 3) UgtDetailsGallery(model),
             ],
           ),
         ),
@@ -369,6 +397,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
               width: 50,
               child: WayaButton(
                 callback: () {
+                  viewModelNotifier.updateContestId(model?.id);
                   WayaNav.toNamed('/create-contest-post');
                 },
                 height: 50,
@@ -404,7 +433,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           Text(
             text,
             style: TextStyle().wayaCopyWith(
-                color: color, fontWeight: FontWeight.w500, fontSize: 12),
+                color: color, fontWeight: FontWeight.w500, fontSize: 12.sp),
           )
         ],
       ),
@@ -421,7 +450,70 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
   }
 }
 
-String formatMoney(String value) {
-  final oCcy = NumberFormat("#,##0.00", "en_US");
-  return oCcy.format(double.parse(value));
+class UpcomingWidgetAdmin extends StatelessWidget {
+  final String title;
+  final String content;
+  final bool status;
+  final bool isFromDetailsPage;
+  const UpcomingWidgetAdmin({
+    super.key,
+    required this.title,
+    required this.content,
+    this.status = false,
+    this.isFromDetailsPage = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: context.width * 0.18,
+          child: Text(title,
+              style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                  color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
+        ),
+        const Gap(5),
+        if (!status)
+          SizedBox(
+            width: context.width * 0.18,
+            child: Text(content,
+                // overflow: TextOverflow.ellipsis,
+                style: WayaTextStyles.bodySmall),
+          ),
+        if (status)
+          Container(
+            decoration: BoxDecoration(
+              color: getColor(false, content.toLowerCase()), // Background color
+              borderRadius: BorderRadius.circular(20), // Rounded corners
+            ),
+            child: Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                child: Text(
+                  content,
+                  style: WayaTextStyles.bodySmall.copyWith(
+                    color: getColor(true, content.toLowerCase()),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+
+  Color getColor(bool isText, String text) {
+    if (text == "pending") {
+      return isText ? Color(0xff865503) : Color(0xffFEF6E7);
+    } else if (text == "rejected") {
+      return isText ? Color(0xff9E0A05) : Color(0xffFBEAE9);
+    } else {
+      return isText ? Color(0xff036B26) : Color(0xffE7F6EC);
+    }
+  }
 }

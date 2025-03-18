@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 
 class SuccessfulSetup extends ConsumerWidget {
@@ -41,8 +42,9 @@ class SuccessfulSetup extends ConsumerWidget {
             ),
           ),
           WayaButton(
-            callback: () {
-              ref.read(successfulSetupVmProvider.notifier).getUserData();
+            callback: () async {
+              await ref.read(successfulSetupVmProvider.notifier).getUserData();
+              WayaNav.toNamed('/explore');
             },
             text: "Explore Wayagram",
           ),

@@ -1,5 +1,6 @@
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -120,7 +121,7 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
                           waveColor: WayaColors.primary,
                           durationStyle: WayaTextStyles.bodySmall.copyWith(
                             color: WayaColors.black,
-                            fontSize: 14,
+                            fontSize: 14.sp,
                           ),
                         ),
                       ),

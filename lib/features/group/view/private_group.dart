@@ -62,7 +62,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                   child: _buildActionNav(
                     context: context,
                     onTap: () {
-                      Navigator.pop(context);
+                      WayaNav.goBack();
                       WayaNav.toNamed('/groupSetting');
                     },
                     asset: SvgPicture.asset('assets/images/pages/setting.svg'),
@@ -87,7 +87,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                   child: _buildActionNav(
                     context: context,
                     onTap: () {
-                      Navigator.pop(context);
+                      WayaNav.goBack();
                     },
                     asset: SvgPicture.asset('assets/images/pages/flag.svg'),
                     text: "Repost",
@@ -100,13 +100,13 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                     context: context,
                     onTap: () {
                       viewGroupModel.deleteGroup(
-                          context, '', ConversationState.self.id);
-                      Navigator.pop(context);
+                          context, '${args['groupId']}');
+                      WayaNav.toNamed('/groups');
                     },
                     asset: SvgPicture.asset(
                       'assets/images/pages/delete.svg',
                       color: wayaTheme.colorScheme.error500,
-                      height: 2,
+                      height: 16,
                     ),
                     text: "Delete Group",
                     color: wayaTheme.colorScheme.error500,
@@ -207,7 +207,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                   '${args['desc']}',
                   //'${viewModel.desc?.capitalizeFirst}',
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w400,
                       color: Theme.of(context).colorScheme.greyColor500 ),
                 ),
@@ -301,7 +301,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
           Text(
             txt2,
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500,
                 ),
@@ -332,7 +332,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
             style: TextStyle().wayaCopyWith(
               color: color,
               fontWeight: FontWeight.w500,
-              fontSize: 12,
+              fontSize: 12.sp,
             ),
           )
         ],

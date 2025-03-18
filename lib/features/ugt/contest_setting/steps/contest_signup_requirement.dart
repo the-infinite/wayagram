@@ -1,39 +1,32 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/Add_new_requirement_modal.dart';
 import 'package:wayagram/features/ugt/data/controller/contest_controller.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
-import '../../../../core/components/waya_buttons.dart';
-import '../../../../core/components/waya_text_form_field.dart';
-import '../../../../core/utils/waya_utils.dart';
 import '../../../auth/account_creation/view/loading_state.dart';
-import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
-import '../../create_contest/steps/create_ultimate.dart';
 
 class ContestSignupRequirement extends StatefulHookConsumerWidget {
   final VoidCallback goToNextTab;
   const ContestSignupRequirement({super.key, required this.goToNextTab});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ContestSignupRequirementState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ContestSignupRequirementState();
 }
 
 bool isSwitched = true;
 
-class _ContestSignupRequirementState
-    extends ConsumerState<ContestSignupRequirement> {
+class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirement> {
   List<dynamic> stages = [];
   final _contestController = Get.put(ContestController());
 
@@ -45,9 +38,7 @@ class _ContestSignupRequirementState
 
   void _removeStage(int index) {
     ref.read(stateRequirementProvider.notifier).state.removeAt(index);
-    ref.read(stateRequirementProvider.notifier).state = [
-      ...ref.read(stateRequirementProvider.notifier).state
-    ];
+    ref.read(stateRequirementProvider.notifier).state = [...ref.read(stateRequirementProvider.notifier).state];
     /*  setState(() {
       _contestController.removeContestSignUpRequirement(index);
       stages.removeAt(index);
@@ -58,16 +49,43 @@ class _ContestSignupRequirementState
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(personalFirstStepProvider);
     final viewModel1 = ref.watch(stateRequirementProvider);
     final wayaTheme = Theme.of(context);
     final isLoading = useState(false);
+    var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
+
+    var isEditing = ref.watch(stateIsEditingContestProvider);
+    useEffect(() {
+      if (isEditing) {
+        int index = 0;
+        Future.delayed(Duration(seconds: 1), () {
+          ref.read(stateRequirementProvider.notifier).state = [
+            ...contestViewModel?.contestSettings?.formRequirements?.map((e) {
+                  return NewRequirementModel(
+                    requirementName: e.requirementName,
+                    requirementType: e.requirementType,
+                    isRequired: e.required,
+                    id: index++,
+                  );
+                }).toList() ??
+                [],
+            /*   NewRequirementModel(
+                    requirementType: "Select Type",
+                    id: ref
+                        .read(stateRequirementProvider.notifier)
+                        .state
+                        .length,
+                  ) */
+          ];
+        });
+      }
+      return null;
+    }, []);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Contest sign up requirement",
-            style: wayaTheme.textTheme.titleLarge),
+        Text("Contest sign up requirement", style: wayaTheme.textTheme.titleLarge),
         const Gap(5),
         Text(
             "configure what are the requirements of the applicants during application and decide if each requirement is mandatory or optional",
@@ -83,22 +101,22 @@ class _ContestSignupRequirementState
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Switch(
+            /*   Switch(
                 value: isSwitched,
                 onChanged: (value) {},
                 activeColor: Colors.white,
-                activeTrackColor: wayaTheme.colorScheme.customPrimary),
+                activeTrackColor: wayaTheme.colorScheme.customPrimary), */
             const SizedBox(width: 10),
             Text(
               "Mark as Required",
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 12.sp,
                 color: isSwitched ? Colors.black : Colors.grey,
               ),
             ),
           ],
         ),
-        const Gap(15),
+        Gap(20),
         _mygrayInput("Email Address"),
 
         /*   WayaTextFormField(
@@ -110,22 +128,22 @@ class _ContestSignupRequirementState
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Switch(
+            /*  Switch(
                 value: isSwitched,
                 onChanged: (value) {},
                 activeColor: Colors.white,
-                activeTrackColor: wayaTheme.colorScheme.customPrimary),
+                activeTrackColor: wayaTheme.colorScheme.customPrimary), */
             const SizedBox(width: 10),
             Text(
               "Mark as Required",
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 12.sp,
                 color: isSwitched ? Colors.black : Colors.grey,
               ),
             ),
           ],
         ),
-        const Gap(15),
+        Gap(20),
         _mygrayInput("Phone number"),
 
         /*  WayaTextFormField(
@@ -137,22 +155,22 @@ class _ContestSignupRequirementState
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Switch(
+            /*   Switch(
                 value: isSwitched,
                 onChanged: (value) {},
                 activeColor: Colors.white,
-                activeTrackColor: wayaTheme.colorScheme.customPrimary),
+                activeTrackColor: wayaTheme.colorScheme.customPrimary), */
             const SizedBox(width: 10),
             Text(
               "Mark as Required",
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 12.sp,
                 color: isSwitched ? Colors.black : Colors.grey,
               ),
             ),
           ],
         ),
-        const Gap(15),
+        Gap(20),
         _mygrayInput("Address"),
         /*   WayaTextFormField(
           controller: TextEditingController(),
@@ -163,16 +181,16 @@ class _ContestSignupRequirementState
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Switch(
+            /*  Switch(
                 value: isSwitched,
                 onChanged: (value) {},
                 activeColor: Colors.white,
-                activeTrackColor: wayaTheme.colorScheme.customPrimary),
-            const SizedBox(width: 10),
+                activeTrackColor: wayaTheme.colorScheme.customPrimary), */
+            Gap(20),
             Text(
               "Mark as Required",
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 12.sp,
                 color: isSwitched ? Colors.black : Colors.grey,
               ),
             ),
@@ -212,8 +230,7 @@ class _ContestSignupRequirementState
                       ),
                       Expanded(
                         child: Container(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                           height: 60,
                           decoration: BoxDecoration(
                             color: Colors.grey[100],
@@ -224,15 +241,10 @@ class _ContestSignupRequirementState
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                  viewModel1[index]
-                                          .requirementType!
-                                          .trim()
-                                          .isEmpty
+                                  viewModel1[index].requirementType!.trim().isEmpty
                                       ? "Select Type"
-                                      : viewModel1[index].requirementType ??
-                                          "Select Type",
-                                  style: TextStyle(
-                                      fontSize: 16, color: Colors.grey[700])),
+                                      : viewModel1[index].requirementType ?? "Select Type",
+                                  style: TextStyle(fontSize: 16.sp, color: Colors.grey[700])),
                               IconButton(
                                 icon: Image.asset(
                                   'assets/images/icon-right.png',
@@ -241,8 +253,7 @@ class _ContestSignupRequirementState
                                 ),
                                 //Icon(Icons.edit, color: Colors.grey),
                                 onPressed: () {
-                                  _contestController
-                                      .selectedIndexSignUPRequire = index;
+                                  _contestController.selectedIndexSignUPRequire = index;
                                   WayaUtils.showModalSheetUgt(
                                     context,
                                     child: AddNewRequirementModal(),
@@ -294,42 +305,29 @@ class _ContestSignupRequirementState
             ), */
             TextButton(
               onPressed: () {
-                int id =
-                    ref.read(stateRequirementProvider.notifier).state.length;
+                int id = ref.read(stateRequirementProvider.notifier).state.length;
                 ref.read(stateRequirementProvider.notifier).state = [
                   ...ref.read(stateRequirementProvider),
                   NewRequirementModel(
                     requirementType: "Select Type",
-                    id: ref
-                        .read(stateRequirementProvider.notifier)
-                        .state
-                        .length,
+                    id: ref.read(stateRequirementProvider.notifier).state.length,
                   )
                 ];
               },
-              child: Text('+ Add Another Requirement',
-                  style: TextStyle(color: Colors.red)),
+              child: Text('+ Add Another Requirement', style: TextStyle(color: Colors.red)),
             ),
             SizedBox(height: 20),
           ],
         ),
         const Gap(15),
         WayaButton(
-            centerWidget:
-                LoadingState(loading: isLoading.value, text: 'Submit'),
+            centerWidget: LoadingState(loading: isLoading.value, text: 'Submit'),
             callback: !isLoading.value
                 ? () {
-                    if (ref
-                        .read(stateRequirementProvider.notifier)
-                        .state
-                        .isNotEmpty) {
-                      for (var model in ref
-                          .read(stateRequirementProvider.notifier)
-                          .state) {
-                        if (model.requirementName!.trim().isEmpty ||
-                            model.requirementType!.trim().isEmpty) {
-                          WayaSnackBar.showToast(
-                              "Please make sure all required field are filled");
+                    if (ref.read(stateRequirementProvider.notifier).state.isNotEmpty) {
+                      for (var model in ref.read(stateRequirementProvider.notifier).state) {
+                        if (model.requirementName!.trim().isEmpty || model.requirementType!.trim().isEmpty) {
+                          WayaSnackBar.showToast("Please make sure all required field are filled");
                           return;
                         }
                       }
@@ -339,7 +337,8 @@ class _ContestSignupRequirementState
                         context,
                         isLoading,
                         ref.read(stateRequirementProvider.notifier).state,
-                        ref.read(stateContactProvider.notifier).state);
+                        ref.read(stateContactProvider.notifier).state,
+                        isEditing);
                     //   provider.submit(context, widget.isWayagramDeal);
                   }
                 : null),
@@ -359,14 +358,14 @@ class _ContestSignupRequirementState
         ),*/
         const Gap(8),
         WayaButton(
-            text: 'Go Back',
-            color: wayaTheme.colorScheme.greyColor300,
-            textColor: wayaTheme.colorScheme.customBlack,
-            border:
-                Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-            callback: () {
-              Navigator.pop(context);
-            })
+          text: 'Go Back',
+          color: wayaTheme.colorScheme.greyColor300,
+          textColor: wayaTheme.colorScheme.customBlack,
+          border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+          callback: () {
+            WayaNav.goBack();
+          },
+        )
       ],
     );
   }

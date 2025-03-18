@@ -55,17 +55,17 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
           state.isEditingMode && state.url == null) {
         return WayaSnackBar.showToast('Pls add a Logo');
       }
-      if (state.logo == null && state.image != null) {
-        final String? url =
+      state = state.copyWith(isLoading: true);
+      if (state.image != null) {
+         String? url =
             await WayaFileRepository.instance.uploadFile(state.image!);
-        state.copyWith(logo: url);
+       state =  state.copyWith(logo: url);
+
+       
       }
       state = state.copyWith(vendorId: ConversationState.self.id);
-      state = state.copyWith(isLoading: true);
-
       final response = state.isEditingMode
-          ? await _shopRepository.editShop(
-              state.createShopModel, state.vendorId)
+          ? await _shopRepository.editShop(state.createShopModel, state.shopId)
           : await _shopRepository.createShop(state.createShopModel);
 
       _logger.i(response.data);
@@ -147,6 +147,9 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
         email: TextEditingController(text: singleShop.email),
         description: TextEditingController(text: singleShop.description),
         name: TextEditingController(text: singleShop.name),
+        lga: singleShop.lga,
+        shopId: singleShop.id,
+        state: singleShop.state,
         url: singleShop.logo,
         logo: singleShop.logo,
         address: TextEditingController(text: singleShop.address));
@@ -155,6 +158,6 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
 
 final createAdditionalShopVmProvider = StateNotifierProvider.family<
     CreateAdditionalShopVm, CreateShopState, String>((ref, uniqueKey) {
-  return CreateAdditionalShopVm(ShopRepository(), AuthRepository(),
+  return CreateAdditionalShopVm(ShopRepository.instance, AuthRepository(),
       ImagePicker(), WayaSecureDataSource(), ref);
 });

@@ -114,7 +114,7 @@ print('MY ARGS $args');
           text: 'Continue',
           horizontalPadding: 12,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
         ),
@@ -264,7 +264,7 @@ print('MY ARGS $args');
                                     formState.errorText!,
                                     style: TextStyle(
                                         color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
+                                        fontSize: 12.sp),
                                   ),
                                 ),
                             ],
@@ -301,7 +301,7 @@ print('MY ARGS $args');
                                     formState.errorText!,
                                     style: TextStyle(
                                         color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
+                                        fontSize: 12.sp),
                                   ),
                                 ),
                             ],

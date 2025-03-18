@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -14,7 +15,7 @@ class BuyerCheckoutVm extends ChangeNotifier {
       context: context,
       title: 'Payment Unsuccessful',
       message: 'Payment failed. Top up your WayaGram Wallet to complete your \n purchase seamlessly',
-      onPress: () => Navigator.of(context).pop(),
+      onPress: () => WayaNav.goBack(),
       icon: Image.asset('assets/images/d-code-invalid.png'),
       buttonCenterWidget: Column(
         children: [
@@ -34,7 +35,7 @@ class BuyerCheckoutVm extends ChangeNotifier {
                 Text(
                   "Fund your Wallet",
                   style: TextStyle().wayaCopyWith(
-                      color: Theme.of(context).colorScheme.white, fontSize: 14, fontWeight: FontWeight.w500),
+                      color: Theme.of(context).colorScheme.white, fontSize: 14.sp, fontWeight: FontWeight.w500),
                 )
               ],
             ),

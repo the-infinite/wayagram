@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -8,11 +9,14 @@ import 'package:wayagram/shared/features/chat/modal/start_conversation.dart';
 
 class EmptyConversationsWidget extends StatelessWidget {
   final bool showButton;
+  final String text, title;
 
   // Construct.
   const EmptyConversationsWidget({
     super.key,
     this.showButton = false,
+    this.title = "No Conversations Yet",
+    this.text = "Start a conversation with your friends or create a group chat",
   });
 
   /// Helper function used to initiate a conversation with a new person or group.
@@ -44,10 +48,10 @@ class EmptyConversationsWidget extends StatelessWidget {
 
         //* Some text
         Text(
-          "No Conversations Yet",
+          title,
           style: WayaTextStyles.titleLarge.copyWith(
             fontWeight: FontWeight.w700,
-            fontSize: 24,
+            fontSize: 24.sp,
           ),
         ),
 
@@ -58,7 +62,7 @@ class EmptyConversationsWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 40),
           child: Text(
-            "Start a conversation with your friends or create a group chat",
+            text,
             maxLines: 3,
             textAlign: TextAlign.center,
             style: WayaTextStyles.hintStyle,

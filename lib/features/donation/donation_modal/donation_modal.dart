@@ -96,7 +96,7 @@ class _DonationModalState extends ConsumerState<DonationModal> {
         ),
       );
     }else{
-      Navigator.of(context).pop();
+      WayaNav.goBack();
       WayaUtils.showModalSheet(
         context,
         child: DonationPinEntryBottomSheet(amount: amount, campaignId: widget.campaignId, campaignTitle: widget.title,)
@@ -118,7 +118,7 @@ class _DonationModalState extends ConsumerState<DonationModal> {
             Text(
               'Donate',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -131,7 +131,7 @@ class _DonationModalState extends ConsumerState<DonationModal> {
                     text: widget.title,
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -173,7 +173,7 @@ class _DonationModalState extends ConsumerState<DonationModal> {
                   //'${ref.read(createPollVotingProvider.notifier).formatAm(amount)}',
                   amount,
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 48,
+                      fontSize: 48.sp,
                       fontWeight: FontWeight.w600,
                       color: amount == '0' ?Theme.of(context).colorScheme.greyColor400 : Theme.of(context).colorScheme.black),
                   textAlign: TextAlign.center,
@@ -209,7 +209,7 @@ class _DonationModalState extends ConsumerState<DonationModal> {
                         text: 'Minimum Donation Amount: ',
                         style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor500,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
@@ -217,7 +217,7 @@ class _DonationModalState extends ConsumerState<DonationModal> {
                         text: WayaHelpers.formatPrice(int.parse(widget.minimumDonationAmount.replaceAll('.00', ''))),
                         style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor500,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -305,7 +305,7 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
   // void _submitPin() {
   //   if (_pin.length == _pinLength) {
   //
-  //     Navigator.of(context).pop();
+  //     WayaNav.goBack();
   //
   //      WayaUtils.showModalSheet(
   //       context,
@@ -325,7 +325,7 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
       await ref.read(donationVmProvider.notifier).verifyWalletPin(_pin, context);
 
       if (isPass) {
-        Navigator.of(context).pop();
+        WayaNav.goBack();
        await ref.watch(donationVmProvider.notifier)
             .makeDonation(widget.campaignId, widget.amount, widget.campaignTitle, context);
         WayaUtils.showModalSheet(
@@ -333,13 +333,13 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
           child: DonationGenerosityModal(),
         );
       } else {
-        Navigator.of(context).pop();
+        WayaNav.goBack();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+           SnackBar(
             content: Text(
               'Invalid pin',
               style:
-              TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+              TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
             ),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
@@ -349,7 +349,7 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
     }
   }
 
-  WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
+  final WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
 
   @override
   Widget build(BuildContext context) {
@@ -364,9 +364,9 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
+           Text(
             'Enter your PIN',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 24),
           GridView.builder(
@@ -392,8 +392,8 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
               child: Center(
                 child: index < _pin.length
                     ? Text("*",
-                    style: const TextStyle(
-                      fontSize: 24,
+                    style:  TextStyle(
+                      fontSize: 24.sp,
                       fontWeight: FontWeight.bold,
                     ))
                     : null,
@@ -420,7 +420,7 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
                   );
                 } else if (index == 10) {
                   return _buildKeypadButton(
-                    child: const Text('0', style: TextStyle(fontSize: 20)),
+                    child:  Text('0', style: TextStyle(fontSize: 20.sp)),
                     onPressed: () => _addDigit('0'),
                   );
                 } else if (index == 11) {
@@ -431,7 +431,7 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
                       if (_pin.length == _pinLength) {
                        // viewModel.submitPins(context);
                    // viewModel.verifyWalletPin(_pin);
-                        //Navigator.of(context).pop();
+                        //WayaNav.goBack();
                      _submitPin();
 
 
@@ -441,7 +441,7 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
                   );
                 } else {
                   return _buildKeypadButton(
-                    child: Text('${index + 1}', style: const TextStyle(fontSize: 24)),
+                    child: Text('${index + 1}', style:  TextStyle(fontSize: 24.sp)),
                     onPressed: () => _addDigit('${index + 1}'),
                   );
                 }
@@ -495,7 +495,7 @@ class _DonationSuccessModalState extends ConsumerState<DonationSuccessModal> {
             Text(
               'Your Donation has Been Posted Successfully',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -509,7 +509,7 @@ class _DonationSuccessModalState extends ConsumerState<DonationSuccessModal> {
             SizedBox(height: 30.h),
             WayaButton(
               callback: () async {
-                Navigator.of(context).pop();
+                WayaNav.goBack();
                 WayaNav.toNamed("/donations");
                 ref.read(donationVmProvider.notifier).reset();
               },
@@ -520,7 +520,7 @@ class _DonationSuccessModalState extends ConsumerState<DonationSuccessModal> {
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                Navigator.pop(context);
+                WayaNav.goBack();
                 Share.share(widget.url);
 
               },
@@ -557,7 +557,7 @@ class _DonationUnSuccessfulModalState extends ConsumerState<DonationUnSuccessful
             Text(
               'Donation Unsuccessful',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -571,7 +571,7 @@ class _DonationUnSuccessfulModalState extends ConsumerState<DonationUnSuccessful
             SizedBox(height: 30.h),
             WayaButton(
               callback: () async {
-                Navigator.of(context).pop();
+                WayaNav.goBack();
                 WayaNav.toNamed(WalletPage.route);
                 ref.read(donationVmProvider.notifier).reset();
               },
@@ -583,7 +583,7 @@ class _DonationUnSuccessfulModalState extends ConsumerState<DonationUnSuccessful
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-               Navigator.pop(context);
+               WayaNav.goBack();
               },
               text: "Cancel",
               textColor: WayaColors.black,
@@ -619,7 +619,7 @@ class _DonationGenerosityModalState extends ConsumerState<DonationGenerosityModa
             Text(
               'Thank You for Your Generosity!',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -633,7 +633,7 @@ class _DonationGenerosityModalState extends ConsumerState<DonationGenerosityModa
             SizedBox(height: 30.h),
             WayaButton(
               callback: () async {
-                Navigator.of(context).pop();
+                WayaNav.goBack();
                 WayaNav.toNamed("/donations");
                 ref.read(donationVmProvider.notifier).reset();
               },
@@ -681,7 +681,7 @@ class _DonationAmountSetupModalState extends ConsumerState<DonationAmountSetupMo
             Text(
               'Set Your Minimum Donation Amount',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -700,7 +700,7 @@ class _DonationAmountSetupModalState extends ConsumerState<DonationAmountSetupMo
                 Text(
                   "Enter Amount",
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 16,
+                      fontSize: 16.sp,
                       fontWeight: FontWeight.w400,
                       color: Theme.of(context).colorScheme.black),
                   textAlign: TextAlign.center,
@@ -747,7 +747,7 @@ class _DonationAmountSetupModalState extends ConsumerState<DonationAmountSetupMo
                           formState.errorText!,
                           style: TextStyle(
                               color: wayaTheme.colorScheme.error,
-                              fontSize: 12),
+                              fontSize: 12.sp),
                         ),
                       ),
                   ],
@@ -760,7 +760,7 @@ class _DonationAmountSetupModalState extends ConsumerState<DonationAmountSetupMo
 
                 await ref.read(donationVmProvider.notifier).editCampaign(context,
                     viewModel.amount.text, widget.id);
-                Navigator.of(context).pop();
+                WayaNav.goBack();
                 WayaNav.toNamed("/donations");
                 ref.read(donationVmProvider.notifier).reset();
               },

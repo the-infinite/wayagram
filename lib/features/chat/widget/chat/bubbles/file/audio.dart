@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -233,7 +234,7 @@ class _AudioFileWidgetState extends State<AudioFileWidget> {
                                         WayaFileHelper.getFileSize(total),
                                         style: WayaTextStyles.bodySmall.copyWith(
                                           color: WayaColors.primary,
-                                          fontSize: 14,
+                                          fontSize: 14.sp,
                                         ),
                                       ),
                                     ),

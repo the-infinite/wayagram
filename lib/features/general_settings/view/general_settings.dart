@@ -3,13 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/modals/logout.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
+import 'package:wayagram/features/role_access/view/role_access_page.dart';
 import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
 import 'package:wayagram/features/support/views/request.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
+import '../../activity_logs/view/logs_and_audit.dart';
 import '../data/model/model.dart';
 import 'components/components.dart';
 
@@ -17,7 +20,8 @@ class GeneralSettingsPage extends ConsumerStatefulWidget {
   static const route = '/general-settings';
   const GeneralSettingsPage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _GeneralSettingsPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _GeneralSettingsPageState();
 }
 
 class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
@@ -46,10 +50,24 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(
-                  title: 'Wallet', iconPath: 'wallet', onTap: () => WayaNav.toNamed(WalletPage.route)),
-              GeneralSettingsOptionModel(title: 'Referrals & Rewards', iconPath: 'confetti'),
-              GeneralSettingsOptionModel(title: 'Roles & Access', iconPath: 'users'),
-              GeneralSettingsOptionModel(title: 'Logs & Audit Trails', iconPath: 'history'),
+
+                  title: 'Wallet',
+                  iconPath: 'wallet',
+                  onTap: () => WayaNav.toNamed(WalletPage.route)),
+              GeneralSettingsOptionModel(
+                  title: 'Referrals & Rewards', iconPath: 'confetti'),
+              GeneralSettingsOptionModel(
+                  title: 'Roles & Access',
+                  iconPath: 'users',
+                  onTap: () {
+                    //? added role access route
+                    WayaNav.toNamed(RoleAccessPage.route);
+                  }),
+
+              GeneralSettingsOptionModel(
+                  title: 'Logs & Audit Trails',
+                  iconPath: 'history',
+                  onTap: () => WayaNav.toNamed(LogsAndAuditTrials.route)),
             ],
           ),
           GeneralSettingsOptionTile(
@@ -58,7 +76,8 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Edit Profile',
                 iconPath: 'edit',
-                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
+                onTap: () => WayaNav.toNamed(
+                    WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
               ),
 
               //
@@ -80,19 +99,24 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
-              GeneralSettingsOptionModel(title: 'Privacy Settings', iconPath: 'shield_plus'),
-              GeneralSettingsOptionModel(title: 'Profile Visibility', iconPath: 'user_settings'),
+              GeneralSettingsOptionModel(
+                  title: 'Privacy Settings', iconPath: 'shield_plus'),
+              GeneralSettingsOptionModel(
+                  title: 'Profile Visibility', iconPath: 'user_settings'),
             ],
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
-              GeneralSettingsOptionModel(title: 'Wallet Security', iconPath: 'card_stacked'),
-              GeneralSettingsOptionModel(title: 'Account Security', iconPath: 'shield_star'),
+              GeneralSettingsOptionModel(
+                  title: 'Wallet Security', iconPath: 'card_stacked'),
+              GeneralSettingsOptionModel(
+                  title: 'Account Security', iconPath: 'shield_star'),
             ],
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
-              GeneralSettingsOptionModel(title: 'Chat & Call Preferences', iconPath: 'chat2'),
+              GeneralSettingsOptionModel(
+                  title: 'Chat & Call Preferences', iconPath: 'chat2'),
               GeneralSettingsOptionModel(
                 title: 'Notification Settings',
                 iconPath: 'bell',
@@ -104,7 +128,8 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
-              GeneralSettingsOptionModel(title: 'Friends & Followers', iconPath: 'users_group'),
+              GeneralSettingsOptionModel(
+                  title: 'Friends & Followers', iconPath: 'users_group'),
             ],
           ),
           GeneralSettingsOptionTile(
@@ -131,6 +156,20 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 title: 'Dispute Management',
                 iconPath: 'info',
                 onTap: () => WayaNav.toNamed(SupportDisputeScreen.route),
+              ),
+            ],
+          ),
+          GeneralSettingsOptionTile(
+            genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Log Out',
+                iconPath: 'logout',
+                onTap: () => WayaUtils.showModalSheet(
+                  context,
+                  child: LogoutDialog(
+                    ref: ref,
+                  ),
+                ),
               ),
             ],
           ),

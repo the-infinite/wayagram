@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
@@ -46,7 +47,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
         return WayaUtils.showNotice(
             context: context,
             title: 'Payment Unsuccessful',
-            onCancel: () => Navigator.pop(context),
+            onCancel: () => WayaNav.goBack(),
             message:
                 'Payment failed. Top up your WayaGram Wallet to complete your purchase seamlessly',
             onPress: () => WayaNav.toNamed(FundWalletOptionsScreen.route),
@@ -66,7 +67,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
                   "Fund your Wallet",
                   style: TextStyle().wayaCopyWith(
                       color: Theme.of(context).colorScheme.white,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500),
                 )
               ],
@@ -102,7 +103,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
         WayaUtils.showNotice(
           context: context,
           title: 'Payment Successful',
-          onCancel: () => Navigator.pop(context),
+          onCancel: () => WayaNav.goBack(),
           message:
               'Your payment has been processed successfully, you can download your reciept and track your order progress',
           onPress: () => WayaNav.toNamed(BottomView.route,
@@ -122,7 +123,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
                 "Track your delivery here",
                 style: TextStyle().wayaCopyWith(
                     color: Theme.of(context).colorScheme.white,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500),
               )
             ],

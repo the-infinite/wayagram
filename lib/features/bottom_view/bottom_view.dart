@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 // Add this import for GetX
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/chat/view/default.dart';
@@ -70,22 +72,21 @@ class _BottomViewState extends ConsumerState<BottomView> {
             ),
             title: Text(
               'Confirm Exit?',
-              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.customBlack),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .copyWith(fontSize: 16.sp, color: Theme.of(context).colorScheme.customBlack),
             ),
             content: Text(
               'Are you sure you want to exit?',
-              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: Theme.of(context).colorScheme.greyColor700),
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontSize: 14.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor700),
             ),
             actions: <Widget>[
               SizedBox(
                 width: 60,
                 child: WayaButton(
-                  callback: () => Navigator.of(context).pop(false),
+                  callback: () => WayaNav.goBack(result: false),
                   text: 'No',
                   height: 35,
                   radius: 6,
@@ -113,13 +114,12 @@ class _BottomViewState extends ConsumerState<BottomView> {
     final viewModel = ref.watch(bottomViewVmProvider);
     final successfulSetupState = ref.watch(successfulSetupVmProvider);
     final userData = successfulSetupState.user;
-    final userType = userData?.user?.role?.name;
+    final userType = userData?.user?.role;
     final dynamic data = ModalRoute.of(context)?.settings.arguments;
     final List<Widget> pages = [
       Explore(),
       WayaShop(
-        currentIndex:
-            data != null && data is Map<String, dynamic> ? data['current'] : 0,
+        currentIndex: data != null && data is Map<String, dynamic> ? data['current'] : 0,
       ),
       Donations(),
       userType == 'PERSONAL' ? WayaBuyerQuotation() : WayaSellerQuotation(),
@@ -127,14 +127,12 @@ class _BottomViewState extends ConsumerState<BottomView> {
       MoreView(),
     ];
 
-    final List<BottomNavigationBarItem> bottomNavigationItem =
-        viewModel.barItems.asMap().entries.map((entry) {
+    final List<BottomNavigationBarItem> bottomNavigationItem = viewModel.barItems.asMap().entries.map((entry) {
       final index = entry.key;
       final item = entry.value;
 
-      final itemColor = (_selectedIndex == index)
-          ? wayaTheme.colorScheme.customPrimary
-          : wayaTheme.colorScheme.customBlack;
+      final itemColor =
+          (_selectedIndex == index) ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.customBlack;
       return BottomNavigationBarItem(
           icon: SvgPicture.asset(
             item.icon,
@@ -146,7 +144,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
     // This is fine.
     return PopScope(
       canPop: false,
-      onPopInvoked: (popDisposition) async {
+      onPopInvokedWithResult: (popDisposition, result) async {
         if (_selectedIndex != 0) {
           setState(() {
             _selectedIndex = 0;
@@ -174,12 +172,12 @@ class _BottomViewState extends ConsumerState<BottomView> {
             type: BottomNavigationBarType.fixed,
             selectedLabelStyle: TextStyle().wayaCopyWith(
               color: wayaTheme.colorScheme.customPrimary,
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
             ),
             unselectedLabelStyle: TextStyle().wayaCopyWith(
               color: wayaTheme.colorScheme.customBlack,
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
             ),
             items: bottomNavigationItem,

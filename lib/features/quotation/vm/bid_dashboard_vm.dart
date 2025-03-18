@@ -5,17 +5,13 @@ import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import '../seller/data/model/bid_dashboard_state.dart';
 
 class BidDashboardVm extends StateNotifier<BidDashboardState> {
-  final ShopRepository _shopRepository;
-  final _logger = getLogger('BidDashboardVm');
+  final repo = ShopRepository.instance;
+  final logger = getLogger('BidDashboardVm');
 
-  BidDashboardVm(this._shopRepository) : super(BidDashboardState());
+  BidDashboardVm() : super(BidDashboardState());
 
   List<Map<String, dynamic>> salesMetrics = [
-    {
-      "title": "Total Settlements",
-      "metrics": "N100,000",
-      "color": Color(0xffE3EFFC)
-    },
+    {"title": "Total Settlements", "metrics": "N100,000", "color": Color(0xffE3EFFC)},
     {"title": "Won Bids", "metrics": "50", "color": Color(0xffE7F6EC)},
     {"title": "Open Bids", "metrics": "100", "color": Color(0xffFEF6E7)},
   ];
@@ -24,7 +20,6 @@ class BidDashboardVm extends StateNotifier<BidDashboardState> {
   }
 }
 
-final bidDashboardVmProvider =
-    StateNotifierProvider.autoDispose<BidDashboardVm, BidDashboardState>((ref) {
-  return BidDashboardVm(ShopRepository());
+final bidDashboardVmProvider = StateNotifierProvider.autoDispose<BidDashboardVm, BidDashboardState>((ref) {
+  return BidDashboardVm();
 });

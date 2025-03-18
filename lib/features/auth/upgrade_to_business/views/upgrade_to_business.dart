@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -26,7 +27,6 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(upgradeToBusinessVmProvider.notifier).fetchBusinessTypes();
       ref.read(upgradeToBusinessVmProvider.notifier).fetchLocation();
-      
     });
     super.initState();
   }
@@ -81,7 +81,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -119,7 +119,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -154,7 +154,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -188,7 +188,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -212,7 +212,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               .textTheme
                               .bodyMedium
                               ?.wayaCopyWith(
-                                fontSize: 14,
+                                fontSize: 14.sp,
                                 color: wayaTheme.colorScheme.greyColor900,
                               ),
                         ),
@@ -269,7 +269,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -303,7 +303,7 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -312,42 +312,6 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                   const Gap(10),
                   Row(
                     children: [
-                      Expanded(
-                        child: FormField<String>(validator: (value) {
-                          if (viewModel.city.isEmpty) {
-                            return 'City is required';
-                          }
-
-                          return null;
-                        }, builder: (formState) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              WayaSelectField<String>(
-                                  uniqueKey: 'city',
-                                  label: "City",
-                                  value: viewModel.city,
-                                  hintText: 'Select City',
-                                  items: viewModel.cities,
-                                  onSelected: (value) => ref
-                                      .read(
-                                          upgradeToBusinessVmProvider.notifier)
-                                      .selectCity(value.first)),
-                              if (formState.hasError && viewModel.city.isEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 5),
-                                  child: Text(
-                                    formState.errorText!,
-                                    style: TextStyle(
-                                        color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
-                                  ),
-                                ),
-                            ],
-                          );
-                        }),
-                      ),
-                      const Gap(10),
                       Expanded(
                           child: FormField<String>(validator: (value) {
                         if (viewModel.state.isEmpty) {
@@ -376,18 +340,55 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                                   formState.errorText!,
                                   style: TextStyle(
                                       color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
+                                      fontSize: 12.sp),
                                 ),
                               ),
                           ],
                         );
-                      }))
+                      })),
+                      const Gap(10),
+                      Expanded(
+                        child: FormField<String>(validator: (value) {
+                          if (viewModel.lga.isEmpty) {
+                            return 'LGA is required';
+                          }
+
+                          return null;
+                        }, builder: (formState) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              WayaSelectField<String>(
+                                  height: 0.2,
+                                  uniqueKey: 'lga',
+                                  label: "LGA",
+                                  hintText: 'Select LGA',
+                                  value: viewModel.lga,
+                                  items: viewModel.lgas,
+                                  onSelected: (value) => ref
+                                      .read(
+                                          upgradeToBusinessVmProvider.notifier)
+                                      .selectLGA(value.first)),
+                              if (formState.hasError && viewModel.lga.isEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 5),
+                                  child: Text(
+                                    formState.errorText!,
+                                    style: TextStyle(
+                                        color: wayaTheme.colorScheme.error,
+                                        fontSize: 12.sp),
+                                  ),
+                                ),
+                            ],
+                          );
+                        }),
+                      ),
                     ],
                   ),
                   const Gap(10),
                   FormField<String>(validator: (value) {
-                    if (viewModel.lga.isEmpty) {
-                      return 'LGA is required';
+                    if (viewModel.city.isEmpty) {
+                      return null;
                     }
 
                     return null;
@@ -396,23 +397,22 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WayaSelectField<String>(
-                            height: 0.2,
-                            uniqueKey: 'lga',
-                            label: "LGA",
-                            hintText: 'Select LGA',
-                            value: viewModel.lga,
-                            items: viewModel.lgas,
+                            uniqueKey: 'city',
+                            label: "City",
+                            value: viewModel.city,
+                            hintText: 'Select City',
+                            items: viewModel.cities,
                             onSelected: (value) => ref
                                 .read(upgradeToBusinessVmProvider.notifier)
-                                .selectLGA(value.first)),
-                        if (formState.hasError && viewModel.lga.isEmpty)
+                                .selectCity(value.first)),
+                        if (formState.hasError && viewModel.city.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],

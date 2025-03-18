@@ -6,6 +6,7 @@ import 'package:wayagram/features/quotation/buyer/model/buyer_request_model.dart
 import 'package:wayagram/features/quotation/buyer/model/create_request_state_model.dart';
 import 'package:wayagram/features/quotation/data/model/model.dart';
 import 'package:wayagram/features/quotation/data/model/quotation_model.dart';
+import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/repo/default.dart';
 
 class CreateRequestVm extends StateNotifier<CreateRequestState> {
@@ -83,9 +84,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
       final response = await showDatePicker(
-
           context: context, firstDate: DateTime(1950), lastDate: DateTime.now(), initialDate: DateTime.now());
-
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
@@ -106,7 +105,6 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
         lastDate: DateTime(moment.year + 1),
         initialDate: moment,
       );
-
 
       if (response != null) {
         final endDate = "${response.year}-${response.month}-${response.day}";
@@ -143,23 +141,25 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
     }
   }
 
-  Future<bool> createBuyerRequest(CreateBuyerRequest createBuyerRequest) async {
+  Future<BuyRequestModel?> createBuyerRequest(CreateBuyerRequest createBuyerRequest) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _quotationRepository.createBuyerRequest(createBuyerRequest);
 
       //? Since this can be fine.
-      if (response.success) {}
+      if (response.success) {
+        return BuyRequestModel.fromJson(response.data['data']);
+      }
 
       //? Return this one as is.
-      return response.success;
+      return null;
     } catch (e) {
       _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);
     }
 
-    return false;
+    return null;
   }
 
   Future<void> getBuyerRequest() async {
@@ -174,6 +174,14 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
     } else {
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  void setRangeStart(double value) {
+    state = state.copyWith(rangeStart: value);
+  }
+
+  void setRangeEnd(double value) {
+    state = state.copyWith(rangeEnd: value);
   }
 }
 

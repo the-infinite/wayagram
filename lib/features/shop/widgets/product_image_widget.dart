@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -59,14 +60,14 @@ class ProductImageWidget extends ConsumerWidget {
               width: 40,
               padding: EdgeInsets.fromLTRB(6, 3, 6, 3),
               decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.primar50,
+                  color: wayaTheme.colorScheme.primary50,
                   borderRadius: BorderRadius.circular(12)),
               child: Center(
                 child: Text("${currPage + 1}/${images.length}",
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.customPrimary,
                         fontWeight: FontWeight.w600,
-                        fontSize: 12)),
+                        fontSize: 12.sp)),
               ),
             ),
           ],

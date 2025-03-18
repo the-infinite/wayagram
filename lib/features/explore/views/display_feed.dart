@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/vm/explore_vm.dart';
 import 'package:wayagram/shared/features/events/shared_event.dart';
@@ -35,51 +36,56 @@ class _DisplayFeedState extends ConsumerState<DisplayFeed> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
-        isLoading: false,
-        isScrollable: true,
-        backgroundColor: wayaTheme.colorScheme.scaffoldColor,
-        title: "Discovery",
-        appBarTrailing: Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () => WayaNav.toNamed(SearchView.route),
-                child: SvgPicture.asset(WayaAssets.icons.searchIconFeed.path),
-              ),
-              const Gap(6),
-              WayaDp(
-                onTap: () {
-                  WayaNav.toNamed('/general-settings');
-                },
-                radius: 18,
-              ),
-            ],
-          ),
-        ),
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+      isLoading: false,
+      isScrollable: true,
+      backgroundColor: wayaTheme.colorScheme.scaffoldColor,
+      title: "Discovery",
+      appBarTrailing: Container(
+        padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 20.w,
           children: [
-            const Gap(10),
-            Text(
-              "Based on your follows",
-              style: wayaTheme.textTheme.bodyMedium,
+            GestureDetector(
+              onTap: () => WayaNav.toNamed(SearchView.route),
+              child: SvgPicture.asset(
+                WayaAssets.icons.searchIconFeed.path,
+                height: 20.dg,
+                width: 20.dg,
+              ),
             ),
-            const Gap(10),
-            SharedMoments(),
-            const Gap(10),
-            SharedPosts(
-              isExpanded: true,
+            WayaDp(
+              onTap: () {
+                WayaNav.toNamed('/general-settings');
+              },
+              radius: 18.r,
             ),
-            const Gap(25),
-            PollsFeedWidget(
-              isExpanded: true,
-            ),
-            const Gap(25),
-            SharedEvent()
           ],
-        ));
+        ),
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Gap(10),
+          Text(
+            "Based on your follows",
+            style: wayaTheme.textTheme.descriptionStyle,
+          ),
+          const Gap(10),
+          SharedMoments(),
+          const Gap(10),
+          SharedPosts(
+            isExpanded: true,
+          ),
+          const Gap(25),
+          PollsFeedWidget(
+            isExpanded: true,
+          ),
+          const Gap(25),
+          SharedEvent()
+        ],
+      ),
+    );
   }
 
   Widget buildEmptyFeed({required BuildContext context}) {

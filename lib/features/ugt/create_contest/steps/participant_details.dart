@@ -1,11 +1,15 @@
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
 import '../../../../core/components/waya_text_form_field.dart';
@@ -15,7 +19,7 @@ import '../../../shop/widgets/upload_image.dart';
 import '../../vm/ugt_vm.dart';
 import 'create_ultimate.dart';
 
-class ParticipantDetails extends ConsumerStatefulWidget {
+class ParticipantDetails extends StatefulHookConsumerWidget {
   final Function goToNextTab;
   const ParticipantDetails({super.key, required this.goToNextTab});
 
@@ -37,7 +41,32 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
     final viewModel2 = ref.watch(contestNotifierProvider);
+    var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
     final wayaTheme = Theme.of(context);
+      var isEditing = ref.watch(stateIsEditingContestProvider);
+    useEffect(() {
+        if (isEditing) {
+      Future.delayed(Duration(seconds: 1), () {
+        viewModel2.howItWorks.text = contestViewModel?.howItWorks ?? "";
+
+        if (contestViewModel?.entryType?.toLowerCase() == "free") {
+          viewModel2.amount.text = "0";
+        }
+        ref.read(contestNotifierProvider.notifier).updateEntryType(
+            contestViewModel?.entryType?.toLowerCase() == "free"
+                ? "Free"
+                : "Paid");
+        // viewModel2.entrySelectType = contestViewModel.entryType??"";
+        viewModel2.amount.text = contestViewModel?.amount?.toString() ?? "";
+        ref.read(contestNotifierProvider.notifier).updateParticipationDate(
+            contestViewModel?.participationStartDate?.split("T").first ?? "");
+
+        viewModel2.descriptionOfAwards.text =
+            contestViewModel?.descriptionOfAwards ?? "";
+      });
+    }
+      return null;
+    }, []);
     return Form(
       key: _formKey,
       child: Column(
@@ -47,7 +76,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
           Text("Participation Details", style: wayaTheme.textTheme.titleLarge),
           const Gap(5),
           Text(
-              "Bring your talent contest vision to life. Customize details,\n set stages, and make it unforgettable",
+              "Bring your talent contest vision to life. Customize details, set stages, and make it unforgettable",
               style: wayaTheme.textTheme.hintStyle),
           const Gap(30),
           FormField<String>(validator: (value) {
@@ -76,7 +105,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                     child: Text(
                       formState.errorText!,
                       style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -118,7 +147,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                     child: Text(
                       formState.errorText!,
                       style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -157,14 +186,14 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                       child: Text(
                         formState.errorText!,
                         style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                            color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                       ),
                     ),
                 ],
               );
             }),
           const Gap(15),
-          Row(
+          /*   Row(
             children: [
               Expanded(
                 child: FormField<String>(validator: (value) {
@@ -244,7 +273,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               )
             ],
           ),
-          const Gap(15),
+          const Gap(15), */
           FormField<String>(validator: (value) {
             if (viewModel2.startDate.isEmpty) {
               return 'Duration type is required';
@@ -274,7 +303,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                           .ugtDurationType(),
                       onSelected: (value) => ref
                           .read(contestNotifierProvider.notifier)
-                          .updateDurationType(value.first.label),
+                          .updateParticipationDate(value.first.label),
                       uniqueKey: 'contest-state',
                     ),
                   ),
@@ -285,7 +314,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                     child: Text(
                       formState.errorText!,
                       style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -319,7 +348,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                     child: Text(
                       formState.errorText!,
                       style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -353,7 +382,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               border: Border.all(
                   width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-                Navigator.pop(context);
+                WayaNav.goBack();
                 // WayaNav.toNamed("/ugt-home");
               })
         ],
