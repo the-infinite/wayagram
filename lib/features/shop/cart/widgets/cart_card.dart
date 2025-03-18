@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
@@ -72,7 +73,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                         Text(
                           widget.cartItem.shopName,
                           style: TextStyle().wayaCopyWith(
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               color: wayaTheme.colorScheme.customBlack),
                         ),
                         if (isDeliveryCharge)
@@ -80,7 +81,7 @@ class _CartCardState extends ConsumerState<CartCard> {
                           "Delivery Date: ${(widget.cartItem.deliveryDate != null && widget.cartItem.deliveryDate!.isNotEmpty) ? WayaHelpers.formatDateString(widget.cartItem.deliveryDate) : 'Not Requested'}",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.greyColor400,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         )
                       ],
                     )
@@ -227,7 +228,7 @@ class CartProductCard extends ConsumerWidget {
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
                               fontWeight: FontWeight.w500,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -242,7 +243,7 @@ class CartProductCard extends ConsumerWidget {
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
                             fontWeight: FontWeight.w600,
-                            fontSize: 14),
+                            fontSize: 14.sp),
                       ),
                     ],
                   )
@@ -268,7 +269,7 @@ class CartProductCard extends ConsumerWidget {
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.customPrimary,
                         fontWeight: FontWeight.w500,
-                        fontSize: 14),
+                        fontSize: 14.sp),
                   ),
                   const Gap(6),
                   GestureDetector(

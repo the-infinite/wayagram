@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -385,7 +386,7 @@ Widget mediaPreview({
                     style: TextStyle(
                       color: wayaTheme.colorScheme.white,
                       fontWeight: FontWeight.w600,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                     ),
                   )
                 : Text(
@@ -393,7 +394,7 @@ Widget mediaPreview({
                     style: TextStyle(
                       color: wayaTheme.colorScheme.white,
                       fontWeight: FontWeight.w500,
-                      fontSize: 13,
+                      fontSize: 13.sp,
                     ),
                   ),
           ),

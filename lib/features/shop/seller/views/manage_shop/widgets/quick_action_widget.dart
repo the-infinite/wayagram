@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
@@ -59,7 +60,7 @@ class QuickActionWidget extends StatelessWidget {
                                 "$metric",
                                 style: TextStyle().wayaCopyWith(
                                     color: wayaTheme.colorScheme.white,
-                                    fontSize: 10,
+                                    fontSize: 10.sp,
                                     fontWeight: FontWeight.w600),
                               ),
                             ))))

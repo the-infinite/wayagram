@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -39,8 +40,8 @@ class DisputeEvidence extends StatelessWidget {
               Text(
                 "Evidence Detail",
                 textAlign: TextAlign.start,
-                style: const TextStyle(
-                  fontSize: 20,
+                style:  TextStyle(
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),

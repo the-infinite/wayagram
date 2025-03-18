@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -177,7 +178,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
                           BuyRequestStatus.active => wayaTheme.colorScheme.success,
                           _ => wayaTheme.colorScheme.error,
                         },
-                        fontSize: 14,
+                        fontSize: 14.sp,
                       ),
                     )
                   ],
@@ -240,7 +241,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
                               : WayaDateHelper.convertDurationToCountdown(timeNotifier.value),
                           style: wayaTheme.textTheme.descriptionStyle.copyWith(
                             color: wayaTheme.colorScheme.customPrimary,
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
@@ -265,7 +266,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
                       text: '₦ ${widget.data.bidStartingAmount}',
                       style: wayaTheme.textTheme.bodyBold.copyWith(
                         color: wayaTheme.colorScheme.black,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

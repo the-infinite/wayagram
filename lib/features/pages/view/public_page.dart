@@ -305,7 +305,7 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
                                                           Text(
                                                             '• ${formatTimeAgo('${post.createdAt}')}',
                                                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                                                fontSize: 14,
+                                                                fontSize: 14.sp,
                                                                 fontWeight: FontWeight.w400,
                                                                 color: Theme.of(context).colorScheme.greyColor500),
                                                           ),
@@ -596,7 +596,7 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
           Text(
             txt2,
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 12, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+                fontSize: 12.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
           ),
         ],
       ),

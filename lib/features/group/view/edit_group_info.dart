@@ -127,7 +127,7 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
           horizontalPadding: 12,
           isLoading: viewModel.isLoading,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
           height: 30,
@@ -361,7 +361,7 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                                  formState.errorText!,
                                  style: TextStyle(
                                      color: wayaTheme.colorScheme.error,
-                                     fontSize: 12),
+                                     fontSize: 12.sp),
                                ),
                              ),
                          ],
@@ -397,7 +397,7 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                                  formState.errorText!,
                                  style: TextStyle(
                                      color: wayaTheme.colorScheme.error,
-                                     fontSize: 12),
+                                     fontSize: 12.sp),
                                ),
                              ),
                          ],

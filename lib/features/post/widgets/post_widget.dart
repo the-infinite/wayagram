@@ -699,7 +699,7 @@ class PostWidget extends ConsumerWidget {
     if (matches.isEmpty) {
       return Text(
         text,
-        style: TextStyle(fontSize: 16),
+        style: TextStyle(fontSize: 16.sp),
       );
     }
 

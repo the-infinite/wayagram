@@ -18,6 +18,7 @@ import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_stages_section.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart' as post;
+import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_details_stage_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
@@ -156,9 +157,24 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    VideoThumbnailPlayer(
-                      imageUrl: imageUrl.value,
-                      videoUrl: model.introVideo ?? "",
+                    GestureDetector(
+                      onTap: (){
+                          WayaNav.toNamed("/view-media-full-page", arguments: {
+                        "url":  model.introVideo ?? "",
+                        "title":  "",
+                        "createdAt":"",
+                        "likeCount":"",
+                        "isLike": "",
+                        "showDescription":true,
+                        "discription": "",
+                        "shareCount":"",
+                        "type": MyFullMediaType.video
+                      });
+                      },
+                      child: VideoThumbnailPlayer(
+                        imageUrl: imageUrl.value,
+                        videoUrl: model.introVideo ?? "",
+                      ),
                     ),
                     const Gap(20),
                     Container(

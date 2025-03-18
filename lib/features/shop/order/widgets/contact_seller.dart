@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -86,7 +87,7 @@ class ContactSeller extends StatelessWidget {
               textAlign: TextAlign.center,
               style: TextStyle(
                   color: wayaTheme.colorScheme.primary600,
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w500),
             ),
           ),

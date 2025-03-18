@@ -43,7 +43,7 @@ class _ConfirmVoteOptionModalState
             Text(
               'Add Reason for Rejection',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
@@ -79,7 +79,7 @@ class _ConfirmVoteOptionModalState
                         child: Text(
                           formState.errorText ?? "",
                           style: TextStyle(
-                              color: wayaTheme.colorScheme.error, fontSize: 12),
+                              color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                         ),
                       ),
                   ],

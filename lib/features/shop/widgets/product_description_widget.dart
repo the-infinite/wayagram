@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -55,7 +56,7 @@ class _ProductDescriptionState extends State<ProductDescriptionWidget> {
                   style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.customPrimary,
                       fontWeight: FontWeight.w500,
-                      fontSize: 13),
+                      fontSize: 13.sp),
                 ),
               ),
             if (exceedsMaxLines && isExpanded)
@@ -70,7 +71,7 @@ class _ProductDescriptionState extends State<ProductDescriptionWidget> {
                   style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor400,
                       fontWeight: FontWeight.w500,
-                      fontSize: 13),
+                      fontSize: 13.sp),
                 ),
               ),
           ],

@@ -157,7 +157,7 @@ class _ExploreState extends ConsumerState<Explore> {
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.primary,
                       fontWeight: FontWeight.w600,
-                      fontSize: 16,
+                      fontSize: 16.sp,
                     ),
                   ),
                 ],

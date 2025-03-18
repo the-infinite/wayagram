@@ -68,7 +68,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
           text: 'Add User',
           isLoading: viewModel.isLoading,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
         ): WayaButton(
@@ -85,7 +85,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
           text: 'Add User',
           isLoading: viewModel.isLoading,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
 
@@ -149,7 +149,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -305,7 +305,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                               Text(
                                 title,
                                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 14,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.w600,
                                     color: Theme.of(context).colorScheme.black ),
                               ),
@@ -327,7 +327,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                             child: Text(
                               subTitle,
                               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                   fontWeight: FontWeight.w400,
                                   color: Theme.of(context).colorScheme.greyColor500 ),
                             ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -58,8 +59,8 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
               Text(
                 "Application Status",
                 textAlign: TextAlign.start,
-                style: const TextStyle(
-                  fontSize: 20,
+                style:  TextStyle(
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -107,7 +108,7 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
                     child: AboutProductApplication(
                         title: 'Submission Date',
                         content: WayaHelpers.formatDateString(
-                            widget.product.updatedAt)),
+                            widget.product.updatedAt.toIso8601String())),
                   ),
                   const Gap(2),
                   Expanded(
@@ -123,7 +124,7 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
                                       ? wayaTheme.colorScheme.pending
                                       : wayaTheme.colorScheme.error,
                               fontWeight: FontWeight.w600,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         )),
                   )
                 ],
@@ -179,14 +180,14 @@ class AboutProductApplication extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style: TextStyle(color: WayaColors.greyColor400, fontSize: 15)),
+            style: TextStyle(color: WayaColors.greyColor400, fontSize: 15.sp)),
         const Gap(5),
         contentWidget != null
             ? contentWidget!
             : Text(content.capitalizeFirst!,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.customBlack,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                 )),
       ],
     );

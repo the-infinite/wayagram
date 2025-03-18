@@ -44,7 +44,7 @@ class SectionCountButton extends StatelessWidget {
               title,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor400,
-                fontSize: 14,
+                fontSize: 14.sp,
               ),
             ),
 
@@ -61,7 +61,7 @@ class SectionCountButton extends StatelessWidget {
                     WayaValueHelper.formatNumber(count),
                     style: theme.textTheme.bodyMedium?.copyWith(
                       color: isSelected ? theme.colorScheme.white : theme.colorScheme.greyColor500,
-                      fontSize: 12,
+                      fontSize: 12.sp,
                     ),
                   ),
                 ),

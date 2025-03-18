@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
@@ -57,7 +58,7 @@ class SingleBidWidget extends ConsumerWidget {
                           "Quote #${bid.requestId}",
                           style: wayaTheme.textTheme.bodyMedium?.copyWith(
                             color: wayaTheme.colorScheme.customBlack,
-                            fontSize: 14,
+                            fontSize: 14.sp,
                           ),
                         ),
 
@@ -74,7 +75,7 @@ class SingleBidWidget extends ConsumerWidget {
                                 text: '11h: 20m: 30s',
                                 style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                   color: wayaTheme.colorScheme.customPrimary,
-                                  fontSize: 12,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w400,
                                 ),
                               ),
@@ -102,7 +103,7 @@ class SingleBidWidget extends ConsumerWidget {
                         style: wayaTheme.textTheme.bodyMedium?.copyWith(
                           color: wayaTheme.colorScheme.success,
                           fontWeight: FontWeight.w500,
-                          fontSize: 11,
+                          fontSize: 11.sp,
                         ),
                       ),
                     ),
@@ -115,7 +116,7 @@ class SingleBidWidget extends ConsumerWidget {
                       WayaDateHelper.getDailyTimestamp(bid.createdAt),
                       style: wayaTheme.textTheme.bodyMedium?.copyWith(
                         color: wayaTheme.colorScheme.greyColor400,
-                        fontSize: 13,
+                        fontSize: 13.sp,
                       ),
                     )
                   ],

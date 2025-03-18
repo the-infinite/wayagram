@@ -1,16 +1,10 @@
 plugins {
     id "com.android.application"
     id "kotlin-android"
-    id 'com.google.gms.google-services'
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
 }
 
-def keystoreProperties = new Properties()
-def keystorePropertiesFile = rootProject.file('key.properties')
-if (keystorePropertiesFile.exists()) {
-    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-}
 
 
 android {
@@ -19,79 +13,30 @@ android {
     ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        coreLibraryDesugaringEnabled true
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
-    }
-
-    packagingOptions {
-        exclude 'project.clj'
-        pickFirst '**/libavcodec.so'
-        pickFirst '**/libavdevice.so'
-        pickFirst '**/libavfilter.so'
-        pickFirst '**/libavformat.so'
-        pickFirst '**/libavutil.so'
-        pickFirst '**/libavcodec_neon.so'
-        pickFirst '**/libavdevice_neon.so'
-        pickFirst '**/libavfilter_neon.so'
-        pickFirst '**/libavformat_neon.so'
-        pickFirst '**/libavutil_neon.so'
-        pickFirst '**/libffmpegkit_armv7a_neon.so'
-        pickFirst '**/libswresample_neon.so'
-        pickFirst '**/libswscale_neon.so'
-        pickFirst '**/libdatastore_shared_counter.so'
-        pickFirst '**/libffmpegkit.so'
-        pickFirst '**/libffmpegkit_abidetect.so'
-        pickFirst '**/libflutter.so'
-        pickFirst '**/libjingle_peerconnection_so.so'
-        pickFirst '**/libsqlcipher.so'
-        pickFirst '**/libsqlite3.so'
-        pickFirst '**/libswresample.so'
-        pickFirst '**/libswscale.so'
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "ng.wayagram"
+        applicationId = "com.wayagram.ng"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
         targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
-        multiDexEnabled = true
-    }
-    signingConfigs {
-        release {
-            keyAlias keystoreProperties['keyAlias']
-            keyPassword keystoreProperties['keyPassword']
-            storeFile keystoreProperties['storeFile'] ? file(keystoreProperties['storeFile']) : null
-            storePassword keystoreProperties['storePassword']
-        }
     }
  
     buildTypes {  
         debug {
             signingConfig signingConfigs.release
         }
-
-         release {
-            signingConfig signingConfigs.release
-            shrinkResources true
-            minifyEnabled true
-        }
     }
-}
-
-dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.3'
-    implementation 'androidx.window:window:1.0.0'
-    implementation 'androidx.window:window-java:1.0.0'
-    implementation 'com.android.support:multidex:1.0.3'
 }
 
 flutter {

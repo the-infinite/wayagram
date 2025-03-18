@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
+import 'package:wayagram/features/onboarding/vm/splash_screen_vm.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/delivery_request_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart';
@@ -36,11 +37,12 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
     try {
       state = state.copyWith(isLoading: true);
 
+      await ref.read(splashScreenVmProvider.notifier).getNewToken();
+      
       final businessProfile = await _profileRepo.getBusinessDataRepo(
           userId: ConversationState.self.id);
 
       if (businessProfile.success) {
-        print("dsffsefffdsvdvfvdfvdfvdfv");
         print(businessProfile.data);
         state = state.copyWith(isPersonalNotUpgradedToBusiness: false);
       } else {

@@ -40,7 +40,7 @@ class DisputeDetail extends ConsumerWidget {
             "Dispute Details",
             style: theme.textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
-              fontSize: 24,
+              fontSize: 24.sp,
             ),
           ),
 
@@ -61,7 +61,7 @@ class DisputeDetail extends ConsumerWidget {
             style: theme.textTheme.descriptionStyle.copyWith(
               color: theme.colorScheme.customBlack,
               fontWeight: FontWeight.w500,
-              fontSize: 16,
+              fontSize: 16.sp,
             ),
           ),
 
@@ -141,7 +141,7 @@ class DisputeDetail extends ConsumerWidget {
                   "View Evidence",
                   style: TextStyle().wayaCopyWith(
                     color: theme.colorScheme.customPrimary,
-                    fontSize: 13,
+                    fontSize: 13.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

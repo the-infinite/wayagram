@@ -70,7 +70,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .wayaCopyWith(fontSize: 24, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
+                  .wayaCopyWith(fontSize: 24.sp, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
@@ -81,7 +81,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                     text: 'Are you sure you want to pay for the contest that will cost ',
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.greyColor500,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -121,7 +121,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                     text: '₦${formatMoney(' ${num.parse(widget.voteFee)}')}?',
                     style: TextStyle().wayaCopyWith(
                       color: WayaColors.primary,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -146,7 +146,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                       'Available Balance',
                       style: TextStyle().wayaCopyWith(
                         // color: WayaColors.primary,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -168,7 +168,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                               'Wallet Balance',
                               style: TextStyle().wayaCopyWith(
                                 color: WayaColors.greyColor500,
-                                fontSize: 14,
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -178,7 +178,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                                   '₦${formatMoney(viewModel.data?.balance ?? "00")}',
                                   style: TextStyle().wayaCopyWith(
                                     color: Colors.black,
-                                    fontSize: 16,
+                                    fontSize: 16.sp,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -186,7 +186,7 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
                                   ".00",
                                   style: TextStyle().wayaCopyWith(
                                     color: WayaColors.greyColor400,
-                                    fontSize: 12,
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w500,
                                   ),
                                 ),
@@ -342,9 +342,9 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Text(
+           Text(
             'Enter your PIN',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 24),
           GridView.builder(
@@ -370,8 +370,8 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
               child: Center(
                 child: index < _pin.length
                     ? Text("*",
-                        style: const TextStyle(
-                          fontSize: 24,
+                        style:  TextStyle(
+                          fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
                         ))
                     : null,
@@ -399,7 +399,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                   );
                 } else if (index == 10) {
                   return _buildKeypadButton(
-                    child: const Text('0', style: TextStyle(fontSize: 20)),
+                    child:  Text('0', style: TextStyle(fontSize: 20.sp)),
                     onPressed: () => _addDigit('0'),
                   );
                 } else if (index == 11) {
@@ -419,7 +419,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                   );
                 } else {
                   return _buildKeypadButton(
-                    child: Text('${index + 1}', style: const TextStyle(fontSize: 24)),
+                    child: Text('${index + 1}', style:  TextStyle(fontSize: 24.sp)),
                     onPressed: () => _addDigit('${index + 1}'),
                   );
                 }

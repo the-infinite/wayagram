@@ -207,7 +207,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
                   '${args['desc']}',
                   //'${viewModel.desc?.capitalizeFirst}',
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w400,
                       color: Theme.of(context).colorScheme.greyColor500 ),
                 ),
@@ -301,7 +301,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
           Text(
             txt2,
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500,
                 ),
@@ -332,7 +332,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup>
             style: TextStyle().wayaCopyWith(
               color: color,
               fontWeight: FontWeight.w500,
-              fontSize: 12,
+              fontSize: 12.sp,
             ),
           )
         ],

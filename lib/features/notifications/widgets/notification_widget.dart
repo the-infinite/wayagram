@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -109,7 +110,7 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
                             title1: "${widget.data.message.body}.",
                             title2: " ${widget.data.notificationAction}.",
                             style1: WayaTextStyles.mediumDescriptionStyle.copyWith(
-                              fontSize: 12,
+                              fontSize: 12.sp,
                             ),
                             style2: WayaTextStyles.smallActiveLinkStyle.copyWith(
                               fontWeight: FontWeight.w700,
@@ -125,7 +126,7 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
                             WayaDateHelper.getFullTimestamp(widget.data.createdAt),
                             style: WayaTextStyles.descriptionStyle.copyWith(
                               color: WayaColors.greyColor400,
-                              fontSize: 13,
+                              fontSize: 13.sp,
                             ),
                           ),
                         ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
@@ -94,7 +95,7 @@ class _SelectInterestState extends ConsumerState<SelectInterest> {
               "Skip for now",
               style: TextStyle().wayaCopyWith(
                   color: wayaTheme.colorScheme.customPrimary,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600),
             ),
           )),

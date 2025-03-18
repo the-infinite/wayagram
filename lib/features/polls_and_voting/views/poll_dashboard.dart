@@ -101,7 +101,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             Text(
               'Dashboard',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black ),
             ),
@@ -110,7 +110,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             Text(
               'Manage your polls activity',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),
@@ -143,7 +143,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
               Text(
                 'Poll time remaining',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(context).colorScheme.greyColor500 ),
               ),
@@ -156,7 +156,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
               _formatDuration(remainingTime),
               //'12 days: 45hrs: 55min: 12sec',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.primary500 ),
             ),
@@ -176,7 +176,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             Text(
               'Poll Statistics',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.black ),
             ),
@@ -237,7 +237,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
           Text(
             vote,
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.black ),
           ),
@@ -245,7 +245,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
           Text(
             position,
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
                 color: Theme.of(context).colorScheme.black ),
           ),
@@ -253,7 +253,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
           Text(
             name,
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
                 color: Theme.of(context).colorScheme.black ),
           ),
@@ -277,7 +277,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             child:  Text(
               name,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 8,
+                  fontSize: 8.sp,
                   fontWeight: FontWeight.w500,
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),
@@ -286,7 +286,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
           Text(
             number,
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 24,
+                fontSize: 24.sp,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.black ),
           ),

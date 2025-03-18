@@ -105,7 +105,7 @@ class DonationWidget extends ConsumerWidget {
                               text: "Donate",
                               height: 30,
                               color: wayaTheme.colorScheme.primary50,
-                              textStyle: TextStyle(fontSize: 12, color:  wayaTheme.colorScheme.customPrimary),
+                              textStyle: TextStyle(fontSize: 12.sp, color:  wayaTheme.colorScheme.customPrimary),
                               textColor: wayaTheme.colorScheme.customPrimary,
                               radius: 5,
                             ),

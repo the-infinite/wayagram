@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/helpers/date.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 
@@ -56,7 +57,7 @@ class WayaTimePicker extends StatelessWidget {
             child: Text(
               label!,
               style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                fontSize: 14,
+                fontSize: 14.sp,
                 color: wayaTheme.colorScheme.greyColor900,
               ),
             ),
@@ -68,7 +69,7 @@ class WayaTimePicker extends StatelessWidget {
           builder: (context, selectedTime, _) => WayaButton(
             callback: () => _chooseTime(context),
             textStyle: wayaTheme.textTheme.bodyMedium?.copyWith(
-              fontSize: 16,
+              fontSize: 16.sp,
             ),
             border: Border.fromBorderSide(
               BorderSide(
@@ -90,7 +91,7 @@ class WayaTimePicker extends StatelessWidget {
             child: Text(
               helperText!,
               style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                fontSize: 13,
+                fontSize: 13.sp,
                 color: wayaTheme.colorScheme.greyColor300,
               ),
             ),
@@ -150,7 +151,7 @@ class WayaDatePicker extends StatelessWidget {
             child: Text(
               label!,
               style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                fontSize: 14,
+                fontSize: 14.sp,
                 color: wayaTheme.colorScheme.greyColor900,
               ),
             ),
@@ -162,7 +163,7 @@ class WayaDatePicker extends StatelessWidget {
           builder: (context, selectedTime, _) => WayaButton(
             callback: () => _chooseTime(context),
             textStyle: wayaTheme.textTheme.bodyMedium?.copyWith(
-              fontSize: 16,
+              fontSize: 16.sp,
             ),
             border: Border.fromBorderSide(
               BorderSide(
@@ -184,7 +185,7 @@ class WayaDatePicker extends StatelessWidget {
             child: Text(
               helperText!,
               style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                fontSize: 13,
+                fontSize: 13.sp,
                 color: wayaTheme.colorScheme.greyColor300,
               ),
             ),

@@ -58,7 +58,7 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
                 Text(
                   "Add New Team Member",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                      color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
                 ),
               ],
             ),
@@ -111,7 +111,7 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
                                 color: group?.role == 'admin' || group?.role == 'owner'?
                                 wayaTheme.colorScheme.success: WayaColors.primary700,
                                 fontWeight: FontWeight.w500,
-                                fontSize: 11,
+                                fontSize: 11.sp,
 
                               ),
                             ),
@@ -131,13 +131,13 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
                           Text(
                             '${group?.user?.firstName} ${group?.user?.lastName}',
                             style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 14,
+                                fontSize: 14.sp,
                                 fontWeight: FontWeight.w600,
                                 color: Theme.of(context).colorScheme.black ),),
                         ],),
                         subtitle:  Text('${group?.user?.email}',
                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).colorScheme.greyColor500 ),
                         ),),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -47,7 +48,7 @@ class _EventTimeWidgetState extends ConsumerState<EventTimeWidget> {
           children: [
             Text(widget.label,
                 style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       color: wayaTheme.colorScheme.greyColor900,
                     )),
             const Gap(4),
@@ -77,7 +78,7 @@ class _EventTimeWidgetState extends ConsumerState<EventTimeWidget> {
                                 .textTheme
                                 .bodyMedium
                                 ?.wayaCopyWith(
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                   color: widget.time.isEmpty
                                       ? wayaTheme.colorScheme.greyColor300
                                       : wayaTheme.colorScheme.customBlack,
@@ -101,7 +102,7 @@ class _EventTimeWidgetState extends ConsumerState<EventTimeWidget> {
                 child: Text(
                   formState.errorText!,
                   style: TextStyle(
-                      color: wayaTheme.colorScheme.error, fontSize: 12),
+                      color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                 ),
               ),
           ],

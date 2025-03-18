@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class WayaCollapsibleText extends StatefulWidget {
   final bool initialState;
@@ -51,7 +52,7 @@ class _WayaCollapsibleTextState extends State<WayaCollapsibleText> {
 
     var overflow = '';
     if (textPainter.didExceedMaxLines) {
-      int endIndex = textPainter.getPositionForOffset(Offset(maxWidth, fontSize * maxLines)).offset;
+      int endIndex = textPainter.getPositionForOffset(Offset(maxWidth, fontSize.sp * maxLines)).offset;
       overflow = '${text.substring(0, endIndex - 3)}...';
     }
     textPainter.dispose();
@@ -61,13 +62,13 @@ class _WayaCollapsibleTextState extends State<WayaCollapsibleText> {
   @override
   Widget build(BuildContext context) {
     final textScaler = MediaQuery.textScalerOf(context);
-    final adjustedTextSize = textScaler.scale(widget.fontSize);
+    final adjustedTextSize = textScaler.scale(widget.fontSize.sp);
 
     return LayoutBuilder(
       builder: (context, constraints) {
         // The text that overflows outside of this things render box.
         final overflowText = getTextOverflow(widget.text,
-            maxWidth: constraints.maxWidth, fontSize: adjustedTextSize, maxLines: widget.maxLines);
+            maxWidth: constraints.maxWidth, fontSize: adjustedTextSize.sp, maxLines: widget.maxLines);
 
         // Return a column.
         return Column(
@@ -83,7 +84,7 @@ class _WayaCollapsibleTextState extends State<WayaCollapsibleText> {
                   TextSpan(
                     text: (overflowText.isEmpty || isExpanded) ? widget.text : overflowText,
                     style: widget.style.copyWith(
-                      fontSize: widget.fontSize,
+                      fontSize: widget.fontSize.sp,
                       color: widget.textColor,
                     ),
                   ),
@@ -103,7 +104,7 @@ class _WayaCollapsibleTextState extends State<WayaCollapsibleText> {
                       style: widget.style.copyWith(
                         color: widget.buttonColor,
                         fontWeight: FontWeight.bold,
-                        fontSize: widget.fontSize,
+                        fontSize: widget.fontSize.sp,
                       ),
                     ),
                 ],

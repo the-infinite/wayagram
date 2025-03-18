@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -164,7 +165,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                         "WayaGram User",
                                     maxLines: 1,
                                     style: WayaTextStyles.titleMedium.copyWith(
-                                      fontSize: 15,
+                                      fontSize: 15.sp,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -178,7 +179,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                         fontWeight: FontWeight.normal,
                                         overflow: TextOverflow.ellipsis,
                                         color: WayaColors.greyColor500,
-                                        fontSize: 13,
+                                        fontSize: 13.sp,
                                       ),
                                     ),
                                 ],
@@ -261,7 +262,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                           "Send the first message",
                           style: WayaTextStyles.titleLarge.copyWith(
                             fontWeight: FontWeight.w700,
-                            fontSize: 24,
+                            fontSize: 24.sp,
                           ),
                         ),
 

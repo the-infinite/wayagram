@@ -65,7 +65,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
             isLoading: viewModel.isLoading,
             horizontalPadding: 12,
             textStyle: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.white ),
           ),
@@ -81,7 +81,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
             Text(
               'Create engaging polls that captivate and spark conversations in just a few clicks',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),
@@ -129,7 +129,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 formState.errorText!,
                                 style: TextStyle(
                                     color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -172,7 +172,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 formState.errorText!,
                                 style: TextStyle(
                                     color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -217,7 +217,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 formState.errorText!,
                                 style: TextStyle(
                                     color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -253,7 +253,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 formState.errorText!,
                                 style: TextStyle(
                                     color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -530,7 +530,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 formState.errorText!,
                                 style: TextStyle(
                                     color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -567,7 +567,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 formState.errorText!,
                                 style: TextStyle(
                                     color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -606,7 +606,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.white,
                         fontWeight: FontWeight.w600,
-                        fontSize: 14),
+                        fontSize: 14.sp),
                   )
                 ],
               ),

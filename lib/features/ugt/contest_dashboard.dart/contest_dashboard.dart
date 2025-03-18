@@ -100,7 +100,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             const Gap(5),
             Text("Manage your contest activity",
                 style: wayaTheme.textTheme.hintStyle
-                    .wayaCopyWith(fontSize: 16, fontWeight: FontWeight.w400)),
+                    .wayaCopyWith(fontSize: 16.sp, fontWeight: FontWeight.w400)),
             //  Text("Your Bio", style: wayaTheme.textTheme.bodyMedium),
             const Gap(20),
             Row(
@@ -538,10 +538,10 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
           children: [
             Text(title,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+                style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
             Gap(10),
             Text(value,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -605,15 +605,15 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
         children: [
           Text(title,
               textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+              style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
           Gap(5),
           Row(
             children: [
               Text(value,
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
               Text(".00",
                   style: TextStyle(
-                      color: wayaTheme.colorScheme.greyColor300, fontSize: 16)),
+                      color: wayaTheme.colorScheme.greyColor300, fontSize: 16.sp)),
             ],
           ),
         ],
@@ -629,7 +629,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
           if (seeAll)
             Row(
               children: [
@@ -720,10 +720,10 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.black,
-                  fontSize: 16)),
+                  fontSize: 16.sp)),
           Text(contestants,
               style: TextStyle(
-                  color: wayaTheme.colorScheme.greyColor700, fontSize: 14)),
+                  color: wayaTheme.colorScheme.greyColor700, fontSize: 14.sp)),
         ],
       ),
     );
@@ -743,12 +743,12 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   color: Colors.black,
-                  fontSize: 16)),
+                  fontSize: 16.sp)),
           Text(isprofile ? "View profile" : "View application",
               style: TextStyle(
                   color: Colors.orange,
                   fontWeight: FontWeight.w600,
-                  fontSize: 14)),
+                  fontSize: 14.sp)),
         ],
       ),
     );

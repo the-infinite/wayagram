@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -26,7 +27,7 @@ class OrderInfoWidget extends StatelessWidget {
           Text(
             title.capitalize!,
             style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.greyColor500, fontSize: 11),
+                color: wayaTheme.colorScheme.greyColor500, fontSize: 11.sp),
           ),
         
          Container(
@@ -35,7 +36,7 @@ class OrderInfoWidget extends StatelessWidget {
            description.capitalize!,
            textAlign: TextAlign.start,
             style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.greyColor500, fontSize: 13),
+                color: wayaTheme.colorScheme.greyColor500, fontSize: 13.sp),
           ),
          )
         ],

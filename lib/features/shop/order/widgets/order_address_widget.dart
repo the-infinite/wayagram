@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -45,7 +46,7 @@ class OrderAddressWidget extends StatelessWidget {
                           address ?? '',
                           style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.greyColor500,
-                            fontSize: 13,
+                            fontSize: 13.sp,
                           ),
                         ),
                       )

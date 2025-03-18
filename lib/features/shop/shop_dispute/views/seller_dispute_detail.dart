@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -58,7 +59,7 @@ class SellerDisputeDetail extends ConsumerWidget {
                   Text(
                     "Send Message",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
                   ),
                 ],
               ),
@@ -126,7 +127,7 @@ class SellerDisputeDetail extends ConsumerWidget {
                     "View Evidence",
                     style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.customPrimary,
-                      fontSize: 13,
+                      fontSize: 13.sp,
                       fontWeight: FontWeight.w500,
                     ),
                   ),

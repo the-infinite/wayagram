@@ -88,7 +88,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                 style: TextStyle().wayaCopyWith(
                     color: wayaTheme.colorScheme.customPrimary,
                     fontWeight: FontWeight.w600,
-                    fontSize: 16),
+                    fontSize: 16.sp),
               ),
             ],
           ),
@@ -135,7 +135,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
         Text(
           "See and manage all your created donations",
           style: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.greyColor500),
         ),
