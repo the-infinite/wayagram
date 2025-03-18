@@ -360,9 +360,8 @@ class MomentVm extends StateNotifier<MomentState> {
       bool hasNextPage = false;
       if (response.success) {
         MomentResponseModel responseModel = MomentResponseModel.fromJson(response.data);
-
         moments = responseModel.data.docs;
-        moments.where((m) => m.active).toList();
+        moments = moments.reversed.where((m) => m.active).toList();
         hasNextPage = responseModel.data.hasNextPage;
         state = state.copyWith(myMoments: moments);
       }

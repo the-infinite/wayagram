@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -18,11 +17,13 @@ class SharedMoments extends ConsumerStatefulWidget {
 }
 
 class _SharedMomentsState extends ConsumerState<SharedMoments> {
+  late final notifier = ref.read(momentVmProvider.notifier);
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(momentVmProvider.notifier).getUserMoments(1);
-      ref.read(momentVmProvider.notifier).getAllMoments();
+      notifier.getUserMoments(1);
+      notifier.getAllMoments();
     });
     super.initState();
   }
@@ -52,16 +53,17 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                   onTap: () async {
                     if (momentState.myMoments.isNotEmpty) {
                       return await showDialog(
-                          context: context,
-                          builder: (context) {
-                            return PopModal(
-                                create: () => WayaNav.toNamed(MyMoments.route),
-                                view: () => WayaNav.toNamed(ViewMoment.route,
-                                        arguments: {
-                                          "moments": momentState.myMoments,
-                                          "isMine": false
-                                        }));
-                          });
+                        context: context,
+                        builder: (context) {
+                          return PopModal(
+                            create: () => WayaNav.toNamed(MyMoments.route),
+                            view: () => WayaNav.toNamed(
+                              ViewMoment.route,
+                              arguments: {"moments": momentState.myMoments, "isMine": true},
+                            ),
+                          );
+                        },
+                      );
                     }
                     WayaNav.toNamed(MyMoments.route);
                   },
@@ -77,10 +79,7 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                 MomentsWidget(
                   moment: moment,
                   onTap: () async {
-                    WayaNav.toNamed(ViewMoment.route, arguments: {
-                      "moments": moment.moments,
-                      "isMine": false
-                    });
+                    WayaNav.toNamed(ViewMoment.route, arguments: {"moments": moment.moments, "isMine": false});
                   },
                 ),
                 const Gap(6),
@@ -128,7 +127,7 @@ class PopModal extends StatelessWidget {
             SizedBox(height: 10),
             TextButton(
               onPressed: () {
-                   WayaNav.goBack();
+                WayaNav.goBack();
                 view();
               },
               child: Text(
