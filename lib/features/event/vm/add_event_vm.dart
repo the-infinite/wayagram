@@ -21,8 +21,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
   final EventRepository _eventRepository;
   final UploadFileRepository _uploadFileRepository;
   final WayaSecureDataSource _secureDataSource;
-  AddEventVm(this._uploadFileRepository, this._secureDataSource,
-      this._eventRepository, this.ref)
+  AddEventVm(this._uploadFileRepository, this._secureDataSource, this._eventRepository, this.ref)
       : super(AddEventState());
 
   void reset() {
@@ -70,9 +69,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
   }
 
   void addFile(File file) {
-    state = state.copyWith(eventImage: [
-      DocType(file: file, type: "event-image", name: file.path.split('/').last)
-    ]);
+    state = state.copyWith(eventImage: [DocType(file: file, type: "event-image", name: file.path.split('/').last)]);
   }
 
   void removeFile() {
@@ -134,8 +131,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
       state = state.copyWith(isLoading: true);
       final image = state.isEditingMode && state.eventImage[0].file == null
           ? state.eventImage[0].url
-          : await WayaUtils.uploadFile(
-              file: state.eventImage[0].file!, repository: _uploadFileRepository);
+          : await WayaUtils.uploadFile(file: state.eventImage[0].file!, repository: _uploadFileRepository);
 
       state = state.copyWith(image: image);
       final userId = await _secureDataSource.getUserId();
@@ -151,8 +147,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
               title: state.isEditingMode
                   ? "Your Event has been updated successfully"
                   : "Your Event has been created successfully",
-              message:
-                  "Your event is now live. Share it with your audience and start engaging with attendees today!",
+              message: "Your event is now live. Share it with your audience and start engaging with attendees today!",
               onPress: () {
                 WayaNav.replaceNamed(EventView.route);
                 // WayaNav.goBack();
@@ -160,9 +155,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
               buttonText: 'Go To Event Home Page',
               secondButtonText: 'Share Event Link',
               onCancel: () {
-                ref
-                    .read(eventVmProvider.notifier)
-                    .shareEvent(context: context, shareUrl: "shareUrl");
+                ref.read(eventVmProvider.notifier).shareEvent(context: context, shareUrl: "shareUrl");
               },
               icon: Image.asset(
                 "assets/images/create-event-success.png",
@@ -185,40 +178,22 @@ class AddEventVm extends StateNotifier<AddEventState> {
         organizer: TextEditingController(text: event.organizerName),
         description: TextEditingController(text: event.description ?? ''),
         location: event.location.capitalizeFirst,
-        address: TextEditingController(
-            text: event.location.toLowerCase() == 'physical'
-                ? event.locationAddress
-                : ''),
-        link: TextEditingController(
-            text: event.location.toLowerCase() == 'virtual'
-                ? event.locationAddress
-                : ''),
+        address: TextEditingController(text: event.location.toLowerCase() == 'physical' ? event.locationAddress : ''),
+        link: TextEditingController(text: event.location.toLowerCase() == 'virtual' ? event.locationAddress : ''),
         eventType: event.eventType.capitalizeFirst,
         eventFee: TextEditingController(text: event.fee.toString()),
-        maxCapacity: TextEditingController(
-            text: event.maxCapacity == null
-                ? null
-                : event.maxCapacity.toString()),
+        maxCapacity: TextEditingController(text: event.maxCapacity?.toString()),
         privacyOption: event.privacyOption,
-        startDate: event.startDate.split('T')[0],
-        endDate: event.endDate.split('T')[0],
+        startDate: event.startDate.toIso8601String().split('T')[0],
+        endDate: event.endDate.toIso8601String().split('T')[0],
         startTime: event.startTime,
         eventId: event.id,
         endTime: event.endTime,
-        eventImage: [
-          DocType(
-              file: null,
-              type: "event-image",
-              name: "uploaded image",
-              url: event.image)
-        ]);
-    ref.read(radioSelectProvider("add-event").notifier).state =
-        event.privacyOption.capitalizeFirst;
+        eventImage: [DocType(file: null, type: "event-image", name: "uploaded image", url: event.image)]);
+    ref.read(radioSelectProvider("add-event").notifier).state = event.privacyOption.capitalizeFirst;
   }
 }
 
-final addEventVmProvider =
-    StateNotifierProvider<AddEventVm, AddEventState>((ref) {
-  return AddEventVm(
-      UploadFileRepository(), WayaSecureDataSource(), EventRepository(), ref);
+final addEventVmProvider = StateNotifierProvider<AddEventVm, AddEventState>((ref) {
+  return AddEventVm(UploadFileRepository(), WayaSecureDataSource(), EventRepository(), ref);
 });

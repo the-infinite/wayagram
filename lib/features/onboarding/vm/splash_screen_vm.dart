@@ -1,9 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
-import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
@@ -21,7 +19,7 @@ class SplashScreenVm extends StateNotifier<void> {
 
   SplashScreenVm(this.repo, this._profileRepo, this._secureDataSource, this._setupVm) : super(null);
 
-  void getUserData() async {
+  Future<void> getUserData() async {
     try {
       // check if user has a token
       String? authToken = await _secureDataSource.getToken();
@@ -82,6 +80,12 @@ class SplashScreenVm extends StateNotifier<void> {
 
           if (bizResponse.success) {
             BusinessAccountData bizData = BusinessAccountData.fromJson(bizResponse.data["data"]);
+            //? Update the business configuration when there is a need to.
+            ConversationState.setSelf(
+              ConversationState.self.copyWith(accountType: UserAccountType.business),
+              null,
+              BusinessDetailsModel.fromJson(bizResponse.data["data"]),
+            );
             _setupVm.state = _setupVm.state.copyWith(business: bizData);
             await _secureDataSource.saveBusinessId(bizData.businessId);
           }
@@ -118,7 +122,7 @@ class SplashScreenVm extends StateNotifier<void> {
   }
 
   void runStartUpLogic() async {
-    getUserData();
+    await getUserData();
   }
 }
 
