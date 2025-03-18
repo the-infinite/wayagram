@@ -19,7 +19,7 @@ import 'package:wayagram/shared/features/profile/logic/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class PostCommentModal extends ConsumerStatefulWidget {
-  final Post post;
+  final PostModel post;
   final int index;
 
   // Construct.
