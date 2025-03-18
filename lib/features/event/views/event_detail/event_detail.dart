@@ -82,6 +82,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                 WayaTabButton(
                   isSelected: _selectedIndex == 0,
                   text: 'Event Details',
+                  
                   onTap: () => setState(() => _selectedIndex = 0),
                 ),
                 WayaTabButton(

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/widgets/about_event.dart';
 import 'package:gap/gap.dart';
@@ -49,38 +50,45 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                   )
                 ] else ...[
                   const Gap(15),
-                  GridView(
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 0,
-                        childAspectRatio: 1.9,
-                        crossAxisSpacing: 8),
-                    children: [
-                      InventoryWidget(
-                          metrics:
-                              "${viewModel.singleEvent?.noOfAttendees ?? 0}",
-                          color: Color(0xffE7F6EC),
-                          title: "Total Attendees"),
-                      InventoryWidget(
-                          metrics: WayaHelpers.formatPrice(
-                              viewModel.singleEvent?.totalRevenue ?? 0),
-                          color: Color(0xffFEF6E7),
-                          title: "Total Revenue")
-                    ],
-                  ),
+                  if (viewModel.singleEvent!.userId ==
+                      ConversationState.self.id)
+                    GridView(
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 0,
+                          childAspectRatio: 1.9,
+                          crossAxisSpacing: 8),
+                      children: [
+                        InventoryWidget(
+                            metrics:
+                                "${viewModel.singleEvent?.noOfAttendees ?? 0}",
+                            color: Color(0xffE7F6EC),
+                            title: "Total Attendees"),
+                        InventoryWidget(
+                            metrics: WayaHelpers.formatPrice(
+                                viewModel.singleEvent?.totalRevenue ?? 0),
+                            color: Color(0xffFEF6E7),
+                            title: "Total Revenue")
+                      ],
+                    ),
                   const Gap(15),
                   AboutEvent(
                       title: 'Title of Event',
-                      content: viewModel.singleEvent?.title.capitalizeFirst ?? ""),
+                      content:
+                          viewModel.singleEvent?.title.capitalizeFirst ?? ""),
                   const Gap(15),
                   AboutEvent(
                       title: 'Organizer Name',
-                      content: viewModel.singleEvent?.organizerName.capitalizeFirst ?? ""),
+                      content: viewModel
+                              .singleEvent?.organizerName.capitalizeFirst ??
+                          ""),
                   const Gap(15),
                   AboutEvent(
                       title: "Event Description",
-                      content: viewModel.singleEvent?.description!.capitalizeFirst ?? ""),
+                      content:
+                          viewModel.singleEvent?.description!.capitalizeFirst ??
+                              ""),
                   const Gap(15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
