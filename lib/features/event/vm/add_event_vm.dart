@@ -173,23 +173,24 @@ class AddEventVm extends StateNotifier<AddEventState> {
 
   Future<void> initializeForEdit(EventDoc event) async {
     state = state.copyWith(
-        isEditingMode: true,
-        title: TextEditingController(text: event.title),
-        organizer: TextEditingController(text: event.organizerName),
-        description: TextEditingController(text: event.description ?? ''),
-        location: event.location.capitalizeFirst,
-        address: TextEditingController(text: event.location.toLowerCase() == 'physical' ? event.locationAddress : ''),
-        link: TextEditingController(text: event.location.toLowerCase() == 'virtual' ? event.locationAddress : ''),
-        eventType: event.eventType.capitalizeFirst,
-        eventFee: TextEditingController(text: event.fee.toString()),
-        maxCapacity: TextEditingController(text: event.maxCapacity?.toString()),
-        privacyOption: event.privacyOption,
-        startDate: event.startDate.toIso8601String().split('T')[0],
-        endDate: event.endDate.toIso8601String().split('T')[0],
-        startTime: event.startTime,
-        eventId: event.id,
-        endTime: event.endTime,
-        eventImage: [DocType(file: null, type: "event-image", name: "uploaded image", url: event.image)]);
+      isEditingMode: true,
+      title: TextEditingController(text: event.title),
+      organizer: TextEditingController(text: event.organizerName),
+      description: TextEditingController(text: event.description ?? ''),
+      location: event.location.capitalizeFirst,
+      address: TextEditingController(text: event.location.toLowerCase() == 'physical' ? event.locationAddress : ''),
+      link: TextEditingController(text: event.location.toLowerCase() == 'virtual' ? event.locationAddress : ''),
+      eventType: event.eventType.capitalizeFirst,
+      eventFee: TextEditingController(text: event.fee.toString()),
+      maxCapacity: TextEditingController(text: event.maxCapacity?.toString()),
+      privacyOption: event.privacyOption,
+      startDate: event.startDate.toIso8601String().split('T')[0],
+      endDate: event.endDate.toIso8601String().split('T')[0],
+      startTime: event.startTime,
+      eventId: event.id,
+      endTime: event.endTime,
+      eventImage: [DocType(file: null, type: "event-image", name: "uploaded image", url: event.image)],
+    );
     ref.read(radioSelectProvider("add-event").notifier).state = event.privacyOption.capitalizeFirst;
   }
 }
