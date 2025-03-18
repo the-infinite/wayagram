@@ -109,6 +109,7 @@ class WayaDebugConsoleController {
   final refreshNotifier = ValueNotifier(0);
   var _awaiter = Completer<void>();
   bool visible = false;
+  bool inDetail = false;
 
   /// Helper function used to get the total count of all unread messages.
   int get unreadCount => errors.where((error) => !error.read.value).length;
@@ -153,6 +154,13 @@ class WayaDebugConsoleController {
 
     //? Since we can, try to resolve this issue.
     errors[index].read.value = true;
+  }
+
+  /// A function used to toggle whether or not we are currently viewing anything
+  /// in detail.
+  void setDetail(bool value) {
+    inDetail = value;
+    refresh();
   }
 
   /// A function that is used to mark all messages past the unread starting
