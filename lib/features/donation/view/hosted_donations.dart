@@ -140,15 +140,15 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
               color: Theme.of(context).colorScheme.greyColor500),
         ),
         const Gap(30),
-        viewModel.myDonationDocs!.isEmpty ? ActivityLogsEmptyState(text: 'There is no hosted donationsgit',):
+        viewModel.myDonationDocs!.isEmpty ? ActivityLogsEmptyState(text: 'There is no hosted donations',):
         SizedBox(
           height: Platform.isAndroid ? 350 : 250,
           child: ListView.builder(
             padding: EdgeInsets.only(bottom: 40),
-              //physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: viewModel.myDonationDocs?.length,
-              //filteredMyDonations.length,
+              itemCount:
+              //viewModel.myDonationDocs?.length,
+              filteredMyDonations.length,
               itemBuilder: (context, index) {
                 final donation = filteredMyDonations[index];
                 int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
@@ -229,32 +229,4 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
   }
 }
 
-class DonationEmptyState extends StatelessWidget {
-  const DonationEmptyState({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
-    return Center(
-      child: Container(
-        padding: EdgeInsets.all(30),
-        child: EmptyState(
-            hasButton: false,
-            onTap: () {
-              //WayaNav.toNamed(CreatePost.route);
-            },
-            buttonTrailingIcon: SvgPicture.asset(
-              WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(
-                  wayaTheme.colorScheme.white, BlendMode.srcIn),
-            ),
-            assetImage: Image.asset(
-              WayaAssets.images.emptyEvent.path,
-              scale: 1.5,
-            ),
-            message: "You haven't added any donations yet"),
-      ),
-    );
-  }
-}
 

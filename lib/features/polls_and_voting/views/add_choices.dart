@@ -28,9 +28,6 @@ class AddChoices extends ConsumerStatefulWidget {
 class _AddChoicesState extends ConsumerState<AddChoices> {
   final _formKey = GlobalKey<FormState>();
 
-  Map<String, dynamic> formData = {};
-
-
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
@@ -254,7 +251,8 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                 ),
               ],
             ),
-           )
+           ),
+
           ],
         ));
   }
@@ -265,6 +263,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
     final wayaTheme = Theme.of(ctx);
     return GestureDetector(
       onTap: () {
+
         WayaNav.toNamed("/poll-summary");
       },
       child: Row(

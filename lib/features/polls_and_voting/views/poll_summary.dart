@@ -31,17 +31,11 @@ class PollSummary extends ConsumerStatefulWidget {
 }
 
 class _PollSummaryState extends ConsumerState<PollSummary>  {
-  CreatePollVotingState? viewModel;
-
-
-
-  String userType = "PERSONAL";
 
   @override
   Widget build(BuildContext context) {
 
     final viewModel = ref.watch(createPollVotingProvider);
-    final poll = ref.watch(createPollVotingProvider.notifier);
     final wayaTheme = Theme.of(context);
     final setUp = ref.watch(successfulSetupVmProvider);
 
@@ -136,7 +130,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               children: [
                 summary('Start Date',
                     '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.startDate)}\n',
-                    'Host', setUp.user?.user?.firstName?.capitalizeFirst ?? ''),
+                    'Host', setUp.user?.user?.firstName.capitalizeFirst ?? ''),
                 summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
                 summary('Poll Type', '${viewModel.pollType.capitalizeFirst}\n', 'Prize per vote', '₦${viewModel.votePrice.text}'
                 ),
@@ -248,8 +242,8 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: chk?
-            //Image.file(File('assets/images/pages/image_placeholder.png'), height: 66.h, width: 50.w,):
-            Image.asset('assets/images/pages/image_placeholder.png',height: 66.h, width: 50.w,):
+            //Image.asset('assets/images/pages/image_placeholder.png',height: 66.h, width: 50.w,):
+            Container():
             Image.file(File(img), height: 66.h, width: 50.w,),
         ),
         const Gap(40),
