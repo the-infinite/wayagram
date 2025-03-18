@@ -91,7 +91,7 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
           widget.file,
           (result) async {
             if (result) {
-              await Future.delayed(const Duration(seconds: 1));
+              await Future.delayed(const Duration(seconds: 1, milliseconds: 800));
               try {
                 _controller.setLooping(true);
                 _controller.play();
@@ -137,7 +137,7 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
       return WayaVideoWidget.file(
         widget.file,
         controller: _controller,
-        controls: WayaVideoControls.content,
+        controls: WayaVideoControls.none,
         onPlaybackChanged: (isPlaying) {
           //? When the video is resumed, continue the animation timer.
           if (isPlaying) {

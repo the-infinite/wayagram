@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/data/moment_helper/moment_helper_funcs.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
@@ -97,8 +98,14 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
 
   //? Fair enough, go back to the previous moment.
   void _previousMoment() {
+    //? If this is actually at an index greater than 0....
     if (currentIndex > 0) {
       _pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.ease);
+    }
+
+    //? Since it is not mine, I just go somewhere else.
+    else {
+      WayaNav.goBack();
     }
   }
 
@@ -158,6 +165,7 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
         child: GestureDetector(
           onLongPressStart: (_) => pauseAnimation(),
           onLongPressEnd: (_) => continueAnimating(),
+          onVerticalDragDown: (_) => WayaNav.goBack(),
           child: Container(
             color: moments[currentIndex].contentType == 'text'
                 ? MomentHelper.hexToColor(moments[currentIndex].color ?? "#1D2939")
@@ -171,9 +179,16 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                   itemCount: moments.length,
                   onPageChanged: (index) => _onPageChanged(index),
                   itemBuilder: (context, index) {
+                    //? Get the moment.
                     final moment = moments[currentIndex];
+
+                    //? This is fine.
                     return moment.contentType == 'text'
-                        ? textMoment(context: context, ref: ref, moment: moment)
+                        ? textMoment(
+                            context: context,
+                            ref: ref,
+                            moment: moment,
+                          )
                         : mediaPreview(
                             context: context,
                             ref: ref,
@@ -193,7 +208,7 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                       //? First, the button to go to the previous page.
                       Expanded(
                         child: GestureDetector(
-                          onDoubleTap: () {
+                          onTap: () {
                             //? If this is the first page, reset the timer.
                             if (_pageController.page == 0) {
                               _startTimer();
@@ -210,7 +225,7 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                       //? Second, the button to go to the previous page.
                       Expanded(
                         child: GestureDetector(
-                          onDoubleTap: () {
+                          onTap: () {
                             //? If this is the first page, reset the timer.
                             if (_pageController.page == moments.length - 1) {
                             }
@@ -262,7 +277,7 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                     top: 30,
                     child: MomentUserInfoWidget(
                       moment: moments[currentIndex],
-                      isMine: isMine,
+                      isMine: moments[currentIndex].userId == ConversationState.self.id,
                       pause: pauseAnimation,
                       continues: continueAnimating,
                     ),
@@ -280,10 +295,10 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                       uniqueKey: "$currentIndex",
                       moment: moments[currentIndex],
                     ),
-                  ),
+                  )
 
                 //? How we see our current moment metrics.
-                if (isMine && !isPaused)
+                else if (!isPaused)
                   Positioned(
                     left: 0,
                     right: 0,

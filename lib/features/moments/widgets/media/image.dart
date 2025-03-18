@@ -120,14 +120,21 @@ class _ImageMomentScreenState extends State<ImageMomentScreen> {
 
     //? Since this is already downloaded...
     else {
-      return Image.file(
-        widget.file,
-        width: size.width,
-        fit: BoxFit.cover,
-        errorBuilder: (context, e, _) => CachedNetworkImage(
-          imageUrl: widget.media,
-          width: size.width,
-          fit: BoxFit.cover,
+      return ColoredBox(
+        color: Colors.black,
+        child: Center(
+          child: IntrinsicHeight(
+            child: Image.file(
+              widget.file,
+              width: size.width,
+              fit: BoxFit.contain,
+              errorBuilder: (context, e, _) => CachedNetworkImage(
+                imageUrl: widget.media,
+                width: size.width,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
         ),
       );
     }
