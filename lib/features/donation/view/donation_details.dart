@@ -148,7 +148,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
               color: wayaTheme.colorScheme.primary500,
               textStyle: TextStyle(color: wayaTheme.colorScheme.white),
               callback: () {
-                if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
+               /* if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
                   WayaUtils.showNotice(
                       context: context,
                       title: "Update KYC Information ",
@@ -190,7 +190,21 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                         donationCount: '${args['donationCount']}'
                     ),
                   );
-                }
+                }*/
+
+                WayaUtils.showModalSheet(
+                  context,
+                  child: DonationModal(
+                      amountRaised: '${args['amountRaised']}',
+                      targetAmount: '${args['targetAmount']}',
+                      title: '${args['title']}',
+                      minimumDonationAmount: '${args['minimumDonationAmount']}',
+                      campaignId: '${args['id']}',
+                      privacy: '${args['privacy']}',
+                      daysLeft: '${args['daysLeft']}',
+                      donationCount: '${args['donationCount']}'
+                  ),
+                );
 
               }),
         )
