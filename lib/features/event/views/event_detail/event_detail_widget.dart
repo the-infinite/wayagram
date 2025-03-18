@@ -125,7 +125,7 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                         child: AboutEvent(
                             title: 'Start Date',
                             content: WayaHelpers.formatDateMonthYear(
-                                viewModel.singleEvent!.startDate)),
+                                viewModel.singleEvent!.startDate.toIso8601String())),
                       ),
                       Expanded(
                         child: AboutEvent(
@@ -143,7 +143,7 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                         child: AboutEvent(
                             title: 'EndDate',
                             content: WayaHelpers.formatDateMonthYear(
-                                viewModel.singleEvent!.endDate)),
+                                viewModel.singleEvent!.endDate.toIso8601String())),
                       ),
                       Expanded(
                         child: AboutEvent(
