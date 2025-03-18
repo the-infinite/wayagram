@@ -490,43 +490,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     })),
                     const Gap(10),
                     Expanded(
-                      child: FormField<String>(validator: (value) {
-                        if (viewModel.city.isEmpty) {
-                          return 'City is required';
-                        }
-
-                        return null;
-                      }, builder: (formState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            WayaSelectField<String>(
-                                uniqueKey: 'city',
-                                label: "City",
-                                value: viewModel.city,
-                                hintText: 'Select City',
-                                items: viewModel.cities,
-                                onSelected: (value) => ref
-                                    .read(personalFirstStepProvider.notifier)
-                                    .selectCity(value.first)),
-                            if (formState.hasError && viewModel.city.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
-                                ),
-                              ),
-                          ],
-                        );
-                      }),
-                    ),
-                  ],
-                ),
-                const Gap(10),
-                FormField<String>(validator: (value) {
+                      child:  FormField<String>(validator: (value) {
                   if (viewModel.lga.isEmpty) {
                     return 'LGA is required';
                   }
@@ -559,6 +523,45 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     ],
                   );
                 }),
+                      
+                      
+                    
+                    ),
+                  ],
+                ),
+                const Gap(10),
+                  FormField<String>(validator: (value) {
+                        if (viewModel.city.isEmpty) {
+                          return null;
+                        }
+
+                        return null;
+                      }, builder: (formState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            WayaSelectField<String>(
+                                uniqueKey: 'city',
+                                label: "City",
+                                value: viewModel.city,
+                                hintText: 'Select City',
+                                items: viewModel.cities,
+                                onSelected: (value) => ref
+                                    .read(personalFirstStepProvider.notifier)
+                                    .selectCity(value.first)),
+                            if (formState.hasError && viewModel.city.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  formState.errorText!,
+                                  style: TextStyle(
+                                      color: wayaTheme.colorScheme.error,
+                                      fontSize: 12),
+                                ),
+                              ),
+                          ],
+                        );
+                      }),
                 const Gap(10),
                 FormField<String>(
                   validator: (value) {

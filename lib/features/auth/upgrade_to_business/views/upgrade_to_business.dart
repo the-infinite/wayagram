@@ -26,7 +26,6 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(upgradeToBusinessVmProvider.notifier).fetchBusinessTypes();
       ref.read(upgradeToBusinessVmProvider.notifier).fetchLocation();
-      
     });
     super.initState();
   }
@@ -311,9 +310,8 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                   }),
                   const Gap(10),
                   Row(
-                    
                     children: [
-                       Expanded(
+                      Expanded(
                           child: FormField<String>(validator: (value) {
                         if (viewModel.state.isEmpty) {
                           return 'State is required';
@@ -347,11 +345,11 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                           ],
                         );
                       })),
-                       const Gap(10),
+                      const Gap(10),
                       Expanded(
                         child: FormField<String>(validator: (value) {
-                          if (viewModel.city.isEmpty) {
-                            return 'City is required';
+                          if (viewModel.lga.isEmpty) {
+                            return 'LGA is required';
                           }
 
                           return null;
@@ -360,16 +358,17 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               WayaSelectField<String>(
-                                  uniqueKey: 'city',
-                                  label: "City",
-                                  value: viewModel.city,
-                                  hintText: 'Select City',
-                                  items: viewModel.cities,
+                                  height: 0.2,
+                                  uniqueKey: 'lga',
+                                  label: "LGA",
+                                  hintText: 'Select LGA',
+                                  value: viewModel.lga,
+                                  items: viewModel.lgas,
                                   onSelected: (value) => ref
                                       .read(
                                           upgradeToBusinessVmProvider.notifier)
-                                      .selectCity(value.first)),
-                              if (formState.hasError && viewModel.city.isEmpty)
+                                      .selectLGA(value.first)),
+                              if (formState.hasError && viewModel.lga.isEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
@@ -383,14 +382,12 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                           );
                         }),
                       ),
-                     
-                     
                     ],
                   ),
                   const Gap(10),
                   FormField<String>(validator: (value) {
-                    if (viewModel.lga.isEmpty) {
-                      return 'LGA is required';
+                    if (viewModel.city.isEmpty) {
+                      return null;
                     }
 
                     return null;
@@ -399,16 +396,15 @@ class _UpgradeToBusinessState extends ConsumerState<UpgradeToBusiness> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         WayaSelectField<String>(
-                            height: 0.2,
-                            uniqueKey: 'lga',
-                            label: "LGA",
-                            hintText: 'Select LGA',
-                            value: viewModel.lga,
-                            items: viewModel.lgas,
+                            uniqueKey: 'city',
+                            label: "City",
+                            value: viewModel.city,
+                            hintText: 'Select City',
+                            items: viewModel.cities,
                             onSelected: (value) => ref
                                 .read(upgradeToBusinessVmProvider.notifier)
-                                .selectLGA(value.first)),
-                        if (formState.hasError && viewModel.lga.isEmpty)
+                                .selectCity(value.first)),
+                        if (formState.hasError && viewModel.city.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
