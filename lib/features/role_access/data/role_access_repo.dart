@@ -15,11 +15,23 @@ class RoleAccessRepo extends BaseRepository {
     return get('$serviceUrl2/shops/$userId');
   }
 
+     Future<WayaRequestResponse> getMemberList(String vendorId) {
+    return get('$serviceUrl2/shopMember/get-members/$vendorId');
+  }
+      Future<WayaRequestResponse> getRoleManagementMemberList(String vendorId) {
+    return get('$serviceUrl2/shopMember/role-management/$vendorId');
+  }
+
     Future<WayaRequestResponse> addTeamMember(payLoad) {
     return post('$serviceUrl2/shopMember/create', payLoad, formdata: false);
   }
 
     Future<WayaRequestResponse> activateDeactivateShopMember(String shopMemberId, payLoad) {
+    return put('$serviceUrl2/shopMember/status/$shopMemberId', payLoad, formdata: false);
+  }
+
+
+      Future<WayaRequestResponse> editMember(String shopMemberId, payLoad) {
     return put('$serviceUrl2/shopMember/status/$shopMemberId', payLoad, formdata: false);
   }
 
