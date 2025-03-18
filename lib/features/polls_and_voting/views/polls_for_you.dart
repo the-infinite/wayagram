@@ -69,9 +69,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                             const Gap(3),
                             Text('${poll.userData?.firstName?.capitalizeFirst}', style: wayaTheme.textTheme.titleLarge),
                             const Gap(3),
-                            Text(
-                              //' • ${formatTimeAgo('${poll.createdAt}')}',
-                              ' • ${WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
+                            Text(' • ${WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
                               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w400,
@@ -112,7 +110,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                         const Gap(3),
                         if (poll.choices != null)
                           ...poll.choices!.map(
-                            (e) => Text(
+                            (e) => e.description == null ? Container() :Text(
                               '${e.description?.capitalizeFirst}',
                               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                   fontSize: 12.sp,
@@ -135,7 +133,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                             if (poll.choices != null)
                               ...poll.choices!.map(
                                 (e) => choiceStatistics(
-                                  '${e.imageUrl}',
+                                  e.imageUrl == null ? '':'${e.imageUrl}',
                                   '${e.text}',
                                   context,
                                   true,
@@ -355,7 +353,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           Text(
                             name,
                             style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(ctx).colorScheme.primary600),
+                                fontSize: 14.sp, fontWeight: FontWeight.w600, color: Theme.of(ctx).colorScheme.primary600),
                           ),
                         ],
                       ),
