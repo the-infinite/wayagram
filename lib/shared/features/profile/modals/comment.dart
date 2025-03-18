@@ -191,7 +191,7 @@ class _PostCommentModalState extends ConsumerState<PostCommentModal> {
                                     Text(
                                       '• ${formatTimeAgo('${comment.createdAt}')}',
                                       style: theme.textTheme.bodyMedium!.copyWith(
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                         fontWeight: FontWeight.w500,
                                         color: Theme.of(context).colorScheme.greyColor500,
                                       ),
@@ -264,7 +264,7 @@ class _PostCommentModalState extends ConsumerState<PostCommentModal> {
                                       padding: const EdgeInsets.only(top: 5),
                                       child: Text(
                                         formState.errorText!,
-                                        style: TextStyle(color: theme.colorScheme.error, fontSize: 12),
+                                        style: TextStyle(color: theme.colorScheme.error, fontSize: 12.sp),
                                       ),
                                     ),
                                 ],

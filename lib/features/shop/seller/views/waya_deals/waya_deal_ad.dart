@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:uuid/uuid.dart';
@@ -39,7 +40,7 @@ class WayaDealAd extends ConsumerWidget {
               "How it Works?",
               style: TextStyle().wayaCopyWith(
                   color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 15,
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.w600),
             ),
             const Gap(10),
@@ -110,7 +111,7 @@ class AdList extends StatelessWidget {
               title,
               style: TextStyle().wayaCopyWith(
                   color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500),
             ),
           ],

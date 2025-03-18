@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_image.dart';
@@ -49,7 +50,7 @@ class OrderedProductCard extends StatelessWidget {
                           orders.productName,
                           style: TextStyle(color: wayaTheme.colorScheme.customBlack,
                               fontWeight: FontWeight.w500,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),

@@ -51,7 +51,7 @@ class _SendRequestCardWidgetState extends State<SendRequestCardWidget> {
             title:Row(children: [
               Text('${widget.groupName.capitalizeFirst}',
                   style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                       color: Theme.of(context).colorScheme.black )),
 
@@ -75,7 +75,7 @@ class _SendRequestCardWidgetState extends State<SendRequestCardWidget> {
                   text: 'Send Join Request',
                   isLoading: isLoading,
                   textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w400,
                       color: Theme.of(context).colorScheme.white ),
                   height: 32.h,
@@ -87,14 +87,14 @@ class _SendRequestCardWidgetState extends State<SendRequestCardWidget> {
             subtitle:  Text(
               '${widget.memberCount} Members',
               style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),),
           Text(
             '${widget.groupDesc.capitalizeFirst}',
             style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.greyColor500 ),
           ),

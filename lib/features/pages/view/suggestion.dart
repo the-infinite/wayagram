@@ -81,7 +81,7 @@ class _SuggestionState extends ConsumerState<Suggestion> with SingleTickerProvid
                           title:Row(children: [
                             Text('${page?.name?.capitalizeFirst}',
                                 style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 14,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.w600,
                                     color: Theme.of(context).colorScheme.black )),
 
@@ -94,7 +94,7 @@ class _SuggestionState extends ConsumerState<Suggestion> with SingleTickerProvid
                                 },
                                 text: 'Follow',
                                 textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                                    fontSize: 12,
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w400,
                                     color: Theme.of(context).colorScheme.white ),
                                 height: 32.h,
@@ -106,14 +106,14 @@ class _SuggestionState extends ConsumerState<Suggestion> with SingleTickerProvid
                           subtitle:  Text(
                             '${page?.followerCount} Followers',
                             style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                                fontSize: 12,
+                                fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
                                 color: Theme.of(context).colorScheme.greyColor500 ),
                           ),),
                         Text(
                           '${page?.description?.capitalizeFirst}',
                           style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).colorScheme.greyColor500 ),
                         ),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
@@ -15,8 +14,7 @@ class AddEvent extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _AddEventState();
 }
 
-class _AddEventState extends ConsumerState<AddEvent>
-    with SingleTickerProviderStateMixin {
+class _AddEventState extends ConsumerState<AddEvent> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -27,8 +25,7 @@ class _AddEventState extends ConsumerState<AddEvent>
   }
 
   void _initializeArgs() {
-    final EventDoc? args =
-        ModalRoute.of(context)?.settings.arguments as EventDoc?;
+    final EventDoc? args = ModalRoute.of(context)?.settings.arguments as EventDoc?;
 
     if (args != null) {
       ref.read(addEventVmProvider.notifier).initializeForEdit(args);
@@ -38,13 +35,11 @@ class _AddEventState extends ConsumerState<AddEvent>
   @override
   Widget build(BuildContext context) {
     return WayaScaffoldWithProgressBar(
-        isLoading: false,
-        isScrollable: true,
-        tabsView: [
-          CreateEvent(gotoNextTab: _goToNextTab),
-          PreviewAddedEvent(gotoPreviousTab: _goToPreviousTab)
-        ],
-        tabController: _tabController);
+      isLoading: false,
+      isScrollable: true,
+      tabsView: [CreateEvent(gotoNextTab: _goToNextTab), PreviewAddedEvent(gotoPreviousTab: _goToPreviousTab)],
+      tabController: _tabController,
+    );
   }
 
   void _goToNextTab() {

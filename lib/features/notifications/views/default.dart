@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -95,7 +96,7 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
               style: WayaTextStyles.bodyMedium.copyWith(
                 color: WayaColors.primary,
                 fontWeight: FontWeight.w600,
-                fontSize: 12,
+                fontSize: 12.sp,
               ),
             ),
           ),

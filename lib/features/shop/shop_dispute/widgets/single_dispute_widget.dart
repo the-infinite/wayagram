@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
@@ -58,7 +59,7 @@ class SingleDisputeWidget extends ConsumerWidget {
                           "Dispute #${dispute.id.substring(0, 6)}",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         ),
                         const Gap(8),
                         Text(
@@ -66,7 +67,7 @@ class SingleDisputeWidget extends ConsumerWidget {
                               dispute.updatedAt.toIso8601String()),
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.greyColor400,
-                              fontSize: 13,
+                              fontSize: 13.sp,
                               fontWeight: FontWeight.normal),
                         )
                       ],
@@ -87,7 +88,7 @@ class SingleDisputeWidget extends ConsumerWidget {
                             ? wayaTheme.colorScheme.primary600
                             : wayaTheme.colorScheme.success,
                         fontWeight: FontWeight.w500,
-                        fontSize: 11),
+                        fontSize: 11.sp),
                   ),
                 )
               ],

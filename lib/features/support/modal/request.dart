@@ -37,7 +37,7 @@ class SuccessfulSupportRequestDialog extends StatelessWidget {
             Text(
               'Support Request Submitted',
               style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                fontSize: 24,
+                fontSize: 24.sp,
                 fontWeight: FontWeight.w700,
                 color: wayaTheme.colorScheme.black,
               ),

@@ -73,8 +73,8 @@ class EventDoc extends BaseModel<EventDoc> {
   final String? description;
   final String location;
   final String locationAddress;
-  final String startDate;
-  final String endDate;
+  final DateTime startDate;
+  final DateTime endDate;
   final String startTime;
   final String endTime;
   final String payoutStatus;
@@ -99,8 +99,8 @@ class EventDoc extends BaseModel<EventDoc> {
     this.description,
     required this.location,
     required this.locationAddress,
-    required this.startDate, 
-    required this.endDate, 
+    required this.startDate,
+    required this.endDate,
     required this.startTime,
     required this.endTime,
     required this.payoutStatus,
@@ -127,8 +127,8 @@ class EventDoc extends BaseModel<EventDoc> {
       description: json["description"],
       location: json["location"],
       locationAddress: json["locationAddress"],
-      startDate: DateTime.parse(json["startDate"]).toIso8601String(),
-      endDate: DateTime.parse(json["endDate"]).toIso8601String(),
+      startDate: DateTime.parse(json["startDate"]),
+      endDate: DateTime.parse(json["endDate"]),
       startTime: json["startTime"],
       endTime: json["endTime"],
       payoutStatus: json["payoutStatus"],
@@ -146,13 +146,13 @@ class EventDoc extends BaseModel<EventDoc> {
     );
   }
 
-    @override
+  @override
   Map<String, dynamic> toMap() => {
         'id': id,
         'userId': userId,
-          "title": title,
-      "organizerName": organizerName,
-      "eventType": eventType,
-      "location": location
+        "title": title,
+        "organizerName": organizerName,
+        "eventType": eventType,
+        "location": location
       };
 }

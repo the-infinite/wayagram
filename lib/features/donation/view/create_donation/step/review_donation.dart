@@ -52,7 +52,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
         const Gap(20),
         Text("Donation Thumbnail",
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 14,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.black),),
         const Gap(15),
@@ -187,7 +187,7 @@ class EditHeader extends StatelessWidget {
           title,
           style: TextStyle().wayaCopyWith(
             color: wayaTheme.colorScheme.customBlack,
-            fontSize: 16,
+            fontSize: 16.sp,
           ),
         ),
         const Gap(3),
@@ -212,7 +212,7 @@ class EditHeader extends StatelessWidget {
                 Text(
                   "Edit",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customBlack, fontSize: 14),
+                      color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
                 )
               ],
             ),

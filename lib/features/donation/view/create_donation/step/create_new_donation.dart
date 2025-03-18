@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -78,7 +79,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -110,7 +111,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -141,7 +142,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -172,7 +173,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -207,7 +208,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -242,7 +243,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -262,7 +263,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                       child: Text(
                         "Show Amount Raised",
                         style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 16, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.black),
+                            fontSize: 16.sp, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.black),
                       ),
                     ),
                   ],
@@ -309,7 +310,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                         Text(
                           "Show Number of Donors",
                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 16, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.black),
+                              fontSize: 16.sp, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.black),
                         ),
                         const Gap(6),
                         Text(
@@ -345,7 +346,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -355,7 +356,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                 Text(
                   'Privacy Options',
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 14, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.black),
+                      fontSize: 14.sp, fontWeight: FontWeight.w500, color: Theme.of(context).colorScheme.black),
                 ),
                 const Gap(10),
                 /* Row(children: [
@@ -404,7 +405,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                       child: RadioSelect(
                         title: Text("Public",
                             style: wayaTheme.textTheme.titleMedium!
-                                .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customBlack)),
+                                .wayaCopyWith(fontSize: 14.sp, color: wayaTheme.colorScheme.customBlack)),
                         value: 'public',
                         groupedValue: selectedOption,
                         onChanged: (value) {
@@ -418,7 +419,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                         child: RadioSelect(
                       title: Text("Private",
                           style: wayaTheme.textTheme.titleMedium!
-                              .wayaCopyWith(fontSize: 14, color: wayaTheme.colorScheme.customBlack)),
+                              .wayaCopyWith(fontSize: 14.sp, color: wayaTheme.colorScheme.customBlack)),
                       value: 'private',
                       groupedValue: selectedOption,
                       onChanged: (value) {

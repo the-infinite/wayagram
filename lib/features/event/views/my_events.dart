@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -50,34 +50,35 @@ class _MyEventState extends ConsumerState<MyEvents> {
 
     return Expanded(
       child: PaginatedDataView<EventDoc>(
-          uniqueKey: 'my-events',
-          trailingWidget: _buildTrailing(context: context, state: state),
-          loadingState: SizedBox(
-              height: context.height * 0.4,
-              child: Center(
-                child: CircularProgressIndicator(),
-              )),
-          emptyState: EventEmptyState(),
-          fetchData: ref.read(eventVmProvider.notifier).getUserEvents,
-          result: (data, s) {
-            final filteredEvents = WayaUtils.search<EventDoc>(
-              data,
-              ['title', 'organizerName', 'eventType', 'location'],
-              searchController.text,
-            );
-            return ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: filteredEvents.length,
-                itemBuilder: (context, index) {
-                  return EventWidget(event: filteredEvents[index]);
-                });
-          }),
+        uniqueKey: 'my-events',
+        trailingWidget: _buildTrailing(context: context, state: state),
+        loadingState: SizedBox(
+            height: context.height * 0.4,
+            child: Center(
+              child: CircularProgressIndicator(),
+            )),
+        emptyState: EventEmptyState(),
+        fetchData: ref.read(eventVmProvider.notifier).getUserEvents,
+        result: (data, s) {
+          final filteredEvents = WayaUtils.search<EventDoc>(
+            data,
+            ['title', 'organizerName', 'eventType', 'location'],
+            searchController.text,
+          );
+          return ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: filteredEvents.length,
+            itemBuilder: (context, index) {
+              return EventWidget(event: filteredEvents[index]);
+            },
+          );
+        },
+      ),
     );
   }
 
-  Column _buildTrailing(
-      {required BuildContext context, required EventState state}) {
+  Column _buildTrailing({required BuildContext context, required EventState state}) {
     final wayaTheme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,8 +86,7 @@ class _MyEventState extends ConsumerState<MyEvents> {
         if (state.myEvents.isNotEmpty) ...[
           WayaButton(
             callback: () {
-             
-               WayaNav.replaceNamed( AddEvent.route);
+              WayaNav.replaceNamed(AddEvent.route);
             },
             color: wayaTheme.colorScheme.primary50,
             centerWidget: Row(
@@ -95,16 +95,13 @@ class _MyEventState extends ConsumerState<MyEvents> {
               children: [
                 SvgPicture.asset(
                   WayaAssets.icons.addEventIcon.path,
-                  colorFilter: ColorFilter.mode(
-                      wayaTheme.colorScheme.customPrimary, BlendMode.srcIn),
+                  colorFilter: ColorFilter.mode(wayaTheme.colorScheme.customPrimary, BlendMode.srcIn),
                 ),
                 const Gap(6),
                 Text(
                   "Create an Event",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customPrimary,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500),
+                      color: wayaTheme.colorScheme.customPrimary, fontSize: 14.sp, fontWeight: FontWeight.w500),
                 )
               ],
             ),
@@ -132,13 +129,12 @@ class EventEmptyState extends StatelessWidget {
       child: EmptyState(
           hasButton: true,
           onTap: () {
-              WayaNav.replaceNamed( AddEvent.route);
+            WayaNav.replaceNamed(AddEvent.route);
           },
           buttontext: 'Create an Event',
           buttonTrailingIcon: SvgPicture.asset(
             WayaAssets.icons.addEventIcon.path,
-            colorFilter:
-                ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+            colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
           ),
           assetImage: Image.asset(
             WayaAssets.images.emptyEvent.path,

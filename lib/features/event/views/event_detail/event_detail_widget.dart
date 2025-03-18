@@ -15,8 +15,7 @@ class EventDetailWidget extends ConsumerStatefulWidget {
   const EventDetailWidget({super.key, required this.eventId});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _EventDetailWidgetState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _EventDetailWidgetState();
 }
 
 class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {

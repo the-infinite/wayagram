@@ -64,7 +64,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                         "62, Lekki - Epe Express way, off Ita opo building,\nLagos State",
                         style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor500,
-                          fontSize: 13,
+                          fontSize: 13.sp,
                         ),
                       ),
                     )
@@ -125,12 +125,12 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                   children: [
                     Text(
                       "Bid Amount",
-                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13.sp),
                     ),
                     const Gap(6),
                     Text(
                       "N 175,000.00",
-                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
                     )
                   ],
                 ),
@@ -155,12 +155,12 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                   children: [
                     Text(
                       "Delivery Charges",
-                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13.sp),
                     ),
                     const Gap(6),
                     Text(
                       "N 5,000.00",
-                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
                     )
                   ],
                 ),
@@ -185,12 +185,12 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                   children: [
                     Text(
                       "Total",
-                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 13.sp),
                     ),
                     const Gap(6),
                     Text(
                       "N 180,000.00",
-                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 18),
+                      style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 18.sp),
                     )
                   ],
                 ),
@@ -220,12 +220,12 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                       children: [
                         Text(
                           "Wayagram Wallet",
-                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 16),
+                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 16.sp),
                         ),
                         const Gap(6),
                         Text(
                           "This transaction will be deducted from \n your wallet  balance",
-                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 14),
+                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 14.sp),
                         )
                       ],
                     )
@@ -286,12 +286,12 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                       children: [
                         Text(
                           "Pay With Wayaquick",
-                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 16),
+                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 16.sp),
                         ),
                         const Gap(6),
                         Text(
                           "Pay with waya’s payment gateway",
-                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 14),
+                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.greyColor400, fontSize: 14.sp),
                         )
                       ],
                     )
@@ -344,14 +344,14 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                       child: Text(
                         "Total",
                         style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.greyColor500, fontWeight: FontWeight.normal, fontSize: 14),
+                            color: wayaTheme.colorScheme.greyColor500, fontWeight: FontWeight.normal, fontSize: 14.sp),
                       ),
                     ),
                     Positioned(
                         top: 25,
                         child: Text(
                           "N 180,000",
-                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 18),
+                          style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 18.sp),
                         ))
                   ],
                 )),

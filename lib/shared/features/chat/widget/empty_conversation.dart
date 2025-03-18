@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -50,7 +51,7 @@ class EmptyConversationsWidget extends StatelessWidget {
           title,
           style: WayaTextStyles.titleLarge.copyWith(
             fontWeight: FontWeight.w700,
-            fontSize: 24,
+            fontSize: 24.sp,
           ),
         ),
 

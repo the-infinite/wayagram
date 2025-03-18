@@ -13,9 +13,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-
-import '../../../core/theme/waya_colors.dart';
 
 class ApplicationStatus extends ConsumerStatefulWidget {
   final String causeTitle;
@@ -28,6 +25,14 @@ class ApplicationStatus extends ConsumerStatefulWidget {
   final String status;
   final String privacy;
   final String showRaised;
+  final String url;
+  final String image;
+  final String id;
+  final int? donationCount;
+  final int? daysLeft;
+  final String impact;
+  final String minimumDonationAmount;
+  final double ratioLeft;
 
   const ApplicationStatus(
       {super.key,
@@ -41,6 +46,14 @@ class ApplicationStatus extends ConsumerStatefulWidget {
         required this.status,
         required this.privacy,
         required this.showRaised,
+        required this.url,
+        required this.image,
+        required this.id,
+        required this.donationCount,
+        required this.daysLeft,
+        required this.impact,
+        required this.minimumDonationAmount,
+        required this.ratioLeft
       });
 
   @override
@@ -61,7 +74,7 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Application Status ",
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
           const Gap(5),
           Text(
               maxLines: 3,
@@ -99,7 +112,7 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
                 Text(
                   'Application',
                   style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 12,
+                      fontSize: 12.sp,
                       fontWeight: FontWeight.w400,
                       color: Theme.of(context).colorScheme.greyColor600 ),
                 ),
@@ -117,7 +130,7 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
                     child: Text(
                       widget.status,
                       style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 12,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
                           color: widget.status == 'Pending'? WayaColors.pendingColor2: widget.status == 'Approved'? WayaColors.success: WayaColors.error ),
                     ),
@@ -156,18 +169,19 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
             callback: (){
               WayaNav.toNamed('/donationManagement', arguments: {
                 'title': widget.causeTitle,
-                //'image': '${donation.imageURL}',
+                'image': widget.image,
                 'amountRaised': widget.amountRaised.replaceAll('.00', ''),
                 'targetAmount': widget.targetAmount.replaceAll('.00', ''),
                 'desc': widget.desc,
                 'solution': widget.solution,
-                // 'impact': '${donation.impact}',
-                // 'url': '${donation.url}',
-                // 'minimumDonationAmount': '${donation.minimumDonationAmount}',
-                // 'daysLeft': '$daysLeft',
-                // 'id': '${donation.id}',
-                // 'range':ratioLeft,
-                // 'donationCount': '${donation.donationCount}'
+                'privacy':widget.privacy,
+                'impact': widget.impact,
+                'url': widget.url,
+                'minimumDonationAmount': widget.minimumDonationAmount,
+                'daysLeft': widget.daysLeft,
+                'id': widget.id,
+                'range': widget.ratioLeft,
+                'donationCount': widget.donationCount
               });
             },
             height: 40,
@@ -206,13 +220,13 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
       children: [
         Text(title,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.greyColor500),),
 
         Text(subTitle,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.black),),
       ],);

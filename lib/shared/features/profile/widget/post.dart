@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
@@ -18,10 +19,10 @@ import 'package:wayagram/features/group/view/report_group_post.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
+import 'package:wayagram/features/post/view/comment.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/shared/features/profile/logic/default.dart';
-import 'package:wayagram/shared/features/profile/modals/comment.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
@@ -59,11 +60,10 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
   }
 
   void showComments(BuildContext context) async {
-    final result = await WayaUtils.showModalSheet(
-      context,
-      child: PostCommentModal(
-        post: widget.data,
-        index: widget.index,
+    final result = await WayaNav.to(
+      transition: Transition.downToUp,
+      PostCommentsWidget(
+        id: widget.data.id,
       ),
     );
 
@@ -163,7 +163,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                 Text(
                                   formatTimeAgo('${widget.data.createdAt}'),
                                   style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                                    fontSize: 14,
+                                    fontSize: 14.sp,
                                     fontWeight: FontWeight.w400,
                                     color: wayaTheme.colorScheme.greyColor500,
                                   ),

@@ -149,7 +149,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         style: TextStyle(
                             color: getColor(
                                 true, model?.status?.toLowerCase() ?? ""),
-                            fontSize: 12),
+                            fontSize: 12.sp),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -178,7 +178,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                           child: Text(
                             "Live",
                             style: TextStyle(
-                                color: Color(0xff036B26), fontSize: 12),
+                                color: Color(0xff036B26), fontSize: 12.sp),
                             textAlign: TextAlign.center,
                           ),
                         ),
@@ -433,7 +433,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           Text(
             text,
             style: TextStyle().wayaCopyWith(
-                color: color, fontWeight: FontWeight.w500, fontSize: 12),
+                color: color, fontWeight: FontWeight.w500, fontSize: 12.sp),
           )
         ],
       ),

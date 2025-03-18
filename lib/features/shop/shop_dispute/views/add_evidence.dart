@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
@@ -48,7 +49,7 @@ class _AddEvidenceState extends ConsumerState<AddEvidence> {
             "Add Evidence",
             textAlign: TextAlign.start,
             style: wayaTheme.textTheme.bodyBold.copyWith(
-              fontSize: 20,
+              fontSize: 20.sp,
             ),
           ),
 

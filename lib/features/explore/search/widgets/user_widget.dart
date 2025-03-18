@@ -130,17 +130,25 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                                               width: 1.5,
                                             )
                                           : null,
-                                      color: _followStatus?.isUserFollowing == true
-                                          ? theme.colorScheme.white
-                                          : theme.colorScheme.primary,
+                                      color: _followStatus == null
+                                          ? theme.colorScheme.greyColor200
+                                          : _followStatus!.isUserFollowing
+                                              ? theme.colorScheme.white
+                                              : theme.colorScheme.primary,
                                       borderRadius: BorderRadius.circular(7.r),
                                     ),
                                     child: Text(
-                                      _followStatus?.isUserFollowing == true ? "Following" : "Follow",
+                                      _followStatus == null
+                                          ? "Loading"
+                                          : _followStatus!.isUserFollowing
+                                              ? "Following"
+                                              : "Follow",
                                       style: theme.textTheme.labelSmall?.copyWith(
-                                        color: _followStatus?.isUserFollowing == true
-                                            ? theme.colorScheme.primary
-                                            : theme.colorScheme.white,
+                                        color: _followStatus == null
+                                            ? theme.colorScheme.greyColor500
+                                            : _followStatus!.isUserFollowing
+                                                ? theme.colorScheme.primary
+                                                : theme.colorScheme.white,
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -151,7 +159,7 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                           subtitle: Text(
                             data.$2.username != null ? '@${data.$2.username}' : 'ID: ${data.$1.id}',
                             style: theme.textTheme.bodySmall!.copyWith(
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
                               color: theme.colorScheme.greyColor500,
                             ),
@@ -164,7 +172,7 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                         Text(
                           data.$2.bio ?? '',
                           style: theme.textTheme.displaySmall!.copyWith(
-                            fontSize: 12,
+                            fontSize: 12.sp,
                             fontWeight: FontWeight.w400,
                             color: theme.colorScheme.greyColor500,
                           ),

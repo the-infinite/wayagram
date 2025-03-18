@@ -506,17 +506,25 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                 width: 1.5,
                                               )
                                             : null,
-                                        color: _followStatus?.isUserFollowing == true
-                                            ? wayaTheme.colorScheme.white
-                                            : wayaTheme.colorScheme.primary,
+                                        color: _followStatus == null
+                                            ? wayaTheme.colorScheme.greyColor200
+                                            : _followStatus!.isUserFollowing
+                                                ? wayaTheme.colorScheme.white
+                                                : wayaTheme.colorScheme.primary,
                                         borderRadius: BorderRadius.circular(7.r),
                                       ),
                                       child: Text(
-                                        _followStatus?.isUserFollowing == true ? "Following" : "Follow",
+                                        _followStatus == null
+                                            ? "Loading"
+                                            : _followStatus!.isUserFollowing
+                                                ? "Following"
+                                                : "Follow",
                                         style: wayaTheme.textTheme.labelSmall?.copyWith(
-                                          color: _followStatus?.isUserFollowing == true
-                                              ? wayaTheme.colorScheme.primary
-                                              : wayaTheme.colorScheme.white,
+                                          color: _followStatus == null
+                                              ? wayaTheme.colorScheme.greyColor500
+                                              : _followStatus!.isUserFollowing
+                                                  ? wayaTheme.colorScheme.primary
+                                                  : wayaTheme.colorScheme.white,
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -565,7 +573,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                   '@${profile.username}',
                                   style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.greyColor500,
-                                    fontSize: 13,
+                                    fontSize: 13.sp,
                                   ),
                                 ),
 
@@ -607,13 +615,18 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       title2: ' Following',
                                       style1: wayaTheme.textTheme.bodySmall?.copyWith(
                                         color: wayaTheme.colorScheme.black,
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                       ),
                                       style2: wayaTheme.textTheme.bodySmall?.copyWith(
                                         color: wayaTheme.colorScheme.greyColor500,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                       ),
+                                      onTap2: isSelf
+                                          ? null
+                                          : () => WayaNav.toNamed(
+                                                WayaAppRoutes.getFollowersPage(widget.id, 'following', 'profile'),
+                                              ),
                                     ),
 
                                     //? Followers.
@@ -623,13 +636,18 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       title2: ' Followers',
                                       style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                         color: wayaTheme.colorScheme.black,
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                       ),
                                       style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                         color: wayaTheme.colorScheme.greyColor500,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                       ),
+                                      onTap2: isSelf
+                                          ? null
+                                          : () => WayaNav.toNamed(
+                                                WayaAppRoutes.getFollowersPage(widget.id, 'followers', 'profile'),
+                                              ),
                                     ),
 
                                     //? Posts.
@@ -638,12 +656,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       title2: ' Posts',
                                       style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                         color: wayaTheme.colorScheme.black,
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                       ),
                                       style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                         color: wayaTheme.colorScheme.greyColor500,
                                         fontWeight: FontWeight.w500,
-                                        fontSize: 12,
+                                        fontSize: 12.sp,
                                       ),
                                     ),
                                   ],
@@ -660,12 +678,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
                                 style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                   color: wayaTheme.colorScheme.black,
-                                  fontSize: 12,
+                                  fontSize: 12.sp,
                                 ),
                                 style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                   color: wayaTheme.colorScheme.greyColor500,
                                   fontWeight: FontWeight.w500,
-                                  fontSize: 12,
+                                  fontSize: 12.sp,
                                 ),
                               ),
                             ],

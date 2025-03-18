@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -82,7 +83,7 @@ class UgtContestantCard extends ConsumerWidget {
           trailing: SizedBox(
             width: 100,
             child: WayaButton(
-              fontSize: 14,
+              fontSize: 14.sp,
               color: WayaColors.primary50,
               textColor: WayaColors.primary500,
               callback: () {
@@ -91,10 +92,31 @@ class UgtContestantCard extends ConsumerWidget {
                   return;
                 }
 
-                //VoteSuccessModal
-                //ConfirmVoteOptionModal
-                //VoteOptionModal
-                //PollsModal
+                if (model.entryType?.toLowerCase() == "free") {
+                  WayaUtils.showModalSheet(
+                    context,
+                    child: ConfirmVoteOptionModal(
+                      amount: "1",
+                      voteFee: "0",
+                      isFree: true,
+                      model: ContestVoteModel(
+                          contestId: contestantData.contestId ?? "",
+                          contestantId: contestantData.id ?? "",
+                          hostUserId: contestantData.profileId ?? "",
+                          amount: "0",
+                          numberOfVotes: "0",
+                          profileId: "",
+                          type: model.entryType?.toLowerCase()),
+                      candidateName:
+                          contestantData.contestApplicant?.fullName ?? "Name",
+                      votingLink: "votingLink",
+                    ),
+                  );
+
+                  return;
+                }
+
+               
                 WayaUtils.showModalSheet(
                   context,
                   child: VoteOptionModal(

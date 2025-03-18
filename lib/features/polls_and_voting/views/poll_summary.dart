@@ -31,17 +31,11 @@ class PollSummary extends ConsumerStatefulWidget {
 }
 
 class _PollSummaryState extends ConsumerState<PollSummary>  {
-  CreatePollVotingState? viewModel;
-
-
-
-  String userType = "PERSONAL";
 
   @override
   Widget build(BuildContext context) {
 
     final viewModel = ref.watch(createPollVotingProvider);
-    final poll = ref.watch(createPollVotingProvider.notifier);
     final wayaTheme = Theme.of(context);
     final setUp = ref.watch(successfulSetupVmProvider);
 
@@ -105,7 +99,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             text: 'Create',
             horizontalPadding: 12,
             textStyle: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.white ),
           )
@@ -123,7 +117,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             Text(
               '${viewModel.pollDescription.text.capitalizeFirst}',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),
@@ -136,7 +130,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               children: [
                 summary('Start Date',
                     '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.startDate)}\n',
-                    'Host', setUp.user?.user?.firstName?.capitalizeFirst ?? ''),
+                    'Host', setUp.user?.user?.firstName.capitalizeFirst ?? ''),
                 summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
                 summary('Poll Type', '${viewModel.pollType.capitalizeFirst}\n', 'Prize per vote', '₦${viewModel.votePrice.text}'
                 ),
@@ -148,7 +142,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             Text(
               'Choices',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
                   color: Theme.of(context).colorScheme.greyColor900 ),
             ),
@@ -173,7 +167,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         Text(
           title,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.greyColor600 ),
         ),
@@ -181,7 +175,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         Text(
           subTitle,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.black ),
         ),
@@ -189,7 +183,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         Text(
           title2,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.greyColor600 ),
         ),
@@ -197,7 +191,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         Text(
           subTitle2,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.black ),
         ),
@@ -248,15 +242,15 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
         ClipRRect(
             borderRadius: BorderRadius.circular(8),
             child: chk?
-            //Image.file(File('assets/images/pages/image_placeholder.png'), height: 66.h, width: 50.w,):
-            Image.asset('assets/images/pages/image_placeholder.png',height: 66.h, width: 50.w,):
+            //Image.asset('assets/images/pages/image_placeholder.png',height: 66.h, width: 50.w,):
+            Container():
             Image.file(File(img), height: 66.h, width: 50.w,),
         ),
         const Gap(40),
         Text(
           name,
           style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 20,
+              fontSize: 20.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(ctx).colorScheme.primary600 ),
         ),
@@ -330,7 +324,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
               child: Text(
                 'Ok, I Agree',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     fontWeight: FontWeight.w400,
                     color: Theme.of(context).colorScheme.greyColor500 ),
               ),

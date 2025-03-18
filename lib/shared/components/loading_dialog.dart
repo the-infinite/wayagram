@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 
@@ -65,7 +66,7 @@ class WayaLoadingDialog extends StatelessWidget {
                 style: textStyle ??
                     TextStyle(
                       color: wayaTheme.colorScheme.primary,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                     ),
                 textAlign: TextAlign.center,
               ),

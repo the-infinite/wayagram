@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_video.dart';
@@ -145,7 +146,7 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                             textAlign: TextAlign.center,
                             style: WayaTextStyles.bodySmall.copyWith(
                               color: WayaColors.primary,
-                              fontSize: 14,
+                              fontSize: 14.sp,
                             ),
                           ),
                         ],

@@ -132,6 +132,7 @@ class ContestAppliedCard extends StatelessWidget {
                       "createdAt": post.contest?.createdAt,
                       "likeCount": 0,
                       "isLike": false,
+                        "showDescription":false,
                       "discription": post.contest?.description,
                       "shareCount": 0,
                       "type": MyFullMediaType.image

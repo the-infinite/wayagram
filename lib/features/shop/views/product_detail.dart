@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
@@ -151,7 +152,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                           style: TextStyle().wayaCopyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
-                              fontSize: 12)),
+                              fontSize: 12.sp)),
                     ),
                   ),
                 ),
@@ -368,7 +369,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                           Text('Add To Cart',
                               style: TextStyle().wayaCopyWith(
                                   color: wayaTheme.colorScheme.customPrimary,
-                                  fontSize: 15,
+                                  fontSize: 15.sp,
                                   fontWeight: FontWeight.w500))
                         ],
                       ),

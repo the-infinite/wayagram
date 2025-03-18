@@ -110,7 +110,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen >
                                 text: 'Follow',
                                 isLoading: viewModel.isLoading,
                                 textStyle: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                                    fontSize: 12,
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w400,
                                     color: Theme.of(context).colorScheme.white ),
                                 height: 32.h,
@@ -122,7 +122,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen >
 
                            '${member?.user?.email}',
                             style: Theme.of(context).textTheme.bodySmall!.wayaCopyWith(
-                                fontSize: 12,
+                                fontSize: 12.sp,
                                 fontWeight: FontWeight.w400,
                                 color: Theme.of(context).colorScheme.greyColor500 ),
                           ),),
@@ -132,7 +132,7 @@ class _MembersScreenState extends ConsumerState<MembersScreen >
                           //'${member?.user.}',
                           //index.isEven?'🌍 Adventurous soul | Espresso lover ☕ | Gadget aficionado 💻 | Documenting my journeys and life lessons! ✨':'✈️ Wanderlust-driven | Tea connoisseur 🍵 | Tech enthusiast 💻 | Exploring the world and sharing my stories! 🌟',
                           style: Theme.of(context).textTheme.displaySmall!.wayaCopyWith(
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).colorScheme.greyColor500 ),
                         ),

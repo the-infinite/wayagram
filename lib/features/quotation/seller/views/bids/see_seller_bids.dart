@@ -119,7 +119,7 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
       child: Center(
         child: Text(
           amt,
-          style: TextStyle().wayaCopyWith(color: color2, fontWeight: FontWeight.w600, fontSize: 16),
+          style: TextStyle().wayaCopyWith(color: color2, fontWeight: FontWeight.w600, fontSize: 16.sp),
         ),
       ),
     );
