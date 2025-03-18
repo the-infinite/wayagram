@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -100,7 +101,7 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                       Text(
                         widget.data.message.body,
                         style: WayaTextStyles.mediumDescriptionStyle.copyWith(
-                          fontSize: 12,
+                          fontSize: 12.sp,
                         ),
                       ),
 
@@ -112,7 +113,7 @@ class _RequestCardWidgetState extends State<RequestCardWidget> {
                         WayaDateHelper.getFullTimestamp(widget.data.createdAt),
                         style: WayaTextStyles.descriptionStyle.copyWith(
                           color: WayaColors.greyColor400,
-                          fontSize: 13,
+                          fontSize: 13.sp,
                         ),
                       ),
 

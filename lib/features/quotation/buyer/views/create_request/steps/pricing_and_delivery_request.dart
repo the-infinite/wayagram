@@ -88,7 +88,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           formState.errorText!,
-                          style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                          style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                         ),
                       ),
                   ],
@@ -124,7 +124,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -241,7 +241,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -285,7 +285,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
                                   formState.errorText!,
-                                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                                 ),
                               ),
                           ],
@@ -324,7 +324,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                                     formState.errorText!,
                                     style: TextStyle(
                                       color: wayaTheme.colorScheme.error,
-                                      fontSize: 12,
+                                      fontSize: 12.sp,
                                     ),
                                   ),
                                 ),
@@ -382,7 +382,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
                           formState.errorText!,
-                          style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                          style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                         ),
                       ),
                   ],
@@ -422,7 +422,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -463,7 +463,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
                                 formState.errorText!,
-                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -506,7 +506,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
                                   formState.errorText!,
-                                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                                 ),
                               ),
                           ],

@@ -143,7 +143,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                         text: 'Post',
                         isLoading: isLoading.value,
                         textStyle: WayaTextStyles.bodySmall.copyWith(
-                            fontSize: 12, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+                            fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
                       )
                     : WayaButton(
                         callback: !isLoading.value
@@ -158,7 +158,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                         text: 'Post',
                         isLoading: isLoading.value,
                         textStyle: WayaTextStyles.bodySmall.copyWith(
-                            fontSize: 12, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+                            fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
                       ),
               ),
             ),
@@ -238,7 +238,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                               padding: const EdgeInsets.only(top: 5),
                                               child: Text(
                                                 formState.errorText!,
-                                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                                               ),
                                             ),
                                         ],
@@ -396,7 +396,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                       Text(
                         sel ? 'Public post' : 'Private post',
                         style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 14, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
+                            fontSize: 14.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
                       ),
                     ],
                   ),
@@ -448,7 +448,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                         Text(
                                           'Public',
                                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14,
+                                              fontSize: 14.sp,
                                               fontWeight: FontWeight.w600,
                                               color: Theme.of(context).colorScheme.primary),
                                         ),
@@ -457,7 +457,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                             Text(
                                               'Everybody can see and interact with this post',
                                               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                                  fontSize: 14,
+                                                  fontSize: 14.sp,
                                                   fontWeight: FontWeight.w400,
                                                   color: Theme.of(context).colorScheme.primary),
                                             ),
@@ -497,14 +497,14 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                         Text(
                                           'Private',
                                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14,
+                                              fontSize: 14.sp,
                                               fontWeight: FontWeight.w600,
                                               color: Theme.of(context).colorScheme.black),
                                         ),
                                         Text(
                                           'Only your friends can see and interact with this post',
                                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14,
+                                              fontSize: 14.sp,
                                               fontWeight: FontWeight.w400,
                                               color: Theme.of(context).colorScheme.greyColor500),
                                         ),
@@ -528,14 +528,14 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                         Text(
                                           'Public',
                                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14,
+                                              fontSize: 14.sp,
                                               fontWeight: FontWeight.w600,
                                               color: Theme.of(context).colorScheme.black),
                                         ),
                                         Text(
                                           'Everybody can see and interact with this post',
                                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14,
+                                              fontSize: 14.sp,
                                               fontWeight: FontWeight.w400,
                                               color: Theme.of(context).colorScheme.greyColor500),
                                         ),
@@ -556,7 +556,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                         Text(
                                           'Private',
                                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14,
+                                              fontSize: 14.sp,
                                               fontWeight: FontWeight.w600,
                                               color: Theme.of(context).colorScheme.primary),
                                         ),
@@ -565,7 +565,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                             Text(
                                               'Only your friends can see and interact with this post',
                                               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                                  fontSize: 14,
+                                                  fontSize: 14.sp,
                                                   fontWeight: FontWeight.w400,
                                                   color: Theme.of(context).colorScheme.primary),
                                             ),

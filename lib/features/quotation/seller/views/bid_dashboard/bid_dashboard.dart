@@ -103,7 +103,7 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
         Text(
           "Quick Action",
           style: wayaTheme.textTheme.bodyMedium?.copyWith(
-            fontSize: 15,
+            fontSize: 15.sp,
             fontWeight: FontWeight.w600,
             color: wayaTheme.colorScheme.customBlack,
           ),
@@ -190,7 +190,7 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
         Text(
           "Recent Bids",
           style: wayaTheme.textTheme.bodyMedium?.copyWith(
-            fontSize: 15,
+            fontSize: 15.sp,
             fontWeight: FontWeight.w600,
             color: wayaTheme.colorScheme.customBlack,
           ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -43,7 +44,7 @@ class ChatReactionInput extends StatelessWidget {
               Text(
                 "Tap to react to message",
                 style: WayaTextStyles.labelMedium.copyWith(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                 ),
               ),
 

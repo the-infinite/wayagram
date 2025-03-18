@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
@@ -151,7 +152,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                           style: TextStyle().wayaCopyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
-                              fontSize: 12)),
+                              fontSize: 12.sp)),
                     ),
                   ),
                 ),
@@ -237,7 +238,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                           ),
                           const Gap(6),
                           Text(
-                            viewModel.product!.shopName,
+                            viewModel.product!.shopName.capitalizeFirst!,
                             style: wayaTheme.textTheme.labelMedium,
                           )
                         ],
@@ -248,10 +249,10 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      RatingStars(rating: 0),
+                      RatingStars(rating: viewModel.product!.shopRating),
                       const Gap(2),
                       Text(
-                        "4.0",
+                       "${viewModel.product!.shopRating}",
                         style: wayaTheme.textTheme.hintStyle,
                       )
                     ],
@@ -368,7 +369,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                           Text('Add To Cart',
                               style: TextStyle().wayaCopyWith(
                                   color: wayaTheme.colorScheme.customPrimary,
-                                  fontSize: 15,
+                                  fontSize: 15.sp,
                                   fontWeight: FontWeight.w500))
                         ],
                       ),

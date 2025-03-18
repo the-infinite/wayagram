@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -159,7 +160,7 @@ class _DisputeChatState extends ConsumerState<InitDispute> {
                                     : "Seller",
                                 maxLines: 1,
                                 style: WayaTextStyles.titleMedium.copyWith(
-                                  fontSize: 15,
+                                  fontSize: 15.sp,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -191,7 +192,7 @@ class _DisputeChatState extends ConsumerState<InitDispute> {
                             "14 Days left",
                             style: wayaTheme.textTheme.hintStyle.copyWith(
                                 color: wayaTheme.colorScheme.customPrimary,
-                                fontSize: 12,
+                                fontSize: 12.sp,
                                 fontWeight: FontWeight.w500),
                           )
                         ],

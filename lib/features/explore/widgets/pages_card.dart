@@ -89,7 +89,7 @@ class PagesCard extends ConsumerWidget {
                           height: 30,
                           textStyle: TextStyle(
                               color: wayaTheme.colorScheme.white,
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w500),
                           radius: 6,
                         ),
@@ -104,7 +104,7 @@ class PagesCard extends ConsumerWidget {
                           textColor: wayaTheme.colorScheme.customPrimary,
                           textStyle: TextStyle(
                               color: wayaTheme.colorScheme.customPrimary,
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w500),
                           radius: 6,
                           color: wayaTheme.colorScheme.transparent,

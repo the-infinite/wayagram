@@ -113,7 +113,7 @@ class FollowRelationshipWidget extends StatelessWidget {
                           subtitle: Text(
                             data.$2.username != null ? '@${data.$2.username}' : 'ID: ${data.$1.id}',
                             style: theme.textTheme.bodySmall!.copyWith(
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
                               color: theme.colorScheme.greyColor500,
                             ),
@@ -126,7 +126,7 @@ class FollowRelationshipWidget extends StatelessWidget {
                         Text(
                           data.$2.bio ?? '',
                           style: theme.textTheme.displaySmall!.copyWith(
-                            fontSize: 12,
+                            fontSize: 12.sp,
                             fontWeight: FontWeight.w400,
                             color: theme.colorScheme.greyColor500,
                           ),

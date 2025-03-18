@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/components/modals/warning.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -26,11 +27,12 @@ class SinglePollWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+    int daysLeft = poll.endDate.difference(DateTime.now()).inHours;
 
-    int daysLeft = poll.endDate.difference(poll.startDate).inHours;
+    //? This is fine.
     return Container(
       margin: EdgeInsets.only(bottom: 40.h),
-      padding: padded ? EdgeInsets.symmetric(horizontal: 5.w) : EdgeInsets.zero,
+      padding: padded ? EdgeInsets.symmetric(horizontal: 10.w) : EdgeInsets.zero,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -53,7 +55,7 @@ class SinglePollWidget extends ConsumerWidget {
               Text(
                 "• ${WayaHelpers.formatTimeAgo(poll.startDate.toIso8601String())}",
                 style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: wayaTheme.colorScheme.greyColor500,
                 ),
@@ -79,11 +81,11 @@ class SinglePollWidget extends ConsumerWidget {
           if (poll.choices != null && poll.choices!.isNotEmpty) ...[
             ...List.generate(poll.choices!.length, (index) {
               final description = poll.choices![index].description;
-              return description.isNotEmpty
+              return description?.isNotEmpty ?? false
                   ? Text(
-                      description,
+                      description!,
                       style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                        fontSize: 12,
+                        fontSize: 12.sp,
                         fontWeight: FontWeight.w400,
                         color: wayaTheme.colorScheme.greyColor500,
                       ),
@@ -94,9 +96,9 @@ class SinglePollWidget extends ConsumerWidget {
 
           const Gap(10),
           Text(
-            '${poll.maxVotesPerUser ?? 0} Votes • $daysLeft hours remaining',
+            '${poll.maxVotesPerUser ?? 0} Votes • ${daysLeft < 0 ? 'This poll has expired' : '$daysLeft hours remaining'}',
             style: wayaTheme.textTheme.bodyMedium!
-                .copyWith(fontSize: 12, fontWeight: FontWeight.w400, color: wayaTheme.colorScheme.greyColor500),
+                .copyWith(fontSize: 12.sp, fontWeight: FontWeight.w400, color: wayaTheme.colorScheme.greyColor500),
           ),
           const Gap(10),
           // index == 0?
@@ -110,18 +112,30 @@ class SinglePollWidget extends ConsumerWidget {
                   splashColor: Colors.transparent,
                   splashFactory: NoSplash.splashFactory,
                   onTap: () {
-                     WayaUtils.showModalSheet(
-                      context,
-                      child: VoteOptionModal(
-                        voteFee: poll.feePerVote!,
-                        choiceId: choice.id,
-                        pollId: poll.id,
-                        candidateName: choice.text,
-                        votingLink: poll.url!,
-                      ),
-                    );
+                    DateTime expirationDate = poll.endDate;
+                    DateTime currentDate = DateTime.now(); // Get current date and time
 
+                    //? If this has expired.
+                    if (currentDate.isAfter(expirationDate)) {
+                      WayaUtils.showModalSheet(
+                        context,
+                        child: WayaWarningDialog(title: "The poll has ended"),
+                      );
+                    }
 
+                    //? Show the voting modal if this poll has not expired.
+                    else {
+                      WayaUtils.showModalSheet(
+                        context,
+                        child: VoteOptionModal(
+                          voteFee: poll.feePerVote!,
+                          choiceId: choice.id,
+                          pollId: poll.id,
+                          candidateName: choice.text,
+                          votingLink: poll.url!,
+                        ),
+                      );
+                    }
                   },
                   child: Container(
                       padding: EdgeInsets.only(left: 10.w, right: 10.w, top: 10.w, bottom: 10.w),
@@ -148,7 +162,7 @@ class SinglePollWidget extends ConsumerWidget {
                           Text(
                             choice.text,
                             style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                                fontSize: 14, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.primary600),
+                                fontSize: 14.sp, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.primary600),
                           ),
                         ],
                       )),

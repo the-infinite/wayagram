@@ -92,7 +92,7 @@ class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal>
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText ?? "",
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -120,7 +120,7 @@ class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal>
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText ?? "",
-                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -151,7 +151,7 @@ class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal>
                 Text(
                   "Mark as Required",
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: 12.sp,
                     color: isSwitched ? wayaTheme.colorScheme.primaryContainer : wayaTheme.colorScheme.greyColor900,
                   ),
                 ),

@@ -119,7 +119,7 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                           WayaValueHelper.formatPrice(request?.maxBidAmount ?? request?.bidStartingAmount ?? 0),
                           style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
-                            fontSize: 20,
+                            fontSize: 20.sp,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -153,7 +153,7 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                       style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.greyColor500,
                         fontWeight: FontWeight.normal,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                       ),
                     ),
 

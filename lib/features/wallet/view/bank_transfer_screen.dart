@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -20,9 +21,9 @@ class BankTransferScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => WayaNav.goBack(),
         ),
-        title: const Text(
+        title:  Text(
           'Fund With Bank Transfer',
-          style: TextStyle(color: Colors.black, fontSize: 18),
+          style: TextStyle(color: Colors.black, fontSize: 18.sp),
         ),
         elevation: 0,
       ),
@@ -40,8 +41,8 @@ class BankTransferScreen extends StatelessWidget {
                   children: [
                     Text(
                       'Amount:',
-                      style: const TextStyle(
-                        fontSize: 16,
+                      style:  TextStyle(
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -49,7 +50,7 @@ class BankTransferScreen extends StatelessWidget {
                     Text(
                       '${args?["amount"] ?? "N/A"} NGN',
                       style: TextStyle(
-                          fontSize: 28,
+                          fontSize: 28.sp,
                           fontWeight: FontWeight.w500,
                           color: wayaTheme.primaryColor),
                     ),
@@ -97,32 +98,32 @@ class BankTransferScreen extends StatelessWidget {
       children: [
         Text(
           numberLabel,
-          style: const TextStyle(
+          style:  TextStyle(
             color: Colors.grey,
-            fontSize: 14,
+            fontSize: 14.sp,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           number,
-          style: const TextStyle(
-            fontSize: 24,
+          style:  TextStyle(
+            fontSize: 24.sp,
             fontWeight: FontWeight.w500,
           ),
         ),
         const SizedBox(height: 16),
         Text(
           nameLabel,
-          style: const TextStyle(
+          style:  TextStyle(
             color: Colors.grey,
-            fontSize: 14,
+            fontSize: 14.sp,
           ),
         ),
         const SizedBox(height: 4),
         Text(
           name,
-          style: const TextStyle(
-            fontSize: 24,
+          style:  TextStyle(
+            fontSize: 24.sp,
           ),
         ),
         const SizedBox(height: 16),
@@ -212,9 +213,9 @@ class BankTransferScreen extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           description,
-          style: const TextStyle(
+          style:  TextStyle(
             color: Colors.grey,
-            fontSize: 14,
+            fontSize: 14.sp,
           ),
         ),
       ],

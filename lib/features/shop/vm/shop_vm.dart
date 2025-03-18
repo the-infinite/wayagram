@@ -65,7 +65,7 @@ class ShopVm extends StateNotifier<ShopState> {
     try {
       state = state.copyWith(isReviewing: true);
       final response = await _repository.createRating(
-          raterId: raterId, score: score, review: review, type: "Product");
+          raterId: raterId, score: score, review: review, type: "Shop");
       WayaNav.goBack();
       if (response.success && context.mounted) {
         print(response.data);

@@ -61,7 +61,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
               '${args['title']}',
               style: TextStyle().wayaCopyWith(
                   color: wayaTheme.colorScheme.black,
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w700),
             ),
             Gap(10),
@@ -89,7 +89,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
               "Donation Information",
               style: TextStyle().wayaCopyWith(
                   color: wayaTheme.colorScheme.greyColor400,
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w400),
             ),
             Gap(20),
@@ -128,7 +128,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                   "Share Invite",
                   style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.customPrimary,
-                      fontWeight: FontWeight.w600, fontSize: 16),
+                      fontWeight: FontWeight.w600, fontSize: 16.sp),
                 ),
               ],
             ),
@@ -212,7 +212,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
             child:  Text(
               name,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),
@@ -223,7 +223,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
             child: Text(
               number,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.black ),
             ),
@@ -241,13 +241,13 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
       children: [
         Text(title,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 14,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(context).colorScheme.greyColor500),),
 
         Text(subTitle,
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 16,
+              fontSize: 16.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.black),),
       ],);

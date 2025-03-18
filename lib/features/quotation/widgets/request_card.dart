@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
@@ -57,7 +58,7 @@ class RequestCard extends ConsumerWidget {
                           "Open Bid",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.success,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         )
                       ],
                     ),
@@ -88,7 +89,7 @@ class RequestCard extends ConsumerWidget {
                       text: '${ref.read(createPollVotingProvider.notifier).formatDt1(product.bidEnd)}',
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customPrimary,
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w400)),
                   ])),
               const Gap(10),
@@ -101,7 +102,7 @@ class RequestCard extends ConsumerWidget {
                         text: '₦ ${product.bidStartingAmount}',
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.black,
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             fontWeight: FontWeight.w500)),
                   ])),
               const Gap(20),
@@ -113,7 +114,7 @@ class RequestCard extends ConsumerWidget {
                     Text(
                       "Place Bid",
                       style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                          color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
                     ),
                   ],
                 ),

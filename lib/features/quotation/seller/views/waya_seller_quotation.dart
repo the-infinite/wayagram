@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -85,7 +86,7 @@ class _WayaSellerQuotationState extends ConsumerState<WayaSellerQuotation> with 
                   style: wayaTheme.textTheme.bodyMedium?.copyWith(
                     color: wayaTheme.colorScheme.customPrimary,
                     fontWeight: FontWeight.w600,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                   ),
                 ),
               ],

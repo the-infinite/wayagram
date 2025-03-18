@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 
@@ -36,7 +37,7 @@ class InventoryWidget extends StatelessWidget {
               title,
               style: wayaTheme.textTheme.bodyMedium?.copyWith(
                 color: wayaTheme.colorScheme.greyColor400,
-                fontSize: 13,
+                fontSize: 13.sp,
                 fontWeight: FontWeight.w400,
               ),
             ),
@@ -54,7 +55,7 @@ class InventoryWidget extends StatelessWidget {
               style: wayaTheme.textTheme.bodyMedium?.copyWith(
                 color: wayaTheme.colorScheme.customBlack,
                 fontWeight: FontWeight.w600,
-                fontSize: 20,
+                fontSize: 20.sp,
               ),
             ),
           ),

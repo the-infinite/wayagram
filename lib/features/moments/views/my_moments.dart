@@ -81,7 +81,7 @@ class _MyMomentState extends ConsumerState<MyMoments> {
           ),
           Text(
             "Add New Moment",
-            style: TextStyle(color: wayaTheme.colorScheme.customPrimary, fontSize: 14, fontWeight: FontWeight.w500),
+            style: TextStyle(color: wayaTheme.colorScheme.customPrimary, fontSize: 14.sp, fontWeight: FontWeight.w500),
           )
         ],
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -48,7 +49,7 @@ class SingleDeliveryRequestWidget extends ConsumerWidget {
                           "#${data.userId.substring(0, 6)}",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         ),
                         const Gap(8),
                         Container(
@@ -61,7 +62,7 @@ class SingleDeliveryRequestWidget extends ConsumerWidget {
                             style: TextStyle().wayaCopyWith(
                                 color: Colors.yellow[600],
                                 fontWeight: FontWeight.w500,
-                                fontSize: 11),
+                                fontSize: 11.sp),
                           ),
                         )
                       ],

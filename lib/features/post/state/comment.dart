@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wayagram/features/chat/model/default.dart';
-import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
 
 class CommentState {
   final bool isLoading;
-  //final FetchComment? comment;
+  final bool hasLoaded;
   final ScrollController controller;
   final List<Comments> comments;
   final int limit;
@@ -13,24 +11,24 @@ class CommentState {
   final bool hasNextPage;
   final int totalCount;
   final int totalPages;
+  final String? postId;
 
-  // This is fine.
   CommentState({
     required this.isLoading,
+    required this.hasLoaded,
     required this.comments,
-    //required this.messages,
     required this.limit,
     required this.controller,
     required this.totalCount,
     required this.totalPages,
     required this.hasNextPage,
     required this.page,
+    required this.postId,
   });
 
-  // This is fine.
   static final initial = CommentState(
     isLoading: false,
-    //comment: null,
+    hasLoaded: false,
     comments: [],
     limit: 100,
     controller: ScrollController(),
@@ -38,12 +36,12 @@ class CommentState {
     totalPages: 0,
     hasNextPage: true,
     page: 1,
+    postId: null,
   );
 
-  /// A helper function used to copy the contents of this chat's internal state
-  /// and then pass it around.
   CommentState copyWith({
     bool? isLoading,
+    bool? hasLoaded,
     List<Comments>? comments,
     int? page,
     bool? hasNextPage,
@@ -51,17 +49,19 @@ class CommentState {
     int? totalPages,
     ScrollController? controller,
     bool? typing,
+    String? postId,
   }) {
     return CommentState(
       isLoading: isLoading ?? this.isLoading,
+      hasLoaded: hasLoaded ?? this.hasLoaded,
       comments: comments ?? this.comments,
-      //messages: messages ?? this.messages,
       limit: limit,
       totalCount: totalCount ?? this.totalCount,
       totalPages: totalPages ?? this.totalPages,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       page: page ?? this.page,
       controller: controller ?? this.controller,
+      postId: postId ?? this.postId,
     );
   }
 }

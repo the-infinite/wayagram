@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
@@ -255,11 +256,11 @@ class GroupVm extends StateNotifier<GroupState> {
       if (response.success && ctx.mounted) {
         WayaNav.toNamed('/groups');
         ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
+           SnackBar(
             content: Text(
               'Group info updated successfully!',
               style:
-                  TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                  TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
             ),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),

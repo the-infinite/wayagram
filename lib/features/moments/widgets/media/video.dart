@@ -93,7 +93,8 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
             if (result) {
               await Future.delayed(const Duration(seconds: 1));
               try {
-                widget.resume();
+                _controller.setLooping(true);
+                _controller.play();
               } catch (_) {}
               setState(() {
                 downloaded = true;

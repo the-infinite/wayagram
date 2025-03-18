@@ -22,8 +22,9 @@ import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
 class ReportDisputeModal extends ConsumerStatefulWidget {
   final Order order;
   final String disputeId;
+  final String tobeEscalatedBy;
   const ReportDisputeModal(
-      {super.key, required this.order, required this.disputeId});
+      {super.key, required this.order, required this.disputeId, required  this.tobeEscalatedBy});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -41,11 +42,11 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
   List<DocType> mediaDoc = [];
 
   void addFile(File file) {
-  setState(() {
+    setState(() {
       mediaDoc = [
-      DocType(file: file, type: "evidence", name: file.path.split('/').last)
-    ];
-  });
+        DocType(file: file, type: "evidence", name: file.path.split('/').last)
+      ];
+    });
   }
 
   void removeFile() {
@@ -71,6 +72,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
         reference: widget.order.id,
         sellerId: widget.order.vendorId,
         disputeId: widget.disputeId,
+        tobeEscalatedBy: widget.tobeEscalatedBy,
         mediaDoc: mediaDoc.isNotEmpty ? mediaDoc[0] : null,
         details: details);
 
@@ -128,7 +130,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                   "Report a Dispute",
                   style: theme.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    fontSize: 24,
+                    fontSize: 24.sp,
                   ),
                 ),
 
@@ -138,7 +140,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                 Text(
                   "Let us know what went wrong to help resolve the issue",
                   style: theme.textTheme.descriptionStyle.copyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
                 ),
 
@@ -150,7 +152,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                   style: theme.textTheme.descriptionStyle.copyWith(
                     color: theme.colorScheme.customBlack,
                     fontWeight: FontWeight.w500,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                   ),
                 ),
 
@@ -223,7 +225,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
                               formState.errorText!,
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: theme.colorScheme.error,
-                                fontSize: 12,
+                                fontSize: 12.sp,
                               ),
                             ),
                           ),

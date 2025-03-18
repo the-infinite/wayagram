@@ -51,7 +51,7 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
           horizontalPadding: 12,
           isLoading: viewModel.isLoading,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
         ),

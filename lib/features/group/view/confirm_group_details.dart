@@ -56,7 +56,7 @@ print('Group Type ====>>> ${args['type']}');
           text: 'Create',
           horizontalPadding: 12,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
         ),

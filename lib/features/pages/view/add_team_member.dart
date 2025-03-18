@@ -62,7 +62,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
           text: 'Add User',
           isLoading: viewModel.isLoading,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
         ): WayaButton(
@@ -79,7 +79,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
           text: 'Add User',
           isLoading: viewModel.isLoading,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
 
@@ -133,7 +133,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -167,7 +167,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -322,7 +322,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                              Text(
                                title,
                                style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                   fontSize: 14,
+                                   fontSize: 14.sp,
                                    fontWeight: FontWeight.w600,
                                    color: Theme.of(context).colorScheme.black ),
                              ),
@@ -344,7 +344,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                            child: Text(
                              subTitle,
                              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                 fontSize: 14,
+                                 fontSize: 14.sp,
                                  fontWeight: FontWeight.w400,
                                  color: Theme.of(context).colorScheme.greyColor500 ),
                            ),

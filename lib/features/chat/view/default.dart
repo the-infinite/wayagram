@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -108,7 +109,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                   "Messages",
                   style: WayaTextStyles.titleLarge.copyWith(
                     fontWeight: FontWeight.w700,
-                    fontSize: 24,
+                    fontSize: 24.sp,
                   ),
                 ),
               ),
@@ -154,7 +155,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                           "Archived chats",
                           style: WayaTextStyles.bodySemiBold.copyWith(
                             color: WayaColors.primary,
-                            fontSize: 13,
+                            fontSize: 13.sp,
                           ),
                         ),
                       ],

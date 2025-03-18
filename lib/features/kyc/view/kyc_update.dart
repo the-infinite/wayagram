@@ -60,7 +60,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
            'KYC Verification Status',
             textAlign: TextAlign.center,
             style: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 24,
+              fontSize: 24.sp,
               fontWeight: FontWeight.w700,
               color: Theme.of(context).colorScheme.black ),
           ),

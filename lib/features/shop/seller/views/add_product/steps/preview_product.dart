@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -290,7 +291,7 @@ class EditHeader extends StatelessWidget {
                 Text(
                   "Edit",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customBlack, fontSize: 14),
+                      color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
                 )
               ],
             ),

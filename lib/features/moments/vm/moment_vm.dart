@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -33,7 +34,7 @@ class MomentVm extends StateNotifier<MomentState> {
       : super(MomentState(
           backgroundColor: const Color(0xFF1D2939),
           textStyle: GoogleFonts.roboto(
-            fontSize: 32,
+            fontSize: 32.sp,
             color: Colors.white,
             fontWeight: FontWeight.w500,
           ),
@@ -51,7 +52,7 @@ class MomentVm extends StateNotifier<MomentState> {
     state = MomentState(
         backgroundColor: const Color(0xFF1D2939),
         textStyle: GoogleFonts.roboto(
-          fontSize: 32,
+          fontSize: 32.sp,
           color: Colors.white,
           fontWeight: FontWeight.w500,
         ),
@@ -137,7 +138,7 @@ class MomentVm extends StateNotifier<MomentState> {
     final nextIndex = (currentIndex + 1) % fonts.length;
 
     updateTextStyle(fonts[nextIndex].copyWith(
-      fontSize: 32,
+      fontSize: 32.sp,
       color: Colors.white,
       fontWeight: FontWeight.w500,
     ));
@@ -508,7 +509,7 @@ class MomentVm extends StateNotifier<MomentState> {
         textStyle: moment.fontType != null && moment.fontType!.isNotEmpty
             ? MomentHelper.textStyleFromJson(moment.fontType!)
             : GoogleFonts.roboto(
-                fontSize: 32,
+                fontSize: 32.sp,
                 color: Colors.white,
                 fontWeight: FontWeight.w500,
               ),

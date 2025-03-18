@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -82,18 +83,18 @@ class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScree
                           ),
                         ),
                         const SizedBox(height: 24),
-                        const Text(
+                         Text(
                           'Verifying Transaction',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 24.sp,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
+                         Text(
                           'Please wait while we confirm your transaction...',
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                          style: TextStyle(color: Colors.grey, fontSize: 16.sp),
                         ),
                       ] else if (state.verified!) ...[
                         Icon(
@@ -105,16 +106,16 @@ class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScree
                         Text(
                           'Transaction Verified',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 24.sp,
                             fontWeight: FontWeight.bold,
                             color: wayaTheme.colorScheme.success,
                           ),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
+                         Text(
                           'Your transaction has been successfully verified.',
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                          style: TextStyle(color: Colors.grey, fontSize: 16.sp),
                         ),
                         const SizedBox(height: 16),
                         ElevatedButton(
@@ -135,16 +136,16 @@ class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScree
                         Text(
                           'Verification Failed',
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: 24.sp,
                             fontWeight: FontWeight.bold,
                             color: wayaTheme.colorScheme.error,
                           ),
                         ),
                         const SizedBox(height: 16),
-                        const Text(
+                         Text(
                           'There was an issue verifying your transaction. Please try again.',
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                          style: TextStyle(color: Colors.grey, fontSize: 16.sp),
                         ),
                       ]
                     ],
@@ -164,7 +165,7 @@ class _VerifyTransactionScreenState extends ConsumerState<VerifyTransactionScree
                     ),
                   ), // I am sorry, i just want to push sth that is working
                   child: Text(args?['redirect'] != null ? 'Back to Home' : 'Back to Wallet',
-                      style: TextStyle(fontSize: 18)),
+                      style: TextStyle(fontSize: 18.sp)),
                 ),
               ],
             ],

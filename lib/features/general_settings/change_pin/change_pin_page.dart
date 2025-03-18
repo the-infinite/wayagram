@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -76,7 +77,7 @@ class _ChangePinPageState extends ConsumerState<ChangePinPage> {
                     child: Text("The PINs don't match. Pls try again",
                         style: TextStyle().wayaCopyWith(
                           fontWeight: FontWeight.w400,
-                          fontSize: 13,
+                          fontSize: 13.sp,
                           color: wayaTheme.colorScheme.error500,
                         )))
               ],

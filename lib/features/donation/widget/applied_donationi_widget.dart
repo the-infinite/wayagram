@@ -83,7 +83,7 @@ class AppliedDonationWidget extends ConsumerWidget {
                             Text(
                               'Application',
                               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                  fontSize: 12,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w400,
                                   color: Theme.of(context).colorScheme.greyColor600 ),
                             ),
@@ -98,7 +98,7 @@ class AppliedDonationWidget extends ConsumerWidget {
                               child: Text(
                                '$status',
                                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 12,
+                                    fontSize: 12.sp,
                                     fontWeight: FontWeight.w500,
                                     fontFamily: WayaConstants.fontFamily,
                                     color: textColor ),
@@ -147,7 +147,7 @@ class AppliedDonationWidget extends ConsumerWidget {
         Text(
           title,
           style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w400,
               color: Theme.of(ctx).colorScheme.greyColor600 ),
         ),
@@ -155,7 +155,7 @@ class AppliedDonationWidget extends ConsumerWidget {
         Text(
           subTitle,
           style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(ctx).colorScheme.black ),
         ),
