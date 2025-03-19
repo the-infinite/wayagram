@@ -22,8 +22,6 @@ class GroupState {
   List<GroupModel>? getAllGroups;
   List<EventDoc>? fetchAllEventDocs;
   List<AllGroupMemberDocs>? allGroupMemberDocs;
-  List<GroupModel>? joinedGroup;
-  List<GroupModel>? myGroups;
   List<GroupModel>? recommendedGroupDocs;
   List<PostModel>? getAllPost;
   List<PostModel>? groupPostdocs;
@@ -33,7 +31,6 @@ class GroupState {
   final bool isReportingGroup;
   final bool isFocused;
   final bool isLoading;
-  final bool joinGroupLoading;
   final bool openToEveryone;
   final bool requireApproval;
   final String roleType;
@@ -48,7 +45,6 @@ class GroupState {
     this.openToEveryone = false,
     this.requireApproval = false,
     this.isReportingGroup = false,
-    this.joinGroupLoading = false,
     this.postCount,
     this.roleType = '',
     this.profileImage = '',
@@ -61,10 +57,8 @@ class GroupState {
     this.allGroupMemberDocs = const [],
     this.getAllGroups = const [],
     this.fetchAllEventDocs = const [],
-    this.joinedGroup = const [],
     this.recommendedGroupDocs = const [],
     this.getAllPost = const [],
-    this.myGroups = const [],
     this.image,
   })  : groupName = groupName ?? TextEditingController(),
         groupDescription = groupDescription ?? TextEditingController(),
@@ -78,11 +72,9 @@ class GroupState {
     TextEditingController? content,
     List<JoinRequestDocs>? docs,
     List<GroupModel>? getAllGroups,
-    List<GroupModel>? myGroups,
     List<EventDoc>? fetchAllEventDocs,
     List<PostModel>? groupPopularPostdocs,
     List<AllGroupMemberDocs>? allGroupMemberDocs,
-    List<GroupModel>? joinedGroup,
     List<GroupModel>? recommendedGroupDocs,
     List<PostModel>? groupPostdocs,
     num? postCount,
@@ -114,11 +106,8 @@ class GroupState {
       allGroupMemberDocs: allGroupMemberDocs ?? this.allGroupMemberDocs,
       groupPostdocs: groupPostdocs ?? this.groupPostdocs,
       recommendedGroupDocs: recommendedGroupDocs ?? this.recommendedGroupDocs,
-      myGroups: myGroups ?? this.myGroups,
-      joinedGroup: joinedGroup ?? this.joinedGroup,
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
-      joinGroupLoading: joinGroupLoading ?? this.joinGroupLoading,
       isReportingGroup: isReportingGroup ?? this.isReportingGroup,
       openToEveryone: openToEveryone ?? this.openToEveryone,
       requireApproval: requireApproval ?? this.requireApproval,

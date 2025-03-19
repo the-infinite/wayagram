@@ -3,30 +3,19 @@ import 'package:wayagram/core/service/repos/base_repository.dart';
 
 class PageRepository extends BaseRepository {
   static const serviceUrl = "wayagram-graph/api/v2";
+  static final instance = PageRepository._();
+  PageRepository._();
 
+  factory PageRepository() => instance;
 
-  Future<WayaRequestResponse> createPost(
-      String content, List<String> images, postType) {
-    final payload = {
-      "content": content,
-      "type": "generic",
-      "media": images,
-      "privacy": postType
-    };
+  Future<WayaRequestResponse> createPost(String content, List<String> images, postType) {
+    final payload = {"content": content, "type": "generic", "media": images, "privacy": postType};
 
     return post("$serviceUrl/posts", payload);
   }
 
-
-  Future<WayaRequestResponse> createPagePost(
-      String content, List<String> images, postType, postId) {
-    final payload = {
-      "content": content,
-      "postId": postId,
-      "type": "generic",
-      "media": images,
-      "privacy": postType
-    };
+  Future<WayaRequestResponse> createPagePost(String content, List<String> images, postType, postId) {
+    final payload = {"content": content, "postId": postId, "type": "generic", "media": images, "privacy": postType};
 
     return post("$serviceUrl/posts", payload);
   }
@@ -92,7 +81,6 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/posts?userId=$userId&status=active");
   }
 
-
   Future<WayaRequestResponse> fetchSinglePost(postId) {
     return get("$serviceUrl/posts?postId=$postId&status=active");
   }
@@ -106,18 +94,12 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> reportPage(String pageId, String reason) {
-    final payload = {
-      "pageId": pageId,
-      "reason": reason
-    };
+    final payload = {"pageId": pageId, "reason": reason};
     return post("$serviceUrl/moderation", payload);
   }
 
   Future<WayaRequestResponse> reportPost(String postId, String reason) {
-    final payload = {
-      "postId": postId,
-      "reason": reason
-    };
+    final payload = {"postId": postId, "reason": reason};
     return post("$serviceUrl/posts/report", payload);
   }
 
@@ -129,8 +111,7 @@ class PageRepository extends BaseRepository {
     return delete("$serviceUrl/posts/$id/comment");
   }
 
-  Future<WayaRequestResponse> editPost(
-      String content, List<String> images, postType, String postId) {
+  Future<WayaRequestResponse> editPost(String content, List<String> images, postType, String postId) {
     final payload = {"content": content, "media": images, "privacy": postType};
 
     return patch("$serviceUrl/posts/$postId", payload);
@@ -140,8 +121,7 @@ class PageRepository extends BaseRepository {
     return post("$serviceUrl/posts/$postId/like", postId);
   }
 
-  Future<WayaRequestResponse> removeReaction(
-      String postId, String? reactionId) async {
+  Future<WayaRequestResponse> removeReaction(String postId, String? reactionId) async {
     return delete("$serviceUrl/posts/$postId/like");
     // return getBooleanResponse(response);
   }
@@ -162,21 +142,19 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/follow/followers");
   }
 
-  Future<WayaRequestResponse> createPage(String pageName, String pageDesc,
-      bool pageType, String coverImage, String profileImage) {
+  Future<WayaRequestResponse> createPage(
+      String pageName, String pageDesc, bool pageType, String coverImage, String profileImage) {
     final payload = {
       "name": pageName,
       "description": pageDesc,
       "isPublic": pageType, //Optional field, if you leave it blank it defaults to false
       //"isOpen": false, // this defaults to true if it is not inserted
-      "coverImage":  coverImage,
-      "profileImage":  profileImage
-
+      "coverImage": coverImage,
+      "profileImage": profileImage
     };
 
     return post("$serviceUrl/pages", payload);
   }
-
 
   Future<WayaRequestResponse> getAllPosts({int? limit = 200}) async {
     return get(
@@ -188,7 +166,7 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getAllPostsWithCategory(
-      {required String category, required int page, int? limit =5}) async {
+      {required String category, required int page, int? limit = 5}) async {
     return get(
         "$serviceUrl/posts/?status=active&&orderBy=popularityScore&orderDirection=DESC&privacy=public&categories=$category&page=$page&limit=$limit");
   }
@@ -196,7 +174,6 @@ class PageRepository extends BaseRepository {
   Future<WayaRequestResponse> getAllPages(ownerId) {
     return get("$serviceUrl/pages?limit=500&ownerId=$ownerId&orderBy=createdAt&orderDirection=DESC");
   }
-
 
   Future<WayaRequestResponse> deletePage(String pageId) async {
     return delete("$serviceUrl/pages/$pageId");
@@ -207,15 +184,13 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> updateTeamMember(String role, String pageId, String memberId) {
-    final payload = {
-      "role": role
-    };
+    final payload = {"role": role};
 
     return put("$serviceUrl/pages/$pageId/team-members/$memberId", payload);
   }
 
-  Future<WayaRequestResponse> editPage(String name, String desc, bool pageType,
-      String coverImage, String profileImage, String pageId) {
+  Future<WayaRequestResponse> editPage(
+      String name, String desc, bool pageType, String coverImage, String profileImage, String pageId) {
     final payload = {
       "name": name,
       "description": desc,
@@ -244,8 +219,7 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/pages/user/followings");
   }
 
-   Future<WayaRequestResponse> getRecommendedPages() {
+  Future<WayaRequestResponse> getRecommendedPages() {
     return get("$serviceUrl/pages/recommended");
   }
-
 }

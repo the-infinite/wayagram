@@ -59,18 +59,20 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Text(
-            'Based on Groups you joined',
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: WayaColors.greyColor700,
-              fontFamily: WayaConstants.fontFamily,
-            ),
+        Text(
+          'Based on Groups you joined',
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w500,
+            color: WayaColors.greyColor700,
+            fontFamily: WayaConstants.fontFamily,
           ),
         ),
+
+        // Some space.
+        Gap(2.h),
+
+        //? Popular group posts.
         ListView.builder(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -98,6 +100,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
             itemBuilder: (_, index) => SingleGroupWidget(
               group: recommended.recommendedGroupDocs![index],
               index: index,
+              vertical: true,
             ),
           ),
         ),

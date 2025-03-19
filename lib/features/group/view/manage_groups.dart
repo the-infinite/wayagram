@@ -4,8 +4,8 @@ import 'package:svg_flutter/svg_flutter.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
+import 'package:wayagram/shared/features/group/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/widget/group.dart';
 
 class ManageGroups extends ConsumerStatefulWidget {
@@ -20,31 +20,26 @@ class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerPr
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      ref.read(createGroupProvider.notifier).getMyGroups();
+      myGroupNotifier.getCreatedGroups();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(createGroupProvider);
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        viewModel.myGroups!.isEmpty
-            ? GroupEmptyState()
-            : ListView.builder(
-                padding: EdgeInsets.only(bottom: 40),
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: viewModel.myGroups?.length ?? 0,
-                itemBuilder: (_, index) => SingleGroupWidget(
-                  group: viewModel.myGroups![index],
-                  index: index,
-                ),
+    return ValueListenableBuilder(
+      valueListenable: myGroupNotifier,
+      builder: (context, redraws, _) => myGroupNotifier.createdGroups.isEmpty
+          ? GroupEmptyState()
+          : ListView.builder(
+              padding: EdgeInsets.only(bottom: 40),
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: myGroupNotifier.createdGroups.length,
+              itemBuilder: (_, index) => SingleGroupWidget(
+                group: myGroupNotifier.createdGroups[index],
+                index: index,
               ),
-      ],
+            ),
     );
   }
 }

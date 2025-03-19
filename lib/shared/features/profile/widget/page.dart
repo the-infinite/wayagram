@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/model/pages.dart';
 
 class SinglePageWidget extends StatefulWidget {
   final PageModel page;
   final int index;
+  final bool vertical;
 
   // Construct.
   const SinglePageWidget({
     super.key,
     required this.page,
     required this.index,
+    this.vertical = false,
   });
 
   @override
@@ -35,6 +39,82 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+
+    //? If this is in vertical orientation.
+    if (widget.vertical) {
+      return Container(
+        margin: widget.index == 0 ? EdgeInsets.zero : EdgeInsets.only(left: 10),
+        width: 150.w,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: wayaTheme.colorScheme.greyColor200),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //? First, the image
+            WayaImage(
+              imageUrl: widget.page.profileImage ?? widget.page.coverImage ?? '',
+              height: 70.dg,
+              width: 70.dg,
+              radius: BorderRadius.circular(12),
+            ),
+
+            // Space.
+            Gap(10.h),
+
+            //? Second, the name of the group.
+            Text(
+              widget.page.name,
+              style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: wayaTheme.colorScheme.black,
+              ),
+            ),
+
+            // Space.
+            Gap(3.h),
+
+            //? Third, member count.
+            Text(
+              "${WayaValueHelper.formatNumber(widget.page.followerCount)} followers",
+              style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                color: wayaTheme.colorScheme.greyColor500,
+              ),
+            ),
+
+            // Space.
+            Gap(15.h),
+
+            //? Finally, a join button.
+            if (widget.page.ownerId != ConversationState.self.id)
+              SizedBox(
+                width: 70.w,
+                child: IntrinsicHeight(
+                  child: ValueListenableBuilder(
+                    valueListenable: myPageNotifier,
+                    builder: (context, redraws, _) => WayaProgressiveButton(
+                      notifier: loadingController,
+                      callback: _followPage,
+                      text: myPageNotifier.isMemberOf(widget.page.id) ? "Leave" : "Join",
+                      height: 30.h,
+                      textStyle: wayaTheme.textTheme.titleMedium?.copyWith(
+                        color: wayaTheme.colorScheme.white,
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+      );
+    }
 
     // Build and return our component.
     return InkWell(
@@ -130,8 +210,10 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
               padding: const EdgeInsets.only(left: 15),
               child: Text(
                 widget.page.description,
+                maxLines: 2,
                 style: wayaTheme.textTheme.bodyMedium!.copyWith(
                   fontSize: 14.sp,
+                  overflow: TextOverflow.ellipsis,
                   fontWeight: FontWeight.w400,
                   color: wayaTheme.colorScheme.greyColor500,
                 ),

@@ -127,52 +127,187 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.data.userId));
-                        },
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //? The user's image.
-                            ChatProfilePicture(
-                              user: widget.data.user!,
-                              radius: 20,
-                              showActive: false,
-                            ),
+                      if (widget.data.group != null)
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            widget.data.group?.isPrivate == true
+                                ? WayaNav.toNamed('/privateGroup', arguments: {
+                                    'memberCount': '${widget.data.group?.memberCount}',
+                                    'name': widget.data.group?.name,
+                                    'url': '${widget.data.group?.url}',
+                                    'desc': widget.data.group?.description,
+                                    'coverImage': '${widget.data.group?.coverImage}',
+                                    'profileImage': '${widget.data.group?.profileImage}',
+                                    'groupId': widget.data.group?.id,
+                                  })
+                                : WayaNav.toNamed(
+                                    '/publicGroup',
+                                    arguments: {
+                                      'memberCount': '${widget.data.group?.memberCount}',
+                                      'name': widget.data.group?.name,
+                                      'url': '${widget.data.group?.url}',
+                                      'desc': widget.data.group?.description,
+                                      'coverImage': '${widget.data.group?.coverImage}',
+                                      'profileImage': '${widget.data.group?.profileImage}',
+                                      'groupId': widget.data.group?.id
+                                    },
+                                  );
+                          },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //? The user's image.
+                              WayaDp(
+                                image: widget.data.group?.profileImage ?? widget.data.group?.coverImage,
+                                isSelf: false,
+                                radius: 20,
+                              ),
 
-                            // Space.
-                            SizedBox(width: 10.w),
+                              // Space.
+                              SizedBox(width: 10.w),
 
-                            //? The user's name and configuration information.
-                            Column(
-                              // mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              spacing: 3,
-                              children: [
-                                //* The user's name.
-                                Text(
-                                  widget.data.user!.fullname,
-                                  style: wayaTheme.textTheme.bodyBold.copyWith(
-                                    fontSize: 16.sp,
+                              //? The user's name and configuration information.
+                              Column(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 3,
+                                children: [
+                                  //* The user's name.
+                                  Text(
+                                    widget.data.group!.name,
+                                    style: wayaTheme.textTheme.bodyBold.copyWith(
+                                      fontSize: 16.sp,
+                                    ),
                                   ),
-                                ),
 
-                                //* When the user joined
-                                Text(
-                                  formatTimeAgo('${widget.data.createdAt}'),
-                                  style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: wayaTheme.colorScheme.greyColor500,
+                                  //* When the user joined
+                                  Text(
+                                    formatTimeAgo('${widget.data.createdAt}'),
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: wayaTheme.colorScheme.greyColor500,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      else if (widget.data.page != null)
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            widget.data.page?.isPublic == true
+                                ? WayaNav.toNamed('/publicPage', arguments: {
+                                    'pageId': widget.data.page?.id,
+                                    'followerCount': '${widget.data.page?.followerCount}',
+                                    'name': widget.data.page?.name,
+                                    'desc': widget.data.page?.description,
+                                    'coverImage': '${widget.data.page?.coverImage}',
+                                    'profileImage': '${widget.data.page?.profileImage}',
+                                  })
+                                : WayaNav.toNamed(
+                                    '/privatePage',
+                                    arguments: {
+                                      'pageId': widget.data.page?.id,
+                                      'followerCount': '${widget.data.page?.followerCount}',
+                                      'name': widget.data.page?.name,
+                                      'desc': widget.data.page?.description,
+                                      'coverImage': '${widget.data.page?.coverImage}',
+                                      'profileImage': '${widget.data.page?.profileImage}',
+                                    },
+                                  );
+                          },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //? The user's image.
+                              WayaDp(
+                                image: widget.data.page?.profileImage ?? widget.data.page?.coverImage,
+                                isSelf: false,
+                                radius: 20,
+                              ),
+
+                              // Space.
+                              SizedBox(width: 10.w),
+
+                              //? The user's name and configuration information.
+                              Column(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 3,
+                                children: [
+                                  //* The user's name.
+                                  Text(
+                                    widget.data.page!.name,
+                                    style: wayaTheme.textTheme.bodyBold.copyWith(
+                                      fontSize: 16.sp,
+                                    ),
+                                  ),
+
+                                  //* When the user joined
+                                  Text(
+                                    formatTimeAgo('${widget.data.createdAt}'),
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: wayaTheme.colorScheme.greyColor500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.data.userId));
+                          },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //? The user's image.
+                              ChatProfilePicture(
+                                user: widget.data.user!,
+                                radius: 20,
+                                showActive: false,
+                              ),
+
+                              // Space.
+                              SizedBox(width: 10.w),
+
+                              //? The user's name and configuration information.
+                              Column(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 3,
+                                children: [
+                                  //* The user's name.
+                                  Text(
+                                    widget.data.user!.fullname,
+                                    style: wayaTheme.textTheme.bodyBold.copyWith(
+                                      fontSize: 16.sp,
+                                    ),
+                                  ),
+
+                                  //* When the user joined
+                                  Text(
+                                    formatTimeAgo('${widget.data.createdAt}'),
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: wayaTheme.colorScheme.greyColor500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
 
                       // Space
                       const Spacer(),
