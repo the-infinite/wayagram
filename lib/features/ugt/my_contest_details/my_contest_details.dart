@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -18,7 +20,7 @@ import '../widgets/contest_applied_card.dart';
 import '../widgets/contest_card.dart';
 import '../widgets/ugt_empty_state.dart';
 
-class MyContestDetails extends ConsumerStatefulWidget {
+class MyContestDetails extends StatefulHookConsumerWidget {
   const MyContestDetails({super.key});
 
   @override
@@ -28,6 +30,7 @@ class MyContestDetails extends ConsumerStatefulWidget {
 
 class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
   int _selectedIndex = 0;
+  double _previousScrollOffset = 0.0;
 
   final List<String> _tabs = [
     "All Contests",
@@ -35,22 +38,40 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
     "Applied Contests"
   ];
   final ScrollController _hostedScrollController = ScrollController();
+  final ScrollController _appliedScrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+
     ref.read(contestDetailProvider.notifier).fetchHostedContest();
     ref.read(followedContestProvider.notifier).fetchFollowedPosts();
-    ref.read(appliedContestProvider.notifier).fetchAppliedContest();
 
-    // Scroll listener for pagination
-    _hostedScrollController.addListener(() {
-      if (_hostedScrollController.position.pixels >=
-          _hostedScrollController.position.maxScrollExtent - 100) {
-        print("My scrolling here");
-        ref.read(contestDetailProvider.notifier).fetchHostedContest();
-      }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _appliedScrollController.addListener(_scrollListener);
     });
+  }
+
+  void _scrollListener() {
+    double currentOffset = _appliedScrollController.position.pixels;
+
+    // ✅ Fetch data only when scrolling **downward** and near the bottom
+    if (currentOffset > _previousScrollOffset &&
+        _appliedScrollController.position.pixels >=
+            _appliedScrollController.position.maxScrollExtent - 100) {
+      // print("fetching .....${_scrollController.position.pixels}");
+      ref.read(appliedContestProvider.notifier).fetchAppliedContest(false);
+    }
+    _previousScrollOffset = currentOffset;
+  }
+
+  @override
+  void dispose() {
+    _appliedScrollController
+        .removeListener(_scrollListener); // Remove listener safely
+    _appliedScrollController.dispose();
+    _hostedScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -60,8 +81,13 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
     final applied = ref.watch(appliedContestProvider);
     final followed = ref.watch(followedContestProvider);
     final hostNotifier = ref.read(contestDetailProvider.notifier);
-    final appliedNotifier = ref.read(appliedContestProvider.notifier);
+
     final followedNotifier = ref.read(followedContestProvider.notifier);
+
+    useEffect(() {
+      ref.read(appliedContestProvider.notifier).fetchAppliedContest(true);
+      return null;
+    }, []);
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
       runSpacing: 1,
@@ -139,7 +165,9 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                           textColor: wayaTheme.colorScheme.customPrimary,
                         ),
                       const Gap(10),
-                      if (host.isEmpty && applied.isEmpty && followed.isEmpty)
+                      if (host.isEmpty &&
+                          applied.listAppliedContest.isEmpty &&
+                          followed.isEmpty)
                         emptyWidget(),
                       /*  if (hostNotifier.isLoading)
                         Center(child: CircularProgressIndicator()), */
@@ -147,15 +175,15 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                         controller: _hostedScrollController,
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
-                        itemCount: applied.length,
+                        itemCount: applied.listAppliedContest.length,
                         itemBuilder: (context, index) {
-                          final post = applied[index];
+                          final post = applied.listAppliedContest[index];
                           return ContestAppliedCard(post);
                         },
                       ),
                       const Gap(10),
                       ListView.builder(
-                        controller: _hostedScrollController,
+                        //  controller: _hostedScrollController,
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: followed.length,
@@ -170,7 +198,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                       ),
                       const Gap(10),
                       ListView.builder(
-                        controller: _hostedScrollController,
+                        // controller: _hostedScrollController,
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: host.length,
@@ -207,7 +235,6 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                             final post = host[index];
                             return GestureDetector(
                               onTap: () {
-                                //To be removed, it a sample
                                 ref
                                     .read(selectedContestProvider.notifier)
                                     .state = post;
@@ -229,17 +256,19 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
 
                 /// Applied Contests
                 // const Gap(10),
-                if (applied.isEmpty) emptyWidget(),
-                if (applied.isNotEmpty)
+                /*  if (applied.isLoading == true)
+                  Center(child: CircularProgressIndicator()), */
+                if (applied.listAppliedContest.isEmpty) emptyWidget(),
+                if (applied.listAppliedContest.isNotEmpty)
                   Column(
                     children: [
                       Expanded(
                         child: ListView.builder(
                           physics: BouncingScrollPhysics(),
-                          // shrinkWrap: true,
-                          itemCount: applied.length,
+                          controller: _appliedScrollController,
+                          itemCount: applied.listAppliedContest.length,
                           itemBuilder: (context, index) {
-                            final post = applied[index];
+                            final post = applied.listAppliedContest[index];
                             return ContestAppliedCard(post);
                           },
                         ),
