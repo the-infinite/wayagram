@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
@@ -24,20 +25,23 @@ class GroupedWidgetHeader extends StatelessWidget {
     return Visibility(
       visible: isVisible,
       child: Row(
+        spacing: 2.w,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(title, style: wayaTheme.textTheme.titleLarge),
-              const Gap(3),
-              Text(subTitle,
-                  style: WayaTextStyles.hintStyleBold.wayaCopyWith(
-                      color: WayaColors.greyColor500,
-                      fontWeight: FontWeight.w400))
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(title, style: wayaTheme.textTheme.titleLarge),
+                const Gap(3),
+                Text(subTitle,
+                    style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                        color: WayaColors.greyColor500,
+                        fontWeight: FontWeight.w400))
+              ],
+            ),
           ),
           Visibility(
             visible: onTap != null,
@@ -46,7 +50,7 @@ class GroupedWidgetHeader extends StatelessWidget {
               child: Text(
                 "See All",
                 style: WayaTextStyles.hintStyleBold
-                    .wayaCopyWith(color: WayaColors.greyColor500),
+                    .wayaCopyWith(color: WayaColors.primary500),
               ),
             ),
           )
