@@ -105,21 +105,18 @@ class LoginVm extends StateNotifier<LoginState> {
       }
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final String? idToken = googleAuth.idToken;
+     
 
-    print("ewfewfwefwe $idToken");
-    print(googleAuth.idToken);
-    print(googleAuth.accessToken);
-    // final OAuthCredential credential = GoogleAuthProvider.credential(
-    //   idToken: googleAuth.idToken,
-    //   accessToken: googleAuth.accessToken,
-    // );
+    final OAuthCredential credential = GoogleAuthProvider.credential(
+      idToken: googleAuth.idToken,
+      accessToken: googleAuth.accessToken,
+    );
 
-    // final UserCredential userCredential =
-    //     await FirebaseAuth.instance.signInWithCredential(credential);
-    // final String? idToken = await userCredential.user?.getIdToken();
-    // print(idToken);
-    // print("vevvvvdvf");
+    final UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
+    final String? idToken = await userCredential.user?.getIdToken();
+    print(idToken);
+     print("vevvvvdvf");
     // if (idToken != null) {
     //   await oauthSignIn(authType: 'GOOGLE', token: idToken);
     // }

@@ -370,8 +370,8 @@ class __TextMomentState extends State<_TextMoment> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifier.initialize(widget.moment);
-      notifier.postSingleUserMoment(moment: widget.moment);
+    
+      notifier.postSingleUserMoment(momentId: widget.moment.id, userId: widget.moment.userId);
     });
     super.initState();
   }
@@ -415,8 +415,8 @@ class __MediaMomentWidgetState extends State<_MediaMomentWidget> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifier.initialize(widget.moment);
-      notifier.postSingleUserMoment(moment: widget.moment);
+    
+      notifier.postSingleUserMoment(momentId: widget.moment.id, userId: widget.moment.userId);
     });
     super.initState();
   }
