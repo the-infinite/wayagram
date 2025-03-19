@@ -42,8 +42,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
   late final notifier = ref.read(replyMomentVmProvider(widget.uniqueKey).notifier);
   late final chatNotifier = ref.read(chatProvider.notifier);
   late final conversationNotifier = ref.read(conversationProvider.notifier);
-  late final notifier =
-      ref.read(replyMomentVmProvider(widget.uniqueKey).notifier);
+
   Map<String, bool> likedMoments = {};
 
   @override
