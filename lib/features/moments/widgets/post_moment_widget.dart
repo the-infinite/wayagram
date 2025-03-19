@@ -13,6 +13,7 @@ class PostMomentWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+    final state = ref.watch(momentVmProvider);
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -31,19 +32,24 @@ class PostMomentWidget extends ConsumerWidget {
               ),
               Text(
                 "Public Moment",
-                style: TextStyle(color: wayaTheme.colorScheme.white, fontSize: 12, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                    color: wayaTheme.colorScheme.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500),
               )
             ],
           ),
           SizedBox(
             width: 36,
             height: 36,
-            child: WayaButton(
+            child:  WayaButton(
               height: 36,
               radius: 36,
-              callback: () {
-                ref.read(momentVmProvider.notifier).submitMoment(context: context);
-              },
+              callback: !state.isCreatingMoment ?() {
+                ref
+                    .read(momentVmProvider.notifier)
+                    .submitMoment(context: context);
+              } : null,
               centerWidget: Center(
                 child: SvgPicture.asset(WayaAssets.icons.aMoment.path),
               ),

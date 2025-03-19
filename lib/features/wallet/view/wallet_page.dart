@@ -25,6 +25,7 @@ class _WalletPageState extends ConsumerState<WalletPage> {
     return WayaScaffold(
       color: wayaTheme.colorScheme.scaffoldColor2,
       title: 'Wallet',
+      onTapBackButton: () => WayaNav.toNamed(BottomView.route),
       isLoading: state.isLoading!,
       body: Column(
         children: [

@@ -177,7 +177,7 @@ class _ExploreState extends ConsumerState<Explore> {
             //? For the next section.
             GroupedWidgetHeader(
                 onTap: () {
-                  WayaNav.toNamed(BottomView.route, arguments: 1);
+                    WayaNav.toNamed(BottomView.route, arguments: 1, preventDuplicates: false);
                 },
                 subTitle: 'Explore Categories & Best Offers',
                 title: 'Shop'),
