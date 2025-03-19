@@ -103,8 +103,11 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                       ),
                       Expanded(
                         child: AboutEvent(
-                            title: 'Start Time',
-                            content: WayaHelpers.format24HRSToAPM(viewModel.singleEvent!.startTime)),
+                          title: 'Start Time',
+                          content: WayaHelpers.format24HRSToAPM(
+                            viewModel.singleEvent!.startTime,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -114,13 +117,17 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                     children: [
                       Expanded(
                         child: AboutEvent(
-                          title: 'EndDate',
+                          title: 'End Date',
                           content: WayaDateHelper.getDailyTimestamp(viewModel.singleEvent!.endDate),
                         ),
                       ),
                       Expanded(
                         child: AboutEvent(
-                            title: 'End Time', content: WayaHelpers.format24HRSToAPM(viewModel.singleEvent!.endTime)),
+                          title: 'End Time',
+                          content: WayaHelpers.format24HRSToAPM(
+                            viewModel.singleEvent!.endTime,
+                          ),
+                        ),
                       ),
                     ],
                   ),
