@@ -1,15 +1,13 @@
-
-
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 
-class FolllowedUserMomentsModel {
+class FollowedUserMomentsModel {
   final String message;
   final bool status;
   final int statusCode;
   final List<UserMoments> data;
   final int responseCode;
 
-  FolllowedUserMomentsModel({
+  FollowedUserMomentsModel({
     required this.message,
     required this.status,
     required this.statusCode,
@@ -17,8 +15,8 @@ class FolllowedUserMomentsModel {
     required this.responseCode,
   });
 
-  factory FolllowedUserMomentsModel.fromJson(Map<String, dynamic> json) {
-    return FolllowedUserMomentsModel(
+  factory FollowedUserMomentsModel.fromJson(Map<String, dynamic> json) {
+    return FollowedUserMomentsModel(
       message: json['message'],
       status: json['status'],
       statusCode: json['statusCode'],
@@ -50,9 +48,7 @@ class UserMoments {
   factory UserMoments.fromJson(Map<String, dynamic> json) {
     return UserMoments(
       userId: json['userId'],
-      moments: (json['moments'] as List)
-          .map((e) => MomentData.fromJson(e))
-          .toList(),
+      moments: (json['moments'] as List).reversed.map((e) => MomentData.fromJson(e)).toList(),
     );
   }
 
@@ -63,7 +59,3 @@ class UserMoments {
     };
   }
 }
-
-
-
-

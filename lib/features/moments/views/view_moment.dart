@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/data/moment_helper/moment_helper_funcs.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
@@ -24,9 +25,10 @@ class ViewMoment extends ConsumerStatefulWidget {
 class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProviderStateMixin {
   late PageController _pageController;
   late AnimationController _animationController;
+  final textController = TextEditingController();
+  final pauseController = ValueNotifier(false);
   List<MomentData> moments = [];
   int currentIndex = 0;
-  bool isPaused = false;
   bool isMine = false;
 
   @override
@@ -57,13 +59,13 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
     final duration = moment.contentType == 'video' ? 30 : 7;
     _animationController.duration = Duration(seconds: duration);
     _animationController.forward(from: 0.0).whenComplete(() {
-      if (mounted && !isPaused) {
+      if (mounted && !pauseController.value) {
         _nextMoment();
       }
     });
   }
 
-  void _nextMoment() {
+  void _nextMoment() async {
     if (!mounted) return;
 
     if (currentIndex < moments.length - 1) {
@@ -97,8 +99,14 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
 
   //? Fair enough, go back to the previous moment.
   void _previousMoment() {
+    //? If this is actually at an index greater than 0....
     if (currentIndex > 0) {
       _pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.ease);
+    }
+
+    //? Since it is not mine, I just go somewhere else.
+    else {
+      WayaNav.goBack();
     }
   }
 
@@ -122,18 +130,21 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
 
   void pauseAnimation([bool hideControls = true]) {
     if (!_animationController.isAnimating) return;
-    setState(() {
-      isPaused = hideControls;
-      _animationController.stop();
-    });
+
+    //? Pause the controller.
+    _animationController.stop();
+
+    //? If this should hide controls.
+    if (!hideControls) return;
+
+    //? This is something.
+    pauseController.value = hideControls;
   }
 
   void continueAnimating() {
     if (_animationController.isAnimating) return;
-    setState(() {
-      isPaused = false;
-      _startTimer();
-    });
+    pauseController.value = false;
+    _startTimer();
   }
 
   @override
@@ -158,6 +169,10 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
         child: GestureDetector(
           onLongPressStart: (_) => pauseAnimation(),
           onLongPressEnd: (_) => continueAnimating(),
+          onPanUpdate: (details) {
+            if ((details.delta.dy / details.delta.dx).abs() < 5) return;
+            WayaNav.goBack();
+          },
           child: Container(
             color: moments[currentIndex].contentType == 'text'
                 ? MomentHelper.hexToColor(moments[currentIndex].color ?? "#1D2939")
@@ -165,17 +180,25 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
             child: Stack(
               fit: StackFit.expand,
               children: [
+                //? First, the page view.
                 PageView.builder(
                   physics: const NeverScrollableScrollPhysics(),
                   controller: _pageController,
                   itemCount: moments.length,
                   onPageChanged: (index) => _onPageChanged(index),
                   itemBuilder: (context, index) {
+                    //? Get the moment.
                     final moment = moments[currentIndex];
+
+                    //? This is fine.
                     return moment.contentType == 'text'
-                        ? textMoment(context: context, ref: ref, moment: moment)
-                        : mediaPreview(
-                            context: context,
+                        ? _TextMoment(
+                            ref: ref,
+                            moment: moment,
+                            index: index,
+                          )
+                        : _MediaMomentWidget(
+                            index: index,
                             ref: ref,
                             moment: moment,
                             pause: () => pauseAnimation(false),
@@ -184,7 +207,7 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                   },
                 ),
 
-                //? Next, the layer that is used to move to the next page.
+                //? Second, the layer that is used to move to the next page.
                 Positioned.fill(
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -192,34 +215,22 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                     children: [
                       //? First, the button to go to the previous page.
                       Expanded(
+                        flex: 2,
                         child: GestureDetector(
-                          onDoubleTap: () {
-                            //? If this is the first page, reset the timer.
-                            if (_pageController.page == 0) {
-                              _startTimer();
-                            }
-
-                            //? Move to the previous page.
-                            else {
-                              _previousMoment();
-                            }
-                          },
+                          onTap: () => _previousMoment(),
                         ),
+                      ),
+
+                      // Boundary in the middle.
+                      Expanded(
+                        child: const SizedBox(),
                       ),
 
                       //? Second, the button to go to the previous page.
                       Expanded(
+                        flex: 2,
                         child: GestureDetector(
-                          onDoubleTap: () {
-                            //? If this is the first page, reset the timer.
-                            if (_pageController.page == moments.length - 1) {
-                            }
-
-                            //? Move to the previous page.
-                            else {
-                              _nextMoment();
-                            }
-                          },
+                          onTap: () => _nextMoment(),
                         ),
                       ),
                     ],
@@ -227,72 +238,106 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                 ),
 
                 //? The title of this page.
-                if (!isPaused)
-                  Positioned(
-                    top: 20,
-                    left: 0,
-                    right: 0,
-                    child: Row(
-                      children: List.generate(
-                        moments.length,
-                        (index) => Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4.0),
-                            child: AnimatedBuilder(
-                              animation: _animationController,
-                              builder: (context, child) => LinearProgressIndicator(
-                                minHeight: 6,
-                                borderRadius: BorderRadius.circular(12),
-                                value: index == currentIndex
-                                    ? _animationController.value
-                                    : (index < currentIndex ? 1.0 : 0.0),
-                                backgroundColor: Colors.black.withOpacity(0.25),
-                                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ValueListenableBuilder(
+                  valueListenable: pauseController,
+                  builder: (context, isPaused, _) {
+                    //? This is fine too.
+                    if (isPaused) {
+                      return const SizedBox();
+                    }
+
+                    //? This is fine.
+                    return Positioned(
+                      top: 20,
+                      left: 0,
+                      right: 0,
+                      child: Row(
+                        children: List.generate(
+                          moments.length,
+                          (index) => Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              child: AnimatedBuilder(
+                                animation: _animationController,
+                                builder: (context, child) => LinearProgressIndicator(
+                                  minHeight: 6,
+                                  borderRadius: BorderRadius.circular(12),
+                                  value: index == currentIndex
+                                      ? _animationController.value
+                                      : (index < currentIndex ? 1.0 : 0.0),
+                                  backgroundColor: Colors.black.withOpacity(0.25),
+                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ),
-                if (!isPaused)
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    top: 30,
-                    child: MomentUserInfoWidget(
-                      moment: moments[currentIndex],
-                      isMine: isMine,
-                      pause: pauseAnimation,
-                      continues: continueAnimating,
-                    ),
-                  ),
+                    );
+                  },
+                ),
 
-                //?
+                //? This user id of this page.
+                ValueListenableBuilder(
+                  valueListenable: pauseController,
+                  builder: (context, isPaused, _) {
+                    //? This is fine too.
+                    if (isPaused) {
+                      return const SizedBox();
+                    }
+
+                    //? This is fine.
+                    return Positioned(
+                      left: 0,
+                      right: 0,
+                      top: 30,
+                      child: MomentUserInfoWidget(
+                        moment: moments[currentIndex],
+                        isMine: moments[currentIndex].userId == ConversationState.self.id,
+                        pause: pauseAnimation,
+                        continues: continueAnimating,
+                      ),
+                    );
+                  },
+                ),
+
+                //? This is fine.
                 if (!isMine)
                   Positioned(
                     left: 0,
                     right: 0,
                     bottom: 0,
                     child: ReplyMomentWidget(
+                      textController: textController,
                       pause: pauseAnimation,
                       continues: continueAnimating,
-                      uniqueKey: "$currentIndex",
+                      uniqueKey: "up-${moments[currentIndex].userId}-$currentIndex",
                       moment: moments[currentIndex],
                     ),
-                  ),
+                  )
 
                 //? How we see our current moment metrics.
-                if (isMine && !isPaused)
-                  Positioned(
-                    left: 0,
-                    right: 0,
-                    bottom: 20,
-                    child: MyMomentMetrics(
-                      pause: pauseAnimation,
-                      continues: continueAnimating,
-                      moment: moments[currentIndex],
-                    ),
+                else
+                  ValueListenableBuilder(
+                    valueListenable: pauseController,
+                    builder: (context, isPaused, _) {
+                      //? This is fine too.
+                      if (isPaused) {
+                        return const SizedBox();
+                      }
+
+                      //? This is fine.
+                      return Positioned(
+                        left: 0,
+                        right: 0,
+                        bottom: 20,
+                        child: MyMomentMetrics(
+                          pause: pauseAnimation,
+                          continues: continueAnimating,
+                          moment: moments[currentIndex],
+                        ),
+                      );
+                    },
                   ),
               ],
             ),
@@ -303,102 +348,155 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
   }
 }
 
-Widget textMoment({
-  required BuildContext context,
-  required WidgetRef ref,
-  required MomentData moment,
-}) {
-  return Container(
-    padding: const EdgeInsets.all(24.0),
-    alignment: Alignment.center,
-    child: Text(
-      moment.content,
-      style: moment.fontType != null ? MomentHelper.textStyleFromJson(moment.fontType!) : null,
-      textAlign: TextAlign.center,
-    ),
-  );
+class _TextMoment extends StatefulWidget {
+  final WidgetRef ref;
+  final MomentData moment;
+  final int index;
+
+  // Construct.
+  const _TextMoment({
+    required this.ref,
+    required this.moment,
+    required this.index,
+  });
+
+  @override
+  State<_TextMoment> createState() => __TextMomentState();
 }
 
-Widget mediaPreview({
-  required BuildContext context,
-  required WidgetRef ref,
-  required MomentData moment,
-  required VoidCallback pause,
-  required VoidCallback resume,
-}) {
-  final wayaTheme = Theme.of(context);
-  return Stack(
-    fit: StackFit.expand,
-    children: [
-      // Media Preview
-      if (moment.contentType == "video")
-        WayaFutureSubscriber(
-          future: WayaFileHelper.getMomentDirectory(moment, moment.content),
-          builder: (context, data) {
-            if (data == null) {
-              return const SizedBox();
-            }
+class __TextMomentState extends State<_TextMoment> {
+  late final notifier = widget.ref.read(replyMomentVmProvider("up-${widget.moment.userId}-${widget.index}").notifier);
 
-            //? Now, return the image moment.
-            return VideoPreview(
-              content: moment.content,
-              file: data,
-              data: moment,
-              pause: pause,
-              resume: resume,
-            );
-          },
-        )
-      else
-        WayaFutureSubscriber(
-          future: WayaFileHelper.getMomentDirectory(moment, moment.content),
-          builder: (context, data) {
-            if (data == null) {
-              return const SizedBox();
-            }
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifier.initialize(widget.moment);
+      notifier.postSingleUserMoment(moment: widget.moment);
+    });
+    super.initState();
+  }
 
-            //? Now, return the image moment.
-            return ImageMomentScreen(
-              media: moment.content,
-              data: moment,
-              file: data,
-              pause: pause,
-              resume: resume,
-            );
-          },
-        ),
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24.0),
+      alignment: Alignment.center,
+      child: Text(
+        widget.moment.content,
+        style: widget.moment.fontType != null ? MomentHelper.textStyleFromJson(widget.moment.fontType!) : null,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+}
 
-      // Caption
-      if (moment.caption != null && moment.caption!.isNotEmpty)
-        Positioned(
-          left: 0,
-          right: 0,
-          bottom: 50,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-            decoration: BoxDecoration(
-              color: wayaTheme.colorScheme.customBlack.withOpacity(0.5),
-            ),
-            child: moment.caption!.length < 100
-                ? Text(
-                    moment.caption!,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: wayaTheme.colorScheme.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 14.sp,
-                    ),
-                  )
-                : Text(
-                    moment.caption!,
-                    style: TextStyle(
-                      color: wayaTheme.colorScheme.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 13.sp,
-                    ),
-                  ),
+class _MediaMomentWidget extends StatefulWidget {
+  final WidgetRef ref;
+  final MomentData moment;
+  final VoidCallback pause;
+  final VoidCallback resume;
+  final int index;
+
+  const _MediaMomentWidget({
+    required this.ref,
+    required this.moment,
+    required this.pause,
+    required this.resume,
+    required this.index,
+  });
+
+  @override
+  State<_MediaMomentWidget> createState() => __MediaMomentWidgetState();
+}
+
+class __MediaMomentWidgetState extends State<_MediaMomentWidget> {
+  late final notifier = widget.ref.read(replyMomentVmProvider("up-${widget.moment.userId}-${widget.index}").notifier);
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifier.initialize(widget.moment);
+      notifier.postSingleUserMoment(moment: widget.moment);
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        // Media Preview
+        if (widget.moment.contentType == "video")
+          WayaFutureSubscriber(
+            future: WayaFileHelper.getMomentDirectory(widget.moment, widget.moment.content),
+            builder: (context, data) {
+              if (data == null) {
+                return const SizedBox();
+              }
+
+              //? Now, return the image moment.
+              return VideoPreview(
+                content: widget.moment.content,
+                file: data,
+                data: widget.moment,
+                pause: widget.pause,
+                resume: widget.resume,
+              );
+            },
+          )
+        else
+          WayaFutureSubscriber(
+            future: WayaFileHelper.getMomentDirectory(widget.moment, widget.moment.content),
+            builder: (context, data) {
+              if (data == null) {
+                return const SizedBox();
+              }
+
+              //? Now, return the image moment.
+              return ImageMomentScreen(
+                media: widget.moment.content,
+                data: widget.moment,
+                file: data,
+                pause: widget.pause,
+                resume: widget.resume,
+              );
+            },
           ),
-        ),
-    ],
-  );
+
+        // Caption
+        if (widget.moment.caption != null && widget.moment.caption!.isNotEmpty)
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 50,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              decoration: BoxDecoration(
+                color: wayaTheme.colorScheme.customBlack.withOpacity(0.5),
+              ),
+              child: widget.moment.caption!.length < 100
+                  ? Text(
+                      widget.moment.caption!,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: wayaTheme.colorScheme.white,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14.sp,
+                      ),
+                    )
+                  : Text(
+                      widget.moment.caption!,
+                      style: TextStyle(
+                        color: wayaTheme.colorScheme.white,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 13.sp,
+                      ),
+                    ),
+            ),
+          ),
+      ],
+    );
+  }
 }

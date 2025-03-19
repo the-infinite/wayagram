@@ -130,48 +130,6 @@ class FollowNotifier extends StateNotifier<FollowState> {
     return null;
   }
 
-  Future<bool> followUser(String id) async {
-    //? This is wonderful.
-    try {
-      // This is fine too.
-      final response = await repo.followUser(id);
-
-      //? After getting these posts...
-      return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.relationships,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
-
-    //? This is fine.
-    return false;
-  }
-
-  Future<bool> unfollowUser(String id) async {
-    //? This is wonderful.
-    try {
-      // This is fine too.
-      final response = await repo.unFollowUser(id);
-
-      //? After getting these posts...
-      return response.success;
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.relationships,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
-
-    //? This is fine.
-    return false;
-  }
-
   void setUserId(String id) {
     state = state.copyWith(
       userId: id,
