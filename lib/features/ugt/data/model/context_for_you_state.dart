@@ -32,6 +32,7 @@ class ContextForYouState {
         listContestForYou: listContestForYou ?? this.listContestForYou,
        
         page: page ?? this.page,
+        isLoading: isLoading ?? this.isLoading,
         isLastPage: isLastPage ?? this.isLastPage,
       );
 }
