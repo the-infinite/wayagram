@@ -10,12 +10,9 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
-import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/pages/data/model/feeds.dart';
-import 'package:wayagram/features/pages/data/model/followers_model.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/pages/data/model/page_popular_post_model.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
@@ -43,14 +40,12 @@ class UploadedImage {
 class PageVm extends StateNotifier<PageState> {
   final Ref ref;
   final PageRepository _pageRepository;
-  final WayaSecureDataSource _secureDataSource;
 
   final _logger = getLogger('PageVm');
 
   PageVm(
     this.ref,
     this._pageRepository,
-    this._secureDataSource,
   ) : super(PageState()) {
     state = state.copyWith(pageName: TextEditingController(text: ''));
     state = state.copyWith(pageDescription: TextEditingController(text: ''));
@@ -62,7 +57,7 @@ class PageVm extends StateNotifier<PageState> {
   }
 
   String _errorMessage = '';
-  int _totalPages = 0;
+  final int _totalPages = 0;
 
   String get errorMessage => _errorMessage;
   int get totalPages => _totalPages;
@@ -71,56 +66,6 @@ class PageVm extends StateNotifier<PageState> {
   String _errorMessage2 = '';
   List<SavedPost> get savedPosts => _savedPosts;
   String get errorMessage2 => _errorMessage2;
-
-  Future<void> commentPost2(Post post) async {
-    if (post.id != null) {
-      //Get.to(() => FullPostDetailsScreen(post: post));
-    } else {
-      print('ERROR: Post ID is null!!!');
-    }
-  }
-
-  /*Future<void> likePost(Post post, {String? reaction}) async {
-    post.toggleLike(); // Toggle local like state
-    updateValue(post.isLikedCount, post.getIsLiked().value == true);
-    WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
-    if (post.id != null) {
-      final user = _wayaLocalDataSource.getUser().user;
-
-      if (user == null) {
-        //showError('Getting user profile... try again');
-        return;
-      }
-
-      if (reaction != null) {
-        // If a reaction is provided, update it
-        final response = await _pageRepository.reactOnPost(post.id!, reaction);
-        if (response.success) {
-          post.reactions[user.id!] = response.data!.reactions[user.id!]!;
-          //..userId = Author(id: user.id,firstName: user.firstName ?? '',lastName: user.lastName ?? '');
-        }
-        handleLikeResponse(post, response);
-      } else if (post.getIsLiked().value == true) {
-        // Handle default "like" without specific reaction
-        final response = await _pageRepository.reactOnPost(post.id!, 'like');
-        handleLikeResponse(post, response);
-      } else {
-        // Remove like if toggled off
-        final response = await _pageRepository.removeReaction(post.id!, post.getReactionId(user.id!));
-        handleLikeResponse(post, response);
-      }
-    } else {
-      print('ERROR: Post ID is null!!!');
-    }
-  }
-
-  void handleLikeResponse(Post post, WayaRequestResponse response) {
-    if (response.success) {
-      post.toggleLike();
-      updateValue(post.isLikedCount, post.getIsLiked().value == true);
-      //showError(response.message);
-    }
-  }*/
 
   void updateValue(RxInt value, bool isIncreased) {
     if (isIncreased) {
@@ -292,7 +237,6 @@ class PageVm extends StateNotifier<PageState> {
       {required String pageId, required String reason, String? comment, required BuildContext context}) async {
     try {
       state = state.copyWith(isReportingPage: true);
-      final userId = await _secureDataSource.getUserId();
       final response = await _pageRepository.reportPage(pageId, reason);
 
       if (response.success && context.mounted) {
@@ -850,18 +794,6 @@ class PageVm extends StateNotifier<PageState> {
     return [];
   }
 
-  Future<void> getFollowers() async {
-    state = state.copyWith(isLoading: true);
-    final response = await _pageRepository.getFollowers();
-    state = state.copyWith(isLoading: false);
-    if (response.success) {
-      FollowersModel responseModel = FollowersModel.fromJson(response.data);
-      //state = state.copyWith(fetchAllPols: responseModel.data?.docs);
-    } else {
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
   Future<void> getAllPages(userId) async {
     try {
       state = state.copyWith(isLoading: true);
@@ -1058,10 +990,5 @@ final pageProvider = Provider((ref) => PageRepository());
 
 final createPageProvider = StateNotifierProvider<PageVm, PageState>((ref) {
   final pageRepository = ref.watch(pageProvider);
-
-  return PageVm(
-    ref,
-    pageRepository,
-    WayaSecureDataSource(),
-  );
+  return PageVm(ref, pageRepository);
 });

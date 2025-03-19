@@ -33,6 +33,12 @@ class OtherUserMoments extends ValueNotifier<int> {
   void refresh() {
     value = value + 1;
   }
+
+  /// Controller function used to reset the moment used inside of this app.
+  void reset() async {
+    moments = [];
+    refresh();
+  }
 }
 
 final otherUserMoments = OtherUserMoments._();

@@ -328,43 +328,42 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
             ),
 
             //? If this has any kind of media here...
-            widget.data.media.isEmpty
-                ? Container()
-                : SizedBox(
-                    height: 200, // Adjust based on your image size
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal, // Enables horizontal scrolling
-                      itemCount: widget.data.media.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () async{
-                            final result = await WayaNav.to(
-                              transition: Transition.downToUp,
-                              WayaImageDetailScreen(
-                                file: null,
-                                imageUrl: widget.data.media[index],
-                              ),
-                            );
+            if (widget.data.media.isEmpty)
+              Container()
+            else
+              SizedBox(
+                height: 200, // Adjust based on your image size
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal, // Enables horizontal scrolling
+                  itemCount: widget.data.media.length,
+                  itemBuilder: (context, index) => GestureDetector(
+                    onTap: () async {
+                      final result = await WayaNav.to(
+                        transition: Transition.downToUp,
+                        WayaImageDetailScreen(
+                          file: null,
+                          imageUrl: widget.data.media[index],
+                        ),
+                      );
 
-                            //? Do nothing.
-                            if (result == null) return;
-                          },
-                          child: Padding(
-                            padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10), // Optional: rounded corners
-                              child: WayaImage(
-                                imageUrl: widget.data.media[index],
-                                fit: BoxFit.cover,
-                                width: screenSize.width - (widget.padded ? 15 : 0), // Adjust width for better display
-                                height: 200, // Matches the container height
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+                      //? Do nothing.
+                      if (result == null) return;
+                    },
+                    child: Padding(
+                      padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10), // Optional: rounded corners
+                        child: WayaImage(
+                          imageUrl: widget.data.media[index],
+                          fit: BoxFit.cover,
+                          width: screenSize.width - (widget.padded ? 15 : 0), // Adjust width for better display
+                          height: 200, // Matches the container height
+                        ),
+                      ),
                     ),
                   ),
+                ),
+              ),
 
             //? Post actions: Like, Comment, Repost, Share
             Padding(

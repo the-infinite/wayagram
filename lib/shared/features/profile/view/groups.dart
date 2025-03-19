@@ -2,12 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/group/widget/group_widget.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
+import 'package:wayagram/shared/features/profile/widget/group.dart';
 
 class GroupsFeedWidget extends ConsumerStatefulWidget {
   final bool isExpanded;
@@ -68,23 +67,16 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
 
           //> Looks Good
           ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: myGroups.length,
-              itemBuilder: (context, index) {
-                final group = myGroups[index];
-                return GroupWidget(
-                  isWhite: true,
-                  name: '${group.name.capitalizeFirst}',
-                  desc: '${group.description.capitalizeFirst}',
-                  image: group.coverImage ?? 'null',
-                  count: '${group.memberCount} Members',
-                  buttonText: '',
-                  onTap: () {},
-                  chk: false,
-                );
-              }),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: myGroups.length,
+            itemBuilder: (context, index) => SingleGroupWidget(
+              group: myGroups[index],
+              index: index,
+            ),
+          ),
         ],
+
         //> Show only if i have joined some groups
         if (widget.isGroupIJoined && joinedGroups!.isNotEmpty) ...[
           Text(
@@ -95,23 +87,16 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
 
           //> Looks Good
           ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: joinedGroups.length,
-              itemBuilder: (context, index) {
-                final group = joinedGroups[index];
-                return GroupWidget(
-                  isWhite: true,
-                  name: '${group.name.capitalizeFirst}',
-                  desc: '${group.description.capitalizeFirst}',
-                  image: group.coverImage ?? 'null',
-                  count: '${group.memberCount} Members',
-                  buttonText: 'Member',
-                  onTap: () {},
-                  chk: true,
-                );
-              }),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: joinedGroups.length,
+            itemBuilder: (context, index) => SingleGroupWidget(
+              group: joinedGroups[index],
+              index: index,
+            ),
+          ),
         ],
+
         //> Recommended groups
         if (widget.isRecommended && recommendedGroups!.isNotEmpty) ...[
           Text(
@@ -122,23 +107,14 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
 
           //> Looks Good
           ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: recommendedGroups.length,
-              itemBuilder: (context, index) {
-                final group = recommendedGroups[index];
-                return GroupWidget(
-                  isWhite: true,
-                  name: '${group.name.capitalizeFirst}',
-                  desc: '${group.description.capitalizeFirst}',
-                  image: group.coverImage ?? 'null',
-                  count: '${group.memberCount} Members',
-                  buttonText: 'Join',
-                  isRecommended: true,
-                  onTap: () {},
-                  chk: true,
-                );
-              }),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: recommendedGroups.length,
+            itemBuilder: (context, index) => SingleGroupWidget(
+              group: recommendedGroups[index],
+              index: index,
+            ),
+          ),
         ],
       ],
     );

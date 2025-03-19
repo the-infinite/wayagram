@@ -1,14 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:wayagram/features/pages/data/model/all_page_model.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
+import 'package:wayagram/shared/features/profile/model/pages.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
 
 import '../../post/model/share_model.dart';
-import '../data/model/pages_users_follow_model.dart';
 
 class PageState {
   final TextEditingController pageName;
@@ -19,10 +18,10 @@ class PageState {
   final List<PostModel>? getAllPost;
   final List<Comments>? comments;
   final num? postCount;
-  List<PagesUsersFollowDocs>? pagesUsersFollow;
-  List<PagesUsersFollowDocs>? myPages;
-  List<PagesUsersFollowDocs>? recommendedPages;
-  List<AllPageModelDocs>? allPageModelDocs;
+  List<PageModel>? pagesUsersFollow;
+  List<PageModel>? myPages;
+  List<PageModel>? recommendedPages;
+  List<PageModel>? allPageModelDocs;
   List<GetPageMemberDocs>? getPageMemberDocs;
   List<PostModel>? pagePopularPostDocs;
   final MediaUploadData? data;
@@ -67,10 +66,10 @@ class PageState {
     List<PostImage>? images,
     List<PostModel>? fetchAllPostData,
     List<PostModel>? getAllPost,
-    List<PagesUsersFollowDocs>? pagesUsersFollow,
-    List<PagesUsersFollowDocs>? myPages,
-    List<PagesUsersFollowDocs>? recommendedPages,
-    List<AllPageModelDocs>? allPageModelDocs,
+    List<PageModel>? pagesUsersFollow,
+    List<PageModel>? myPages,
+    List<PageModel>? recommendedPages,
+    List<PageModel>? allPageModelDocs,
     List<GetPageMemberDocs>? getPageMemberDocs,
     List<PostModel>? pagePopularPostDocs,
     List<Comments>? comments,
@@ -84,28 +83,27 @@ class PageState {
     bool? isReportingPost,
   }) {
     return PageState(
-      pageName: pageName ?? this.pageName,
-      myPages: myPages ?? this.myPages,
-      pageDescription: pageDescription ?? this.pageDescription,
-      content: content ?? this.content,
-      images: images ?? this.images,
-      data: data ?? this.data,
-      postCount: postCount ?? this.postCount,
-      recommendedPages: recommendedPages ?? this.recommendedPages,
-      shareModelData: shareModelData ?? this.shareModelData,
-      fetchAllPostData: fetchAllPostData ?? this.fetchAllPostData,
-      getAllPost: getAllPost ?? this.getAllPost,
-      allPageModelDocs: allPageModelDocs ?? this.allPageModelDocs,
-      comments: comments ?? this.comments,
-      pagePopularPostDocs: pagePopularPostDocs ?? this.pagePopularPostDocs,
-      docs: docs ?? this.docs,
-      pagesUsersFollow: pagesUsersFollow ?? this.pagesUsersFollow,
-      getPageMemberDocs: getPageMemberDocs ?? this.getPageMemberDocs,
-      isFocused: isFocused ?? this.isFocused,
-      isLoading: isLoading ?? this.isLoading,
-      isReportingPage: isReportingPage ?? this.isReportingPage,
-      isReportingPost: isReportingPost ?? this.isReportingPost
-    );
+        pageName: pageName ?? this.pageName,
+        myPages: myPages ?? this.myPages,
+        pageDescription: pageDescription ?? this.pageDescription,
+        content: content ?? this.content,
+        images: images ?? this.images,
+        data: data ?? this.data,
+        postCount: postCount ?? this.postCount,
+        recommendedPages: recommendedPages ?? this.recommendedPages,
+        shareModelData: shareModelData ?? this.shareModelData,
+        fetchAllPostData: fetchAllPostData ?? this.fetchAllPostData,
+        getAllPost: getAllPost ?? this.getAllPost,
+        allPageModelDocs: allPageModelDocs ?? this.allPageModelDocs,
+        comments: comments ?? this.comments,
+        pagePopularPostDocs: pagePopularPostDocs ?? this.pagePopularPostDocs,
+        docs: docs ?? this.docs,
+        pagesUsersFollow: pagesUsersFollow ?? this.pagesUsersFollow,
+        getPageMemberDocs: getPageMemberDocs ?? this.getPageMemberDocs,
+        isFocused: isFocused ?? this.isFocused,
+        isLoading: isLoading ?? this.isLoading,
+        isReportingPage: isReportingPage ?? this.isReportingPage,
+        isReportingPost: isReportingPost ?? this.isReportingPost);
   }
 }
 

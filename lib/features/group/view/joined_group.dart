@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/group/widget/group_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
+import 'package:wayagram/shared/features/profile/widget/group.dart';
 
 class JoinedGroup extends ConsumerStatefulWidget {
   const JoinedGroup({super.key});
@@ -39,45 +37,11 @@ class _JoinedGroupState extends ConsumerState<JoinedGroup> with SingleTickerProv
                 padding: EdgeInsets.only(bottom: 40),
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: viewModel.joinedGroup?.length,
-                itemBuilder: (_, index) {
-                  final group = viewModel.joinedGroup?[index];
-                  return GroupWidget(
-                    name: '${group?.name?.capitalizeFirst}',
-                    desc: '${group?.description?.capitalizeFirst}',
-                    image: '${group?.coverImage}',
-                    count: '${group?.memberCount} Members',
-                    buttonText: 'Member',
-                    chk: true,
-                    onTap: () {
-                      group?.isPrivate == true
-                          ? WayaNav.toNamed(
-                              '/privateGroup',
-                              arguments: {
-                                'memberCount': '${group!.memberCount}',
-                                'name': group.name,
-                                'url': '',
-                                'desc': group.description,
-                                'coverImage': '${group.coverImage}',
-                                'profileImage': '${group.profileImage}',
-                                'groupId': group.id,
-                              },
-                            )
-                          : WayaNav.toNamed(
-                              '/publicGroup',
-                              arguments: {
-                                'memberCount': '${group!.memberCount}',
-                                'name': group.name,
-                                'url': '',
-                                'desc': group.description,
-                                'coverImage': '${group.coverImage}',
-                                'profileImage': '${group.profileImage}',
-                                'groupId': group.id
-                              },
-                            );
-                    },
-                  );
-                },
+                itemCount: viewModel.joinedGroup?.length ?? 0,
+                itemBuilder: (_, index) => SingleGroupWidget(
+                  group: viewModel.joinedGroup![index],
+                  index: index,
+                ),
               ),
       ],
     );

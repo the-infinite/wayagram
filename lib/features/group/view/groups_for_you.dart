@@ -8,8 +8,8 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/group/widget/join_card_widget.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/shared/features/profile/widget/group.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 
 import '../../../assetsgen/assets.gen.dart';
@@ -53,7 +53,6 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
   Widget build(BuildContext context) {
     //final viewModel2 = ref.watch(createPageProvider);
     final recommended = ref.watch(createGroupProvider);
-    final group = ref.watch(createGroupProvider.notifier);
     final viewGroup = ref.watch(createGroupProvider);
 
     return Column(
@@ -95,17 +94,11 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
           child: ListView.builder(
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
-            itemCount: recommended.recommendedGroupDocs?.length,
-            itemBuilder: (_, index) {
-              final recommendedGroup = recommended.recommendedGroupDocs?[index];
-              return JoinCardWidget(
-                memberCount: '${recommendedGroup?.memberCount}',
-                groupName: '${recommendedGroup?.name}',
-                image: '${recommendedGroup?.coverImage}',
-                onTap: group.joinGroup,
-                id: '${recommendedGroup?.id}',
-              );
-            },
+            itemCount: recommended.recommendedGroupDocs?.length ?? 0,
+            itemBuilder: (_, index) => SingleGroupWidget(
+              group: recommended.recommendedGroupDocs![index],
+              index: index,
+            ),
           ),
         ),
         Gap(20),

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 
-class SingleGroupWidget extends StatelessWidget {
+class SingleGroupWidget extends StatefulWidget {
   final GroupModel group;
   final int index;
 
@@ -15,6 +16,21 @@ class SingleGroupWidget extends StatelessWidget {
     required this.group,
     required this.index,
   });
+
+  @override
+  State<SingleGroupWidget> createState() => _SingleGroupWidgetState();
+}
+
+class _SingleGroupWidgetState extends State<SingleGroupWidget> {
+  final loadingController = ValueNotifier(false);
+
+  @override
+  void dispose() {
+    loadingController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _joinGroup() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -27,26 +43,26 @@ class SingleGroupWidget extends StatelessWidget {
       highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
       borderRadius: BorderRadius.circular(12.r),
       onTap: () {
-        group.isPrivate == true
+        widget.group.isPrivate == true
             ? WayaNav.toNamed('/privateGroup', arguments: {
-                'memberCount': '${group.memberCount}',
-                'name': group.name,
-                'url': '${group.url}',
-                'desc': group.description,
-                'coverImage': '${group.coverImage}',
-                'profileImage': '${group.profileImage}',
-                'groupId': group.id,
+                'memberCount': '${widget.group.memberCount}',
+                'name': widget.group.name,
+                'url': '${widget.group.url}',
+                'desc': widget.group.description,
+                'coverImage': '${widget.group.coverImage}',
+                'profileImage': '${widget.group.profileImage}',
+                'groupId': widget.group.id,
               })
             : WayaNav.toNamed(
                 '/publicGroup',
                 arguments: {
-                  'memberCount': '${group.memberCount}',
-                  'name': group.name,
-                  'url': '${group.url}',
-                  'desc': group.description,
-                  'coverImage': '${group.coverImage}',
-                  'profileImage': '${group.profileImage}',
-                  'groupId': group.id
+                  'memberCount': '${widget.group.memberCount}',
+                  'name': widget.group.name,
+                  'url': '${widget.group.url}',
+                  'desc': widget.group.description,
+                  'coverImage': '${widget.group.coverImage}',
+                  'profileImage': '${widget.group.profileImage}',
+                  'groupId': widget.group.id
                 },
               );
       },
@@ -62,28 +78,43 @@ class SingleGroupWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 5.h,
           children: [
             ListTile(
               contentPadding: EdgeInsets.only(left: 0, right: 0),
               leading: CircleAvatar(
                 radius: 40,
                 backgroundColor: wayaTheme.colorScheme.greyColor100,
-                backgroundImage: NetworkImage(group.profileImage ?? ""),
+                backgroundImage: NetworkImage(widget.group.profileImage ?? ""),
               ),
-              title: Row(
-                children: [
-                  Text(
-                    group.name,
-                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color: wayaTheme.colorScheme.black,
+              trailing: widget.group.ownerId == ConversationState.self.id
+                  ? null
+                  : SizedBox(
+                      width: 70.w,
+                      child: IntrinsicHeight(
+                        child: WayaProgressiveButton(
+                          notifier: loadingController,
+                          callback: _joinGroup,
+                          text: "Join",
+                          height: 30.h,
+                          textStyle: wayaTheme.textTheme.titleMedium?.copyWith(
+                            color: wayaTheme.colorScheme.white,
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                ],
+              title: Text(
+                widget.group.name,
+                style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  color: wayaTheme.colorScheme.black,
+                ),
               ),
               subtitle: Text(
-                "${WayaValueHelper.formatNumber(group.memberCount)} members",
+                "${WayaValueHelper.formatNumber(widget.group.memberCount)} members",
                 style: wayaTheme.textTheme.bodyMedium?.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
@@ -92,14 +123,11 @@ class SingleGroupWidget extends StatelessWidget {
               ),
             ),
 
-            // Space.
-            const Gap(10),
-
             // Finally, the group's description.
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: Text(
-                group.description,
+                widget.group.description,
                 style: wayaTheme.textTheme.bodyMedium!.copyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
