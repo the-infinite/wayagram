@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contest_detail_vm.dart';
@@ -114,72 +115,78 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
             color: Colors.white,
           ),
           width: double.infinity,
+          height: context.height,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 15),
             child: IndexedStack(
               index: _selectedIndex,
               children: [
                 /// All Contests
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    if (ConversationState.self.accountType ==
-                        UserAccountType.business)
-                      WayaButton(
-                        callback: () {
-                          ivalidateUGTVM(ref);
-                          WayaNav.toNamed('/create-contest');
+                SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (ConversationState.self.accountType ==
+                          UserAccountType.business)
+                        WayaButton(
+                          callback: () {
+                            ivalidateUGTVM(ref);
+                            WayaNav.toNamed('/create-contest');
+                          },
+                          color: wayaTheme.colorScheme.primary50,
+                          text: "Host a Contest",
+                          textColor: wayaTheme.colorScheme.customPrimary,
+                        ),
+                      const Gap(10),
+                      if (host.isEmpty && applied.isEmpty && followed.isEmpty)
+                        emptyWidget(),
+                      /*  if (hostNotifier.isLoading)
+                        Center(child: CircularProgressIndicator()), */
+                      ListView.builder(
+                        controller: _hostedScrollController,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: applied.length,
+                        itemBuilder: (context, index) {
+                          final post = applied[index];
+                          return ContestAppliedCard(post);
                         },
-                        color: wayaTheme.colorScheme.primary50,
-                        text: "Host a Contest",
-                        textColor: wayaTheme.colorScheme.customPrimary,
                       ),
-                    const Gap(10),
-                    if (host.isEmpty && applied.isEmpty && followed.isEmpty)
-                      emptyWidget(),
-                    /*  if (hostNotifier.isLoading)
-                      Center(child: CircularProgressIndicator()), */
-                    ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: applied.length,
-                      itemBuilder: (context, index) {
-                        final post = applied[index];
-                        return ContestAppliedCard(post);
-                      },
-                    ),
-                    const Gap(10),
-                    ListView.builder(
-                      // controller: _hostedScrollController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: followed.length,
-                      itemBuilder: (context, index) {
-                        final post = followed[index];
-                        return ContestCard(
-                            post,
-                            followedNotifier.toggleLike,
-                            followedNotifier.toggleShare,
-                            followedNotifier.doFollow);
-                      },
-                    ),
-                    const Gap(10),
-                    ListView.builder(
-                      controller: _hostedScrollController,
-                      shrinkWrap: true,
-                      itemCount: host.length,
-                      itemBuilder: (context, index) {
-                        /*  if (hostNotifier.isLoading) {
-                          return Center(child: CircularProgressIndicator());
-                        } */
+                      const Gap(10),
+                      ListView.builder(
+                        controller: _hostedScrollController,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: followed.length,
+                        itemBuilder: (context, index) {
+                          final post = followed[index];
+                          return ContestCard(
+                              post,
+                              followedNotifier.toggleLike,
+                              followedNotifier.toggleShare,
+                              followedNotifier.doFollow);
+                        },
+                      ),
+                      const Gap(10),
+                      ListView.builder(
+                        controller: _hostedScrollController,
+                        physics: NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: host.length,
+                        itemBuilder: (context, index) {
+                          /*  if (hostNotifier.isLoading) {
+                            return Center(child: CircularProgressIndicator());
+                          } */
 
-                        final post = host[index];
-                        return ContestCard(post, hostNotifier.toggleLike,
-                            hostNotifier.toggleShare, hostNotifier.doFollow);
-                      },
-                    ),
-                  ],
+                          final post = host[index];
+                          return ContestCard(post, hostNotifier.toggleLike,
+                              hostNotifier.toggleShare, hostNotifier.doFollow);
+                        },
+                      ),
+                      const Gap(200),
+                    ],
+                  ),
                 ),
 
                 /// Hosted Contests
@@ -188,37 +195,57 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                   Center(child: CircularProgressIndicator()),
 
                 if (host.isNotEmpty)
-                  ListView.builder(
-                    controller: _hostedScrollController,
-                    shrinkWrap: true,
-                    itemCount: host.length,
-                    itemBuilder: (context, index) {
-                      final post = host[index];
-                      return GestureDetector(
-                        onTap: () {
-                          //To be removed, it a sample
-                          ref.read(selectedContestProvider.notifier).state =
-                              post;
-                          WayaNav.toNamed('/upcoming-manage-contest-details');
-                        },
-                        child: ContestCard(post, hostNotifier.toggleLike,
-                            hostNotifier.toggleShare, hostNotifier.doFollow),
-                      );
-                    },
+                  Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          controller: _hostedScrollController,
+                          // shrinkWrap: true,
+                          physics: BouncingScrollPhysics(),
+                          itemCount: host.length,
+                          itemBuilder: (context, index) {
+                            final post = host[index];
+                            return GestureDetector(
+                              onTap: () {
+                                //To be removed, it a sample
+                                ref
+                                    .read(selectedContestProvider.notifier)
+                                    .state = post;
+                                WayaNav.toNamed(
+                                    '/upcoming-manage-contest-details');
+                              },
+                              child: ContestCard(
+                                  post,
+                                  hostNotifier.toggleLike,
+                                  hostNotifier.toggleShare,
+                                  hostNotifier.doFollow),
+                            );
+                          },
+                        ),
+                      ),
+                      Gap(200),
+                    ],
                   ),
 
                 /// Applied Contests
                 // const Gap(10),
                 if (applied.isEmpty) emptyWidget(),
                 if (applied.isNotEmpty)
-                  ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: applied.length,
-                    itemBuilder: (context, index) {
-                      final post = applied[index];
-                      return ContestAppliedCard(post);
-                    },
+                  Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          physics: BouncingScrollPhysics(),
+                          // shrinkWrap: true,
+                          itemCount: applied.length,
+                          itemBuilder: (context, index) {
+                            final post = applied[index];
+                            return ContestAppliedCard(post);
+                          },
+                        ),
+                      ),
+                      Gap(250),
+                    ],
                   ),
               ],
             ),

@@ -196,7 +196,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     "createdAt": widget.post.createdAt,
                     "likeCount": widget.post.likeCount,
                     "isLike": widget.post.hasLiked,
-                    "showDescription": false,
+                    "showDescription": true,
                     "discription": widget.post.description,
                     "shareCount": widget.post.shareCount,
                     "type": MyFullMediaType.image

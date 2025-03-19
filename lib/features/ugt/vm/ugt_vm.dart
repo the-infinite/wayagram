@@ -241,7 +241,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       isLoading.value = false;
 
       if (response.success) {
-        ref.read(postProvider.notifier).fetchPosts();
+        ref.read(postProvider.notifier).fetchContestForYou(true);
         //  ref.read(postProvider.notifier).fetchPosts();
         // ref.read(postProvider.notifier).fetchPosts();
         WayaUtils.showModalSheetUgt(

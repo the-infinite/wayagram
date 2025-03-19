@@ -111,27 +111,32 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
     if (state.isLoading == true) {
       return;
     }
-    state = state.copyWith(isLoading: true);
-    final response = await _roleAccessRepository.getMemberList(
-        _localDataSource.getUserId().toString(), state.page);
-    state = state.copyWith(isLoading: false);
-    if (response.success == true) {
-      ShopMemberBase responseModel = ShopMemberBase.fromJson(response.data);
-      state = state.copyWith(
-          isLastPage: responseModel.data?.hasNextPage == true ? false : true);
-      if (isFirst) {
-        state = state.copyWith(listMember: responseModel.data?.docs ?? []);
-      } else {
-        state = state.copyWith(listMember: [
-          ...state.listMember,
-          ...responseModel.data?.docs ?? []
-        ]);
-      }
-      state = state.copyWith(page: state.page + 1);
-      // contestList = responseModel.data?.docs ?? [];
-    } else {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _roleAccessRepository.getMemberList(
+          _localDataSource.getUserId().toString(), state.page);
       state = state.copyWith(isLoading: false);
-    }
+      if (response.success == true) {
+        ShopMemberBase responseModel = ShopMemberBase.fromJson(response.data);
+        state = state.copyWith(
+            isLastPage: responseModel.data?.hasNextPage == true ? false : true);
+        if (isFirst) {
+          state = state.copyWith(listMember: responseModel.data?.docs ?? []);
+        } else {
+          state = state.copyWith(listMember: [
+            ...state.listMember,
+            ...responseModel.data?.docs ?? []
+          ]);
+        }
+        state = state.copyWith(page: state.page + 1);
+        // contestList = responseModel.data?.docs ?? [];
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+      print(e);
+    } finally {}
   }
 
   Future<void> getRoleManagementMemberList() async {

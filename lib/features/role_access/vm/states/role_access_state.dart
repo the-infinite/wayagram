@@ -7,7 +7,7 @@ import 'package:wayagram/features/role_access/data/model/shop_model.dart';
 class RoleAccessState {
   final int? revenueGenerated;
   final int page;
-  final bool isLastPage ;
+  final bool isLastPage;
   final bool? isLoading;
   final List<RolesModel> listRoleModel;
   final List<Select> listSelect;
