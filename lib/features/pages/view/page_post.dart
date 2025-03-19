@@ -41,12 +41,15 @@ class _PagePostState extends ConsumerState<PagePost> with SingleTickerProviderSt
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Latest post',
-                    style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                        color: WayaColors.greyColor700,
-                        fontFamily: WayaConstants.fontFamily)),
+                Text(
+                  'Latest post',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: WayaColors.greyColor700,
+                    fontFamily: WayaConstants.fontFamily,
+                  ),
+                ),
                 if (viewModel2.getAllPost?.isEmpty ?? true)
                   PostEmptyState()
                 else
