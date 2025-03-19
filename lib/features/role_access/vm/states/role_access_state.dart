@@ -6,6 +6,8 @@ import 'package:wayagram/features/role_access/data/model/shop_model.dart';
 
 class RoleAccessState {
   final int? revenueGenerated;
+  final int page;
+  final bool isLastPage ;
   final bool? isLoading;
   final List<RolesModel> listRoleModel;
   final List<Select> listSelect;
@@ -16,7 +18,9 @@ class RoleAccessState {
 
   RoleAccessState({
     this.revenueGenerated = 0,
+    this.page = 1,
     this.isLoading = false,
+    this.isLastPage = false,
     this.listRoleModel = const [],
     this.listSelect = const [],
     this.listShop = const [],
@@ -27,7 +31,9 @@ class RoleAccessState {
 
   RoleAccessState copyWith({
     int? revenueGenerated,
+    int? page,
     bool? isLoading,
+    bool? isLastPage,
     List<RolesModel>? listRoleModel,
     List<Select>? listSelect,
     List<Select>? listShop,
@@ -44,5 +50,7 @@ class RoleAccessState {
         listMember: listMember ?? this.listMember,
         isLoading: isLoading ?? this.isLoading,
         listRoleManagement: listRoleManagement ?? this.listRoleManagement,
+        page: page ?? this.page,
+        isLastPage: isLastPage ?? this.isLastPage,
       );
 }
