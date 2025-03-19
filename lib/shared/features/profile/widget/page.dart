@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -77,6 +76,7 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
+          spacing: 5.h,
           children: [
             ListTile(
               contentPadding: EdgeInsets.only(left: 0, right: 0),
@@ -125,10 +125,7 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
                     ),
             ),
 
-            // Space.
-            const Gap(10),
-
-            // Finally, the group's description.
+            // Finally, the page's description.
             Padding(
               padding: const EdgeInsets.only(left: 15),
               child: Text(
