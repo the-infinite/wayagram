@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
@@ -72,15 +73,16 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                   color: WayaColors.greyColor700,
                   fontFamily: WayaConstants.fontFamily)),
         ),
-        if (viewModel2.getAllPost?.isEmpty ?? true)
-          PostEmptyState()
+        if (viewModel2.pagePopularPostDocs?.isEmpty ?? true)
+          ActivityLogsEmptyState(text: 'No post based on pages you follow')
+
         else
           ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: viewPage.getAllPost?.length ?? 0,
+            itemCount: viewPage.pagePopularPostDocs?.length ?? 0,
             itemBuilder: (_, index) => WayaPostWidget(
-              data: viewPage.getAllPost![index],
+              data: viewPage.pagePopularPostDocs![index],
               index: index,
             ),
           ),
@@ -94,7 +96,7 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
         ),
         const Gap(25),
         viewModel2.allPageModelDocs!.isEmpty
-            ? PageEmptyState()
+            ? ActivityLogsEmptyState(text: 'No post based on pages you follow')
             : SizedBox(
                 height: 190,
                 child: ListView.builder(

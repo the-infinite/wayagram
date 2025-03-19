@@ -146,7 +146,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
           FilterWidget(
               search: TextEditingController(), hintText: 'Search Donations'),
           Gap(20),
-          Text("My Donations", style: wayaTheme.textTheme.titleLarge),
+          Text("Approved Donations", style: wayaTheme.textTheme.titleLarge),
           Row(
             children: [
               Text(
@@ -222,6 +222,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                 }),
           ),
           const Gap(10),
+          Text("Pending Donations", style: wayaTheme.textTheme.titleLarge),
           Row(
             children: [
               Text(
