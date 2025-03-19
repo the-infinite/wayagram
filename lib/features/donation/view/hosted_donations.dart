@@ -223,6 +223,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
           ),
           const Gap(10),
           Text("Pending Donations", style: wayaTheme.textTheme.titleLarge),
+
           Row(
             children: [
               Text(
