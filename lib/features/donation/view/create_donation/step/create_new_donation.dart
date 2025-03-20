@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -244,6 +245,40 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                           child: Text(
                             formState.errorText!,
                             style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                          ),
+                        ),
+                    ],
+                  );
+                }),
+                const Gap(20),
+                FormField<String>(validator: (value) {
+                  if (viewModel.category.isEmpty) {
+                    return 'Category is required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaSelectField<String>(
+                          height: 0.3,
+                          label: "Category",
+                          value: viewModel.category.capitalizeFirst,
+                          uniqueKey: 'category-type',
+                          hintText: 'Select Category',
+                          items: ref.read(donationVmProvider.notifier).donationCategory,
+                          onSelected: (value) => ref
+                              .read(donationVmProvider.notifier)
+                              .selectDonationCategory(value.first.value)),
+                      if (formState.hasError && viewModel.category.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],

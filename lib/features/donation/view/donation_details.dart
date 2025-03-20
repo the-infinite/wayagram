@@ -76,7 +76,9 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                 topLeft: "${WayaHelpers.formatPrice(int.parse('${args['amountRaised']}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount']}'))}",
                 bottomLeft: "${args['donationCount']} Donations",
                 bottomRight: "${args['daysLeft']} ${args['daysLeft'] == '1' ? 'day': 'days'} left",
-                range: args['donationCount'] == '0' ? 0.0 : 0.4),
+                range: args['ratioLeft'],
+                //range: args['donationCount'] == '0' ? 0.0 : 0.4
+            ),
             Gap(10),
             Row(children: [
               Expanded(child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['amountRaised']}')), 'Amount Raised', wayaTheme.colorScheme.success50),),

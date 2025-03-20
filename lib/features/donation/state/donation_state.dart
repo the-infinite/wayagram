@@ -17,6 +17,7 @@ class DonationState{
     final TextEditingController details;
     final List<DocType> donationImage;
     final MultipartFile? image;
+    final String category;
     final String? kycStatus;
     final String kycMessage;
     final String privacyOption;
@@ -27,6 +28,7 @@ class DonationState{
     final String endDateString;
     final CreateDonationResponse? createDonationResponse;
     List<AllDonationDocs>? allDonationDocs;
+    List<AllDonationDocs>? appliedDonationDocs;
     List<MyDonationDocs>? myDonationDocs;
     List<MyDonationDocs>? approvedDonations;
     List<MyDonationDocs>? rejectedDonations;
@@ -45,12 +47,14 @@ class DonationState{
     TextEditingController? minimumDonationAmount,
     TextEditingController? details,
       this.allDonationDocs = const [],
+      this.appliedDonationDocs = const [],
       this.myDonationDocs = const [],
       this.approvedDonations = const [],
       this.rejectedDonations = const [],
       this.donationImage = const [],
       this.image,
       this.startDate = '',
+      this.category = '',
       this.accountType,
       this.kycStatus = '',
       this.kycMessage = '',
@@ -82,12 +86,14 @@ class DonationState{
     TextEditingController? minimumDonationAmount,
     TextEditingController? details,
       List<AllDonationDocs>? allDonationDocs,
+      List<AllDonationDocs>? appliedDonationDocs,
       List<MyDonationDocs>? myDonationDocs,
       List<MyDonationDocs>? approvedDonations,
       List<MyDonationDocs>? rejectedDonations,
       List<DocType>? donationImage,
       MultipartFile? image,
       String? privacyOption,
+      String? category,
       String? startDate,
       String? endDate,
       String? startDateString,
@@ -115,6 +121,7 @@ class DonationState{
       minimumDonationAmount: minimumDonationAmount ?? this.minimumDonationAmount,
       details: details ?? this.details,
       donationImage: donationImage ?? this.donationImage,
+      category: category ?? this.category,
       image: image ?? this.image,
       privacyOption: privacyOption ?? this.privacyOption,
       accountType: accountType ?? this.accountType,
@@ -126,6 +133,7 @@ class DonationState{
       showAmountRaised: showAmountRaised ?? this.showAmountRaised,
       showNumberOfDonors: showNumberOfDonors ?? this.showNumberOfDonors,
       allDonationDocs: allDonationDocs ?? this.allDonationDocs,
+      appliedDonationDocs: appliedDonationDocs ?? this.appliedDonationDocs,
       myDonationDocs: myDonationDocs ?? this.myDonationDocs,
       approvedDonations: approvedDonations ?? this.approvedDonations,
       rejectedDonations: rejectedDonations ?? this.rejectedDonations,
