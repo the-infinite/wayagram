@@ -17,6 +17,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/donation/data/repo/donation_repository.dart';
 import 'package:wayagram/features/donation/donation_modal/donation_modal.dart';
 import 'package:wayagram/features/donation/model/all_donation_model.dart';
+import 'package:wayagram/features/donation/model/applied_donation_model.dart';
 import 'package:wayagram/features/donation/model/create_donation_response.dart';
 import 'package:wayagram/features/donation/model/kyc_model.dart';
 import 'package:wayagram/features/donation/model/login_response.dart';
@@ -93,8 +94,8 @@ class DonationVm extends StateNotifier<DonationState> {
   }
 
   List<Select> donationCategory = [
-    Select(label: 'Education', value: 'Education'),
-    Select(label: 'School', value: 'School'),
+    Select(label: 'School fees', value: 'School fees'),
+    Select(label: 'Food', value: 'Food'),
   ];
 
   bool isStartDateAfterEndDate(String startDate, String endDate) {
@@ -203,7 +204,7 @@ class DonationVm extends StateNotifier<DonationState> {
       print('Status Code: ${response.statusCode}');
 
       if (response.success) {
-        AllDonationModel responseModel = AllDonationModel.fromJson(response.data);
+        AppliedDonationModel responseModel = AppliedDonationModel.fromJson(response.data);
         state = state.copyWith(appliedDonationDocs: responseModel.data?.docs);
       } else {}
     } catch (e) {
