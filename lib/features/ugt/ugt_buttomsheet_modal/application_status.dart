@@ -48,7 +48,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
         ref
             .read(postProvider.notifier)
             .fetchSingleContestantDetails(widget.post?.contestId ?? "",
-                widget.post?.contest?.profileId ?? "")
+                widget.post?.userId ?? "")
             .then((model) {
           if (model != null) {
             if (model.data?.totalDocs == 1) {
@@ -256,6 +256,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                   WayaNav.toNamed("/upcoming-manage-contest-details");
                 }
               },
+              //? first checking if contest is approved or not
               text: widget.post?.status?.toLowerCase() == "approved"
                   ? widget.post?.contest?.entryType?.toLowerCase() == "free"
                       //? if it free and has profile details

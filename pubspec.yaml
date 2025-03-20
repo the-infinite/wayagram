@@ -86,6 +86,8 @@ dependencies:
   photo_view: ^0.15.0
   #for saving file to gallery
   gallery_saver_plus: ^3.2.4
+  #for native splash screen
+  flutter_native_splash: ^2.4.5
   
 
 
@@ -103,6 +105,9 @@ dev_dependencies:
 dependency_overrides:
   intl: "^0.20.1"
   source_gen: "^2.0.0"
+  #cause of our flutter version to add Flutter_native, we have to override this
+  path: 1.9.1
+  meta: 1.16.0
 
   # This is fine.
   flutter_lints: ^5.0.0

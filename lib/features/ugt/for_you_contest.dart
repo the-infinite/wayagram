@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -145,32 +146,32 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-            if (isScrollingUp && isAtTop)
-          Column(
-            children: [
-              GroupedWidgetHeader(
-                  onTap: null,
-                  subTitle:
-                      "See contests which are active for you to \n participate in",
-                  title: "Active Contests"),
-              const Gap(10),
-              if (ConversationState.self.accountType ==
-                  UserAccountType.business)
-                WayaButton(
-                  callback: () {
-                    ivalidateUGTVM(ref);
-                    //WayaNav.toNamed('/create-profile-contest1');
-                    WayaNav.toNamed('/create-contest');
-                  },
-                  color: wayaTheme.colorScheme.primary50,
-                  text: "Host a Contest",
-                  textColor: wayaTheme.colorScheme.customPrimary,
-                ),
-              if (ConversationState.self.accountType ==
-                  UserAccountType.business)
+          if (isScrollingUp && isAtTop)
+            Column(
+              children: [
+                GroupedWidgetHeader(
+                    onTap: null,
+                    subTitle:
+                        "See contests which are active for you to \n participate in",
+                    title: "Active Contests"),
                 const Gap(10),
-            ],
-          ),
+                if (ConversationState.self.accountType ==
+                    UserAccountType.business)
+                  WayaButton(
+                    callback: () {
+                      ivalidateUGTVM(ref);
+                      //WayaNav.toNamed('/create-profile-contest1');
+                      WayaNav.toNamed('/create-contest');
+                    },
+                    color: wayaTheme.colorScheme.primary50,
+                    text: "Host a Contest",
+                    textColor: wayaTheme.colorScheme.customPrimary,
+                  ),
+                if (ConversationState.self.accountType ==
+                    UserAccountType.business)
+                  const Gap(10),
+              ],
+            ),
           if (posts.isLoading == true)
             Center(child: CircularProgressIndicator()),
           if (posts.listContestForYou.isEmpty) emptyWidget(),

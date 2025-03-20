@@ -282,7 +282,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         ApplicantContestModelBase responseModel =
             ApplicantContestModelBase.fromJson(response.data);
         contestList = responseModel.data ?? [];
-      
 
         state = state.copyWith(myContestApplicantList: contestList);
       }
@@ -290,7 +289,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       //print(e);
     } finally {}
   }
-
 
   void searchList(String value) {
     if (value.trim().isEmpty) {
@@ -340,7 +338,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     listMap.add({"type": "TEXT", "url": text});
 
     var map = {
-      "contestantProfileId": state.createPostId,
+      // "contestantProfileId": state.createPostId,
+      "contestantProfileId": _localDataSource.getUserId(),
       "contestId": state.contestId,
       "description": text,
       "mediaContent": listMap
@@ -365,6 +364,10 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   void updateContestId(String? id) {
     state = state.copyWith(contestId: id);
+  }
+
+  void updateContestantId(String? id) {
+    state = state.copyWith(createPostId: id);
   }
 
   void toggleLike(String postId, String galleryId) {
