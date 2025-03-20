@@ -10,9 +10,7 @@ import 'package:wayagram/features/group/view/joined_group.dart';
 import 'package:wayagram/features/group/view/manage_groups.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 
-import '../../bottom_view/bottom_view.dart';
 import 'groups_for_you.dart';
-
 
 class Groups extends ConsumerStatefulWidget {
   static const route = '/groups';
@@ -25,11 +23,10 @@ class Groups extends ConsumerStatefulWidget {
 class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
-
   @override
   void reassemble() {
     super.reassemble();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       // final id  = ModalRoute.of(context)?.settings.arguments as String;
       // final fetchGroup =  await ref.read(createGroupProvider.notifier).getSingleGroup(id);
       // ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
@@ -42,56 +39,57 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
     final viewModel = ref.watch(createGroupProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
-      onTapBackButton: () {
-        WayaNav.toNamed( BottomView.route, arguments: 0);
-      },
-      isLoading: viewModel.isLoading,
-      isScrollable: true,
-      title: 'Groups',
-      appBarTrailing: Row(
-        spacing: 12,
-        children: [
-          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-          WayaDp(
-            radius: 15.r,
-          ),
-          Gap(8)
-        ],
-      ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Gap(10),
-          Row(
-            children: [
-              WayaTabButton(
-                isSelected: _selectedIndex == 0,
-                text: 'For You',
-                onTap: () => setState(() => _selectedIndex = 0),
-              ),
-              WayaTabButton(
-                isSelected: _selectedIndex == 1,
-                text: 'Joined Groups',
-                onTap: () => setState(() => _selectedIndex = 1),
-              ),
-              WayaTabButton(
-                isSelected: _selectedIndex == 2,
-                text: 'Manage Groups',
-                onTap: () => setState(() => _selectedIndex = 2),
-              ),
-            ],
-          ),
-          const Gap(20),
-          _selectedIndex == 0 ? GroupsForYou() : _selectedIndex == 1 ? JoinedGroup() : ManageGroups()
-        ],
-      ),
+        isLoading: viewModel.isLoading,
+        isScrollable: true,
+        title: 'Groups',
+        appBarTrailing: Row(
+          spacing: 12,
+          children: [
+            WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+            WayaDp(
+              radius: 15.r,
+            ),
+            Gap(8)
+          ],
+        ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Gap(10),
+            Row(
+              children: [
+                WayaTabButton(
+                  isSelected: _selectedIndex == 0,
+                  text: 'For You',
+                  onTap: () => setState(() => _selectedIndex = 0),
+                ),
+                WayaTabButton(
+                  isSelected: _selectedIndex == 1,
+                  text: 'Joined Groups',
+                  onTap: () => setState(() => _selectedIndex = 1),
+                ),
+                WayaTabButton(
+                  isSelected: _selectedIndex == 2,
+                  text: 'Manage Groups',
+                  onTap: () => setState(() => _selectedIndex = 2),
+                ),
+              ],
+            ),
+            const Gap(20),
+            _selectedIndex == 0
+                ? GroupsForYou()
+                : _selectedIndex == 1
+                    ? JoinedGroup()
+                    : ManageGroups()
+          ],
+        ),
         floatingActionButton: SizedBox(
           height: 50,
           width: 50,
           child: WayaButton(
             callback: () {
-              WayaNav.toNamed('/createGroup', arguments: 'groupForYou' );
+              WayaNav.toNamed('/createGroup', arguments: 'groupForYou');
             },
             height: 50,
             centerWidget: Center(
@@ -102,7 +100,6 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
               ),
             ),
           ),
-        )
-    );
+        ));
   }
 }

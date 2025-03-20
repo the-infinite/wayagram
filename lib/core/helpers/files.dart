@@ -476,6 +476,14 @@ class WayaFileHelper {
     return File(path);
   }
 
+  /// A helper function used to get the extension of a file.
+  static String getFileExtension(String path) {
+    final uri = path.split(Platform.pathSeparator);
+    final filename = uri.last;
+    final extensionIndex = filename.lastIndexOf(".");
+    return extensionIndex > -1 ? filename.substring(extensionIndex + 1) : '';
+  }
+
   /// A helper function used to calculate the directory where we would keep a
   /// status update.
   static Future<File> getMomentDirectory(MomentData moment, String file) async {
@@ -486,7 +494,8 @@ class WayaFileHelper {
     var directory = await WayaFileHelper.getStatusUpdatesDirectory();
 
     //? Now, we try looking for the rest here.
-    final path = "${WayaFileHelper.getFileSubdirectory(directory, moment.userId)}/${moment.id.replaceAll("-", "")}.$extension";
+    final path =
+        "${WayaFileHelper.getFileSubdirectory(directory, moment.userId)}/${moment.id.replaceAll("-", "")}.$extension";
 
     // Now, return this file.
     return File(path);

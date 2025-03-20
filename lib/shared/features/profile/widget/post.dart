@@ -47,6 +47,16 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
   late int comment = widget.data.commentCount;
   late int liked = widget.data.likeCount;
   late int shared = widget.data.shareCount;
+  late final videoControllers = widget.data.media.map((_) => WayaVideoController()).toList();
+
+  @override
+  void dispose() {
+    //? Dispose the older video controllers
+    for (final controller in videoControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   Future<void> _launchUrl(String link) async {
     final Uri url = Uri.parse(link);
@@ -469,32 +479,78 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal, // Enables horizontal scrolling
                   itemCount: widget.data.media.length,
-                  itemBuilder: (context, index) => GestureDetector(
-                    onTap: () async {
-                      final result = await WayaNav.to(
-                        transition: Transition.downToUp,
-                        WayaImageDetailScreen(
-                          file: null,
-                          imageUrl: widget.data.media[index],
+                  itemBuilder: (context, index) {
+                    final resource = widget.data.media[index];
+                    final controller = videoControllers[index];
+
+                    //? This is fine.
+                    if (WayaFileExtensions.videos.contains(WayaFileHelper.getFileExtension(resource))) {
+                      return Container(
+                        height: 200.h,
+                        width: screenSize.width * 0.90,
+                        padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: Stack(
+                            children: [
+                              //? First, the video itself.
+                              WayaVideoWidget.networkUrl(
+                                Uri.parse(resource),
+                                controller: controller,
+                                controls: WayaVideoControls.none,
+                              ),
+
+                              //? Now, that special thing on top that tells you it is playable.
+                              Positioned.fill(
+                                child: Center(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white.withOpacity(0.7),
+                                    ),
+                                    padding: EdgeInsets.all(8),
+                                    child: Icon(
+                                      Icons.play_arrow,
+                                      size: 30,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       );
+                    }
 
-                      //? Do nothing.
-                      if (result == null) return;
-                    },
-                    child: Padding(
-                      padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10), // Optional: rounded corners
-                        child: WayaImage(
-                          imageUrl: widget.data.media[index],
-                          fit: BoxFit.cover,
-                          width: screenSize.width - (widget.padded ? 15 : 0), // Adjust width for better display
-                          height: 200, // Matches the container height
+                    //? Return this one.
+                    return GestureDetector(
+                      onTap: () async {
+                        final result = await WayaNav.to(
+                          transition: Transition.downToUp,
+                          WayaImageDetailScreen(
+                            file: null,
+                            imageUrl: resource,
+                          ),
+                        );
+
+                        //? Do nothing.
+                        if (result == null) return;
+                      },
+                      child: Padding(
+                        padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: WayaImage(
+                            imageUrl: resource,
+                            fit: BoxFit.cover,
+                            width: screenSize.width - (widget.padded ? 15.w : 0),
+                            height: 200.h,
+                          ),
                         ),
                       ),
-                    ),
-                  ),
+                    );
+                  },
                 ),
               ),
 

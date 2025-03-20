@@ -10,13 +10,9 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:wayagram/shared/model/media_upload_model.dart';
-
-import '../../../core/utils/waya_navigation.dart';
-import '../../auth/account_creation/view/loading_state.dart';
-import '../../explore/widgets/service_card.dart';
 
 class CreatePagePost extends ConsumerStatefulWidget {
   static const route = '/createPagePost';
@@ -32,11 +28,20 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
   );
 
   final _formKey = GlobalKey<FormState>();
-
   final ImagePicker _pickers = ImagePicker();
   List<XFile> _selectedImages = [];
+  List<WayaVideoController> videoControllers = [];
 
   bool sel = false;
+
+  @override
+  void dispose() {
+    //? Dispose the older video controllers
+    for (final controller in videoControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   Future<void> _pickImages() async {
     try {
@@ -48,8 +53,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
 
       if (images.isNotEmpty) {
         setState(() {
-          _selectedImages.clear();
-          _selectedImages.addAll(images.take(5).toList());
+          _selectedImages = images.take(5).toList();
         });
       }
     } catch (e) {
@@ -58,13 +62,18 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
     }
   }
 
-  File? _videoFile;
-
   Future<void> pickVideo() async {
     final XFile? pickedFile = await _pickers.pickVideo(source: ImageSource.gallery);
     if (pickedFile != null) {
+      //? Dispose the older video controllers
+      for (final controller in videoControllers) {
+        controller.dispose();
+      }
+
+      //? Update all things.
       setState(() {
-        _videoFile = File(pickedFile.path);
+        videoControllers = [WayaVideoController()];
+        _selectedImages = [pickedFile];
       });
     }
   }
@@ -120,7 +129,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                           pageId,
                                         );
                                     ref.watch(createPageProvider.notifier).reset();
-                                    WayaNav.goBack();
+                                    WayaNav.replaceNamed("/pages");
                                   }
                                 }
                               : null,
@@ -218,21 +227,59 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                               crossAxisCount: 2, mainAxisSpacing: 16, crossAxisSpacing: 16, childAspectRatio: 1.5),
                           itemCount: _selectedImages.length,
                           itemBuilder: (context, index) {
+                            //? This is fine.
+                            final resource = _selectedImages[index];
+                            final controller = videoControllers[index];
+
+                            //? Return the view.
                             return Stack(
                               children: [
-                                Container(
-                                  height: 100,
-                                  width: 168,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    image: DecorationImage(
-                                      image: FileImage(File(
-                                        _selectedImages[index].path,
-                                      )),
-                                      fit: BoxFit.cover,
+                                if (WayaFileExtensions.videos.contains(
+                                  WayaFileHelper.getFileExtension(resource.path),
+                                )) ...[
+                                  SizedBox(
+                                    height: 100.h,
+                                    width: 168.w,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      child: WayaVideoWidget.file(
+                                        File(resource.path),
+                                        controller: controller,
+                                        controls: WayaVideoControls.none,
+                                        canFocus: false,
+                                      ),
                                     ),
                                   ),
-                                ),
+
+                                  //? This is fine.
+                                  Center(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white.withOpacity(0.7),
+                                      ),
+                                      padding: EdgeInsets.all(8),
+                                      child: Icon(
+                                        Icons.play_arrow,
+                                        size: 30,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ] else
+                                  Container(
+                                    height: 100.h,
+                                    width: 168.w,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      image: DecorationImage(
+                                        image: FileImage(File(resource.path)),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+
+                                //? This is fine.
                                 Positioned(
                                   top: 4,
                                   right: 4,

@@ -6,8 +6,11 @@ import 'package:wayagram/core/components/components.dart';
 class WayaImageDetailScreen extends StatefulWidget {
   final File? file;
   final String? imageUrl;
-  const WayaImageDetailScreen(
-      {super.key, required this.imageUrl, required this.file});
+  const WayaImageDetailScreen({
+    super.key,
+    required this.imageUrl,
+    required this.file,
+  });
 
   @override
   State<WayaImageDetailScreen> createState() => _WayaImageDetailScreenState();
@@ -28,22 +31,24 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
       isScrollable: false,
       body: ColoredBox(
         color: Colors.black,
-        child: Center(
-          child: widget.file != null
-              ? IntrinsicHeight(
-                child: Image.file(
-                    widget.file!,
-                    width: size.width,
-                    fit: BoxFit.contain,
+        child: SafeArea(
+          child: Center(
+            child: widget.file != null
+                ? IntrinsicHeight(
+                    child: Image.file(
+                      widget.file!,
+                      width: size.width,
+                      fit: BoxFit.contain,
+                    ),
+                  )
+                : IntrinsicHeight(
+                    child: Image.network(
+                      '${widget.imageUrl}',
+                      width: size.width,
+                      fit: BoxFit.contain,
+                    ),
                   ),
-              )
-              : IntrinsicHeight(
-                child: Image.network(
-                    '${widget.imageUrl}',
-                    width: size.width,
-                    fit: BoxFit.contain,
-                  ),
-              ),
+          ),
         ),
       ),
     );
