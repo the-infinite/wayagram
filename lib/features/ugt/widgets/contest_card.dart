@@ -27,9 +27,9 @@ import '../../../core/utils/waya_navigation.dart';
 
 class ContestCard extends StatefulHookConsumerWidget {
   Contest post;
-  final Function(String) onLikePressed;
-  final Function(String) onSharePressed;
-  final Function(String) onFollowPressed;
+  final void Function(String) onLikePressed;
+  final void Function(String) onSharePressed;
+  final void Function(String) onFollowPressed;
   ContestCard(
       this.post, this.onLikePressed, this.onSharePressed, this.onFollowPressed,
       {super.key});
