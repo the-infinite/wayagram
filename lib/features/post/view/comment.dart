@@ -7,8 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:wayagram/features/post/view/comment_input.dart';
+import 'package:wayagram/features/post/widgets/comment_input.dart';
 import 'package:wayagram/features/post/vm/comment.dart';
 import 'package:wayagram/features/post/widgets/comment.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
@@ -30,7 +29,6 @@ class PostCommentsWidget extends ConsumerStatefulWidget {
 
 class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
   late final notifier = ref.read(createCommentProvider.notifier);
-  late final pageNotifier = ref.read(createPageProvider.notifier);
   final loadingController = ValueNotifier(false);
   final handler = WayaObservableScrollController();
   final formKey = GlobalKey<FormState>();
@@ -84,7 +82,6 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
       onPopInvokedWithResult: (isPopping, _) {
         if (!isPopping) return;
         notifier.reset();
-        pageNotifier.reset();
       },
       child: WayaScaffold(
         isLoading: false,
@@ -116,15 +113,16 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
                   ),
                 ),
               ),
-        
+
             // Some more space
             Gap(5.h),
-        
+
             //? For writing a comment.
             CommentInputField(
               formKey: formKey,
               loadingController: loadingController,
               post: widget.post,
+              notifier: notifier,
             ),
           ],
         ),

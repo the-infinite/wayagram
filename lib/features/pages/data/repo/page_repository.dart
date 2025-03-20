@@ -126,8 +126,21 @@ class PageRepository extends BaseRepository {
     // return getBooleanResponse(response);
   }
 
-  Future<WayaRequestResponse> getComment(postId) {
-    return get("$serviceUrl/posts/comments/$postId");
+  Future<WayaRequestResponse> getComments(
+    String postId, [
+    String? parentId,
+    int page = 1,
+    int limit = 15,
+  ]) {
+    return get(
+      "$serviceUrl/posts/comments/$postId?${parentId != null ? 'parentCommentId=$parentId&' : ''}page=$page&limit=$limit",
+    );
+  }
+
+  Future<WayaRequestResponse> getSingleComment(String postId, String commentId) {
+    return get(
+      "$serviceUrl/posts/comments/$postId?id=$commentId",
+    );
   }
 
   Future<WayaRequestResponse> deleteComment(String commentId) async {
@@ -155,12 +168,16 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> createPage(
-      String pageName, String pageDesc, bool pageType, String coverImage, String profileImage) {
+    String pageName,
+    String pageDesc,
+    bool pageType,
+    String coverImage,
+    String profileImage,
+  ) {
     final payload = {
       "name": pageName,
       "description": pageDesc,
       "isPublic": pageType, //Optional field, if you leave it blank it defaults to false
-      //"isOpen": false, // this defaults to true if it is not inserted
       "coverImage": coverImage,
       "profileImage": profileImage
     };

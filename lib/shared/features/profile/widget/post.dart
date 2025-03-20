@@ -441,6 +441,10 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                   scrollDirection: Axis.horizontal, // Enables horizontal scrolling
                   itemCount: widget.data.media.length,
                   itemBuilder: (context, index) {
+                    //? Stop when we are getting ahead of ourselves.
+                    if (index >= widget.data.media.length) return null;
+
+                    //? Just leave this as is.
                     final resource = widget.data.media[index];
                     final controller = videoControllers[index];
 

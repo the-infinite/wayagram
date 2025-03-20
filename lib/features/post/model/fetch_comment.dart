@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:json_annotation/json_annotation.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
+
+part 'fetch_comment.g.dart';
 
 FetchComment fetchCommentFromJson(String str) => FetchComment.fromJson(json.decode(str));
 String fetchCommentToJson(FetchComment data) => json.encode(data.toJson());
@@ -85,7 +88,7 @@ class FetchCommentData {
   num? limit;
   num? totalPages;
   bool? hasNextPage;
-  dynamic nextPage;
+  num? nextPage;
   bool? hasPrevPage;
   dynamic prevPage;
   FetchCommentData copyWith({
@@ -95,7 +98,7 @@ class FetchCommentData {
     num? limit,
     num? totalPages,
     bool? hasNextPage,
-    dynamic nextPage,
+    num? nextPage,
     bool? hasPrevPage,
     dynamic prevPage,
   }) =>
@@ -127,60 +130,51 @@ class FetchCommentData {
   }
 }
 
-CommentModel commentsFromJson(String str) => CommentModel.fromJson(json.decode(str));
-String commentsToJson(CommentModel data) => json.encode(data.toJson());
-
+@JsonSerializable()
 class CommentModel {
+  final String id;
+  final String postId;
+  final String userId;
+  final String content;
+  final bool? isLiked;
+  final String? parentCommentId;
+  final int likeCount;
+  final int commentCount;
+  final int shareCount;
+  final dynamic deletedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final UserDetailsModel? user;
+  
   CommentModel({
-    this.id,
-    this.postId,
-    this.userId,
-    this.content,
-    this.parentCommentId,
-    this.likeCount,
-    this.commentCount,
-    this.shareCount,
-    this.deletedAt,
-    this.createdAt,
-    this.updatedAt,
-    this.user,
+    required this.id,
+    required this.isLiked,
+    required this.postId,
+    required this.userId,
+    required this.content,
+    required this.likeCount,
+    required this.commentCount,
+    required this.shareCount,
+    required this.deletedAt,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.parentCommentId,
+    required this.user,
   });
 
-  CommentModel.fromJson(dynamic json) {
-    id = json['id'];
-    postId = json['postId'];
-    userId = json['userId'];
-    content = json['content'];
-    parentCommentId = json['parentCommentId'];
-    likeCount = json['likeCount'];
-    commentCount = json['commentCount'];
-    shareCount = json['shareCount'];
-    deletedAt = json['deletedAt'];
-    createdAt = DateTime.tryParse(json['createdAt'].toString());
-    updatedAt = DateTime.tryParse(json['updatedAt'].toString());
-    user = json['user'] != null ? UserDetailsModel.fromJson(json['user']) : null;
-  }
-  String? id;
-  String? postId;
-  String? userId;
-  String? content;
-  dynamic parentCommentId;
-  num? likeCount;
-  num? commentCount;
-  num? shareCount;
-  dynamic deletedAt;
-  DateTime? createdAt;
-  DateTime? updatedAt;
-  UserDetailsModel? user;
+  factory CommentModel.fromJson(Map<String, dynamic> json) => _$CommentModelFromJson(json);
+  Map<String, dynamic> toJson() => _$CommentModelToJson(this);
+
   CommentModel copyWith({
     String? id,
     String? postId,
     String? userId,
     String? content,
-    dynamic parentCommentId,
-    num? likeCount,
-    num? commentCount,
-    num? shareCount,
+    bool? isLiked,
+    String? parentCommentId,
+    int? likeCount,
+    int? commentCount,
+    int? shareCount,
     dynamic deletedAt,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -191,6 +185,7 @@ class CommentModel {
         postId: postId ?? this.postId,
         userId: userId ?? this.userId,
         content: content ?? this.content,
+        isLiked: isLiked ?? this.isLiked,
         parentCommentId: parentCommentId ?? this.parentCommentId,
         likeCount: likeCount ?? this.likeCount,
         commentCount: commentCount ?? this.commentCount,
@@ -200,24 +195,4 @@ class CommentModel {
         updatedAt: updatedAt ?? this.updatedAt,
         user: user ?? this.user,
       );
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['id'] = id;
-    map['postId'] = postId;
-    map['userId'] = userId;
-    map['content'] = content;
-    map['parentCommentId'] = parentCommentId;
-    map['likeCount'] = likeCount;
-    map['commentCount'] = commentCount;
-    map['shareCount'] = shareCount;
-    map['deletedAt'] = deletedAt;
-    map['createdAt'] = createdAt;
-    map['updatedAt'] = updatedAt;
-    map['created_at'] = createdAt;
-    map['updated_at'] = updatedAt;
-    if (user != null) {
-      map['user'] = user?.toJson();
-    }
-    return map;
-  }
 }

@@ -18,8 +18,8 @@ class CategoriesFilterWidgetVm extends StateNotifier<CategoryFilterState> {
   List<String> updateSelectedCategory(Select cat) {
     if (state.selected.any((i) => i == cat.value)) {
       List<String> selectedList = List.from(state.selected);
-     final filtered = selectedList.where((c) => c != cat.value).toList();
-      
+      final filtered = selectedList.where((c) => c != cat.value).toList();
+
       state = state.copyWith(selected: filtered);
     } else {
       List<String> selectedList = List.from(state.selected);
@@ -35,4 +35,5 @@ class CategoriesFilterWidgetVm extends StateNotifier<CategoryFilterState> {
 
 final categoriesFilterWidgetVmProvider =
     StateNotifierProvider.family<CategoriesFilterWidgetVm, CategoryFilterState, String>(
-        (ref, uniqueKey) => CategoriesFilterWidgetVm(ref));
+  (ref, uniqueKey) => CategoriesFilterWidgetVm(ref),
+);
