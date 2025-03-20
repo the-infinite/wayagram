@@ -21,7 +21,9 @@ import 'create_ultimate.dart';
 
 class ParticipantDetails extends StatefulHookConsumerWidget {
   final Function goToNextTab;
-  const ParticipantDetails({super.key, required this.goToNextTab});
+  final Function(int) goToPrevTab;
+  const ParticipantDetails(
+      {super.key, required this.goToNextTab, required this.goToPrevTab});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -43,28 +45,28 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
     final viewModel2 = ref.watch(contestNotifierProvider);
     var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
     final wayaTheme = Theme.of(context);
-      var isEditing = ref.watch(stateIsEditingContestProvider);
+    var isEditing = ref.watch(stateIsEditingContestProvider);
     useEffect(() {
-        if (isEditing) {
-      Future.delayed(Duration(seconds: 1), () {
-        viewModel2.howItWorks.text = contestViewModel?.howItWorks ?? "";
+      if (isEditing) {
+        Future.delayed(Duration(seconds: 1), () {
+          viewModel2.howItWorks.text = contestViewModel?.howItWorks ?? "";
 
-        if (contestViewModel?.entryType?.toLowerCase() == "free") {
-          viewModel2.amount.text = "0";
-        }
-        ref.read(contestNotifierProvider.notifier).updateEntryType(
-            contestViewModel?.entryType?.toLowerCase() == "free"
-                ? "Free"
-                : "Paid");
-        // viewModel2.entrySelectType = contestViewModel.entryType??"";
-        viewModel2.amount.text = contestViewModel?.amount?.toString() ?? "";
-        ref.read(contestNotifierProvider.notifier).updateParticipationDate(
-            contestViewModel?.participationStartDate?.split("T").first ?? "");
+          if (contestViewModel?.entryType?.toLowerCase() == "free") {
+            viewModel2.amount.text = "0";
+          }
+          ref.read(contestNotifierProvider.notifier).updateEntryType(
+              contestViewModel?.entryType?.toLowerCase() == "free"
+                  ? "Free"
+                  : "Paid");
+          // viewModel2.entrySelectType = contestViewModel.entryType??"";
+          viewModel2.amount.text = contestViewModel?.amount?.toString() ?? "";
+          ref.read(contestNotifierProvider.notifier).updateParticipationDate(
+              contestViewModel?.participationStartDate?.split("T").first ?? "");
 
-        viewModel2.descriptionOfAwards.text =
-            contestViewModel?.descriptionOfAwards ?? "";
-      });
-    }
+          viewModel2.descriptionOfAwards.text =
+              contestViewModel?.descriptionOfAwards ?? "";
+        });
+      }
       return null;
     }, []);
     return Form(
@@ -92,7 +94,8 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                 WayaTextFormField(
                   controller: viewModel2.howItWorks,
                   hintText: "Enter Contest Description",
-                  label: "How It Works",
+                  label: "How to Participate",
+                  maxLength: 500,
                   line: 6,
                   borderColor:
                       formState.hasError && viewModel2.howItWorks.text.isEmpty
@@ -122,6 +125,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                //   state.contestFreePaid
                 WayaSelectField<String>(
                   height: 0.3,
                   value: viewModel2.entrySelectType,
@@ -157,9 +161,20 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
           if (viewModel2.entrySelectType != "Free")
             FormField<String>(validator: (value) {
               if (viewModel2.amount.text.isEmpty) {
-                return 'Winner`s Award is required';
+                return 'Amount is required';
               }
-
+              String value = viewModel2.amount.text.contains("NGN")
+                  ? viewModel2.amount.text
+                      .replaceAll("NGN", "")
+                      .split(".")
+                      .first
+                      .toString()
+                  : viewModel2.amount.text;
+             
+              if (int.parse(value) <= 0) {
+               
+                return 'Amount must be greater than zero';
+              }
               return null;
             }, builder: (formState) {
               return Column(
@@ -176,17 +191,16 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                           name: 'NGN', symbol: 'NGN', locale: 'en_NG')
                     ],
                     borderColor:
-                        formState.hasError && viewModel2.amount.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
+                        formState.hasError ? wayaTheme.colorScheme.error : null,
                   ),
-                  if (formState.hasError && viewModel2.amount.text.isEmpty)
+                  if (formState.hasError)
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
                         formState.errorText!,
                         style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            color: wayaTheme.colorScheme.error,
+                            fontSize: 12.sp),
                       ),
                     ),
                 ],
@@ -276,7 +290,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
           const Gap(15), */
           FormField<String>(validator: (value) {
             if (viewModel2.startDate.isEmpty) {
-              return 'Duration type is required';
+              return 'Date is required';
             }
 
             return null;
@@ -296,7 +310,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                       value: viewModel2.startDate.isEmpty
                           ? 'DD/MM/YYYY'
                           : viewModel2.startDate,
-                      label: "Start Date",
+                      label: "Participation Start Date",
                       hintText: 'Select Start Date',
                       items: ref
                           .read(contestNotifierProvider.notifier)
@@ -335,6 +349,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
                   controller: viewModel2.descriptionOfAwards,
                   hintText: "Enter Contest Description",
                   label: "Contest Description",
+                  maxLength: 500,
                   line: 6,
                   borderColor: formState.hasError &&
                           viewModel2.descriptionOfAwards.text.isEmpty
@@ -382,7 +397,8 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               border: Border.all(
                   width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-                WayaNav.goBack();
+                widget.goToPrevTab(0);
+                //  WayaNav.goBack();
                 // WayaNav.toNamed("/ugt-home");
               })
         ],

@@ -6,12 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
+import 'package:wayagram/features/ugt/create_contest/steps/create_ultimate.dart';
 import 'package:wayagram/features/ugt/data/model/category_response.dart';
 import 'package:wayagram/features/ugt/data/model/contest_state.dart';
 import 'package:wayagram/features/ugt/data/model/create_contest.dart';
@@ -167,7 +169,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     if (isEditing) {
       if (state.image.trim().isEmpty) {
         // use the defualt url
-        profileImageUrl = contestViewModel?.uploadCoverImages??"";
+        profileImageUrl = contestViewModel?.uploadCoverImages ?? "";
       }
     } else {
       profileImageUrl = await WayaFileRepository.instance.uploadFile(
@@ -216,14 +218,14 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "status": "ACTIVE",
         "howItWorks": state.howItWorks.text,
         //  "numberOfWeeks": numberOfWeeks.text,
-        "currentStage": state.contestTimelineCurrentStage,
+        "currentStage": state.contestTimelineCurrentStage ?? "",
         "participationStartDate": _convertToISO(state.startDate),
         "startDate": _convertToISO(state.contestTimelineStartDate),
         "uploadCoverImages": profileImageUrl,
         "endDate": _convertToISO(state.contestTimelineEndDate),
 
-        // "entryType": state.entrySelectType.toUpperCase(),
-        "entryType": state.contestFreePaid.toUpperCase(),
+        "entryType": state.entrySelectType.toUpperCase(),
+        //  "entryType": state.contestFreePaid.toUpperCase(),
         "contestSettings": {
           "stages": mapStageList,
           "formRequirements": mapRequireList
@@ -232,8 +234,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       print(map.toString());
       WayaRequestResponse? response;
       if (isEditing) {
-        response =
-            await _contestRepository.editContest(contestViewModel?.id??"", map);
+        response = await _contestRepository.editContest(
+            contestViewModel?.id ?? "", map);
       } else {
         response = await _contestRepository.createContest(map);
       }
@@ -257,6 +259,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
                 WayaNav.removeAllUntil(UgtHome(), '/ugt-home');
               }),
         );
+      } else {
+        WayaSnackBar.showToast(
+            "Please try again later, unable to create contest");
       }
     } catch (e) {
       _logger.e(e.toString());
@@ -370,13 +375,14 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     }
   }
 
-  Future<DateTime?> pickerDialog(BuildContext context) async {
+  Future<DateTime?> pickerDialog(BuildContext context,
+      {DateTime? firtDate, DateTime? lastDate}) async {
     try {
       final response = await showDatePicker(
           context: context,
-          firstDate: DateTime(1950),
-          lastDate: DateTime(2050),
-          initialDate: DateTime.now());
+          firstDate: firtDate ?? DateTime.now(),
+          lastDate: lastDate ?? DateTime(2050),
+          initialDate: firtDate ?? DateTime.now());
 
       if (response != null) {
         return response;
@@ -633,7 +639,11 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   Future<void> showDateContestEnd(BuildContext context) async {
     try {
-      final response = await pickerDialog(context);
+      final response = await pickerDialog(context,
+          firtDate: convertToUsableDate(
+              state.contestTimelineStartDate.trim().isEmpty
+                  ? "2050-1-1"
+                  : state.contestTimelineStartDate));
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
@@ -646,9 +656,11 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     }
   }
 
-  Future<String?> showDatePickerMain(BuildContext context) async {
+  Future<String?> showDatePickerMain(BuildContext context,
+      {DateTime? firstDate, DateTime? lastDate}) async {
     try {
-      final response = await pickerDialog(context);
+      final response =
+          await pickerDialog(context, firtDate: firstDate, lastDate: lastDate);
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";

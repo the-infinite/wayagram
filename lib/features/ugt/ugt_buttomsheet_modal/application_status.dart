@@ -103,7 +103,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
               ],
             ),
             const Gap(20),
-            if (widget.post?.rejectionReason != null)
+            if (widget.post?.status == "REJECTED")
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -113,11 +113,11 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                   const Gap(10),
                   Text(
                       widget.post?.rejectionReason ??
-                          "We regret to inform you that your application for the University Got Talent contest has been rejected due to insufficient originality in your proposed act. We encourage you to explore more unique ideas and reapply in the future!",
+                          "We regret to inform you that your application has been rejected due to insufficient originality in your proposed act. We encourage you to explore more unique ideas and reapply in the future!",
                       style: wayaTheme.textTheme.bodyMedium),
                 ],
               ),
-            if (widget.post?.rejectionReason == null)
+            if (widget.post?.status == "REJECTED")
               Column(
                 children: [
                   Row(

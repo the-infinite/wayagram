@@ -90,8 +90,6 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                           voteCountToQualify:
                               e.voteCountToQualify.toString() ?? '0',
                           reviewApprovePost: e.approveBeforeLive ?? false,
-
-                
                         ))
                     .toList() ??
                 []
@@ -168,7 +166,8 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                                       : stages[index] */
                                   ,
                                   style: TextStyle(
-                                      fontSize: 16.sp, color: Colors.grey[700])),
+                                      fontSize: 16.sp,
+                                      color: Colors.grey[700])),
                               IconButton(
                                 icon: Image.asset(
                                   'assets/images/icon-right.png',
@@ -257,7 +256,7 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
                 Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
               print("stages  ${_contestController.contestStages.toString()}");
-              // WayaNav.goBack();
+              WayaNav.goBack();
             })
       ],
     );

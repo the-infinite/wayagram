@@ -57,6 +57,7 @@ class _ContestSettingContentState extends ConsumerState<ContestSettingContent>
           ),
           ContestSignupRequirement(
             goToNextTab: _goToNextTab,
+            goToPrevTab: _goBack,
           ),
           // EditStagePreference(),
           // StageContestSettings(),

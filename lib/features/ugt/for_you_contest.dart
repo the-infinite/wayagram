@@ -88,31 +88,33 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
     //? listen to when scroll is to the top
     double currentOffset = _scrollController.position.pixels;
 
-    if (_scrollController.position.pixels <= 0) {
-      // 👇 Scrolled to the top
-      if (!isAtTop) {
-        setState(() => isAtTop = true);
-        print("Scrolled to the top!");
+    Future.delayed(Duration(seconds: 1), () {
+      if (_scrollController.position.pixels <= 0) {
+        // 👇 Scrolled to the top
+        if (!isAtTop) {
+          setState(() => isAtTop = true);
+          print("Scrolled to the top!");
+        }
+      } else {
+        if (isAtTop) {
+          setState(() => isAtTop = false);
+        }
       }
-    } else {
-      if (isAtTop) {
-        setState(() => isAtTop = false);
-      }
-    }
 
-    if (currentOffset < _previousScrollOffset) {
-      // ✅ Scrolling Up (Show Widget)
-      if (!isScrollingUp) {
-        print("Scrolling Up - Show Widget");
-        setState(() => isScrollingUp = true);
+      if (currentOffset < _previousScrollOffset) {
+        // ✅ Scrolling Up (Show Widget)
+        if (!isScrollingUp) {
+          print("Scrolling Up - Show Widget");
+          setState(() => isScrollingUp = true);
+        }
+      } else if (currentOffset > _previousScrollOffset) {
+        // ✅ Scrolling Down (Hide Widget)
+        if (isScrollingUp) {
+          print("Scrolling Down - Hide Widget");
+          setState(() => isScrollingUp = false);
+        }
       }
-    } else if (currentOffset > _previousScrollOffset) {
-      // ✅ Scrolling Down (Hide Widget)
-      if (isScrollingUp) {
-        print("Scrolling Down - Hide Widget");
-        setState(() => isScrollingUp = false);
-      }
-    }
+    });
 
     // ✅ Fetch data only when scrolling **downward** and near the bottom
     if (currentOffset > _previousScrollOffset &&
@@ -143,32 +145,32 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (isScrollingUp && isAtTop)
-            Column(
-              children: [
-                GroupedWidgetHeader(
-                    onTap: null,
-                    subTitle:
-                        "See contests which are active for you to \n participate in",
-                    title: "Active Contests"),
+            if (isScrollingUp && isAtTop)
+          Column(
+            children: [
+              GroupedWidgetHeader(
+                  onTap: null,
+                  subTitle:
+                      "See contests which are active for you to \n participate in",
+                  title: "Active Contests"),
+              const Gap(10),
+              if (ConversationState.self.accountType ==
+                  UserAccountType.business)
+                WayaButton(
+                  callback: () {
+                    ivalidateUGTVM(ref);
+                    //WayaNav.toNamed('/create-profile-contest1');
+                    WayaNav.toNamed('/create-contest');
+                  },
+                  color: wayaTheme.colorScheme.primary50,
+                  text: "Host a Contest",
+                  textColor: wayaTheme.colorScheme.customPrimary,
+                ),
+              if (ConversationState.self.accountType ==
+                  UserAccountType.business)
                 const Gap(10),
-                if (ConversationState.self.accountType ==
-                    UserAccountType.business)
-                  WayaButton(
-                    callback: () {
-                      ivalidateUGTVM(ref);
-                      //WayaNav.toNamed('/create-profile-contest1');
-                      WayaNav.toNamed('/create-contest');
-                    },
-                    color: wayaTheme.colorScheme.primary50,
-                    text: "Host a Contest",
-                    textColor: wayaTheme.colorScheme.customPrimary,
-                  ),
-                if (ConversationState.self.accountType ==
-                    UserAccountType.business)
-                  const Gap(10),
-              ],
-            ),
+            ],
+          ),
           if (posts.isLoading == true)
             Center(child: CircularProgressIndicator()),
           if (posts.listContestForYou.isEmpty) emptyWidget(),
