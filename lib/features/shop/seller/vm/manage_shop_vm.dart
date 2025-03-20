@@ -6,6 +6,7 @@ import 'package:wayagram/features/general_settings/profile/data/repo/profile_rep
 import 'package:wayagram/features/onboarding/vm/splash_screen_vm.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
+import 'package:wayagram/features/shop/order/data/repo/order_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/delivery_request_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
@@ -17,6 +18,7 @@ import 'package:wayagram/features/shop/seller/vm/delivery_request_vm.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_orders_vm.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_products_vm.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
+import 'package:wayagram/shared/features/shop/model/default.dart';
 
 List<SalesMetric> salesMetrics = [
   SalesMetric(title: "Total Sales", metrics: "0", color: Color(0xffE3EFFC)),
@@ -26,13 +28,14 @@ List<SalesMetric> salesMetrics = [
 
 class ManageShopVm extends StateNotifier<ManageShopState> {
   final ShopRepository _shopRepository;
+  final OrderRepository _orderRepository;
   final ProfileRepo _profileRepo;
 
   final Ref ref;
 
   final _logger = getLogger('ManageShopVm');
 
-  ManageShopVm(this._profileRepo, this._shopRepository, this.ref)
+  ManageShopVm(this._orderRepository,this._profileRepo, this._shopRepository, this.ref)
       : super(ManageShopState.initial());
 
   Future<void> getSellerShops() async {
@@ -83,21 +86,32 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
     await getSellerShops();
   }
 
-  void getCurrentShop(ShopData? shop) {
-    state = state.copyWith(singleShop: shop);
+  Future<void> getCurrentShop(String? shop) async {
+    try {
+      state = state.copyWith(isLoadingOrder: true);
+      final result = await ref
+          .read(manageShopVmProvider.notifier)
+          .getShopDetails(id: shop!);
+          ShopData shopData = ShopData.fromJson(result!.shop.toJson());
+      state = state.copyWith(singleShop: shopData);
+
+       fetchData(shopId: shop);
+    } catch (error) {
+      print(error);
+    }
   }
 
-  void fetchData() async {
-    state = state.copyWith(isLoadingOrder: true);
+  void fetchData({required String shopId}) async {
+    
 
     await ref
         .read(shopVmProvider.notifier)
-        .getShopMetrics(shopId: state.singleShop!.id);
+        .getShopMetrics(shopId: shopId);
     final List<DeliveryRequestData>? requests =
         await ref.read(deliveryRequestVmProvider.notifier).getRequests();
 
     final PaginatedResult<Order>? paginatedResult =
-        await ref.read(sellerOrdersVmProvider.notifier).getOrders(page: 1);
+        await getOrders(shopId: shopId);
     if (paginatedResult?.items != null && paginatedResult!.items.isNotEmpty) {
       final now = DateTime.now();
       //> get start of the week
@@ -119,6 +133,46 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
       state = state.copyWith(numberOfRequests: requests.length);
     }
   }
+
+
+  
+
+  Future<ShopDetailsModel?> getShopDetails({required String id}) async {
+    try {
+      final response = await _shopRepository.getShopDetailsById(id);
+      ShopDetailsModel? shop;
+      if (response.success) {
+        //? Retrieve this too.
+        final data = response.data['data'];
+        final result = ShopDetailsModel.fromJson(data);
+        shop = result;
+      }
+
+      return shop;
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
+   Future<PaginatedResult<Order>?> getOrders({required String shopId}) async {
+    try {
+      final response =
+          await _orderRepository.getSellerOrders(shopId, 1);
+      List<Order> orders = [];
+      bool hasNextPage = false;
+      if (response.success) {
+        OrdersResponse ordersResponse = OrdersResponse.fromJson(response.data);
+        orders = ordersResponse.data.docs;
+        hasNextPage = ordersResponse.data.hasNextPage;
+      }
+      return PaginatedResult<Order>(hasNextPage: hasNextPage, items: orders);
+    } catch (e) {
+      print(e);
+      return null;
+    } finally {}
+  }
+
 
   // main endpoint to get seller paginated poduct --others will later be removed
 
@@ -175,5 +229,5 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
 final manageShopVmProvider =
     StateNotifierProvider.autoDispose<ManageShopVm, ManageShopState>((ref) {
-  return ManageShopVm(ProfileRepo(), ShopRepository.instance, ref);
+  return ManageShopVm(OrderRepository(),ProfileRepo(), ShopRepository.instance, ref);
 });

@@ -65,6 +65,8 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
       return CircularProgressIndicator();
     }
 
+    print(viewModel.product?.shopRating);
+
     return WayaScaffold(
         title: "Product Details",
         isScrollable: true,
@@ -215,7 +217,8 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                         children: [
                           WayaDp(
                             radius: 18,
-                            image: WayaConstants.shopLogo,
+                            image: viewModel.product?.shopLogo ??
+                                WayaConstants.shopLogo,
                           ),
                           const Gap(6),
                           Text(
@@ -230,10 +233,10 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      RatingStars(rating: viewModel.product!.shopRating),
+                      RatingStars(rating: viewModel.product?.shopRating ?? 0),
                       const Gap(2),
                       Text(
-                        "${viewModel.product!.shopRating}",
+                        "${viewModel.product?.shopRating ?? 0}",
                         style: wayaTheme.textTheme.hintStyle,
                       )
                     ],
@@ -257,7 +260,8 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: shopState.reviews.length,
                         itemBuilder: (context, index) {
-                          return ProductReviewWidget(review: shopState.reviews[index]);
+                          return ProductReviewWidget(
+                              review: shopState.reviews[index]);
                         }),
                     const Gap(25),
                   ],

@@ -1,12 +1,17 @@
 import 'dart:convert';
+
+import 'package:wayagram/shared/features/profile/model/pages.dart';
+
 PagesUsersFollowModel pagesUsersFollowModelFromJson(String str) => PagesUsersFollowModel.fromJson(json.decode(str));
 String pagesUsersFollowModelToJson(PagesUsersFollowModel data) => json.encode(data.toJson());
+
 class PagesUsersFollowModel {
   PagesUsersFollowModel({
-      this.message, 
-      this.status, 
-      this.statusCode, 
-      this.data,});
+    this.message,
+    this.status,
+    this.statusCode,
+    this.data,
+  });
 
   PagesUsersFollowModel.fromJson(dynamic json) {
     message = json['message'];
@@ -18,15 +23,18 @@ class PagesUsersFollowModel {
   bool? status;
   num? statusCode;
   Data? data;
-PagesUsersFollowModel copyWith({  String? message,
-  bool? status,
-  num? statusCode,
-  Data? data,
-}) => PagesUsersFollowModel(  message: message ?? this.message,
-  status: status ?? this.status,
-  statusCode: statusCode ?? this.statusCode,
-  data: data ?? this.data,
-);
+  PagesUsersFollowModel copyWith({
+    String? message,
+    bool? status,
+    num? statusCode,
+    Data? data,
+  }) =>
+      PagesUsersFollowModel(
+        message: message ?? this.message,
+        status: status ?? this.status,
+        statusCode: statusCode ?? this.statusCode,
+        data: data ?? this.data,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['message'] = message;
@@ -37,29 +45,30 @@ PagesUsersFollowModel copyWith({  String? message,
     }
     return map;
   }
-
 }
 
 Data dataFromJson(String str) => Data.fromJson(json.decode(str));
 String dataToJson(Data data) => json.encode(data.toJson());
+
 class Data {
   Data({
-      this.docs, 
-      this.totalDocs, 
-      this.limit, 
-      this.totalPages, 
-      this.page, 
-      this.hasNextPage, 
-      this.nextPage, 
-      this.hasPrevPage, 
-      this.prevPage, 
-      this.pagingCounter,});
+    this.docs,
+    this.totalDocs,
+    this.limit,
+    this.totalPages,
+    this.page,
+    this.hasNextPage,
+    this.nextPage,
+    this.hasPrevPage,
+    this.prevPage,
+    this.pagingCounter,
+  });
 
   Data.fromJson(dynamic json) {
     if (json['docs'] != null) {
       docs = [];
       json['docs'].forEach((v) {
-        docs?.add(PagesUsersFollowDocs.fromJson(v));
+        docs?.add(PageModel.fromJson(v));
       });
     }
     totalDocs = json['totalDocs'];
@@ -72,7 +81,7 @@ class Data {
     prevPage = json['prevPage'];
     pagingCounter = json['pagingCounter'];
   }
-  List<PagesUsersFollowDocs>? docs;
+  List<PageModel>? docs;
   num? totalDocs;
   num? limit;
   num? totalPages;
@@ -82,27 +91,30 @@ class Data {
   bool? hasPrevPage;
   dynamic prevPage;
   num? pagingCounter;
-Data copyWith({  List<PagesUsersFollowDocs>? docs,
-  num? totalDocs,
-  num? limit,
-  num? totalPages,
-  num? page,
-  bool? hasNextPage,
-  dynamic nextPage,
-  bool? hasPrevPage,
-  dynamic prevPage,
-  num? pagingCounter,
-}) => Data(  docs: docs ?? this.docs,
-  totalDocs: totalDocs ?? this.totalDocs,
-  limit: limit ?? this.limit,
-  totalPages: totalPages ?? this.totalPages,
-  page: page ?? this.page,
-  hasNextPage: hasNextPage ?? this.hasNextPage,
-  nextPage: nextPage ?? this.nextPage,
-  hasPrevPage: hasPrevPage ?? this.hasPrevPage,
-  prevPage: prevPage ?? this.prevPage,
-  pagingCounter: pagingCounter ?? this.pagingCounter,
-);
+  Data copyWith({
+    List<PageModel>? docs,
+    num? totalDocs,
+    num? limit,
+    num? totalPages,
+    num? page,
+    bool? hasNextPage,
+    dynamic nextPage,
+    bool? hasPrevPage,
+    dynamic prevPage,
+    num? pagingCounter,
+  }) =>
+      Data(
+        docs: docs ?? this.docs,
+        totalDocs: totalDocs ?? this.totalDocs,
+        limit: limit ?? this.limit,
+        totalPages: totalPages ?? this.totalPages,
+        page: page ?? this.page,
+        hasNextPage: hasNextPage ?? this.hasNextPage,
+        nextPage: nextPage ?? this.nextPage,
+        hasPrevPage: hasPrevPage ?? this.hasPrevPage,
+        prevPage: prevPage ?? this.prevPage,
+        pagingCounter: pagingCounter ?? this.pagingCounter,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (docs != null) {
@@ -119,25 +131,26 @@ Data copyWith({  List<PagesUsersFollowDocs>? docs,
     map['pagingCounter'] = pagingCounter;
     return map;
   }
-
 }
 
 PagesUsersFollowDocs docsFromJson(String str) => PagesUsersFollowDocs.fromJson(json.decode(str));
 String docsToJson(PagesUsersFollowDocs data) => json.encode(data.toJson());
+
 class PagesUsersFollowDocs {
   PagesUsersFollowDocs({
-      this.id, 
-      this.ownerId,
-      this.followerCount,
-      this.name, 
-      this.description, 
-      this.isPublic, 
-      this.coverImage, 
-      this.profileImage, 
-      this.deletedAt, 
-      this.createdAt, 
-      this.updatedAt,
-      this.owner,});
+    this.id,
+    this.ownerId,
+    this.followerCount,
+    this.name,
+    this.description,
+    this.isPublic,
+    this.coverImage,
+    this.profileImage,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.owner,
+  });
 
   PagesUsersFollowDocs.fromJson(dynamic json) {
     id = json['id'];
@@ -168,33 +181,34 @@ class PagesUsersFollowDocs {
   String? updatedAt;
 
   Owner? owner;
-  PagesUsersFollowDocs copyWith({  String? id,
-  String? ownerId,
+  PagesUsersFollowDocs copyWith({
+    String? id,
+    String? ownerId,
     num? followerCount,
-  String? name,
-  String? description,
-  bool? isPublic,
-  String? coverImage,
-  String? profileImage,
-  dynamic deletedAt,
-  String? createdAt,
-  String? updatedAt,
-
-  Owner? owner,
-}) => PagesUsersFollowDocs(  id: id ?? this.id,
-  ownerId: ownerId ?? this.ownerId,
-    followerCount: followerCount ?? this.followerCount,
-  name: name ?? this.name,
-  description: description ?? this.description,
-  isPublic: isPublic ?? this.isPublic,
-  coverImage: coverImage ?? this.coverImage,
-  profileImage: profileImage ?? this.profileImage,
-  deletedAt: deletedAt ?? this.deletedAt,
-  createdAt: createdAt ?? this.createdAt,
-  updatedAt: updatedAt ?? this.updatedAt,
-
-  owner: owner ?? this.owner,
-);
+    String? name,
+    String? description,
+    bool? isPublic,
+    String? coverImage,
+    String? profileImage,
+    dynamic deletedAt,
+    String? createdAt,
+    String? updatedAt,
+    Owner? owner,
+  }) =>
+      PagesUsersFollowDocs(
+        id: id ?? this.id,
+        ownerId: ownerId ?? this.ownerId,
+        followerCount: followerCount ?? this.followerCount,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        isPublic: isPublic ?? this.isPublic,
+        coverImage: coverImage ?? this.coverImage,
+        profileImage: profileImage ?? this.profileImage,
+        deletedAt: deletedAt ?? this.deletedAt,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        owner: owner ?? this.owner,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -215,45 +229,46 @@ class PagesUsersFollowDocs {
     }
     return map;
   }
-
 }
 
 Owner ownerFromJson(String str) => Owner.fromJson(json.decode(str));
 String ownerToJson(Owner data) => json.encode(data.toJson());
+
 class Owner {
   Owner({
-      this.id, 
-      this.phoneNumber, 
-      this.email, 
-      this.passwordHash, 
-      this.firstName, 
-      this.lastName, 
-      this.gender, 
-      this.address, 
-      this.city, 
-      this.lga, 
-      this.state, 
-      this.country, 
-      this.countryCode, 
-      this.postalCode, 
-      this.middleName, 
-      this.dateOfBirth, 
-      this.twoFactorEnabled, 
-      this.profilePicture, 
-      this.fcmToken, 
-      this.emailVerified, 
-      this.phoneVerified, 
-      this.accountStatus, 
-      this.tcAgreement, 
-      this.policyAgreement, 
-      this.emailVerifiedDate, 
-      this.deletedAt, 
-      this.roleId, 
-      this.accountTypeId, 
-      this.v, 
-      this.createdAt, 
-      this.updatedAt, 
-      this.role,});
+    this.id,
+    this.phoneNumber,
+    this.email,
+    this.passwordHash,
+    this.firstName,
+    this.lastName,
+    this.gender,
+    this.address,
+    this.city,
+    this.lga,
+    this.state,
+    this.country,
+    this.countryCode,
+    this.postalCode,
+    this.middleName,
+    this.dateOfBirth,
+    this.twoFactorEnabled,
+    this.profilePicture,
+    this.fcmToken,
+    this.emailVerified,
+    this.phoneVerified,
+    this.accountStatus,
+    this.tcAgreement,
+    this.policyAgreement,
+    this.emailVerifiedDate,
+    this.deletedAt,
+    this.roleId,
+    this.accountTypeId,
+    this.v,
+    this.createdAt,
+    this.updatedAt,
+    this.role,
+  });
 
   Owner.fromJson(dynamic json) {
     id = json['id'];
@@ -321,71 +336,74 @@ class Owner {
   String? createdAt;
   String? updatedAt;
   Role? role;
-Owner copyWith({  String? id,
-  String? phoneNumber,
-  String? email,
-  String? passwordHash,
-  String? firstName,
-  String? lastName,
-  String? gender,
-  String? address,
-  String? city,
-  dynamic lga,
-  String? state,
-  String? country,
-  dynamic countryCode,
-  dynamic postalCode,
-  dynamic middleName,
-  String? dateOfBirth,
-  bool? twoFactorEnabled,
-  String? profilePicture,
-  dynamic fcmToken,
-  bool? emailVerified,
-  bool? phoneVerified,
-  String? accountStatus,
-  bool? tcAgreement,
-  bool? policyAgreement,
-  String? emailVerifiedDate,
-  dynamic deletedAt,
-  String? roleId,
-  String? accountTypeId,
-  String? v,
-  String? createdAt,
-  String? updatedAt,
-  Role? role,
-}) => Owner(  id: id ?? this.id,
-  phoneNumber: phoneNumber ?? this.phoneNumber,
-  email: email ?? this.email,
-  passwordHash: passwordHash ?? this.passwordHash,
-  firstName: firstName ?? this.firstName,
-  lastName: lastName ?? this.lastName,
-  gender: gender ?? this.gender,
-  address: address ?? this.address,
-  city: city ?? this.city,
-  lga: lga ?? this.lga,
-  state: state ?? this.state,
-  country: country ?? this.country,
-  countryCode: countryCode ?? this.countryCode,
-  postalCode: postalCode ?? this.postalCode,
-  middleName: middleName ?? this.middleName,
-  dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-  twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
-  profilePicture: profilePicture ?? this.profilePicture,
-  fcmToken: fcmToken ?? this.fcmToken,
-  emailVerified: emailVerified ?? this.emailVerified,
-  phoneVerified: phoneVerified ?? this.phoneVerified,
-  accountStatus: accountStatus ?? this.accountStatus,
-  tcAgreement: tcAgreement ?? this.tcAgreement,
-  policyAgreement: policyAgreement ?? this.policyAgreement,
-  emailVerifiedDate: emailVerifiedDate ?? this.emailVerifiedDate,
-  deletedAt: deletedAt ?? this.deletedAt,
-  roleId: roleId ?? this.roleId,
-  accountTypeId: accountTypeId ?? this.accountTypeId,
-  v: v ?? this.v,
-  createdAt: createdAt ?? this.createdAt,
-  updatedAt: updatedAt ?? this.updatedAt,
-  role: role ?? this.role,
-);
+  Owner copyWith({
+    String? id,
+    String? phoneNumber,
+    String? email,
+    String? passwordHash,
+    String? firstName,
+    String? lastName,
+    String? gender,
+    String? address,
+    String? city,
+    dynamic lga,
+    String? state,
+    String? country,
+    dynamic countryCode,
+    dynamic postalCode,
+    dynamic middleName,
+    String? dateOfBirth,
+    bool? twoFactorEnabled,
+    String? profilePicture,
+    dynamic fcmToken,
+    bool? emailVerified,
+    bool? phoneVerified,
+    String? accountStatus,
+    bool? tcAgreement,
+    bool? policyAgreement,
+    String? emailVerifiedDate,
+    dynamic deletedAt,
+    String? roleId,
+    String? accountTypeId,
+    String? v,
+    String? createdAt,
+    String? updatedAt,
+    Role? role,
+  }) =>
+      Owner(
+        id: id ?? this.id,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        email: email ?? this.email,
+        passwordHash: passwordHash ?? this.passwordHash,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        gender: gender ?? this.gender,
+        address: address ?? this.address,
+        city: city ?? this.city,
+        lga: lga ?? this.lga,
+        state: state ?? this.state,
+        country: country ?? this.country,
+        countryCode: countryCode ?? this.countryCode,
+        postalCode: postalCode ?? this.postalCode,
+        middleName: middleName ?? this.middleName,
+        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+        twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
+        profilePicture: profilePicture ?? this.profilePicture,
+        fcmToken: fcmToken ?? this.fcmToken,
+        emailVerified: emailVerified ?? this.emailVerified,
+        phoneVerified: phoneVerified ?? this.phoneVerified,
+        accountStatus: accountStatus ?? this.accountStatus,
+        tcAgreement: tcAgreement ?? this.tcAgreement,
+        policyAgreement: policyAgreement ?? this.policyAgreement,
+        emailVerifiedDate: emailVerifiedDate ?? this.emailVerifiedDate,
+        deletedAt: deletedAt ?? this.deletedAt,
+        roleId: roleId ?? this.roleId,
+        accountTypeId: accountTypeId ?? this.accountTypeId,
+        v: v ?? this.v,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        role: role ?? this.role,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -424,26 +442,29 @@ Owner copyWith({  String? id,
     }
     return map;
   }
-
 }
 
 Role roleFromJson(String str) => Role.fromJson(json.decode(str));
 String roleToJson(Role data) => json.encode(data.toJson());
+
 class Role {
   Role({
-      this.name,});
+    this.name,
+  });
 
   Role.fromJson(dynamic json) {
     name = json['name'];
   }
   String? name;
-Role copyWith({  String? name,
-}) => Role(  name: name ?? this.name,
-);
+  Role copyWith({
+    String? name,
+  }) =>
+      Role(
+        name: name ?? this.name,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['name'] = name;
     return map;
   }
-
 }

@@ -200,11 +200,12 @@ class _ExploreState extends ConsumerState<Explore> {
                         ? notifier.filteredProducts.sublist(0, 2)
                         : notifier.filteredProducts),
             const Gap(25),
+
             GroupedWidgetHeader(
                 onTap: () {
                   WayaNav.toNamed(DisplayFeed.route);
                 },
-                subTitle: 'Based on your interests',
+                subTitle: 'Explore content based on your interests and interactions.',
                 title: 'Discover'),
             const Gap(25),
             SharedPosts(),

@@ -75,7 +75,7 @@ class WayaLocalDataSource {
   }
 
   List<String>? getSearchHistory() {
-    return wayaFastStorageService.read<List<dynamic>>(key: 'search-history').map((item) => item.toString()).toList();
+    return wayaFastStorageService.read<List<dynamic>?>(key: 'search-history')?.map((item) => item.toString()).toList();
   }
 
   Future<void> addSearchToHistory(String search) {

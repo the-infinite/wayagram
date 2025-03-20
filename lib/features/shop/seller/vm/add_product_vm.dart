@@ -217,7 +217,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
                 ? "Your product has been updated and changes are now live."
                 : "Your product is now live in your shop and ready for customers to discover.",
             onPress: () {
-              WayaNav.replaceNamed(ManageShop.route);
+              WayaNav.replaceNamed(ManageShop.route, arguments: state.shopId);
               //reset();
             },
             icon: Image.asset('assets/images/shop/add-product-success.png'),
@@ -284,7 +284,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
       final response = await _shopRepository.deleteProductRequest(
           shopId: shopId, productId: productId);
       if (response.success) {
-        WayaNav.replaceNamed(ManageShop.route);
+        WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
       }
     } catch (e) {
       print(e);

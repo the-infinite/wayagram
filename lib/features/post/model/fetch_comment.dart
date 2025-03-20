@@ -68,7 +68,7 @@ class FetchCommentData {
     if (json['comments'] != null) {
       comments = [];
       json['comments'].forEach((v) {
-        comments?.add(Comments.fromJson(v));
+        comments?.add(CommentModel.fromJson(v));
       });
     }
     page = json['page'];
@@ -80,7 +80,7 @@ class FetchCommentData {
     prevPage = json['prevPage'];
   }
   num? total;
-  List<Comments>? comments;
+  List<CommentModel>? comments;
   num? page;
   num? limit;
   num? totalPages;
@@ -90,7 +90,7 @@ class FetchCommentData {
   dynamic prevPage;
   FetchCommentData copyWith({
     num? total,
-    List<Comments>? comments,
+    List<CommentModel>? comments,
     num? page,
     num? limit,
     num? totalPages,
@@ -127,11 +127,11 @@ class FetchCommentData {
   }
 }
 
-Comments commentsFromJson(String str) => Comments.fromJson(json.decode(str));
-String commentsToJson(Comments data) => json.encode(data.toJson());
+CommentModel commentsFromJson(String str) => CommentModel.fromJson(json.decode(str));
+String commentsToJson(CommentModel data) => json.encode(data.toJson());
 
-class Comments {
-  Comments({
+class CommentModel {
+  CommentModel({
     this.id,
     this.postId,
     this.userId,
@@ -146,7 +146,7 @@ class Comments {
     this.user,
   });
 
-  Comments.fromJson(dynamic json) {
+  CommentModel.fromJson(dynamic json) {
     id = json['id'];
     postId = json['postId'];
     userId = json['userId'];
@@ -172,7 +172,7 @@ class Comments {
   DateTime? createdAt;
   DateTime? updatedAt;
   UserDetailsModel? user;
-  Comments copyWith({
+  CommentModel copyWith({
     String? id,
     String? postId,
     String? userId,
@@ -186,7 +186,7 @@ class Comments {
     DateTime? updatedAt,
     UserDetailsModel? user,
   }) =>
-      Comments(
+      CommentModel(
         id: id ?? this.id,
         postId: postId ?? this.postId,
         userId: userId ?? this.userId,

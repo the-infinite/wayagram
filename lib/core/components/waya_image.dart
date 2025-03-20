@@ -11,10 +11,13 @@ class WayaDp extends ConsumerWidget {
   final Function()? onTap;
   final String? image;
   final bool isEdit;
+  final bool isSelf;
+
   const WayaDp({
     this.radius = 75,
     this.onTap,
     this.isEdit = false,
+    this.isSelf = true,
     this.image = '',
     super.key,
   });
@@ -23,7 +26,7 @@ class WayaDp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final avatar = image?.isNotEmpty == true
+    final avatar = !isSelf || (image?.isNotEmpty ?? false)
         ? image
         : ref.watch(profileVmProvider).userAccountModel?.data?.userdata?.user?.profilePicture;
 

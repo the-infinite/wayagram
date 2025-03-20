@@ -42,7 +42,7 @@ class ProductReviewWidget extends StatelessWidget {
               ],
             ),
             RatingStars(
-              rating: review.score,
+              rating: review.score + 1,
             )
           ],
         ),

@@ -17,7 +17,7 @@ import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'dart:io' show Platform;
 
 class SeeAllDonations extends ConsumerStatefulWidget {
-  static const route = '/seeAllDonations';
+  static const route = '/seeAllPendingDonations';
   const SeeAllDonations({super.key,});
 
   @override

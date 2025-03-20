@@ -12,6 +12,8 @@ import 'package:wayagram/features/general_settings/profile/data/model/profile_st
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/follow/notifier/self.dart';
+import 'package:wayagram/shared/features/moments/notifier/default.dart';
 
 class ProfileVm extends StateNotifier<ProfileState> {
   final ProfileRepo _profileRepo;
@@ -129,10 +131,11 @@ class ProfileVm extends StateNotifier<ProfileState> {
     await _secureDataSource.saveToken("");
     await _secureDataSource.saveRefreshToken("");
     await _secureDataSource.saveBusinessId("");
+    myFollowProvider.reset();
+    otherUserMoments.reset();
     _localDataSource.saveUserId("");
     await _secureDataSource.saveUserId("");
-
-    WayaNav.toNamed('/login-cover-page');
+    WayaNav.removeUntilNamed(LoginCoverPage.route);
   }
 
   void updateProfilePicture() async {

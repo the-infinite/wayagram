@@ -28,6 +28,8 @@ import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 import '../../../shared/features/user/models/default.dart';
 import 'dart:io' show Platform;
 
+import '../../explore/widgets/grouped_widget_header.dart';
+
 class HostedDonations extends ConsumerStatefulWidget {
   final bool isExpanded;
   const HostedDonations({super.key,  this.isExpanded = false});
@@ -45,6 +47,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(donationVmProvider.notifier).getHostedDonation();
       ref.read(donationVmProvider.notifier).getAppliedDonation();
+      ref.read(donationVmProvider.notifier).getRejectedDonation();
       ref.read(donationVmProvider.notifier).getMyKYC();
     });
     searchController = TextEditingController();
@@ -146,31 +149,12 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
           FilterWidget(
               search: TextEditingController(), hintText: 'Search Donations'),
           Gap(20),
-          Text("Approved Donations", style: wayaTheme.textTheme.titleLarge),
-          Row(
-            children: [
-              Text(
-                "See and manage all your approved donations",
-                style: WayaTextStyles.bodySmall.copyWith(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Theme.of(context).colorScheme.greyColor500),
-              ),
-              Spacer(),
-              InkWell(
-                onTap: (){
-                  WayaNav.toNamed('/seeAllApprovedDonations');
-                },
-                child: Text(
-                  "See All",
-                  style: WayaTextStyles.bodySmall.copyWith(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Theme.of(context).colorScheme.primary500),
-                ),
-              ),
-            ],
-          ),
+          GroupedWidgetHeader(
+              onTap: () {
+                WayaNav.toNamed('/seeAllApprovedDonations');
+              },
+              subTitle: 'See and manage all your approved donations',
+              title: 'Approved Donations'),
           const Gap(10),
           viewModel.approvedDonations!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have approved donations yet',):
           SizedBox(
@@ -222,32 +206,12 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                 }),
           ),
           const Gap(10),
-          Text("Pending Donations", style: wayaTheme.textTheme.titleLarge),
-
-          Row(
-            children: [
-              Text(
-                "See and manage all your pending donations",
-                style: WayaTextStyles.bodySmall.copyWith(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Theme.of(context).colorScheme.greyColor500),
-              ),
-              Spacer(),
-              InkWell(
-                onTap: (){
-                  WayaNav.toNamed('/seeAllDonations');
-                },
-                child: Text(
-                  "See All",
-                  style: WayaTextStyles.bodySmall.copyWith(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Theme.of(context).colorScheme.primary500),
-                ),
-              ),
-            ],
-          ),
+          GroupedWidgetHeader(
+              onTap: () {
+                WayaNav.toNamed('/seeAllPendingDonations');
+              },
+              subTitle: 'See and manage all your pending donations',
+              title: 'Pending Donations'),
           const Gap(10),
           myDonations!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have pending donations yet',):
           SizedBox(
@@ -306,6 +270,70 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                 }),
           ),
           const Gap(30),
+          GroupedWidgetHeader(
+              onTap: () {
+                WayaNav.toNamed('/seeAllRejectedDonations');
+              },
+              subTitle: 'See and manage all your rejected donations',
+              title: 'Rejected Donations'),
+
+          const Gap(10),
+          viewModel.rejectedDonations!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have rejected donations yet',):
+          SizedBox(
+            height: Platform.isAndroid ? 300 : 460,
+            //height: Platform.isAndroid ? 560 : 460,
+            child: ListView.builder(
+              //physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: myDonations.length,
+                //filteredMyDonations.length,
+                itemBuilder: (context, index) {
+                  final donation = myDonations[index];
+                  //final donation = filteredMyDonations[index];
+                  int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
+
+                  int amountRaised = double.parse('${donation.amountRaised}').toInt();
+
+                  int targetedAmount = double.parse('${donation.targetAmount}').toInt();
+
+                  double ratioLeft = amountRaised / targetedAmount;
+                  return AppliedDonationWidget(
+                    onTap: ()async{
+                      await WayaUtils.showModalSheet(context,
+                          child: ApplicationStatus(
+                            causeTitle: '${donation.title?.capitalizeFirst}',
+                            solution: '${donation.solution}',
+                            desc: '${donation.description}',
+                            startDate: ref.read(createPollVotingProvider.notifier).formatDonationDate('${donation.startDate}'),
+                            endDate: ref.read(createPollVotingProvider.notifier).formatDonationDate('${donation.expirationDate}'),
+                            targetAmount:'${donation.targetAmount?.replaceAll('.00', '')}',
+                            amountRaised: '${donation.amountRaised?.replaceAll('.00', '')}',
+                            status: donation.status == 'pending_approval'?'Pending':donation.status =='approved'?'Accepted':'Rejected',
+                            privacy: '${donation.privacy}',
+                            showRaised: donation.showRaised == true?'YES':'NO',
+                            url: '${donation.url}',
+                            image: '${donation.imageURL}',
+                            id: '${donation.id}',
+                            donationCount: donation.donationCount,
+                            daysLeft: daysLeft,
+                            impact: '${donation.impact}',
+                            minimumDonationAmount: '${donation.minimumDonationAmount}',
+                            ratioLeft: ratioLeft,
+                          ));
+                    },
+                    privacy: '${donation.privacy?.capitalizeFirst}',
+                    title: '${donation.title}',
+                    status: donation.status == 'pending_approval'?'Pending':donation.status =='approved'?'Accepted':'Rejected',
+                    image: '${donation.imageURL}',
+                    targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
+                    startDate: ref.read(createPollVotingProvider.notifier).formatDt1('${donation.startDate}'),
+                    endDate: ref.read(createPollVotingProvider.notifier).formatDt1('${donation.expirationDate}'),
+                    color:donation.status == 'pending_approval'? WayaColors.pendingColor: donation.status =='approved'? WayaColors.success50: WayaColors.error50,
+                    textColor:donation.status == 'pending_approval'? WayaColors.pendingColor2 :donation.status =='approved'? WayaColors.success: WayaColors.error,
+                  );
+
+                }),
+          ),
        /*   Expanded(
       child: PaginatedDataView<MyDonationDocs>(
       uniqueKey: 'Hosted-donations',

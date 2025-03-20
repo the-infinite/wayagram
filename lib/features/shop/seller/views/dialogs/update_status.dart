@@ -42,6 +42,8 @@ class _UpdateStatusState extends State<UpdateStatus> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+
+    print(widget.currentStatus);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 14),
       decoration: BoxDecoration(
@@ -54,7 +56,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
           children: [
             Text(
               widget.title,
-              style:  TextStyle(
+              style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
               ),

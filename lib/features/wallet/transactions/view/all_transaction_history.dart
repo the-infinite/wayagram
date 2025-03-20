@@ -78,9 +78,9 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
       appliedFilter =
           "startDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(const Duration(days: 365)))}&endDate=${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
     }
-    await ref
-        .read(transactionVmProvider.notifier)
-        .getUserTransactions(filters: appliedFilter);
+    await ref.read(transactionVmProvider.notifier)
+        //.getUserTransactions(filters: appliedFilter);
+        .getTransaction(filters: appliedFilter);
   }
 
   @override

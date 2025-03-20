@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -72,8 +73,11 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
         //? Just if there are some top rated posts to show.
         if (state.topPosts.isNotEmpty) ...[
           Text(
-            "Recommended For You",
-            style: widget.isExpanded ? wayaTheme.textTheme.descriptionStyle : wayaTheme.textTheme.bodyMedium,
+            "Based on people you Follow",
+            style: widget.isExpanded
+                ? wayaTheme.textTheme.descriptionStyle
+                    .copyWith(color: wayaTheme.colorScheme.greyColor700, fontSize: 12.sp, fontWeight: FontWeight.w500)
+                : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
           ListView.builder(
