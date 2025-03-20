@@ -19,7 +19,6 @@ class TextMessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return WayaCollapsibleText(
       data.content ?? '',
-      initialState: true,
       textColor: textColor,
       buttonColor: textColor,
       maxLines: 10,

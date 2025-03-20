@@ -75,17 +75,17 @@ class WayaDateHelper {
 
     //? If this is less than a minute ago.
     if (gap.inSeconds.abs() < 60) {
-      return "${gap.inSeconds.abs()} seconds ago";
+      return "${gap.inSeconds.abs()}s";
     }
 
     //? If this is less than an hour ago...
     if (gap.inMinutes < 60) {
-      return "${gap.inMinutes.abs()} minutes ago";
+      return "${gap.inMinutes.abs()}m";
     }
 
     //? If this is less than a day ago....
     if (gap.inHours < 24) {
-      return "${gap.inHours.abs()} hours ago";
+      return "${gap.inHours.abs()}h";
     }
 
     //? If this is today.

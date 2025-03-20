@@ -209,7 +209,6 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
               //? Our description.
               WayaCollapsibleText(
                 widget.data.description,
-                initialState: true,
                 maxLines: 3,
                 textColor: wayaTheme.colorScheme.greyColor500,
                 buttonColor: wayaTheme.colorScheme.primary,

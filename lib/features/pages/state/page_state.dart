@@ -16,7 +16,7 @@ class PageState {
   final List<PostImage> images;
   final List<PostModel>? fetchAllPostData;
   final List<PostModel>? getAllPost;
-  final List<Comments>? comments;
+  final List<CommentModel>? comments;
   final num? postCount;
   List<PageModel>? recommendedPages;
   List<PageModel>? allPageModelDocs;
@@ -66,7 +66,7 @@ class PageState {
     List<PageModel>? allPageModelDocs,
     List<GetPageMemberDocs>? getPageMemberDocs,
     List<PostModel>? pagePopularPostDocs,
-    List<Comments>? comments,
+    List<CommentModel>? comments,
     List<dynamic>? docs,
     MediaUploadData? data,
     num? postCount,

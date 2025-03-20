@@ -27,22 +27,28 @@ class SinglePageWidget extends StatefulWidget {
 
 class _SinglePageWidgetState extends State<SinglePageWidget> {
   final loadingController = ValueNotifier(false);
+  late final followerCount = ValueNotifier(widget.page.followerCount);
 
   @override
   void dispose() {
     loadingController.dispose();
+    followerCount.dispose();
     super.dispose();
   }
 
   Future<void> _followPage() async {
-    //? Then leave the group.
+    //? Then leave the page.
     if (myPageNotifier.isMemberOf(widget.page.id)) {
-      await myPageNotifier.unfollowPage(widget.page.id);
+      if (await myPageNotifier.unfollowPage(widget.page.id)) {
+        followerCount.value = followerCount.value - 1;
+      }
     }
 
-    //? Then, join the group.
+    //? Then, join the page.
     else {
-      await myPageNotifier.followPage(widget.page.id);
+      if (await myPageNotifier.followPage(widget.page.id)) {
+        followerCount.value = followerCount.value + 1;
+      }
     }
   }
 
@@ -88,12 +94,15 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
             Gap(3.h),
 
             //? Third, member count.
-            Text(
-              "${WayaValueHelper.formatNumber(widget.page.followerCount)} followers",
-              style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w400,
-                color: wayaTheme.colorScheme.greyColor500,
+            ValueListenableBuilder(
+              valueListenable: followerCount,
+              builder: (context, count, _) => Text(
+                "${WayaValueHelper.formatNumber(count)} followers",
+                style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: wayaTheme.colorScheme.greyColor500,
+                ),
               ),
             ),
 
@@ -187,12 +196,15 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
                   ),
                 ],
               ),
-              subtitle: Text(
-                "${WayaValueHelper.formatNumber(widget.page.followerCount)} followers",
-                style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
-                  color: wayaTheme.colorScheme.greyColor500,
+              subtitle: ValueListenableBuilder(
+                valueListenable: followerCount,
+                builder: (context, count, _) => Text(
+                  "${WayaValueHelper.formatNumber(count)} followers",
+                  style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: wayaTheme.colorScheme.greyColor500,
+                  ),
                 ),
               ),
               trailing: widget.page.ownerId == ConversationState.self.id
