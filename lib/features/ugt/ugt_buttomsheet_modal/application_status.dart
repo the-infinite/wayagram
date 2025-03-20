@@ -212,12 +212,13 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
             SizedBox(height: 17.h),
             WayaButton(
               callback: () async {
+                //? check if users request has been approved
                 if (widget.post?.status?.toLowerCase() == "approved") {
                   if (hasProfile.value) {
                     WayaNav.toNamed("/upcoming-manage-contest-details");
                     return;
                   }
-
+                  //? check if contest is free
                   if (widget.post?.contest?.entryType?.toLowerCase() ==
                       "free") {
                     ref.read(selectedAppliedContestProvider.notifier).state =
@@ -225,6 +226,14 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                     WayaNav.goBack();
                     WayaNav.toNamed("/create-profile-contest1");
                   } else {
+                    //? User has already paid for a contest
+                    if (hasPaid.value) {
+                      WayaNav.goBack();
+                      WayaNav.toNamed("/create-profile-contest1");
+                      return;
+                    }
+
+                    //? move on to pay for a contest
                     WayaNav.goBack();
                     WayaUtils.showModalSheet(
                       context,
@@ -243,6 +252,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                     );
                   }
                 } else {
+                  //? contest not approved, could be pending or rejected, can go on to view the contest details
                   WayaNav.toNamed("/upcoming-manage-contest-details");
                 }
               },
