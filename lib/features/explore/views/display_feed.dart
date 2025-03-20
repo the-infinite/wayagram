@@ -68,8 +68,12 @@ class _DisplayFeedState extends ConsumerState<DisplayFeed> {
         children: [
           const Gap(10),
           Text(
-            "Based on your follows",
-            style: wayaTheme.textTheme.descriptionStyle,
+            "Top Moments",
+            style: wayaTheme.textTheme.descriptionStyle.copyWith(
+                color: wayaTheme.colorScheme.greyColor700,
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w500
+            ),
           ),
           const Gap(10),
           SharedMoments(),

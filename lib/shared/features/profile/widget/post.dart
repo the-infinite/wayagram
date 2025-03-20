@@ -20,6 +20,7 @@ import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/post/view/comment.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
+import 'package:wayagram/shared/features/media/image.dart';
 import 'package:wayagram/shared/features/profile/logic/default.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
@@ -335,15 +336,29 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                       scrollDirection: Axis.horizontal, // Enables horizontal scrolling
                       itemCount: widget.data.media.length,
                       itemBuilder: (context, index) {
-                        return Padding(
-                          padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10), // Optional: rounded corners
-                            child: WayaImage(
-                              imageUrl: widget.data.media[index],
-                              fit: BoxFit.cover,
-                              width: screenSize.width - (widget.padded ? 15 : 0), // Adjust width for better display
-                              height: 200, // Matches the container height
+                        return GestureDetector(
+                          onTap: () async{
+                            final result = await WayaNav.to(
+                              transition: Transition.downToUp,
+                              WayaImageDetailScreen(
+                                file: null,
+                                imageUrl: widget.data.media[index],
+                              ),
+                            );
+
+                            //? Do nothing.
+                            if (result == null) return;
+                          },
+                          child: Padding(
+                            padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10), // Optional: rounded corners
+                              child: WayaImage(
+                                imageUrl: widget.data.media[index],
+                                fit: BoxFit.cover,
+                                width: screenSize.width - (widget.padded ? 15 : 0), // Adjust width for better display
+                                height: 200, // Matches the container height
+                              ),
                             ),
                           ),
                         );
