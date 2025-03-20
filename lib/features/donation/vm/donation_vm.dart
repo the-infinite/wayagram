@@ -326,6 +326,7 @@ class DonationVm extends StateNotifier<DonationState> {
             child: DonationSuccessModal(url: '${createDonationResponse.data?.url}',),
           );
         }
+
         //reset();
       }
     } catch (error) {
