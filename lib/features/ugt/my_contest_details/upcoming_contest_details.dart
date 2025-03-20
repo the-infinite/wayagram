@@ -109,10 +109,9 @@ class _UpcomingContestDetailsState
                   style: wayaTheme.textTheme.bodyMedium),
               const Gap(5),
               Text(model?.description ?? "Description",
-                  style: WayaTextStyles.hintStyleBold
-                                    .wayaCopyWith(
-                                        color: WayaColors.greyColor500,
-                                        fontWeight: FontWeight.w400)),
+                  style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                      color: WayaColors.greyColor500,
+                      fontWeight: FontWeight.w400)),
               const Gap(20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -140,6 +139,7 @@ class _UpcomingContestDetailsState
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  
                   AboutUgtWidget(
                       title: "Total Stages",
                       content: model?.multipleStages ?? ""),
@@ -148,7 +148,8 @@ class _UpcomingContestDetailsState
                       title: "Category", content: model?.categoryName ?? ""),
                   const Gap(20),
                   AboutUgtWidget(
-                      title: "Prize", content: model?.winnerPrize ?? ""),
+                      title: "Prize",
+                      content: "NGN${formatMoney(model?.winnerPrize ?? "")}"),
                   /*   const Gap(20),
                   UpcomingWidget(title: "Host", content: "Host"), */
                 ],
@@ -157,10 +158,9 @@ class _UpcomingContestDetailsState
               Text("How it Works", style: wayaTheme.textTheme.bodyMedium),
               const Gap(15),
               Text(model?.howItWorks ?? "",
-                  style:  WayaTextStyles.hintStyleBold
-                                    .wayaCopyWith(
-                                        color: WayaColors.greyColor500,
-                                        fontWeight: FontWeight.w400)),
+                  style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                      color: WayaColors.greyColor500,
+                      fontWeight: FontWeight.w400)),
               const Gap(15),
               Text(
                 "Stages",
@@ -242,8 +242,7 @@ class _UpcomingContestDetailsState
             AboutUgtWidget(
                 // isFromDetailsPage: true,
                 title: "No of Posts",
-                content:
-                    "${model.numberOfPostPerWeek?.toString()} of Duration"),
+                content: "${model.numberOfPostPerWeek?.toString()}"),
             const Gap(20),
             AboutUgtWidget(
                 // isFromDetailsPage: true,

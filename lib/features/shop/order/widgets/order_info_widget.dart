@@ -27,7 +27,7 @@ class OrderInfoWidget extends StatelessWidget {
           Text(
             title.capitalize!,
             style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.greyColor500, fontSize: 11.sp),
+                color: wayaTheme.colorScheme.greyColor500, fontSize: 12.sp),
           ),
         
          Container(
@@ -36,7 +36,7 @@ class OrderInfoWidget extends StatelessWidget {
            description.capitalize!,
            textAlign: TextAlign.start,
             style: TextStyle().wayaCopyWith(
-                color: wayaTheme.colorScheme.greyColor500, fontSize: 13.sp),
+                color: wayaTheme.colorScheme.greyColor500, fontSize: 14.sp),
           ),
          )
         ],

@@ -1,42 +1,58 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
+import 'package:wayagram/features/ugt/data/model/context_for_you_state.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 
-class ContestForYou extends StateNotifier<List<Contest>> {
+class ContestForYou extends StateNotifier<ContextForYouState> {
   final ContestRepo _contestRepository;
   final WayaLocalDataSource _localDataSource;
 
-  ContestForYou(this._contestRepository, this._localDataSource) : super([]);
+  ContestForYou(this._contestRepository, this._localDataSource)
+      : super(ContextForYouState(page: 1));
 
   int _page = 1; // Pagination tracking
   bool isLoading = false;
 
   // Simulate fetching paginated posts
-  Future<void> fetchPosts() async {
-    if (isLoading) return;
-    isLoading = true;
+  Future<void> fetchContestForYou(bool isFirst) async {
+    if (isFirst) {
+      state = state.copyWith(page: 1);
+    }
+    if (state.isLastPage) {
+      return;
+    }
+    if (state.isLoading == true) {
+      return;
+    }
+    state = state.copyWith(isLoading: true);
 
     try {
-      final response = await _contestRepository.getContestForYou(1);
-      List<Contest> contestList = [];
+      final response = await _contestRepository.getContestForYou(state.page);
+      //  List<Contest> contestList = [];
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);
-        contestList = responseModel.data?.docs ?? [];
-        state = [...contestList];
-        /*  if (_page == 1) {
+        // contestList = responseModel.data?.docs ?? [];
+        state = state.copyWith(
+            isLastPage: responseModel.data?.hasNextPage == true ? false : true);
+        if (isFirst) {
+          state =
+              state.copyWith(listContestForYou: responseModel.data?.docs ?? []);
         } else {
-          state = [...state, ...contestList];
-        } */
+          state = state.copyWith(listContestForYou: [
+            ...state.listContestForYou,
+            ...responseModel.data?.docs ?? []
+          ]);
+        }
+        state = state.copyWith(page: state.page + 1);
 
         _page++;
-        isLoading = false;
+        state = state.copyWith(isLoading: false);
       }
       // return contestList;
     } catch (e) {
+      state = state.copyWith(isLoading: false);
       print(e);
     } finally {
       isLoading = false;
@@ -47,7 +63,8 @@ class ContestForYou extends StateNotifier<List<Contest>> {
   void toggleLike(String postId) {
     // Contest? contestPost = null;
     print("Contest for you");
-    state = state.map((post) {
+    state = state.copyWith(
+        listContestForYou: state.listContestForYou.map((post) {
       if (post.id == postId) {
         doOnLikeLike(postId);
         bool value = post.hasLiked == null ? false : post.hasLiked ?? false;
@@ -58,7 +75,7 @@ class ContestForYou extends StateNotifier<List<Contest>> {
         );
       }
       return post;
-    }).toList();
+    }).toList());
   }
 
   void doOnLikeLike(String postId) async {
@@ -70,7 +87,8 @@ class ContestForYou extends StateNotifier<List<Contest>> {
 
     if (!response.success) {
       //  print("do like stuff Fail");
-      state = state.map((post) {
+      state = state.copyWith(
+          listContestForYou: state.listContestForYou.map((post) {
         if (post.id == postId) {
           bool value = post.hasLiked == null ? false : post.hasLiked ?? false;
 
@@ -80,7 +98,7 @@ class ContestForYou extends StateNotifier<List<Contest>> {
           );
         }
         return post;
-      }).toList();
+      }).toList());
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
       //WayaSnackBar.showToast("Contest already liked");
@@ -94,7 +112,8 @@ class ContestForYou extends StateNotifier<List<Contest>> {
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
-    state = state.map((post) {
+    state = state.copyWith(
+        listContestForYou: state.listContestForYou.map((post) {
       if (post.id == postId) {
         bool value =
             post.isFollowing == null ? false : post.isFollowing ?? false;
@@ -104,7 +123,7 @@ class ContestForYou extends StateNotifier<List<Contest>> {
         );
       }
       return post;
-    }).toList();
+    }).toList());
     doshare(postId);
 
     if (response.success) {
@@ -118,7 +137,8 @@ class ContestForYou extends StateNotifier<List<Contest>> {
 
   void toggleShare(String postId) {
     // Contest? contestPost = null;
-    state = state.map((post) {
+    state = state.copyWith(
+        listContestForYou: state.listContestForYou.map((post) {
       if (post.id == postId) {
         return post.copyWith(
           // isLiked: true,
@@ -126,7 +146,7 @@ class ContestForYou extends StateNotifier<List<Contest>> {
         );
       }
       return post;
-    }).toList();
+    }).toList());
     doshare(postId);
   }
 
@@ -139,7 +159,8 @@ class ContestForYou extends StateNotifier<List<Contest>> {
 
     if (!response.success) {
       //  print("do like stuff Fail");
-      state = state.map((post) {
+      state = state.copyWith(
+          listContestForYou: state.listContestForYou.map((post) {
         if (post.id == postId) {
           return post.copyWith(
             hasLiked: !post.hasLiked!,
@@ -147,7 +168,7 @@ class ContestForYou extends StateNotifier<List<Contest>> {
           );
         }
         return post;
-      }).toList();
+      }).toList());
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
       print("do like stuff Success");
@@ -169,6 +190,7 @@ final selectedContestProvider = StateProvider<Contest?>((ref) {
   return null;
 });
 // Provider
-final postProvider = StateNotifierProvider<ContestForYou, List<Contest>>((ref) {
+final postProvider =
+    StateNotifierProvider<ContestForYou, ContextForYouState>((ref) {
   return ContestForYou(ContestRepo(), WayaLocalDataSource());
 });

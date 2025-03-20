@@ -57,13 +57,13 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
             //  Text("Your Bio", style: wayaTheme.textTheme.bodyMedium),
 
             Text("Application submission",
-                style: wayaTheme.textTheme.displaySmall!
-                    .wayaCopyWith(fontWeight: FontWeight.w700, fontSize: 24.sp)),
+                style: wayaTheme.textTheme.displaySmall!.wayaCopyWith(
+                    fontWeight: FontWeight.w700, fontSize: 24.sp)),
             const Gap(5),
             Text(
                 "View all the details submitted by the contestant to enter for the contest",
-                style: wayaTheme.textTheme.hintStyle
-                    .wayaCopyWith(fontSize: 16.sp, fontWeight: FontWeight.w400)),
+                style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                    fontSize: 16.sp, fontWeight: FontWeight.w400)),
             //  Text("Your Bio", style: wayaTheme.textTheme.bodyMedium),
             const Gap(20),
 
@@ -110,12 +110,14 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
                         Text(entry.key,
                             style: wayaTheme.textTheme.displaySmall!
                                 .wayaCopyWith(
-                                    fontWeight: FontWeight.w500, fontSize: 16.sp)),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16.sp)),
                         const Gap(5),
                         Text(entry.value,
                             style: wayaTheme.textTheme.displaySmall!
                                 .wayaCopyWith(
-                                    fontWeight: FontWeight.w500, fontSize: 14.sp)),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14.sp)),
                         const Gap(5),
                       ],
                     );
@@ -127,10 +129,11 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
                         Text(entry.key,
                             style: wayaTheme.textTheme.displaySmall!
                                 .wayaCopyWith(
-                                    fontWeight: FontWeight.w500, fontSize: 16.sp)),
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 16.sp)),
                         const Gap(5),
                         WayaImage(
-                          imageUrl: entry.key,
+                          imageUrl: entry.value,
                           height: 200,
                           width: context.width,
                           fit: BoxFit.cover,
@@ -199,12 +202,17 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
                   context,
                   child: ContestantRejectModal(
                     onTap: (value, myReason) async {
+                      if (myReason.trim().isEmpty) {
+                        WayaSnackBar.showToast(
+                            "Please provide a reason for rejected");
+                        return;
+                      }
                       bool isPass = await ref
                           .read(votersContestNotifier.notifier)
                           .acceptRejectContestant(
                               value, model?.id ?? "", model?.contestId ?? "", {
                         "status": "REJECTED",
-                        "rejectedReason": myReason,
+                        "rejectionReason": myReason,
                       });
                       if (isPass) {
                         WayaSnackBar.showToast("Rejected sent successfully!");

@@ -95,8 +95,14 @@ class ShopRepository extends BaseRepository {
       'type': type
     };
 
-    if (productId != null) payload['productId'];
-    if (shopId != null) payload['shopId'];
+  
+
+    if (productId != null) payload['productId'] = productId;
+    if (shopId != null) payload['shopId'] = shopId;
+
+      print("Ewfwefewfwefewfewfwefwef $payload");
+
+  
 
     return post("$serviceUrl/rating/create", payload);
   }
