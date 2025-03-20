@@ -24,6 +24,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
           orderId: orderId, status: status);
 
       if (response.success) {
+        
         WayaSnackBar.showToast("Pickup status updated");
         WayaNav.toNamed(ManageShop.route);
       }

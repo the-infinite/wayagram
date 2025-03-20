@@ -359,7 +359,7 @@ class _YourBubbleWidget extends StatelessWidget {
                         margin: const EdgeInsets.only(bottom: 10),
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(
-                          color: WayaColors.primary.withAlpha(90),
+                          color: WayaColors.primary50,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: ChatReplyToWidget(

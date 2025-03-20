@@ -35,7 +35,7 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
       rollAccessNotifier.getRoles();
       rollAccessNotifier.getShops();
       Future.delayed(Duration(seconds: 1), () {
-        rollAccessNotifier.getAllMembers();
+        rollAccessNotifier.getAllMembers(true);
         rollAccessNotifier.getRoleManagementMemberList();
       });
       rollAccessNotifier.email.text = "";
@@ -46,32 +46,30 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
       isLoading: false,
       isScrollable: true,
       title: "Roles & Access",
-      body: SingleChildScrollView(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Gap(10),
-            Row(
-              children: [
-                WayaTabButton(
-                  isSelected: _selectedIndex == 0,
-                  text: 'Manage Users',
-                  onTap: () => setState(() => _selectedIndex = 0),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 1,
-                  text: 'Role Management',
-                  onTap: () => setState(() => _selectedIndex = 1),
-                ),
-              ],
-            ),
-            const Gap(20),
-            if (_selectedIndex == 0) ManageUserTab(),
-            if (_selectedIndex == 1) RoleManagementTab(),
-            // const Gap(50),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Gap(10),
+          Row(
+            children: [
+              WayaTabButton(
+                isSelected: _selectedIndex == 0,
+                text: 'Manage Users',
+                onTap: () => setState(() => _selectedIndex = 0),
+              ),
+              WayaTabButton(
+                isSelected: _selectedIndex == 1,
+                text: 'Role Management',
+                onTap: () => setState(() => _selectedIndex = 1),
+              ),
+            ],
+          ),
+          const Gap(20),
+          if (_selectedIndex == 0) ManageUserTab(),
+          if (_selectedIndex == 1) RoleManagementTab(),
+          // const Gap(50),
+        ],
       ),
       /*   floatingActionButton:
           ConversationState.self.accountType == UserAccountType.business

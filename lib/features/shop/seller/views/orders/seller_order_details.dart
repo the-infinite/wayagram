@@ -166,7 +166,17 @@ class SellerOrderDetails extends ConsumerWidget {
             //   },
             //   text: "Accept Order",
             // ),
-            if (arg?.deliveryType == 'Delivery')
+            if (  ((arg?.deliveryStatusHistory.isNotEmpty == true &&
+                            arg?.deliveryStatusHistory.last.status ==
+                                'completed') ||
+                        (arg?.pickupStatusHistory.isNotEmpty == true &&
+                            arg?.pickupStatusHistory.last.status ==
+                                'completed'))
+                                ) ... [
+    SizedBox.shrink()
+                                ]
+                                else ...[
+if (arg?.deliveryType == 'Delivery')
               WayaButton(
                 color: wayaTheme.colorScheme.transparent,
                 textColor: wayaTheme.colorScheme.greyColor900,
@@ -214,6 +224,8 @@ class SellerOrderDetails extends ConsumerWidget {
               },
               text: "Reject Order",
             )
+                                ]
+        
           ],
         ));
   }

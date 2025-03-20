@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -66,20 +67,70 @@ class ForYouContest extends ConsumerStatefulWidget {
 
 class _ForYouContestState extends ConsumerState<ForYouContest> {
   final ScrollController _scrollController = ScrollController();
+  double _previousScrollOffset = 0.0;
+
+  bool isAtTop = true;
+  bool isScrollingUp = true;
 
   @override
   void initState() {
     super.initState();
-    ref.read(postProvider.notifier).fetchPosts();
 
     // Scroll listener for pagination
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels >=
-          _scrollController.position.maxScrollExtent - 100) {
-        print("My scrolling here");
-        ref.read(postProvider.notifier).fetchPosts();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.addListener(_scrollListener);
+
+      ref.read(postProvider.notifier).fetchContestForYou(true);
+    });
+  }
+
+  void _scrollListener() {
+    //? listen to when scroll is to the top
+    double currentOffset = _scrollController.position.pixels;
+
+    Future.delayed(Duration(seconds: 1), () {
+      if (_scrollController.position.pixels <= 0) {
+        // 👇 Scrolled to the top
+        if (!isAtTop) {
+          setState(() => isAtTop = true);
+          print("Scrolled to the top!");
+        }
+      } else {
+        if (isAtTop) {
+          setState(() => isAtTop = false);
+        }
+      }
+
+      if (currentOffset < _previousScrollOffset) {
+        // ✅ Scrolling Up (Show Widget)
+        if (!isScrollingUp) {
+          print("Scrolling Up - Show Widget");
+          setState(() => isScrollingUp = true);
+        }
+      } else if (currentOffset > _previousScrollOffset) {
+        // ✅ Scrolling Down (Hide Widget)
+        if (isScrollingUp) {
+          print("Scrolling Down - Hide Widget");
+          setState(() => isScrollingUp = false);
+        }
       }
     });
+
+    // ✅ Fetch data only when scrolling **downward** and near the bottom
+    if (currentOffset > _previousScrollOffset &&
+        _scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 150) {
+      // print("fetching .....${_scrollController.position.pixels}");
+      ref.read(postProvider.notifier).fetchContestForYou(false);
+    }
+    _previousScrollOffset = currentOffset;
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener); // Remove listener safely
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -88,50 +139,65 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
 
     final wayaTheme = Theme.of(context);
     final postNotifier = ref.read(postProvider.notifier);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        GroupedWidgetHeader(
-            onTap: null,
-            subTitle:
-                "See contests which are active for you to \n participate in",
-            title: "Active Contests"),
-        const Gap(10),
-        if (ConversationState.self.accountType == UserAccountType.business)
-          WayaButton(
-            callback: () {
-              ivalidateUGTVM(ref);
-              //WayaNav.toNamed('/create-profile-contest1');
-              WayaNav.toNamed('/create-contest');
-            },
-            color: wayaTheme.colorScheme.primary50,
-            text: "Host a Contest",
-            textColor: wayaTheme.colorScheme.customPrimary,
-          ),
-        if (ConversationState.self.accountType == UserAccountType.business)
-          const Gap(10),
-        if (postNotifier.isLoading) Center(child: CircularProgressIndicator()),
-        if (posts.isEmpty) emptyWidget(),
-        if (posts.isNotEmpty)
-          ListView.builder(
-            controller: _scrollController,
-            shrinkWrap: true,
-            itemCount: posts.length,
-            itemBuilder: (context, index) {
-              final post = posts[index];
-              return GestureDetector(
-                onTap: () {},
-                child: ContestCard(
-                  post,
-                  postNotifier.toggleLike,
-                  postNotifier.toggleShare,
-                  postNotifier.doFollow,
+    return SizedBox(
+      height: MediaQuery.of(context).size.height - 100,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+            if (isScrollingUp && isAtTop)
+          Column(
+            children: [
+              GroupedWidgetHeader(
+                  onTap: null,
+                  subTitle:
+                      "See contests which are active for you to \n participate in",
+                  title: "Active Contests"),
+              const Gap(10),
+              if (ConversationState.self.accountType ==
+                  UserAccountType.business)
+                WayaButton(
+                  callback: () {
+                    ivalidateUGTVM(ref);
+                    //WayaNav.toNamed('/create-profile-contest1');
+                    WayaNav.toNamed('/create-contest');
+                  },
+                  color: wayaTheme.colorScheme.primary50,
+                  text: "Host a Contest",
+                  textColor: wayaTheme.colorScheme.customPrimary,
                 ),
-              );
-            },
+              if (ConversationState.self.accountType ==
+                  UserAccountType.business)
+                const Gap(10),
+            ],
           ),
-      ],
+          if (posts.isLoading == true)
+            Center(child: CircularProgressIndicator()),
+          if (posts.listContestForYou.isEmpty) emptyWidget(),
+          if (posts.listContestForYou.isNotEmpty)
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                //  physics: BouncingScrollPhysics(),
+                //shrinkWrap: true,
+                itemCount: posts.listContestForYou.length,
+                itemBuilder: (context, index) {
+                  final post = posts.listContestForYou[index];
+                  return GestureDetector(
+                    onTap: () {},
+                    child: ContestCard(
+                      post,
+                      postNotifier.toggleLike,
+                      postNotifier.toggleShare,
+                      postNotifier.doFollow,
+                    ),
+                  );
+                },
+              ),
+            ),
+          Gap(50)
+        ],
+      ),
     );
   }
 
@@ -148,11 +214,5 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
           ivalidateUGTVM(ref);
           WayaNav.toNamed("/create-contest");
         });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
   }
 }

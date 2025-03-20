@@ -68,7 +68,7 @@ class LoginVm extends StateNotifier<LoginState> {
   final SuccessfulSetupVm _setupVm;
   final ProfileRepo _profileRepo;
   final _logger = getLogger("LoginVm");
-   final GoogleSignIn _googleSignIn = GoogleSignIn(
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: ['email'],
   );
 
@@ -95,17 +95,15 @@ class LoginVm extends StateNotifier<LoginState> {
     super.dispose();
   }
 
-
-
   Future<void> signinWithGoogle() async {
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        print("User cancelled sign-in");
-        return;
-      }
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) {
+      print("User cancelled sign-in");
+      return;
+    }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-     
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
     final OAuthCredential credential = GoogleAuthProvider.credential(
       idToken: googleAuth.idToken,
@@ -116,7 +114,7 @@ class LoginVm extends StateNotifier<LoginState> {
         await FirebaseAuth.instance.signInWithCredential(credential);
     final String? idToken = await userCredential.user?.getIdToken();
     print(idToken);
-     print("vevvvvdvf");
+    print("vevvvvdvf");
     // if (idToken != null) {
     //   await oauthSignIn(authType: 'GOOGLE', token: idToken);
     // }
@@ -209,9 +207,10 @@ class LoginVm extends StateNotifier<LoginState> {
           if (response.success) {
             UserAccountModel userAccountModel =
                 UserAccountModel.fromJson(response.data);
+                    print("wqdwqdw ${userAccountModel.data!.userdata!.user!.role}");
             _setupVm.state =
                 _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
-
+        
             if (userAccountModel.data != null &&
                 userAccountModel.data!.userdata!.user!.role != "PERSONAL") {
               final bizResponse = await _profileRepo.getBusinessDataRepo(

@@ -80,7 +80,7 @@ class SellerProduct {
   final bool deliveryCharge;
   final String options;
   final String? pickupAddress;
-  final String? rating;
+  final int? rating;
   final double discountPercentage;
   final String shopId;
   final String? discountedPrice;

@@ -42,11 +42,9 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text(
-                "Populate Delivery Details",
-                textAlign: TextAlign.start,
-                style: wayaTheme.textTheme.headlineMedium
-              ),
+              Text("Populate Delivery Details",
+                  textAlign: TextAlign.start,
+                  style: wayaTheme.textTheme.headlineMedium),
               const Gap(12),
               Text(
                 "Add the delivery price and date of delivery for this order so the customer can review and pay",
@@ -234,7 +232,7 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                                     WayaSnackBar.showToast(
                                         "Delivery detail updated");
 
-                                    WayaNav.offNamed(ManageShop.route);
+                                    WayaNav.replaceNamed(ManageShop.route);
                                   }
                                 }
                               : null,
@@ -244,8 +242,7 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
               const Gap(10),
               WayaButton(
                   callback: () {
-                     WayaNav.goBack();
-                
+                    WayaNav.goBack();
                   },
                   textColor: wayaTheme.colorScheme.greyColor500,
                   color: wayaTheme.colorScheme.transparent,
@@ -332,7 +329,9 @@ class AddDeliveryDetailsViewModel
           userId: userId,
           shopId: shopId);
 
-      if (response.success) {}
+      if (response.success) {
+        state = AddDeliveryDetailState();
+      }
     } catch (e) {
       print(e);
     } finally {

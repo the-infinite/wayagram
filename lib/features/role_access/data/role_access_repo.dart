@@ -15,8 +15,8 @@ class RoleAccessRepo extends BaseRepository {
     return get('$serviceUrl2/shops/$userId');
   }
 
-     Future<WayaRequestResponse> getMemberList(String vendorId) {
-    return get('$serviceUrl2/shopMember/get-members/$vendorId');
+     Future<WayaRequestResponse> getMemberList(String vendorId, int page) {
+    return get('$serviceUrl2/shopMember/get-members/$vendorId?page=$page');
   }
       Future<WayaRequestResponse> getRoleManagementMemberList(String vendorId) {
     return get('$serviceUrl2/shopMember/role-management/$vendorId');

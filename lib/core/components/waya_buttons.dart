@@ -697,7 +697,7 @@ class WayaProgressiveButton extends StatelessWidget {
         textColor: textColor,
         centerWidget: centerWidget,
         horizontalPadding: horizontalPadding,
-        verticalPadding: horizontalPadding,
+        verticalPadding: verticalPadding,
         height: height,
         isDisabled: isDisabled,
         shape: shape,

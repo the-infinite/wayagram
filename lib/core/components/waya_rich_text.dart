@@ -11,14 +11,18 @@ class WayaRichText extends StatelessWidget {
   final TextStyle? style1;
   final TextStyle? style2;
   final List<InlineSpan>? texts;
+  final int? maxLines;
+  final TextOverflow? overflow;
 
   final VoidCallback? onTap2;
   const WayaRichText({
     required this.title1,
+    required this.title2,
     this.texts,
+    this.overflow,
     this.style1,
     this.style2,
-    required this.title2,
+    this.maxLines,
     this.onTap2,
     super.key,
   });
@@ -27,6 +31,8 @@ class WayaRichText extends StatelessWidget {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return RichText(
+      maxLines: maxLines,
+      overflow: overflow ?? TextOverflow.clip,
       text: TextSpan(
         style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
           fontSize: 18.0.sp,

@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -12,15 +10,16 @@ import 'package:wayagram/features/group/vm/group_vm.dart';
 
 class SuccessGroup extends ConsumerStatefulWidget {
   static const route = '/successGroup';
-  const SuccessGroup({super.key,});
+  const SuccessGroup({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SuccessGroupState();
 }
 
 class _SuccessGroupState extends ConsumerState<SuccessGroup> {
-
-  bool sel =  false;
+  bool sel = false;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +29,7 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
     //final dynamic args  = ModalRoute.of(context)?.settings.arguments;
     //print("GROUP TYPE ID  ${args['id']}");
     return WayaScaffold(
-      removeAppBar: true,
+      removeAppBar: false,
       isLoading: viewModel.isLoading,
       isScrollable: false,
       body: Column(
@@ -38,42 +37,42 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Gap(50),
-          Center(child: Image.asset('assets/images/pages/team.png', height: 160.h,)),
+          Center(
+              child: Image.asset(
+            'assets/images/pages/team.png',
+            height: 160.h,
+          )),
           const Gap(50),
           Text(
-              'Group Created Successfully',
-              style: TextStyle(
-                  fontSize: 24.sp,
-                  fontWeight: FontWeight.w700,
-                  color: WayaColors.black,
-                  fontFamily: WayaConstants.fontFamily
-              )),
+            'Group Created Successfully',
+            style: wayaTheme.textTheme.bodyMedium?.copyWith(
+              fontSize: 24.sp,
+              fontWeight: FontWeight.w700,
+              color: WayaColors.black,
+            ),
+          ),
           const Gap(10),
           Text(
             'Great news! Your Group has been successfully\ncreated and you can manage it anytime in the\nGroups section.',
-            style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w400,
-                color: WayaColors.greyColor500,
-                fontFamily: WayaConstants.fontFamily
-            ),textAlign: TextAlign.center,),
+            style: wayaTheme.textTheme.bodyMedium?.copyWith(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w400,
+              color: WayaColors.greyColor500,
+            ),
+            textAlign: TextAlign.center,
+          ),
           const Gap(150),
           WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-              WayaNav.toNamed("/groups");
-            /* args['type'] == 'Public Group'? WayaNav.toNamed("/publicGroup", arguments: args['id'])
-             //type == 'Public Group'? WayaNav.toNamed("/publicGroup", arguments: id)
-                 :WayaNav.toNamed("/privateGroup");*/
-            } : null,
-            centerWidget: LoadingState(
-                loading: viewModel.isLoading, text: 'Manage Group'),
+                    WayaNav.toNamed("/groups");
+                  }
+                : null,
+            centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Manage Group'),
             height: 50.h,
           ),
-
         ],
       ),
     );
   }
-
 }

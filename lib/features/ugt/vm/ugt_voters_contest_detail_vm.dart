@@ -282,6 +282,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         ApplicantContestModelBase responseModel =
             ApplicantContestModelBase.fromJson(response.data);
         contestList = responseModel.data ?? [];
+      
 
         state = state.copyWith(myContestApplicantList: contestList);
       }

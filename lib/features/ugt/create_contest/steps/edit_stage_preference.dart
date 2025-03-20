@@ -8,24 +8,23 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_scaffold.dart';
 import '../../../../core/components/waya_select_field.dart';
 import '../../../../core/components/waya_text_form_field.dart';
 import '../../../../core/utils/waya_navigation.dart';
-import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
-import '../../../shop/widgets/upload_image.dart';
+
 import '../../data/controller/contest_controller.dart';
 import '../../vm/ugt_vm.dart';
 import 'create_ultimate.dart';
 
 class EditStagePreference extends StatefulHookConsumerWidget {
   static const route = '/edit-stage-preference';
+
   const EditStagePreference({super.key});
 
   @override
@@ -45,7 +44,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
         print("${value.toJson()}");
       return _contestController.selectedIndex == value.id;
     }); */
-    final entryType = useState(model.entryType ?? "");
+    final entryType = useState(model.entryType ?? "Paid");
     final startDate = useState(model.startDate ?? "");
     final endDate = useState(model.endDate ?? "");
     final priceForWinner = useState(
@@ -173,6 +172,20 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                       return 'Entry Amount is required';
                     }
 
+                    String value = _contestController.entryAmountController.text
+                            .contains("NGN")
+                        ? _contestController.entryAmountController.text
+                            .replaceAll("NGN", "")
+                            .replaceAll(",", "")
+                            .split(".")
+                            .first
+                            .toString()
+                        : _contestController.entryAmountController.text;
+
+                    if (int.parse(value) <= 0) {
+                      return 'Amount must be greater than zero';
+                    }
+
                     return null;
                   }, builder: (formState) {
                     return Column(
@@ -188,15 +201,11 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             CurrencyTextInputFormatter.currency(
                                 name: 'NGN', symbol: 'NGN', locale: 'en_NG')
                           ],
-                          borderColor: formState.hasError &&
-                                  _contestController
-                                      .entryAmountController.text.isEmpty
+                          borderColor: formState.hasError
                               ? wayaTheme.colorScheme.error
                               : null,
                         ),
-                        if (formState.hasError &&
-                            _contestController
-                                .entryAmountController.text.isEmpty)
+                        if (formState.hasError)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
@@ -222,9 +231,31 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                     children: [
                       GestureDetector(
                         onTap: () async {
+                          DateTime? firstDate;
+                          DateTime? lastDate;
+
+                          if (_contestController.selectedIndex == 0) {
+                            firstDate = convertToUsableDate(
+                                viewModel.contestTimelineStartDate);
+                            lastDate = convertToUsableDate(
+                                viewModel.contestTimelineEndDate);
+                          } else {
+                            int newIndex = _contestController.selectedIndex - 1;
+                            StagePrefModel model = ref
+                                .read(stateContactProvider.notifier)
+                                .state[newIndex];
+
+                            firstDate = convertToUsableDate(
+                                model.endDate ?? "2025-1-1");
+                            lastDate = convertToUsableDate(
+                                viewModel.contestTimelineEndDate);
+                          }
+
                           startDate.value = await ref
                                   .read(contestNotifierProvider.notifier)
-                                  .showDatePickerMain(context) ??
+                                  .showDatePickerMain(context,
+                                      firstDate: firstDate,
+                                      lastDate: lastDate) ??
                               "";
                         },
                         child: AbsorbPointer(
@@ -271,9 +302,34 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                     children: [
                       GestureDetector(
                         onTap: () async {
+                          if (startDate.value.trim().isEmpty) {
+                            WayaSnackBar.showToast("Please pick a start date");
+                            return;
+                          }
+                          DateTime? firstDate;
+                          DateTime? lastDate;
+
+                          if (_contestController.selectedIndex == 0) {
+                            firstDate = convertToUsableDate(startDate.value);
+                            lastDate = convertToUsableDate(
+                                viewModel.contestTimelineEndDate);
+                          } else {
+                            int newIndex = _contestController.selectedIndex - 1;
+                            StagePrefModel model = ref
+                                .read(stateContactProvider.notifier)
+                                .state[newIndex];
+
+                            firstDate = convertToUsableDate(
+                                model.endDate ?? "2025-1-1");
+                            lastDate = convertToUsableDate(
+                                viewModel.contestTimelineEndDate);
+                          }
+
                           endDate.value = await ref
                                   .read(contestNotifierProvider.notifier)
-                                  .showDatePickerMain(context) ??
+                                  .showDatePickerMain(context,
+                                      firstDate: firstDate,
+                                      lastDate: lastDate) ??
                               "";
                         },
                         child: AbsorbPointer(
@@ -420,9 +476,9 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                                 .contestPrizeWinnerTextController.text = "0";
                           }
                           priceForWinner.value = value.first.label;
-                          ref
+                          /*  ref
                               .read(contestNotifierProvider.notifier)
-                              .updateEntryType(value.first.label);
+                              .updateEntryType(value.first.label); */
                         },
                         uniqueKey: 'contest-state',
                       ),
@@ -446,6 +502,22 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                         .contestPrizeWinnerTextController.text.isEmpty) {
                       return 'Winner Price is required';
                     }
+                    String value = _contestController
+                            .contestPrizeWinnerTextController.text
+                            .contains("NGN")
+                        ? _contestController
+                            .contestPrizeWinnerTextController.text
+                            .replaceAll("NGN", "")
+                            .replaceAll(",", "")
+                            .split(".")
+                            .first
+                            .toString()
+                        : _contestController
+                            .contestPrizeWinnerTextController.text;
+
+                    if (int.parse(value) <= 0) {
+                      return 'Amount must be greater than zero';
+                    }
 
                     return null;
                   }, builder: (formState) {
@@ -462,21 +534,15 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           ],
                           hintText: "Enter Winners price",
                           label: "Prize for the Winner? ",
-                          borderColor: formState.hasError &&
-                                  _contestController
-                                      .contestPrizeWinnerTextController
-                                      .text
-                                      .isEmpty
+                          borderColor: formState.hasError
                               ? wayaTheme.colorScheme.error
                               : null,
                         ),
-                        if (formState.hasError &&
-                            _contestController
-                                .contestPrizeWinnerTextController.text.isEmpty)
+                        if (formState.hasError)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
-                              formState.errorText!,
+                              formState.errorText ?? "Error",
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
                                   fontSize: 12.sp),

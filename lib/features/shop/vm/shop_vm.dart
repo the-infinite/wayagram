@@ -9,6 +9,7 @@ import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/review_repsonse_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_metrics_response_model.dart';
 
 class ShopVm extends StateNotifier<ShopState> {
@@ -55,7 +56,7 @@ class ShopVm extends StateNotifier<ShopState> {
     state = state.copyWith(searchQuery: query);
   }
 
-  Future<void> reviewProduct(
+  Future<bool?> reviewProduct(
       {required String raterId,
       String? productId,
       String? shopId,
@@ -63,25 +64,28 @@ class ShopVm extends StateNotifier<ShopState> {
       required String review,
       required BuildContext context}) async {
     try {
+      print(productId);
+
       state = state.copyWith(isReviewing: true);
       final response = await _repository.createRating(
-          raterId: raterId, score: score, review: review, type: "Shop");
-      WayaNav.goBack();
-      if (response.success && context.mounted) {
+          raterId: raterId,
+          score: score,
+          productId: productId,
+          review: review,
+          type: "Shop");
+
+      bool isSuccess = false;
+      if (response.success) {
         print(response.data);
-        WayaUtils.showNotice(
-            context: context,
-            title: 'Handover Successful!',
-            message:
-                'The confirmation code has been verified. The product is now officially handed over to the buyer',
-            onPress: () {
-              WayaNav.replaceNamed(BottomView.route, arguments: 1);
-            },
-            icon: Image.asset(WayaAssets.images.dCodeValid.path),
-            buttonText: 'Go To Shop');
+        isSuccess = true;
+      } else {
+        isSuccess = false;
       }
+
+      return isSuccess;
     } catch (error) {
       print(error);
+      return null;
     } finally {
       state = state.copyWith(isReviewing: false);
     }
@@ -92,6 +96,9 @@ class ShopVm extends StateNotifier<ShopState> {
       final response = await _repository.getProductRating(productId: productId);
 
       if (response.success) {
+        ReviewRepsonseModel responseModel =
+            ReviewRepsonseModel.fromJson(response.data);
+        state = state.copyWith(reviews: responseModel.data);
         print(response.data);
       }
     } catch (error) {

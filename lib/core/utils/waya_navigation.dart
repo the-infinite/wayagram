@@ -14,7 +14,7 @@ class WayaNav<T> {
   static Future<T> to<T>(
     Widget page, {
     Function(T)? onResult,
-    bool preventDuplicates = true,
+    bool preventDuplicates = false,
     Transition transition = Transition.cupertino,
   }) {
     final completer = Completer<T>();

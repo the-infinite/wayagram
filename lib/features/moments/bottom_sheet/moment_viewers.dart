@@ -107,7 +107,7 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
                   Stack(
                     children: [
                       WayaImage(
-                        imageUrl: viewer.image!,
+                        imageUrl: viewer.image ?? '',
                         radius: BorderRadius.circular(50),
                         width: 50,
                         height: 50,
