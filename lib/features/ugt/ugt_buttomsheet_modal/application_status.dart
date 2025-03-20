@@ -48,7 +48,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
         ref
             .read(postProvider.notifier)
             .fetchSingleContestantDetails(widget.post?.contestId ?? "",
-                widget.post?.contest?.profileId ?? "")
+                widget.post?.userId ?? "")
             .then((model) {
           if (model != null) {
             if (model.data?.totalDocs == 1) {
