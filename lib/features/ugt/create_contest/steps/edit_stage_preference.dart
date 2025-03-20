@@ -176,6 +176,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                             .contains("NGN")
                         ? _contestController.entryAmountController.text
                             .replaceAll("NGN", "")
+                            .replaceAll(",", "")
                             .split(".")
                             .first
                             .toString()
@@ -507,6 +508,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                         ? _contestController
                             .contestPrizeWinnerTextController.text
                             .replaceAll("NGN", "")
+                            .replaceAll(",", "")
                             .split(".")
                             .first
                             .toString()

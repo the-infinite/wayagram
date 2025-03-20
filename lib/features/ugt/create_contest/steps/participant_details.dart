@@ -166,6 +166,7 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
               String value = viewModel2.amount.text.contains("NGN")
                   ? viewModel2.amount.text
                       .replaceAll("NGN", "")
+                       .replaceAll(",", "")
                       .split(".")
                       .first
                       .toString()
