@@ -8,14 +8,14 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/moments/data/model/folllowed_user_moments_model.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
-import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/widgets/my_moment_widget.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
 import 'package:wayagram/features/explore/search/model/user_detail.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/features/explore/search/widgets/user_widget.dart';
+import 'package:wayagram/shared/features/moments/notifier/default.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 
 class SearchView extends ConsumerStatefulWidget {
@@ -68,16 +68,15 @@ class _SearchState extends ConsumerState<SearchView> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(servicesProvider);
-    final momentState = ref.watch(momentVmProvider);
     final query = searchController.text.trim();
 
     //? Aggregating moments.
-    for (UserMoments userMoments in momentState.moments) {
+    for (final userMoments in otherUserMoments.moments) {
       moments = [...userMoments.moments];
     }
 
     //? Searching posts.
-    final List<Post> filteredPosts = WayaUtils.strictSearch<Post>(state.topPosts, ['hashtags'], query);
+    final List<PostModel> filteredPosts = WayaUtils.strictSearch<PostModel>(state.topPosts, ['hashtags'], query);
     final history = storage.getSearchHistory();
 
     //? Moments
@@ -94,15 +93,11 @@ class _SearchState extends ConsumerState<SearchView> {
       query,
     );
 
-    Map<String, dynamic> serviceData = {'Post': filteredPosts, 'Account': filteredAccounts, 'Moment': filteredMoments};
-
-    List<String> matchingServices =
+    final serviceData = {'Post': filteredPosts, 'Account': filteredAccounts, 'Moment': filteredMoments};
+    final matchingServices =
         serviceData.entries.where((entry) => (entry.value as List).isNotEmpty).map((entry) => entry.key).toList();
-
     selectedServices.retainAll(matchingServices);
-
     List<String> activeServices = selectedServices.isEmpty ? matchingServices : selectedServices.toList();
-
     bool allServicesEmpty = matchingServices.isEmpty;
 
     if (!allServicesEmpty) {
@@ -286,7 +281,7 @@ class _SearchState extends ConsumerState<SearchView> {
               );
             }),
       );
-    } else if (service == 'Post' && data is List<Post>) {
+    } else if (service == 'Post' && data is List<PostModel>) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: List.generate(

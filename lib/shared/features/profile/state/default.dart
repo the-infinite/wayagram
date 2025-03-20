@@ -1,4 +1,4 @@
-import 'package:wayagram/features/post/model/post_reponse_model.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 
 class PostState {
   final bool hasLoaded;
@@ -10,7 +10,7 @@ class PostState {
   final int totalPages;
   final bool hasNextPage;
   final bool hasPreviousPage;
-  final List<Post> posts;
+  final List<PostModel> posts;
 
   // This is fine.
   PostState({
@@ -35,7 +35,7 @@ class PostState {
       hasNextPage: json["hasNextPage"],
       hasPreviousPage: json["hasPrevPage"],
       nextPage: json["nextPage"],
-      posts: (json["docs"] as List).map((e) => Post.fromJson(e)).toList(),
+      posts: (json["docs"] as List).map((e) => PostModel.fromJson(e)).toList(),
       isLoading: false,
       hasLoaded: true,
     );
@@ -65,7 +65,7 @@ class PostState {
     int? totalPages,
     bool? hasNextPage,
     bool? hasPreviousPage,
-    List<Post>? posts,
+    List<PostModel>? posts,
   }) {
     return PostState(
       hasLoaded: hasLoaded ?? this.hasLoaded,

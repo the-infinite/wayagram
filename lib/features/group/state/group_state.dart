@@ -3,12 +3,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
-import 'package:wayagram/features/group/data/model/get_all_groups.dart';
-import 'package:wayagram/features/group/data/model/group_popular_post_model.dart';
-import 'package:wayagram/features/group/data/model/group_post_model.dart';
-import 'package:wayagram/features/group/data/model/joined_group_model.dart';
-import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
-import 'package:wayagram/features/post/model/get_all_post.dart';
+import 'package:wayagram/shared/features/profile/model/groups.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 
 import '../data/model/join_request_model.dart';
 
@@ -23,15 +19,15 @@ class GroupState {
   String? name;
   String? desc;
   List<JoinRequestDocs>? docs;
-  List<GetAllGroupDocs>? getAllGroups;
+  List<GroupModel>? getAllGroups;
   List<EventDoc>? fetchAllEventDocs;
   List<AllGroupMemberDocs>? allGroupMemberDocs;
-  List<JoinedGroupDocs>? joinedGroup;
-  List<GetAllGroupDocs>? myGroups;
-  List<RecommendedGroupDocs>? recommendedGroupDocs;
-  List<GetAllPostDocs>? getAllPost;
-  List<GroupPostDocs>? groupPostdocs;
-  List<GroupPopularPostDocs>? groupPopularPostdocs;
+  List<GroupModel>? joinedGroup;
+  List<GroupModel>? myGroups;
+  List<GroupModel>? recommendedGroupDocs;
+  List<PostModel>? getAllPost;
+  List<PostModel>? groupPostdocs;
+  List<PostModel>? groupPopularPostdocs;
   num? postCount;
 
   final bool isReportingGroup;
@@ -81,16 +77,16 @@ class GroupState {
     TextEditingController? username,
     TextEditingController? content,
     List<JoinRequestDocs>? docs,
-    List<GetAllGroupDocs>? getAllGroups,
-    List<GetAllGroupDocs>? myGroups,
+    List<GroupModel>? getAllGroups,
+    List<GroupModel>? myGroups,
     List<EventDoc>? fetchAllEventDocs,
-    List<GroupPopularPostDocs>? groupPopularPostdocs,
+    List<PostModel>? groupPopularPostdocs,
     List<AllGroupMemberDocs>? allGroupMemberDocs,
-    List<JoinedGroupDocs>? joinedGroup,
-    List<RecommendedGroupDocs>? recommendedGroupDocs,
-    List<GroupPostDocs>? groupPostdocs,
+    List<GroupModel>? joinedGroup,
+    List<GroupModel>? recommendedGroupDocs,
+    List<PostModel>? groupPostdocs,
     num? postCount,
-    List<GetAllPostDocs>? getAllPost,
+    List<PostModel>? getAllPost,
     bool? isReportingGroup,
     bool? isFocused,
     bool? isLoading,
@@ -143,4 +139,3 @@ const groupReport = [
   "Violates_terms_and_conditions",
   "other"
 ];
-

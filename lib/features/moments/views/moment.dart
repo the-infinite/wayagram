@@ -22,10 +22,8 @@ class _MomentViewState extends ConsumerState<Moment> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final MomentData? args =
-          ModalRoute.of(context)?.settings.arguments as MomentData?;
+      final MomentData? args = ModalRoute.of(context)?.settings.arguments as MomentData?;
       if (args != null) {
-        print("${args.active}");
         ref.read(momentVmProvider.notifier).initializeEditMoment(args);
       }
     });
@@ -69,9 +67,7 @@ class _MomentViewState extends ConsumerState<Moment> {
                     IconButton(
                       icon: SvgPicture.asset(WayaAssets.icons.cColorType.path),
                       onPressed: () {
-                        ref
-                            .read(momentVmProvider.notifier)
-                            .cycleBackgroundColor();
+                        ref.read(momentVmProvider.notifier).cycleBackgroundColor();
                       },
                     ),
                     IconButton(
@@ -83,9 +79,7 @@ class _MomentViewState extends ConsumerState<Moment> {
                   ],
                 ),
               ),
-              Expanded(
-                  child:
-                      textMoment(context: context, ref: ref, status: status)),
+              Expanded(child: textMoment(context: context, ref: ref, status: status)),
               if (status.text.isEmpty) ...[
                 Container(
                   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -99,18 +93,14 @@ class _MomentViewState extends ConsumerState<Moment> {
                         label: 'Text',
                         isSelected: status.type == StatusType.text,
                         onTap: () {
-                          ref
-                              .read(momentVmProvider.notifier)
-                              .setStatusType(StatusType.text);
+                          ref.read(momentVmProvider.notifier).setStatusType(StatusType.text);
                         },
                       ),
                       _TabButton(
                         label: 'Media',
                         isSelected: status.type == StatusType.media,
                         onTap: () {
-                          ref
-                              .read(momentVmProvider.notifier)
-                              .setStatusType(StatusType.media);
+                          ref.read(momentVmProvider.notifier).setStatusType(StatusType.media);
                           _openImagePicker();
                         },
                       ),
@@ -127,10 +117,7 @@ class _MomentViewState extends ConsumerState<Moment> {
     );
   }
 
-  Widget textMoment(
-      {required BuildContext context,
-      required WidgetRef ref,
-      required MomentState status}) {
+  Widget textMoment({required BuildContext context, required WidgetRef ref, required MomentState status}) {
     final wayaTheme = Theme.of(context);
     return GestureDetector(
       onTap: () {
@@ -139,7 +126,6 @@ class _MomentViewState extends ConsumerState<Moment> {
       onVerticalDragUpdate: (details) {
         // swipe in the negative y-axis
         if (details.delta.dy > 10) {
-        
           FocusScope.of(context).unfocus();
         }
       },
@@ -198,9 +184,7 @@ class _TabButton extends StatelessWidget {
               label,
               textAlign: TextAlign.center,
               style: TextStyle(
-                color: isSelected
-                    ? wayaTheme.colorScheme.white
-                    : wayaTheme.colorScheme.white.withOpacity(0.5),
+                color: isSelected ? wayaTheme.colorScheme.white : wayaTheme.colorScheme.white.withOpacity(0.5),
                 fontSize: 16.sp,
                 fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
               ),

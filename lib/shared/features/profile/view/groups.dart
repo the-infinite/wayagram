@@ -1,16 +1,13 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/features/group/data/model/get_all_groups.dart';
-import 'package:wayagram/features/group/data/model/joined_group_model.dart';
-import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/group/widget/group_widget.dart';
+import 'package:wayagram/shared/features/profile/model/groups.dart';
 
 class GroupsFeedWidget extends ConsumerStatefulWidget {
   final bool isExpanded;
@@ -25,8 +22,7 @@ class GroupsFeedWidget extends ConsumerStatefulWidget {
       this.isRecommended = false});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _GroupsFeedWidgetState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _GroupsFeedWidgetState();
 }
 
 class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
@@ -46,20 +42,17 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
     final state = ref.watch(createGroupProvider);
 
     // joined groups
-    List<JoinedGroupDocs>? joinedGroups = widget.isExpanded
-        ? state.joinedGroup
-        : state.joinedGroup?.sublist(0, min(state.joinedGroup!.length, 2));
+    List<GroupModel>? joinedGroups =
+        widget.isExpanded ? state.joinedGroup : state.joinedGroup?.sublist(0, min(state.joinedGroup!.length, 2));
 
     // recommended groups
-    List<RecommendedGroupDocs>? recommendedGroups = widget.isExpanded
+    List<GroupModel>? recommendedGroups = widget.isExpanded
         ? state.recommendedGroupDocs
-        : state.recommendedGroupDocs
-            ?.sublist(0, min(state.recommendedGroupDocs!.length, 2));
+        : state.recommendedGroupDocs?.sublist(0, min(state.recommendedGroupDocs!.length, 2));
 
     // my groups
-    List<GetAllGroupDocs>? myGroups = widget.isExpanded
-        ? state.myGroups
-        : state.myGroups?.sublist(0, min(state.myGroups!.length, 2));
+    List<GroupModel>? myGroups =
+        widget.isExpanded ? state.myGroups : state.myGroups?.sublist(0, min(state.myGroups!.length, 2));
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -69,9 +62,7 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
         if (widget.isMyGroups && myGroups!.isNotEmpty) ...[
           Text(
             "My Groups",
-            style: widget.isExpanded
-                ? wayaTheme.textTheme.descriptionStyle
-                : wayaTheme.textTheme.bodyMedium,
+            style: widget.isExpanded ? wayaTheme.textTheme.descriptionStyle : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
 
@@ -84,9 +75,9 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
                 final group = myGroups[index];
                 return GroupWidget(
                   isWhite: true,
-                  name: '${group.name?.capitalizeFirst}',
-                  desc: '${group.description?.capitalizeFirst}',
-                  image: '${group.coverImage}',
+                  name: '${group.name.capitalizeFirst}',
+                  desc: '${group.description.capitalizeFirst}',
+                  image: group.coverImage ?? 'null',
                   count: '${group.memberCount} Members',
                   buttonText: '',
                   onTap: () {},
@@ -98,9 +89,7 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
         if (widget.isGroupIJoined && joinedGroups!.isNotEmpty) ...[
           Text(
             "Groups you joined",
-            style: widget.isExpanded
-                ? wayaTheme.textTheme.descriptionStyle
-                : wayaTheme.textTheme.bodyMedium,
+            style: widget.isExpanded ? wayaTheme.textTheme.descriptionStyle : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
 
@@ -113,9 +102,9 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
                 final group = joinedGroups[index];
                 return GroupWidget(
                   isWhite: true,
-                  name: '${group.name?.capitalizeFirst}',
-                  desc: '${group.description?.capitalizeFirst}',
-                  image: '${group.coverImage}',
+                  name: '${group.name.capitalizeFirst}',
+                  desc: '${group.description.capitalizeFirst}',
+                  image: group.coverImage ?? 'null',
                   count: '${group.memberCount} Members',
                   buttonText: 'Member',
                   onTap: () {},
@@ -127,9 +116,7 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
         if (widget.isRecommended && recommendedGroups!.isNotEmpty) ...[
           Text(
             "Recommended groups",
-            style: widget.isExpanded
-                ? wayaTheme.textTheme.descriptionStyle
-                : wayaTheme.textTheme.bodyMedium,
+            style: widget.isExpanded ? wayaTheme.textTheme.descriptionStyle : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),
 
@@ -142,9 +129,9 @@ class _GroupsFeedWidgetState extends ConsumerState<GroupsFeedWidget> {
                 final group = recommendedGroups[index];
                 return GroupWidget(
                   isWhite: true,
-                  name: '${group.name?.capitalizeFirst}',
-                  desc: '${group.description?.capitalizeFirst}',
-                  image: '${group.coverImage}',
+                  name: '${group.name.capitalizeFirst}',
+                  desc: '${group.description.capitalizeFirst}',
+                  image: group.coverImage ?? 'null',
                   count: '${group.memberCount} Members',
                   buttonText: 'Join',
                   isRecommended: true,

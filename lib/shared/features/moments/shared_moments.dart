@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/widgets/moments_widget.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
+import 'package:wayagram/shared/features/moments/notifier/default.dart';
 
 class SharedMoments extends ConsumerStatefulWidget {
   const SharedMoments({super.key});
@@ -18,11 +20,13 @@ class SharedMoments extends ConsumerStatefulWidget {
 }
 
 class _SharedMomentsState extends ConsumerState<SharedMoments> {
+  late final notifier = ref.read(momentVmProvider.notifier);
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(momentVmProvider.notifier).getUserMoments(1);
-      ref.read(momentVmProvider.notifier).getAllMoments();
+      notifier.getUserMoments(1);
+      otherUserMoments.getAllMoments();
     });
     super.initState();
   }
@@ -37,57 +41,62 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
 
     return SizedBox(
       height: 80,
-      child: ListView.builder(
-        itemCount: 1 + momentState.moments.length,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            // First
-            return Row(
-              children: [
-                const Gap(6),
-                MomentsWidget(
-                  isCreate: true,
-                  hasMoment: momentState.myMoments.isNotEmpty,
-                  onTap: () async {
-                    if (momentState.myMoments.isNotEmpty) {
-                      return await showDialog(
+      child: ValueListenableBuilder(
+        valueListenable: otherUserMoments,
+        builder: (context, refreshCount, _) => ListView.builder(
+          itemCount: 1 + otherUserMoments.moments.length,
+          scrollDirection: Axis.horizontal,
+          itemBuilder: (context, index) {
+            //? For you kini, shey you get?
+            if (index == 0) {
+              // First
+              return Row(
+                children: [
+                  const Gap(6),
+                  MomentsWidget(
+                    isCreate: true,
+                    hasMoment: momentState.myMoments.isNotEmpty,
+                    onTap: () async {
+                      if (momentState.myMoments.isNotEmpty) {
+                        return await showDialog(
                           context: context,
-                          builder: (context) {
-                            return PopModal(
-                                create: () => WayaNav.toNamed(MyMoments.route),
-                                view: () => WayaNav.toNamed(ViewMoment.route,
-                                        arguments: {
-                                          "moments": momentState.myMoments,
-                                          "isMine": false
-                                        }));
-                          });
-                    }
-                    WayaNav.toNamed(MyMoments.route);
-                  },
-                ),
-                const Gap(6),
-              ],
-            );
-          } else {
-            // Others
-            final moment = momentState.moments[index - 1];
-            return Row(
-              children: [
-                MomentsWidget(
-                  moment: moment,
-                  onTap: () async {
-                    WayaNav.toNamed(ViewMoment.route, arguments: {
-                      "moments": moment.moments,
-                      "isMine": false
-                    });
-                  },
-                ),
-                const Gap(6),
-              ],
-            );
-          }
-        },
+                          builder: (context) => PopModal(
+                            create: () => WayaNav.toNamed(MyMoments.route),
+                            view: () => WayaNav.toNamed(
+                              ViewMoment.route,
+                              arguments: {"moments": momentState.myMoments, "isMine": true},
+                            ),
+                          ),
+                        );
+                      }
+                      WayaNav.toNamed(MyMoments.route);
+                    },
+                  ),
+                  const Gap(6),
+                ],
+              );
+            }
+
+            //? For the other user's kini.
+            else {
+              // Others
+              final moment = otherUserMoments.moments[index - 1];
+
+              //? Return this like this.
+              return Row(
+                children: [
+                  MomentsWidget(
+                    moment: moment,
+                    onTap: () async {
+                      WayaNav.toNamed(ViewMoment.route, arguments: {"moments": moment.moments, "isMine": false});
+                    },
+                  ),
+                  const Gap(6),
+                ],
+              );
+            }
+          },
+        ),
       ),
     );
   }
@@ -119,24 +128,26 @@ class PopModal extends StatelessWidget {
               child: Text(
                 textAlign: TextAlign.start,
                 "Create New Moment",
-                style: TextStyle(
+                style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                   color: wayaTheme.colorScheme.customBlack,
                   fontSize: 14.sp,
+                   fontWeight: FontWeight.w500
                 ),
               ),
             ),
             SizedBox(height: 10),
             TextButton(
               onPressed: () {
-                   WayaNav.goBack();
+                WayaNav.goBack();
                 view();
               },
               child: Text(
                 "View Moment",
                 textAlign: TextAlign.start,
-                style: TextStyle(
+                style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                   color: wayaTheme.colorScheme.customBlack,
                   fontSize: 14.sp,
+                  fontWeight: FontWeight.w500
                 ),
               ),
             ),

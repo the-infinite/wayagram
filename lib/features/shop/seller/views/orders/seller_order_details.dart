@@ -5,7 +5,11 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
+import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_order_detail_vm.dart';
@@ -20,10 +24,31 @@ class SellerOrderDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(sellerOrderDetailVmProvider);
+    final notifier = ref.read(conversationProvider.notifier);
+    final chatNotifier = ref.read(chatProvider.notifier);
 
     final wayaTheme = Theme.of(context);
 
     final Order? arg = ModalRoute.of(context)?.settings.arguments as Order?;
+
+    void chatWithUser() async {
+      //? This is fine.
+      notifier.startChat(ChatType.personal, [arg!.userId]).then(
+        (chat) {
+          //? Stop if we could not make this chat.
+          if (chat == null) return;
+
+          //? If we could make this chat...
+          chatNotifier.setChat(chat);
+          WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
+        },
+      ).catchError(
+        (_) {
+          //? Leave here.
+          //   WayaNav.goBack();
+        },
+      );
+    }
 
     return WayaScaffold(
         isLoading: false,
@@ -42,14 +67,14 @@ class SellerOrderDetails extends ConsumerWidget {
             const Gap(30),
             Text("Product Ordered", style: wayaTheme.textTheme.bodyMedium),
             const Gap(15),
-                    ListView.builder(
+            ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemCount: arg?.items.length,
                 itemBuilder: (context, index) {
                   CartProduct order = CartProduct(
-                      price: double.parse(arg?.items[index].price ?? '0')
-                              .toInt() ,
+                      price:
+                          double.parse(arg?.items[index].price ?? '0').toInt(),
                       quantity: arg?.items[index].quantity ?? 0,
                       productId: arg?.items[index].productId ?? '',
                       productName: arg?.items[index].productName ?? '',
@@ -78,38 +103,33 @@ class SellerOrderDetails extends ConsumerWidget {
                 description: WayaHelpers.formatDateString(
                     arg?.updatedAt.toIso8601String())),
             const Gap(8),
-            // OrderInfoWidget(
-            //     title: "Order Status",
-            //     description: arg?.deliveryType == 'Pickup'
-            //         ? arg?.pickupStatus ?? ""
-            //         : arg?.deliveryStatus ?? ""),
-            const Gap(8),
+
             OrderInfoWidget(
                 title: "Delivery Type", description: arg?.deliveryType ?? ''),
-            // const Gap(25),
-            // WayaButton(
-            //   centerWidget: Row(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     crossAxisAlignment: CrossAxisAlignment.center,
-            //     children: [
-            //       Icon(
-            //         Icons.chat_bubble_outline,
-            //         size: 28,
-            //         color: wayaTheme.colorScheme.customPrimary,
-            //       ),
-            //       const Gap(8),
-            //       Text(
-            //         "Send Message",
-            //         style: TextStyle().wayaCopyWith(
-            //             color: wayaTheme.colorScheme.customPrimary,
-            //             fontWeight: FontWeight.w600,
-            //             fontSize: 16),
-            //       ),
-            //     ],
-            //   ),
-            //   callback: () {},
-            //   color: wayaTheme.colorScheme.primar50,
-            // ),
+            const Gap(25),
+            WayaButton(
+              centerWidget: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.chat_bubble_outline,
+                    size: 28,
+                    color: wayaTheme.colorScheme.customPrimary,
+                  ),
+                  const Gap(8),
+                  Text(
+                    "Send Message",
+                    style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                        color: wayaTheme.colorScheme.customPrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16),
+                  ),
+                ],
+              ),
+              callback: chatWithUser,
+              color: wayaTheme.colorScheme.primary50,
+            ),
             Visibility(
               visible: arg?.deliveryType == 'Delivery',
               child: Column(
@@ -146,7 +166,17 @@ class SellerOrderDetails extends ConsumerWidget {
             //   },
             //   text: "Accept Order",
             // ),
-            if (arg?.deliveryType == 'Delivery')
+            if (  ((arg?.deliveryStatusHistory.isNotEmpty == true &&
+                            arg?.deliveryStatusHistory.last.status ==
+                                'completed') ||
+                        (arg?.pickupStatusHistory.isNotEmpty == true &&
+                            arg?.pickupStatusHistory.last.status ==
+                                'completed'))
+                                ) ... [
+    SizedBox.shrink()
+                                ]
+                                else ...[
+if (arg?.deliveryType == 'Delivery')
               WayaButton(
                 color: wayaTheme.colorScheme.transparent,
                 textColor: wayaTheme.colorScheme.greyColor900,
@@ -194,6 +224,8 @@ class SellerOrderDetails extends ConsumerWidget {
               },
               text: "Reject Order",
             )
+                                ]
+        
           ],
         ));
   }

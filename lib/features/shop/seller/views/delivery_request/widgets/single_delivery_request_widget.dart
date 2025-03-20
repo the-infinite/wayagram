@@ -103,6 +103,7 @@ class SingleDeliveryRequestViewModel extends ChangeNotifier {
 
   Future<void> addDeliveryDetail(
       BuildContext context, DeliveryRequestData data) async {
+    WayaNav.goBack();
     if (context.mounted) {
       await WayaUtils.showModalSheet(context,
           child: AddDeliveryDetails(data: data));

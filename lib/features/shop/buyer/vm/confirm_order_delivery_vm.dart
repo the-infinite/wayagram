@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/buyer/views/dialogs/review_product.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
+import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 
 final orderPinProvider = StateProvider<String>((ref) => '');
 
@@ -42,7 +43,7 @@ class ConfirmOrderDeliveryVm extends StateNotifier<States> {
     ref.read(orderPinProvider.notifier).state = '';
   }
 
-  Future<void> submitPins(BuildContext context, String shopId) async {
+  Future<void> submitPins(BuildContext context, Order order) async {
     final pin = ref.read(orderPinProvider);
 
     try {
@@ -70,7 +71,7 @@ class ConfirmOrderDeliveryVm extends StateNotifier<States> {
         state = state.copyWith(isLoading: false);
         await WayaUtils.showModalSheet(context,
             child: ReviewProduct(
-              shopId: shopId,
+              order: order,
             ));
       }
     } catch (error) {

@@ -139,7 +139,7 @@ class MyMomentWidget extends ConsumerWidget {
                         width: 3.w,
                       ),
                       Text(
-                        "${moment.totalViews} VIEWS",
+                        "${moment.totalViews} ${moment.totalViews > 1 ? 'VIEWS': 'VIEW'} ",
                         style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                       )
                     ],

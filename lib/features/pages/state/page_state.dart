@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:wayagram/features/pages/data/model/all_page_model.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
-import 'package:wayagram/features/pages/data/model/page_popular_post_model.dart';
-import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
-import 'package:wayagram/features/post/model/get_all_post.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
 
 import '../../post/model/share_model.dart';
@@ -17,8 +15,8 @@ class PageState {
   final TextEditingController pageDescription;
   final TextEditingController content;
   final List<PostImage> images;
-  final List<Docs>? fetchAllPostData;
-  final List<GetAllPostDocs>? getAllPost;
+  final List<PostModel>? fetchAllPostData;
+  final List<PostModel>? getAllPost;
   final List<Comments>? comments;
   final num? postCount;
   List<PagesUsersFollowDocs>? pagesUsersFollow;
@@ -26,7 +24,7 @@ class PageState {
   List<PagesUsersFollowDocs>? recommendedPages;
   List<AllPageModelDocs>? allPageModelDocs;
   List<GetPageMemberDocs>? getPageMemberDocs;
-  List<PagePopularPostDocs>? pagePopularPostDocs;
+  List<PostModel>? pagePopularPostDocs;
   final MediaUploadData? data;
   List<dynamic>? docs;
   final ShareModelData? shareModelData;
@@ -67,14 +65,14 @@ class PageState {
     TextEditingController? pageDescription,
     TextEditingController? content,
     List<PostImage>? images,
-    List<Docs>? fetchAllPostData,
-    List<GetAllPostDocs>? getAllPost,
+    List<PostModel>? fetchAllPostData,
+    List<PostModel>? getAllPost,
     List<PagesUsersFollowDocs>? pagesUsersFollow,
     List<PagesUsersFollowDocs>? myPages,
     List<PagesUsersFollowDocs>? recommendedPages,
     List<AllPageModelDocs>? allPageModelDocs,
     List<GetPageMemberDocs>? getPageMemberDocs,
-    List<PagePopularPostDocs>? pagePopularPostDocs,
+    List<PostModel>? pagePopularPostDocs,
     List<Comments>? comments,
     List<dynamic>? docs,
     MediaUploadData? data,

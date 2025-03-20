@@ -36,9 +36,9 @@ class SplashScreenVm extends StateNotifier<void> {
 
       //>  get a new auth token
       await getNewToken();
-      print("token refreshed");
       final response = await _profileRepo.getUserDataRepo(userId: userId);
 
+      //? This was fine so move forward.
       if (response.success) {
         UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
 
@@ -92,8 +92,11 @@ class SplashScreenVm extends StateNotifier<void> {
         }
 
         WayaNav.toNamed(BottomView.route);
-      } else {
-        WayaNav.toNamed(LoginCoverPage.route);
+      }
+      
+      //? Go 
+      else {
+        WayaNav.toNamed(WelcomeBackPage.route);
       }
     } catch (e) {
       WayaNav.toNamed(LoginCoverPage.route);

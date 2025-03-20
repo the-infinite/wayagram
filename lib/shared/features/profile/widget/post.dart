@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -18,16 +17,16 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/view/report_group_post.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:wayagram/features/post/model/post_reponse_model.dart';
 import 'package:wayagram/features/post/view/comment.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/shared/features/profile/logic/default.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class WayaPostWidget extends StatefulWidget {
-  final Post data;
+  final PostModel data;
   final int index;
   final bool padded;
 
@@ -137,7 +136,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                           children: [
                             //? The user's image.
                             ChatProfilePicture(
-                              user: widget.data.user,
+                              user: widget.data.user!,
                               radius: 20,
                               showActive: false,
                             ),
@@ -153,7 +152,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               children: [
                                 //* The user's name.
                                 Text(
-                                  widget.data.user.fullname,
+                                  widget.data.user!.fullname,
                                   style: wayaTheme.textTheme.bodyBold.copyWith(
                                     fontSize: 16.sp,
                                   ),
@@ -364,24 +363,44 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                   PostActionType(
                     text: '$liked ${liked <= 1 ? 'Like' : 'Likes'}',
                     image: WayaAssets.images.pages.like2.path,
-                    color: liked == 0 ? wayaTheme.colorScheme.greyColor500 : wayaTheme.colorScheme.primary,
-                    onPressed: () {
-                      //? Perform the action on the post.
-                      pageNotifier.likePost(context, postId: widget.data.id, userId: ConversationState.self.id).then(
-                        (result) {
-                          if (!result) return;
-                          setState(() {
-                            liked += 1;
-                          });
-                        },
-                      );
+                    color: widget.data.isLiked ? wayaTheme.colorScheme.primary : wayaTheme.colorScheme.greyColor500,
+                    onPressed: widget.data.isLiked
+                        ? () {
+                            //? Perform the action on the post.
+                            pageNotifier.unlikePost(context, postId: widget.data.id).then(
+                              (result) {
+                                if (!result) return;
+                                setState(() {
+                                  liked -= 1;
+                                });
+                              },
+                            );
 
-                      //? Persist this engagement action.
-                      postEngagement(engagementMonitor, widget.data, PostPoints.likedPoint.value);
+                            //? Persist this engagement action.
+                            postEngagement(engagementMonitor, widget.data, -PostPoints.likedPoint.value);
 
-                      // Notify all
-                      invalidate(serviceNotifier);
-                    },
+                            // Notify all
+                            invalidate(serviceNotifier);
+                          }
+                        : () {
+                            //? Perform the action on the post.
+                            pageNotifier
+                                .likePost(context, postId: widget.data.id, userId: ConversationState.self.id)
+                                .then(
+                              (result) {
+                                if (!result) return;
+                                setState(() {
+                                  liked += 1;
+                                });
+                              },
+                            );
+
+                            //? Persist this engagement action.
+                            postEngagement(engagementMonitor, widget.data, PostPoints.likedPoint.value);
+
+                            // Notify all
+                            invalidate(serviceNotifier);
+                          },
                   ),
 
                   //? The action button for comments.

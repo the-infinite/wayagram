@@ -6,6 +6,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/view/application_details.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
@@ -61,6 +62,7 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        filteredMyDonations.isEmpty ? ActivityLogsEmptyState(text: 'There is no applied donations yet'):
         SizedBox(
           height: Platform.isAndroid ? 560 : 460,
           child: ListView.builder(

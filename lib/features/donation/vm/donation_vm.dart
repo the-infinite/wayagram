@@ -95,7 +95,7 @@ class DonationVm extends StateNotifier<DonationState> {
     return startMinutes > endMinutes;
   }
 
-  Future<void> makeDonation(String campaignId, dynamic amount, String message, ctx) async {
+  Future<void> makeDonation(String campaignId, int amount, String message, ctx) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.donate(campaignId, amount, message);
@@ -298,7 +298,8 @@ class DonationVm extends StateNotifier<DonationState> {
 
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
-        state = state.copyWith(myDonationDocs: responseModel.data?.docs);
+        //state = state.copyWith(myDonationDocs: responseModel.data?.docs);
+        state = state.copyWith(approvedDonations: responseModel.data?.docs);
       } else {}
     } catch (e) {
       print(e);

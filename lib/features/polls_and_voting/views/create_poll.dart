@@ -228,7 +228,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                     ///
                     FormField<String>(validator: (value) {
                       if (viewModel.pollType.isEmpty) {
-                        return 'Poll  Type is required';
+                        return 'Poll Type is required';
                       }
 
                       return null;
@@ -320,7 +320,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 style: wayaTheme.textTheme.titleMedium),
                             const Gap(6),
                             Text(
-                              "Display number of votes per choice",
+                              "Hide number of votes per choice",
                               style: wayaTheme.textTheme.hintStyle,
                             )
                           ],
@@ -329,161 +329,6 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                     ),
                     const Gap(15),
 
-                   /* FormField<String>(
-                      validator: (value) {
-                        if (viewModel.startDate.isEmpty) {
-                          return 'Start Date is required';
-                        }
-                        return null;
-                      },
-                      builder: (formState) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Select Start Date",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.wayaCopyWith(
-                                  fontSize: 14,
-                                  color: wayaTheme.colorScheme.greyColor900,
-                                )),
-                            const Gap(4),
-                            WayaButton(
-                              callback: () {
-                                ref.read(createPollVotingProvider.notifier).showDatePickerDialog(context);
-                              },
-                              horizontalPadding: 0,
-                              color: wayaTheme.colorScheme.transparent,
-                              centerWidget: Focus(
-                                  onFocusChange: (hasFocus) {
-                                    ref.read(createPollVotingProvider.notifier).focusChanged(hasFocus);
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                            viewModel.startDate.isEmpty
-                                                ? 'DD/MM/YYYY'
-                                                : viewModel.startDate,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.wayaCopyWith(
-                                              fontSize: 14,
-                                              color: viewModel
-                                                  .startDate.isEmpty
-                                                  ? wayaTheme.colorScheme
-                                                  .greyColor300
-                                                  : wayaTheme.colorScheme
-                                                  .customBlack,
-                                            )),
-                                        Icon(
-                                          Icons.arrow_drop_down,
-                                          color:
-                                          wayaTheme.colorScheme.greyColor300,
-                                        )
-                                      ],
-                                    ),
-                                  )),
-                              border: Border.all(
-                                  width: 1,
-                                  color:
-                                  //viewModel.isFocused ? wayaTheme.colorScheme.customPrimary :
-                                  wayaTheme.colorScheme.greyColor300),
-                            ),
-                            if (formState.hasError &&
-                                viewModel.startDate.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
-                    const Gap(15),
-
-                    FormField<String>(
-                      validator: (value) {
-                        if (viewModel.endDate.isEmpty) {
-                          return 'End Date is required';
-                        }
-                        return null;
-                      },
-                      builder: (formState) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Select End Date",
-                                style: Theme.of(context).textTheme.bodyMedium
-                                    ?.wayaCopyWith(
-                                  fontSize: 14,
-                                  color: wayaTheme.colorScheme.greyColor900,
-                                )),
-                            const Gap(4),
-                            WayaButton(
-                              callback: () {
-                                ref.read(createPollVotingProvider.notifier).showDatePickerDialogTwo(context);
-                              },
-                              horizontalPadding: 0,
-                              color: wayaTheme.colorScheme.transparent,
-                              centerWidget: Focus(
-                                  onFocusChange: (hasFocus) {
-                                    ref.read(createPollVotingProvider.notifier).focusChanged(hasFocus);
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 10),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                            viewModel.endDate.isEmpty ? 'DD/MM/YYYY' : viewModel.endDate,
-                                            style: Theme.of(context).textTheme.bodyMedium
-                                                ?.wayaCopyWith(
-                                              fontSize: 14,
-                                              color: viewModel.endDate.isEmpty
-                                                  ? wayaTheme.colorScheme.greyColor300
-                                                  : wayaTheme.colorScheme.customBlack,
-                                            )),
-                                        Icon(
-                                          Icons.arrow_drop_down,
-                                          color: wayaTheme.colorScheme.greyColor300,
-                                        )
-                                      ],
-                                    ),
-                                  )),
-                              border: Border.all(
-                                  width: 1,
-                                  color:
-                                  //viewModel.isFocused ? wayaTheme.colorScheme.customPrimary :
-                                  wayaTheme.colorScheme.greyColor300),
-                            ),
-                            if (formState.hasError &&
-                                viewModel.endDate.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    ),*/
                     const Gap(10),
                     EventDateWidget(
                         uniqueKey: 'start-date',
@@ -505,6 +350,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                             .read(createPollVotingProvider.notifier)
                             .selectEndDate),
                     const Gap(10),
+                    viewModel.pollType == 'free' || viewModel.pollType.isEmpty ? Container():
                     FormField<String>(validator: (value) {
                       return null;
                     }, builder: (formState) {
@@ -557,10 +403,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 : null,
                             label: 'Number of times to vote',
                           ),
-                          if (formState.hasError &&
-                              viewModel.voteNumber.text.isEmpty
-
-                          )
+                          if (formState.hasError && viewModel.voteNumber.text.isEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(

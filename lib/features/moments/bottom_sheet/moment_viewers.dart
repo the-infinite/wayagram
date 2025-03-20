@@ -68,7 +68,8 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
                 child: Text(
                   "No Viewer",
                   style: TextStyle(
-                      color: wayaTheme.colorScheme.greyColor300, fontSize: 14.sp),
+                      color: wayaTheme.colorScheme.greyColor300,
+                      fontSize: 14.sp),
                 ),
               ),
             ),
@@ -105,9 +106,11 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
                 children: [
                   Stack(
                     children: [
-                      WayaDp(
-                        image: viewer.image,
-                        radius: 25,
+                      WayaImage(
+                        imageUrl: viewer.image ?? '',
+                        radius: BorderRadius.circular(50),
+                        width: 50,
+                        height: 50,
                       ),
                       if (viewer.likeMoment)
                         Positioned(

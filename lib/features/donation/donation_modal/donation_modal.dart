@@ -325,9 +325,13 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
       await ref.read(donationVmProvider.notifier).verifyWalletPin(_pin, context);
 
       if (isPass) {
-        WayaNav.goBack();
+        //WayaNav.goBack();
+        print('DOANTION AMOUNT ${widget.amount}');
        await ref.watch(donationVmProvider.notifier)
-            .makeDonation(widget.campaignId, widget.amount, widget.campaignTitle, context);
+            .makeDonation(widget.campaignId,
+          int.parse( widget.amount),
+           //widget.amount,
+           widget.campaignTitle, context);
         WayaUtils.showModalSheet(
           context,
           child: DonationGenerosityModal(),
@@ -353,6 +357,7 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
 
   @override
   Widget build(BuildContext context) {
+    print('DARLINGTON AMOUNT ${widget.amount}');
     final viewModel = ref.watch(donationVmProvider.notifier);
     return Container(
       height: 490.h,
@@ -560,7 +565,7 @@ class _DonationUnSuccessfulModalState extends ConsumerState<DonationUnSuccessful
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
                   color: Theme.of(context).colorScheme.black),
-              textAlign: TextAlign.center,
+                  textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
             Text(
@@ -621,13 +626,18 @@ class _DonationGenerosityModalState extends ConsumerState<DonationGenerosityModa
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 24.sp,
                   fontWeight: FontWeight.w700,
+                  fontFamily: WayaConstants.fontFamily,
                   color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
             Text(
               "Your donation has been successfully processed. Together, we're making a difference!",
-              style: wayaTheme.textTheme.hintStyle,
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 16.sp,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: WayaConstants.fontFamily,
+                  color: Theme.of(context).colorScheme.greyColor500),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 30.h),

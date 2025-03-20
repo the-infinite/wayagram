@@ -1,5 +1,6 @@
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/review_repsonse_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_metrics_response_model.dart';
 
 class ShopState {
@@ -11,6 +12,7 @@ class ShopState {
   final bool isReviewing;
   final List<Product> products;
   final ShopMetricsData? sellerMetrics;
+  final List<ReviewData> reviews;
 
   ShopState(
       {this.categories = const [],
@@ -19,6 +21,7 @@ class ShopState {
       this.products = const [],
       this.searchQuery = '',
       this.sellerMetrics,
+      this.reviews = const [],
       this.isReviewing = false,
       this.totalNoOfCategoryPages = 1});
 
@@ -29,12 +32,14 @@ class ShopState {
       List<Product>? products,
       String? searchQuery,
       ShopMetricsData? sellerMetrics,
+      List<ReviewData>? reviews,
       bool? isReviewing,
       int? totalNoOfCategoryPages}) {
     return ShopState(
         categories: categories ?? this.categories,
         isReviewing: isReviewing ?? this.isReviewing,
         selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
+        reviews: reviews ?? this.reviews,
         totalNoOfCategoryPages:
             totalNoOfCategoryPages ?? this.totalNoOfCategoryPages,
         searchQuery: searchQuery ?? this.searchQuery,
