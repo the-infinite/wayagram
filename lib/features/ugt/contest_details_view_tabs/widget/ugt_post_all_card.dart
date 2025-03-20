@@ -263,10 +263,10 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                               height: 35,
                               child: Center(
                                   child: Icon(
-                                Icons.thumb_up_alt,
+                               widget.post.hasLiked == true? Icons.thumb_up_alt:Icons.thumb_up_alt_outlined,
                                 color: widget.post.hasLiked == true
-                                    ? wayaTheme.colorScheme.primary
-                                    : null,
+                                     ? wayaTheme.colorScheme.primary
+                                : wayaTheme.colorScheme.greyColor500,
                               )),
                             ),
                             const Gap(3),

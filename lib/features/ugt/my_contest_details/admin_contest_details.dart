@@ -242,7 +242,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   UpcomingWidgetAdmin(
-                      title: "Total Stages",
+                      title: "Multiple Stages",
                       content: model?.multipleStages ?? ""),
                   const Gap(20),
                   UpcomingWidgetAdmin(
