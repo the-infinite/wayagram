@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/ugt/data/model/context_for_you_state.dart';
+import 'package:wayagram/features/ugt/data/model/single_contestant_profile.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 
@@ -57,6 +58,35 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
     } finally {
       isLoading = false;
     }
+  }
+
+  Future<void> fetchSingleContest(WidgetRef ref, String contestId) async {
+    try {
+      final response = await _contestRepository.fetchSingleContest(contestId);
+      Contest? contest;
+      if (response.success) {
+        ContestResponse responseModel = ContestResponse.fromJson(response.data);
+        contest = responseModel.data?.docs?.first;
+        ref.read(selectedContestProvider.notifier).state = contest;
+      }
+      // return contestList;
+    } finally {}
+  }
+
+  Future<SingleContestProfileBase?> fetchSingleContestantDetails(
+      String contestId, String contestantProfileId) async {
+    try {
+      final response = await _contestRepository.fetchSingleContestantDetails(
+          contestId, contestantProfileId);
+    //  SingleContestProfile? contest;
+      if (response.success) {
+        SingleContestProfileBase responseModel =
+            SingleContestProfileBase.fromJson(response.data);
+        return responseModel;
+      }
+      // return contestList;
+    } finally {}
+    return null;
   }
 
   // Toggle Like
