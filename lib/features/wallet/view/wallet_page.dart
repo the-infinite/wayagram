@@ -7,6 +7,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_history.dart';
+import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
 import 'package:wayagram/features/wallet/view/components/wallet_cards.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
@@ -18,6 +19,15 @@ class WalletPage extends ConsumerStatefulWidget {
 }
 
 class _WalletPageState extends ConsumerState<WalletPage> {
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.watch(transactionVmProvider.notifier).getTransaction();
+    });
+
+  }
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
