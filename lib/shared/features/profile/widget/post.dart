@@ -1,13 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -58,13 +55,6 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
     super.dispose();
   }
 
-  Future<void> _launchUrl(String link) async {
-    final Uri url = Uri.parse(link);
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
-    }
-  }
-
   Future<void> invalidate(ServicesProvider notifier) async {
     // notifier.getEngagedPost(); Not considered for now
   }
@@ -74,6 +64,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
       transition: Transition.downToUp,
       PostCommentsWidget(
         id: widget.data.id,
+        post: widget.data,
       ),
     );
 
@@ -398,42 +389,12 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                   ),
 
                   //? For the post description.
-                  ReadMoreText(
+                  WayaCollapsibleText(
                     removeHashtags('${widget.data.content.capitalizeFirst}'),
-                    style: TextStyle(
-                      fontFamily: WayaConstants.fontFamily,
+                    maxLines: 2,
+                    fontSize: 14.sp,
+                    style: wayaTheme.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w400,
-                      fontSize: 14.sp,
-                    ),
-                    trimLines: 2,
-                    annotations: [
-                      Annotation(
-                        regExp: RegExp(r'((https?:\/\/)?([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(\/[^\s]*)?)'),
-                        spanBuilder: ({required String text, TextStyle? textStyle}) => TextSpan(
-                          text: text,
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
-                              decorationColor: Colors.blue),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async {
-                              final String fullUrl = text.startsWith('http') ? text : 'https://$text';
-                              _launchUrl(fullUrl);
-                            },
-                        ),
-                      ),
-                    ],
-                    colorClickableText: Colors.blue,
-                    trimMode: TrimMode.Line,
-                    trimCollapsedText: "read more",
-                    trimExpandedText: "show less",
-                    moreStyle: const TextStyle(color: Colors.blue),
-                    lessStyle: wayaTheme.textTheme.bodyLarge?.copyWith(
-                      color: wayaTheme.colorScheme.primary,
-                      fontFamily: WayaConstants.fontFamily,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14.sp,
                     ),
                   ),
 
@@ -564,7 +525,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                 children: [
                   //? For liking a post.
                   PostActionType(
-                    text: '$liked ${liked <= 1 ? 'Like' : 'Likes'}',
+                    text: '${WayaValueHelper.formatNumber(liked)} ${liked <= 1 ? 'Like' : 'Likes'}',
                     image: WayaAssets.images.pages.like2.path,
                     color: widget.data.isLiked ? wayaTheme.colorScheme.primary : wayaTheme.colorScheme.greyColor500,
                     onPressed: widget.data.isLiked
@@ -608,7 +569,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
                   //? The action button for comments.
                   PostActionType(
-                    text: '$comment Comments',
+                    text: '${WayaValueHelper.formatNumber(comment)} Comments',
                     image: WayaAssets.images.pages.comment2.path,
                     color: comment == 0 ? wayaTheme.colorScheme.greyColor500 : wayaTheme.colorScheme.primary,
                     onPressed: () {
@@ -624,7 +585,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
                   //? For sharing a post.
                   PostActionType(
-                    text: '$shared Shares',
+                    text: '${WayaValueHelper.formatNumber(shared)} Shares',
                     image: WayaAssets.images.pages.share2.path,
                     color: shared == 0 ? wayaTheme.colorScheme.greyColor500 : wayaTheme.colorScheme.primary,
                     onPressed: () => _sharePost(engagementMonitor, pageNotifier, serviceNotifier),

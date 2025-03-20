@@ -85,10 +85,10 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/posts?postId=$postId&status=active");
   }
 
-  Future<WayaRequestResponse> commentOnPost(postId, content) {
+  Future<WayaRequestResponse> commentOnPost(String postId, String content, String? parentCommentId) {
     final payload = {
       "content": content,
-      //"parentCommentId": postId // this is optional and is only required for child comment.
+      if (parentCommentId != null) "parentCommentId": parentCommentId,
     };
     return post("$serviceUrl/posts/comments/$postId", payload);
   }
@@ -131,7 +131,19 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> deleteComment(String commentId) async {
-    return delete("$serviceUrl/posts/$commentId/comment");
+    return delete("$serviceUrl/posts/comments/$commentId");
+  }
+
+  Future<WayaRequestResponse> likeComment(String commentId) async {
+    return post("$serviceUrl/posts/comments/likes/$commentId", {});
+  }
+
+  Future<WayaRequestResponse> unlikeComment(String commentId) async {
+    return delete("$serviceUrl/posts/comments/likes/$commentId");
+  }
+
+  Future<WayaRequestResponse> editComment(String commentId, String content) async {
+    return patch("$serviceUrl/posts/comments/$commentId", {"content": content});
   }
 
   Future<WayaRequestResponse> getFollowing() {

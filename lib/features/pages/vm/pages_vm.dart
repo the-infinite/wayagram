@@ -73,6 +73,18 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
+  void clearText() {
+    state.content.clear();
+  }
+
+  String getText() {
+    return state.content.text;
+  }
+
+  void setText(String text) {
+    state.content.text = text;
+  }
+
   Future<void> unsavePost(BuildContext context, String postId) async {
     try {
       final response = await _pageRepository.delete(postId);
@@ -480,9 +492,9 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  Future<void> commentOnPost(String postId, String content) async {
+  Future<void> commentOnPost(String postId, String content, [String? parentId]) async {
     try {
-      final response = await _pageRepository.commentOnPost(postId, content);
+      final response = await _pageRepository.commentOnPost(postId, content, parentId);
       if (response.statusCode == 200 || response.statusCode == 201) {
         getCommentsStream(postId);
       }
@@ -697,7 +709,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  FutureOr<List<Comments>> getComments(String postId) async {
+  FutureOr<List<CommentModel>> getComments(String postId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.getComment(postId);
@@ -707,7 +719,7 @@ class PageVm extends StateNotifier<PageState> {
         //print("uri: ${response.realUri}");
         final data = response.data["comments"] as List;
 
-        final comment = data.map((json) => Comments.fromJson(json)).toList();
+        final comment = data.map((json) => CommentModel.fromJson(json)).toList();
         // _isLoading = false;
 
         return comment;
@@ -722,7 +734,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<List<Comments>> getCommentsStream(String postId) async {
+  Future<List<CommentModel>> getCommentsStream(String postId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.getComment(postId);

@@ -27,22 +27,28 @@ class SingleGroupWidget extends StatefulWidget {
 
 class _SingleGroupWidgetState extends State<SingleGroupWidget> {
   final loadingController = ValueNotifier(false);
+  late final followerCount = ValueNotifier(widget.group.memberCount);
 
   @override
   void dispose() {
     loadingController.dispose();
+    followerCount.dispose();
     super.dispose();
   }
 
   Future<void> _joinGroup() async {
     //? Then leave the group.
     if (myGroupNotifier.isMemberOf(widget.group.id)) {
-      await myGroupNotifier.leaveGroup(widget.group.id);
+      if (await myGroupNotifier.leaveGroup(widget.group.id)) {
+        followerCount.value = followerCount.value - 1;
+      }
     }
 
     //? Then, join the group.
     else {
-      await myGroupNotifier.joinGroup(widget.group.id);
+      if (await myGroupNotifier.joinGroup(widget.group.id)) {
+        followerCount.value = followerCount.value + 1;
+      }
     }
   }
 
@@ -88,12 +94,15 @@ class _SingleGroupWidgetState extends State<SingleGroupWidget> {
             Gap(3.h),
 
             //? Third, member count.
-            Text(
-              "${WayaValueHelper.formatNumber(widget.group.memberCount)} members",
-              style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w400,
-                color: wayaTheme.colorScheme.greyColor500,
+            ValueListenableBuilder(
+              valueListenable: followerCount,
+              builder: (context, count, _) => Text(
+                "${WayaValueHelper.formatNumber(count)} members",
+                style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: wayaTheme.colorScheme.greyColor500,
+                ),
               ),
             ),
 
@@ -206,12 +215,15 @@ class _SingleGroupWidgetState extends State<SingleGroupWidget> {
                   color: wayaTheme.colorScheme.black,
                 ),
               ),
-              subtitle: Text(
-                "${WayaValueHelper.formatNumber(widget.group.memberCount)} members",
-                style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
-                  color: wayaTheme.colorScheme.greyColor500,
+              subtitle: ValueListenableBuilder(
+                valueListenable: followerCount,
+                builder: (context, count, _) => Text(
+                  "${WayaValueHelper.formatNumber(count)} members",
+                  style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: wayaTheme.colorScheme.greyColor500,
+                  ),
                 ),
               ),
             ),
