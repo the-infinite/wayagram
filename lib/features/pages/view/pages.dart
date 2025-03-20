@@ -9,7 +9,6 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/pages/view/pages_for_you.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
-import '../../bottom_view/bottom_view.dart';
 import 'following_page.dart';
 import 'manage_pages.dart';
 
@@ -30,10 +29,6 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
     final viewModel = ref.watch(createPageProvider);
 
     return WayaScaffold(
-      onTapBackButton: () {
-        WayaNav.toNamed("/explore");
-        // WayaNav.toNamed( BottomView.route, arguments: 0);
-      },
       isLoading: viewModel.isLoading,
       isScrollable: true,
       title: 'Pages',
@@ -72,7 +67,11 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
             ],
           ),
           const Gap(20),
-          _selectedIndex == 0 ? PagesForYou() : _selectedIndex == 1 ? FollowingPage() : ManagePages()
+          _selectedIndex == 0
+              ? PagesForYou()
+              : _selectedIndex == 1
+                  ? FollowingPage()
+                  : ManagePages()
         ],
       ),
       floatingActionButton: SizedBox(

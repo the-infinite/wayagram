@@ -47,6 +47,16 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
   late int comment = widget.data.commentCount;
   late int liked = widget.data.likeCount;
   late int shared = widget.data.shareCount;
+  late final videoControllers = widget.data.media.map((_) => WayaVideoController()).toList();
+
+  @override
+  void dispose() {
+    //? Dispose the older video controllers
+    for (final controller in videoControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
 
   Future<void> _launchUrl(String link) async {
     final Uri url = Uri.parse(link);
@@ -127,52 +137,185 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.data.userId));
-                        },
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //? The user's image.
-                            ChatProfilePicture(
-                              user: widget.data.user!,
-                              radius: 20,
-                              showActive: false,
-                            ),
+                      if (widget.data.group != null)
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            widget.data.group?.isPrivate == true
+                                ? WayaNav.toNamed('/privateGroup', arguments: {
+                                    'memberCount': '${widget.data.group?.memberCount}',
+                                    'name': widget.data.group?.name,
+                                    'url': '${widget.data.group?.url}',
+                                    'desc': widget.data.group?.description,
+                                    'coverImage': '${widget.data.group?.coverImage}',
+                                    'profileImage': '${widget.data.group?.profileImage}',
+                                    'groupId': widget.data.group?.id,
+                                  })
+                                : WayaNav.toNamed(
+                                    '/publicGroup',
+                                    arguments: {
+                                      'memberCount': '${widget.data.group?.memberCount}',
+                                      'name': widget.data.group?.name,
+                                      'url': '${widget.data.group?.url}',
+                                      'desc': widget.data.group?.description,
+                                      'coverImage': '${widget.data.group?.coverImage}',
+                                      'profileImage': '${widget.data.group?.profileImage}',
+                                      'groupId': widget.data.group?.id
+                                    },
+                                  );
+                          },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //? The user's image.
+                              WayaDp(
+                                image: widget.data.group?.profileImage ?? widget.data.group?.coverImage,
+                                isSelf: false,
+                                radius: 20,
+                              ),
 
-                            // Space.
-                            SizedBox(width: 10.w),
+                              // Space.
+                              SizedBox(width: 10.w),
 
-                            //? The user's name and configuration information.
-                            Column(
-                              // mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              spacing: 3,
-                              children: [
-                                //* The user's name.
-                                Text(
-                                  widget.data.user!.fullname,
-                                  style: wayaTheme.textTheme.bodyBold.copyWith(
-                                    fontSize: 16.sp,
+                              //? The user's name and configuration information.
+                              Column(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 3,
+                                children: [
+                                  //* The user's name.
+                                  Text(
+                                    widget.data.group!.name,
+                                    style: wayaTheme.textTheme.bodyBold.copyWith(
+                                      fontSize: 16.sp,
+                                    ),
                                   ),
-                                ),
 
-                                //* When the user joined
-                                Text(
-                                  formatTimeAgo('${widget.data.createdAt}'),
-                                  style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: wayaTheme.colorScheme.greyColor500,
+                                  //* When the user joined
+                                  Text(
+                                    formatTimeAgo('${widget.data.createdAt}'),
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: wayaTheme.colorScheme.greyColor500,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      else if (widget.data.page != null)
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            widget.data.page?.isPublic == true
+                                ? WayaNav.toNamed('/publicPage', arguments: {
+                                    'pageId': widget.data.page?.id,
+                                    'followerCount': '${widget.data.page?.followerCount}',
+                                    'name': widget.data.page?.name,
+                                    'desc': widget.data.page?.description,
+                                    'coverImage': '${widget.data.page?.coverImage}',
+                                    'profileImage': '${widget.data.page?.profileImage}',
+                                  })
+                                : WayaNav.toNamed(
+                                    '/privatePage',
+                                    arguments: {
+                                      'pageId': widget.data.page?.id,
+                                      'followerCount': '${widget.data.page?.followerCount}',
+                                      'name': widget.data.page?.name,
+                                      'desc': widget.data.page?.description,
+                                      'coverImage': '${widget.data.page?.coverImage}',
+                                      'profileImage': '${widget.data.page?.profileImage}',
+                                    },
+                                  );
+                          },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //? The user's image.
+                              WayaDp(
+                                image: widget.data.page?.profileImage ?? widget.data.page?.coverImage,
+                                isSelf: false,
+                                radius: 20,
+                              ),
+
+                              // Space.
+                              SizedBox(width: 10.w),
+
+                              //? The user's name and configuration information.
+                              Column(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 3,
+                                children: [
+                                  //* The user's name.
+                                  Text(
+                                    widget.data.page!.name,
+                                    style: wayaTheme.textTheme.bodyBold.copyWith(
+                                      fontSize: 16.sp,
+                                    ),
+                                  ),
+
+                                  //* When the user joined
+                                  Text(
+                                    formatTimeAgo('${widget.data.createdAt}'),
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: wayaTheme.colorScheme.greyColor500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.data.userId)),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //? The user's image.
+                              ChatProfilePicture(
+                                user: widget.data.user!,
+                                radius: 20,
+                                showActive: false,
+                              ),
+
+                              // Space.
+                              SizedBox(width: 10.w),
+
+                              //? The user's name and configuration information.
+                              Column(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 3,
+                                children: [
+                                  //* The user's name.
+                                  Text(
+                                    widget.data.user!.fullname,
+                                    style: wayaTheme.textTheme.bodyBold.copyWith(
+                                      fontSize: 16.sp,
+                                    ),
+                                  ),
+
+                                  //* When the user joined
+                                  Text(
+                                    formatTimeAgo('${widget.data.createdAt}'),
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: wayaTheme.colorScheme.greyColor500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
 
                       // Space
                       const Spacer(),
@@ -328,43 +471,88 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
             ),
 
             //? If this has any kind of media here...
-            widget.data.media.isEmpty
-                ? Container()
-                : SizedBox(
-                    height: 200, // Adjust based on your image size
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal, // Enables horizontal scrolling
-                      itemCount: widget.data.media.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () async{
-                            final result = await WayaNav.to(
-                              transition: Transition.downToUp,
-                              WayaImageDetailScreen(
-                                file: null,
-                                imageUrl: widget.data.media[index],
-                              ),
-                            );
+            if (widget.data.media.isEmpty)
+              Container()
+            else
+              SizedBox(
+                height: 200, // Adjust based on your image size
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal, // Enables horizontal scrolling
+                  itemCount: widget.data.media.length,
+                  itemBuilder: (context, index) {
+                    final resource = widget.data.media[index];
+                    final controller = videoControllers[index];
 
-                            //? Do nothing.
-                            if (result == null) return;
-                          },
-                          child: Padding(
-                            padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10), // Optional: rounded corners
-                              child: WayaImage(
-                                imageUrl: widget.data.media[index],
-                                fit: BoxFit.cover,
-                                width: screenSize.width - (widget.padded ? 15 : 0), // Adjust width for better display
-                                height: 200, // Matches the container height
+                    //? This is fine.
+                    if (WayaFileExtensions.videos.contains(WayaFileHelper.getFileExtension(resource))) {
+                      return Container(
+                        height: 200.h,
+                        width: screenSize.width * 0.90,
+                        padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: Stack(
+                            children: [
+                              //? First, the video itself.
+                              WayaVideoWidget.networkUrl(
+                                Uri.parse(resource),
+                                controller: controller,
+                                controls: WayaVideoControls.none,
                               ),
-                            ),
+
+                              //? Now, that special thing on top that tells you it is playable.
+                              Positioned.fill(
+                                child: Center(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white.withOpacity(0.7),
+                                    ),
+                                    padding: EdgeInsets.all(8),
+                                    child: Icon(
+                                      Icons.play_arrow,
+                                      size: 30,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    //? Return this one.
+                    return GestureDetector(
+                      onTap: () async {
+                        final result = await WayaNav.to(
+                          transition: Transition.downToUp,
+                          WayaImageDetailScreen(
+                            file: null,
+                            imageUrl: resource,
                           ),
                         );
+
+                        //? Do nothing.
+                        if (result == null) return;
                       },
-                    ),
-                  ),
+                      child: Padding(
+                        padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: WayaImage(
+                            imageUrl: resource,
+                            fit: BoxFit.cover,
+                            width: screenSize.width - (widget.padded ? 15.w : 0),
+                            height: 200.h,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
 
             //? Post actions: Like, Comment, Repost, Share
             Padding(
