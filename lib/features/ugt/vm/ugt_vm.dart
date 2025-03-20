@@ -342,6 +342,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       "profilePhoto": imageUrl
     };
 
+    //print("My Map $map");
     final response = await _contestRepository.editProfile(id, map);
 
     isLoading.value = false;

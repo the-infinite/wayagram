@@ -15,6 +15,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
 import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
@@ -63,6 +64,13 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
     // final selectedUniversity = useState("");
     final selectedState = useState("");
     final isLoading = useState(false);
+    useEffect(() {
+      notifier.fullName.text = ConversationState.self.fullname;
+      notifier.emailAddress.text = ConversationState.self.email ?? "";
+      notifier.address.text = ConversationState.self.address ?? "";
+      notifier.phoneNumber.text = ConversationState.self.phoneNumber ?? "";
+      return null;
+    }, []);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -96,6 +104,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     controller: notifier.fullName,
                     hintText: "Enter Full Name",
                     label: "Full Name",
+                    isReadOnly: true,
                     borderColor:
                         formState.hasError && notifier.fullName.text.isEmpty
                             ? wayaTheme.colorScheme.error
@@ -139,6 +148,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     keyboardType: TextInputType.emailAddress,
                     controller: notifier.emailAddress,
                     hintText: 'example@gmail.com',
+                    isReadOnly: true,
                     borderColor:
                         formState.hasError && notifier.emailAddress.text.isEmpty
                             ? wayaTheme.colorScheme.error
@@ -173,6 +183,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     controller: notifier.address,
                     hintText: "Enter Address here",
                     label: "Address",
+                    isReadOnly: true,
                     borderColor:
                         formState.hasError && notifier.address.text.isEmpty
                             ? wayaTheme.colorScheme.error
@@ -199,7 +210,6 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
               if (notifier.phoneNumber.text.length != 11) {
                 return 'Phone enter a valid number';
               }
-              
 
               return null;
             }, builder: (formState) {
@@ -250,6 +260,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                           keyboardType: TextInputType.phone,
                           controller: notifier.phoneNumber,
                           hintText: '000-000-000',
+                          isReadOnly: true,
                           borderColor: formState.hasError &&
                                   notifier.phoneNumber.text.isEmpty
                               ? wayaTheme.colorScheme.error

@@ -47,9 +47,12 @@ class _UpcomingContestDetailsState
               model?.id ?? "", viewModel.getLoggedInUserId())
           .then((model) {
         if (model != null) {
+          print("i am here");
           if (model.data?.totalDocs == 1) {
+            print("i am here 2");
             if (model.data?.docs?.first.profilePhoto != null &&
                 model.data?.docs?.first.bio != null) {
+              print("i am here 3");
               hasProfile.value = true;
             }
           }
@@ -205,9 +208,8 @@ class _UpcomingContestDetailsState
                   callback: () {
                     //? if user has a profile
                     if (hasProfile.value) {
-                        ref.read(selectedContestProvider.notifier).state =
-                        model;
-                    WayaNav.toNamed('/upcoming-manage-contest-details');
+                      ref.read(selectedContestProvider.notifier).state = model;
+                      WayaNav.toNamed('/upcoming-manage-contest-details');
                       return;
                     }
                     ivalidateUGTVM(ref);
