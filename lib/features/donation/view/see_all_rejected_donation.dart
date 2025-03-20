@@ -90,7 +90,7 @@ class _SeeAllRejectedDonationsState extends ConsumerState<SeeAllRejectedDonation
                               endDate: ref.read(createPollVotingProvider.notifier).formatDonationDate('${donation.expirationDate}'),
                               targetAmount:'${donation.targetAmount?.replaceAll('.00', '')}',
                               amountRaised: '${donation.amountRaised?.replaceAll('.00', '')}',
-                              status: donation.status == 'pending_approval'?'Pending':donation.status =='approved'?'Accepted':'Rejected',
+                              status: 'Rejected',
                               privacy: '${donation.privacy}',
                               showRaised: donation.showRaised == true?'YES':'NO',
                               url: '${donation.url}',

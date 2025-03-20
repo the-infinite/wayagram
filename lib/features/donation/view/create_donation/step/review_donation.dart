@@ -122,10 +122,10 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
                 viewModel.statement.text,
                 viewModel.targetAmount.text,
                 viewModel.minimumDonationAmount.text,
-                //'public',
                 viewModel.privacyOption,
                 viewModel.endDate,
-                viewModel.donationImage, viewModel.startDate, context: context);
+                viewModel.donationImage, viewModel.startDate,
+                viewModel.category, context: context);
 
             //donation.reset();
           }

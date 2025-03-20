@@ -38,7 +38,7 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      //ref.read(donationVmProvider.notifier).getMyDonation();
+      ref.read(donationVmProvider.notifier).getDonatedDonation;
       ref.read(donationVmProvider.notifier).getMyKYC();
       ref.read(donationVmProvider.notifier).getHostedDonation();
       ref.read(donationVmProvider.notifier).getAppliedDonation();
