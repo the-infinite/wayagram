@@ -36,7 +36,16 @@ class DonationVm extends StateNotifier<DonationState> {
   final _logger = getLogger('DonationVm');
   DonationVm(this._secureDataSource, this._donationRepository,
       this.ref, this._uploadFileRepository, this._setupState)
-      : super(DonationState());
+      : super(DonationState()){
+    state = state.copyWith(title: TextEditingController(text: ''));
+    state = state.copyWith(description: TextEditingController(text: ''));
+    state = state.copyWith(solution: TextEditingController(text: ''));
+    state = state.copyWith(statement: TextEditingController(text: ''));
+    state = state.copyWith(targetAmount: TextEditingController(text: ''));
+    state = state.copyWith(minimumDonationAmount: TextEditingController(text: ''));
+    state = state.copyWith(details: TextEditingController(text: ''));
+
+  }
 
   void reset() {
     state = DonationState();
@@ -263,7 +272,9 @@ class DonationVm extends StateNotifier<DonationState> {
     }
   }
 
-  Future<void> onSubmit(title, description, solution, impact, targetAmount, minimumAmount, privacy, expirationDate, image, startDate, category, {required BuildContext context}) async {
+  Future<void> onSubmit(title, description, solution, impact, targetAmount, minimumAmount, privacy, expirationDate, image, startDate,
+      category,
+      {required BuildContext context}) async {
     try {
       // validate image
       if (state.donationImage.isEmpty) {
@@ -302,7 +313,9 @@ class DonationVm extends StateNotifier<DonationState> {
       final response = await _donationRepository.createCampaign(title, description,
           solution, impact,
           targetAmount, minimumAmount,
-          privacy, expirationDate, image!, startDate, category);
+          privacy, expirationDate, image!, startDate,
+          category
+      );
 
 
       if (response.success) {

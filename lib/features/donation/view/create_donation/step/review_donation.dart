@@ -93,7 +93,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
         const Gap(10),
     _reviewText('Impact Statement', '${viewModel.statement.text.capitalizeFirst}'),
         const Gap(10),
-    _reviewText('Target Amount', WayaHelpers.formatPrice(int.parse(viewModel.targetAmount.text))),
+    _reviewText('Target Amount', WayaHelpers.formatPrice(int.tryParse(viewModel.targetAmount.text) ??0)),
         const Gap(10),
         Row(children: [
           _reviewText('Start Date', viewModel.startDate),
@@ -116,8 +116,9 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
         WayaButton(
           callback: !viewModel.isLoading
               ? ()  async{
-            donation.onSubmit(
-                viewModel.title.text, viewModel.description.text,
+           await donation.onSubmit(
+                viewModel.title.text,
+                viewModel.description.text,
                 viewModel.solution.text,
                 viewModel.statement.text,
                 viewModel.targetAmount.text,
@@ -125,9 +126,10 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
                 viewModel.privacyOption,
                 viewModel.endDate,
                 viewModel.donationImage, viewModel.startDate,
-                viewModel.category, context: context);
+                viewModel.category,
+                context: context);
 
-            //donation.reset();
+            donation.reset();
           }
               : null,
           centerWidget: LoadingState(
@@ -142,7 +144,8 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              widget.gotoPreviousTab();
+              WayaNav.goBack();
+              //widget.gotoPreviousTab();
             })
       ],
     );

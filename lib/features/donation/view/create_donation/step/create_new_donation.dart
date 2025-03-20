@@ -41,7 +41,13 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
       children: [
         Text("Create a New Donation", style: wayaTheme.textTheme.titleLarge),
         const Gap(5),
-        Text("Start by selecting the basic details about your donation", style: wayaTheme.textTheme.hintStyle),
+        Text("Start by selecting the basic details about your donation",
+            style: wayaTheme.textTheme.hintStyle.copyWith(
+              color: wayaTheme.colorScheme.greyColor500,
+              fontSize: 16.sp,
+              fontFamily: WayaConstants.fontFamily,
+              fontWeight: FontWeight.w400,
+            )),
         const Gap(30),
         Form(
             key: _formKey,
