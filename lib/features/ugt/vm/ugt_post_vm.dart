@@ -13,21 +13,22 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
   ContestForYou(this._contestRepository, this._localDataSource)
       : super(ContextForYouState(page: 1));
 
-  int _page = 1; // Pagination tracking
   bool isLoading = false;
 
-  // Simulate fetching paginated posts
+  //? Simulate fetching paginated posts
   Future<void> fetchContestForYou(bool isFirst) async {
-    if (isFirst) {
-      state = state.copyWith(page: 1);
-    }
-    if (state.isLastPage) {
-      return;
-    }
-    if (state.isLoading == true) {
-      return;
-    }
-    state = state.copyWith(isLoading: true);
+    try {
+      if (isFirst) {
+        state = state.copyWith(page: 1);
+      }
+      if (state.isLastPage) {
+        return;
+      }
+      if (state.isLoading == true) {
+        return;
+      }
+      state = state.copyWith(isLoading: true);
+    } catch (e) {}
 
     try {
       final response = await _contestRepository.getContestForYou(state.page);
@@ -48,16 +49,13 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
         }
         state = state.copyWith(page: state.page + 1);
 
-        _page++;
         state = state.copyWith(isLoading: false);
       }
       // return contestList;
     } catch (e) {
       state = state.copyWith(isLoading: false);
       print(e);
-    } finally {
-      isLoading = false;
-    }
+    } finally {}
   }
 
   Future<void> fetchSingleContest(WidgetRef ref, String contestId) async {
@@ -78,7 +76,7 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
     try {
       final response = await _contestRepository.fetchSingleContestantDetails(
           contestId, contestantProfileId);
-    //  SingleContestProfile? contest;
+      //  SingleContestProfile? contest;
       if (response.success) {
         SingleContestProfileBase responseModel =
             SingleContestProfileBase.fromJson(response.data);
