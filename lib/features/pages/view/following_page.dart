@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/widget/page.dart';
 
 class FollowingPage extends ConsumerStatefulWidget {
@@ -23,30 +23,25 @@ class _FollowingPageState extends ConsumerState<FollowingPage> with SingleTicker
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPageProvider.notifier).getPagesUserFollows();
+      myPageNotifier.getPagesUserFollows();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(createPageProvider);
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        viewModel.pagesUsersFollow!.isEmpty
-            ? PageEmptyState()
-            : ListView.builder(
-                padding: EdgeInsets.only(bottom: 40),
-                shrinkWrap: true,
-                itemCount: viewModel.pagesUsersFollow?.length ?? 0,
-                itemBuilder: (_, index) => SinglePageWidget(
-                  page: viewModel.pagesUsersFollow![index],
-                  index: index,
-                ),
+    return ValueListenableBuilder(
+      valueListenable: myPageNotifier,
+      builder: (context, redraws, _) => myPageNotifier.followedPages.isEmpty
+          ? PageEmptyState()
+          : ListView.builder(
+              padding: EdgeInsets.only(bottom: 40),
+              shrinkWrap: true,
+              itemCount: myPageNotifier.followedPages.length,
+              itemBuilder: (_, index) => SinglePageWidget(
+                page: myPageNotifier.followedPages[index],
+                index: index,
               ),
-      ],
+            ),
     );
   }
 }

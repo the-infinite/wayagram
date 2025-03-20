@@ -18,8 +18,6 @@ class PageState {
   final List<PostModel>? getAllPost;
   final List<Comments>? comments;
   final num? postCount;
-  List<PageModel>? pagesUsersFollow;
-  List<PageModel>? myPages;
   List<PageModel>? recommendedPages;
   List<PageModel>? allPageModelDocs;
   List<GetPageMemberDocs>? getPageMemberDocs;
@@ -48,10 +46,8 @@ class PageState {
     this.pagePopularPostDocs = const [],
     this.getAllPost = const [],
     this.docs = const [],
-    this.pagesUsersFollow = const [],
     this.allPageModelDocs = const [],
     this.getPageMemberDocs = const [],
-    this.myPages = const [],
     this.recommendedPages = const [],
     this.data,
     this.shareModelData,
@@ -66,8 +62,6 @@ class PageState {
     List<PostImage>? images,
     List<PostModel>? fetchAllPostData,
     List<PostModel>? getAllPost,
-    List<PageModel>? pagesUsersFollow,
-    List<PageModel>? myPages,
     List<PageModel>? recommendedPages,
     List<PageModel>? allPageModelDocs,
     List<GetPageMemberDocs>? getPageMemberDocs,
@@ -84,7 +78,6 @@ class PageState {
   }) {
     return PageState(
         pageName: pageName ?? this.pageName,
-        myPages: myPages ?? this.myPages,
         pageDescription: pageDescription ?? this.pageDescription,
         content: content ?? this.content,
         images: images ?? this.images,
@@ -98,7 +91,6 @@ class PageState {
         comments: comments ?? this.comments,
         pagePopularPostDocs: pagePopularPostDocs ?? this.pagePopularPostDocs,
         docs: docs ?? this.docs,
-        pagesUsersFollow: pagesUsersFollow ?? this.pagesUsersFollow,
         getPageMemberDocs: getPageMemberDocs ?? this.getPageMemberDocs,
         isFocused: isFocused ?? this.isFocused,
         isLoading: isLoading ?? this.isLoading,

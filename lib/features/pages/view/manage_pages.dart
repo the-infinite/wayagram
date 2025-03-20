@@ -4,9 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/widget/page.dart';
 
 class ManagePages extends ConsumerStatefulWidget {
@@ -21,31 +20,26 @@ class _ManagePagesState extends ConsumerState<ManagePages> with SingleTickerProv
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPageProvider.notifier).getAllPages(ConversationState.self.id);
+      myPageNotifier.getCreatedPages();
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(createPageProvider);
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        viewModel.pagesUsersFollow!.isEmpty
-            ? PageEmptyState()
-            : ListView.builder(
-                padding: EdgeInsets.only(bottom: 40),
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: viewModel.pagesUsersFollow?.length ?? 0,
-                itemBuilder: (_, index) => SinglePageWidget(
-                  page: viewModel.pagesUsersFollow![index],
-                  index: index,
-                ),
+    return ValueListenableBuilder(
+      valueListenable: myPageNotifier,
+      builder: (context, redraws, _) => myPageNotifier.createdPages.isEmpty
+          ? PageEmptyState()
+          : ListView.builder(
+              padding: EdgeInsets.only(bottom: 40),
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: myPageNotifier.createdPages.length,
+              itemBuilder: (_, index) => SinglePageWidget(
+                page: myPageNotifier.createdPages[index],
+                index: index,
               ),
-      ],
+            ),
     );
   }
 }

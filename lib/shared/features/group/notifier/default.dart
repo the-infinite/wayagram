@@ -61,6 +61,7 @@ class GroupNotifier extends ValueNotifier<int> {
       //? This is good.
       totalCreatedGroups = responseModel.data?.totalDocs?.toInt() ?? 0;
       createdGroupPage = responseModel.data?.nextPage?.toInt() ?? 1;
+      hasMoreCreatedGroups = responseModel.data?.hasNextPage ?? true;
 
       //? Now add the newly fetched groups.
       result.addAll(responseModel.data?.docs ?? []);
@@ -114,6 +115,7 @@ class GroupNotifier extends ValueNotifier<int> {
       //? This is good.
       totalJoinedGroups = responseModel.data?.totalDocs?.toInt() ?? 0;
       joinedGroupPage = responseModel.data?.nextPage?.toInt() ?? 1;
+      hasMoreJoinedGroups = responseModel.data?.hasNextPage ?? true;
 
       //? Now add the newly fetched groups.
       result.addAll(responseModel.data?.docs ?? []);
@@ -336,7 +338,7 @@ class GroupNotifier extends ValueNotifier<int> {
   /// Utility function used to check whether or not a user is a member of a
   /// group.
   bool isMemberOf(String groupId) {
-    return joinedGroups.any((group) => group.id == groupId);
+    return joinedGroups.any((group) => group.id == groupId) || createdGroups.any((group) => group.id == groupId);
   }
 
   /// Refreshes the current state and triggers a rebuild of dependent widgets.

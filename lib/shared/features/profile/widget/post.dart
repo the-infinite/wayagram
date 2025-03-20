@@ -264,9 +264,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                       else
                         GestureDetector(
                           behavior: HitTestBehavior.opaque,
-                          onTap: () {
-                            WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.data.userId));
-                          },
+                          onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.data.userId)),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [

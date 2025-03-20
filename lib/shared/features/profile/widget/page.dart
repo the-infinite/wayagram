@@ -34,7 +34,17 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
     super.dispose();
   }
 
-  Future<void> _followPage() async {}
+  Future<void> _followPage() async {
+    //? Then leave the group.
+    if (myPageNotifier.isMemberOf(widget.page.id)) {
+      await myPageNotifier.unfollowPage(widget.page.id);
+    }
+
+    //? Then, join the group.
+    else {
+      await myPageNotifier.followPage(widget.page.id);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +110,7 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
                     builder: (context, redraws, _) => WayaProgressiveButton(
                       notifier: loadingController,
                       callback: _followPage,
-                      text: myPageNotifier.isMemberOf(widget.page.id) ? "Leave" : "Join",
+                      text: myPageNotifier.isMemberOf(widget.page.id) ? "Unfollow" : "Follow",
                       height: 30.h,
                       textStyle: wayaTheme.textTheme.titleMedium?.copyWith(
                         color: wayaTheme.colorScheme.white,
@@ -190,15 +200,18 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
                   : SizedBox(
                       width: 70.w,
                       child: IntrinsicHeight(
-                        child: WayaProgressiveButton(
-                          notifier: loadingController,
-                          callback: _followPage,
-                          text: "Follow",
-                          height: 30.h,
-                          textStyle: wayaTheme.textTheme.titleMedium?.copyWith(
-                            color: wayaTheme.colorScheme.white,
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
+                        child: ValueListenableBuilder(
+                          valueListenable: myPageNotifier,
+                          builder: (context, redraws, _) => WayaProgressiveButton(
+                            notifier: loadingController,
+                            callback: _followPage,
+                            text: myPageNotifier.isMemberOf(widget.page.id) ? "Unfollow" : "Follow",
+                            height: 30.h,
+                            textStyle: wayaTheme.textTheme.titleMedium?.copyWith(
+                              color: wayaTheme.colorScheme.white,
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),

@@ -162,7 +162,7 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> fetchPopularPost() {
-    return get("$serviceUrl/pages/popular-post");
+    return get("$serviceUrl/pages/popular-posts");
   }
 
   Future<WayaRequestResponse> getAllPostsWithCategory(
@@ -171,15 +171,15 @@ class PageRepository extends BaseRepository {
         "$serviceUrl/posts/?status=active&&orderBy=popularityScore&orderDirection=DESC&privacy=public&categories=$category&page=$page&limit=$limit");
   }
 
-  Future<WayaRequestResponse> getAllPages(ownerId) {
-    return get("$serviceUrl/pages?limit=500&ownerId=$ownerId&orderBy=createdAt&orderDirection=DESC");
+  Future<WayaRequestResponse> getAllPages(String ownerId, [int page = 1, int limit = 500]) {
+    return get("$serviceUrl/pages?page=$page&limit=$limit&ownerId=$ownerId&orderBy=createdAt&orderDirection=DESC");
   }
 
   Future<WayaRequestResponse> deletePage(String pageId) async {
     return delete("$serviceUrl/pages/$pageId");
   }
 
-  Future<WayaRequestResponse> getPageMembers(pageId) {
+  Future<WayaRequestResponse> getPageMembers(String pageId) {
     return get("$serviceUrl/pages/team-members/$pageId");
   }
 
@@ -215,8 +215,8 @@ class PageRepository extends BaseRepository {
     return delete("$serviceUrl/pages/unfollow/$pageId");
   }
 
-  Future<WayaRequestResponse> getPagesAUserFollows() {
-    return get("$serviceUrl/pages/user/followings");
+  Future<WayaRequestResponse> getPagesAUserFollows([int page = 1, int limit = 15]) {
+    return get("$serviceUrl/pages/user/followings?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getRecommendedPages() {
