@@ -10,6 +10,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
@@ -53,17 +54,10 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
     });
   }
 
-// Stop tracking when the page is closed
-  @override
-  void dispose() {
-    ref.read(productEngagementProvider.notifier).stopViewingProduct();
-
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(productDetailVmProvider);
+    final shopState = ref.watch(shopVmProvider);
     final addState = ref.watch(addProductProvider('add-product'));
     final wayaTheme = Theme.of(context);
 
@@ -157,20 +151,6 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                   ),
                 ),
                 const Gap(8),
-                // Container(
-                //   width: 60,
-                //   padding: EdgeInsets.fromLTRB(4, 3, 4, 3),
-                //   decoration: BoxDecoration(
-                //       color: wayaTheme.colorScheme.primar50,
-                //       borderRadius: BorderRadius.circular(6)),
-                //   child: Center(
-                //     child: Text("12 Left",
-                //         style: TextStyle().wayaCopyWith(
-                //             color: wayaTheme.colorScheme.customPrimary,
-                //             fontWeight: FontWeight.w600,
-                //             fontSize: 12)),
-                //   ),
-                // ),
               ],
             ),
             const Gap(25),
@@ -200,7 +180,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
               "Product Description",
               style: wayaTheme.textTheme.titleMedium,
             ),
-            const Gap(20),
+            const Gap(10),
             ProductDescriptionWidget(
                 description: viewModel.product!.description),
             const Gap(25),
@@ -235,6 +215,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                         children: [
                           WayaDp(
                             radius: 18,
+                            image: WayaConstants.shopLogo,
                           ),
                           const Gap(6),
                           Text(
@@ -252,7 +233,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                       RatingStars(rating: viewModel.product!.shopRating),
                       const Gap(2),
                       Text(
-                       "${viewModel.product!.shopRating}",
+                        "${viewModel.product!.shopRating}",
                         style: wayaTheme.textTheme.hintStyle,
                       )
                     ],
@@ -262,7 +243,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
             ),
             const Gap(25),
             Visibility(
-                visible: false,
+                visible: shopState.reviews.isNotEmpty,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -271,13 +252,13 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                       style: wayaTheme.textTheme.titleMedium,
                     ),
                     const Gap(20),
-                    // ListView.builder(
-                    //     shrinkWrap: true,
-                    //     physics: const NeverScrollableScrollPhysics(),
-                    //     itemCount: reviews.length,
-                    //     itemBuilder: (context, index) {
-                    //       return ProductReviewWidget(review: reviews[index]);
-                    //     }),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: shopState.reviews.length,
+                        itemBuilder: (context, index) {
+                          return ProductReviewWidget(review: shopState.reviews[index]);
+                        }),
                     const Gap(25),
                   ],
                 )),

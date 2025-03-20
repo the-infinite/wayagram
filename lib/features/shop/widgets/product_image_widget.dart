@@ -48,7 +48,7 @@ class ProductImageWidget extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Gap(2),
+          const Gap(2),
             WayaCustomIndicator(
               currentPage: currPage,
               pageCount: images.length,

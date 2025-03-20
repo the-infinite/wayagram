@@ -45,7 +45,9 @@ class ProductCard extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          WayaImage(
+         Stack(
+          children: [
+             WayaImage(
             imageUrl: image,
             height: 180,
             width: double.infinity,
@@ -53,6 +55,8 @@ class ProductCard extends ConsumerWidget {
             radius: BorderRadius.circular(8),
             color: wayaTheme.colorScheme.transparent,
           ),
+          ],
+         ),
           if (product.discountPercentage == 0)
             SizedBox(
               height: 22,
@@ -88,9 +92,10 @@ class ProductCard extends ConsumerWidget {
                 ],
               )),
           SizedBox(height: 3),
-          Text(product.name.capitalizeFirst!, style: wayaTheme.textTheme.bodyXtraMedium),
+          Text(product.name.capitalizeFirst!,
+              style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
-              visible: !isExplore && product.rating != null,
+              visible: !isExplore ,
               child: Column(
                 children: [
                   SizedBox(height: 3),
@@ -105,10 +110,10 @@ class ProductCard extends ConsumerWidget {
                       ),
                       SizedBox(height: 3),
                       Text(
-                        product.rating ?? '0',
+                        "${product.rating ?? 0}",
                         style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.greyColor400,
-                            fontSize: 11.sp),
+                            color: wayaTheme.colorScheme.customBlack,
+                            fontSize: 12.sp),
                       )
                     ],
                   )
@@ -162,7 +167,7 @@ class ProductCard extends ConsumerWidget {
                           productName: product.name,
                           price: price,
                           shopId: product.shopId);
-                       WayaSnackBar.showToast("Item added to cart");    
+                      WayaSnackBar.showToast("Item added to cart");
                     },
                     height: 38,
                     radius: 6,
@@ -199,7 +204,9 @@ class ProductCard extends ConsumerWidget {
                   )
                 ],
               )),
-              SizedBox(height: 10,)
+          SizedBox(
+            height: 10,
+          )
         ],
       ),
     );
@@ -275,7 +282,7 @@ class SellerProductCard extends ConsumerWidget {
           Text(product.name.capitalizeFirst!,
               style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
-              visible: !isExplore && product.rating != null,
+              visible: !isExplore,
               child: Column(
                 children: [
                   SizedBox(height: 3),
@@ -290,10 +297,10 @@ class SellerProductCard extends ConsumerWidget {
                       ),
                       SizedBox(height: 3),
                       Text(
-                        product.rating ?? '0',
+                        "${product.rating ?? 0}",
                         style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.greyColor400,
-                            fontSize: 11.sp),
+                            color: wayaTheme.colorScheme.customBlack,
+                            fontSize: 12.sp),
                       )
                     ],
                   )
