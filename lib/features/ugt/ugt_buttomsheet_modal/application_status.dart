@@ -17,6 +17,7 @@ import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_detail
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 
 import '../../../core/components/waya_buttons.dart';
@@ -37,6 +38,35 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final hasProfile = useState(false);
+    final hasPaid = useState(false);
+    useEffect(() {
+      ref
+          .read(postProvider.notifier)
+          .fetchSingleContest(ref, widget.post?.contestId ?? "");
+      if (widget.post?.status?.toLowerCase() == "approved") {
+        ref
+            .read(postProvider.notifier)
+            .fetchSingleContestantDetails(widget.post?.contestId ?? "",
+                widget.post?.contest?.profileId ?? "")
+            .then((model) {
+          if (model != null) {
+            if (model.data?.totalDocs == 1) {
+              if (model.data?.docs?.first.profilePhoto != null &&
+                  model.data?.docs?.first.bio != null) {
+                hasProfile.value = true;
+              }
+
+              if (model.data?.docs?.length == 1) {
+                hasPaid.value = model.data?.docs?.first.hasPaid ?? false;
+              }
+            }
+          }
+        });
+      }
+
+      return null;
+    }, []);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
       child: SingleChildScrollView(
@@ -183,6 +213,11 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
             WayaButton(
               callback: () async {
                 if (widget.post?.status?.toLowerCase() == "approved") {
+                  if (hasProfile.value) {
+                    WayaNav.toNamed("/upcoming-manage-contest-details");
+                    return;
+                  }
+
                   if (widget.post?.contest?.entryType?.toLowerCase() ==
                       "free") {
                     ref.read(selectedAppliedContestProvider.notifier).state =
@@ -207,12 +242,20 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                       ),
                     );
                   }
-                } else {}
+                } else {
+                  WayaNav.toNamed("/upcoming-manage-contest-details");
+                }
               },
               text: widget.post?.status?.toLowerCase() == "approved"
                   ? widget.post?.contest?.entryType?.toLowerCase() == "free"
-                      ? "Create Contest Profile"
-                      : "Pay NGN${formatMoney(widget.post?.contest?.amount?.toString() ?? "0")} to continue"
+                      //? if it free and has profile details
+                      ? hasProfile.value
+                          ? "View Contest Details"
+                          : "Create Contest Profile"
+                      //? if it free and has profile details
+                      : hasProfile.value
+                          ? "View Contest Details"
+                          : "Pay NGN${formatMoney(widget.post?.contest?.amount?.toString() ?? "0")} to continue"
                   : "View Contest Details",
             ),
             const Gap(10),
