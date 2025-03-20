@@ -167,7 +167,7 @@ class OrderDetails extends ConsumerWidget {
                                 'completed')),
                 child: WayaButton(
                   callback: () {
-                    WayaNav.toNamed(ConfirmOrderDelivery.route,
+                    WayaNav.replaceNamed(ConfirmOrderDelivery.route,
                         arguments: arg?.order);
                   },
                   text: "Confirm Order Delivery",

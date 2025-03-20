@@ -5,6 +5,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/features/onboarding/vm/splash_screen_vm.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
+import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/delivery_request_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
@@ -13,6 +14,7 @@ import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/vm/delivery_request_vm.dart';
+import 'package:wayagram/features/shop/seller/vm/seller_orders_vm.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_products_vm.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
@@ -38,7 +40,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
       state = state.copyWith(isLoading: true);
 
       await ref.read(splashScreenVmProvider.notifier).getNewToken();
-      
+
       final businessProfile = await _profileRepo.getBusinessDataRepo(
           userId: ConversationState.self.id);
 
@@ -88,22 +90,31 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
   void fetchData() async {
     state = state.copyWith(isLoadingOrder: true);
 
-    final List<SellerProduct>? products = await ref
-        .read(sellerProductsVmProvider.notifier)
-        .sellerProducts(shopId: state.singleShop!.id);
     await ref
         .read(shopVmProvider.notifier)
         .getShopMetrics(shopId: state.singleShop!.id);
     final List<DeliveryRequestData>? requests =
         await ref.read(deliveryRequestVmProvider.notifier).getRequests();
 
+    final PaginatedResult<Order>? paginatedResult =
+        await ref.read(sellerOrdersVmProvider.notifier).getOrders(page: 1);
+    if (paginatedResult?.items != null && paginatedResult!.items.isNotEmpty) {
+      final now = DateTime.now();
+      //> get start of the week
+      final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+
+      final filteredOrders = paginatedResult.items.where((order) {
+        final createdAt = order.createdAt;
+        return createdAt.isAfter(startOfWeek);
+      }).toList();
+
+      state = state.copyWith(orders: filteredOrders);
+    }
     state = state.copyWith(isLoadingOrder: false);
-    updateMetrics(products: products, requests: requests);
+    updateMetrics(requests: requests);
   }
 
-  void updateMetrics(
-      {required List<SellerProduct>? products,
-      required List<DeliveryRequestData>? requests}) {
+  void updateMetrics({required List<DeliveryRequestData>? requests}) {
     if (requests != null) {
       state = state.copyWith(numberOfRequests: requests.length);
     }

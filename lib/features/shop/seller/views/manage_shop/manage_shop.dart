@@ -65,8 +65,8 @@ class _ManageShopState extends ConsumerState<ManageShop> {
  */
       // waya deals
       totalWayaDealProducts =
-          shopState.sellerMetrics!.productMetrics.approvedProducts +
-              shopState.sellerMetrics!.productMetrics.unapprovedProducts;
+          shopState.sellerMetrics!.productMetrics.wayagramDealApprove +
+              shopState.sellerMetrics!.productMetrics.wayagramDealNotApproved;
 
       int totalProducts = // products
           shopState.sellerMetrics!.productMetrics.totalProducts;
@@ -119,16 +119,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                     ),
                   ],
                 ),
-                // WayaButton(
-                //   callback: () {},
-                //   text: 'Shop Settings',
-                //   textStyle: TextStyle().wayaCopyWith(
-                //       color: wayaTheme.colorScheme.white,
-                //       fontSize: 13,
-                //       fontWeight: FontWeight.w500),
-                //   height: 35,
-                //   radius: 6,
-                // )
+              
               ],
             ),
             const Gap(30),
@@ -272,6 +263,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                       return SingleOrderWidget(
                         isSeller: true,
                         order: viewModel.orders[index],
+                        fromRecent: true,
                       );
                     })
           ],

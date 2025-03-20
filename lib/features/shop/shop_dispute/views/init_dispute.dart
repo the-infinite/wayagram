@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/waya_constants.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/chat/model/default.dart';
@@ -139,7 +140,7 @@ class _DisputeChatState extends ConsumerState<InitDispute> {
                     children: [
                       // First, the user's profile picture.
                       DisputeProfilePicture(
-                        picture: "",
+                        picture: WayaConstants.shopLogo,
                         showActive: false,
                         // lastSeen: chat.other.chatUser?.lastSeen,
                         radius: 25,
