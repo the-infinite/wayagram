@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
@@ -44,8 +45,13 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
 
     final ShopData? shop = ref.watch(manageShopVmProvider).singleShop;
     if (shop != null) {
-      bool isOwner = shop.id == product.shopId;
+     if (shop.vendorId == ConversationState.self.id){
+       bool isOwner = shop.id == product.shopId;
       state = state.copyWith(isProductOwner: isOwner);
+     }
+     else {
+      state = state.copyWith(isProductOwner: false);
+     }
     }
     //getSimilarProduct(categoryId: product.categoryId, productId: product.id);
   }

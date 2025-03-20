@@ -157,7 +157,8 @@ class OrderDetails extends ConsumerWidget {
                     ? arg?.order.pickupStatusHistory
                     : arg?.order.deliveryStatusHistory),
             const Gap(25),
-            Visibility(
+          if (arg?.order.status != 'cancelled') ... [
+              Visibility(
                 visible: arg?.order.status != 'completed' &&
                     ((arg?.order.deliveryStatusHistory.isNotEmpty == true &&
                             arg?.order.deliveryStatusHistory.last.status ==
@@ -182,6 +183,7 @@ class OrderDetails extends ConsumerWidget {
                   },
                   text: "Report a problem",
                 ))
+          ]
           ],
         ));
   }

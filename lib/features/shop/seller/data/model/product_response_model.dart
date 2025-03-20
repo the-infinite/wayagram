@@ -84,6 +84,7 @@ class Product extends BaseModel<Product> {
   final String shopName;
   final String shopPhone;
   final dynamic shopRating;
+  final String? shopLogo;
   final String categoryName;
   final bool isDeleted;
   final DateTime createdAt;
@@ -122,7 +123,10 @@ class Product extends BaseModel<Product> {
       required this.isDeleted,
       required this.createdAt,
       required this.updatedAt,
-      this.shopRating});
+      this.shopRating,
+      this.shopLogo
+      
+      });
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
@@ -158,7 +162,8 @@ class Product extends BaseModel<Product> {
         isDeleted: json['isDeleted'] ?? false,
         createdAt: DateTime.parse(json['createdAt'] ?? ''),
         updatedAt: DateTime.parse(json['updatedAt'] ?? ''),
-        shopRating: json['shopRating']
+        shopRating: json['shopRating'],
+        shopLogo: json['shopLogo']
         
         );
   }
@@ -196,7 +201,8 @@ class Product extends BaseModel<Product> {
       'shopName': shopName,
       'shopPhone': shopPhone,
       'categoryName': categoryName,
-      'shopRating': shopRating
+      'shopRating': shopRating,
+      'shopLogo': shopLogo
     };
   }
 
@@ -249,7 +255,9 @@ class Product extends BaseModel<Product> {
       String? shopName,
       String? shopPhone,
       String? categoryName,
-      dynamic shopRating}) {
+      dynamic shopRating,
+      String? shopLogo
+      }) {
     return Product(
         id: id ?? this.id,
         categoryId: categoryId ?? this.categoryId,
@@ -283,6 +291,7 @@ class Product extends BaseModel<Product> {
         shopName: shopName ?? this.shopName,
         shopPhone: shopPhone ?? this.shopPhone,
         categoryName: categoryName ?? this.categoryName,
+        shopLogo: shopLogo ?? this.shopLogo,
         shopRating: shopRating ?? this.shopRating);
   }
 

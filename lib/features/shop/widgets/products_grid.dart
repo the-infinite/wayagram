@@ -69,6 +69,7 @@ class SellerProductGrid extends StatelessWidget {
                 child: SellerProductCard(
                   product: products[i],
                   isExplore: false,
+                  sellerProduct: true,
                 ),
               ),
               if (i + 1 < products.length) ...[
@@ -77,6 +78,7 @@ class SellerProductGrid extends StatelessWidget {
                   child: SellerProductCard(
                     product: products[i + 1],
                     isExplore: false,
+                     sellerProduct: true,
                   ),
                 ),
               ] else ...[

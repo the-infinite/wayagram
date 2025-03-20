@@ -12,10 +12,11 @@ import 'package:wayagram/features/shop/order/vm/order_vm.dart';
 
 class RejectionReason extends ConsumerWidget {
   final String orderId;
-
+  final String shopId;
   const RejectionReason({
     super.key,
     required this.orderId,
+    required this.shopId
   });
 
   @override
@@ -39,7 +40,7 @@ class RejectionReason extends ConsumerWidget {
               Text(
                 "Reject Order",
                 textAlign: TextAlign.start,
-                style:  TextStyle(
+                style: TextStyle(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -88,6 +89,7 @@ class RejectionReason extends ConsumerWidget {
 
                         ref.read(orderVmProvider.notifier).declineOrder(
                             orderId: orderId,
+                           
                             reason: _controller.text,
                             context: context);
                       }
@@ -98,8 +100,7 @@ class RejectionReason extends ConsumerWidget {
               const Gap(10),
               WayaButton(
                   callback: () {
-                     WayaNav.goBack();
-                
+                    WayaNav.goBack();
                   },
                   textColor: wayaTheme.colorScheme.greyColor500,
                   color: wayaTheme.colorScheme.transparent,

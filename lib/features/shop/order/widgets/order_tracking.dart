@@ -53,7 +53,7 @@ class _OrderTrackingState extends State<OrderTracking> {
 
     setState(() {
       currentStatusList =
-          widget.currentStatuses?.map((s) => s.status.toLowerCase()).toList() ??
+          widget.currentStatuses?.map((s) => s.status).toList() ??
               [];
     });
     _updateOrderStatusList();
