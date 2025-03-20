@@ -69,13 +69,16 @@ class SingleOrderWidget extends ConsumerWidget {
                         const Gap(8),
                         _buildOrderStatus(
                             context: context,
-                            status: order.deliveryType == 'Pickup'
-                                ? order.pickupStatusHistory.isNotEmpty
-                                    ? order.pickupStatusHistory.last.status
-                                    : 'pending'
-                                : order.deliveryStatusHistory.isNotEmpty
-                                    ? order.deliveryStatusHistory.last.status
-                                    : 'pending',
+                            status: order.status == 'cancelled'
+                                ? 'cancelled'
+                                : order.deliveryType == 'Pickup'
+                                    ? order.pickupStatusHistory.isNotEmpty
+                                        ? order.pickupStatusHistory.last.status
+                                        : 'pending'
+                                    : order.deliveryStatusHistory.isNotEmpty
+                                        ? order
+                                            .deliveryStatusHistory.last.status
+                                        : 'pending',
                             deliveryType: "")
                       ],
                     )
@@ -97,7 +100,7 @@ class SingleOrderWidget extends ConsumerWidget {
                     const Gap(8),
                     Text(
                       WayaHelpers.formatDateString(
-                          order.updatedAt.toIso8601String()),
+                          order.createdAt.toIso8601String()),
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor400,
                           fontSize: 13.sp),
@@ -126,6 +129,7 @@ class SingleOrderWidget extends ConsumerWidget {
       'completed': wayaTheme.colorScheme.success50,
       deliveryType == 'Delivery' ? 'onTransit' : 'pickUpScheduled':
           wayaTheme.colorScheme.info50,
+      'cancelled': wayaTheme.colorScheme.error50
     };
 
     Map<String, Color> textColors = {
@@ -135,6 +139,7 @@ class SingleOrderWidget extends ConsumerWidget {
       'completed': wayaTheme.colorScheme.success,
       deliveryType == 'Delivery' ? 'onTransit' : 'pickUpScheduled':
           wayaTheme.colorScheme.info,
+      'cancelled': wayaTheme.colorScheme.error700
     };
 
     final backgroundColor =

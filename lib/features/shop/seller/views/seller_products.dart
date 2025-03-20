@@ -19,6 +19,7 @@ import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
+import 'package:wayagram/features/shop/widgets/products_grid.dart';
 
 class SellerProducts extends ConsumerStatefulWidget {
   static const route = '/seller-product';
@@ -113,7 +114,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                         },
                       ),
                       const Gap(25),
-                      _buildProductGrid(ref
+                      SellerProductGrid( products: ref
                           .watch(sellerProductsVmProvider.notifier)
                           .filteredProducts)
                     ],

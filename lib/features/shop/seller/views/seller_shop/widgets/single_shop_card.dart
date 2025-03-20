@@ -94,7 +94,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                     context: context,
                     onTap: () {
                       WayaNav.goBack();
-                      WayaNav.toNamed(ManageShop.route, arguments: widget.shop);
+                      WayaNav.toNamed(ManageShop.route, arguments: widget.shop.id);
                     },
                     asset: SvgPicture.asset(WayaAssets.icons.bShop.path),
                     text: "Shop Dashboard",

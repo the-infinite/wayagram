@@ -232,7 +232,7 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                                     WayaSnackBar.showToast(
                                         "Delivery detail updated");
 
-                                    WayaNav.replaceNamed(ManageShop.route);
+                                    WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
                                   }
                                 }
                               : null,
