@@ -24,7 +24,7 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(donationVmProvider.notifier).getDonatedDonation(1);
+      ref.read(donationVmProvider.notifier).getDonatedDonation;
       ref.read(donationVmProvider.notifier).getMyKYC();
     });
     searchController = TextEditingController();

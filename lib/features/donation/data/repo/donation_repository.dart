@@ -34,7 +34,8 @@ class DonationRepository extends BaseRepository {
       String expirationDate,
       String image,
       String startDate,
-      String category) {
+      String category
+      ) {
     final payload = {
       "title": title,
       "description": description,

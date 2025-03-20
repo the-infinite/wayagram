@@ -28,6 +28,8 @@ import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 import '../../../shared/features/user/models/default.dart';
 import 'dart:io' show Platform;
 
+import '../../explore/widgets/grouped_widget_header.dart';
+
 class HostedDonations extends ConsumerStatefulWidget {
   final bool isExpanded;
   const HostedDonations({super.key,  this.isExpanded = false});
@@ -147,31 +149,12 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
           FilterWidget(
               search: TextEditingController(), hintText: 'Search Donations'),
           Gap(20),
-          Text("Approved Donations", style: wayaTheme.textTheme.titleLarge),
-          Row(
-            children: [
-              Text(
-                "See and manage all your approved donations",
-                style: WayaTextStyles.bodySmall.copyWith(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Theme.of(context).colorScheme.greyColor500),
-              ),
-              Spacer(),
-              InkWell(
-                onTap: (){
-                  WayaNav.toNamed('/seeAllApprovedDonations');
-                },
-                child: Text(
-                  "See All",
-                  style: WayaTextStyles.bodySmall.copyWith(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Theme.of(context).colorScheme.primary500),
-                ),
-              ),
-            ],
-          ),
+          GroupedWidgetHeader(
+              onTap: () {
+                WayaNav.toNamed('/seeAllApprovedDonations');
+              },
+              subTitle: 'See and manage all your approved donations',
+              title: 'Approved Donations'),
           const Gap(10),
           viewModel.approvedDonations!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have approved donations yet',):
           SizedBox(
@@ -223,32 +206,12 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                 }),
           ),
           const Gap(10),
-          Text("Pending Donations", style: wayaTheme.textTheme.titleLarge),
-
-          Row(
-            children: [
-              Text(
-                "See and manage all your pending donations",
-                style: WayaTextStyles.bodySmall.copyWith(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Theme.of(context).colorScheme.greyColor500),
-              ),
-              Spacer(),
-              InkWell(
-                onTap: (){
-                  WayaNav.toNamed('/seeAllDonations');
-                },
-                child: Text(
-                  "See All",
-                  style: WayaTextStyles.bodySmall.copyWith(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Theme.of(context).colorScheme.primary500),
-                ),
-              ),
-            ],
-          ),
+          GroupedWidgetHeader(
+              onTap: () {
+                WayaNav.toNamed('/seeAllPendingDonations');
+              },
+              subTitle: 'See and manage all your pending donations',
+              title: 'Pending Donations'),
           const Gap(10),
           myDonations!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have pending donations yet',):
           SizedBox(
@@ -307,31 +270,13 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                 }),
           ),
           const Gap(30),
-          Text("Rejected Donations", style: wayaTheme.textTheme.titleLarge),
-          Row(
-            children: [
-              Text(
-                "See and manage all your rejected donations",
-                style: WayaTextStyles.bodySmall.copyWith(
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.w400,
-                    color: Theme.of(context).colorScheme.greyColor500),
-              ),
-              Spacer(),
-              InkWell(
-                onTap: (){
-                  WayaNav.toNamed('/seeAllRejectedDonations');
-                },
-                child: Text(
-                  "See All",
-                  style: WayaTextStyles.bodySmall.copyWith(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Theme.of(context).colorScheme.primary500),
-                ),
-              ),
-            ],
-          ),
+          GroupedWidgetHeader(
+              onTap: () {
+                WayaNav.toNamed('/seeAllRejectedDonations');
+              },
+              subTitle: 'See and manage all your rejected donations',
+              title: 'Rejected Donations'),
+
           const Gap(10),
           viewModel.rejectedDonations!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have rejected donations yet',):
           SizedBox(
