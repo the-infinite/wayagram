@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -24,7 +25,7 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(donationVmProvider.notifier).getDonatedDonation;
+      ref.read(donationVmProvider.notifier).getDonatedDonation(1);
       ref.read(donationVmProvider.notifier).getMyKYC();
     });
     searchController = TextEditingController();
@@ -44,55 +45,58 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
-
-
+    
     return
-      viewModel.appliedDonationDocs!.isEmpty ? DonationEmptyState() :ListView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
-        itemCount: viewModel.appliedDonationDocs?.length,
-        itemBuilder: (context, index){
-          final donation = viewModel.appliedDonationDocs?[index];
-          int daysLeft = DateTime.parse('${donation?.expirationDate}').difference(DateTime.parse('${donation?.startDate}')).inDays;
-          int amountRaised = double.parse('${donation?.amountRaised}').toInt();
+      viewModel.appliedDonationDocs?.isEmpty ?? true ? DonationEmptyState()
+          :SizedBox(
+        height: 560.h,
+            child: ListView.builder(
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: viewModel.appliedDonationDocs?.length,
+                    itemBuilder: (context, index){
+            final donation = viewModel.appliedDonationDocs?[index];
+            int daysLeft = DateTime.parse('${donation?.expirationDate}').difference(DateTime.parse('${donation?.startDate}')).inDays;
+            int amountRaised = double.parse('${donation?.amountRaised}').toInt();
 
-          int targetedAmount = double.parse('${donation?.targetAmount}').toInt();
+            int targetedAmount = double.parse('${donation?.targetAmount}').toInt();
 
-          double ratioLeft = amountRaised / targetedAmount;
+            double ratioLeft = amountRaised / targetedAmount;
 
-          return ManageDonationWidget(
-            text:  "Donate",
-            amountRaised:  WayaHelpers.formatPrice(int.parse('${donation?.amountRaised?.replaceAll('.00', '')}')),
-            targetAmount: WayaHelpers.formatPrice(int.parse('${donation?.targetAmount?.replaceAll('.00', '')}')),
-            title: donation?.title?.capitalizeFirst,
-            image: donation?.imageURL,
-            dayLeft: daysLeft < 0  ? '0' : '$daysLeft',
-            donationCount: donation?.donationCount,
-            rangeRatio: ratioLeft,
-            onTap: (){
-              WayaNav.toNamed('/donationDetails',
-                  arguments: {
-                    'title':'${donation?.title?.capitalizeFirst}',
-                    'image':'${donation?.imageURL}',
-                    'amountRaised': '${donation?.amountRaised?.replaceAll('.00', '')}',
-                    'targetAmount': '${donation?.targetAmount?.replaceAll('.00', '')}',
-                    'desc': '${donation?.description}',
-                    'solution': '${donation?.solution}',
-                    'impact': '${donation?.impact}',
-                    'url': '${donation?.url}',
-                    'minimumDonationAmount':'${donation?.minimumDonationAmount}',
-                    'daysLeft':'$daysLeft',
-                    'privacy':'${donation?.privacy}',
-                    'id': '${donation?.id}',
-                    'donationCount': '${donation?.donationCount}',
-                    'ratioLeft': ratioLeft
+            return ManageDonationWidget(
+              text:  "Donate",
+              amountRaised:  WayaHelpers.formatPrice(int.parse('${donation?.amountRaised?.replaceAll('.00', '')}')),
+              targetAmount: WayaHelpers.formatPrice(int.parse('${donation?.targetAmount?.replaceAll('.00', '')}')),
+              title: donation?.title?.capitalizeFirst,
+              image: donation?.imageURL,
+              dayLeft: daysLeft < 0  ? '0' : '$daysLeft',
+              donationCount: donation?.donationCount,
+              rangeRatio: ratioLeft,
+              onTap: (){
+                WayaNav.toNamed('/donationDetails',
+                    arguments: {
+                      'title':'${donation?.title?.capitalizeFirst}',
+                      'image':'${donation?.imageURL}',
+                      'amountRaised': '${donation?.amountRaised?.replaceAll('.00', '')}',
+                      'targetAmount': '${donation?.targetAmount?.replaceAll('.00', '')}',
+                      'desc': '${donation?.description}',
+                      'solution': '${donation?.solution}',
+                      'impact': '${donation?.impact}',
+                      'url': '${donation?.url}',
+                      'minimumDonationAmount':'${donation?.minimumDonationAmount}',
+                      'daysLeft':'$daysLeft',
+                      'privacy':'${donation?.privacy}',
+                      'id': '${donation?.id}',
+                      'donationCount': '${donation?.donationCount}',
+                      'ratioLeft': ratioLeft
 
-                  });
-            },
-            buttonWidth: 60.0,
+                    });
+              },
+              buttonWidth: 60.0,
+            );
+                    }
+                ),
           );
-        }
-    );
    /* return Column(
       children: [
         Expanded(
