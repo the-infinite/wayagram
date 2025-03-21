@@ -1,19 +1,48 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/data/repo/explore_repository.dart';
-//import 'package:wayagram/features/explore/data/model/default.dart';
-import 'package:wayagram/features/quotation/vm/quotation_vm.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 
 class ExploreState {
   final bool isLoading;
   final String userId;
+  final String? cursor;
+  final bool hasMore;
+  final List<PostModel> posts;
 
-  ExploreState({this.isLoading = false, this.userId = ''});
+  const ExploreState({
+    required this.posts,
+    required this.isLoading,
+    required this.userId,
+    required this.hasMore,
+    required this.cursor,
+  });
 
-  ExploreState copyWith({bool? isLoading, String? userId}) {
+  static const initial = ExploreState(
+    posts: [],
+    isLoading: false,
+    userId: '',
+    hasMore: true,
+    cursor: null,
+  );
+
+  ExploreState copyWith({
+    bool? isLoading,
+    String? userId,
+    String? cursor,
+    bool? hasMore,
+    List<PostModel>? posts,
+  }) {
     return ExploreState(
-        isLoading: isLoading ?? this.isLoading, userId: userId ?? this.userId);
+      isLoading: isLoading ?? this.isLoading,
+      userId: userId ?? this.userId,
+      hasMore: hasMore ?? this.hasMore,
+      posts: posts ?? this.posts,
+      cursor: cursor ?? this.cursor,
+    );
   }
 }
 
@@ -21,8 +50,7 @@ class ExploreVm extends StateNotifier<ExploreState> {
   final Ref ref;
   final ExploreRepository _exploreRepository;
   final WayaSecureDataSource _secureDataSource;
-  ExploreVm(this._secureDataSource, this._exploreRepository, this.ref)
-      : super(ExploreState()) {
+  ExploreVm(this._secureDataSource, this._exploreRepository, this.ref) : super(ExploreState.initial) {
     initialize();
   }
 
@@ -30,31 +58,6 @@ class ExploreVm extends StateNotifier<ExploreState> {
     final userId = await _secureDataSource.getUserId();
     state = state.copyWith(userId: userId);
   }
-
-  final List<Quotation> quotations = [
-    Quotation(
-        category: 'TECHNOLOGY',
-        images: [
-          'assets/images/explore/bid1.png',
-          'assets/images/explore/bid2.png',
-          'assets/images/explore/bid2.png'
-        ],
-        description:
-            'Samsung S22 Ultra 5G Fairly Used in good condition. Graphite',
-        name: 'Samsung Galaxy S22 Ultra 5G',
-        isActive: true,
-        timeLeft: '11h: 20m: 30s'),
-    Quotation(
-        category: 'TECHNOLOGY',
-        images: [
-          'assets/images/explore/bid1.png',
-        ],
-        description:
-            'Samsung S22 Ultra 5G Fairly Used in good condition. Graphite',
-        name: 'Samsung Galaxy S22 Ultra 5G',
-        isActive: true,
-        timeLeft: '11h: 20m: 30s'),
-  ];
 
   final List<Ugt> ugtList = [
     Ugt(
@@ -69,16 +72,37 @@ class ExploreVm extends StateNotifier<ExploreState> {
   Future<void> getUserFeeds() async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _exploreRepository.getFeeds();
+      final response = await _exploreRepository.getFeeds(state.cursor);
 
       if (response.success) {
-        print(response.data);
+        final data = response.data['data'];
+        final posts = data['posts'] as List;
+
+        //? Fetch the posts.
+        final result = [...state.posts];
+        result.addAll(posts.map((e) => PostModel.fromJson(e)));
+
+        //? Now update the state.
+        state = state.copyWith(
+          posts: result,
+          cursor: data['cursor'],
+          hasMore: data['hasMore'],
+        );
       }
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.posts,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     } finally {
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  void reset() {
+    state = ExploreState.initial;
   }
 }
 

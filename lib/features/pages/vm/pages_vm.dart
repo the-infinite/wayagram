@@ -3,19 +3,15 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
-import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/pages/data/model/feeds.dart';
-import 'package:wayagram/features/pages/data/model/followers_model.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/pages/data/model/page_popular_post_model.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
@@ -27,10 +23,8 @@ import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
 import 'package:wayagram/features/post/model/saved_posts.dart';
 
-import '../../../shared/features/file/repo/default.dart';
 import '../../group/data/model/group_post_model.dart';
 import '../../group/view/groups.dart';
-import '../../post/model/fetch_comment.dart';
 
 class UploadedImage {
   final String url;
@@ -43,14 +37,12 @@ class UploadedImage {
 class PageVm extends StateNotifier<PageState> {
   final Ref ref;
   final PageRepository _pageRepository;
-  final WayaSecureDataSource _secureDataSource;
 
   final _logger = getLogger('PageVm');
 
   PageVm(
     this.ref,
     this._pageRepository,
-    this._secureDataSource,
   ) : super(PageState()) {
     state = state.copyWith(pageName: TextEditingController(text: ''));
     state = state.copyWith(pageDescription: TextEditingController(text: ''));
@@ -62,7 +54,7 @@ class PageVm extends StateNotifier<PageState> {
   }
 
   String _errorMessage = '';
-  int _totalPages = 0;
+  final int _totalPages = 0;
 
   String get errorMessage => _errorMessage;
   int get totalPages => _totalPages;
@@ -72,62 +64,24 @@ class PageVm extends StateNotifier<PageState> {
   List<SavedPost> get savedPosts => _savedPosts;
   String get errorMessage2 => _errorMessage2;
 
-  Future<void> commentPost2(Post post) async {
-    if (post.id != null) {
-      //Get.to(() => FullPostDetailsScreen(post: post));
-    } else {
-      print('ERROR: Post ID is null!!!');
-    }
-  }
-
-  /*Future<void> likePost(Post post, {String? reaction}) async {
-    post.toggleLike(); // Toggle local like state
-    updateValue(post.isLikedCount, post.getIsLiked().value == true);
-    WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
-    if (post.id != null) {
-      final user = _wayaLocalDataSource.getUser().user;
-
-      if (user == null) {
-        //showError('Getting user profile... try again');
-        return;
-      }
-
-      if (reaction != null) {
-        // If a reaction is provided, update it
-        final response = await _pageRepository.reactOnPost(post.id!, reaction);
-        if (response.success) {
-          post.reactions[user.id!] = response.data!.reactions[user.id!]!;
-          //..userId = Author(id: user.id,firstName: user.firstName ?? '',lastName: user.lastName ?? '');
-        }
-        handleLikeResponse(post, response);
-      } else if (post.getIsLiked().value == true) {
-        // Handle default "like" without specific reaction
-        final response = await _pageRepository.reactOnPost(post.id!, 'like');
-        handleLikeResponse(post, response);
-      } else {
-        // Remove like if toggled off
-        final response = await _pageRepository.removeReaction(post.id!, post.getReactionId(user.id!));
-        handleLikeResponse(post, response);
-      }
-    } else {
-      print('ERROR: Post ID is null!!!');
-    }
-  }
-
-  void handleLikeResponse(Post post, WayaRequestResponse response) {
-    if (response.success) {
-      post.toggleLike();
-      updateValue(post.isLikedCount, post.getIsLiked().value == true);
-      //showError(response.message);
-    }
-  }*/
-
   void updateValue(RxInt value, bool isIncreased) {
     if (isIncreased) {
       value.value++;
     } else {
       value.value--;
     }
+  }
+
+  void clearText() {
+    state.content.clear();
+  }
+
+  String getText() {
+    return state.content.text;
+  }
+
+  void setText(String text) {
+    state.content.text = text;
   }
 
   Future<void> unsavePost(BuildContext context, String postId) async {
@@ -292,7 +246,6 @@ class PageVm extends StateNotifier<PageState> {
       {required String pageId, required String reason, String? comment, required BuildContext context}) async {
     try {
       state = state.copyWith(isReportingPage: true);
-      final userId = await _secureDataSource.getUserId();
       final response = await _pageRepository.reportPage(pageId, reason);
 
       if (response.success && context.mounted) {
@@ -397,43 +350,9 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> createPage(ctx, pageName, pageDesc, pageType, String coverImage, String profileImage) async {
-    final coverImageUrl = await WayaFileRepository.instance.uploadFile(
-      File(coverImage),
-    );
-    final profileImageUrl = await WayaFileRepository.instance.uploadFile(
-      File(profileImage),
-    );
-
-    try {
-      state = state.copyWith(isLoading: true);
-      final response =
-          await _pageRepository.createPage(pageName, pageDesc, pageType, coverImageUrl ?? '', profileImageUrl ?? '');
-      state = state.copyWith(isLoading: false);
-      if (response.success && ctx.mounted) {
-      }
-
-      //? If it failed...
-      else {
-        _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        _logger.i(response.data['data']);
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.pages,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    } finally {
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
   Future<void> createPost(ctx, content, postType, List<XFile> images) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
-    final choiceMap = <String>[];
     // get url
     for (XFile image in images) {
       final uploadImageResponse = await _pageRepository.getUploadImage(image.name);
@@ -497,7 +416,6 @@ class PageVm extends StateNotifier<PageState> {
   Future<void> createPagePost(ctx, content, postType, List<XFile> images, postId) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
-    final choiceMap = <String>[];
     // get url
     for (XFile image in images) {
       final uploadImageResponse = await _pageRepository.getUploadImage(image.name);
@@ -540,12 +458,6 @@ class PageVm extends StateNotifier<PageState> {
           ),
         );
       }
-
-      //? If it failed...
-      else {
-        _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        _logger.i(response.data['data']);
-      }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
@@ -577,22 +489,6 @@ class PageVm extends StateNotifier<PageState> {
         WayaDebugHelpers.getStackTrace(e),
       );
     } finally {}
-  }
-
-  Future<void> commentOnPost(String postId, String content) async {
-    try {
-      final response = await _pageRepository.commentOnPost(postId, content);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        getCommentsStream(postId);
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.pages,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
   }
 
   Future<void> deletePost(ctx, {required String postId, required String userId}) async {
@@ -738,8 +634,6 @@ class PageVm extends StateNotifier<PageState> {
   Future<void> editPost(ctx, content, postType, List<XFile> images, postId) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
-    final choiceMap = <String>[];
-
     // get url
     for (XFile image in images) {
       final uploadImageResponse = await _pageRepository.getUploadImage(image.name);
@@ -798,90 +692,6 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  FutureOr<List<Comments>> getComments(String postId) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.getComment(postId);
-      state = state.copyWith(isLoading: false);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        //print("uri: ${response.realUri}");
-        print("Post comments ${response.data}");
-        final data = response.data["comments"] as List;
-
-        final comment = data.map((json) => Comments.fromJson(json)).toList();
-        // _isLoading = false;
-
-        return comment;
-      } else {
-        //_isLoading = false;
-        _errorMessage = 'Failed to fetch comment';
-
-        return [];
-      }
-    } on DioException catch (e) {
-      print("Error: $e");
-      //_isLoading = false;
-      _errorMessage = e.toString();
-
-      rethrow;
-    } finally {}
-  }
-
-  Future<List<Comments>> getCommentsStream(String postId) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.getComment(postId);
-      state = state.copyWith(isLoading: false);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        FetchComment responseModel = FetchComment.fromJson(response.data);
-        state = state.copyWith(comments: responseModel.data?.comments);
-        return responseModel.data?.comments ?? [];
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.pages,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
-    state = state.copyWith(isLoading: false);
-    return [];
-  }
-
-  Future<void> getFollowers() async {
-    state = state.copyWith(isLoading: true);
-    final response = await _pageRepository.getFollowers();
-    state = state.copyWith(isLoading: false);
-    if (response.success) {
-      FollowersModel responseModel = FollowersModel.fromJson(response.data);
-      //state = state.copyWith(fetchAllPols: responseModel.data?.docs);
-    } else {
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
-  Future<void> getAllPages(userId) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.getAllPages(userId);
-      state = state.copyWith(isLoading: false);
-      if (response.success) {
-        PagesUsersFollowModel responseModel = PagesUsersFollowModel.fromJson(response.data);
-        state = state.copyWith(pagesUsersFollow: responseModel.data?.docs);
-        state = state.copyWith(myPages: responseModel.data?.docs);
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.pages,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    } finally {}
-  }
-
   Future<void> getPopularPosts() async {
     try {
       // API call
@@ -911,25 +721,6 @@ class PageVm extends StateNotifier<PageState> {
       if (response.success) {
         GetPageMemberModel responseModel = GetPageMemberModel.fromJson(response.data);
         state = state.copyWith(getPageMemberDocs: responseModel.data?.docs);
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.pages,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    } finally {}
-  }
-
-  Future<void> getPagesUserFollows() async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.getPagesAUserFollows();
-      state = state.copyWith(isLoading: false);
-      if (response.success) {
-        PagesUsersFollowModel responseModel = PagesUsersFollowModel.fromJson(response.data);
-        state = state.copyWith(pagesUsersFollow: responseModel.data?.docs);
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -978,74 +769,6 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> followPage(ctx, pageId) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.followPage(pageId);
-      state = state.copyWith(isLoading: false);
-      if (response.success && ctx.mounted) {
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Post unsaved successfully'),
-            backgroundColor: Colors.green,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.pages,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    } finally {
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
-  Future<void> editPage(
-      ctx, pageName, pageDesc, pageType, String coverImage, String profileImage, String pageId) async {
-    final coverImageUrl = await WayaFileRepository.instance.uploadFile(
-      File(coverImage),
-    );
-    final profileImageUrl = await WayaFileRepository.instance.uploadFile(
-      File(profileImage),
-    );
-
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.editPage(
-          pageName, pageDesc, pageType, coverImageUrl ?? '', profileImageUrl ?? '', pageId);
-      state = state.copyWith(isLoading: false);
-      //? If this is fine...
-      if (response.success && ctx.mounted) {
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Page updated successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-
-      //? If it failed...
-      else {
-        _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        _logger.i(response.data['data']);
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.pages,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    } finally {
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
   void prefillFunc(args) {
     state = state.copyWith(
       pageName: TextEditingController(text: '${args['name']}'),
@@ -1058,10 +781,5 @@ final pageProvider = Provider((ref) => PageRepository());
 
 final createPageProvider = StateNotifierProvider<PageVm, PageState>((ref) {
   final pageRepository = ref.watch(pageProvider);
-
-  return PageVm(
-    ref,
-    pageRepository,
-    WayaSecureDataSource(),
-  );
+  return PageVm(ref, pageRepository);
 });

@@ -1,4 +1,5 @@
 import 'package:wayagram/core/service/repos/transactions/transaction_history_model.dart';
+import 'package:wayagram/features/wallet/transactions/model/transaction_model.dart';
 
 class TransactionHistoryState {
   final bool? isLoading;
@@ -8,6 +9,7 @@ class TransactionHistoryState {
   final bool? hasNextPage;
   final List<TransactionDetail>? transactions;
   final TransactionDetail? transaction;
+  List<TransactionModelDocs>? docs;
   final double totalCreditTransaction;
   final double totalDebitTransaction;
 
@@ -17,6 +19,7 @@ class TransactionHistoryState {
     this.isVerifying = false,
     this.verified = false,
     this.hasNextPage = false,
+    this.docs = const [],
     this.transactions,
     this.transaction,
     this.totalCreditTransaction = 0.0,
@@ -31,6 +34,7 @@ class TransactionHistoryState {
       bool? hasNextPage,
       List<TransactionDetail>? transactions,
       TransactionDetail? transaction,
+        List<TransactionModelDocs>? docs,
       double? totalCreditTransaction,
       double? totalDebitTransaction}) {
     return TransactionHistoryState(
@@ -41,6 +45,7 @@ class TransactionHistoryState {
         hasNextPage: hasNextPage ?? this.hasNextPage,
         transactions: transactions ?? this.transactions,
         transaction: transaction ?? this.transaction,
+        docs: docs ?? this.docs,
         totalCreditTransaction:
             totalCreditTransaction ?? this.totalCreditTransaction,
         totalDebitTransaction:

@@ -27,9 +27,9 @@ import '../../../core/utils/waya_navigation.dart';
 
 class ContestCard extends StatefulHookConsumerWidget {
   Contest post;
-  final Function(String) onLikePressed;
-  final Function(String) onSharePressed;
-  final Function(String) onFollowPressed;
+  final void Function(String) onLikePressed;
+  final void Function(String) onSharePressed;
+  final void Function(String) onFollowPressed;
   ContestCard(
       this.post, this.onLikePressed, this.onSharePressed, this.onFollowPressed,
       {super.key});
@@ -42,7 +42,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final postNotifier = ref.read(postProvider.notifier);
+    // final postNotifier = ref.read(postProvider.notifier);
     final voteNotifier = ref.read(votersContestNotifier.notifier);
     final hasClickedLiked = useState(false);
     final hasClickedShared = useState(false);
@@ -70,11 +70,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     child: Row(
                       //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        /*SvgPicture.asset(
-                        '',
-                        colorFilter: ColorFilter.mode(
-                            wayaTheme.colorScheme.success, BlendMode.srcIn),
-                      ),*/
                         GestureDetector(
                           onTap: () {},
                           child: ClipRRect(
@@ -88,14 +83,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                                     fit: BoxFit.cover,
                                     radius: BorderRadius.circular(45),
                                   )
-
-                                /*  Image.network(
-                                    post.uploadCoverImages!,
-                                    height: 45,
-                                    width: 45,
-                                    fit: BoxFit
-                                        .cover, // Ensures the image covers the area properly
-                                  ) */
                                 : Image.asset(
                                     'assets/images/frameuni.png',
                                     height: 45,
@@ -105,13 +92,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                                   ),
                           ),
                         ),
-                        /*WayaImage(
-                        imageUrl: 'assets/images/destructive.png',
-                        height: 45,
-                        width: 45,
-                        fit:BoxFit.cover ,
-                        radius: BorderRadius.circular(45),
-                      ),*/
+
                         const Gap(10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,28 +141,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                                 height: 40,
                                 text: "   Follow  ",
                               )
-                        /*  : SizedBox(
-                                height: 40,
-                                width: 90,
-                                child: OutlinedButton(
-                                    onPressed: () =>
-                                        postNotifier.doFollow(post.id!),
-                                    style: OutlinedButton.styleFrom(
-                                      side: BorderSide(
-                                          color: wayaTheme.primaryColor,
-                                          width: 2), // Border color and width
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                            4), // Rounded corners
-                                      ),
-                                    ),
-                                    child: Text("Follow")),
-                              ), */
-                        /*  WayaButton(
-                          callback: () => postNotifier.doFollow(post.id!),
-                          height: 40,
-                          text: "Follow",
-                        ), */
                       ],
                     ),
                   ),
@@ -196,7 +155,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     "createdAt": widget.post.createdAt,
                     "likeCount": widget.post.likeCount,
                     "isLike": widget.post.hasLiked,
-                    "showDescription": false,
+                    "showDescription": true,
                     "discription": widget.post.description,
                     "shareCount": widget.post.shareCount,
                     "type": MyFullMediaType.image
@@ -348,10 +307,12 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                           height: 35,
                           child: Center(
                               child: Icon(
-                            Icons.thumb_up_alt,
+                            widget.post.hasLiked == true
+                                ? Icons.thumb_up_alt
+                                : Icons.thumb_up_alt_outlined,
                             color: widget.post.hasLiked == true
                                 ? wayaTheme.colorScheme.primary
-                                : null,
+                                : wayaTheme.colorScheme.greyColor500,
                           )),
                         ),
                         const Gap(3),

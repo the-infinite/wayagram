@@ -78,7 +78,7 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
                 WayaNav.goBack();
               });
             },
-            color: wayaTheme.colorScheme.primary50,
+            color: wayaTheme.colorScheme.   primary50,
             text: "   Deactivate Role   ",
             isLoading: isLoading.value,
             leadingIcon: WayaAssets.icons.caution.svg(),

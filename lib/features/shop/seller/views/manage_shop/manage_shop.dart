@@ -43,9 +43,9 @@ class _ManageShopState extends ConsumerState<ManageShop> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final shop = ModalRoute.of(context)!.settings.arguments as ShopData;
-      ref.read(manageShopVmProvider.notifier).getCurrentShop(shop);
-      ref.read(manageShopVmProvider.notifier).fetchData();
+      final shopId = ModalRoute.of(context)!.settings.arguments as String;
+      ref.read(manageShopVmProvider.notifier).getCurrentShop(shopId);
+      //ref.read(manageShopVmProvider.notifier).fetchData();
     });
   }
 
@@ -53,7 +53,22 @@ class _ManageShopState extends ConsumerState<ManageShop> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(manageShopVmProvider);
     final shopState = ref.watch(shopVmProvider);
+    final wayaTheme = Theme.of(context);
 
+    final shopId = ModalRoute.of(context)!.settings.arguments as String?;
+
+    if (shopId == null || viewModel.isLoadingOrder) {
+      return Container(
+        width: double.infinity,
+        height: context.height,
+        decoration: BoxDecoration(
+          color: wayaTheme.colorScheme.white
+        ),
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
     if (shopState.sellerMetrics != null && !viewModel.isLoadingOrder) {
       // order
       totalOrders = shopState.sellerMetrics!.totalOrders.cancelled.count +
@@ -65,8 +80,8 @@ class _ManageShopState extends ConsumerState<ManageShop> {
  */
       // waya deals
       totalWayaDealProducts =
-          shopState.sellerMetrics!.productMetrics.approvedProducts +
-              shopState.sellerMetrics!.productMetrics.unapprovedProducts;
+          shopState.sellerMetrics!.productMetrics.wayagramDealApprove +
+              shopState.sellerMetrics!.productMetrics.wayagramDealNotApproved;
 
       int totalProducts = // products
           shopState.sellerMetrics!.productMetrics.totalProducts;
@@ -91,13 +106,13 @@ class _ManageShopState extends ConsumerState<ManageShop> {
       }).toList();
     }
 
-    final wayaTheme = Theme.of(context);
+
     return WayaScaffold(
-        title: viewModel.singleShop!.name.capitalizeFirst ?? '',
+        title: viewModel.singleShop?.name.capitalizeFirst ?? '',
         isLoading: viewModel.isLoadingOrder,
         isScrollable: true,
         onRefresh: () async {
-          ref.read(manageShopVmProvider.notifier).fetchData();
+          ref.read(manageShopVmProvider.notifier).fetchData(shopId: shopId);
         },
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -119,16 +134,6 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                     ),
                   ],
                 ),
-                // WayaButton(
-                //   callback: () {},
-                //   text: 'Shop Settings',
-                //   textStyle: TextStyle().wayaCopyWith(
-                //       color: wayaTheme.colorScheme.white,
-                //       fontSize: 13,
-                //       fontWeight: FontWeight.w500),
-                //   height: 35,
-                //   radius: 6,
-                // )
               ],
             ),
             const Gap(30),
@@ -272,6 +277,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                       return SingleOrderWidget(
                         isSeller: true,
                         order: viewModel.orders[index],
+                        fromRecent: true,
                       );
                     })
           ],

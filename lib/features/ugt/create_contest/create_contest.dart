@@ -46,7 +46,7 @@ class _CreateContestState extends ConsumerState<CreateContest>
   Widget build(BuildContext context) {
     final viewModel = ref.watch(contestNotifierProvider);
     return WayaScaffoldWithProgressBar(
-        isLoading:false,
+        isLoading: false,
         isScrollable: true,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
@@ -55,9 +55,14 @@ class _CreateContestState extends ConsumerState<CreateContest>
           ),
           ParticipantDetails(
             goToNextTab: _goToNextTab,
+            goToPrevTab: _goBack,
           ),
-          ContestTimeline(),
-          EditStagePreference(),
+          ContestTimeline(
+            goToPrevTab: _goBack,
+          ),
+          EditStagePreference(
+              // goToPrevTab: _goToPreviousTab,
+              ),
           // StageContestSettings(),
         ],
         tabController: _tabController);

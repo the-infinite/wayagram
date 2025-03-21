@@ -78,22 +78,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                     child: Row(
                       //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        /*SvgPicture.asset(
-                        '',
-                        colorFilter: ColorFilter.mode(
-                            wayaTheme.colorScheme.success, BlendMode.srcIn),
-                      ),*/
-                        /*   ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                              45), // Adjust the radius as needed
-                          child: Image.asset(
-                            'assets/images/frameuni.png',
-                            height: 45,
-                            width: 45,
-                            fit: BoxFit
-                                .cover, // Ensures the image covers the area properly
-                          ),
-                        ), */
+                      
 
                         WayaImage(
                           imageUrl: widget.contestApplicant?.profilePhoto ?? "",
@@ -159,7 +144,8 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                                         context,
                                         child: DeletePostModal(
                                           postId: widget.post.id ?? "",
-                                          contestantId: widget.contestApplicant?.id??"",
+                                          contestantId:
+                                              widget.contestApplicant?.id ?? "",
                                           contestId:
                                               widget.post.contestId ?? "",
                                         ),
@@ -196,25 +182,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
               Text(widget.post.description ?? "",
                   style: wayaTheme.textTheme.bodySmall),
               const Gap(20),
-              /*   ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(16), // Adjust the radius as needed
-                child: WayaImage(
-                  imageUrl: post.mediaContent?[0].url ?? "",
-                  height: 200,
-                  width: context.width,
-                  fit: BoxFit.cover, // Ensur
-                  //  radius: BorderRadius.circular(45),
-                ),
-
-                /*  Image.network(
-                  post.mediaContent?[0].url ?? "",
-                  height: 200,
-                  width: context.width,
-                  fit: BoxFit
-                      .cover, // Ensures the image covers the area properly
-                ), */
-              ), */
+    
 
               MediaCard(
                   //just a random id
@@ -286,10 +254,10 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                               height: 35,
                               child: Center(
                                   child: Icon(
-                                Icons.thumb_up_alt,
+                                widget.post.hasLiked == true? Icons.thumb_up_alt:Icons.thumb_up_alt_outlined,
                                 color: widget.post.hasLiked == true
                                     ? wayaTheme.colorScheme.primary
-                                    : null,
+                                    : wayaTheme.colorScheme.greyColor500,
                               )),
                             ),
                             const Gap(3),
@@ -346,16 +314,6 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                                   : false,
                           voteFee:
                               contestModel2?.amountPerVote?.toString() ?? "0",
-
-                          //   amountPaid: "89",
-
-/* 
- contestId: post.contestId ?? "",
-                              contestantId: post.contestantProfileId ?? "",
-                              hostUserId: model.profileId ?? "",
-
-
- */
 
                           model: ContestVoteModel(
                               contestId: widget.post.contestId ?? "",

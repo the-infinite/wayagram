@@ -18,8 +18,9 @@ typedef WayaDownloadListener = void Function(double done, int totalSize);
 
 class RequestRepeater {
   final Future<WayaRequestResponse> Function(RequestRepeater) repeat;
+  int depth;
 
-  RequestRepeater({required this.repeat});
+  RequestRepeater({required this.repeat, this.depth = 3});
 }
 
 class DioHttpClient implements WayaHttpClientInterface {
@@ -377,7 +378,7 @@ class DioHttpClient implements WayaHttpClientInterface {
   }
 
   Future<WayaRequestResponse> _makeRequest(Future<Response> future, RequestRepeater repeater,
-      [bool showErrors = false, int depth = 3]) async {
+      [bool showErrors = false]) async {
     try {
       final response = await future;
       _logger.i('Request URI: ${response.requestOptions.uri.toString()}');
@@ -388,8 +389,6 @@ class DioHttpClient implements WayaHttpClientInterface {
         statusCode: response.statusCode,
       );
     } on DioException catch (e) {
-      _logger.e('URI: ${e.requestOptions.uri.toString()}');
-      _logger.e('statusCode: ${e.response}');
       if (e.response != null) {
         var message = 'An unknown error occurred';
 
@@ -398,16 +397,27 @@ class DioHttpClient implements WayaHttpClientInterface {
           bool success = await refreshToken();
 
           //? Then try again.
-          if (success && depth > 0) {
+          if (success && repeater.depth > 0) {
+            repeater.depth -= 1;
             return repeater.repeat(repeater);
           }
 
           //? Since it failed, probably redirect the user to the login screen.
           else {
-            //> return error if not successful
+            await WayaNav.removeUntilNamed(LoginCoverPage.route);
+            WayaUtils.showModalSheet(
+              WayaNav.context,
+              child: WayaErrorDialog(
+                title: "Your session has expired. To continue, please log in to your account.",
+              ),
+            );
             return WayaHttpException.handleDioError(e);
           }
         }
+
+        //? Since this is something else.
+        _logger.e('URI: ${e.requestOptions.uri.toString()}');
+        _logger.e('statusCode: ${e.response}');
 
         try {
           message = e.response?.data['errors'] != null ? e.response?.data['errors'][0] : e.response?.data['message'];

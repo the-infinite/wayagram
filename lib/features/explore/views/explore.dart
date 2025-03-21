@@ -37,6 +37,7 @@ import 'package:wayagram/shared/features/profile/view/pages.dart';
 import 'package:wayagram/shared/features/profile/view/groups.dart';
 import 'package:wayagram/shared/features/profile/view/polls.dart';
 import 'package:wayagram/shared/features/quotation/view/buy_request.dart';
+import 'package:wayagram/shared/features/ugt/widget/ugt_contest.dart';
 
 class Explore extends ConsumerStatefulWidget {
   const Explore({super.key});
@@ -175,7 +176,8 @@ class _ExploreState extends ConsumerState<Explore> {
             //? For the next section.
             GroupedWidgetHeader(
                 onTap: () {
-                    WayaNav.toNamed(BottomView.route, arguments: 1, preventDuplicates: false);
+                  WayaNav.toNamed(BottomView.route,
+                      arguments: 1, preventDuplicates: false);
                 },
                 subTitle: 'Explore Categories & Best Offers',
                 title: 'Shop'),
@@ -183,7 +185,9 @@ class _ExploreState extends ConsumerState<Explore> {
             CategoriesFilterWidget(setCategory: (value) {
               ref.read(shopVmProvider.notifier).setCategory(value);
               for (String categoryId in value) {
-                ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
+                ref
+                    .read(productEngagementProvider.notifier)
+                    .addCategory(categoryId, ProductPoint.searchPoint.value);
               }
             }),
             const Gap(25),
@@ -194,11 +198,12 @@ class _ExploreState extends ConsumerState<Explore> {
                         ? notifier.filteredProducts.sublist(0, 2)
                         : notifier.filteredProducts),
             const Gap(25),
+
             GroupedWidgetHeader(
                 onTap: () {
                   WayaNav.toNamed(DisplayFeed.route);
                 },
-                subTitle: 'Based on your interests',
+                subTitle: 'Explore content based on your interests and interactions.',
                 title: 'Discover'),
             const Gap(25),
             SharedPosts(),
@@ -295,14 +300,10 @@ class _ExploreState extends ConsumerState<Explore> {
                 subTitle: 'Join Upcoming Activities',
                 title: 'University Got Talent'),
             const Gap(25),
-            ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: viewModel.ugtList.length,
-              itemBuilder: (context, index) {
-                return UgtCard(ugt: viewModel.ugtList[index]);
-              },
-            ),
+            //?added ugt widget to the page
+            UgtContestWidget(
+              isExpanded: false,
+            )
           ],
         ),
         floatingActionButton: SizedBox(

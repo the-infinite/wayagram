@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
+import 'package:wayagram/shared/features/profile/widget/page.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 
 import '../../../assetsgen/assets.gen.dart';
@@ -29,6 +28,7 @@ class PagesForYou extends ConsumerStatefulWidget {
 }
 
 class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProviderStateMixin {
+  late final notifier = ref.watch(createPageProvider.notifier);
   final _wayaLocalDataSource = WayaLocalDataSource();
 
   int like = 0;
@@ -37,139 +37,86 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPageProvider.notifier).getAllPages(ConversationState.self.id);
-      ref.read(createPageProvider.notifier).getAllPosts(_wayaLocalDataSource.getUserId());
-      ref.read(createPageProvider.notifier).getPopularPosts();
+      myPageNotifier.getCreatedPages();
+      notifier.getRecommendedPages();
+      notifier.getAllPosts(_wayaLocalDataSource.getUserId());
+      notifier.getPopularPosts();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createPageProvider.notifier);
-    final viewModel2 = ref.watch(createPageProvider);
     final viewPage = ref.watch(createPageProvider);
-    /*   if (viewModel2.isLoading) {
-      return Expanded(
-          child: Center(
-            child: CircularProgressIndicator(),
-          ));
-    }
 
-    if (viewModel2.getAllPost!.isEmpty ) {
-      return PostEmptyState();
-    }*/
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 10),
-          child: Text('Based on pages you follow',
-              style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: WayaColors.greyColor700,
-                  fontFamily: WayaConstants.fontFamily)),
-        ),
-        if (viewModel2.getAllPost?.isEmpty ?? true)
-          PostEmptyState()
-        else
-          ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: viewPage.getAllPost?.length ?? 0,
-            itemBuilder: (_, index) => WayaPostWidget(
-              data: viewPage.getAllPost![index],
-              index: index,
+    return ValueListenableBuilder(
+      valueListenable: myPageNotifier,
+      builder: (context, redraws, _) => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 10),
+            child: Text(
+              'Based on pages you follow',
+              style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: WayaColors.greyColor700,
+              ),
             ),
           ),
-        const Gap(25),
-        GroupedWidgetHeader(
-          onTap: () {
-            WayaNav.toNamed('/suggestion');
-          },
-          subTitle: 'Connect with friends and communities',
-          title: 'Suggestions',
-        ),
-        const Gap(25),
-        viewModel2.allPageModelDocs!.isEmpty
-            ? PageEmptyState()
-            : SizedBox(
-                height: 190,
-                child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
+          if (viewPage.pagePopularPostDocs?.isEmpty ?? true)
+            ActivityLogsEmptyState(text: 'No post based on pages you follow')
+          else
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: viewPage.pagePopularPostDocs?.length ?? 0,
+              itemBuilder: (_, index) => WayaPostWidget(
+                data: viewPage.pagePopularPostDocs![index],
+                index: index,
+              ),
+            ),
+          const Gap(25),
+          GroupedWidgetHeader(
+            onTap: () {
+              WayaNav.toNamed('/suggestion');
+            },
+            subTitle: 'Connect with friends and communities',
+            title: 'Suggestions',
+          ),
+          const Gap(25),
+          viewPage.recommendedPages?.isEmpty ?? true
+              ? ActivityLogsEmptyState(text: 'No pages to recommend just yet')
+              : SizedBox(
+                  height: 190,
+                  child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    itemCount: viewModel2.allPageModelDocs?.length,
-                    itemBuilder: (_, index) {
-                      final recommendedPage = viewModel2.allPageModelDocs?[index];
-                      return Container(
-                        margin: EdgeInsets.only(right: 10),
-                        width: 147.w,
-                        height: 159.h,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Theme.of(context).colorScheme.greyColor200),
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            WayaImage(
-                              imageUrl: '${recommendedPage?.coverImage}',
-                              height: 70,
-                              width: 70,
-                              radius: BorderRadius.circular(12),
-                            ),
-                            const Gap(10),
-                            Text('${recommendedPage?.name?.capitalizeFirst}',
-                                style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                    color: Theme.of(context).colorScheme.black)),
-                            const Gap(3),
-                            Text(
-                              '${recommendedPage?.followerCount} Followers',
-                              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400,
-                                  color: Theme.of(context).colorScheme.greyColor500),
-                            ),
-                            const Gap(3),
-                            Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
-                              child: WayaButton(
-                                callback: () async {
-                                  await viewModel.followPage(context, '${recommendedPage?.id}');
-                                },
-                                text: 'Follow',
-                                height: 30,
-                                textStyle: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                    color: Theme.of(context).colorScheme.white),
-                              ),
-                            )
-                          ],
-                        ),
-                      );
-                    }),
+                    itemCount: viewPage.recommendedPages?.length ?? 0,
+                    itemBuilder: (_, index) => SinglePageWidget(
+                      page: viewPage.recommendedPages![index],
+                      index: index,
+                      vertical: true,
+                    ),
+                  ),
+                ),
+          Gap(20),
+          if (viewPage.pagePopularPostDocs?.isEmpty ?? true)
+            PostEmptyState()
+          else
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: viewPage.pagePopularPostDocs?.length ?? 0,
+              itemBuilder: (_, index) => WayaPostWidget(
+                data: viewPage.pagePopularPostDocs![index],
+                index: index,
               ),
-        Gap(20),
-        if (viewPage.pagePopularPostDocs?.isEmpty ?? true)
-          PostEmptyState()
-        else
-          ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: viewPage.pagePopularPostDocs?.length ?? 0,
-            itemBuilder: (_, index) => WayaPostWidget(
-              data: viewPage.pagePopularPostDocs![index],
-              index: index,
             ),
-          ),
-      ],
+        ],
+      ),
     );
   }
 }

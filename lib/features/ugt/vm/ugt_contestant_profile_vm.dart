@@ -19,6 +19,7 @@ class UgtContestantProfileVm
 
   // Simulate fetching paginated posts
   Future<void> fetchSingleContestantPosts(String id) async {
+    
     if (isLoading) return;
     isLoading = true;
 

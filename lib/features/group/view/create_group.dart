@@ -2,27 +2,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
-import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
-import '../../pages/component/extras.dart';
-import '../../wallet/view/fund_wallet_options_screen.dart';
 
 class CreateGroup extends ConsumerStatefulWidget {
   static const route = '/createGroup';
@@ -48,7 +38,6 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
-        print('SELECTED IMAGES $_selectedImage');
       });
     }
   }
@@ -67,7 +56,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
     final viewModel = ref.watch(createGroupProvider);
     final viewModel2 = ref.watch(createGroupProvider.notifier);
     final wayaTheme = Theme.of(context);
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    // final args = ModalRoute.of(context)?.settings.arguments as dynamic;
     return WayaScaffold(
       title: "Create a Group",
       onTapBackButton: (){

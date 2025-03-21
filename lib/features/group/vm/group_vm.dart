@@ -17,7 +17,6 @@ import 'package:wayagram/features/group/data/model/group_popular_post_model.dart
 import 'package:wayagram/features/group/data/model/group_post_model.dart';
 import 'package:wayagram/features/group/data/model/group_response.dart';
 import 'package:wayagram/features/group/data/model/join_request_model.dart';
-import 'package:wayagram/features/group/data/model/joined_group_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
 import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/view/groups.dart';
@@ -81,48 +80,9 @@ class GroupVm extends StateNotifier<GroupState> {
     state = state.copyWith(roleType: value.toLowerCase());
   }
 
-  Future<GroupResponse?> createGroup(
-      ctx, groupName, groupDesc, groupType, String coverImage, String profileImage) async {
-    final coverImageUrl = await WayaFileRepository.instance.uploadFile(
-      File(coverImage),
-    );
-    final profileImageUrl = await WayaFileRepository.instance.uploadFile(
-      File(profileImage),
-    );
-
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.createGroup(
-          groupName, groupDesc, groupType, coverImageUrl ?? '', profileImageUrl ?? '');
-      state = state.copyWith(isLoading: false);
-
-      //? If this is fine...
-      if (response.success && ctx.mounted) {
-        return GroupResponse.fromJson(response.data['data']);
-      }
-
-      //? If it failed...
-      else {
-        _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        _logger.i(response.data['data']);
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    } finally {
-      state = state.copyWith(isLoading: false);
-    }
-    return null;
-  }
-
   Future<void> createGroupPost(ctx, content, postType, List<XFile> images, postId) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
-    final choiceMap = <String>[];
     // get url
     for (XFile image in images) {
       final uploadImageResponse = await _groupRepository.getUploadImage(image.name);
@@ -281,58 +241,6 @@ class GroupVm extends StateNotifier<GroupState> {
     );
   }
 
-  Future<void> leaveGroup(ctx, {required String groupId}) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.leaveGroup(groupId);
-      state = state.copyWith(isLoading: false);
-      if (response.success && ctx.mounted) {
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Exit group'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    } finally {
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
-  Future<void> joinGroup(ctx, String groupId) async {
-    try {
-      state = state.copyWith(joinGroupLoading: true);
-      final response = await _groupRepository.joinGroup(groupId);
-      state = state.copyWith(joinGroupLoading: false);
-      if (response.success && ctx.mounted) {
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Joined successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    } finally {
-      state = state.copyWith(joinGroupLoading: false);
-    }
-  }
-
   Future<void> approveRequest(ctx, String requestId) async {
     try {
       state = state.copyWith(isLoading: true);
@@ -464,11 +372,14 @@ class GroupVm extends StateNotifier<GroupState> {
         GetAllGroups responseModel = GetAllGroups.fromJson(response.data);
         state = state.copyWith(getAllGroups: responseModel.data?.docs);
         return responseModel.data?.docs;
-      } else {
-        print('Error: Status code ${response.statusCode}');
       }
     } catch (e) {
-      print(e);
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     } finally {}
     return null;
   }
@@ -492,41 +403,6 @@ class GroupVm extends StateNotifier<GroupState> {
       );
     } finally {}
     return null;
-  }
-
-  Future<void> getMyGroups() async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.getMyGroups();
-      state = state.copyWith(isLoading: false);
-      if (response.success) {
-        GetAllGroups responseModel = GetAllGroups.fromJson(response.data);
-        state = state.copyWith(myGroups: responseModel.data?.docs);
-      } else {
-        print('Error: Status code ${response.statusCode}');
-      }
-    } catch (e) {
-      print(e);
-    } finally {}
-  }
-
-  Future<void> getJoinedGroups() async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.getJoinedGroup();
-      state = state.copyWith(isLoading: false);
-      if (response.success) {
-        JoinedGroupModel responseModel = JoinedGroupModel.fromJson(response.data);
-        state = state.copyWith(joinedGroup: responseModel.data?.docs);
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.groups,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    } finally {}
   }
 
   Future<void> getGroupMembers(groupId) async {

@@ -90,6 +90,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
               ],
             ),
             callback: () {
+              print('DARLINGTON KYC is ====>> ${viewModel.kycStatus}');
                if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
                  WayaUtils.showNotice(
                      context: context,
@@ -162,6 +163,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   donationCount: donation.donationCount,
                   rangeRatio: ratioLeft,
                   onTap: (){
+                    print('MY RATIO $ratioLeft');
                     WayaNav.toNamed('/donationDetails',
                         arguments: {
                           'title':'${donation.title?.capitalizeFirst}',
@@ -176,8 +178,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                           'daysLeft':'$daysLeft',
                           'privacy':'${donation.privacy}',
                           'id': '${donation.id}',
-                          'donationCount': '${donation.donationCount}'
-
+                          'donationCount': '${donation.donationCount}',
+                          'ratioLeft': ratioLeft
                         });
                   },
                   buttonWidth: 60.0,
@@ -231,7 +233,9 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                           'minimumDonationAmount':'${donation?.minimumDonationAmount}',
                           'daysLeft':'$daysLeft',
                           'privacy':'${donation?.privacy}',
-                          'id': '${donation?.id}'
+                          'donationCount': '${donation?.donationCount}',
+                          'id': '${donation?.id}',
+                          'ratioLeft': ratioLeft
 
                         });
                   },

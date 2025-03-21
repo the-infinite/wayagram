@@ -1,13 +1,10 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:readmore/readmore.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -20,6 +17,7 @@ import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/post/view/comment.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
+import 'package:wayagram/shared/features/media/image.dart';
 import 'package:wayagram/shared/features/profile/logic/default.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
@@ -46,12 +44,15 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
   late int comment = widget.data.commentCount;
   late int liked = widget.data.likeCount;
   late int shared = widget.data.shareCount;
+  late final videoControllers = widget.data.media.map((_) => WayaVideoController()).toList();
 
-  Future<void> _launchUrl(String link) async {
-    final Uri url = Uri.parse(link);
-    if (!await launchUrl(url)) {
-      throw Exception('Could not launch $url');
+  @override
+  void dispose() {
+    //? Dispose the older video controllers
+    for (final controller in videoControllers) {
+      controller.dispose();
     }
+    super.dispose();
   }
 
   Future<void> invalidate(ServicesProvider notifier) async {
@@ -63,6 +64,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
       transition: Transition.downToUp,
       PostCommentsWidget(
         id: widget.data.id,
+        post: widget.data,
       ),
     );
 
@@ -126,52 +128,185 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.data.userId));
-                        },
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //? The user's image.
-                            ChatProfilePicture(
-                              user: widget.data.user!,
-                              radius: 20,
-                              showActive: false,
-                            ),
+                      if (widget.data.group != null)
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            widget.data.group?.isPrivate == true
+                                ? WayaNav.toNamed('/privateGroup', arguments: {
+                                    'memberCount': '${widget.data.group?.memberCount}',
+                                    'name': widget.data.group?.name,
+                                    'url': '${widget.data.group?.url}',
+                                    'desc': widget.data.group?.description,
+                                    'coverImage': '${widget.data.group?.coverImage}',
+                                    'profileImage': '${widget.data.group?.profileImage}',
+                                    'groupId': widget.data.group?.id,
+                                  })
+                                : WayaNav.toNamed(
+                                    '/publicGroup',
+                                    arguments: {
+                                      'memberCount': '${widget.data.group?.memberCount}',
+                                      'name': widget.data.group?.name,
+                                      'url': '${widget.data.group?.url}',
+                                      'desc': widget.data.group?.description,
+                                      'coverImage': '${widget.data.group?.coverImage}',
+                                      'profileImage': '${widget.data.group?.profileImage}',
+                                      'groupId': widget.data.group?.id
+                                    },
+                                  );
+                          },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //? The user's image.
+                              WayaDp(
+                                image: widget.data.group?.profileImage ?? widget.data.group?.coverImage,
+                                isSelf: false,
+                                radius: 20,
+                              ),
 
-                            // Space.
-                            SizedBox(width: 10.w),
+                              // Space.
+                              SizedBox(width: 10.w),
 
-                            //? The user's name and configuration information.
-                            Column(
-                              // mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              spacing: 3,
-                              children: [
-                                //* The user's name.
-                                Text(
-                                  widget.data.user!.fullname,
-                                  style: wayaTheme.textTheme.bodyBold.copyWith(
-                                    fontSize: 16.sp,
+                              //? The user's name and configuration information.
+                              Column(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 3,
+                                children: [
+                                  //* The user's name.
+                                  Text(
+                                    widget.data.group!.name,
+                                    style: wayaTheme.textTheme.bodyBold.copyWith(
+                                      fontSize: 16.sp,
+                                    ),
                                   ),
-                                ),
 
-                                //* When the user joined
-                                Text(
-                                  formatTimeAgo('${widget.data.createdAt}'),
-                                  style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w400,
-                                    color: wayaTheme.colorScheme.greyColor500,
+                                  //* When the user joined
+                                  Text(
+                                    formatTimeAgo('${widget.data.createdAt}'),
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: wayaTheme.colorScheme.greyColor500,
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      else if (widget.data.page != null)
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () {
+                            widget.data.page?.isPublic == true
+                                ? WayaNav.toNamed('/publicPage', arguments: {
+                                    'pageId': widget.data.page?.id,
+                                    'followerCount': '${widget.data.page?.followerCount}',
+                                    'name': widget.data.page?.name,
+                                    'desc': widget.data.page?.description,
+                                    'coverImage': '${widget.data.page?.coverImage}',
+                                    'profileImage': '${widget.data.page?.profileImage}',
+                                  })
+                                : WayaNav.toNamed(
+                                    '/privatePage',
+                                    arguments: {
+                                      'pageId': widget.data.page?.id,
+                                      'followerCount': '${widget.data.page?.followerCount}',
+                                      'name': widget.data.page?.name,
+                                      'desc': widget.data.page?.description,
+                                      'coverImage': '${widget.data.page?.coverImage}',
+                                      'profileImage': '${widget.data.page?.profileImage}',
+                                    },
+                                  );
+                          },
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //? The user's image.
+                              WayaDp(
+                                image: widget.data.page?.profileImage ?? widget.data.page?.coverImage,
+                                isSelf: false,
+                                radius: 20,
+                              ),
+
+                              // Space.
+                              SizedBox(width: 10.w),
+
+                              //? The user's name and configuration information.
+                              Column(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 3,
+                                children: [
+                                  //* The user's name.
+                                  Text(
+                                    widget.data.page!.name,
+                                    style: wayaTheme.textTheme.bodyBold.copyWith(
+                                      fontSize: 16.sp,
+                                    ),
+                                  ),
+
+                                  //* When the user joined
+                                  Text(
+                                    formatTimeAgo('${widget.data.createdAt}'),
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: wayaTheme.colorScheme.greyColor500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        )
+                      else
+                        GestureDetector(
+                          behavior: HitTestBehavior.opaque,
+                          onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.data.userId)),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //? The user's image.
+                              ChatProfilePicture(
+                                user: widget.data.user!,
+                                radius: 20,
+                                showActive: false,
+                              ),
+
+                              // Space.
+                              SizedBox(width: 10.w),
+
+                              //? The user's name and configuration information.
+                              Column(
+                                // mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                spacing: 3,
+                                children: [
+                                  //* The user's name.
+                                  Text(
+                                    widget.data.user!.fullname,
+                                    style: wayaTheme.textTheme.bodyBold.copyWith(
+                                      fontSize: 16.sp,
+                                    ),
+                                  ),
+
+                                  //* When the user joined
+                                  Text(
+                                    formatTimeAgo('${widget.data.createdAt}'),
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w400,
+                                      color: wayaTheme.colorScheme.greyColor500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
 
                       // Space
                       const Spacer(),
@@ -254,42 +389,12 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                   ),
 
                   //? For the post description.
-                  ReadMoreText(
+                  WayaCollapsibleText(
                     removeHashtags('${widget.data.content.capitalizeFirst}'),
-                    style: TextStyle(
-                      fontFamily: WayaConstants.fontFamily,
+                    maxLines: 2,
+                    fontSize: 14.sp,
+                    style: wayaTheme.textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w400,
-                      fontSize: 14.sp,
-                    ),
-                    trimLines: 2,
-                    annotations: [
-                      Annotation(
-                        regExp: RegExp(r'((https?:\/\/)?([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(\/[^\s]*)?)'),
-                        spanBuilder: ({required String text, TextStyle? textStyle}) => TextSpan(
-                          text: text,
-                          style: TextStyle(
-                              fontSize: 15.sp,
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
-                              decorationColor: Colors.blue),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async {
-                              final String fullUrl = text.startsWith('http') ? text : 'https://$text';
-                              _launchUrl(fullUrl);
-                            },
-                        ),
-                      ),
-                    ],
-                    colorClickableText: Colors.blue,
-                    trimMode: TrimMode.Line,
-                    trimCollapsedText: "read more",
-                    trimExpandedText: "show less",
-                    moreStyle: const TextStyle(color: Colors.blue),
-                    lessStyle: wayaTheme.textTheme.bodyLarge?.copyWith(
-                      color: wayaTheme.colorScheme.primary,
-                      fontFamily: WayaConstants.fontFamily,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14.sp,
                     ),
                   ),
 
@@ -327,29 +432,92 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
             ),
 
             //? If this has any kind of media here...
-            widget.data.media.isEmpty
-                ? Container()
-                : SizedBox(
-                    height: 200, // Adjust based on your image size
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal, // Enables horizontal scrolling
-                      itemCount: widget.data.media.length,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10), // Optional: rounded corners
-                            child: WayaImage(
-                              imageUrl: widget.data.media[index],
-                              fit: BoxFit.cover,
-                              width: screenSize.width - (widget.padded ? 15 : 0), // Adjust width for better display
-                              height: 200, // Matches the container height
-                            ),
+            if (widget.data.media.isEmpty)
+              Container()
+            else
+              SizedBox(
+                height: 200, // Adjust based on your image size
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal, // Enables horizontal scrolling
+                  itemCount: widget.data.media.length,
+                  itemBuilder: (context, index) {
+                    //? Stop when we are getting ahead of ourselves.
+                    if (index >= widget.data.media.length) return null;
+
+                    //? Just leave this as is.
+                    final resource = widget.data.media[index];
+
+                    //? This is fine.
+                    if (WayaFileExtensions.videos.contains(WayaFileHelper.getFileExtension(resource))) {
+                      final controller = videoControllers[index];
+                      return Container(
+                        height: 200.h,
+                        width: screenSize.width * 0.90,
+                        padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: Stack(
+                            children: [
+                              //? First, the video itself.
+                              WayaVideoWidget.networkUrl(
+                                Uri.parse(resource),
+                                controller: controller,
+                                controls: WayaVideoControls.none,
+                              ),
+
+                              //? Now, that special thing on top that tells you it is playable.
+                              Positioned.fill(
+                                child: Center(
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white.withOpacity(0.7),
+                                    ),
+                                    padding: EdgeInsets.all(8),
+                                    child: Icon(
+                                      Icons.play_arrow,
+                                      size: 30,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    }
+
+                    //? Return this one.
+                    return GestureDetector(
+                      onTap: () async {
+                        final result = await WayaNav.to(
+                          transition: Transition.downToUp,
+                          WayaImageDetailScreen(
+                            file: null,
+                            imageUrl: resource,
                           ),
                         );
+
+                        //? Do nothing.
+                        if (result == null) return;
                       },
-                    ),
-                  ),
+                      child: Padding(
+                        padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.r),
+                          child: WayaImage(
+                            imageUrl: resource,
+                            fit: BoxFit.cover,
+                            width: screenSize.width - (widget.padded ? 15.w : 0),
+                            height: 200.h,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
 
             //? Post actions: Like, Comment, Repost, Share
             Padding(
@@ -361,7 +529,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                 children: [
                   //? For liking a post.
                   PostActionType(
-                    text: '$liked ${liked <= 1 ? 'Like' : 'Likes'}',
+                    text: '${WayaValueHelper.formatNumber(liked)} ${liked <= 1 ? 'Like' : 'Likes'}',
                     image: WayaAssets.images.pages.like2.path,
                     color: widget.data.isLiked ? wayaTheme.colorScheme.primary : wayaTheme.colorScheme.greyColor500,
                     onPressed: widget.data.isLiked
@@ -405,7 +573,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
                   //? The action button for comments.
                   PostActionType(
-                    text: '$comment Comments',
+                    text: '${WayaValueHelper.formatNumber(comment)} Comments',
                     image: WayaAssets.images.pages.comment2.path,
                     color: comment == 0 ? wayaTheme.colorScheme.greyColor500 : wayaTheme.colorScheme.primary,
                     onPressed: () {
@@ -421,7 +589,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
                   //? For sharing a post.
                   PostActionType(
-                    text: '$shared Shares',
+                    text: '${WayaValueHelper.formatNumber(shared)} Shares',
                     image: WayaAssets.images.pages.share2.path,
                     color: shared == 0 ? wayaTheme.colorScheme.greyColor500 : wayaTheme.colorScheme.primary,
                     onPressed: () => _sharePost(engagementMonitor, pageNotifier, serviceNotifier),

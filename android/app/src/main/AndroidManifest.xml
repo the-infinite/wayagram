@@ -57,6 +57,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                <data android:scheme="https" android:host="wayagram.ng" />
+               <data android:scheme="http" android:host="wayagram.ng" />
             </intent-filter>
 
             <!-- Deep Link sample -->
@@ -66,7 +67,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Add optional android:host to distinguish your app
                     from others in case of conflicting scheme name -->
-                <data android:scheme="wayaGramApp" android:host="wayagram.app" />
+                <data android:scheme="waya" android:host="gram.app" />
+                <data android:scheme="waya" android:host="gram.ng" />
                 <!-- <data android:scheme="sample" /> -->
             </intent-filter>
 

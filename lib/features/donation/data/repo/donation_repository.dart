@@ -33,7 +33,9 @@ class DonationRepository extends BaseRepository {
       String privacy,
       String expirationDate,
       String image,
-      String startDate) {
+      String startDate,
+      String category
+      ) {
     final payload = {
       "title": title,
       "description": description,
@@ -44,13 +46,18 @@ class DonationRepository extends BaseRepository {
       "privacy": privacy,
       "expirationDate": expirationDate,
       "imageURL": image,
-      "startDate": startDate
+      "startDate": startDate,
+      "category": category
     };
     return post("$serviceUrl/client/campaigns", payload);
   }
 
+  // Future<WayaRequestResponse> getAllCampaigns(int page, [int limit = 15, String? organizerId]) {
+  //   return get("$serviceUrl/client/campaigns?page=$page&limit=$limit&${organizerId != null ? '&organizerId=$organizerId' : ''}");
+  // }
+
   Future<WayaRequestResponse> getAllCampaigns(int page, [int limit = 15, String? organizerId]) {
-    return get("$serviceUrl/client/campaigns?page=$page&limit=$limit&${organizerId != null ? '&organizerId=$organizerId' : ''}");
+    return get("$serviceUrl/client/campaigns?limit=$limit&page=$page&status=live&status=live&${organizerId != null ? '&organizerId=$organizerId' : ''}");
   }
 
   // Future<WayaRequestResponse> getMyCampaigns(String organizerId, int page) {
@@ -73,6 +80,17 @@ class DonationRepository extends BaseRepository {
     String organizerId,
   ) {
     return get("$serviceUrl/client/campaigns?organizerId=$organizerId&status=pending_approval");
+  }
+
+  Future<WayaRequestResponse> getRejectedDonation(
+      String organizerId,
+      ) {
+    return get("$serviceUrl/client/campaigns?organizerId=$organizerId&status=closed");
+  }
+
+  Future<WayaRequestResponse> getDonatedDonations(int page,
+      ) {
+    return get("$serviceUrl/client/campaigns/donated?page=$page");
   }
 
   Future<WayaRequestResponse> getSingleCampaign(String campaignId) {

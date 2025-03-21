@@ -28,7 +28,7 @@ class _UgtHomeState extends ConsumerState<UgtHome> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     //  ConversationState.self.id
-   // print("UGT HOME ${ConversationState.self.role?.name}");
+    // print("UGT HOME ${ConversationState.self.role?.name}");
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -57,27 +57,28 @@ class _UgtHomeState extends ConsumerState<UgtHome> {
           if (_selectedIndex == 1) MyContestDetails(),
         ],
       ),
-      floatingActionButton: ConversationState.self.accountType == UserAccountType.business
-          ? SizedBox(
-              height: 50,
-              width: 50,
-              child: WayaButton(
-                callback: () {
-                  ivalidateUGTVM(ref);
+      floatingActionButton:
+          ConversationState.self.accountType == UserAccountType.business
+              ? SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: WayaButton(
+                    callback: () {
+                      ivalidateUGTVM(ref);
 
-                  WayaNav.toNamed('/create-contest');
-                },
-                height: 50,
-                centerWidget: Center(
-                  child: Icon(
-                    Icons.add,
-                    color: wayaTheme.colorScheme.white,
-                    size: 40,
+                      WayaNav.toNamed('/create-contest');
+                    },
+                    height: 50,
+                    centerWidget: Center(
+                      child: Icon(
+                        Icons.add,
+                        color: wayaTheme.colorScheme.white,
+                        size: 40,
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            )
-          : null,
+                )
+              : null,
     );
   }
 }

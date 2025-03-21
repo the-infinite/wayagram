@@ -101,6 +101,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
 
             return;
           }
+          //?if contest is free but you have not accepted the stage
           if (element.entryType?.toLowerCase() == "free" &&
               element.hasAccepted == false) {
             SuccessfulModal(
@@ -158,18 +159,18 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     GestureDetector(
-                      onTap: (){
-                          WayaNav.toNamed("/view-media-full-page", arguments: {
-                        "url":  model.introVideo ?? "",
-                        "title":  "",
-                        "createdAt":"",
-                        "likeCount":"",
-                        "isLike": "",
-                        "showDescription":true,
-                        "discription": "",
-                        "shareCount":"",
-                        "type": MyFullMediaType.video
-                      });
+                      onTap: () {
+                        WayaNav.toNamed("/view-media-full-page", arguments: {
+                          "url": model.introVideo ?? "",
+                          "title": "",
+                          "createdAt": "",
+                          "likeCount": "",
+                          "isLike": "",
+                          "showDescription": true,
+                          "discription": "",
+                          "shareCount": "",
+                          "type": MyFullMediaType.video
+                        });
                       },
                       child: VideoThumbnailPlayer(
                         imageUrl: imageUrl.value,
@@ -288,7 +289,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
               width: 50,
               child: WayaButton(
                 callback: () {
-                  viewModel.updateContestId(model.id);
+                  viewModel.updateContestantId(model.id);
                   WayaNav.toNamed('/create-contest-post');
                 },
                 height: 50,
@@ -312,203 +313,5 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     } else {
       return isText ? Color(0xff865503) : Color(0xffFEF6E7);
     } */
-  }
-
-  Widget _buildStages(post.Stage model) {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      shape: Border.all(color: Colors.transparent), // Removes default border
-      collapsedShape: Border.all(color: Colors.transparent),
-      title: Text(
-        model.stageName ?? "name",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(
-                title: "Start Date",
-                isFromDetailsPage: true,
-                content: formatDate(model.startDate ?? "")),
-            const Gap(20),
-            UpcomingWidget(
-                isFromDetailsPage: true,
-                title: "End Date",
-                content: formatDate(model.endDate ?? "")),
-            const Gap(20),
-            UpcomingWidget(
-                isFromDetailsPage: true,
-                title: "Entry Type",
-                content: model.entryType ?? ""),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(
-                isFromDetailsPage: true,
-                title: "No of Posts",
-                content:
-                    "${model.numberOfPostPerWeek?.toString()} of Duration"),
-            const Gap(20),
-            UpcomingWidget(
-                isFromDetailsPage: true,
-                title: "Prize for Winner",
-                content:
-                    "NGN${formatMoney(model.priceOfTheWinner.toString())}"),
-            const Gap(20),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
-  }
-
-  Widget _buildStagesContestLevel1() {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      title: Text(
-        "Contest Level 1",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
-            const Gap(20),
-            UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
-  }
-
-  Widget _buildStagesContestLevel2() {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      title: Text(
-        "Contest Level 2",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
-            const Gap(20),
-            UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
-  }
-
-  Widget _buildStagesContestLevel3() {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      title: Text(
-        "Contest Level 3",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
-            const Gap(20),
-            UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
-  }
-
-  Widget _buildStagesContestFinal() {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      title: Text(
-        "Final Stage",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
-            const Gap(20),
-            UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
   }
 }
