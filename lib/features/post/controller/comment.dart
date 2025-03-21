@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
+import 'package:wayagram/features/post/vm/comment.dart';
 
 class CommentInputController extends ValueNotifier<int> {
   final content = TextEditingController();
@@ -7,12 +8,18 @@ class CommentInputController extends ValueNotifier<int> {
   String? postId;
   CommentModel? replyingTo;
   String? parentId;
+  CommentNotifier? notifier;
   CommentInputController._() : super(0);
 
   static final instance = CommentInputController._();
 
   void setPost(String postId) {
     this.postId = postId;
+    refresh();
+  }
+
+  void setNotifier(CommentNotifier notifier) {
+    this.notifier = notifier;
     refresh();
   }
 
@@ -32,6 +39,7 @@ class CommentInputController extends ValueNotifier<int> {
 
   void refresh() {
     value = value + 1;
+    notifier?.update();
   }
 
   void reset() {

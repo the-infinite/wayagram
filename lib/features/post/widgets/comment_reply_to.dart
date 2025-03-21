@@ -27,7 +27,7 @@ class CommentReplyToWidget extends StatefulWidget {
   State<CommentReplyToWidget> createState() => _CommentReplyToWidgetState();
 }
 
-class _CommentReplyToWidgetState extends State<CommentReplyToWidget> with TickerProviderStateMixin {
+class _CommentReplyToWidgetState extends State<CommentReplyToWidget> with SingleTickerProviderStateMixin {
   AnimationController? animationController;
 
   @override
@@ -54,82 +54,85 @@ class _CommentReplyToWidgetState extends State<CommentReplyToWidget> with Ticker
     final user = ConversationState.self;
 
     //? Then listen.
-    final composite = IntrinsicHeight(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          //? First, the bar that is used to convey color.
-          Container(
-            width: 5,
-            height: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(200),
-              color: widget.comment.userId == user.id ? WayaColors.primary : WayaColors.primary600,
-            ),
-          ),
-
-          // Some space.
-          const Gap(8),
-
-          //? Now for the text part of things...
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //? First, the top row where this user happens to keep important
-                  //? data.
-                  Row(
-                    mainAxisAlignment: widget.interactive ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      //* User name.
-                      Text(
-                        (widget.interactive && widget.controller.isEditing)
-                            ? "Edit comment"
-                            : widget.comment.userId == user.id
-                                ? "You"
-                                : widget.comment.user?.fullname ?? "WayaGram User",
-                        style: WayaTextStyles.titleMedium.copyWith(
-                          color: widget.comment.userId == user.id ? WayaColors.primary : WayaColors.primary600,
-                        ),
-                      ),
-
-                      //* Cancel button.
-                      if (widget.interactive)
-                        IconButton(
-                          onPressed: () {
-                            animationController!.reverse().then((_) => widget.controller.setReplyTo(null));
-                          },
-                          style: IconButton.styleFrom(
-                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                            padding: const EdgeInsets.all(2),
-                          ),
-                          icon: WayaAssets.icons.cMultiplyCircle.svg(
-                            color: WayaColors.greyColor400,
-                          ),
-                        ),
-                    ],
-                  ),
-
-                  //? The message contents.
-                  Text(
-                    widget.comment.content,
-                    maxLines: 3,
-                    style: WayaTextStyles.labelMedium.copyWith(
-                      fontSize: 15.sp,
-                      color: Colors.black,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
+    final composite = ValueListenableBuilder(
+      valueListenable: widget.controller,
+      builder: (context, redraws, _) => IntrinsicHeight(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //? First, the bar that is used to convey color.
+            Container(
+              width: 5,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(200),
+                color: widget.comment.userId == user.id ? WayaColors.primary : WayaColors.primary600,
               ),
             ),
-          )
-        ],
+
+            // Some space.
+            const Gap(8),
+
+            //? Now for the text part of things...
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //? First, the top row where this user happens to keep important
+                    //? data.
+                    Row(
+                      mainAxisAlignment: widget.interactive ? MainAxisAlignment.spaceBetween : MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        //* User name.
+                        Text(
+                          (widget.interactive && widget.controller.isEditing)
+                              ? "Edit comment"
+                              : widget.comment.userId == user.id
+                                  ? "You"
+                                  : widget.comment.user?.fullname ?? "WayaGram User",
+                          style: WayaTextStyles.titleMedium.copyWith(
+                            color: widget.comment.userId == user.id ? WayaColors.primary : WayaColors.primary600,
+                          ),
+                        ),
+
+                        //* Cancel button.
+                        if (widget.interactive)
+                          IconButton(
+                            onPressed: () {
+                              animationController!.reverse().then((_) => widget.controller.setReplyTo(null));
+                            },
+                            style: IconButton.styleFrom(
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                              padding: const EdgeInsets.all(2),
+                            ),
+                            icon: WayaAssets.icons.cMultiplyCircle.svg(
+                              color: WayaColors.greyColor400,
+                            ),
+                          ),
+                      ],
+                    ),
+
+                    //? The message contents.
+                    Text(
+                      widget.comment.content,
+                      maxLines: 3,
+                      style: WayaTextStyles.labelMedium.copyWith(
+                        fontSize: 15.sp,
+                        color: Colors.black,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
 

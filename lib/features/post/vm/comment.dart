@@ -330,6 +330,10 @@ class CommentNotifier extends StateNotifier<CommentState> {
     return false;
   }
 
+  void update() {
+    state = state.copyWith(typing: !state.typing);
+  }
+
   void reset() {
     state = CommentState.initial;
   }

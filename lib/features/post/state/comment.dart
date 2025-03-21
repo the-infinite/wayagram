@@ -10,6 +10,7 @@ class CommentState {
   final int limit;
   final int page;
   final bool hasNextPage;
+  final bool typing;
   final int totalCount;
   final int totalPages;
   final int replyPage;
@@ -29,6 +30,7 @@ class CommentState {
     required this.totalPages,
     required this.hasNextPage,
     required this.page,
+    required this.typing,
     required this.replyPage,
     required this.replyHasNextPage,
     required this.replyTotalCount,
@@ -47,6 +49,7 @@ class CommentState {
     totalPages: 0,
     hasNextPage: true,
     page: 1,
+    typing: false,
     replyPage: 1,
     replyHasNextPage: true,
     replyTotalCount: 0,
@@ -81,6 +84,7 @@ class CommentState {
       totalPages: totalPages ?? this.totalPages,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       page: page ?? this.page,
+      typing: typing ?? this.typing,
       controller: controller ?? this.controller,
       replyPage: replyPage ?? this.replyPage,
       replyHasNextPage: replyHasNextPage ?? this.replyHasNextPage,

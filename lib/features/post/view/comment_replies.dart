@@ -37,7 +37,9 @@ class _WayaCommentRepliesScreenState extends ConsumerState<WayaCommentRepliesScr
 
   @override
   void initState() {
-    //? This is fine.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      inputController.setNotifier(notifier);
+    });
     super.initState();
   }
 

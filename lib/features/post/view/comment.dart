@@ -40,6 +40,7 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
+        inputController.setNotifier(notifier);
         _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
           //? Fetch and update the comments every 5 seconds.
           notifier.getCommentsStream(widget.id).then(
