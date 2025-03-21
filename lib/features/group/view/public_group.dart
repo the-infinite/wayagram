@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/view/events.dart';
 import 'package:wayagram/features/group/view/group_post.dart';
@@ -18,6 +19,7 @@ import 'package:wayagram/features/group/view/media_post.dart';
 import 'package:wayagram/features/group/view/report_group.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/shared/features/group/notifier/default.dart';
 
 class PublicGroup extends ConsumerStatefulWidget {
   static const route = '/publicGroup';
@@ -260,32 +262,72 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
                   actionType('${ ref.read(createPageProvider).postCount}', 'Posts'),
                 ],
               ),
-              const Gap(10),
-              Row(
-                children: [
-                  WayaTabButton(
-                    isSelected: _selectedIndex == 0,
-                    text: 'Posts',
-                    onTap: () => setState(() => _selectedIndex = 0),
+
+                if(myGroupNotifier.isMemberOf('${args['groupId']}')) ...[
+                  Row(
+                    children: [
+                      WayaTabButton(
+                        isSelected: _selectedIndex == 0,
+                        text: 'Posts',
+                        onTap: () => setState(() => _selectedIndex = 0),
+                      ),
+                      WayaTabButton(
+                        isSelected: _selectedIndex == 1,
+                        text: 'Events',
+                        onTap: () => setState(() => _selectedIndex = 1),
+                      ),
+                      WayaTabButton(
+                        isSelected: _selectedIndex == 2,
+                        text: 'Media',
+                        onTap: () => setState(() => _selectedIndex = 2),
+                      ),
+                    ],
                   ),
-                  WayaTabButton(
-                    isSelected: _selectedIndex == 1,
-                    text: 'Events',
-                    onTap: () => setState(() => _selectedIndex = 1),
-                  ),
-                  WayaTabButton(
-                    isSelected: _selectedIndex == 2,
-                    text: 'Media',
-                    onTap: () => setState(() => _selectedIndex = 2),
-                  ),
-                ],
-              ),
+                  _selectedIndex == 0 ? GroupPost(groupId: '${args['groupId']}',) :
+                  _selectedIndex == 1 ? Events(): MediaPost(groupId: '${args['groupId']}')
+                ] else ...[
+                  Gap(100.h),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                    SvgPicture.asset(WayaAssets.icons.genSet.lock.path,),
+                    Gap(10),
+                    Text(
+                        'This group is private',
+                        style: wayaTheme.textTheme.titleLarge),
+                    Gap(10),
+                    Text(
+                        'You must join to see posts and participate',
+                        style: wayaTheme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w400,
+                          fontFamily: WayaConstants.fontFamily,
+                          fontSize: 16.sp,
+                        )),
+                    const Gap(30),
+
+                    WayaButton(
+                      callback: !viewModel.isLoading
+                          ? ()  async{
+                        await myGroupNotifier.joinGroup('${args['groupId']}');
+
+                      } : null,
+                      centerWidget: LoadingState(
+                          loading: viewModel.isLoading, text: 'Join & Request Access'),
+                    ),
+
+
+                  ],),
+
+                ]
+
+
 
               //const Gap(20),
             ],),
           ),
 
-          _selectedIndex == 0 ? GroupPost(groupId: '${args['groupId']}',) : _selectedIndex == 1 ? Events(): MediaPost(groupId: '${args['groupId']}')
+
           //AllOrders()
         ],
       ),
@@ -356,5 +398,40 @@ class _PublicGroupState extends ConsumerState<PublicGroup>
         ],
       ),
     );
+  }
+
+  cancelRequest(onTap, cancel){
+    final wayaTheme = Theme.of(context);
+    return  Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+      SvgPicture.asset(WayaAssets.icons.genSet.lock.path,),
+      Text(
+          'This group is private',
+          style: wayaTheme.textTheme.titleLarge),
+      Gap(10),
+      Text(
+          'You must join to see posts and participate',
+          style: wayaTheme.textTheme.titleSmall?.copyWith(
+            fontWeight: FontWeight.w400,
+            fontFamily: WayaConstants.fontFamily,
+            fontSize: 16.sp,
+          )),
+      const Gap(30),
+
+      WayaButton(
+        callback: onTap,
+        color: wayaTheme.colorScheme.white,
+        textColor: wayaTheme.colorScheme.greyColor700,
+        text: 'Access to Group requested',
+      ),
+      Gap(10),
+      InkWell(
+        onTap: cancel,
+        child: Text(
+            'Cancel request',
+            style: wayaTheme.textTheme.titleSmall),
+      ),
+    ],);
   }
 }

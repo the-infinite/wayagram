@@ -131,6 +131,40 @@ class TransactionPinVm extends StateNotifier<void> {
     }
   }
 
+  Future<void> resetPin() async {
+    final pin = ref.read(pinProvider);
+    final confirmPin = ref.read(confirmPinProvider);
+    final newConfirmPin = ref.read(newPinConfirmationProvider);
+    ref.read(isPinValidProvider.notifier).state = pin.length == 4 && pin != confirmPin;
+
+    ref.read(isPinValidProvider.notifier).state = pin.length == 4 && pin == confirmPin;
+
+    if (pin.length == 4 && confirmPin.length == 4 && newConfirmPin == confirmPin) {
+      ref.read(loadingProvider.notifier).state = true;
+      try {
+        final userId = _localDataSource.getUserId();
+
+        final response = await _changePinRepo.resetPin(userId: userId ?? '',
+            pin: pin, confirmPin: newConfirmPin);
+
+        if (response.success) {
+          WayaSnackBar.showToast('Pin Changed Successfully');
+          Future.delayed(Duration(seconds: 2), () {
+            WayaNav.offNamed('/general-settings');
+          });
+          ref.read(pinProvider.notifier).state = '';
+          ref.read(confirmPinProvider.notifier).state = '';
+          ref.read(newPinConfirmationProvider.notifier).state =
+          ''; // this code needs to  be refactored after the first deployment , it is hard working with it
+        }
+      } catch (e) {
+        _logger.e(e);
+      } finally {
+        ref.read(loadingProvider.notifier).state = false;
+      }
+    }
+  }
+
   void clearPins() {
     ref.read(pinProvider.notifier).state = '';
     ref.read(confirmPinProvider.notifier).state = '';
