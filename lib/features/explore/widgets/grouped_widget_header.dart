@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -12,12 +10,13 @@ class GroupedWidgetHeader extends StatelessWidget {
   final String subTitle;
   final bool isVisible;
 
-  const GroupedWidgetHeader(
-      {super.key,
-      this.onTap,
-      required this.subTitle,
-      this.isVisible = true,
-      required this.title});
+  const GroupedWidgetHeader({
+    super.key,
+    this.onTap,
+    required this.subTitle,
+    this.isVisible = true,
+    required this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -34,12 +33,18 @@ class GroupedWidgetHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(title, style: wayaTheme.textTheme.titleLarge),
+                Text(
+                  title,
+                  style: wayaTheme.textTheme.titleLarge?.copyWith(),
+                ),
                 const Gap(3),
-                Text(subTitle,
-                    style: WayaTextStyles.hintStyleBold.wayaCopyWith(
-                        color: WayaColors.greyColor500,
-                        fontWeight: FontWeight.w400))
+                Text(
+                  subTitle,
+                  style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                    color: WayaColors.greyColor500,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )
               ],
             ),
           ),
@@ -49,8 +54,7 @@ class GroupedWidgetHeader extends StatelessWidget {
               onTap: onTap,
               child: Text(
                 "See All",
-                style: WayaTextStyles.hintStyleBold
-                    .wayaCopyWith(color: WayaColors.primary500),
+                style: WayaTextStyles.hintStyleBold.wayaCopyWith(color: WayaColors.primary500),
               ),
             ),
           )
