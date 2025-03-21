@@ -23,6 +23,7 @@ class WayaCommentWidget extends StatefulWidget {
   final PostModel post;
   final WidgetRef ref;
   final bool canReply;
+  final CommentInputController controller;
 
   const WayaCommentWidget({
     super.key,
@@ -30,6 +31,7 @@ class WayaCommentWidget extends StatefulWidget {
     required this.comment,
     required this.post,
     required this.ref,
+    required this.controller,
     this.canReply = true,
   });
 
@@ -40,7 +42,6 @@ class WayaCommentWidget extends StatefulWidget {
 class _WayaCommentWidgetState extends State<WayaCommentWidget> {
   //? Configure the one you are replying to.
   late final notifier = widget.ref.read(createCommentProvider.notifier);
-  final controller = CommentInputController.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -144,7 +145,7 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                                 //? Third, the button to edit a comment.
                                 PopupMenuItem<int>(
                                   value: 2,
-                                  onTap: () => controller.setReplyTo(comment, true),
+                                  onTap: () => widget.controller.setReplyTo(comment, true),
                                   child: WayaActionNav(
                                     context: context,
                                     asset: WayaAssets.icons.mEdit.svg(
@@ -245,7 +246,7 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
 
                   //? Third, the button to reply to the comment of a post.
                   GestureDetector(
-                    onTap: () => controller.setReplyTo(comment),
+                    onTap: () => widget.controller.setReplyTo(comment),
                     child: Container(
                       height: 32.h,
                       width: 32.w,
@@ -277,11 +278,11 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                 InkWell(
                   onTap: () async {
                     try {
-                      final replyTo = controller.replyingTo;
+                      final replyTo = widget.controller.replyingTo;
 
                       //? You are replying to this particular post.
-                      controller.setReplyTo(comment);
-                      controller.setParentId(comment.id);
+                      widget.controller.setReplyTo(comment);
+                      widget.controller.setParentId(comment.id);
 
                       //? Now, let us continue.
                       final result = await WayaNav.to(
@@ -294,7 +295,7 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                       );
 
                       //? Reset the reply to.
-                      controller.setReplyTo(replyTo);
+                      widget.controller.setReplyTo(replyTo);
 
                       //? Do nothing.
                       if (result == null) return;

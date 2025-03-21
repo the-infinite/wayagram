@@ -12,12 +12,14 @@ class CommentReplyToWidget extends StatefulWidget {
   final CommentModel comment;
   final WidgetRef ref;
   final bool interactive;
+  final CommentInputController controller;
 
   // Construct.
   const CommentReplyToWidget({
     super.key,
     required this.comment,
     required this.ref,
+    required this.controller,
     this.interactive = true,
   });
 
@@ -50,7 +52,6 @@ class _CommentReplyToWidgetState extends State<CommentReplyToWidget> with Ticker
   @override
   Widget build(BuildContext context) {
     final user = ConversationState.self;
-    final controller = CommentInputController.instance;
 
     //? Then listen.
     final composite = IntrinsicHeight(
@@ -87,7 +88,7 @@ class _CommentReplyToWidgetState extends State<CommentReplyToWidget> with Ticker
                     children: [
                       //* User name.
                       Text(
-                        (widget.interactive && controller.isEditing)
+                        (widget.interactive && widget.controller.isEditing)
                             ? "Edit comment"
                             : widget.comment.userId == user.id
                                 ? "You"
@@ -101,7 +102,7 @@ class _CommentReplyToWidgetState extends State<CommentReplyToWidget> with Ticker
                       if (widget.interactive)
                         IconButton(
                           onPressed: () {
-                            animationController!.reverse().then((_) => controller.setReplyTo(null));
+                            animationController!.reverse().then((_) => widget.controller.setReplyTo(null));
                           },
                           style: IconButton.styleFrom(
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,

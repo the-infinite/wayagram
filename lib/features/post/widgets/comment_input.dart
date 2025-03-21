@@ -16,6 +16,7 @@ class CommentInputField extends ConsumerWidget {
   final GlobalKey<FormState> formKey;
   final ValueNotifier<bool> loadingController;
   final CommentNotifier notifier;
+  final CommentInputController controller;
 
   // Construct.
   const CommentInputField({
@@ -24,12 +25,12 @@ class CommentInputField extends ConsumerWidget {
     required this.loadingController,
     required this.post,
     required this.notifier,
+    required this.controller,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final controller = CommentInputController.instance;
     final replyTo = controller.replyingTo;
 
     //? For our comment input field.
@@ -45,6 +46,7 @@ class CommentInputField extends ConsumerWidget {
             CommentReplyToWidget(
               comment: replyTo,
               ref: ref,
+              controller: controller,
             ),
           ],
 

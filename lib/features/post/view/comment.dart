@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/post/controller/comment.dart';
 import 'package:wayagram/features/post/widgets/comment_input.dart';
 import 'package:wayagram/features/post/vm/comment.dart';
 import 'package:wayagram/features/post/widgets/comment.dart';
@@ -29,6 +30,7 @@ class PostCommentsWidget extends ConsumerStatefulWidget {
 
 class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
   late final notifier = ref.read(createCommentProvider.notifier);
+  final inputController = CommentInputController.instance;
   final loadingController = ValueNotifier(false);
   final handler = WayaObservableScrollController();
   final formKey = GlobalKey<FormState>();
@@ -110,6 +112,7 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
                     comment: state.comments[index],
                     post: widget.post,
                     ref: ref,
+                    controller: inputController,
                   ),
                 ),
               ),
@@ -123,6 +126,7 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
               loadingController: loadingController,
               post: widget.post,
               notifier: notifier,
+              controller: inputController,
             ),
           ],
         ),
