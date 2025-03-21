@@ -287,13 +287,17 @@ class WayaCheckButton extends StatelessWidget {
   final bool isSelected;
   final String text;
   final double fontSize;
+  final bool hasBackground;
+  final bool isExpanded;
 
   const WayaCheckButton({
     super.key,
     required this.onTap,
     required this.isSelected,
     required this.text,
+    this.isExpanded = true,
     this.fontSize = 16,
+    this.hasBackground = false,
   });
 
   @override
@@ -304,29 +308,45 @@ class WayaCheckButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 15),
+      child: Container(
+        padding: EdgeInsets.only(top: 7.h, bottom: 7.h, left: 15.w),
+        decoration: hasBackground
+            ? BoxDecoration(
+                color: isSelected
+                    ? theme.colorScheme.customPrimary.withAlpha(30)
+                    : theme.colorScheme.greyColor400.withAlpha(30),
+                borderRadius: BorderRadius.circular(2000.r),
+                border: Border.all(
+                  color: isSelected ? theme.colorScheme.customPrimary : theme.colorScheme.greyColor300,
+                ))
+            : null,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: isExpanded ? MainAxisSize.max : MainAxisSize.min,
           children: [
             //? First, the title.
             Text(
               text,
               style: theme.textTheme.bodyMedium?.copyWith(
                 fontSize: fontSize,
+                color: hasBackground
+                    ? isSelected
+                        ? theme.colorScheme.customPrimary
+                        : theme.colorScheme.greyColor400
+                    : null,
               ),
             ),
 
             // Boundless space.
-            const Spacer(),
+            if (isExpanded) const Spacer() else SizedBox(width: 10.w),
 
             //? Finally, the toggling checkbox.
             Checkbox(
               value: isSelected,
               tristate: false,
               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              splashRadius: 12,
+              splashRadius: hasBackground ? 1 : 12,
               fillColor: WidgetStateColor.resolveWith(
                 (states) {
                   //? If this is selected...
@@ -339,7 +359,7 @@ class WayaCheckButton extends StatelessWidget {
                 },
               ),
               side: BorderSide(
-                color: isSelected ? theme.colorScheme.greyColor300 : theme.colorScheme.primary,
+                color: isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor300,
               ),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(100000),

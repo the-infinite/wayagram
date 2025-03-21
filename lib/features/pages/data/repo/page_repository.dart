@@ -60,8 +60,7 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> unlikePost(postId) {
-    final payload = {};
-    return post("$serviceUrl/posts/likes/$postId", payload);
+    return delete("$serviceUrl/posts/likes/$postId");
   }
 
   Future<WayaRequestResponse> repost(postId) {

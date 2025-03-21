@@ -29,7 +29,7 @@ class ConversationFeedWidget extends ConsumerWidget {
           chat: state.conversations[index],
           notifier: chatNotifier,
           conversationNotifier: notifier,
-          isInteractive: isExpanded,
+          isInteractive: false,
         ),
       ),
     );
