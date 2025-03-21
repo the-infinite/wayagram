@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/controller/preloader.dart';
 
 class WayaPreloaderOverlay extends StatefulWidget {
   const WayaPreloaderOverlay({super.key});
@@ -23,7 +24,7 @@ class _WayaPreloaderOverlayState extends State<WayaPreloaderOverlay> {
       (_) async {
         _timer = Timer.periodic(
           const Duration(milliseconds: 500),
-          (timer) {
+          (timer) async {
             //? If this is showing only the first icon
             if (step == 1) {
               step = 2;
@@ -35,6 +36,14 @@ class _WayaPreloaderOverlayState extends State<WayaPreloaderOverlay> {
             if (step == 2) {
               step = 3;
               showThree.value = CrossFadeState.showSecond;
+
+              //? Then this is dismissed.
+              if (WayaPreloaderController.instance.hideOnEnd) {
+                await Future.delayed(const Duration(milliseconds: 750));
+                WayaPreloaderController.instance.dismiss();
+              }
+
+              //? Moving forward.
               return;
             }
 

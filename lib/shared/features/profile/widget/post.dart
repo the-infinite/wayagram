@@ -441,11 +441,15 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                   scrollDirection: Axis.horizontal, // Enables horizontal scrolling
                   itemCount: widget.data.media.length,
                   itemBuilder: (context, index) {
+                    //? Stop when we are getting ahead of ourselves.
+                    if (index >= widget.data.media.length) return null;
+
+                    //? Just leave this as is.
                     final resource = widget.data.media[index];
-                    final controller = videoControllers[index];
 
                     //? This is fine.
                     if (WayaFileExtensions.videos.contains(WayaFileHelper.getFileExtension(resource))) {
+                      final controller = videoControllers[index];
                       return Container(
                         height: 200.h,
                         width: screenSize.width * 0.90,

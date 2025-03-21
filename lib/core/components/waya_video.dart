@@ -235,7 +235,7 @@ class WayaVideoWidget extends StatefulWidget {
   }
 }
 
-class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProviderStateMixin {
+class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderStateMixin {
   AnimationController? animationController;
   bool _controlsHidden = false;
   Timer? _timer;

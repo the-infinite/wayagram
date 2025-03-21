@@ -4,32 +4,38 @@ import 'package:wayagram/features/post/model/fetch_comment.dart';
 class CommentState {
   final bool isLoading;
   final bool hasLoaded;
-  final bool isEditing;
   final ScrollController controller;
   final List<CommentModel> comments;
-  final CommentState? childrenState;
-  final String? replyingTo;
+  final List<CommentModel> replies;
   final int limit;
   final int page;
   final bool hasNextPage;
+  final bool typing;
   final int totalCount;
   final int totalPages;
-  final String? postId;
+  final int replyPage;
+  final bool replyHasNextPage;
+  final bool replyHasLoaded;
+  final int replyTotalCount;
+  final int replyTotalPages;
 
   CommentState({
     required this.isLoading,
     required this.hasLoaded,
-    required this.isEditing,
     required this.comments,
+    required this.replies,
     required this.limit,
     required this.controller,
-    required this.replyingTo,
     required this.totalCount,
     required this.totalPages,
-    required this.childrenState,
     required this.hasNextPage,
     required this.page,
-    required this.postId,
+    required this.typing,
+    required this.replyPage,
+    required this.replyHasNextPage,
+    required this.replyTotalCount,
+    required this.replyTotalPages,
+    required this.replyHasLoaded,
   });
 
   static final initial = CommentState(
@@ -39,44 +45,52 @@ class CommentState {
     limit: 100,
     controller: ScrollController(),
     totalCount: 0,
+    replies: [],
     totalPages: 0,
-    isEditing: false,
-    replyingTo: null,
-    childrenState: null,
     hasNextPage: true,
     page: 1,
-    postId: null,
+    typing: false,
+    replyPage: 1,
+    replyHasNextPage: true,
+    replyTotalCount: 0,
+    replyTotalPages: 0,
+    replyHasLoaded: false,
   );
 
   CommentState copyWith({
     bool? isLoading,
     bool? hasLoaded,
     List<CommentModel>? comments,
+    List<CommentModel>? replies,
     int? page,
     bool? hasNextPage,
     int? totalCount,
     int? totalPages,
-    String? replyingTo,
-    bool? isEditing,
-    CommentState? childrenState,
     ScrollController? controller,
     bool? typing,
-    String? postId,
+    int? replyPage,
+    bool? replyHasNextPage,
+    bool? replyHasLoaded,
+    int? replyTotalCount,
+    int? replyTotalPages,
   }) {
     return CommentState(
       isLoading: isLoading ?? this.isLoading,
       hasLoaded: hasLoaded ?? this.hasLoaded,
       comments: comments ?? this.comments,
       limit: limit,
+      replies: replies ?? this.replies,
       totalCount: totalCount ?? this.totalCount,
       totalPages: totalPages ?? this.totalPages,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       page: page ?? this.page,
-      isEditing: isEditing ?? this.isEditing,
-      replyingTo: replyingTo ?? this.replyingTo,
-      childrenState: childrenState ?? this.childrenState,
+      typing: typing ?? this.typing,
       controller: controller ?? this.controller,
-      postId: postId ?? this.postId,
+      replyPage: replyPage ?? this.replyPage,
+      replyHasNextPage: replyHasNextPage ?? this.replyHasNextPage,
+      replyTotalCount: replyTotalCount ?? this.replyTotalCount,
+      replyTotalPages: replyTotalPages ?? this.replyTotalPages,
+      replyHasLoaded: replyHasLoaded ?? this.replyHasLoaded,
     );
   }
 }

@@ -25,7 +25,6 @@ import 'package:wayagram/features/post/model/saved_posts.dart';
 
 import '../../group/data/model/group_post_model.dart';
 import '../../group/view/groups.dart';
-import '../../post/model/fetch_comment.dart';
 
 class UploadedImage {
   final String url;
@@ -492,22 +491,6 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  Future<void> commentOnPost(String postId, String content, [String? parentId]) async {
-    try {
-      final response = await _pageRepository.commentOnPost(postId, content, parentId);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        getCommentsStream(postId);
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.pages,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
-  }
-
   Future<void> deletePost(ctx, {required String postId, required String userId}) async {
     try {
       final response = await _pageRepository.deletePost(postId);
@@ -707,53 +690,6 @@ class PageVm extends StateNotifier<PageState> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
-  }
-
-  FutureOr<List<CommentModel>> getComments(String postId) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.getComment(postId);
-      state = state.copyWith(isLoading: false);
-
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        //print("uri: ${response.realUri}");
-        final data = response.data["comments"] as List;
-
-        final comment = data.map((json) => CommentModel.fromJson(json)).toList();
-        // _isLoading = false;
-
-        return comment;
-      } else {
-        //_isLoading = false;
-        _errorMessage = 'Failed to fetch comment';
-
-        return [];
-      }
-    } catch (e) {
-      return [];
-    }
-  }
-
-  Future<List<CommentModel>> getCommentsStream(String postId) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.getComment(postId);
-      state = state.copyWith(isLoading: false);
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        FetchComment responseModel = FetchComment.fromJson(response.data);
-        state = state.copyWith(comments: responseModel.data?.comments);
-        return responseModel.data?.comments ?? [];
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.pages,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    }
-    state = state.copyWith(isLoading: false);
-    return [];
   }
 
   Future<void> getPopularPosts() async {
