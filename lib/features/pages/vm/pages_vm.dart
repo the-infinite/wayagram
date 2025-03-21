@@ -17,14 +17,12 @@ import 'package:wayagram/features/pages/data/model/page_popular_post_model.dart'
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/data/model/pages_users_follow_model.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
-import 'package:wayagram/features/pages/view/pages.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
 import 'package:wayagram/features/post/model/saved_posts.dart';
 
 import '../../group/data/model/group_post_model.dart';
-import '../../group/view/groups.dart';
 
 class UploadedImage {
   final String url;
@@ -242,8 +240,12 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  Future<void> reportPage(
-      {required String pageId, required String reason, String? comment, required BuildContext context}) async {
+  Future<void> reportPage({
+    required String pageId,
+    required String reason,
+    String? comment,
+    required BuildContext context,
+  }) async {
     try {
       state = state.copyWith(isReportingPage: true);
       final response = await _pageRepository.reportPage(pageId, reason);
@@ -256,9 +258,7 @@ class PageVm extends StateNotifier<PageState> {
           await WayaUtils.showNotice(
             context: context,
             title: "Thank you for reporting",
-            onPress: () {
-              WayaNav.replaceNamed(Pages.route);
-            },
+            onPress: () => WayaNav.goBack(),
             icon: Image.asset(
               WayaAssets.images.eCheckEvent.path,
               scale: 1.5,
@@ -266,6 +266,9 @@ class PageVm extends StateNotifier<PageState> {
             message: 'Your report has been submitted. Our team will review the issue and take appropriate action.',
             buttonText: 'Go to Page Dashboard',
           );
+
+          //? This is fine.
+          WayaNav.goBack();
         }
       }
     } catch (e) {
@@ -280,27 +283,33 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> reportPost(
-      {required String postId, required String reason, String? comment, required BuildContext context}) async {
+  Future<void> reportPost({
+    required String postId,
+    required String reason,
+    String? comment,
+  }) async {
     try {
       state = state.copyWith(isReportingPost: true);
       final response = await _pageRepository.reportPost(postId, reason);
 
-      if (response.success && context.mounted) {
-        WayaUtils.showNotice(
-            context: context,
-            title: "Thank you for reporting",
-            onPress: () {
-              WayaNav.replaceNamed(Pages.route);
-            },
-            icon: Image.asset(
-              WayaAssets.images.eCheckEvent.path,
-              scale: 1.5,
-            ),
-            message: 'Your report has been submitted. Our team will review the issue and take appropriate action.',
-            buttonText: 'Go to Page Dashboard');
-        // show success modal
-        //WayaNav.goBack();
+      if (response.success) {
+        // This is fine.
+        WayaNav.goBack();
+
+        await WayaUtils.showNotice(
+          context: WayaNav.context,
+          title: "Thank you for reporting",
+          onPress: () => WayaNav.goBack(),
+          icon: Image.asset(
+            WayaAssets.images.eCheckEvent.path,
+            scale: 1.5,
+          ),
+          message: 'Your report has been submitted. Our team will review the issue and take appropriate action.',
+          buttonText: 'Go to Page Dashboard',
+        );
+
+        // This is fine.
+        WayaNav.goBack();
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -314,29 +323,28 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> reportGroupPost(
-      {required String groupId, required String reason, String? comment, required BuildContext context}) async {
+  Future<void> reportGroupPost({
+    required String groupId,
+    required String reason,
+    String? comment,
+    required BuildContext context,
+  }) async {
     try {
       state = state.copyWith(isReportingPost: true);
       final response = await _pageRepository.reportPost(groupId, reason);
 
-      if (response.success && context.mounted) {
-        // show success modal
-        WayaNav.goBack();
-        if (context.mounted) {
-          await WayaUtils.showNotice(
-              context: context,
-              title: "Thank you for reporting",
-              onPress: () {
-                WayaNav.replaceNamed(Groups.route);
-              },
-              icon: Image.asset(
-                WayaAssets.images.eCheckEvent.path,
-                scale: 1.5,
-              ),
-              message: 'Your report has been submitted. Our team will review the issue and take appropriate action.',
-              buttonText: 'Go to Group Dashboard');
-        }
+      if (response.success) {
+        WayaUtils.showNotice(
+          context: WayaNav.context,
+          title: "Thank you for reporting",
+          onPress: () => WayaNav.goBack(),
+          icon: Image.asset(
+            WayaAssets.images.eCheckEvent.path,
+            scale: 1.5,
+          ),
+          message: 'Your report has been submitted. Our team will review the issue and take appropriate action.',
+          buttonText: 'Go to Page Dashboard',
+        );
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(

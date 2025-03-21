@@ -320,9 +320,9 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                             //? First, the button to share a post.
                             PopupMenuItem<int>(
                               value: 2,
+                              onTap: () => _sharePost(engagementMonitor, pageNotifier, serviceNotifier),
                               child: WayaActionNav(
                                 context: context,
-                                onTap: () => _sharePost(engagementMonitor, pageNotifier, serviceNotifier),
                                 asset: WayaAssets.icons.share.svg(
                                   height: 20,
                                 ),
@@ -336,10 +336,13 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               //? Second, the button to delete a post
                               PopupMenuItem<int>(
                                 value: 1,
+                                onTap: () => pageNotifier.deletePost(
+                                  context,
+                                  postId: widget.data.id,
+                                  userId: ConversationState.self.id,
+                                ),
                                 child: WayaActionNav(
                                   context: context,
-                                  onTap: () => pageNotifier.deletePost(context,
-                                      postId: widget.data.id, userId: ConversationState.self.id),
                                   asset: WayaAssets.images.pages.delete.svg(
                                     color: wayaTheme.colorScheme.error500,
                                     height: 20,
@@ -356,18 +359,18 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               //? Third, the button to report a group post.
                               PopupMenuItem<int>(
                                 value: 0,
+                                onTap: () {
+                                  WayaUtils.showModalSheet(
+                                    context,
+                                    child: ReportGroupPost(
+                                      statuses: pageReport,
+                                      currentStatus: "",
+                                      postId: widget.data.id,
+                                    ),
+                                  );
+                                },
                                 child: WayaActionNav(
                                   context: context,
-                                  onTap: () {
-                                    WayaUtils.showModalSheet(
-                                      context,
-                                      child: ReportGroupPost(
-                                        statuses: pageReport,
-                                        currentStatus: "",
-                                        postId: widget.data.id,
-                                      ),
-                                    );
-                                  },
                                   asset: WayaAssets.images.pages.flag.svg(),
                                   text: "Report",
                                   color: wayaTheme.colorScheme.customBlack,

@@ -51,10 +51,10 @@ class WayaVideoController {
     _controller?.removeListener(listener);
   }
 
-  Future<void> dispose() {
+  Future<void> dispose() async {
     _isPlaying.dispose();
     _isMuted.dispose();
-    return _controller!.dispose();
+    _controller?.dispose();
   }
 
   Future<void> pause() {
