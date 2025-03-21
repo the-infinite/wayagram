@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -41,6 +42,9 @@ class ChatInputController {
 
   /// Our voice recorder.
   RecorderController? _soundRecorder;
+
+  /// Our nice way of keeping track of what you are currently focusing on.
+  FocusNode? _focusNode;
 
   /// Our momentId.
   String? _momentId;
@@ -116,8 +120,9 @@ class ChatInputController {
     _isEditing.value = false;
     _contacts.value = [];
     _files.value = [];
-    _soundRecorder?.dispose();
-    _soundRecorder = null;
+    _focusNode?.unfocus();
+    _focusNode?.dispose();
+    _focusNode = null;
     _focusedMessage.value = null;
     _isMedia.value = false;
     _momentId = null;
@@ -197,6 +202,14 @@ class ChatInputController {
     _replyTo.value = message;
     _isEditing.value = isEditing;
     _momentId = momentId;
+
+    //? If you can request focus
+    if (_focusNode!.canRequestFocus) {
+      _focusNode!.requestFocus();
+    }
+
+    //? Now, tell me the situation.
+    debugPrint("Is focused: ${_focusNode!.hasFocus}");
   }
 
   /// A helper function used to set the type of message that this is currently
@@ -551,43 +564,64 @@ class ChatInputWidget extends StatelessWidget {
                                 );
                               },
                             ),
-                      secondChild: WayaTextFormField(
-                        hintText: "Write a message here",
-                        showBorder: false,
-                        maxLines: 5,
-                        onChanged: (value) {
-                          //? If this is a text message, allowing a user to send
-                          //? a message would need to ENTIRELY depend on the
-                          //? contents of the message text.
-                          if (controller._currentType.value == MessageType.text) {
-                            controller._canSend.value = value.trim().isNotEmpty;
-                          }
+                      secondChild: Consumer(
+                        builder: (context, ref, _) {
+                          //? Watch this for changes.
+                          ref.watch(chatProvider);
 
-                          //? If this has no chat yet...
-                          if (controller._chat == null) return;
+                          //? Change the controller's focus node.
+                          controller._focusNode?.dispose();
+                          controller._focusNode = FocusNode();
 
-                          //? If this is not in the state we are thinking of...
-                          if (!controller._isTyping.value) {
-                            WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, true));
-                            controller._isTyping.value = true;
-                          }
+                          //? Return the textfield.
+                          return TextField(
+                            maxLines: 5,
+                            minLines: 1,
+                            focusNode: controller._focusNode,
+                            onChanged: (value) {
+                              //? If this is a text message, allowing a user to send
+                              //? a message would need to ENTIRELY depend on the
+                              //? contents of the message text.
+                              if (controller._currentType.value == MessageType.text) {
+                                controller._canSend.value = value.trim().isNotEmpty;
+                              }
 
-                          //? Since this is the case, emit the typing event so
-                          //? everyone knows this user is typing.
-                          debounce(key: "control-typing", delay: const Duration(milliseconds: 800), () {
-                            WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, false));
-                            controller._isTyping.value = false;
-                          })();
+                              //? If this has no chat yet...
+                              if (controller._chat == null) return;
+
+                              //? If this is not in the state we are thinking of...
+                              if (!controller._isTyping.value) {
+                                WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, true));
+                                controller._isTyping.value = true;
+                              }
+
+                              //? Since this is the case, emit the typing event so
+                              //? everyone knows this user is typing.
+                              debounce(key: "control-typing", delay: const Duration(milliseconds: 800), () {
+                                WayaSocketController.instance
+                                    .emit(WayaChatSocketArgs.typing(controller.chat.id, false));
+                                controller._isTyping.value = false;
+                              })();
+                            },
+                            style: WayaTextStyles.labelMedium,
+                            decoration: InputDecoration(
+                              isDense: true,
+                              contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              fillColor: WayaColors.greyColor200,
+                              filled: true,
+                              hintText: "Write a message here",
+                              hintStyle: WayaTextStyles.hintStyle,
+                              labelStyle: WayaTextStyles.labelSmall,
+                            ),
+                            textInputAction: TextInputAction.newline,
+                            keyboardType: TextInputType.multiline,
+                            controller: controller._textController,
+                          );
                         },
-                        onFieldSubmitted: (_) {
-                          WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, false));
-                        },
-                        isDense: true,
-                        textInputAction: TextInputAction.newline,
-                        keyboardType: TextInputType.multiline,
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-                        fillColor: WayaColors.greyColor200,
-                        controller: controller._textController,
                       ),
                     ),
                   ),

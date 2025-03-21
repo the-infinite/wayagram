@@ -33,6 +33,7 @@ class SingleChatScreen extends ConsumerStatefulWidget {
 class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   late final notifier = ref.watch(chatProvider.notifier);
   final handler = WayaObservableScrollController();
+  bool _initialized = false;
 
   @override
   void initState() {
@@ -90,11 +91,14 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
           : null;
 
       // Set this up.
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) {
-          inputController.setChat(chat);
-        },
-      );
+      if (!_initialized) {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            _initialized = true;
+            inputController.setChat(chat);
+          },
+        );
+      }
 
       //? This is fine.
       return PopScope(

@@ -190,77 +190,78 @@ class _SingleGroupWidgetState extends State<SingleGroupWidget> {
           ),
         ),
         child: ValueListenableBuilder(
-            valueListenable: wayaGroupCache,
-            builder: (context, redraws, _) {
-              //? Our data.
-              final group = wayaGroupCache.getCachedData(widget.group.id) ?? widget.group;
+          valueListenable: wayaGroupCache,
+          builder: (context, redraws, _) {
+            //? Our data.
+            final group = wayaGroupCache.getCachedData(widget.group.id) ?? widget.group;
 
-              //? Build the widget.
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: 5.h,
-                children: [
-                  ListTile(
-                    contentPadding: EdgeInsets.only(left: 0, right: 0),
-                    leading: CircleAvatar(
-                      radius: 40,
-                      backgroundColor: wayaTheme.colorScheme.greyColor100,
-                      backgroundImage: NetworkImage(group.profileImage ?? ""),
-                    ),
-                    trailing: group.ownerId == ConversationState.self.id
-                        ? null
-                        : SizedBox(
-                            width: 70.w,
-                            child: IntrinsicHeight(
-                              child: WayaProgressiveButton(
-                                notifier: loadingController,
-                                callback: _joinGroup,
-                                text: myGroupNotifier.isMemberOf(group.id) ? "Leave" : "Join",
-                                height: 30.h,
-                                textStyle: wayaTheme.textTheme.titleMedium?.copyWith(
-                                  color: wayaTheme.colorScheme.white,
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w500,
-                                ),
+            //? Build the widget.
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              spacing: 5.h,
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.only(left: 0, right: 0),
+                  leading: CircleAvatar(
+                    radius: 40,
+                    backgroundColor: wayaTheme.colorScheme.greyColor100,
+                    backgroundImage: NetworkImage(group.profileImage ?? ""),
+                  ),
+                  trailing: group.ownerId == ConversationState.self.id
+                      ? null
+                      : SizedBox(
+                          width: 70.w,
+                          child: IntrinsicHeight(
+                            child: WayaProgressiveButton(
+                              notifier: loadingController,
+                              callback: _joinGroup,
+                              text: myGroupNotifier.isMemberOf(group.id) ? "Leave" : "Join",
+                              height: 30.h,
+                              textStyle: wayaTheme.textTheme.titleMedium?.copyWith(
+                                color: wayaTheme.colorScheme.white,
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
-                    title: Text(
-                      group.name,
-                      style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
-                        color: wayaTheme.colorScheme.black,
-                      ),
-                    ),
-                    subtitle: Text(
-                      "${WayaValueHelper.formatNumber(group.memberCount)} members",
-                      style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
-                        color: wayaTheme.colorScheme.greyColor500,
-                      ),
+                        ),
+                  title: Text(
+                    group.name,
+                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: wayaTheme.colorScheme.black,
                     ),
                   ),
+                  subtitle: Text(
+                    "${WayaValueHelper.formatNumber(group.memberCount)} members",
+                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: wayaTheme.colorScheme.greyColor500,
+                    ),
+                  ),
+                ),
 
-                  // Finally, the group's description.
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15),
-                    child: Text(
-                      group.description,
-                      maxLines: 2,
-                      style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                        fontSize: 14.sp,
-                        overflow: TextOverflow.ellipsis,
-                        fontWeight: FontWeight.w400,
-                        color: wayaTheme.colorScheme.greyColor500,
-                      ),
+                // Finally, the group's description.
+                Padding(
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text(
+                    group.description,
+                    maxLines: 2,
+                    style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                      fontSize: 14.sp,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.w400,
+                      color: wayaTheme.colorScheme.greyColor500,
                     ),
                   ),
-                ],
-              );
-            }),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }

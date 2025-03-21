@@ -17,7 +17,6 @@ import 'package:wayagram/features/post/view/comment.dart';
 import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
-import 'package:wayagram/shared/features/media/image.dart';
 import 'package:wayagram/shared/features/profile/logic/default.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
@@ -129,15 +128,18 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
                                   postData.group?.isPrivate == true
-                                      ? WayaNav.toNamed('/privateGroup', arguments: {
-                                          'memberCount': '${postData.group?.memberCount}',
-                                          'name': postData.group?.name,
-                                          'url': '${postData.group?.url}',
-                                          'desc': postData.group?.description,
-                                          'coverImage': '${postData.group?.coverImage}',
-                                          'profileImage': '${postData.group?.profileImage}',
-                                          'groupId': postData.group?.id,
-                                        })
+                                      ? WayaNav.toNamed(
+                                          '/privateGroup',
+                                          arguments: {
+                                            'memberCount': '${postData.group?.memberCount}',
+                                            'name': postData.group?.name,
+                                            'url': '${postData.group?.url}',
+                                            'desc': postData.group?.description,
+                                            'coverImage': '${postData.group?.coverImage}',
+                                            'profileImage': '${postData.group?.profileImage}',
+                                            'groupId': postData.group?.id,
+                                          },
+                                        )
                                       : WayaNav.toNamed(
                                           '/publicGroup',
                                           arguments: {
@@ -435,7 +437,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                     Container()
                   else
                     SizedBox(
-                      height: 200, // Adjust based on your image size
+                      height: 200.h, // Adjust based on your image size
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal, // Enables horizontal scrolling
                         itemCount: postData.media.length,
@@ -452,7 +454,11 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                             return Container(
                               height: 200.h,
                               width: screenSize.width * 0.90,
-                              padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                              padding: widget.padded
+                                  ? EdgeInsets.symmetric(horizontal: 8.w)
+                                  : index == 0
+                                      ? EdgeInsets.zero
+                                      : EdgeInsets.only(left: 8.w),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10.r),
                                 child: Stack(
@@ -475,7 +481,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                           padding: EdgeInsets.all(8),
                                           child: Icon(
                                             Icons.play_arrow,
-                                            size: 30,
+                                            size: 30.dg,
                                             color: Colors.black,
                                           ),
                                         ),
@@ -490,19 +496,20 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                           //? Return this one.
                           return GestureDetector(
                             onTap: () async {
-                              final result = await WayaNav.to(
-                                transition: Transition.downToUp,
-                                WayaImageDetailScreen(
-                                  file: null,
-                                  imageUrl: resource,
-                                ),
+                              final result = await WayaNavigationHelper.toImageDetailsScreen(
+                                null,
+                                [resource],
                               );
 
                               //? Do nothing.
                               if (result == null) return;
                             },
                             child: Padding(
-                              padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                              padding: widget.padded
+                                  ? EdgeInsets.symmetric(horizontal: 8.w)
+                                  : index == 0
+                                      ? EdgeInsets.zero
+                                      : EdgeInsets.only(left: 8.w),
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10.r),
                                 child: WayaImage(
