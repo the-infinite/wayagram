@@ -22,6 +22,8 @@ import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/view/groups.dart';
 //import 'package:wayagram/features/post/model/fetch_comment.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
+import 'package:wayagram/shared/cache/group.dart';
+import 'package:wayagram/shared/cache/post.dart';
 
 import 'package:wayagram/shared/features/file/repo/default.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
@@ -147,7 +149,7 @@ class GroupVm extends StateNotifier<GroupState> {
     try {
       final response = await _groupRepository.deleteGroup(postId);
       if (response.success && ctx.mounted) {
-        //getAllGroups();
+        wayaGroupCache.deleteItem(postId);
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Group deleted successfully!'),
@@ -208,6 +210,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
+        await getSingleGroup(groupId);
         WayaNav.toNamed('/groups');
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
@@ -330,6 +333,7 @@ class GroupVm extends StateNotifier<GroupState> {
 
       if (response.success) {
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
+        wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(getAllPost: responseModel.data?.docs);
       }
     } catch (e) {
@@ -351,6 +355,7 @@ class GroupVm extends StateNotifier<GroupState> {
       if (response.success) {
         GroupPostModel responseModel = GroupPostModel.fromJson(response.data);
         GroupPostModel postModel = GroupPostModel.fromJson(response.data);
+        wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(groupPostdocs: responseModel.data?.docs, postCount: postModel.data?.totalDocs);
       }
     } catch (e) {
@@ -370,6 +375,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       if (response.success) {
         GetAllGroups responseModel = GetAllGroups.fromJson(response.data);
+        wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(getAllGroups: responseModel.data?.docs);
         return responseModel.data?.docs;
       }
@@ -391,6 +397,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       if (response.success) {
         GetAllGroups responseModel = GetAllGroups.fromJson(response.data);
+        wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(getAllGroups: responseModel.data?.docs);
         return responseModel.data?.docs;
       }
@@ -433,6 +440,7 @@ class GroupVm extends StateNotifier<GroupState> {
 
       if (response.success) {
         GroupPopularPostModel responseModel = GroupPopularPostModel.fromJson(response.data);
+        wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(groupPopularPostdocs: responseModel.data?.docs);
       }
     } catch (e) {
@@ -452,6 +460,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       if (response.success) {
         RecommendedGroupModel responseModel = RecommendedGroupModel.fromJson(response.data);
+        wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(recommendedGroupDocs: responseModel.data?.docs);
       }
     } catch (e) {

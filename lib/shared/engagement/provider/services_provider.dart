@@ -8,6 +8,7 @@ import 'package:wayagram/features/event/data/repo/event_repository.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
 import 'package:wayagram/features/polls_and_voting/data/repo/poll_and_voting_repository.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
+import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
@@ -200,6 +201,8 @@ class ServicesProvider extends StateNotifier<States> {
         final userInterests = ref.watch(selectInterestProvider).userInterests;
         final List<PostModel> allPosts = responseModel.data.docs;
 
+        wayaPostCache.cacheAll(responseModel.data.docs);
+
         // Map user interests to categories and scores
         Map<String, int> interestMap = {for (var interest in userInterests) interest.category: interest.score};
 
@@ -262,6 +265,7 @@ class ServicesProvider extends StateNotifier<States> {
         PostResponseModel responseModel = PostResponseModel.fromJson(response.data);
 
         List<PostModel> allPosts = responseModel.data.docs;
+        wayaPostCache.cacheAll(responseModel.data.docs);
 
         // Get hashtag rankings from engagement provider
         Map<String, int> tagRanks = ref.read(postEngagementProvider.notifier).getAllTags();

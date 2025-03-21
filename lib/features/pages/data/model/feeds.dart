@@ -1,7 +1,4 @@
-import 'dart:ffi';
-
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 
@@ -93,7 +90,6 @@ class Post {
   Rx<bool?> getIsLiked() {
     WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
     if (_isLiked.value == null) {
-      final user = _wayaLocalDataSource.getUser().user;
 //Get.find<ProfileController>().getProfile().value.data;
 // if (user != null) {
 // _isLiked.value = reactions[user.id!] != null;

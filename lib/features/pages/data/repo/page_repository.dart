@@ -81,7 +81,7 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> fetchSinglePost(postId) {
-    return get("$serviceUrl/posts?postId=$postId&status=active");
+    return get("$serviceUrl/posts?id=$postId");
   }
 
   Future<WayaRequestResponse> commentOnPost(String postId, String content, String? parentCommentId) {
@@ -201,6 +201,10 @@ class PageRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getAllPages(String ownerId, [int page = 1, int limit = 500]) {
     return get("$serviceUrl/pages?page=$page&limit=$limit&ownerId=$ownerId&orderBy=createdAt&orderDirection=DESC");
+  }
+
+  Future<WayaRequestResponse> getSinglePage(String pageId) {
+    return get("$serviceUrl/pages?id=$pageId");
   }
 
   Future<WayaRequestResponse> deletePage(String pageId) async {
