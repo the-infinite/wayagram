@@ -161,7 +161,7 @@ class _WayagramState extends ConsumerState<Wayagram> {
             if (showPreloader) WayaPreloaderOverlay(),
 
             //? Third, the debug console.
-            if (!WayaConstants.isProduction) WayaDebugConsole(),
+            //if (!WayaConstants.isProduction) WayaDebugConsole(),
           ],
         ),
       ),
