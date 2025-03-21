@@ -77,6 +77,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
   void initState() {
     super.initState();
 
+    print("user ${ConversationState.self.accountType}");
     // Scroll listener for pagination
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.addListener(_scrollListener);
