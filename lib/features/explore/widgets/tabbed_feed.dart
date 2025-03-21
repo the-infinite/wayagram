@@ -78,6 +78,7 @@ class _TabbedFeedWidgetState extends State<TabbedFeedWidget> {
                     isSelected: selectedTab == 1,
                     hasBackground: true,
                     isExpanded: false,
+                    fontSize: 14.sp,
                     text: "Pages",
                   ),
 
@@ -87,6 +88,7 @@ class _TabbedFeedWidgetState extends State<TabbedFeedWidget> {
                     isSelected: selectedTab == 2,
                     hasBackground: true,
                     isExpanded: false,
+                    fontSize: 14.sp,
                     text: "Groups",
                   ),
 
@@ -95,6 +97,7 @@ class _TabbedFeedWidgetState extends State<TabbedFeedWidget> {
                     onTap: () => updater.value = 7,
                     isSelected: selectedTab == 7,
                     hasBackground: true,
+                    fontSize: 14.sp,
                     isExpanded: false,
                     text: "Polls",
                   ),
@@ -105,6 +108,7 @@ class _TabbedFeedWidgetState extends State<TabbedFeedWidget> {
                     isSelected: selectedTab == 3,
                     hasBackground: true,
                     isExpanded: false,
+                    fontSize: 14.sp,
                     text: "Events",
                   ),
 
@@ -114,6 +118,7 @@ class _TabbedFeedWidgetState extends State<TabbedFeedWidget> {
                     isSelected: selectedTab == 4,
                     hasBackground: true,
                     isExpanded: false,
+                    fontSize: 14.sp,
                     text: "Chats",
                   ),
                 ],

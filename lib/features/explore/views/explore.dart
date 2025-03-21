@@ -27,7 +27,6 @@ import 'package:wayagram/features/shop/seller/data/model/product_response_model.
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
-import 'package:wayagram/features/ugt/widgets/ugt_card.dart';
 import 'package:wayagram/shared/features/chat/widget/conversation.dart';
 import 'package:wayagram/shared/features/location/vm/default.dart';
 import 'package:wayagram/shared/features/profile/shared_posts.dart';
@@ -68,7 +67,6 @@ class _ExploreState extends ConsumerState<Explore> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(exploreVmProvider.notifier);
     final exploreState = ref.watch(exploreVmProvider);
     final state = ref.watch(shopVmProvider);
     final notifier = ref.read(shopVmProvider.notifier);
