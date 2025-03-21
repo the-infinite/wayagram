@@ -14,7 +14,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/view/events.dart';
 import 'package:wayagram/features/group/view/group_post.dart';
-import 'package:wayagram/features/group/view/mediaPost.dart';
+import 'package:wayagram/features/group/view/media_post.dart';
 import 'package:wayagram/features/group/view/report_group.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';

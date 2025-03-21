@@ -7,6 +7,7 @@ import 'package:wayagram/core/service/repos/transactions/transaction_repository.
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_state_model.dart';
+import 'package:wayagram/features/wallet/transactions/model/transaction_model.dart';
 
 class TransactionVm extends StateNotifier<TransactionHistoryState> {
   final TransactionRepository _transactionRepository;
@@ -15,6 +16,26 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
 
   TransactionVm(this._transactionRepository, this._walletRepository, this._localDataSource)
       : super(TransactionHistoryState());
+
+
+  Future<void> getTransaction({int? page = 1, int? limit = 10, bool? hasNextPage, String? filters}) async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _transactionRepository.getUserTransactions(page: page, limit: limit, filters: filters);
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        TransactionModel responseModel = TransactionModel.fromJson(response.data);
+        state = state.copyWith(docs: responseModel.data?.docs);
+      }
+    } catch (e) {
+      print(e);
+    } finally {}
+  }
+
 
   Future<void> getUserTransactions({int? page = 1, int? limit = 10, bool? hasNextPage, String? filters}) async {
     try {

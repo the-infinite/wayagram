@@ -24,3 +24,4 @@ export 'waya_confirmation_view.dart';
 export 'waya_debug_console.dart';
 export 'waya_preloader.dart';
 export 'waya_video.dart';
+export 'waya_error_widget.dart';

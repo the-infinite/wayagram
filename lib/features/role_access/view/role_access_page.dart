@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/role_access/vm/role_access_vm.dart';
 import 'package:wayagram/features/role_access/widget/manage_user_tab.dart';
 import 'package:wayagram/features/role_access/widget/role_management_tab.dart';
-import 'package:wayagram/features/ugt/for_you_contest.dart';
-import 'package:wayagram/features/ugt/my_contest_details/my_contest_details.dart';
-import 'package:wayagram/features/ugt/my_contests.dart';
-import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
-class RoleAccessPage extends ConsumerStatefulWidget {
+class RoleAccessPage extends StatefulHookConsumerWidget {
   static const route = '/role-access-page';
   const RoleAccessPage({super.key});
 
@@ -27,8 +26,22 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final rollAccessNotifier = ref.read(roleAccessVm.notifier);
+
     //  ConversationState.self.id
     // print("UGT HOME ${ConversationState.self.role?.name}");
+
+    useEffect(() {
+      rollAccessNotifier.getRoles();
+      rollAccessNotifier.getShops();
+      Future.delayed(Duration(seconds: 1), () {
+        rollAccessNotifier.getAllMembers(true);
+        rollAccessNotifier.getRoleManagementMemberList();
+      });
+      rollAccessNotifier.email.text = "";
+      return null;
+    }, []);
+
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -52,14 +65,13 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
               ),
             ],
           ),
-        
           const Gap(20),
           if (_selectedIndex == 0) ManageUserTab(),
           if (_selectedIndex == 1) RoleManagementTab(),
+          // const Gap(50),
         ],
-        
       ),
-      floatingActionButton:
+      /*   floatingActionButton:
           ConversationState.self.accountType == UserAccountType.business
               ? SizedBox(
                   height: 50,
@@ -76,7 +88,7 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
                     ),
                   ),
                 )
-              : null,
+              : null, */
     );
   }
 }

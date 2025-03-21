@@ -231,6 +231,10 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     if (state.following.isEmpty) await getUsersFollowing();
   }
 
+  void reset() async {
+    state = FollowState.initial;
+  }
+
   bool isUserFollowing(String id) {
     return state.followers.any((relation) => relation.isUserFollowing && relation.otherUserId == id) ||
         state.following.any((relation) => relation.isUserFollowing && relation.otherUserId == id);

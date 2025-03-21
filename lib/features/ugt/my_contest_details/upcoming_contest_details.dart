@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -13,6 +14,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 
@@ -35,6 +37,30 @@ class _UpcomingContestDetailsState
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     var model = ref.watch(selectedContestProvider.notifier).state;
+    var viewModel = ref.watch(votersContestNotifier.notifier);
+    final hasProfile = useState(false);
+
+    useEffect(() {
+      ref
+          .read(postProvider.notifier)
+          .fetchSingleContestantDetails(
+              model?.id ?? "", viewModel.getLoggedInUserId())
+          .then((model) {
+        if (model != null) {
+          print("i am here");
+          if (model.data?.totalDocs == 1) {
+            print("i am here 2");
+            if (model.data?.docs?.first.profilePhoto != null &&
+                model.data?.docs?.first.bio != null) {
+              print("i am here 3");
+              hasProfile.value = true;
+            }
+          }
+        }
+      });
+      return null;
+    }, []);
+
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -109,10 +135,9 @@ class _UpcomingContestDetailsState
                   style: wayaTheme.textTheme.bodyMedium),
               const Gap(5),
               Text(model?.description ?? "Description",
-                  style: WayaTextStyles.hintStyleBold
-                                    .wayaCopyWith(
-                                        color: WayaColors.greyColor500,
-                                        fontWeight: FontWeight.w400)),
+                  style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                      color: WayaColors.greyColor500,
+                      fontWeight: FontWeight.w400)),
               const Gap(20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -148,7 +173,8 @@ class _UpcomingContestDetailsState
                       title: "Category", content: model?.categoryName ?? ""),
                   const Gap(20),
                   AboutUgtWidget(
-                      title: "Prize", content: model?.winnerPrize ?? ""),
+                      title: "Prize",
+                      content: "NGN${formatMoney(model?.winnerPrize ?? "")}"),
                   /*   const Gap(20),
                   UpcomingWidget(title: "Host", content: "Host"), */
                 ],
@@ -157,10 +183,9 @@ class _UpcomingContestDetailsState
               Text("How it Works", style: wayaTheme.textTheme.bodyMedium),
               const Gap(15),
               Text(model?.howItWorks ?? "",
-                  style:  WayaTextStyles.hintStyleBold
-                                    .wayaCopyWith(
-                                        color: WayaColors.greyColor500,
-                                        fontWeight: FontWeight.w400)),
+                  style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                      color: WayaColors.greyColor500,
+                      fontWeight: FontWeight.w400)),
               const Gap(15),
               Text(
                 "Stages",
@@ -181,10 +206,18 @@ class _UpcomingContestDetailsState
               Center(
                 child: WayaButton(
                   callback: () {
+                    //? if user has a profile
+                    if (hasProfile.value) {
+                      ref.read(selectedContestProvider.notifier).state = model;
+                      WayaNav.toNamed('/upcoming-manage-contest-details');
+                      return;
+                    }
                     ivalidateUGTVM(ref);
                     WayaNav.toNamed('/register-contest1');
                   },
-                  text: "Register For Contest",
+                  text: hasProfile.value
+                      ? "View Contest Details"
+                      : "Register For Contest",
                 ),
               ),
             ],
@@ -242,8 +275,7 @@ class _UpcomingContestDetailsState
             AboutUgtWidget(
                 // isFromDetailsPage: true,
                 title: "No of Posts",
-                content:
-                    "${model.numberOfPostPerWeek?.toString()} of Duration"),
+                content: "${model.numberOfPostPerWeek?.toString()}"),
             const Gap(20),
             AboutUgtWidget(
                 // isFromDetailsPage: true,

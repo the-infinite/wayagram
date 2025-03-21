@@ -4,8 +4,13 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/shared/features/media/video.dart';
+
+import 'waya_error_widget.dart';
 
 class WayaVideoController {
   VideoPlayerController? _controller;
@@ -134,6 +139,7 @@ class WayaVideoWidget extends StatefulWidget {
   final String? asset;
   final Uri? networkUrl;
   final File? file;
+  final bool canFocus;
   final VideoPlayerOptions? options;
   final Future<ClosedCaptionFile>? subtitles;
   final WayaVideoControls controls;
@@ -142,6 +148,7 @@ class WayaVideoWidget extends StatefulWidget {
   const WayaVideoWidget._({
     required this.controller,
     required this.controls,
+    required this.canFocus,
     this.subtitles,
     this.options,
     this.asset,
@@ -158,6 +165,7 @@ class WayaVideoWidget extends StatefulWidget {
     File file, {
     required WayaVideoController controller,
     required WayaVideoControls controls,
+    bool canFocus = true,
     VideoPlayerOptions? options,
     Future<ClosedCaptionFile>? subtitles,
     void Function(bool)? onPlaybackChanged,
@@ -172,6 +180,7 @@ class WayaVideoWidget extends StatefulWidget {
       controls: controls,
       options: options,
       subtitles: subtitles,
+      canFocus: canFocus,
     );
   }
 
@@ -181,6 +190,7 @@ class WayaVideoWidget extends StatefulWidget {
     Uri uri, {
     required WayaVideoController controller,
     required WayaVideoControls controls,
+    bool canFocus = true,
     VideoPlayerOptions? options,
     Future<ClosedCaptionFile>? subtitles,
     void Function(bool)? onPlaybackChanged,
@@ -195,6 +205,7 @@ class WayaVideoWidget extends StatefulWidget {
       controls: controls,
       options: options,
       subtitles: subtitles,
+      canFocus: canFocus,
     );
   }
 
@@ -204,6 +215,7 @@ class WayaVideoWidget extends StatefulWidget {
     String path, {
     required WayaVideoController controller,
     required WayaVideoControls controls,
+    bool canFocus = true,
     VideoPlayerOptions? options,
     Future<ClosedCaptionFile>? subtitles,
     void Function(bool)? onPlaybackChanged,
@@ -218,11 +230,12 @@ class WayaVideoWidget extends StatefulWidget {
       controls: controls,
       options: options,
       subtitles: subtitles,
+      canFocus: canFocus,
     );
   }
 }
 
-class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProviderStateMixin {
+class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderStateMixin {
   AnimationController? animationController;
   bool _controlsHidden = false;
   Timer? _timer;
@@ -335,13 +348,18 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProv
 
     //? The widget that is used to compose the contents of this widget.
     final composition = widget.controller._controller!.value.isInitialized
-        ? ColoredBox(
-            color: Colors.black,
-            child: Center(
-              child: AspectRatio(
-                aspectRatio: widget.controller._controller!.value.aspectRatio,
-                child: VideoPlayer(
-                  widget.controller._controller!,
+        ? WayaErrorWidget(
+            onError: (context, _) => ColoredBox(
+              color: Colors.black,
+            ),
+            child: ColoredBox(
+              color: Colors.black,
+              child: Center(
+                child: AspectRatio(
+                  aspectRatio: widget.controller._controller!.value.aspectRatio,
+                  child: VideoPlayer(
+                    widget.controller._controller!,
+                  ),
                 ),
               ),
             ),
@@ -406,7 +424,23 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProv
     }
 
     //? Since this has no complex controls, just return the composition widget.
-    return composition;
+    return GestureDetector(
+      onTap: !widget.canFocus
+          ? null
+          : () async {
+              final result = await WayaNav.to(
+                transition: Transition.downToUp,
+                WayaVideoDetailScreen(
+                  file: widget.file,
+                  videoUrl: widget.networkUrl.toString(),
+                ),
+              );
+
+              //? Do nothing.
+              if (result == null) return;
+            },
+      child: composition,
+    );
   }
 
   /// The video controls used primarily in message views. Kind of handy for that
@@ -647,6 +681,6 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with SingleTickerProv
   /// Expects that the height of the video is full screen so you would immediately
   /// notice its layout is optimized for such.
   Widget fullScreenVideoControls() {
-    return const SizedBox();
+    return contentVideoControls();
   }
 }

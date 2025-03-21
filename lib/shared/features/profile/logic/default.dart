@@ -1,6 +1,7 @@
-import 'package:wayagram/features/post/model/post_reponse_model.dart';
+
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 
 String removeHashtags(String text) {
   return text.replaceAll(RegExp(r'#\w+'), '').trim();
@@ -11,7 +12,7 @@ String formatTimeAgo(String dateString) {
   return timeago.format(dateTime); // Convert to "time ago" format
 }
 
-void postEngagement(PostEngagementMonitor provider, Post post, int point) {
+void postEngagement(PostEngagementMonitor provider, PostModel post, int point) {
   //add tag point
   // if (post.hashtags.isNotEmpty) {
   //   for (String tag in post.hashtags) {

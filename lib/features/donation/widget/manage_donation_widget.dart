@@ -6,6 +6,8 @@ import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
 
 import '../model/my_donation_model.dart';
@@ -72,17 +74,24 @@ class ManageDonationWidget extends ConsumerWidget {
                               children: [
                                 Text(
                                   '$title',
-                                  overflow: TextOverflow.ellipsis,
-                                  style: wayaTheme.textTheme.bodyMedium,
-                                ),
+                                  style: WayaTextStyles.bodySmall.copyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: WayaConstants.fontFamily,
+                                      color: Theme.of(context).colorScheme.black ),
+                                  overflow: TextOverflow.ellipsis,),
                                 SizedBox(
                                   height: 3.h,
                                 ),
                                 Text(
                                   '$amountRaised raised from $targetAmount',
-                                  style: wayaTheme.textTheme.hintStyle,
-                                  overflow: TextOverflow.ellipsis,
-                                )
+                                  style: WayaTextStyles.bodySmall.copyWith(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: WayaConstants.fontFamily,
+                                      color: Theme.of(context).colorScheme.greyColor600 ),
+                                  overflow: TextOverflow.ellipsis,),
+
                               ],
                             ),
                           ),

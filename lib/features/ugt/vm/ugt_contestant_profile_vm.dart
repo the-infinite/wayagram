@@ -19,6 +19,7 @@ class UgtContestantProfileVm
 
   // Simulate fetching paginated posts
   Future<void> fetchSingleContestantPosts(String id) async {
+    
     if (isLoading) return;
     isLoading = true;
 
@@ -30,7 +31,8 @@ class UgtContestantProfileVm
         SingleContestantPostsBase responseModel =
             SingleContestantPostsBase.fromJson(response.data);
         contestList = responseModel.data?.docs ?? [];
-        state = [...state, ...contestList];
+        //  state = [...state, ...contestList];
+        state = [...contestList];
         _page++;
         isLoading = false;
       }

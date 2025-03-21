@@ -49,13 +49,16 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                 const Gap(30),
                 CopyCode(code: arg!.deliveryToken!, title: "Delivery Confirmation Token"),
                 const Gap(2),
-                PinInputField(
+               Align(
+                alignment: Alignment.center,
+                child:  PinInputField(
                   pin: pin,
                   digits: 10,
                   margin: 2.5,
-                  ratio: 0.08,
-                  height: 48,
+                  ratio: 0.075,
+                  height: 40,
                 ),
+               ),
                 const Gap(25),
                 Align(
                   alignment: Alignment.center,
@@ -86,7 +89,7 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                 SizedBox(
                     child: PinKeyboard(
                         onKeyTap: viewModel.handleKeyPress,
-                        onSubmit: () => viewModel.submitPins(context, arg.shopId),
+                        onSubmit: () => viewModel.submitPins(context, arg),
                         onBackspace: viewModel.handleBackspace)),
                 const Gap(20),
               ],

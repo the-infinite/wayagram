@@ -76,7 +76,9 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                 topLeft: "${WayaHelpers.formatPrice(int.parse('${args['amountRaised']}'))} raised from ${WayaHelpers.formatPrice(int.parse('${args['targetAmount']}'))}",
                 bottomLeft: "${args['donationCount']} Donations",
                 bottomRight: "${args['daysLeft']} ${args['daysLeft'] == '1' ? 'day': 'days'} left",
-                range: args['donationCount'] == '0' ? 0.0 : 0.4),
+                range: args['ratioLeft'],
+                //range: args['donationCount'] == '0' ? 0.0 : 0.4
+            ),
             Gap(10),
             Row(children: [
               Expanded(child: _detailCard(WayaHelpers.formatPrice(int.parse('${args['amountRaised']}')), 'Amount Raised', wayaTheme.colorScheme.success50),),
@@ -148,7 +150,7 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
               color: wayaTheme.colorScheme.primary500,
               textStyle: TextStyle(color: wayaTheme.colorScheme.white),
               callback: () {
-                if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
+               /* if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
                   WayaUtils.showNotice(
                       context: context,
                       title: "Update KYC Information ",
@@ -190,7 +192,21 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                         donationCount: '${args['donationCount']}'
                     ),
                   );
-                }
+                }*/
+
+                WayaUtils.showModalSheet(
+                  context,
+                  child: DonationModal(
+                      amountRaised: '${args['amountRaised']}',
+                      targetAmount: '${args['targetAmount']}',
+                      title: '${args['title']}',
+                      minimumDonationAmount: '${args['minimumDonationAmount']}',
+                      campaignId: '${args['id']}',
+                      privacy: '${args['privacy']}',
+                      daysLeft: '${args['daysLeft']}',
+                      donationCount: '${args['donationCount']}'
+                  ),
+                );
 
               }),
         )

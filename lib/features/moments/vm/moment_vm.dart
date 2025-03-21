@@ -367,6 +367,7 @@ class MomentVm extends StateNotifier<MomentState> {
       bool hasNextPage = false;
       if (response.success) {
         MomentResponseModel responseModel = MomentResponseModel.fromJson(response.data);
+
         moments = responseModel.data.docs;
         moments = moments.reversed.where((m) => m.active).toList();
         hasNextPage = responseModel.data.hasNextPage;
@@ -487,6 +488,24 @@ class MomentVm extends StateNotifier<MomentState> {
       state = state.copyWith(isReportingMoment: false);
     }
   }
+
+  // Future<void> postSingleUserMoment({required MomentData moment}) async {
+  //   try {
+  //     final profileId = await _secureDataSource.getUserId();
+  //     if (profileId == moment.userId) return;
+  //     final response = await _momentRepository.viewMoments(
+  //         profileId: profileId!,
+  //         momentId: moment.id,
+  //         likeMoment: state.isLiked,
+  //         comment: state.isComment);
+
+  //     if (response.success) {
+  //       print(response.data);
+  //     }
+  //   } catch (error) {
+  //     print(error);
+  //   }
+  // }
 
   void initializeEditMoment(MomentData moment) async {
     state = state.copyWith(

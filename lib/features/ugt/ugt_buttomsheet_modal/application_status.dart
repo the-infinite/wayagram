@@ -17,6 +17,7 @@ import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_detail
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 
 import '../../../core/components/waya_buttons.dart';
@@ -37,6 +38,35 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final hasProfile = useState(false);
+    final hasPaid = useState(false);
+    useEffect(() {
+      ref
+          .read(postProvider.notifier)
+          .fetchSingleContest(ref, widget.post?.contestId ?? "");
+      if (widget.post?.status?.toLowerCase() == "approved") {
+        ref
+            .read(postProvider.notifier)
+            .fetchSingleContestantDetails(widget.post?.contestId ?? "",
+                widget.post?.userId ?? "")
+            .then((model) {
+          if (model != null) {
+            if (model.data?.totalDocs == 1) {
+              if (model.data?.docs?.first.profilePhoto != null &&
+                  model.data?.docs?.first.bio != null) {
+                hasProfile.value = true;
+              }
+
+              if (model.data?.docs?.length == 1) {
+                hasPaid.value = model.data?.docs?.first.hasPaid ?? false;
+              }
+            }
+          }
+        });
+      }
+
+      return null;
+    }, []);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
       child: SingleChildScrollView(
@@ -103,7 +133,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
               ],
             ),
             const Gap(20),
-            if (widget.post?.rejectionReason != null)
+            if (widget.post?.status == "REJECTED")
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -113,11 +143,11 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                   const Gap(10),
                   Text(
                       widget.post?.rejectionReason ??
-                          "We regret to inform you that your application for the University Got Talent contest has been rejected due to insufficient originality in your proposed act. We encourage you to explore more unique ideas and reapply in the future!",
+                          "We regret to inform you that your application has been rejected due to insufficient originality in your proposed act. We encourage you to explore more unique ideas and reapply in the future!",
                       style: wayaTheme.textTheme.bodyMedium),
                 ],
               ),
-            if (widget.post?.rejectionReason == null)
+            if (widget.post?.status == "REJECTED")
               Column(
                 children: [
                   Row(
@@ -182,7 +212,13 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
             SizedBox(height: 17.h),
             WayaButton(
               callback: () async {
+                //? check if users request has been approved
                 if (widget.post?.status?.toLowerCase() == "approved") {
+                  if (hasProfile.value) {
+                    WayaNav.toNamed("/upcoming-manage-contest-details");
+                    return;
+                  }
+                  //? check if contest is free
                   if (widget.post?.contest?.entryType?.toLowerCase() ==
                       "free") {
                     ref.read(selectedAppliedContestProvider.notifier).state =
@@ -190,6 +226,14 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                     WayaNav.goBack();
                     WayaNav.toNamed("/create-profile-contest1");
                   } else {
+                    //? User has already paid for a contest
+                    if (hasPaid.value) {
+                      WayaNav.goBack();
+                      WayaNav.toNamed("/create-profile-contest1");
+                      return;
+                    }
+
+                    //? move on to pay for a contest
                     WayaNav.goBack();
                     WayaUtils.showModalSheet(
                       context,
@@ -207,12 +251,22 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                       ),
                     );
                   }
-                } else {}
+                } else {
+                  //? contest not approved, could be pending or rejected, can go on to view the contest details
+                  WayaNav.toNamed("/upcoming-manage-contest-details");
+                }
               },
+              //? first checking if contest is approved or not
               text: widget.post?.status?.toLowerCase() == "approved"
                   ? widget.post?.contest?.entryType?.toLowerCase() == "free"
-                      ? "Create Contest Profile"
-                      : "Pay NGN${formatMoney(widget.post?.contest?.amount?.toString() ?? "0")} to continue"
+                      //? if it free and has profile details
+                      ? hasProfile.value
+                          ? "View Contest Details"
+                          : "Create Contest Profile"
+                      //? if it free and has profile details
+                      : hasProfile.value
+                          ? "View Contest Details"
+                          : "Pay NGN${formatMoney(widget.post?.contest?.amount?.toString() ?? "0")} to continue"
                   : "View Contest Details",
             ),
             const Gap(10),

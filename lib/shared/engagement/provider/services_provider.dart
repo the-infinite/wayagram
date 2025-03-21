@@ -11,11 +11,12 @@ import 'package:wayagram/features/post/model/post_reponse_model.dart';
 import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/user/repo/default.dart';
 import 'package:wayagram/features/explore/search/model/user_detail.dart';
 
 class CategorizedPost {
-  final List<Post> posts;
+  final List<PostModel> posts;
   final int currentPage;
   final bool hasNextPage;
   final String categoryName;
@@ -23,7 +24,7 @@ class CategorizedPost {
   CategorizedPost(
       {required this.posts, required this.currentPage, required this.categoryName, required this.hasNextPage});
 
-  CategorizedPost copyWith({List<Post>? posts, int? currentPage, bool? hasNextPage, String? categoryName}) {
+  CategorizedPost copyWith({List<PostModel>? posts, int? currentPage, bool? hasNextPage, String? categoryName}) {
     return CategorizedPost(
       posts: posts ?? this.posts,
       currentPage: currentPage ?? this.currentPage,
@@ -37,8 +38,8 @@ class States {
   final List<EventDoc> events;
   final List<EventDoc> topEvents;
   final String userId;
-  final List<Post> posts;
-  final List<Post> topPosts;
+  final List<PostModel> posts;
+  final List<PostModel> topPosts;
   final List<CategorizedPost> categorizedPosts;
   final List<UserDetails> usersDetails;
   final List<Docs> feedPolls;
@@ -59,9 +60,9 @@ class States {
       List<EventDoc>? topEvents,
       List<CategorizedPost>? categorizedPosts,
       List<UserDetails>? usersDetails,
-      List<Post>? posts,
+      List<PostModel>? posts,
       List<Docs>? feedPolls,
-      List<Post>? topPosts}) {
+      List<PostModel>? topPosts}) {
     return States(
         events: events ?? this.events,
         userId: userId ?? this.userId,
@@ -171,7 +172,7 @@ class ServicesProvider extends StateNotifier<States> {
   }
 
   void invalidatePostData(String id, {int? likeCount, int? commentCount, int? shareCount}) {
-    Post updatePost(Post post) {
+    PostModel updatePost(PostModel post) {
       return post.id == id
           ? post.copyWith(
               likeCount: likeCount ?? post.likeCount,
@@ -195,15 +196,15 @@ class ServicesProvider extends StateNotifier<States> {
     try {
       final response = await _pageRepository.getAllPosts();
       if (response.success) {
-        PostReponseModel responseModel = PostReponseModel.fromJson(response.data);
+        PostResponseModel responseModel = PostResponseModel.fromJson(response.data);
         final userInterests = ref.watch(selectInterestProvider).userInterests;
-        final List<Post> allPosts = responseModel.data.docs;
+        final List<PostModel> allPosts = responseModel.data.docs;
 
         // Map user interests to categories and scores
         Map<String, int> interestMap = {for (var interest in userInterests) interest.category: interest.score};
 
         // Filter posts that match user interests, handling null categories
-        List<Post> matchingPosts = allPosts
+        List<PostModel> matchingPosts = allPosts
             .where((post) =>
                 (post.categories?.isNotEmpty ?? false) &&
                 post.categories!.any((category) => interestMap.containsKey(category)))
@@ -222,7 +223,7 @@ class ServicesProvider extends StateNotifier<States> {
 
         // Get score distribution and select top posts
         List<int> scoreDistribution = _getScoreDistribution(userInterests.length, 5);
-        List<Post> topPosts = [];
+        List<PostModel> topPosts = [];
         int index = 0;
 
         for (int slots in scoreDistribution) {
@@ -258,12 +259,12 @@ class ServicesProvider extends StateNotifier<States> {
     try {
       final response = await _pageRepository.getAllPosts();
       if (response.success) {
-        PostReponseModel responseModel = PostReponseModel.fromJson(response.data);
+        PostResponseModel responseModel = PostResponseModel.fromJson(response.data);
 
-        List<Post> allPosts = responseModel.data.docs;
+        List<PostModel> allPosts = responseModel.data.docs;
 
         // Get hashtag rankings from engagement provider
-        Map<String, int> tagRanks = ref.read(postEngagementProvider.notifier).getAlltags();
+        Map<String, int> tagRanks = ref.read(postEngagementProvider.notifier).getAllTags();
 
         if (tagRanks.isEmpty) {
           state = state.copyWith(posts: []);
@@ -271,14 +272,14 @@ class ServicesProvider extends StateNotifier<States> {
         }
 
         // Compute hashtag scores for each post
-        Map<Post, int> postScores = {
+        Map<PostModel, int> postScores = {
           for (var post in allPosts) post: post.hashtags.fold(0, (sum, tag) => sum + (tagRanks[tag] ?? 0))
         };
 
         // Sort posts by highest score first
-        List<Post> sortedPosts = postScores.keys.toList()..sort((a, b) => postScores[b]!.compareTo(postScores[a]!));
+        List<PostModel> sortedPosts = postScores.keys.toList()..sort((a, b) => postScores[b]!.compareTo(postScores[a]!));
 
-        List<Post> finalPosts = [];
+        List<PostModel> finalPosts = [];
         Set<String> seenPostIds = {}; // Ensure uniqueness
         int totalSlots = 10;
 
@@ -290,7 +291,7 @@ class ServicesProvider extends StateNotifier<States> {
 
         for (int i = 0; i < uniqueScores.length; i++) {
           int score = uniqueScores[i];
-          List<Post> postsWithScore = sortedPosts.where((p) => postScores[p] == score).toList();
+          List<PostModel> postsWithScore = sortedPosts.where((p) => postScores[p] == score).toList();
 
           int allowedPosts = distribution[i]; // Posts allowed from this score level
           int count = 0;
@@ -424,7 +425,7 @@ class ServicesProvider extends StateNotifier<States> {
         final response = await _pageRepository.getAllPostsWithCategory(category: category, page: page);
 
         if (response.success) {
-          final postResponse = PostReponseModel.fromJson(response.data);
+          final postResponse = PostResponseModel.fromJson(response.data);
 
           if (postResponse.data.docs.isNotEmpty) {
             categorizedPosts.add(
@@ -468,7 +469,7 @@ class ServicesProvider extends StateNotifier<States> {
       final response = await _pageRepository.getAllPostsWithCategory(category: category, page: nextPage);
 
       if (response.success) {
-        final postResponse = PostReponseModel.fromJson(response.data);
+        final postResponse = PostResponseModel.fromJson(response.data);
 
         if (postResponse.data.docs.isNotEmpty) {
           state = state.copyWith(

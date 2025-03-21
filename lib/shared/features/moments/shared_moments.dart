@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/widgets/moments_widget.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
@@ -126,9 +128,10 @@ class PopModal extends StatelessWidget {
               child: Text(
                 textAlign: TextAlign.start,
                 "Create New Moment",
-                style: TextStyle(
+                style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                   color: wayaTheme.colorScheme.customBlack,
                   fontSize: 14.sp,
+                   fontWeight: FontWeight.w500
                 ),
               ),
             ),
@@ -141,9 +144,10 @@ class PopModal extends StatelessWidget {
               child: Text(
                 "View Moment",
                 textAlign: TextAlign.start,
-                style: TextStyle(
+                style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                   color: wayaTheme.colorScheme.customBlack,
                   fontSize: 14.sp,
+                  fontWeight: FontWeight.w500
                 ),
               ),
             ),

@@ -30,12 +30,22 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
 
   final ImagePicker _pickers = ImagePicker();
   List<XFile> _selectedImages = [];
+  List<WayaVideoController> videoControllers = [];
 
   bool sel = false;
 
+  @override
+  void dispose() {
+    //? Dispose the older video controllers
+    for (final controller in videoControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
   Future<void> _pickImages() async {
     try {
-      final List<XFile> images = await _pickers.pickMultiImage(
+      final images = await _pickers.pickMultiImage(
         imageQuality: 80, // Adjust image quality (0-100)
         maxWidth: 1200, // Max width of images
         maxHeight: 1200, // Max height of images
@@ -43,8 +53,7 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
 
       if (images.isNotEmpty) {
         setState(() {
-          _selectedImages.clear();
-          _selectedImages.addAll(images.take(5).toList());
+          _selectedImages = images.take(5).toList();
         });
       }
     } catch (e) {
@@ -56,7 +65,15 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
   Future<void> pickVideo() async {
     final XFile? pickedFile = await _pickers.pickVideo(source: ImageSource.gallery);
     if (pickedFile != null) {
+      //? Dispose the older video controllers
+      for (final controller in videoControllers) {
+        controller.dispose();
+      }
+
+      //? Update all things.
       setState(() {
+        videoControllers = [WayaVideoController()];
+        _selectedImages = [pickedFile];
       });
     }
   }
@@ -71,7 +88,7 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
-    final args = ModalRoute.of(context)?.settings.arguments;
+    //final args = ModalRoute.of(context)?.settings.arguments as dynamic;
 
     return WayaScaffold(
         resizeToAvoidBottomInset: true,
@@ -101,14 +118,13 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                             ? () async {
                                 if (_formKey.currentState!.validate()) {
                                   await ref.watch(createPageProvider.notifier).createPost(
-                                        context, viewModel.content.text,
+                                        context,
+                                        viewModel.content.text,
                                         sel ? "public" : "private",
                                         _selectedImages,
-                                        //'${args['groupId']}'
                                       );
                                   ref.watch(createPageProvider.notifier).reset();
-                                  WayaNav.toNamed( BottomView.route, arguments: 0);
-                                  //WayaNav.toNamed("/pages",);
+                                  WayaNav.goBack();
                                 }
                               }
                             : null,
@@ -156,45 +172,46 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                           Expanded(
                             flex: 3,
                             child: Form(
-                                key: _formKey,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    FormField<String>(validator: (value) {
-                                      if (viewModel.content.text.isEmpty) {
-                                        return 'Post content is required';
-                                      }
+                              key: _formKey,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  FormField<String>(validator: (value) {
+                                    if (viewModel.content.text.isEmpty) {
+                                      return 'Post content is required';
+                                    }
 
-                                      return null;
-                                    }, builder: (formState) {
-                                      return Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          WayaTextFormField(
-                                            line: 6,
-                                            showBorder: false,
-                                            keyboardType: TextInputType.text,
-                                            controller: viewModel.content,
-                                            hintText: 'what is on your mind?',
-                                            borderColor: formState.hasError && viewModel.content.text.isEmpty
-                                                ? wayaTheme.colorScheme.error
-                                                : null,
-                                          ),
-                                          if (formState.hasError && viewModel.content.text.isEmpty)
-                                            Padding(
-                                              padding: const EdgeInsets.only(top: 5),
-                                              child: Text(
-                                                formState.errorText!,
-                                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
-                                              ),
+                                    return null;
+                                  }, builder: (formState) {
+                                    return Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        WayaTextFormField(
+                                          line: 6,
+                                          showBorder: false,
+                                          keyboardType: TextInputType.text,
+                                          controller: viewModel.content,
+                                          hintText: 'what is on your mind?',
+                                          borderColor: formState.hasError && viewModel.content.text.isEmpty
+                                              ? wayaTheme.colorScheme.error
+                                              : null,
+                                        ),
+                                        if (formState.hasError && viewModel.content.text.isEmpty)
+                                          Padding(
+                                            padding: const EdgeInsets.only(top: 5),
+                                            child: Text(
+                                              formState.errorText!,
+                                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                                             ),
-                                        ],
-                                      );
-                                    }),
-                                    const Gap(20),
-                                  ],
-                                )),
+                                          ),
+                                      ],
+                                    );
+                                  }),
+                                  const Gap(20),
+                                ],
+                              ),
+                            ),
                           ),
                         ],
                       ),
@@ -205,24 +222,66 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                           shrinkWrap: true,
                           padding: EdgeInsets.only(left: 20),
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, mainAxisSpacing: 16, crossAxisSpacing: 16, childAspectRatio: 1.5),
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            childAspectRatio: 1.5,
+                          ),
                           itemCount: _selectedImages.length,
                           itemBuilder: (context, index) {
+                            //? This is fine.
+                            final resource = _selectedImages[index];
+                            final controller = videoControllers[index];
+
+                            //? Return the view.
                             return Stack(
                               children: [
-                                Container(
-                                  height: 100,
-                                  width: 168,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    image: DecorationImage(
-                                      image: FileImage(File(
-                                        _selectedImages[index].path,
-                                      )),
-                                      fit: BoxFit.cover,
+                                if (WayaFileExtensions.videos.contains(
+                                  WayaFileHelper.getFileExtension(resource.path),
+                                )) ...[
+                                  SizedBox(
+                                    height: 100.h,
+                                    width: 168.w,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      child: WayaVideoWidget.file(
+                                        File(resource.path),
+                                        controller: controller,
+                                        controls: WayaVideoControls.none,
+                                        canFocus: false,
+                                      ),
                                     ),
                                   ),
-                                ),
+
+                                  //? This is fine.
+                                  Center(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Colors.white.withOpacity(0.7),
+                                      ),
+                                      padding: EdgeInsets.all(8),
+                                      child: Icon(
+                                        Icons.play_arrow,
+                                        size: 30,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ] else
+                                  Container(
+                                    height: 100.h,
+                                    width: 168.w,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8.r),
+                                      image: DecorationImage(
+                                        image: FileImage(File(resource.path)),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ),
+
+                                //? This is fine.
                                 Positioned(
                                   top: 4,
                                   right: 4,

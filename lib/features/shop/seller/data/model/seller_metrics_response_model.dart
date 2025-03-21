@@ -144,28 +144,28 @@ class OrderMetrics {
 
 class ProductMetrics {
   final int totalProducts;
-  final int approvedProducts;
-  final int unapprovedProducts;
+  final int wayagramDealApprove;
+  final int wayagramDealNotApproved;
 
   ProductMetrics({
     required this.totalProducts,
-    required this.approvedProducts,
-    required this.unapprovedProducts,
+    required this.wayagramDealApprove,
+    required this.wayagramDealNotApproved,
   });
 
   factory ProductMetrics.fromJson(Map<String, dynamic> json) {
     return ProductMetrics(
       totalProducts: json['totalProducts'],
-      approvedProducts: json['approvedProducts'],
-      unapprovedProducts: json['unapprovedProducts'],
+      wayagramDealApprove: json['wayagramDealApprove'],
+      wayagramDealNotApproved: json['wayagramDealNotApproved'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'totalProducts': totalProducts,
-      'approvedProducts': approvedProducts,
-      'unapprovedProducts': unapprovedProducts,
+      'wayagramDealApprove': wayagramDealApprove,
+      'wayagramDealNotApproved': wayagramDealNotApproved,
     };
   }
 }

@@ -15,6 +15,7 @@ import 'package:wayagram/features/explore/search/model/user_detail.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/features/explore/search/widgets/user_widget.dart';
 import 'package:wayagram/shared/features/moments/notifier/default.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 
 class SearchView extends ConsumerStatefulWidget {
@@ -75,7 +76,7 @@ class _SearchState extends ConsumerState<SearchView> {
     }
 
     //? Searching posts.
-    final List<Post> filteredPosts = WayaUtils.strictSearch<Post>(state.topPosts, ['hashtags'], query);
+    final List<PostModel> filteredPosts = WayaUtils.strictSearch<PostModel>(state.topPosts, ['hashtags'], query);
     final history = storage.getSearchHistory();
 
     //? Moments
@@ -93,7 +94,8 @@ class _SearchState extends ConsumerState<SearchView> {
     );
 
     final serviceData = {'Post': filteredPosts, 'Account': filteredAccounts, 'Moment': filteredMoments};
-    final matchingServices = serviceData.entries.where((entry) => (entry.value as List).isNotEmpty).map((entry) => entry.key).toList();
+    final matchingServices =
+        serviceData.entries.where((entry) => (entry.value as List).isNotEmpty).map((entry) => entry.key).toList();
     selectedServices.retainAll(matchingServices);
     List<String> activeServices = selectedServices.isEmpty ? matchingServices : selectedServices.toList();
     bool allServicesEmpty = matchingServices.isEmpty;
@@ -279,7 +281,7 @@ class _SearchState extends ConsumerState<SearchView> {
               );
             }),
       );
-    } else if (service == 'Post' && data is List<Post>) {
+    } else if (service == 'Post' && data is List<PostModel>) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: List.generate(

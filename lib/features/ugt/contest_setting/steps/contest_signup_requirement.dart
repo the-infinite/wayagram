@@ -18,15 +18,19 @@ import '../../../auth/account_creation/view/loading_state.dart';
 
 class ContestSignupRequirement extends StatefulHookConsumerWidget {
   final VoidCallback goToNextTab;
-  const ContestSignupRequirement({super.key, required this.goToNextTab});
+  final Function(int) goToPrevTab;
+  const ContestSignupRequirement(
+      {super.key, required this.goToNextTab, required this.goToPrevTab});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ContestSignupRequirementState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ContestSignupRequirementState();
 }
 
 bool isSwitched = true;
 
-class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirement> {
+class _ContestSignupRequirementState
+    extends ConsumerState<ContestSignupRequirement> {
   List<dynamic> stages = [];
   final _contestController = Get.put(ContestController());
 
@@ -38,7 +42,9 @@ class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirem
 
   void _removeStage(int index) {
     ref.read(stateRequirementProvider.notifier).state.removeAt(index);
-    ref.read(stateRequirementProvider.notifier).state = [...ref.read(stateRequirementProvider.notifier).state];
+    ref.read(stateRequirementProvider.notifier).state = [
+      ...ref.read(stateRequirementProvider.notifier).state
+    ];
     /*  setState(() {
       _contestController.removeContestSignUpRequirement(index);
       stages.removeAt(index);
@@ -85,7 +91,8 @@ class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirem
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Contest sign up requirement", style: wayaTheme.textTheme.titleLarge),
+        Text("Contest sign up requirement",
+            style: wayaTheme.textTheme.titleLarge),
         const Gap(5),
         Text(
             "configure what are the requirements of the applicants during application and decide if each requirement is mandatory or optional",
@@ -230,7 +237,8 @@ class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirem
                       ),
                       Expanded(
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 0),
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 16, vertical: 0),
                           height: 60,
                           decoration: BoxDecoration(
                             color: Colors.grey[100],
@@ -241,10 +249,16 @@ class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirem
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                  viewModel1[index].requirementType!.trim().isEmpty
+                                  viewModel1[index]
+                                          .requirementType!
+                                          .trim()
+                                          .isEmpty
                                       ? "Select Type"
-                                      : viewModel1[index].requirementType ?? "Select Type",
-                                  style: TextStyle(fontSize: 16.sp, color: Colors.grey[700])),
+                                      : viewModel1[index].requirementType ??
+                                          "Select Type",
+                                  style: TextStyle(
+                                      fontSize: 16.sp,
+                                      color: Colors.grey[700])),
                               IconButton(
                                 icon: Image.asset(
                                   'assets/images/icon-right.png',
@@ -253,7 +267,8 @@ class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirem
                                 ),
                                 //Icon(Icons.edit, color: Colors.grey),
                                 onPressed: () {
-                                  _contestController.selectedIndexSignUPRequire = index;
+                                  _contestController
+                                      .selectedIndexSignUPRequire = index;
                                   WayaUtils.showModalSheetUgt(
                                     context,
                                     child: AddNewRequirementModal(),
@@ -305,29 +320,51 @@ class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirem
             ), */
             TextButton(
               onPressed: () {
-                int id = ref.read(stateRequirementProvider.notifier).state.length;
+                int id =
+                    ref.read(stateRequirementProvider.notifier).state.length;
                 ref.read(stateRequirementProvider.notifier).state = [
                   ...ref.read(stateRequirementProvider),
                   NewRequirementModel(
                     requirementType: "Select Type",
-                    id: ref.read(stateRequirementProvider.notifier).state.length,
+                    id: ref
+                        .read(stateRequirementProvider.notifier)
+                        .state
+                        .length,
                   )
                 ];
               },
-              child: Text('+ Add Another Requirement', style: TextStyle(color: Colors.red)),
+              child: Text('+ Add Another Requirement',
+                  style: TextStyle(color: Colors.red)),
             ),
             SizedBox(height: 20),
           ],
         ),
         const Gap(15),
         WayaButton(
-            centerWidget: LoadingState(loading: isLoading.value, text: 'Submit'),
+            centerWidget:
+                LoadingState(loading: isLoading.value, text: 'Submit'),
             callback: !isLoading.value
                 ? () {
-                    if (ref.read(stateRequirementProvider.notifier).state.isNotEmpty) {
-                      for (var model in ref.read(stateRequirementProvider.notifier).state) {
-                        if (model.requirementName!.trim().isEmpty || model.requirementType!.trim().isEmpty) {
-                          WayaSnackBar.showToast("Please make sure all required field are filled");
+                    if (ref
+                        .read(stateRequirementProvider.notifier)
+                        .state
+                        .isEmpty) {
+                      WayaSnackBar.showToast(
+                          "Please add a contest requirement");
+                      return;
+                    }
+
+                    if (ref
+                        .read(stateRequirementProvider.notifier)
+                        .state
+                        .isNotEmpty) {
+                      for (var model in ref
+                          .read(stateRequirementProvider.notifier)
+                          .state) {
+                        if (model.requirementName!.trim().isEmpty ||
+                            model.requirementType!.trim().isEmpty) {
+                          WayaSnackBar.showToast(
+                              "Please make sure all required field are filled");
                           return;
                         }
                       }
@@ -361,9 +398,11 @@ class _ContestSignupRequirementState extends ConsumerState<ContestSignupRequirem
           text: 'Go Back',
           color: wayaTheme.colorScheme.greyColor300,
           textColor: wayaTheme.colorScheme.customBlack,
-          border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+          border:
+              Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
           callback: () {
-            WayaNav.goBack();
+            widget.goToPrevTab(0);
+            // WayaNav.goBack();
           },
         )
       ],

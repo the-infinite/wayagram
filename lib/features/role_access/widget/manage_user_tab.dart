@@ -2,12 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/role_access/data/model/role_member.dart';
 import 'package:wayagram/features/role_access/view/add_team_member_page.dart';
 import 'package:wayagram/features/role_access/view/member_details_page.dart';
+import 'package:wayagram/features/role_access/vm/role_access_vm.dart';
 import 'package:wayagram/features/role_access/widget/role_access_card.dart';
+import 'package:wayagram/features/role_access/widget/role_admin_card.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
@@ -21,71 +25,99 @@ class ManageUserTab extends ConsumerStatefulWidget {
 
 class _ForYouContestState extends ConsumerState<ManageUserTab> {
   final ScrollController _scrollController = ScrollController();
+  double _previousScrollOffset = 0.0;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollController.addListener(_scrollListener);
+    });
+  }
+
+  void _scrollListener() {
+    double currentOffset = _scrollController.position.pixels;
+
+    // ✅ Fetch data only when scrolling **downward** and near the bottom
+    if (currentOffset > _previousScrollOffset &&
+        _scrollController.position.pixels >=
+            _scrollController.position.maxScrollExtent - 100) {
+      // print("fetching .....${_scrollController.position.pixels}");
+      ref.read(roleAccessVm.notifier).getAllMembers(false);
+    }
+    _previousScrollOffset = currentOffset;
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener); // Remove listener safely
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        WayaButton(
-          callback: () {
-            /*   ivalidateUGTVM(ref);
-            //WayaNav.toNamed('/create-profile-contest1');
-            WayaNav.toNamed('/create-contest'); */
+    final viewModel = ref.watch(roleAccessVm);
 
-            WayaNav.toNamed(AddTeamMemberPage.route);
-          },
-          color: wayaTheme.colorScheme.primary50,
-          text: "Add New Team Member",
-          textColor: wayaTheme.colorScheme.customPrimary,
-        ),
-        const Gap(10),
-        /*   if (posts.isEmpty) emptyWidget(),
-        if (postNotifier.isLoading) Center(child: CircularProgressIndicator()),
-        if (posts.isNotEmpty) */
-
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: users.length,
-          itemBuilder: (context, index) {
-            final user = users[index];
-            return GestureDetector(
-                onTap: () {
-                  WayaNav.toNamed(MemberDetailsPage.route);
-                },
-                child: RoleAccessCard(user: user));
-          },
-        ),
-      ],
+    return SizedBox(
+      height: MediaQuery.of(context).size.height - 100,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          WayaButton(
+            callback: () {
+              /*   ivalidateUGTVM(ref);
+              //WayaNav.toNamed('/create-profile-contest1');
+              WayaNav.toNamed('/create-contest'); */
+              ref.read(editingRoleMemberProvider.notifier).state = false;
+              WayaNav.toNamed(AddTeamMemberPage.route);
+            },
+            color: wayaTheme.colorScheme.primary50,
+            text: "Add New Team Member",
+            textColor: wayaTheme.colorScheme.customPrimary,
+          ),
+          const Gap(10),
+          RoleAdminCard(),
+          /*   if (posts.isEmpty) emptyWidget(),
+          if (postNotifier.isLoading) Center(child: CircularProgressIndicator()),
+          if (posts.isNotEmpty) */
+          if (viewModel.isLoading == true)
+            Center(child: CircularProgressIndicator()),
+          if (viewModel.listMember.isEmpty) emptyWidget(),
+          Expanded(
+            // height: context.height - 200,
+            child: ListView.builder(
+              controller: _scrollController,
+              physics: AlwaysScrollableScrollPhysics(),
+              itemCount: viewModel.listMember.length,
+              itemBuilder: (context, index) {
+                final user = viewModel.listMember[index];
+                return GestureDetector(
+                    onTap: () {
+                      ref.read(selectedRoleMemberProvider.notifier).state =
+                          user;
+                      WayaNav.toNamed(MemberDetailsPage.route);
+                    },
+                    child: RoleAccessCard(user: user));
+              },
+            ),
+          ),
+          Gap(100)
+        ],
+      ),
     );
   }
 
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc: ConversationState.self.accountType == UserAccountType.business
-            ? "You don’t have any active contest here. Create a \n contest and have different participant"
-            : "You don’t have any active contest here. Create a \n Business account to access more features",
-        title: "No Contest Created",
-        buttonText: "Host a Contest",
-        hideButton: true,
-        onTap: () {
-          ivalidateUGTVM(ref);
-          WayaNav.toNamed("/create-contest");
-        });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
+        desc: "No Member added yet",
+        title: "Role & Access",
+        buttonText: "",
+        hideButton: false,
+        onTap: () {});
   }
 }
 

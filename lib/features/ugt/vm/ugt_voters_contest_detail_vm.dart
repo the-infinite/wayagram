@@ -106,6 +106,23 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
+  Future<bool> deletePost(ValueNotifier<bool> isLoading, String postId,
+      String contestId, VoidCallback onTap) async {
+    final response = await _contestRepository.deletePost(postId);
+    isLoading.value = false;
+    if (response.success) {
+      onTap();
+      WayaSnackBar.showToast("Post Deleted Successfully", showSuccess: true);
+      fetchAllContestPosts(contestId);
+      return true;
+    } else {
+      WayaSnackBar.showToast(
+        "Please try again later",
+      );
+      return false;
+    }
+  }
+
   Future<bool> payForPaidContest(
       ValueNotifier<bool> isLoading, Map<String, String> map) async {
     final response = await _contestRepository.payForPaidContest(map);
@@ -321,7 +338,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     listMap.add({"type": "TEXT", "url": text});
 
     var map = {
-      "contestantProfileId": state.createPostId,
+      // "contestantProfileId": state.createPostId,
+      "contestantProfileId": _localDataSource.getUserId(),
       "contestId": state.contestId,
       "description": text,
       "mediaContent": listMap
@@ -346,6 +364,10 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   void updateContestId(String? id) {
     state = state.copyWith(contestId: id);
+  }
+
+  void updateContestantId(String? id) {
+    state = state.copyWith(createPostId: id);
   }
 
   void toggleLike(String postId, String galleryId) {

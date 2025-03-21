@@ -51,20 +51,18 @@ class _WayaAmountFormatterState extends State<WayaAmountFormatter> {
                 textBaseline: TextBaseline.alphabetic,
                 children: [
                   WayaRichText(
-                      title1: value ? 'xxxx' : formatter.format(widget.amount),
-                      title2: value ? '' : '.00',
-                      style1: wayaTheme.textTheme.headlineLarge?.wayaCopyWith(
-                          color: widget.balanceColor ??
-                              wayaTheme.colorScheme.onPrimary),
-                      style2: wayaTheme.textTheme.headlineLarge?.wayaCopyWith(
-                        color: widget.koboValueColor ??
-                            wayaTheme.colorScheme.white50,
-                      )),
+                    title1: value ? 'xxxx' : formatter.format(widget.amount),
+                    title2: value ? '' : '.00',
+                    style1: wayaTheme.textTheme.headlineLarge
+                        ?.wayaCopyWith(color: widget.balanceColor ?? wayaTheme.colorScheme.onPrimary),
+                    style2: wayaTheme.textTheme.headlineLarge?.wayaCopyWith(
+                      color: widget.koboValueColor ?? wayaTheme.colorScheme.white50,
+                    ),
+                  ),
                   Text(
                     'NGN',
                     style: wayaTheme.textTheme.headlineLarge?.wayaCopyWith(
-                        color: widget.koboValueColor ??
-                            wayaTheme.colorScheme.white50,
+                        color: widget.koboValueColor ?? wayaTheme.colorScheme.white50,
                         fontWeight: FontWeight.w400,
                         fontSize: 19.sp),
                   ),
@@ -77,17 +75,13 @@ class _WayaAmountFormatterState extends State<WayaAmountFormatter> {
                         padding: EdgeInsets.all(3.71),
                         decoration: BoxDecoration(
                           // ignore: deprecated_member_use
-                          color: widget.color?.withOpacity(0.2) ??
-                              wayaTheme.colorScheme.white50,
+                          color: widget.color?.withOpacity(0.2) ?? wayaTheme.colorScheme.white50,
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
-                          _showAmountNotifer.value
-                              ? Icons.visibility_off_rounded
-                              : Icons.visibility_rounded,
+                          _showAmountNotifer.value ? Icons.visibility_off_rounded : Icons.visibility_rounded,
                           size: 17,
-                          color:
-                              widget.color ?? wayaTheme.colorScheme.onPrimary,
+                          color: widget.color ?? wayaTheme.colorScheme.onPrimary,
                         )),
                   )
                 ],
@@ -134,12 +128,8 @@ class TextAmountFormatter extends StatelessWidget {
       decimalDigits: decimalDegit ?? 2,
     );
 
-    return Text(
-        inFlow == null
-            ? formatter.format(amount)
-            : "${inFlow == true ? '+' : '- '}${formatter.format(amount)}",
-        textAlign: align,
-        style: textStyle ?? wayaTheme.textTheme.headlineLarge);
+    return Text(inFlow == null ? formatter.format(amount) : "${inFlow == true ? '+' : '- '}${formatter.format(amount)}",
+        textAlign: align, style: textStyle ?? wayaTheme.textTheme.headlineLarge);
   }
 }
 

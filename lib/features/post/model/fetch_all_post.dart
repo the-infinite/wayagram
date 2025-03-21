@@ -1,4 +1,6 @@
 import 'dart:convert';
+
+import 'package:wayagram/shared/features/profile/model/post.dart';
 FetchAllPost fetchAllPostFromJson(String str) => FetchAllPost.fromJson(json.decode(str));
 String fetchAllPostToJson(FetchAllPost data) => json.encode(data.toJson());
 class FetchAllPost {
@@ -59,7 +61,7 @@ class FetchAllPostData {
     if (json['docs'] != null) {
       docs = [];
       json['docs'].forEach((v) {
-        docs?.add(Docs.fromJson(v));
+        docs?.add(PostModel.fromJson(v));
       });
     }
     limit = json['limit'];
@@ -71,7 +73,7 @@ class FetchAllPostData {
     prevPage = json['prevPage'];
   }
   num? totalDocs;
-  List<Docs>? docs;
+  List<PostModel>? docs;
   num? limit;
   num? page;
   num? totalPages;
@@ -80,7 +82,7 @@ class FetchAllPostData {
   bool? hasPrevPage;
   dynamic prevPage;
   FetchAllPostData copyWith({  num? totalDocs,
-  List<Docs>? docs,
+  List<PostModel>? docs,
   num? limit,
   num? page,
   num? totalPages,

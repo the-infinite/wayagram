@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/group/widget/send_request_card_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
+import 'package:wayagram/shared/features/profile/widget/group.dart';
 
 class GroupSuggestion extends ConsumerStatefulWidget {
   static const route = '/groupSuggestion';
@@ -23,7 +19,6 @@ class GroupSuggestion extends ConsumerStatefulWidget {
 }
 
 class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTickerProviderStateMixin {
-
   PageController pageController = PageController(
     initialPage: 0,
   );
@@ -38,44 +33,37 @@ class _GroupSuggestionState extends ConsumerState<GroupSuggestion> with SingleTi
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
-    final group = ref.watch(createGroupProvider.notifier);
 
     return WayaScaffold(
-        isLoading: viewModel.isLoading,
-        isScrollable: true,
-        title: 'Suggested For You',
-        backgroundColor: Theme.of(context).colorScheme.greyColor50,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Gap(10),
-            viewModel.recommendedGroupDocs!.isEmpty ? GroupEmptyState():
+      isLoading: viewModel.isLoading,
+      isScrollable: true,
+      title: 'Suggested For You',
+      backgroundColor: Theme.of(context).colorScheme.greyColor50,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Gap(10),
+
+          //? NOw for the recommended groups.
+          if (viewModel.recommendedGroupDocs!.isEmpty)
+            GroupEmptyState()
+          else
             ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                padding: EdgeInsets.only(top: 15),
-                itemCount: viewModel.recommendedGroupDocs?.length,
-                itemBuilder: (_, index){
-                  final recommendedGroup = viewModel.recommendedGroupDocs?[index];
-                  return SendRequestCardWidget(
-                      memberCount: '${recommendedGroup?.memberCount}',
-                      groupName: '${recommendedGroup?.name}',
-                      groupDesc: '${recommendedGroup?.description}',
-                      image: '${recommendedGroup?.coverImage}',
-                      id: '${recommendedGroup?.id}',
-                      onTap:group.joinGroup);
-
-                }),
-
-          ],
-        ));
-
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              padding: EdgeInsets.only(top: 15),
+              itemCount: viewModel.recommendedGroupDocs?.length ?? 0,
+              itemBuilder: (_, index) => SingleGroupWidget(
+                group: viewModel.recommendedGroupDocs![index],
+                index: index,
+              ),
+            ),
+        ],
+      ),
+    );
   }
-
-
 }
 
 class GroupEmptyState extends StatelessWidget {
@@ -94,8 +82,7 @@ class GroupEmptyState extends StatelessWidget {
             },
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter:
-              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

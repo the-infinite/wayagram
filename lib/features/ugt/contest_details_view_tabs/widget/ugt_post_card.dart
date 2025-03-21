@@ -23,6 +23,7 @@ import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/ugt/media_card.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/delete_post_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 
@@ -77,22 +78,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                     child: Row(
                       //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        /*SvgPicture.asset(
-                        '',
-                        colorFilter: ColorFilter.mode(
-                            wayaTheme.colorScheme.success, BlendMode.srcIn),
-                      ),*/
-                        /*   ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                              45), // Adjust the radius as needed
-                          child: Image.asset(
-                            'assets/images/frameuni.png',
-                            height: 45,
-                            width: 45,
-                            fit: BoxFit
-                                .cover, // Ensures the image covers the area properly
-                          ),
-                        ), */
+                      
 
                         WayaImage(
                           imageUrl: widget.contestApplicant?.profilePhoto ?? "",
@@ -152,7 +138,19 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                                 value: 1,
                                 child: _buildActionNav(
                                     context: context,
-                                    onTap: () {},
+                                    onTap: () {
+                                      WayaNav.goBack();
+                                      WayaUtils.showModalSheet(
+                                        context,
+                                        child: DeletePostModal(
+                                          postId: widget.post.id ?? "",
+                                          contestantId:
+                                              widget.contestApplicant?.id ?? "",
+                                          contestId:
+                                              widget.post.contestId ?? "",
+                                        ),
+                                      );
+                                    },
                                     asset: Icon(
                                       Icons.delete_outline_outlined,
                                       size: 24,
@@ -184,25 +182,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
               Text(widget.post.description ?? "",
                   style: wayaTheme.textTheme.bodySmall),
               const Gap(20),
-              /*   ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(16), // Adjust the radius as needed
-                child: WayaImage(
-                  imageUrl: post.mediaContent?[0].url ?? "",
-                  height: 200,
-                  width: context.width,
-                  fit: BoxFit.cover, // Ensur
-                  //  radius: BorderRadius.circular(45),
-                ),
-
-                /*  Image.network(
-                  post.mediaContent?[0].url ?? "",
-                  height: 200,
-                  width: context.width,
-                  fit: BoxFit
-                      .cover, // Ensures the image covers the area properly
-                ), */
-              ), */
+    
 
               MediaCard(
                   //just a random id
@@ -216,24 +196,25 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                         "createdAt": widget.post.createdAt,
                         "likeCount": widget.post.likes,
                         "isLike": widget.post.hasLiked,
-                          "showDescription":false,
+                        "showDescription": false,
                         "discription": widget.post.description,
                         "shareCount": widget.post.shares,
                         "type": MyFullMediaType.image
                       });
-                    }else{
-                        WayaNav.toNamed("/view-media-full-page", arguments: {
+                    } else {
+                      WayaNav.toNamed("/view-media-full-page", arguments: {
                         "url": url,
-                        "title": widget.contestApplicant?.contestApplicant?.fullName ?? "",
+                        "title": widget
+                                .contestApplicant?.contestApplicant?.fullName ??
+                            "",
                         "createdAt": widget.post.createdAt,
                         "likeCount": widget.post.likes,
                         "isLike": widget.post.hasLiked,
-                          "showDescription":false,
+                        "showDescription": false,
                         "discription": widget.post.description,
                         "shareCount": widget.post.shares,
                         "type": MyFullMediaType.video
                       });
-
                     }
                   },
                   mediaUrls: [
@@ -273,10 +254,10 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                               height: 35,
                               child: Center(
                                   child: Icon(
-                                Icons.thumb_up_alt,
+                                widget.post.hasLiked == true? Icons.thumb_up_alt:Icons.thumb_up_alt_outlined,
                                 color: widget.post.hasLiked == true
                                     ? wayaTheme.colorScheme.primary
-                                    : null,
+                                    : wayaTheme.colorScheme.greyColor500,
                               )),
                             ),
                             const Gap(3),
@@ -333,16 +314,6 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                                   : false,
                           voteFee:
                               contestModel2?.amountPerVote?.toString() ?? "0",
-
-                          //   amountPaid: "89",
-
-/* 
- contestId: post.contestId ?? "",
-                              contestantId: post.contestantProfileId ?? "",
-                              hostUserId: model.profileId ?? "",
-
-
- */
 
                           model: ContestVoteModel(
                               contestId: widget.post.contestId ?? "",

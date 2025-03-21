@@ -24,6 +24,7 @@ import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_m
 import 'package:wayagram/features/ugt/media_card.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/delete_post_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
@@ -138,11 +139,23 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                               ),
                               /*   if (viewModel.getLoggedInUserId() ==
                                   widget.post.contestantProfileId) */
+                                  // https://services.staging.wayagram.ng/school-contest/api/v1/gallery/f3c0f686-85fd-4125-8e3f-5a83e7910f32/gallery
                               PopupMenuItem<int>(
                                 value: 1,
                                 child: _buildActionNav(
                                     context: context,
-                                    onTap: () {},
+                                    onTap: () {
+                                      WayaNav.goBack();
+                                      WayaUtils.showModalSheet(
+                                        context,
+                                        child: DeletePostModal(
+                                          postId: widget.post.id ?? "",
+                                          contestantId: "",
+                                          contestId:
+                                              widget.post.contestId ?? "",
+                                        ),
+                                      );
+                                    },
                                     asset: Icon(
                                       Icons.delete_outline_outlined,
                                       size: 24,
@@ -250,10 +263,10 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                               height: 35,
                               child: Center(
                                   child: Icon(
-                                Icons.thumb_up_alt,
+                               widget.post.hasLiked == true? Icons.thumb_up_alt:Icons.thumb_up_alt_outlined,
                                 color: widget.post.hasLiked == true
-                                    ? wayaTheme.colorScheme.primary
-                                    : null,
+                                     ? wayaTheme.colorScheme.primary
+                                : wayaTheme.colorScheme.greyColor500,
                               )),
                             ),
                             const Gap(3),
@@ -309,8 +322,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                         return;
                       }
 
-                        if (widget.model.entryType?.toLowerCase() == "free") {
-                   
+                      if (widget.model.entryType?.toLowerCase() == "free") {
                         WayaUtils.showModalSheet(
                           context,
                           child: ConfirmVoteOptionModal(
@@ -336,7 +348,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                         return;
                       }
 
-                        WayaUtils.showModalSheet(
+                      WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(
                           voteFee:

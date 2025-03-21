@@ -67,8 +67,7 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
               child: Center(
                 child: Text(
                   "No Viewer",
-                  style: TextStyle(
-                      color: wayaTheme.colorScheme.greyColor300, fontSize: 14.sp),
+                  style: TextStyle(color: wayaTheme.colorScheme.greyColor300, fontSize: 14.sp),
                 ),
               ),
             ),
@@ -89,8 +88,7 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
     );
   }
 
-  Widget builViewers(
-      {required BuildContext context, required MomentViewer viewer}) {
+  Widget builViewers({required BuildContext context, required MomentViewer viewer}) {
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
@@ -105,19 +103,22 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
                 children: [
                   Stack(
                     children: [
-                      WayaDp(
-                        image: viewer.image,
-                        radius: 25,
+                      WayaImage(
+                        imageUrl: viewer.image ?? '',
+                        radius: BorderRadius.circular(50),
+                        width: 50,
+                        height: 50,
                       ),
                       if (viewer.likeMoment)
                         Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: SvgPicture.asset(
-                              WayaAssets.icons.mSmallHeart.path,
-                              width: 16,
-                              height: 16,
-                            ))
+                          bottom: 0,
+                          right: 0,
+                          child: SvgPicture.asset(
+                            WayaAssets.icons.mSmallHeart.path,
+                            width: 16,
+                            height: 16,
+                          ),
+                        )
                     ],
                   ),
                   SizedBox(
@@ -129,8 +130,7 @@ class _MomentViewersState extends ConsumerState<MomentViewers> {
                       SizedBox(
                         width: 150.w,
                         child: Text(viewer.name ?? '',
-                            overflow: TextOverflow.ellipsis,
-                            style: wayaTheme.textTheme.bodyMedium),
+                            overflow: TextOverflow.ellipsis, style: wayaTheme.textTheme.bodyMedium),
                       ),
                       SizedBox(
                         height: 6.h,
