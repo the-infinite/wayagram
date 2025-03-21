@@ -16,6 +16,7 @@ class VoterDetailState {
   final List<contestant.MyContestContestantModel> myContestList;
   final List<Stage> stageList;
   final List<ApplicantContestModel> myContestApplicantList;
+  final List<ApplicantContestModel> myFilteredContestApplicantList;
   final List<contestant.MyContestContestantModel> myContestListCopy;
   final List<MyFilterModel> filterList;
   final List<UgtAllPostContestModel> myPostList;
@@ -28,6 +29,7 @@ class VoterDetailState {
     this.contestId = "",
     this.myPostList = const[],
     this.myContestApplicantList = const[],
+    this.myFilteredContestApplicantList = const[],
     this.stageList = const[],
     this.filterList = const[
      
@@ -47,6 +49,7 @@ class VoterDetailState {
     List<Stage>? stageList,
     List<MyFilterModel>? filterList,
     List<ApplicantContestModel>? myContestApplicantList,
+    List<ApplicantContestModel>? myFilteredContestApplicantList,
     List<ExternalWalletModel>? externalWallets,
     List<contestant.MyContestContestantModel>? myContestList,
     List<contestant.MyContestContestantModel>? myContestListCopy,
@@ -58,6 +61,7 @@ class VoterDetailState {
         stageList: stageList ?? this.stageList,
         filterList: filterList ?? this.filterList,
         myContestApplicantList: myContestApplicantList ?? this.myContestApplicantList,
+        myFilteredContestApplicantList: myFilteredContestApplicantList ?? this.myFilteredContestApplicantList,
         createPostId:createPostId??this.createPostId,
         contestId:contestId??this.contestId,
         myContestList: myContestList ?? this.myContestList,

@@ -16,6 +16,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 class CreateContestPost extends StatefulHookConsumerWidget {
@@ -23,10 +24,12 @@ class CreateContestPost extends StatefulHookConsumerWidget {
   const CreateContestPost({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CreateContestPostState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _CreateContestPostState();
 }
 
-class _CreateContestPostState extends ConsumerState<CreateContestPost> with SingleTickerProviderStateMixin {
+class _CreateContestPostState extends ConsumerState<CreateContestPost>
+    with SingleTickerProviderStateMixin {
   PageController pageController = PageController(
     initialPage: 0,
   );
@@ -51,7 +54,10 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
       if (images.isNotEmpty) {
         setState(() {
           _selectedImages.removeWhere((e) => e.type == false);
-          List<MyMediaType> listImage = images.take(5).map((e) => MyMediaType(path: e.path, type: false)).toList();
+          List<MyMediaType> listImage = images
+              .take(5)
+              .map((e) => MyMediaType(path: e.path, type: false))
+              .toList();
           _selectedImages.addAll(listImage);
         });
       }
@@ -64,7 +70,8 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
   File? _videoFile;
 
   Future<void> pickVideo() async {
-    final XFile? pickedFile = await _pickers.pickVideo(source: ImageSource.gallery);
+    final XFile? pickedFile =
+        await _pickers.pickVideo(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       //  setState(() {
@@ -119,6 +126,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
     final notifier = ref.read(votersContestNotifier.notifier);
     final isLoading = useState(false);
     final isEmptyTest = useState(false);
+    var model = ref.watch(selectedContestProvider.notifier).state;
 
     // final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
@@ -143,14 +151,25 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                         text: 'Post',
                         isLoading: isLoading.value,
                         textStyle: WayaTextStyles.bodySmall.copyWith(
-                            fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.white),
                       )
                     : WayaButton(
                         callback: !isLoading.value
                             ? () async {
                                 if (_formKey.currentState!.validate()) {
-                                  notifier.uploadCreatePost(ref, context, isLoading, textField.text, _selectedImages,
-                                      _videoFile, sel ? "public" : "private");
+                                  notifier.uploadCreatePost(
+                                      ref,
+                                      context,
+                                      isLoading,
+                                      textField.text,
+                                      _selectedImages,
+                                      _videoFile,
+                                      sel ? "public" : "private",
+                                      model?.id ?? "", () {
+                                    WayaNav.goBack();
+                                  });
                                 }
                               }
                             : null,
@@ -158,7 +177,9 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                         text: 'Post',
                         isLoading: isLoading.value,
                         textStyle: WayaTextStyles.bodySmall.copyWith(
-                            fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.white),
                       ),
               ),
             ),
@@ -211,7 +232,8 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                       return null;
                                     }, builder: (formState) {
                                       return Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           WayaTextFormField(
                                             line: 5,
@@ -229,16 +251,22 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                             keyboardType: TextInputType.text,
                                             controller: textField,
                                             hintText: 'what is on your mind?',
-                                            borderColor: formState.hasError && textField.text.isEmpty
+                                            borderColor: formState.hasError &&
+                                                    textField.text.isEmpty
                                                 ? wayaTheme.colorScheme.error
                                                 : null,
                                           ),
-                                          if (formState.hasError && textField.text.isEmpty)
+                                          if (formState.hasError &&
+                                              textField.text.isEmpty)
                                             Padding(
-                                              padding: const EdgeInsets.only(top: 5),
+                                              padding:
+                                                  const EdgeInsets.only(top: 5),
                                               child: Text(
                                                 formState.errorText!,
-                                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                                                style: TextStyle(
+                                                    color: wayaTheme
+                                                        .colorScheme.error,
+                                                    fontSize: 12.sp),
                                               ),
                                             ),
                                         ],
@@ -251,13 +279,18 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                         ],
                       ),
                       Container(
-                        decoration:
-                            BoxDecoration(borderRadius: BorderRadius.circular(15), color: wayaTheme.colorScheme.white),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: wayaTheme.colorScheme.white),
                         child: GridView.builder(
                           shrinkWrap: true,
                           padding: EdgeInsets.only(left: 20),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2, mainAxisSpacing: 16, crossAxisSpacing: 16, childAspectRatio: 1.5),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                  mainAxisSpacing: 16,
+                                  crossAxisSpacing: 16,
+                                  childAspectRatio: 1.5),
                           itemCount: _selectedImages.length,
                           itemBuilder: (context, index) {
                             return Stack(
@@ -306,7 +339,9 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                       child: Icon(
                                         Icons.close,
                                         size: 10,
-                                        color: Theme.of(context).colorScheme.primary,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
                                       ),
                                     ),
                                   ),
@@ -389,14 +424,21 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                   child: Row(
                     children: [
                       Image.asset(
-                        sel ? 'assets/images/pages/post.png' : 'assets/images/pages/lock.png',
+                        sel
+                            ? 'assets/images/pages/post.png'
+                            : 'assets/images/pages/lock.png',
                         height: 18.h,
                       ),
                       Gap(5),
                       Text(
                         sel ? 'Public post' : 'Private post',
-                        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 14.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium!
+                            .wayaCopyWith(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(context).colorScheme.primary),
                       ),
                     ],
                   ),
@@ -430,7 +472,9 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                       top: 10,
                     ),
                     child: Container(
-                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.white),
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: Colors.white),
                       child: chk
                           ? Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -439,37 +483,56 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                 Container(
                                   width: double.infinity,
                                   height: 56.h,
-                                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary50),
+                                  decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary50),
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Public',
-                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: Theme.of(context).colorScheme.primary),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .wayaCopyWith(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary),
                                         ),
                                         Row(
                                           children: [
                                             Text(
                                               'Everybody can see and interact with this post',
-                                              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Theme.of(context).colorScheme.primary),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .wayaCopyWith(
+                                                      fontSize: 14.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary),
                                             ),
                                             Spacer(),
                                             Padding(
-                                              padding: const EdgeInsets.only(right: 20),
+                                              padding: const EdgeInsets.only(
+                                                  right: 20),
                                               child: GestureDetector(
                                                 onTap: () => WayaNav.goBack(),
                                                 child: Container(
-                                                  padding: const EdgeInsets.all(2),
+                                                  padding:
+                                                      const EdgeInsets.all(2),
                                                   decoration: BoxDecoration(
-                                                    color: Theme.of(context).colorScheme.primary,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
                                                     shape: BoxShape.circle,
                                                   ),
                                                   child: Icon(
@@ -488,25 +551,37 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                 ),
                                 Gap(10),
                                 Container(
-                                  decoration: BoxDecoration(color: Colors.white),
+                                  decoration:
+                                      BoxDecoration(color: Colors.white),
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Private',
-                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: Theme.of(context).colorScheme.black),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .wayaCopyWith(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .black),
                                         ),
                                         Text(
                                           'Only your friends can see and interact with this post',
-                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: Theme.of(context).colorScheme.greyColor500),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .wayaCopyWith(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .greyColor500),
                                         ),
                                       ],
                                     ),
@@ -519,25 +594,37 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
                                 Container(
-                                  decoration: BoxDecoration(color: Colors.white),
+                                  decoration:
+                                      BoxDecoration(color: Colors.white),
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Public',
-                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: Theme.of(context).colorScheme.black),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .wayaCopyWith(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .black),
                                         ),
                                         Text(
                                           'Everybody can see and interact with this post',
-                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w400,
-                                              color: Theme.of(context).colorScheme.greyColor500),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .wayaCopyWith(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w400,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .greyColor500),
                                         ),
                                       ],
                                     ),
@@ -547,37 +634,56 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                 Container(
                                   width: double.infinity,
                                   height: 56.h,
-                                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary50),
+                                  decoration: BoxDecoration(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .primary50),
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Private',
-                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                              fontSize: 14.sp,
-                                              fontWeight: FontWeight.w600,
-                                              color: Theme.of(context).colorScheme.primary),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .wayaCopyWith(
+                                                  fontSize: 14.sp,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary),
                                         ),
                                         Row(
                                           children: [
                                             Text(
                                               'Only your friends can see and interact with this post',
-                                              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                                  fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Theme.of(context).colorScheme.primary),
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .wayaCopyWith(
+                                                      fontSize: 14.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .primary),
                                             ),
                                             Spacer(),
                                             Padding(
-                                              padding: const EdgeInsets.only(right: 20),
+                                              padding: const EdgeInsets.only(
+                                                  right: 20),
                                               child: GestureDetector(
                                                 onTap: () => WayaNav.goBack(),
                                                 child: Container(
-                                                  padding: const EdgeInsets.all(2),
+                                                  padding:
+                                                      const EdgeInsets.all(2),
                                                   decoration: BoxDecoration(
-                                                    color: Theme.of(context).colorScheme.primary,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .primary,
                                                     shape: BoxShape.circle,
                                                   ),
                                                   child: Icon(

@@ -136,6 +136,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   Future<bool> startStageContest(
       String stageName, Map<String, String> map) async {
+    print("mapkkkk $map");
     final response = await _contestRepository.startStage(map);
 
     //  isLoading.value = false;
@@ -226,27 +227,39 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
   }
 
   Future<void> getContestantProfileVoteDetails(String contestId) async {
-    print("i am here333  $contestId");
     try {
       final response =
           await _contestRepository.getContestantProfileVoteDetails(contestId);
       List<MyContestContestantModel> contestList = [];
+
       if (response.success) {
-        state = state.copyWith(
+        /*  state = state.copyWith(
           myContestList: [],
           myContestListCopy: [],
-        );
+        ); */
+
         ContestContestantModelMean responseModel =
             ContestContestantModelMean.fromJson(response.data);
         contestList = responseModel.data ?? [];
+
+        MyContestContestantModel? model;
+
         contestList.sort((a, b) => b.votes!.compareTo(a.votes!));
-        var model = contestList.firstWhere(
-            (e) => e.profileId == _localDataSource.getUserId().toString());
+
+        //? this may not contain what i am looking for that y i am using try here
+        try {
+          model = contestList.firstWhere(
+              (e) => e.profileId == _localDataSource.getUserId().toString());
+        } catch (e) {
+          print(e);
+        }
+
         // createPostId = ;
+
         state = state.copyWith(
             myContestList: contestList,
             myContestListCopy: contestList,
-            createPostId: model.id ?? "");
+            createPostId: model?.id ?? "");
         // _page++;
         //isLoading = false;
       }
@@ -282,8 +295,13 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         ApplicantContestModelBase responseModel =
             ApplicantContestModelBase.fromJson(response.data);
         contestList = responseModel.data ?? [];
+        var myFilteredListt = contestList
+            .where((e) => e.status?.toLowerCase() == "pending")
+            .toList();
 
-        state = state.copyWith(myContestApplicantList: contestList);
+        state = state.copyWith(
+            myContestApplicantList: contestList,
+            myFilteredContestApplicantList: myFilteredListt);
       }
     } catch (e) {
       //print(e);
@@ -313,7 +331,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       String text,
       List<MyMediaType> selectedImages,
       File? videoFile,
-      String s) async {
+      String s,
+      String contestId,
+      VoidCallback onBackPressed) async {
     List<String> imageUrls = [];
     String? videoUrl;
     isLoading.value = true;
@@ -338,9 +358,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     listMap.add({"type": "TEXT", "url": text});
 
     var map = {
-      // "contestantProfileId": state.createPostId,
-      "contestantProfileId": _localDataSource.getUserId(),
-      "contestId": state.contestId,
+      "contestantProfileId": state.createPostId,
+      // "contestantProfileId": _localDataSource.getUserId(),
+      "contestId": contestId,
       "description": text,
       "mediaContent": listMap
     };
@@ -354,7 +374,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       Future.delayed(
         Duration(seconds: 2),
         () {
-          WayaNav.goBack();
+          onBackPressed;
         },
       );
     } else {

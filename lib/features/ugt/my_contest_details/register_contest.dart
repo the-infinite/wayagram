@@ -68,7 +68,8 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
       notifier.fullName.text = ConversationState.self.fullname;
       notifier.emailAddress.text = ConversationState.self.email ?? "";
       notifier.address.text = ConversationState.self.address ?? "";
-      notifier.phoneNumber.text = ConversationState.self.phoneNumber ?? "";
+      notifier.phoneNumber.text =
+          "${ConversationState.self.phoneNumber?.split("234").last}" ?? "";
       return null;
     }, []);
     return WayaScaffold(
@@ -106,12 +107,10 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     label: "Full Name",
                     isReadOnly: true,
                     borderColor:
-                        formState.hasError && notifier.fullName.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
+                        formState.hasError ? wayaTheme.colorScheme.error : null,
                     //  label: 'Business Name',
                   ),
-                  if (formState.hasError && notifier.fullName.text.isEmpty)
+                  if (formState.hasError)
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
@@ -136,7 +135,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                 return 'Email is required';
               }
               final RegExp regexp = RegExp(r'^[^@]+@[^@]+\.[^@]+');
-              if (!regexp.hasMatch(notifier.emailAddress.text)) {
+              if (!regexp.hasMatch(notifier.emailAddress.text.trim())) {
                 return 'Invalid email address';
               }
               return null;
@@ -150,12 +149,10 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     hintText: 'example@gmail.com',
                     isReadOnly: true,
                     borderColor:
-                        formState.hasError && notifier.emailAddress.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
+                        formState.hasError ? wayaTheme.colorScheme.error : null,
                     label: 'Email Address',
                   ),
-                  if (formState.hasError && notifier.emailAddress.text.isEmpty)
+                  if (formState.hasError)
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
@@ -207,9 +204,9 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
               if (notifier.phoneNumber.text.isEmpty) {
                 return 'Phone is required';
               }
-              if (notifier.phoneNumber.text.length != 11) {
+              /*  if (notifier.phoneNumber.text.length != 11) {
                 return 'Phone enter a valid number';
-              }
+              } */
 
               return null;
             }, builder: (formState) {
@@ -261,15 +258,14 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                           controller: notifier.phoneNumber,
                           hintText: '000-000-000',
                           isReadOnly: true,
-                          borderColor: formState.hasError &&
-                                  notifier.phoneNumber.text.isEmpty
+                          borderColor: formState.hasError
                               ? wayaTheme.colorScheme.error
                               : null,
                         ),
                       )
                     ],
                   ),
-                  if (formState.hasError && notifier.phoneNumber.text.isEmpty)
+                  if (formState.hasError)
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
@@ -312,7 +308,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     },
                     uniqueKey: 'contest-state',
                   ),
-                  if (formState.hasError && selectedState.value.isEmpty)
+                  if (formState.hasError)
                     Padding(
                       padding: const EdgeInsets.only(top: 5),
                       child: Text(
@@ -496,10 +492,15 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                   loading: isLoading.value, text: 'Apply Now & Join the Fun!'),
               callback: !isLoading.value
                   ? () {
+                      print("2222");
                       if (_formKey.currentState!.validate()) {
+                        print("1");
                         for (var model in viewModel) {
+                          print("2");
                           if (model.isRequired) {
+                            print("3");
                             if (model.type == FieldType.image) {
+                              print("4");
                               if (model.imagePath == null ||
                                   model.imagePath!.trim().isEmpty) {
                                 WayaSnackBar.showToast(
@@ -514,6 +515,8 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                             context, isLoading, selectedState.value, () {
                           WayaNav.goBack();
                         });
+                      } else {
+                        print(_formKey.currentState!.toString());
                       }
                     }
                   : null,

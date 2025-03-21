@@ -69,30 +69,26 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                     // width: context.width * 0.8,
                     child: Row(
                       //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      
                       children: [
-                        /*SvgPicture.asset(
-                        '',
-                        colorFilter: ColorFilter.mode(
-                            wayaTheme.colorScheme.success, BlendMode.srcIn),
-                      ),*/
-                        /*   ClipRRect(
-                          borderRadius: BorderRadius.circular(
-                              45), // Adjust the radius as needed
-                          child: Image.asset(
-                            'assets/images/frameuni.png',
+                        GestureDetector(
+                          onTap: () {
+                            /*   ref.read(selectedContestantProfile.notifier).state =
+                              viewModel.myContestList[0]; */
+
+                            WayaNav.toNamed(
+                              '/contest-profile-page',
+                            );
+                          },
+                          child: WayaImage(
+                            imageUrl:
+                                widget.post.contestantProfile?.profilePhoto ??
+                                    "",
                             height: 45,
                             width: 45,
-                            fit: BoxFit
-                                .cover, // Ensures the image covers the area properly
+                            fit: BoxFit.cover,
+                            radius: BorderRadius.circular(45),
                           ),
-                        ), */
-                        WayaImage(
-                          imageUrl:
-                              widget.post.contestantProfile?.profilePhoto ?? "",
-                          height: 45,
-                          width: 45,
-                          fit: BoxFit.cover,
-                          radius: BorderRadius.circular(45),
                         ),
                         const Gap(10),
                         Column(
@@ -139,7 +135,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                               ),
                               /*   if (viewModel.getLoggedInUserId() ==
                                   widget.post.contestantProfileId) */
-                                  // https://services.staging.wayagram.ng/school-contest/api/v1/gallery/f3c0f686-85fd-4125-8e3f-5a83e7910f32/gallery
+                              // https://services.staging.wayagram.ng/school-contest/api/v1/gallery/f3c0f686-85fd-4125-8e3f-5a83e7910f32/gallery
                               PopupMenuItem<int>(
                                 value: 1,
                                 child: _buildActionNav(
@@ -263,10 +259,12 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                               height: 35,
                               child: Center(
                                   child: Icon(
-                               widget.post.hasLiked == true? Icons.thumb_up_alt:Icons.thumb_up_alt_outlined,
+                                widget.post.hasLiked == true
+                                    ? Icons.thumb_up_alt
+                                    : Icons.thumb_up_alt_outlined,
                                 color: widget.post.hasLiked == true
-                                     ? wayaTheme.colorScheme.primary
-                                : wayaTheme.colorScheme.greyColor500,
+                                    ? wayaTheme.colorScheme.primary
+                                    : wayaTheme.colorScheme.greyColor500,
                               )),
                             ),
                             const Gap(3),

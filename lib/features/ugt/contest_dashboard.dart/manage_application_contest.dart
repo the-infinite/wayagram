@@ -60,7 +60,7 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
                 _buildStatCard(
                     context,
                     "Number of\nApplication\nsubmitted",
-                    "10",
+                    viewModel.myContestApplicantList.length.toString(),
                     Icon(
                       Icons.map_outlined,
                       color: Colors.white,
@@ -68,13 +68,14 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
                 _buildStatCard(
                     context,
                     "Number of\nApproved\nApplication",
-                    "2,765",
+                    "${viewModel.myContestApplicantList.length - viewModel.myFilteredContestApplicantList.length}",
                     Icon(
                       Icons.map_outlined,
                       color: Colors.white,
                     )),
               ],
             ),
+            
 
             SizedBox(height: 20),
 
@@ -84,18 +85,20 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
               padding: EdgeInsets.all(10),
               child: Column(
                 children: [
-                    ListView.builder(
+                  ListView.builder(
                     // controller: _scrollController,
                     shrinkWrap: true,
-                    itemCount: viewModel.myContestApplicantList.length > 6
-                        ? 6
-                        : viewModel.myContestApplicantList.length,
+                    itemCount:
+                        viewModel.myFilteredContestApplicantList.length > 6
+                            ? 6
+                            : viewModel.myFilteredContestApplicantList.length,
                     itemBuilder: (context, index) {
                       if (viewModel.isLoading!) {
                         return Center(child: CircularProgressIndicator());
                       }
 
-                      final post = viewModel.myContestApplicantList[index];
+                      final post =
+                          viewModel.myFilteredContestApplicantList[index];
                       return GestureDetector(
                         onTap: () {
                           ref.read(selectedApplicantProfile.notifier).state =
@@ -191,7 +194,8 @@ class _ManageStateContestState extends ConsumerState<ManageApplicationContest> {
           children: [
             Text(contestants,
                 style: TextStyle(
-                    color: wayaTheme.colorScheme.greyColor700, fontSize: 14.sp)),
+                    color: wayaTheme.colorScheme.greyColor700,
+                    fontSize: 14.sp)),
             Gap(10),
             Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
             Gap(10)

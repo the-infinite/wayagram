@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -324,14 +325,21 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     ),
                   ),
                   const Gap(30),
+                  
                   GestureDetector(
-                    onTap: () {
-                      if (hasClickedShared.value == false) {
-                        widget.onSharePressed(widget.post.id!);
+                    onTap: () async {
+                      final result = await Share.share(
+                          'check out my website https://example.com');
+
+                      if (result.status == ShareResultStatus.success) {
+                        print('Thank you for sharing my website!');
+                        if (hasClickedShared.value == false) {
+                          widget.onSharePressed(widget.post.id!);
+                        }
+                        Future.delayed(Duration(seconds: 2), () {
+                          hasClickedShared.value = false;
+                        });
                       }
-                      Future.delayed(Duration(seconds: 2), () {
-                        hasClickedShared.value = false;
-                      });
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
