@@ -50,11 +50,12 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
                     shape: BoxShape.circle,
                     border: Border.all(width: 1, color: wayaTheme.colorScheme.white),
                   ),
-                  child: WayaImage(
-                    imageUrl: widget.moment.image,
-                    radius: BorderRadius.circular(50),
-                    width: 50,
-                    height: 50,
+                  child: WayaDp(
+                    image: widget.moment.image,
+                    radius: 50.r,
+                    isSelf: false,
+                    isEdit: false,
+                    onTap: null,
                   ),
                 ),
                 SizedBox(

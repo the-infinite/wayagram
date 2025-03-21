@@ -13,6 +13,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/view/report_page.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 
 import '../../group/view/groups_for_you.dart';
@@ -27,20 +28,34 @@ class PublicPage extends ConsumerStatefulWidget {
 }
 
 class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProviderStateMixin {
+  final loadingController = ValueNotifier(false);
+  late final args = ModalRoute.of(context)?.settings.arguments as dynamic;
+  late final pageId = args?['pageId'];
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final dynamic args = ModalRoute.of(context)?.settings.arguments;
-      ref.read(createPageProvider.notifier).getPagePosts(args['pageId']);
+      ref.read(createPageProvider.notifier).getPagePosts(pageId);
     });
+  }
+
+  Future<void> _followPage() async {
+    //? Then leave the page.
+    if (myPageNotifier.isMemberOf(pageId)) {
+      await myPageNotifier.unfollowPage(pageId);
+    }
+
+    //? Then, join the page.
+    else {
+      await myPageNotifier.followPage(pageId);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);
-    final args = ModalRoute.of(context)?.settings.arguments as dynamic;
 
     return WayaScaffold(
       padding: EdgeInsets.zero,
@@ -55,53 +70,58 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
             child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
           ),
           PopupMenuButton(
-              onSelected: (value) {},
-              iconColor: wayaTheme.colorScheme.greyColor400,
-              position: PopupMenuPosition.under,
-              itemBuilder: (context) {
-                return [
-                  PopupMenuItem<int>(
-                    value: 0,
-                    child: WayaActionNav(
-                        context: context,
-                        onTap: () {
-                          WayaNav.goBack();
-                          //WayaNav.toNamed('/groupSetting');
-                        },
-                        asset: SvgPicture.asset(
-                          'assets/images/pages/mute.svg',
-                          height: 20,
-                        ),
-                        text: "  Mute Page",
-                        color: wayaTheme.colorScheme.customBlack),
+            onSelected: (value) {},
+            iconColor: wayaTheme.colorScheme.greyColor400,
+            position: PopupMenuPosition.under,
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem<int>(
+                  value: 0,
+                  onTap: () {
+                    WayaNav.goBack();
+                    //WayaNav.toNamed('/groupSetting');
+                  },
+                  child: WayaActionNav(
+                    context: context,
+                    asset: SvgPicture.asset(
+                      'assets/images/pages/mute.svg',
+                      height: 20,
+                    ),
+                    text: "  Mute Page",
+                    color: wayaTheme.colorScheme.customBlack,
                   ),
-                  PopupMenuItem<int>(
-                    value: 1,
-                    child: WayaActionNav(
-                        context: context,
-                        onTap: () {
-                          Share.share('${args['url']}', subject: 'Share Options');
-                        },
-                        asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
-                        text: "  Share Page link",
-                        color: wayaTheme.colorScheme.customBlack),
+                ),
+                PopupMenuItem<int>(
+                  value: 1,
+                  onTap: () {
+                    Share.share('${args['url']}', subject: 'Share Options');
+                  },
+                  child: WayaActionNav(
+                    context: context,
+                    asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                    text: "  Share Page link",
+                    color: wayaTheme.colorScheme.customBlack,
                   ),
-                  PopupMenuItem<int>(
-                    value: 2,
-                    child: WayaActionNav(
-                        context: context,
-                        onTap: () async {
-                          WayaNav.goBack();
-                          await WayaUtils.showModalSheet(context,
-                              child: ReportPage(statuses: pageReport, currentStatus: "", pageId: '${args['pageId']}'));
-                        },
-                        asset: SvgPicture.asset('assets/images/pages/flag.svg'),
-                        text: "  Report Page",
-                        color: wayaTheme.colorScheme.customBlack),
-                  ),
-                ];
-              },
-              child: WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none)),
+                ),
+                PopupMenuItem<int>(
+                  value: 2,
+                  onTap: () async {
+                    WayaNav.goBack();
+                    await WayaUtils.showModalSheet(context,
+                        child: ReportPage(statuses: pageReport, currentStatus: "", pageId: '${args['pageId']}'));
+                  },
+                  child: WayaActionNav(
+                      context: context,
+                      asset: SvgPicture.asset(
+                        'assets/images/pages/flag.svg',
+                      ),
+                      text: "  Report Page",
+                      color: wayaTheme.colorScheme.customBlack),
+                ),
+              ];
+            },
+            child: WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
+          ),
           Gap(8)
         ],
       ),
@@ -115,57 +135,66 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
+                  //? This is fine.
                   Container(
                     width: double.infinity,
                     height: 200, // Banner height
                     decoration: BoxDecoration(
-                        color: WayaColors.primaryBrown50,
-                        borderRadius: BorderRadius.circular(0),
-                        image:
-                            //viewModel.profileImage!=null
-                            args['profileImage'] != null
-                                ? DecorationImage(
-                                    image: NetworkImage('${args['profileImage']}'),
-                                    //image: NetworkImage('${viewModel.profileImage}'),
-                                    fit: BoxFit.cover,
-                                  )
-                                : DecorationImage(
-                                    image: AssetImage('assets/images/pages/image_placeholder.png'),
-                                    fit: BoxFit.cover,
-                                  )),
+                      color: WayaColors.primaryBrown50,
+                      borderRadius: BorderRadius.circular(0),
+                      image:
+                          //viewModel.profileImage!=null
+                          args['profileImage'] != null
+                              ? DecorationImage(
+                                  image: NetworkImage('${args['profileImage']}'),
+                                  //image: NetworkImage('${viewModel.profileImage}'),
+                                  fit: BoxFit.cover,
+                                )
+                              : DecorationImage(
+                                  image: AssetImage('assets/images/pages/image_placeholder.png'),
+                                  fit: BoxFit.cover,
+                                ),
+                    ),
                   ),
-                  Gap(15),
-                  GestureDetector(
-                    onTap: () {
-                      // WayaNav.toNamed('/editPageInfo',
-                      //     arguments: '${args['pageId']}');
-                    },
-                    child: Container(
-                      margin: EdgeInsets.only(right: 20.w),
-                      padding: EdgeInsets.all(5.0),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
-                        color: wayaTheme.colorScheme.white,
-                        borderRadius: BorderRadius.circular(7.r),
-                      ),
-                      child: Text(
-                        'Following',
-                        style: wayaTheme.textTheme.labelSmall
-                            ?.wayaCopyWith(color: wayaTheme.colorScheme.primary600, fontWeight: FontWeight.w600),
+
+                  // Some there.
+                  Gap(15.h),
+
+                  //? This is fine.
+                  ValueListenableBuilder(
+                    valueListenable: myPageNotifier,
+                    builder: (context, redraws, _) => GestureDetector(
+                      onTap: _followPage,
+                      child: Container(
+                        margin: EdgeInsets.only(right: 20.w),
+                        padding: EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
+                          color: wayaTheme.colorScheme.white,
+                          borderRadius: BorderRadius.circular(7.r),
+                        ),
+                        child: Text(
+                          myPageNotifier.isMemberOf(pageId) ? "Following" : "Follow",
+                          style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                            color: wayaTheme.colorScheme.primary600,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
                   )
                 ],
               ),
               Positioned(
-                  left: 16.w,
-                  top: 190,
-                  child: CircleAvatar(
-                      radius: 30,
-                      backgroundColor: WayaColors.greyColor100,
-                      backgroundImage: NetworkImage('${args['coverImage']}')
-                      //NetworkImage('${viewModel.coverImage}'),
-                      )),
+                left: 16.w,
+                top: 190,
+                child: CircleAvatar(
+                    radius: 30,
+                    backgroundColor: WayaColors.greyColor100,
+                    backgroundImage: NetworkImage('${args['coverImage']}')
+                    //NetworkImage('${viewModel.coverImage}'),
+                    ),
+              ),
             ],
           ),
           const Gap(10),

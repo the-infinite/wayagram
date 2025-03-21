@@ -36,6 +36,40 @@ class _SingleGroupWidgetState extends State<SingleGroupWidget> {
     super.dispose();
   }
 
+  void _toGroup() {
+    //? If you can do this then.
+    if (widget.group.ownerId == ConversationState.self.id) {
+      WayaNav.toNamed(
+        '/privateGroup',
+        arguments: {
+          'memberCount': '${widget.group.memberCount}',
+          'name': widget.group.name,
+          'url': '${widget.group.url}',
+          'desc': widget.group.description,
+          'coverImage': '${widget.group.coverImage}',
+          'profileImage': '${widget.group.profileImage}',
+          'groupId': widget.group.id,
+        },
+      );
+    }
+
+    //? This is fine.
+    else {
+      WayaNav.toNamed(
+        '/publicGroup',
+        arguments: {
+          'memberCount': '${widget.group.memberCount}',
+          'name': widget.group.name,
+          'url': '${widget.group.url}',
+          'desc': widget.group.description,
+          'coverImage': '${widget.group.coverImage}',
+          'profileImage': '${widget.group.profileImage}',
+          'groupId': widget.group.id
+        },
+      );
+    }
+  }
+
   Future<void> _joinGroup() async {
     //? Then leave the group.
     if (myGroupNotifier.isMemberOf(widget.group.id)) {
@@ -58,79 +92,86 @@ class _SingleGroupWidgetState extends State<SingleGroupWidget> {
 
     //? If this is in vertical orientation.
     if (widget.vertical) {
-      return Container(
-        margin: widget.index == 0 ? EdgeInsets.zero : EdgeInsets.only(left: 10),
-        width: 150.w,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: wayaTheme.colorScheme.greyColor200),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            //? First, the image
-            WayaImage(
-              imageUrl: widget.group.profileImage ?? widget.group.coverImage ?? '',
-              height: 70.dg,
-              width: 70.dg,
-              radius: BorderRadius.circular(12),
-            ),
-
-            // Space.
-            Gap(10.h),
-
-            //? Second, the name of the group.
-            Text(
-              widget.group.name,
-              style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w600,
-                color: wayaTheme.colorScheme.black,
+      return InkWell(
+        splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
+        focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+        highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
+        borderRadius: BorderRadius.circular(12.r),
+        onTap: _toGroup,
+        child: Container(
+          margin: widget.index == 0 ? EdgeInsets.zero : EdgeInsets.only(left: 10),
+          width: 150.w,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: wayaTheme.colorScheme.greyColor200),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //? First, the image
+              WayaImage(
+                imageUrl: widget.group.profileImage ?? widget.group.coverImage ?? '',
+                height: 70.dg,
+                width: 70.dg,
+                radius: BorderRadius.circular(12),
               ),
-            ),
 
-            // Space.
-            Gap(3.h),
+              // Space.
+              Gap(10.h),
 
-            //? Third, member count.
-            ValueListenableBuilder(
-              valueListenable: followerCount,
-              builder: (context, count, _) => Text(
-                "${WayaValueHelper.formatNumber(count)} members",
-                style: wayaTheme.textTheme.bodyMedium?.copyWith(
+              //? Second, the name of the group.
+              Text(
+                widget.group.name,
+                style: wayaTheme.textTheme.bodyMedium!.copyWith(
                   fontSize: 14.sp,
-                  fontWeight: FontWeight.w400,
-                  color: wayaTheme.colorScheme.greyColor500,
+                  fontWeight: FontWeight.w600,
+                  color: wayaTheme.colorScheme.black,
                 ),
               ),
-            ),
 
-            // Space.
-            Gap(15.h),
+              // Space.
+              Gap(3.h),
 
-            //? Finally, a join button.
-            if (widget.group.ownerId != ConversationState.self.id)
-              SizedBox(
-                width: 70.w,
-                child: IntrinsicHeight(
-                  child: ValueListenableBuilder(
-                    valueListenable: myGroupNotifier,
-                    builder: (context, redraws, _) => WayaProgressiveButton(
-                      notifier: loadingController,
-                      callback: _joinGroup,
-                      text: myGroupNotifier.isMemberOf(widget.group.id) ? "Leave" : "Join",
-                      height: 30.h,
-                      textStyle: wayaTheme.textTheme.titleMedium?.copyWith(
-                        color: wayaTheme.colorScheme.white,
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w500,
+              //? Third, member count.
+              ValueListenableBuilder(
+                valueListenable: followerCount,
+                builder: (context, count, _) => Text(
+                  "${WayaValueHelper.formatNumber(count)} members",
+                  style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: wayaTheme.colorScheme.greyColor500,
+                  ),
+                ),
+              ),
+
+              // Space.
+              Gap(15.h),
+
+              //? Finally, a join button.
+              if (widget.group.ownerId != ConversationState.self.id)
+                SizedBox(
+                  width: 70.w,
+                  child: IntrinsicHeight(
+                    child: ValueListenableBuilder(
+                      valueListenable: myGroupNotifier,
+                      builder: (context, redraws, _) => WayaProgressiveButton(
+                        notifier: loadingController,
+                        callback: _joinGroup,
+                        text: myGroupNotifier.isMemberOf(widget.group.id) ? "Leave" : "Join",
+                        height: 30.h,
+                        textStyle: wayaTheme.textTheme.titleMedium?.copyWith(
+                          color: wayaTheme.colorScheme.white,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-          ],
+            ],
+          ),
         ),
       );
     }
@@ -141,30 +182,7 @@ class _SingleGroupWidgetState extends State<SingleGroupWidget> {
       focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
       highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
       borderRadius: BorderRadius.circular(12.r),
-      onTap: () {
-        widget.group.isPrivate == true
-            ? WayaNav.toNamed('/privateGroup', arguments: {
-                'memberCount': '${widget.group.memberCount}',
-                'name': widget.group.name,
-                'url': '${widget.group.url}',
-                'desc': widget.group.description,
-                'coverImage': '${widget.group.coverImage}',
-                'profileImage': '${widget.group.profileImage}',
-                'groupId': widget.group.id,
-              })
-            : WayaNav.toNamed(
-                '/publicGroup',
-                arguments: {
-                  'memberCount': '${widget.group.memberCount}',
-                  'name': widget.group.name,
-                  'url': '${widget.group.url}',
-                  'desc': widget.group.description,
-                  'coverImage': '${widget.group.coverImage}',
-                  'profileImage': '${widget.group.profileImage}',
-                  'groupId': widget.group.id
-                },
-              );
-      },
+      onTap: _toGroup,
       child: Container(
         margin: EdgeInsets.only(bottom: 15),
         padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
