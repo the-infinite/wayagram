@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/moments/data/model/followed_user_moments_model.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
