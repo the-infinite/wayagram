@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -19,6 +20,9 @@ import 'package:wayagram/features/pages/data/model/pages_users_follow_model.dart
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
+import 'package:wayagram/shared/cache/page.dart';
+import 'package:wayagram/shared/cache/post.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
 import 'package:wayagram/features/post/model/saved_posts.dart';
 
@@ -87,6 +91,7 @@ class PageVm extends StateNotifier<PageState> {
       final response = await _pageRepository.delete(postId);
 
       if (response.statusCode == 200) {
+        await getSinglePost(postId);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Post unsaved successfully'),
@@ -127,6 +132,7 @@ class PageVm extends StateNotifier<PageState> {
       final response = await _pageRepository.savePost(postId);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        await getSinglePost(postId);
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Post saved successfully'),
@@ -169,6 +175,7 @@ class PageVm extends StateNotifier<PageState> {
 
       if (response.success) {
         FetchAllPost responseModel = FetchAllPost.fromJson(response.data);
+        wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(fetchAllPostData: responseModel.data?.docs);
 
         // Clear existing saved posts
@@ -201,6 +208,7 @@ class PageVm extends StateNotifier<PageState> {
       if (response.success) {
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
         GroupPostModel postModel = GroupPostModel.fromJson(response.data);
+        wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(getAllPost: responseModel.data?.docs, postCount: postModel.data?.totalPages);
       } else {
         _errorMessage2 = 'Failed to fetch saved posts. Status code: ${response.statusCode}';
@@ -216,16 +224,18 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  Future<void> getSinglePost(userId) async {
+  Future<PostModel?> getSinglePost(String postId) async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.fetchSinglePost(userId);
+      final response = await _pageRepository.fetchSinglePost(postId);
       state = state.copyWith(isLoading: false);
 
       if (response.success) {
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
+        wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(getAllPost: responseModel.data?.docs);
+        return responseModel.data?.docs?.first;
       } else {
         _errorMessage2 = 'Failed to fetch saved posts. Status code: ${response.statusCode}';
       }
@@ -238,6 +248,9 @@ class PageVm extends StateNotifier<PageState> {
       );
       _errorMessage2 = 'Something went wrong. Please try again later.';
     } finally {}
+
+    //? Return null.
+    return null;
   }
 
   Future<void> reportPage({
@@ -252,6 +265,7 @@ class PageVm extends StateNotifier<PageState> {
 
       if (response.success && context.mounted) {
         // show success modal
+        wayaPageCache.deleteItem(pageId);
         WayaNav.goBack();
 
         if (context.mounted) {
@@ -293,6 +307,7 @@ class PageVm extends StateNotifier<PageState> {
       final response = await _pageRepository.reportPost(postId, reason);
 
       if (response.success) {
+        wayaPostCache.deleteItem(postId);
         // This is fine.
         WayaNav.goBack();
 
@@ -324,16 +339,17 @@ class PageVm extends StateNotifier<PageState> {
   }
 
   Future<void> reportGroupPost({
-    required String groupId,
+    required String postId,
     required String reason,
     String? comment,
     required BuildContext context,
   }) async {
     try {
       state = state.copyWith(isReportingPost: true);
-      final response = await _pageRepository.reportPost(groupId, reason);
+      final response = await _pageRepository.reportPost(postId, reason);
 
       if (response.success) {
+        wayaPostCache.deleteItem(postId);
         WayaUtils.showNotice(
           context: WayaNav.context,
           title: "Thank you for reporting",
@@ -487,6 +503,7 @@ class PageVm extends StateNotifier<PageState> {
 
       if (response.success) {
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
+        wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(getAllPost: responseModel.data?.docs);
       } else {}
     } catch (e) {
@@ -502,8 +519,8 @@ class PageVm extends StateNotifier<PageState> {
   Future<void> deletePost(ctx, {required String postId, required String userId}) async {
     try {
       final response = await _pageRepository.deletePost(postId);
-      if (response.success && ctx.mounted) {
-        getAllPosts(userId);
+      if (response.success) {
+        wayaPostCache.deleteItem(postId);
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Post deleted successfully!'),
@@ -530,6 +547,7 @@ class PageVm extends StateNotifier<PageState> {
       final response = await _pageRepository.repost(postId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
+        await getSinglePost(postId);
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Post reposted successfully!'),
@@ -555,7 +573,9 @@ class PageVm extends StateNotifier<PageState> {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.sharePost(postId);
       state = state.copyWith(isLoading: false);
-      if (response.success && ctx.mounted) {}
+      if (response.success) {
+        await getSinglePost(postId);
+      }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
@@ -573,14 +593,9 @@ class PageVm extends StateNotifier<PageState> {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.bookMarkPost(postId);
       state = state.copyWith(isLoading: false);
-      if (response.success && ctx.mounted) {
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Post bookmarked successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
+      if (response.success) {
+        await getSinglePost(postId);
+        WayaSnackBar.showToast('Post bookmarked successfully!');
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -598,9 +613,9 @@ class PageVm extends StateNotifier<PageState> {
     try {
       //state = state.copyWith(isLoading: true);
       final response = await _pageRepository.likePost(postId);
-      //state = state.copyWith(isLoading: false);
+
       if (response.success && ctx.mounted) {
-        getAllPosts(userId);
+        await getSinglePost(postId);
       }
 
       return response.success;
@@ -623,7 +638,8 @@ class PageVm extends StateNotifier<PageState> {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.unlikePost(postId);
       state = state.copyWith(isLoading: false);
-      if (response.success && ctx.mounted) {
+      if (response.success) {
+        await getSinglePost(postId);
         return response.success;
       }
     } catch (e) {
@@ -654,7 +670,6 @@ class PageVm extends StateNotifier<PageState> {
     for (UploadedImage url in urls) {
       final file = File(url.file);
       final putImageResponse = await _pageRepository.putImage(url.url, file);
-
       //? This is fine.
       if (!(putImageResponse.success && ctx.mounted)) {
         ScaffoldMessenger.of(ctx).showSnackBar(
@@ -674,6 +689,7 @@ class PageVm extends StateNotifier<PageState> {
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
+        await getSinglePost(postId);
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Post updated successfully!'),
@@ -708,7 +724,10 @@ class PageVm extends StateNotifier<PageState> {
       state = state.copyWith(isLoading: false);
 
       if (response.success) {
-        PagePopularPostModel responseModel = PagePopularPostModel.fromJson(response.data);
+        final responseModel = PagePopularPostModel.fromJson(response.data);
+
+        //? Now, add these ones.
+        wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(pagePopularPostDocs: responseModel.data?.docs);
       }
     } catch (e) {
@@ -747,6 +766,7 @@ class PageVm extends StateNotifier<PageState> {
       state = state.copyWith(isLoading: false);
       if (response.success) {
         PagesUsersFollowModel responseModel = PagesUsersFollowModel.fromJson(response.data);
+        wayaPageCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(recommendedPages: responseModel.data?.docs);
       }
     } catch (e) {

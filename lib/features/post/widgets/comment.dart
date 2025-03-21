@@ -14,6 +14,7 @@ import 'package:wayagram/features/post/controller/comment.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
 import 'package:wayagram/features/post/view/comment_replies.dart';
 import 'package:wayagram/features/post/vm/comment.dart';
+import 'package:wayagram/shared/cache/comment.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
@@ -50,7 +51,7 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
 
     //? The comment component.
     return ValueListenableBuilder(
-      valueListenable: updateCacheNotifier,
+      valueListenable: wayaCommentCache,
       builder: (context, redraws, _) {
         final comment = notifier.retrieveCachedComment(widget.comment.id) ?? widget.comment;
         final commentCount = comment.commentCount;

@@ -1,5 +1,4 @@
 import 'package:wayagram/shared/features/profile/model/post.dart';
-export 'package:wayagram/shared/features/profile/model/post.dart';
 
 class PostResponseModel {
   final String message;

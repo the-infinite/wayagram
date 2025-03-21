@@ -15,7 +15,7 @@ import 'package:wayagram/features/pages/data/model/role_type.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 class AddTeamMember extends ConsumerStatefulWidget {
-  static const route = '/addTeamMember';
+  static const route = '/pages/team/add';
   const AddTeamMember({super.key,});
 
   @override

@@ -245,12 +245,15 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
           // _selectedIndex == 0 ? PagePost(pageId: '${args['pageId']}') : TeamPage(pageId: '${args['pageId']}',)
           Padding(
             padding: const EdgeInsets.only(left: 15),
-            child: Text('Latest post',
-                style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: WayaColors.greyColor700,
-                    fontFamily: WayaConstants.fontFamily)),
+            child: Text(
+              'Latest post',
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: WayaColors.greyColor700,
+                fontFamily: WayaConstants.fontFamily,
+              ),
+            ),
           ),
           if (viewModel.getAllPost?.isEmpty ?? true)
             PostEmptyState()
@@ -261,6 +264,7 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
                   left: 15,
                   right: 15,
                 ),
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: viewModel.getAllPost?.length ?? 0,
                 itemBuilder: (_, index) => WayaPostWidget(
