@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,7 +13,9 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
 import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
@@ -61,6 +64,13 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
     // final selectedUniversity = useState("");
     final selectedState = useState("");
     final isLoading = useState(false);
+    useEffect(() {
+      notifier.fullName.text = ConversationState.self.fullname;
+      notifier.emailAddress.text = ConversationState.self.email ?? "";
+      notifier.address.text = ConversationState.self.address ?? "";
+      notifier.phoneNumber.text = ConversationState.self.phoneNumber ?? "";
+      return null;
+    }, []);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -94,6 +104,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     controller: notifier.fullName,
                     hintText: "Enter Full Name",
                     label: "Full Name",
+                    isReadOnly: true,
                     borderColor:
                         formState.hasError && notifier.fullName.text.isEmpty
                             ? wayaTheme.colorScheme.error
@@ -106,7 +117,8 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                       child: Text(
                         formState.errorText!,
                         style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                            color: wayaTheme.colorScheme.error,
+                            fontSize: 12.sp),
                       ),
                     ),
                 ],
@@ -136,6 +148,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     keyboardType: TextInputType.emailAddress,
                     controller: notifier.emailAddress,
                     hintText: 'example@gmail.com',
+                    isReadOnly: true,
                     borderColor:
                         formState.hasError && notifier.emailAddress.text.isEmpty
                             ? wayaTheme.colorScheme.error
@@ -148,7 +161,8 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                       child: Text(
                         formState.errorText!,
                         style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                            color: wayaTheme.colorScheme.error,
+                            fontSize: 12.sp),
                       ),
                     ),
                 ],
@@ -169,6 +183,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     controller: notifier.address,
                     hintText: "Enter Address here",
                     label: "Address",
+                    isReadOnly: true,
                     borderColor:
                         formState.hasError && notifier.address.text.isEmpty
                             ? wayaTheme.colorScheme.error
@@ -180,7 +195,8 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                       child: Text(
                         formState.errorText!,
                         style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                            color: wayaTheme.colorScheme.error,
+                            fontSize: 12.sp),
                       ),
                     ),
                 ],
@@ -191,6 +207,9 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
               if (notifier.phoneNumber.text.isEmpty) {
                 return 'Phone is required';
               }
+              if (notifier.phoneNumber.text.length != 11) {
+                return 'Phone enter a valid number';
+              }
 
               return null;
             }, builder: (formState) {
@@ -200,7 +219,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                   Text(
                     "Phone Number",
                     style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                          fontSize: 14,
+                          fontSize: 14.sp,
                           color: wayaTheme.colorScheme.greyColor900,
                         ),
                   ),
@@ -241,6 +260,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                           keyboardType: TextInputType.phone,
                           controller: notifier.phoneNumber,
                           hintText: '000-000-000',
+                          isReadOnly: true,
                           borderColor: formState.hasError &&
                                   notifier.phoneNumber.text.isEmpty
                               ? wayaTheme.colorScheme.error
@@ -255,7 +275,8 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                       child: Text(
                         formState.errorText!,
                         style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                            color: wayaTheme.colorScheme.error,
+                            fontSize: 12.sp),
                       ),
                     ),
                 ],
@@ -297,7 +318,8 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                       child: Text(
                         formState.errorText ?? "",
                         style: TextStyle(
-                            color: wayaTheme.colorScheme.error, fontSize: 12),
+                            color: wayaTheme.colorScheme.error,
+                            fontSize: 12.sp),
                       ),
                     ),
                 ],
@@ -489,7 +511,9 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                           }
                         }
                         notifier.submitDetail(
-                            context, isLoading, selectedState.value);
+                            context, isLoading, selectedState.value, () {
+                          WayaNav.goBack();
+                        });
                       }
                     }
                   : null,
@@ -500,14 +524,15 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
             ),
             const Gap(8),
             WayaButton(
-                text: 'Go Back',
-                color: wayaTheme.colorScheme.greyColor300,
-                textColor: wayaTheme.colorScheme.customBlack,
-                border: Border.all(
-                    width: 1, color: wayaTheme.colorScheme.greyColor300),
-                callback: () {
-                  Navigator.pop(context);
-                })
+              text: 'Go Back',
+              color: wayaTheme.colorScheme.greyColor300,
+              textColor: wayaTheme.colorScheme.customBlack,
+              border: Border.all(
+                  width: 1, color: wayaTheme.colorScheme.greyColor300),
+              callback: () {
+                WayaNav.goBack();
+              },
+            )
           ],
         ),
       ),

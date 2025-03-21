@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -7,12 +6,11 @@ import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
-import 'package:flutter/services.dart';
 
 class EventWidget extends ConsumerWidget {
   final EventDoc event;
@@ -22,7 +20,7 @@ class EventWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    print(event.image);
+    final bool isMyEvent = event.userId == ConversationState.self.id;
     return Column(
       children: [
         Container(
@@ -36,8 +34,7 @@ class EventWidget extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WayaImage(
-                  imageUrl:
-                     event.image,
+                  imageUrl: event.image,
                   height: 180.h,
                   width: double.infinity,
                   radius: BorderRadius.only(
@@ -107,7 +104,7 @@ class EventWidget extends ConsumerWidget {
                               color: wayaTheme.colorScheme.pending50,
                               textStyle: wayaTheme.textTheme.hintStyle.copyWith(
                                   color: wayaTheme.colorScheme.pending,
-                                  fontSize: 12,
+                                  fontSize: 12.sp,
                                   fontWeight: FontWeight.w500),
                               radius: 14,
                             ),
@@ -137,9 +134,9 @@ class EventWidget extends ConsumerWidget {
                         callback: () {
                           WayaNav.toNamed(EventDetail.route, arguments: event);
                         },
-                        color: wayaTheme.colorScheme.primar50,
+                        color: wayaTheme.colorScheme.primary50,
                         textColor: wayaTheme.colorScheme.customPrimary,
-                        text: "View Event",
+                        text: isMyEvent ? "Manage Event" : "View Event",
                       ),
                     ],
                   ),

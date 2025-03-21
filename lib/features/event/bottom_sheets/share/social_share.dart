@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -92,11 +93,11 @@ class ShareSheet extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
+           Text(
             'Share options',
             textAlign: TextAlign.start,
             style: TextStyle(
-              fontSize: 22,
+              fontSize: 22.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -127,8 +128,8 @@ class ShareSheet extends ConsumerWidget {
         const SizedBox(height: 8),
         Text(
           option.title,
-          style: const TextStyle(
-            fontSize: 12,
+          style:  TextStyle(
+            fontSize: 12.sp,
             color: Colors.black87,
           ),
         ),

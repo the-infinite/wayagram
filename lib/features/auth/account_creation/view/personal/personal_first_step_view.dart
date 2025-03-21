@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -10,6 +11,7 @@ import 'package:wayagram/core/utils/waya_validators.dart';
 import 'package:wayagram/features/auth/account_creation/data/gender_data.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
+import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 
 class PersonalFirstStepView extends ConsumerStatefulWidget {
   final Function goToNextTab;
@@ -36,13 +38,13 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
     final wayaTheme = Theme.of(context);
-    final userTypeProvider = ref.watch(localDataSourceProvider);
+    final selectAccountState = ref.watch(selectAccountProvider);
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (userTypeProvider.getUserType().type == "BUSINESS")
+          if (selectAccountState.selectedType!.type == "BUSINESS")
             Text("Tell us About Your Business",
                 style: wayaTheme.textTheme.titleLarge)
           else
@@ -89,7 +91,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                   formState.errorText!,
                                   style: TextStyle(
                                       color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
+                                      fontSize: 12.sp),
                                 ),
                               ),
                           ],
@@ -126,7 +128,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                   formState.errorText!,
                                   style: TextStyle(
                                       color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
+                                      fontSize: 12.sp),
                                 ),
                               ),
                           ],
@@ -166,7 +168,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -175,7 +177,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                 const Gap(10),
                 //*    business section*/ */
                 Visibility(
-                    visible: userTypeProvider.getUserType().type == "BUSINESS",
+                    visible: selectAccountState.selectedType!.type == "BUSINESS",
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -208,7 +210,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                     formState.errorText!,
                                     style: TextStyle(
                                         color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
+                                        fontSize: 12.sp),
                                   ),
                                 ),
                             ],
@@ -243,7 +245,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                     formState.errorText!,
                                     style: TextStyle(
                                         color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
+                                        fontSize: 12.sp),
                                   ),
                                 ),
                             ],
@@ -277,7 +279,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                     formState.errorText!,
                                     style: TextStyle(
                                         color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
+                                        fontSize: 12.sp),
                                   ),
                                 ),
                             ],
@@ -304,7 +306,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             .textTheme
                             .bodyMedium
                             ?.wayaCopyWith(
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               color: wayaTheme.colorScheme.greyColor900,
                             ),
                       ),
@@ -361,7 +363,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -411,7 +413,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -444,7 +446,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -469,7 +471,6 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               uniqueKey: 'state',
                               label: "State",
                               value: viewModel.state,
-                              
                               hintText: 'Select State',
                               items: viewModel.states,
                               onSelected: (value) => ref
@@ -482,7 +483,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                 formState.errorText!,
                                 style: TextStyle(
                                     color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -490,43 +491,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     })),
                     const Gap(10),
                     Expanded(
-                      child: FormField<String>(validator: (value) {
-                        if (viewModel.city.isEmpty) {
-                          return 'City is required';
-                        }
-
-                        return null;
-                      }, builder: (formState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            WayaSelectField<String>(
-                                uniqueKey: 'city',
-                                label: "City",
-                                value: viewModel.city,
-                                hintText: 'Select City',
-                                items: viewModel.cities,
-                                onSelected: (value) => ref
-                                    .read(personalFirstStepProvider.notifier)
-                                    .selectCity(value.first)),
-                            if (formState.hasError && viewModel.city.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
-                                ),
-                              ),
-                          ],
-                        );
-                      }),
-                    ),
-                  ],
-                ),
-                const Gap(10),
-                FormField<String>(validator: (value) {
+                      child:  FormField<String>(validator: (value) {
                   if (viewModel.lga.isEmpty) {
                     return 'LGA is required';
                   }
@@ -559,6 +524,45 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     ],
                   );
                 }),
+                      
+                      
+                    
+                    ),
+                  ],
+                ),
+                const Gap(10),
+                  FormField<String>(validator: (value) {
+                        if (viewModel.city.isEmpty) {
+                          return null;
+                        }
+
+                        return null;
+                      }, builder: (formState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            WayaSelectField<String>(
+                                uniqueKey: 'city',
+                                label: "City",
+                                value: viewModel.city,
+                                hintText: 'Select City',
+                                items: viewModel.cities,
+                                onSelected: (value) => ref
+                                    .read(personalFirstStepProvider.notifier)
+                                    .selectCity(value.first)),
+                            if (formState.hasError && viewModel.city.isEmpty)
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  formState.errorText!,
+                                  style: TextStyle(
+                                      color: wayaTheme.colorScheme.error,
+                                      fontSize: 12),
+                                ),
+                              ),
+                          ],
+                        );
+                      }),
                 const Gap(10),
                 FormField<String>(
                   validator: (value) {
@@ -577,7 +581,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                 .textTheme
                                 .bodyMedium
                                 ?.wayaCopyWith(
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                   color: wayaTheme.colorScheme.greyColor900,
                                 )),
                         const Gap(4),
@@ -609,7 +613,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                             .textTheme
                                             .bodyMedium
                                             ?.wayaCopyWith(
-                                              fontSize: 14,
+                                              fontSize: 14.sp,
                                               color:
                                                   viewModel.dateOfBirth.isEmpty
                                                       ? wayaTheme.colorScheme
@@ -637,7 +641,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -672,7 +676,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -724,7 +728,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -786,7 +790,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -806,7 +810,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                     Expanded(
                       child: RichText(
                         textAlign: TextAlign.start,
-                        text: const TextSpan(
+                        text:  TextSpan(
                           children: [
                             TextSpan(
                                 text: "I agree to the ",

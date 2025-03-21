@@ -1,13 +1,20 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 class ConversationState {
   static UserDetailsModel? _self;
   static SocialProfileModel? _profile;
+  static BusinessDetailsModel? _business;
   final bool isLoading;
   final String searchFilter;
   final List<ChatModel> conversations;
   final List<ChatModel> archived;
+  final List<ChatUser> blocked;
   final bool inArchived;
 
   //? For chats.
@@ -43,12 +50,30 @@ class ConversationState {
     required this.archivedTotalPages,
     required this.archivedPage,
     required this.archivedHasNextPage,
+    required this.blocked,
   });
 
   // This is fine.
-  static void setSelf(UserDetailsModel? self, SocialProfileModel? profile) {
-    ConversationState._self ??= self;
-    ConversationState._profile ??= profile;
+  static void setSelf(UserDetailsModel? self, SocialProfileModel? profile, [BusinessDetailsModel? business]) async {
+    if (self != null) {
+      ConversationState._self = self.copyWith(accountType: _self?.id == self.id ? _self?.accountType : null);
+    }
+    if (profile != null) ConversationState._profile = profile;
+    if (business != null) ConversationState._business = business;
+
+    //? If this is not undefined.
+    if (self != null && !kDebugMode) {
+      //? First for crashlytics.
+      await FirebaseCrashlytics.instance.setUserIdentifier(self.id);
+      await FirebaseCrashlytics.instance.setCustomKey("fullname", self.fullname);
+      await FirebaseCrashlytics.instance.setCustomKey("environment", WayaConstants.isProduction ? 'live' : 'test');
+
+      //? Next for analytics.
+      await FirebaseAnalytics.instance.setUserId(id: self.id);
+      await FirebaseAnalytics.instance.setUserProperty(name: "fullname", value: self.fullname);
+      await FirebaseAnalytics.instance
+          .setUserProperty(name: "environment", value: WayaConstants.isProduction ? 'live' : 'test');
+    }
   }
 
   /// The currently logged in user's account details.
@@ -56,6 +81,9 @@ class ConversationState {
 
   /// The social media profile of the currently logged in user.
   static SocialProfileModel get profile => _profile!;
+
+  /// The business profile of this user.
+  static BusinessDetailsModel get business => _business!;
 
   /// When this was done.
   static final initial = ConversationState(
@@ -75,6 +103,7 @@ class ConversationState {
     archivedTotalPages: 0,
     archivedPage: 1,
     archivedHasNextPage: true,
+    blocked: [],
   );
 
   /// Utility used to retrieve the list of pinned chats from this one.
@@ -97,7 +126,7 @@ class ConversationState {
     //? This is fine.
     return conversations
         .where((chat) =>
-            (chat.chatType == 'group' && (chat.name ?? '').toLowerCase().contains(filter)) ||
+            (chat.chatType == ChatType.group && (chat.name ?? '').toLowerCase().contains(filter)) ||
             (chat.other.userData?.fullname.toLowerCase().contains(filter) ?? false) ||
             (chat.other.profileData?.username?.toLowerCase().contains(filter) ?? false) ||
             (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ?? false))
@@ -118,12 +147,16 @@ class ConversationState {
     //? This is fine.
     return archived
         .where((chat) =>
-            (chat.chatType == 'group' && (chat.name ?? '').toLowerCase().contains(filter)) ||
+            (chat.chatType == ChatType.group && (chat.name ?? '').toLowerCase().contains(filter)) ||
             (chat.other.userData?.fullname.toLowerCase().contains(filter) ?? false) ||
             (chat.other.profileData?.username?.toLowerCase().contains(filter) ?? false) ||
             (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ?? false))
         .toList();
   }
+
+  /// A helper function used to check if a user is blocked by using the current
+  /// list of blocked users.
+  bool isBlocked(String userId) => blocked.any((user) => user.userId == userId);
 
   /// Clone this conversation but change a little bit of details about it.
   ConversationState copyWith({
@@ -143,6 +176,7 @@ class ConversationState {
     bool? inArchived,
     bool? hasLoaded,
     bool? hasLoadedArchived,
+    List<ChatUser>? blocked,
   }) {
     return ConversationState(
       hasLoaded: hasLoaded ?? this.hasLoaded,
@@ -161,6 +195,7 @@ class ConversationState {
       archivedPage: archivedPage ?? this.archivedPage,
       archivedHasNextPage: archivedHasNextPage ?? this.archivedHasNextPage,
       inArchived: inArchived ?? this.inArchived,
+      blocked: blocked ?? this.blocked,
     );
   }
 }

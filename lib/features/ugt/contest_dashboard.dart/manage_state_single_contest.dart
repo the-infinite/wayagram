@@ -45,7 +45,7 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
               children: [
                 Text("Overview",
                     style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w400,
                         color: Colors.black)),
               ],
@@ -114,7 +114,7 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
               children: [
                 Text(title,
                     textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+                    style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
                 Container(
                     width: 50.w, // Must be equal to height for a perfect circle
                     height: 50.w,
@@ -132,7 +132,7 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
             ),
             Gap(10),
             Text(value,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
           ],
         ),
       ),
@@ -147,7 +147,7 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(title,
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold)),
           if (seeAll)
             Row(
               children: [
@@ -245,14 +245,14 @@ class _ManageStateContestState extends ConsumerState<ManageStateSingleContest> {
                 style: TextStyle(
                     fontWeight: FontWeight.w500,
                     color: Colors.black,
-                    fontSize: 16)),
+                    fontSize: 16.sp)),
           ],
         ),
         Row(
           children: [
             Text(contestants,
                 style: TextStyle(
-                    color: wayaTheme.colorScheme.greyColor700, fontSize: 14)),
+                    color: wayaTheme.colorScheme.greyColor700, fontSize: 14.sp)),
             Gap(10),
             Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
             Gap(10)
@@ -272,7 +272,3 @@ Color getColor(bool isText, String text) {
     } */
 }
 
-String formatMoney(String value) {
-  final oCcy = NumberFormat("#,##0.00", "en_US");
-  return oCcy.format(double.parse(value));
-}

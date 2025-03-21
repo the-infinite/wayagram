@@ -6,7 +6,7 @@ part 'quotation_model.g.dart';
 class CreateBuyerRequest {
   final String buyerId;
   final String productName;
-  final String brand;
+  final String? brand;
   final String category;
   final String condition;
   final String description;
@@ -54,7 +54,6 @@ class CreateBuyerRequest {
 
   Map<String, dynamic> toJson() {
     final result = _$CreateBuyerRequestToJson(this);
-    //? Remove everything that was nulled out.
     result.removeWhere((key, value) => value == null);
     return result;
   }

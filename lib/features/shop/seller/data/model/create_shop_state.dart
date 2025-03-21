@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/data/model/create_shop_model.dart';
@@ -22,6 +21,7 @@ class CreateShopState {
   final List<Select> states;
   final bool isEditingMode;
   final String? url;
+  final String shopId;
 
   CreateShopState(
       {this.isLoading = false,
@@ -36,6 +36,7 @@ class CreateShopState {
       this.state = '',
       this.states = const [],
       this.lgas = const [],
+      this.shopId = "",
       this.isEditingMode = false,
       this.url,
       this.vendorId = ''})
@@ -60,7 +61,9 @@ class CreateShopState {
       String? logo,
       String? url,
       File? image,
-      String? vendorId}) {
+      String? vendorId,
+      String? shopId
+      }) {
     return CreateShopState(
       isLoading: isLoading ?? this.isLoading,
       phone: phone ?? this.phone,
@@ -77,22 +80,22 @@ class CreateShopState {
       url: url ?? this.url,
       isEditingMode: isEditingMode ?? this.isEditingMode,
       lgas: lgas ?? this.lgas,
+      shopId: shopId ?? this.shopId
     );
   }
 
   CreateShopModel get createShopModel {
     return CreateShopModel(
-      phone: "+234${phone.text}",
-      address: address.text,
-      email: email.text,
-      description: description.text,
-      name: name.text,
-      logo: logo,
-      vendorId: vendorId,
-      state: state,
-      lga: lga,
-      country: "Nigeria"
-    );
+        phone: phone.text,
+        address: address.text,
+        email: email.text,
+        description: description.text,
+        name: name.text,
+        logo: logo,
+        vendorId: vendorId,
+        state: state,
+        lga: lga,
+        country: "Nigeria");
   }
 }
 

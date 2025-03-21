@@ -44,7 +44,7 @@ class BuyerDisputeSuccessModal extends StatelessWidget {
               'Your dispute has been submitted successfully',
               textAlign: TextAlign.center,
               style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                fontSize: 24,
+                fontSize: 24.sp,
                 fontWeight: FontWeight.w700,
                 color: wayaTheme.colorScheme.black,
               ),

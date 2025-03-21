@@ -48,7 +48,7 @@ app.*.map.json
 # FVM Version Cache
 .fvm/
 
-# Ignore genrated Dart files so everybody's worktree is cleaner
+# Ignore generated Dart files so everybody's worktree is cleaner
 **.g.dart
 **.gen.dart
 

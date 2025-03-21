@@ -37,6 +37,7 @@ class LoginCoverPage extends ConsumerWidget {
               ),
             ),
             Gap(Get.height * 0.25),
+         
             WayaButton(
               color: wayaTheme.colorScheme.secondaryColor,
               callback: () {},

@@ -80,17 +80,18 @@ class SellerProduct {
   final bool deliveryCharge;
   final String options;
   final String? pickupAddress;
-  final String? rating;
+  final int? rating;
   final double discountPercentage;
   final String shopId;
   final String? discountedPrice;
   final String shopName;
   final String shopPhone;
   final String categoryName;
-  final String createdAt;
-  final String updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   final bool isDeleted;
-    final dynamic wayagramDealApprove;
+  final dynamic wayagramDealApprove;
+  final dynamic shopRating;
 
   SellerProduct({
     required this.id,
@@ -123,6 +124,7 @@ class SellerProduct {
     required this.createdAt,
     required this.updatedAt,
     required this.isDeleted,
+    this.shopRating
   });
 
   factory SellerProduct.fromJson(Map<String, dynamic> json) {
@@ -131,36 +133,36 @@ class SellerProduct {
 
     return SellerProduct(
       id: json['id'],
-      categoryId: json['categoryId'],
+      categoryId: json['categoryId'] ?? '',
       discountTypeId: json['discountTypeId'],
-      name: json['name'],
-      description: json['description'],
+      name: json['name'] ?? '',
+      description: json['description'] ?? '',
       price: json['price'],
-      images:  List<String>.from(json['images']),
+      images:  (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
       height: json['height'],
       width: json['width'],
       color: json['color'] ?? '',
       materialType: json['materialType'] ?? '',
       depth: json['depth'],
-      condition: json['condition'],
-      wayagramDeal: json['wayagramDeal'],
-      wayagramDealApprove: json['wayagramDealApprove'],
+      condition: json['condition'] ?? '',
+      wayagramDeal: json['wayagramDeal'] ?? false,
+      wayagramDealApprove: json['wayagramDealApprove'] ?? false,
       wayagramDealRejectedReason: json['wayagramDealRejectedReason'],
-      approve: json['approve'],
-      deliveryCharge: json['deliveryCharge'],
-      options: json['options'],
+      approve: json['approve'] ?? false,
+      deliveryCharge: json['deliveryCharge'] ?? false,
+      options: json['options'] ?? '',
       pickupAddress: json['pickupAddress'] ?? '',
       rating: json['rating'],
       discountPercentage: json['discountPercentage'].toDouble(),
-      shopId: json['shopId'],
+      shopId: json['shopId'] ?? '',
       discountedPrice: json['discountedPrice'],
-      shopName: json['shopName'],
-      shopPhone: json['shopPhone'],
-      categoryName: json['categoryName'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-  
-      isDeleted: json['isDeleted'],
+       shopName: json['shopName'] ?? '',
+        shopPhone: json['shopPhone'] ?? '',
+        categoryName: json['categoryName'] ?? '',
+        isDeleted: json['isDeleted'] ?? false,
+        createdAt: DateTime.parse(json['createdAt'] ?? ''),
+        updatedAt: DateTime.parse(json['updatedAt'] ?? ''),
+      shopRating: json['shopRating']
     );
   }
 
@@ -196,7 +198,7 @@ class SellerProduct {
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'isDeleted': isDeleted,
+      'shopRating': shopRating
     };
   }
 }
-

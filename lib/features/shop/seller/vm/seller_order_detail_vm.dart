@@ -15,7 +15,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
   String orderStatus = "";
   String delivery = "";
 
-  Future<void> updateOrder(String status, String orderId) async {
+  Future<void> updateOrder(String status, String orderId, String shopId) async {
     orderStatus = status;
     //toLowerCase().replaceAll(' ', '_');
     notifyListeners();
@@ -25,14 +25,15 @@ class SellerOrderDetailVm extends ChangeNotifier {
 
       if (response.success) {
         WayaSnackBar.showToast("Pickup status updated");
-        WayaNav.toNamed(ManageShop.route);
+        WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
       }
     } catch (e) {
       print(e);
     }
   }
 
-  Future<void> updateDelivery(String status, String orderId) async {
+  Future<void> updateDelivery(
+      String status, String orderId, String shopId) async {
     delivery = status;
     notifyListeners();
     try {
@@ -41,7 +42,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
 
       if (response.success) {
         WayaSnackBar.showToast("Delivery status updated");
-        WayaNav.toNamed(ManageShop.route);
+        WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
       }
     } catch (e) {
       print(e);
@@ -60,7 +61,8 @@ class SellerOrderDetailVm extends ChangeNotifier {
         icon: Image.asset('assets/images/d-code-valid.png'));
   }
 
-  Future<void> rejectOrder(BuildContext context, String orderId) async {
+  Future<void> rejectOrder(
+      BuildContext context, String orderId, String shopId) async {
     WayaUtils.showNotice(
         context: context,
         buttonText: 'Reject Order',
@@ -69,20 +71,26 @@ class SellerOrderDetailVm extends ChangeNotifier {
         message:
             'Please confirm whether you’d like to reject. This will update the order status for the buyer.',
         onPress: () async {
-          Navigator.pop(context);
+          WayaNav.goBack();
           await WayaUtils.showModalSheet(context,
-              child: RejectionReason(
-                orderId: orderId,
-              ));
+              child: RejectionReason(orderId: orderId, shopId: shopId));
         },
         onCancel: () {
-          Navigator.pop(context);
+          WayaNav.goBack();
         },
         icon: Image.asset('assets/images/d-code-invalid.png'));
   }
 
+  //> to be revamped
+
   Future<void> updateOrderStatus(
-      {required BuildContext context, required String orderId}) async {
+      {required String shopId,
+       String? current,
+      required BuildContext context,
+      required String orderId}) async {
+    orderStatus = current ?? 'pending';
+    //print(current);
+    notifyListeners();
     final response = await WayaUtils.showModalSheet(context,
         child: UpdateStatus(
             currentStatus: orderStatus,
@@ -91,11 +99,23 @@ class SellerOrderDetailVm extends ChangeNotifier {
                 "Choose the new pickup status you want this order to display for both you and the buyer",
             statuses: pickupStatus,
             cta: "Choose new order status"));
-    updateOrder(response, orderId);
+    updateOrder(response, orderId, shopId);
+  }
+
+  void wdfew() {
+    print("wefwef");
   }
 
   Future<void> updateDeliveryStatus(
-      {required BuildContext context, required String orderId}) async {
+      {
+      required String shopId,
+     String? current,
+     required BuildContext context,
+      required String orderId}) async {
+    print("wefvewfew");
+
+    delivery = current ?? 'pending';
+    notifyListeners();
     final response = await WayaUtils.showModalSheet(context,
         child: UpdateStatus(
             currentStatus: delivery,
@@ -105,7 +125,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
             statuses: deliveryStatus,
             cta: "Choose new delivery status"));
 
-    updateDelivery(response, orderId);
+    updateDelivery(response, orderId, shopId);
   }
 }
 

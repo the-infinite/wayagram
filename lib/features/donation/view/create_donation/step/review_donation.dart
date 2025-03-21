@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -51,16 +52,16 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
         const Gap(20),
         Text("Donation Thumbnail",
           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-              fontSize: 14,
+              fontSize: 14.sp,
               fontWeight: FontWeight.w500,
               color: Theme.of(context).colorScheme.black),),
         const Gap(15),
         ClipRRect(
           borderRadius: BorderRadius.circular(12),
-          child: viewModel.donationImage != null
-              ? viewModel.donationImage!.file != null
+          child: viewModel.donationImage.isNotEmpty
+              ? viewModel.donationImage[0].file != null
               ? Image.file(
-            viewModel.donationImage!.file!,
+            viewModel.donationImage[0].file!,
             fit: BoxFit.cover,
             height: 200,
             width: double.infinity,
@@ -68,7 +69,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
             scale: 1,
           )
               : Image.network(
-            viewModel.donationImage!.url,
+            viewModel.donationImage[0].url,
             fit: BoxFit.cover,
             height: 200,
             width: double.infinity,
@@ -92,7 +93,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
         const Gap(10),
     _reviewText('Impact Statement', '${viewModel.statement.text.capitalizeFirst}'),
         const Gap(10),
-    _reviewText('Target Amount', WayaHelpers.formatPrice(int.parse(viewModel.targetAmount.text))),
+    _reviewText('Target Amount', WayaHelpers.formatPrice(int.tryParse(viewModel.targetAmount.text) ??0)),
         const Gap(10),
         Row(children: [
           _reviewText('Start Date', viewModel.startDate),
@@ -115,18 +116,20 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
         WayaButton(
           callback: !viewModel.isLoading
               ? ()  async{
-            donation.onSubmit(
-                viewModel.title.text, viewModel.description.text,
+           await donation.onSubmit(
+                viewModel.title.text,
+                viewModel.description.text,
                 viewModel.solution.text,
                 viewModel.statement.text,
                 viewModel.targetAmount.text,
                 viewModel.minimumDonationAmount.text,
-                //'public',
                 viewModel.privacyOption,
                 viewModel.endDate,
-                viewModel.donationImage, viewModel.startDate, context: context);
+                viewModel.donationImage, viewModel.startDate,
+                viewModel.category,
+                context: context);
 
-            //donation.reset();
+            donation.reset();
           }
               : null,
           centerWidget: LoadingState(
@@ -141,7 +144,8 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              widget.gotoPreviousTab();
+              WayaNav.goBack();
+              //widget.gotoPreviousTab();
             })
       ],
     );
@@ -152,15 +156,17 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
       children: [
       Text(title,
         style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-            fontSize: 14,
+            fontSize: 14.sp,
             fontWeight: FontWeight.w400,
+            fontFamily: WayaConstants.fontFamily,
             color: Theme.of(context).colorScheme.greyColor500),),
 
       Text(subTitle,
         style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-            fontSize: 16,
+            fontSize: 14.sp,
             fontWeight: FontWeight.w500,
-            color: Theme.of(context).colorScheme.black),),
+            fontFamily: WayaConstants.fontFamily,
+            color: Theme.of(context).colorScheme.greyColor900),),
     ],);
   }
 }
@@ -184,7 +190,7 @@ class EditHeader extends StatelessWidget {
           title,
           style: TextStyle().wayaCopyWith(
             color: wayaTheme.colorScheme.customBlack,
-            fontSize: 16,
+            fontSize: 16.sp,
           ),
         ),
         const Gap(3),
@@ -209,7 +215,7 @@ class EditHeader extends StatelessWidget {
                 Text(
                   "Edit",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customBlack, fontSize: 14),
+                      color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
                 )
               ],
             ),

@@ -18,6 +18,8 @@ class CreateRequestState {
   final TextEditingController maxDistance;
   final TextEditingController bidStartingAmount;
   final TextEditingController maxBidAmount;
+  final double rangeStart;
+  final double rangeEnd;
 
   final bool vendorSeeBuyRequest;
   final bool skipAddress;
@@ -54,6 +56,8 @@ class CreateRequestState {
     TextEditingController? pricePerUnit,
     TextEditingController? deliveryAddress,
     TextEditingController? deliveryPrice,
+    this.rangeStart = 0.1,
+    this.rangeEnd = 0.7,
     this.productCategory = '',
     this.productColor = '',
     this.productCondition = '',
@@ -103,6 +107,8 @@ class CreateRequestState {
     ValueNotifier<TimeOfDay?>? startTime,
     ValueNotifier<TimeOfDay?>? endTime,
     ValueNotifier<DateTime?>? bidDate,
+    double? rangeStart,
+    double? rangeEnd,
     TextEditingController? pricePerUnit,
     TextEditingController? deliveryAddress,
     TextEditingController? deliveryPrice,
@@ -136,6 +142,8 @@ class CreateRequestState {
     File? productImage,
   }) {
     return CreateRequestState(
+      rangeEnd: rangeEnd ?? this.rangeEnd,
+      rangeStart: rangeStart ?? this.rangeStart,
       productName: productName ?? this.productName,
       brandName: brandName ?? this.brandName,
       productDescription: productDescription ?? this.productDescription,

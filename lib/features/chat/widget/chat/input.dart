@@ -7,7 +7,6 @@ import 'package:gap/gap.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
@@ -42,6 +41,9 @@ class ChatInputController {
 
   /// Our voice recorder.
   RecorderController? _soundRecorder;
+
+  /// Our momentId.
+  String? _momentId;
 
   /// Where we keep the voice note currently being sent in chat.
   final _voiceMessage = ValueNotifier<String?>(null);
@@ -118,6 +120,7 @@ class ChatInputController {
     _soundRecorder = null;
     _focusedMessage.value = null;
     _isMedia.value = false;
+    _momentId = null;
     _isTyping.value = false;
     _currentType.value = MessageType.text;
     _voiceMessage.value = null;
@@ -190,9 +193,10 @@ class ChatInputController {
 
   /// A helper function used to set the message that this input widget is
   /// supposed to be replying to.
-  void quoteMessage(MessageModel? message, [bool isEditing = false]) {
+  void quoteMessage(MessageModel? message, [bool isEditing = false, String? momentId]) {
     _replyTo.value = message;
     _isEditing.value = isEditing;
+    _momentId = momentId;
   }
 
   /// A helper function used to set the type of message that this is currently
@@ -309,6 +313,7 @@ class ChatInputController {
     return SendMessageDto(
       chatId: chat.id,
       type: _currentType.value,
+      momentId: _momentId,
       originalMessageId: _replyTo.value?.id,
       originalMessage: _replyTo.value,
       content: buildBody,
@@ -351,7 +356,7 @@ class ChatInputWidget extends StatelessWidget {
     //? If there is actual data here and it is a file...
     if (result.type != MessageType.contact) {
       //? Change this to file.
-      controller._currentType.value = MessageType.file;
+      controller._currentType.value = result.type;
 
       //? Add all of the files that need to be added.
       controller._files.value.addAll(result.files?.map((file) => File(file)) ?? []);

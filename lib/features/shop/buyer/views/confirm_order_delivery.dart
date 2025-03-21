@@ -49,13 +49,16 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                 const Gap(30),
                 CopyCode(code: arg!.deliveryToken!, title: "Delivery Confirmation Token"),
                 const Gap(2),
-                PinInputField(
+               Align(
+                alignment: Alignment.center,
+                child:  PinInputField(
                   pin: pin,
                   digits: 10,
                   margin: 2.5,
-                  ratio: 0.08,
-                  height: 48,
+                  ratio: 0.075,
+                  height: 40,
                 ),
+               ),
                 const Gap(25),
                 Align(
                   alignment: Alignment.center,
@@ -67,7 +70,7 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                           color: wayaTheme.colorScheme.primary75,
                           borderRadius: BorderRadius.all(Radius.circular(8))),
                       child: RichText(
-                          text: const TextSpan(children: [
+                          text:  TextSpan(children: [
                         TextSpan(
                             text: "Having issue? ",
                             style: WayaTextStyles.bodySmall),
@@ -86,7 +89,7 @@ class _ConfirmOrderDeliveryState extends ConsumerState<ConfirmOrderDelivery> {
                 SizedBox(
                     child: PinKeyboard(
                         onKeyTap: viewModel.handleKeyPress,
-                        onSubmit: () => viewModel.submitPins(context, arg.shopId),
+                        onSubmit: () => viewModel.submitPins(context, arg),
                         onBackspace: viewModel.handleBackspace)),
                 const Gap(20),
               ],

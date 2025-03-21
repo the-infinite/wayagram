@@ -21,3 +21,27 @@ class CreateConversationDto {
   // To JSON method
   Map<String, dynamic> toJson() => _$CreateConversationDtoToJson(this);
 }
+
+@JsonSerializable()
+class PrivacySettingsDto {
+  final bool canSeeOnlineStatus;
+  final bool canSeeLastSeen;
+  @JsonKey(name: 'canSeeReadReeceipt')
+  final bool canSeeReadReceipt;
+  final bool canSeeProfilePicture;
+  final bool canSeeProfileDescription;
+
+  PrivacySettingsDto({
+    required this.canSeeOnlineStatus,
+    required this.canSeeLastSeen,
+    required this.canSeeReadReceipt,
+    required this.canSeeProfilePicture,
+    required this.canSeeProfileDescription,
+  });
+
+  // From JSON constructor
+  factory PrivacySettingsDto.fromJson(Map<String, dynamic> json) => _$PrivacySettingsDtoFromJson(json);
+
+  // To JSON method
+  Map<String, dynamic> toJson() => _$PrivacySettingsDtoToJson(this);
+}

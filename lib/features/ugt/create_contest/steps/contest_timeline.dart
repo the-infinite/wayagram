@@ -1,10 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
@@ -16,8 +20,9 @@ import '../../../wallet/view/components/modal_content.dart';
 import '../../ugt_buttomsheet_modal/ugt_modal.dart';
 import '../../vm/ugt_vm.dart';
 
-class ContestTimeline extends ConsumerStatefulWidget {
-  const ContestTimeline({super.key});
+class ContestTimeline extends StatefulHookConsumerWidget {
+  final Function(int) goToPrevTab;
+  const ContestTimeline({super.key, required this.goToPrevTab});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -30,7 +35,30 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(personalFirstStepProvider);
     final viewModel2 = ref.watch(contestNotifierProvider);
+    var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
     final wayaTheme = Theme.of(context);
+
+    var isEditing = ref.watch(stateIsEditingContestProvider);
+    useEffect(() {
+      if (isEditing) {
+        Future.delayed(Duration(seconds: 1), () {
+          ref.read(contestNotifierProvider.notifier).updateContestTimeStartDate(
+              contestViewModel?.startDate?.split("T").first ?? "");
+          ref.read(contestNotifierProvider.notifier).updateContestTimeEndDate(
+              contestViewModel?.endDate?.split("T").first ?? "");
+          ref
+              .read(contestNotifierProvider.notifier)
+              .updateContestTimeMultipleStage(
+                  contestViewModel?.multipleStages ?? '');
+
+          ref
+              .read(contestNotifierProvider.notifier)
+              .updateContestTimeCurrentStage(
+                  contestViewModel?.currentStage ?? '');
+        });
+      }
+      return null;
+    }, []);
     return Form(
       key: _formKey,
       child: Column(
@@ -41,9 +69,9 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
               style: wayaTheme.textTheme.titleLarge),
           const Gap(5),
           Text(
-              "Bring your talent contest vision to life. Customize details,\n set stages, and make it unforgettable",
+              "Bring your talent contest vision to life. Customize details,\nset stages, and make it unforgettable",
               style: wayaTheme.textTheme.hintStyle),
-          const Gap(30),
+          const Gap(15),
           FormField<String>(validator: (value) {
             if (viewModel2.contestTimelineStartDate.isEmpty) {
               return 'Start Date is required';
@@ -66,7 +94,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                       value: viewModel2.contestTimelineStartDate.isEmpty
                           ? 'DD/MM/YYYY'
                           : viewModel2.contestTimelineStartDate,
-                      label: "Start Date",
+                      label: "When do you want your contest to start?",
                       hintText: 'Select Start Date',
                       items: ref
                           .read(contestNotifierProvider.notifier)
@@ -85,7 +113,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                     child: Text(
                       formState.errorText!,
                       style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -114,7 +142,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                       value: viewModel2.contestTimelineEndDate.isEmpty
                           ? 'DD/MM/YYYY'
                           : viewModel2.contestTimelineEndDate,
-                      label: "End Date",
+                      label: "When do you want your contest to end?",
                       hintText: 'Select End Date',
                       items: ref
                           .read(contestNotifierProvider.notifier)
@@ -133,7 +161,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                     child: Text(
                       formState.errorText!,
                       style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -153,7 +181,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                 WayaSelectField<String>(
                   height: 0.3,
                   value: viewModel2.contestTimelineMultipleStage,
-                  label: "Multiple Stages?",
+                  label: "Will your contest have multiple stages?",
                   hintText: 'Select Yes or No',
                   items: ref
                       .read(contestNotifierProvider.notifier)
@@ -172,14 +200,16 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                     child: Text(
                       formState.errorText!,
                       style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
             );
           }),
           const Gap(15),
-          const Gap(15),
+          // const Gap(15),
+
+          //  if (viewModel2.contestTimelineMultipleStage.toLowerCase() != "no")
           FormField<String>(validator: (value) {
             if (viewModel2.contestTimelineCurrentStage.isEmpty) {
               return 'Current Stage is required';
@@ -193,7 +223,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                 WayaSelectField<String>(
                   height: 0.3,
                   value: viewModel2.contestTimelineCurrentStage,
-                  label: "Current Stage",
+                  label: "What is the current stage",
                   hintText: 'Select Current Stage',
                   items: ref
                       .read(contestNotifierProvider.notifier)
@@ -212,7 +242,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                     child: Text(
                       formState.errorText!,
                       style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12),
+                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                     ),
                   ),
               ],
@@ -242,7 +272,8 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
               border: Border.all(
                   width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-                Navigator.pop(context);
+                widget.goToPrevTab(1);
+                // WayaNav.goBack();
                 //WayaNav.toNamed("/ugt-home");
               })
         ],

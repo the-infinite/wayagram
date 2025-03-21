@@ -1,58 +1,109 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
+import 'package:wayagram/features/ugt/data/model/context_for_you_state.dart';
+import 'package:wayagram/features/ugt/data/model/single_contestant_profile.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 
-class ContestForYou extends StateNotifier<List<Contest>> {
+class ContestForYou extends StateNotifier<ContextForYouState> {
   final ContestRepo _contestRepository;
   final WayaLocalDataSource _localDataSource;
 
-  ContestForYou(this._contestRepository, this._localDataSource) : super([]);
+  ContestForYou(this._contestRepository, this._localDataSource)
+      : super(ContextForYouState(page: 1));
 
-  int _page = 1; // Pagination tracking
   bool isLoading = false;
 
-  // Simulate fetching paginated posts
-  Future<void> fetchPosts() async {
-    if (isLoading) return;
-    isLoading = true;
+  //? Simulate fetching paginated posts
+  Future<void> fetchContestForYou(bool isFirst) async {
+    try {
+      if (isFirst) {
+        state = state.copyWith(page: 1);
+      }
+      if (state.isLastPage) {
+        return;
+      }
+      if (state.isLoading == true) {
+        return;
+      }
+      state = state.copyWith(isLoading: true);
+    } catch (e) {}
 
     try {
-      final response = await _contestRepository.getContestForYou(_page);
-      List<Contest> contestList = [];
+      final response = await _contestRepository.getContestForYou(state.page);
+      //  List<Contest> contestList = [];
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);
-        contestList = responseModel.data.docs;
-        state = [...state, ...contestList];
-        _page++;
-        isLoading = false;
+        // contestList = responseModel.data?.docs ?? [];
+        state = state.copyWith(
+            isLastPage: responseModel.data?.hasNextPage == true ? false : true);
+        if (isFirst) {
+          state =
+              state.copyWith(listContestForYou: responseModel.data?.docs ?? []);
+        } else {
+          state = state.copyWith(listContestForYou: [
+            ...state.listContestForYou,
+            ...responseModel.data?.docs ?? []
+          ]);
+        }
+        state = state.copyWith(page: state.page + 1);
+
+        state = state.copyWith(isLoading: false);
       }
       // return contestList;
     } catch (e) {
+      state = state.copyWith(isLoading: false);
       print(e);
-    } finally {
-      isLoading = false;
-    }
+    } finally {}
+  }
+
+  Future<void> fetchSingleContest(WidgetRef ref, String contestId) async {
+    try {
+      final response = await _contestRepository.fetchSingleContest(contestId);
+      Contest? contest;
+      if (response.success) {
+        ContestResponse responseModel = ContestResponse.fromJson(response.data);
+        contest = responseModel.data?.docs?.first;
+        ref.read(selectedContestProvider.notifier).state = contest;
+      }
+      // return contestList;
+    } finally {}
+  }
+
+  Future<SingleContestProfileBase?> fetchSingleContestantDetails(
+      String contestId, String contestantProfileId) async {
+    try {
+      final response = await _contestRepository.fetchSingleContestantDetails(
+          contestId, contestantProfileId);
+      //  SingleContestProfile? contest;
+      if (response.success) {
+        SingleContestProfileBase responseModel =
+            SingleContestProfileBase.fromJson(response.data);
+        return responseModel;
+      }
+      // return contestList;
+    } finally {}
+    return null;
   }
 
   // Toggle Like
   void toggleLike(String postId) {
     // Contest? contestPost = null;
     print("Contest for you");
-    state = state.map((post) {
+    state = state.copyWith(
+        listContestForYou: state.listContestForYou.map((post) {
       if (post.id == postId) {
-        if (!post.isLiked!) {
-          doOnLikeLike(postId);
-        }
+        doOnLikeLike(postId);
+        bool value = post.hasLiked == null ? false : post.hasLiked ?? false;
+
         return post.copyWith(
-          isLiked: true,
-          likeCount: post.likeCount! + 1,
+          hasLiked: !value,
+          likeCount: value ? post.likeCount! - 1 : post.likeCount! + 1,
         );
       }
       return post;
-    }).toList();
+    }).toList());
   }
 
   void doOnLikeLike(String postId) async {
@@ -64,18 +115,22 @@ class ContestForYou extends StateNotifier<List<Contest>> {
 
     if (!response.success) {
       //  print("do like stuff Fail");
-      state = state.map((post) {
+      state = state.copyWith(
+          listContestForYou: state.listContestForYou.map((post) {
         if (post.id == postId) {
+          bool value = post.hasLiked == null ? false : post.hasLiked ?? false;
+
           return post.copyWith(
-            isLiked: !post.isLiked!,
-            likeCount: post.likeCount! - 1,
+            hasLiked: !value,
+            likeCount: value ? post.likeCount! - 1 : post.likeCount! + 1,
           );
         }
         return post;
-      }).toList();
+      }).toList());
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
-      print("do like stuff Success");
+      //WayaSnackBar.showToast("Contest already liked");
+      debugPrint("Contest already liked");
     }
   }
 
@@ -85,11 +140,24 @@ class ContestForYou extends StateNotifier<List<Contest>> {
       "profileId": _localDataSource.getUserId().toString(),
       "contestId": postId
     });
+    state = state.copyWith(
+        listContestForYou: state.listContestForYou.map((post) {
+      if (post.id == postId) {
+        bool value =
+            post.isFollowing == null ? false : post.isFollowing ?? false;
+        return post.copyWith(
+          // isLiked: true,
+          isFollowing: !value,
+        );
+      }
+      return post;
+    }).toList());
+    doshare(postId);
 
     if (response.success) {
       //  print("do like stuff Fail");
 
-      WayaSnackBar.showToast("Contest liked");
+      // WayaSnackBar.showToast("Contest followed", showSuccess: true);
     } else {
       print("do like stuff Success");
     }
@@ -97,7 +165,8 @@ class ContestForYou extends StateNotifier<List<Contest>> {
 
   void toggleShare(String postId) {
     // Contest? contestPost = null;
-    state = state.map((post) {
+    state = state.copyWith(
+        listContestForYou: state.listContestForYou.map((post) {
       if (post.id == postId) {
         return post.copyWith(
           // isLiked: true,
@@ -105,7 +174,7 @@ class ContestForYou extends StateNotifier<List<Contest>> {
         );
       }
       return post;
-    }).toList();
+    }).toList());
     doshare(postId);
   }
 
@@ -118,15 +187,16 @@ class ContestForYou extends StateNotifier<List<Contest>> {
 
     if (!response.success) {
       //  print("do like stuff Fail");
-      state = state.map((post) {
+      state = state.copyWith(
+          listContestForYou: state.listContestForYou.map((post) {
         if (post.id == postId) {
           return post.copyWith(
-            isLiked: !post.isLiked!,
+            hasLiked: !post.hasLiked!,
             likeCount: post.likeCount! - 1,
           );
         }
         return post;
-      }).toList();
+      }).toList());
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
       print("do like stuff Success");
@@ -144,10 +214,11 @@ class ContestForYou extends StateNotifier<List<Contest>> {
   } */
 }
 
-final selectedContestProvider = StateProvider<Contest>((ref) {
-  return Contest();
+final selectedContestProvider = StateProvider<Contest?>((ref) {
+  return null;
 });
 // Provider
-final postProvider = StateNotifierProvider<ContestForYou, List<Contest>>((ref) {
+final postProvider =
+    StateNotifierProvider<ContestForYou, ContextForYouState>((ref) {
   return ContestForYou(ContestRepo(), WayaLocalDataSource());
 });

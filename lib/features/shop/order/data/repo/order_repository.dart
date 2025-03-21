@@ -17,6 +17,8 @@ class OrderRepository extends BaseRepository {
 
     if (pickupAddress != null) payload['pickupAddress'] = pickupAddress;
 
+    print(payload);
+
     return post("$serviceUrl/orders/place-order", payload);
   }
 
@@ -41,8 +43,7 @@ class OrderRepository extends BaseRepository {
         "$serviceUrl/orders/pickupStatus/$orderId", {"pickupStatus": status});
   }
 
-
-    Future<WayaRequestResponse> declineOrder(
+  Future<WayaRequestResponse> declineOrder(
       {required String orderId, required String reason}) {
     return post("$serviceUrl/orders/decline-order",
         {"orderId": orderId, "reason": reason});

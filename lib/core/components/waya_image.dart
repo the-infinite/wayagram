@@ -11,10 +11,13 @@ class WayaDp extends ConsumerWidget {
   final Function()? onTap;
   final String? image;
   final bool isEdit;
+  final bool isSelf;
+
   const WayaDp({
     this.radius = 75,
     this.onTap,
     this.isEdit = false,
+    this.isSelf = true,
     this.image = '',
     super.key,
   });
@@ -23,7 +26,7 @@ class WayaDp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final avatar = image?.isNotEmpty == true
+    final avatar = !isSelf || (image?.isNotEmpty ?? false)
         ? image
         : ref.watch(profileVmProvider).userAccountModel?.data?.userdata?.user?.profilePicture;
 
@@ -69,10 +72,15 @@ class WayaDp extends ConsumerWidget {
 
 class WayaImage2 extends ConsumerWidget {
   final String? imageUrl;
+  final Function()? onTap;
+  final bool isEdit;
+
   const WayaImage2({
     super.key,
-    this.imageUrl,
     required this.height,
+    this.isEdit = false,
+    this.onTap,
+    this.imageUrl,
   });
 
   final double height;
@@ -82,15 +90,38 @@ class WayaImage2 extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
 
     final coverImage = ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
-    return coverImage == null
-        ? errorWidget(wayaTheme)
-        : CachedNetworkImage(
-            errorWidget: (context, url, error) => errorWidget(wayaTheme),
-            fit: BoxFit.fill,
-            width: double.infinity,
-            height: height,
-            imageUrl: imageUrl ?? coverImage,
-          );
+    return GestureDetector(
+      onTap: isEdit
+          ? () {
+              updateCoverPhoto(ref);
+            }
+          : onTap,
+      child: Stack(
+        children: [
+          imageUrl == null && coverImage == null
+              ? errorWidget(wayaTheme)
+              : CachedNetworkImage(
+                  errorWidget: (context, url, error) => errorWidget(wayaTheme),
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: height,
+                  imageUrl: imageUrl ?? coverImage,
+                ),
+
+          //? If this is in edit mode...
+          if (isEdit)
+            Positioned.fill(
+              child: ColoredBox(
+                color: Colors.black12,
+                child: Icon(
+                  Icons.camera_alt_outlined,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
   Container errorWidget(ThemeData wayaTheme) {
@@ -104,6 +135,10 @@ class WayaImage2 extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  void updateCoverPhoto(WidgetRef ref) {
+    ref.read(profileVmProvider.notifier).updateCoverPhoto();
   }
 }
 

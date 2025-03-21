@@ -6,7 +6,6 @@ class ShopResponseModel {
   final int statusCode;
   final Data data;
 
-
   ShopResponseModel({
     required this.message,
     required this.status,
@@ -39,14 +38,14 @@ class Data {
 
   Data({required this.message, required this.shops});
 
- factory Data.fromJson(Map<String, dynamic> json) {
-  return Data(
-    message: json["message"] ?? "",
-    shops: (json["shops"] != null)
-        ? List<ShopData>.from(json["shops"].map((x) => ShopData.fromJson(x)))
-        : [],
-  );
-}
+  factory Data.fromJson(Map<String, dynamic> json) {
+    return Data(
+      message: json["message"] ?? "",
+      shops: (json["shops"] != null)
+          ? List<ShopData>.from(json["shops"].map((x) => ShopData.fromJson(x)))
+          : [],
+    );
+  }
 
   Map<String, dynamic> toJson() {
     return {"message": message, "shops": shops};
@@ -62,6 +61,8 @@ class ShopData {
   final dynamic logo;
   final dynamic coverImage;
   final String address;
+  final String state;
+  final String lga;
   final String phone;
   final String email;
   final dynamic rating;
@@ -89,6 +90,8 @@ class ShopData {
     required this.totalOrders,
     this.socialLinks,
     this.businessHours,
+    required this.state,
+    required this.lga,
     required this.v,
     required this.isDeleted,
     required this.createdAt,
@@ -111,6 +114,8 @@ class ShopData {
       totalOrders: json["totalOrders"],
       socialLinks: json["socialLinks"],
       businessHours: json["businessHours"],
+      state: json['state'],
+      lga: json['lga'],
       v: json["_v"] ?? "",
       isDeleted: json["isDeleted"],
       createdAt: DateTime.parse(json["createdAt"]),
@@ -134,6 +139,8 @@ class ShopData {
       "totalOrders": totalOrders,
       "socialLinks": socialLinks,
       "businessHours": businessHours,
+      "state": state,
+      "lga":lga,
       "_v": v,
       "isDeleted": isDeleted,
       "createdAt": createdAt.toIso8601String(),

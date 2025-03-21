@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -72,14 +73,14 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation> with Si
                       Text(
                         "Create Buying Request",
                         style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                            color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
                       ),
                     ],
                   ),
                   callback: () {
                     WayaNav.toNamed(CreateRequest.route);
                   },
-                  color: wayaTheme.colorScheme.primar50,
+                  color: wayaTheme.colorScheme.primary50,
                 )
               : Container(),
           _selectedIndex == 0 || _selectedIndex == 1 ? const Gap(25) : const Gap(10),

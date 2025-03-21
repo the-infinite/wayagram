@@ -1,7 +1,6 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
@@ -79,9 +78,9 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
       appliedFilter =
           "startDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(const Duration(days: 365)))}&endDate=${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
     }
-    await ref
-        .read(transactionVmProvider.notifier)
-        .getUserTransactions(filters: appliedFilter);
+    await ref.read(transactionVmProvider.notifier)
+        //.getUserTransactions(filters: appliedFilter);
+        .getTransaction(filters: appliedFilter);
   }
 
   @override
@@ -97,7 +96,7 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
         title: Text(
           'All Transactions',
           style:
-              TextStyle(color: wayaTheme.colorScheme.customBlack, fontSize: 16),
+              TextStyle(color: wayaTheme.colorScheme.customBlack, fontSize: 16.sp),
         ),
         actions: [
           IconButton(
@@ -146,7 +145,7 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
               ),
             ),
             itemBuilder: (context) => [
-              const PopupMenuItem(
+               PopupMenuItem(
                 enabled: false,
                 height: 40,
                 child: Column(
@@ -155,7 +154,7 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
                     Text(
                       'Filter by',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: 16.sp,
                         fontWeight: FontWeight.w500,
                         color: Colors.black,
                       ),
@@ -163,7 +162,7 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
                     Text(
                       'Choose filter',
                       style: TextStyle(
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         color: Colors.grey,
                       ),
                     ),
@@ -198,9 +197,9 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
           const SizedBox(height: 16),
 
           // Quick Overview
-          const Text(
+           Text(
             'Quick Overview',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+            style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 12),
           Row(
@@ -227,10 +226,10 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
           // Transaction History Header
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
+            children:  [
               Text(
                 'Transaction History',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w500),
               ),
             ],
           ),
@@ -268,16 +267,16 @@ class _OverviewCard extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
+            style:  TextStyle(
               color: Colors.grey,
-              fontSize: 12,
+              fontSize: 12.sp,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             NumberFormat.currency(symbol: '₦', decimalDigits: 2).format(amount),
-            style: const TextStyle(
-              fontSize: 16,
+            style:  TextStyle(
+              fontSize: 16.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -287,80 +286,3 @@ class _OverviewCard extends StatelessWidget {
   }
 }
 
-class _TransactionCard extends StatelessWidget {
-  final String title;
-  final bool isCredit;
-  final double amount;
-  final DateTime date;
-  final IconData icon;
-
-  const _TransactionCard({
-    required this.title,
-    required this.isCredit,
-    required this.amount,
-    required this.date,
-    required this.icon,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: isCredit ? Colors.green[50] : Colors.red[50],
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              icon,
-              color: isCredit ? Colors.green : Colors.red,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  isCredit ? 'Credit' : 'Debit',
-                  style: TextStyle(
-                    color: isCredit ? Colors.green : Colors.red,
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                '${isCredit ? '+' : '-'}${NumberFormat.currency(symbol: '₦', decimalDigits: 2).format(amount)}',
-                style: TextStyle(
-                  color: isCredit ? Colors.green : Colors.red,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              Text(
-                DateFormat('MMM dd, hh:mm a').format(date),
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}

@@ -38,14 +38,14 @@ class AboutEvent extends StatelessWidget {
               }
             },
             child: Text(content,
-                style: TextStyle().wayaCopyWith(
+                style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                   color: wayaTheme.colorScheme.customPrimary,
                   fontSize: context.width * 0.035,
                 )),
           ),
         ] else ...[
           Text(content,
-              style: TextStyle().wayaCopyWith(
+              style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                 color: wayaTheme.colorScheme.customBlack,
                 fontSize: context.width * 0.035,
               )),

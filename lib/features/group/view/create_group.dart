@@ -2,27 +2,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
-import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
-import '../../pages/component/extras.dart';
-import '../../wallet/view/fund_wallet_options_screen.dart';
 
 class CreateGroup extends ConsumerStatefulWidget {
   static const route = '/createGroup';
@@ -48,7 +38,6 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
-        print('SELECTED IMAGES $_selectedImage');
       });
     }
   }
@@ -67,10 +56,11 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
     final viewModel = ref.watch(createGroupProvider);
     final viewModel2 = ref.watch(createGroupProvider.notifier);
     final wayaTheme = Theme.of(context);
+    // final args = ModalRoute.of(context)?.settings.arguments as dynamic;
     return WayaScaffold(
       title: "Create a Group",
       onTapBackButton: (){
-        Navigator.pop(context);
+        WayaNav.goBack();
         viewModel2.reset();
 
       },
@@ -84,10 +74,10 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
             if (_formKey.currentState!.validate()) {
               if(!sel && !sel2){
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                   SnackBar(
                     content: Text('Select group type', style: TextStyle(
                       fontFamily: WayaConstants.fontFamily,
-                      fontSize: 12
+                      fontSize: 12.sp
                     ),),
                     backgroundColor: Colors.red,
                     duration: Duration(seconds: 2),
@@ -95,10 +85,10 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                 );
               }else if(_selectedImage == null || _coverImage == null){
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
+                   SnackBar(
                     content: Text('Add Images', style: TextStyle(
                         fontFamily: WayaConstants.fontFamily,
-                        fontSize: 12
+                        fontSize: 12.sp
                     ),),
                     backgroundColor: Colors.red,
                     duration: Duration(seconds: 2),
@@ -120,7 +110,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
           text: 'Create',
           horizontalPadding: 12,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: Theme.of(context).colorScheme.white ),
           height: 30,
@@ -270,7 +260,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -307,7 +297,7 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                               formState.errorText!,
                               style: TextStyle(
                                   color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                                  fontSize: 12.sp),
                             ),
                           ),
                       ],

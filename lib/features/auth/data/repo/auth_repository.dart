@@ -5,29 +5,47 @@ import 'package:wayagram/features/auth/upgrade_to_business/data/model/upgrade_to
 
 class AuthRepository extends BaseRepository {
   static const serviceUrl = "wayagram-profile/api/v2";
+  static const graphServiceUrl = "wayagram-graph/api/v2";
 
   Future<WayaRequestResponse> register(Register payload) {
-    return post('$serviceUrl/client/auth/register', payload.toJson());
+    return post('$serviceUrl/client/auth/register', payload.toJson(),
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> verifyOtp(VerifyOtp payload) {
-    return post('$serviceUrl/client/auth/register/verify-email', payload.toJson());
+    return post(
+        '$serviceUrl/client/auth/register/verify-email', payload.toJson(),
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> resendOtp(String email) {
-    return post('$serviceUrl/client/auth/resend-otp', {"email": email, "purpose": 'REGISTER_USER'});
+    return post('$serviceUrl/client/auth/resend-otp',
+        {"email": email, "purpose": 'REGISTER_USER'});
   }
 
+    Future<WayaRequestResponse> oauth(String token, String authType) {
+    return post('$serviceUrl/client/auth/login/oauth',
+        {"oauthProvider": authType, "token": token});
+  }
+
+
   Future<WayaRequestResponse> verifyEmail(String email) {
-    return post('$serviceUrl/client/auth/password/reset-password', {"email": email});
+    return post(
+        '$serviceUrl/client/auth/password/reset-password', {"email": email},
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> resetPassword(ForgotPassword payload) {
-    return post('$serviceUrl/client/auth/password/new-password', payload.toJson());
+    return post(
+        '$serviceUrl/client/auth/password/new-password', payload.toJson(),
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> login(
-      {required String password, String? email, String? businessId, bool? isBusinessLogin}) {
+      {required String password,
+      String? email,
+      String? businessId,
+      bool? isBusinessLogin}) {
     final payload = <String, dynamic>{};
     if (isBusinessLogin == true) {
       payload['businessId'] = businessId;
@@ -37,7 +55,7 @@ class AuthRepository extends BaseRepository {
       payload['password'] = password;
     }
 
-    return post('$serviceUrl/client/auth/login', payload);
+    return post('$serviceUrl/client/auth/login', payload, showErrors: true);
   }
 
   Future<WayaRequestResponse> getAllCountries() {
@@ -48,16 +66,21 @@ class AuthRepository extends BaseRepository {
     return get("$serviceUrl/client/location/states?countryCode=NG");
   }
 
-  Future<WayaRequestResponse> getAllLGA({required String stateCode, required String countryCode}) {
-    return get("$serviceUrl/client/location/lgas?stateCode=$stateCode&countryCode=$countryCode");
+  Future<WayaRequestResponse> getAllLGA(
+      {required String stateCode, required String countryCode}) {
+    return get(
+        "$serviceUrl/client/location/lgas?stateCode=$stateCode&countryCode=$countryCode");
   }
 
-  Future<WayaRequestResponse> getAllCities({required String stateCode, required String countryCode}) {
-    return get("$serviceUrl/client/location/cities?stateCode=$stateCode&countryCode=$countryCode");
+  Future<WayaRequestResponse> getAllCities(
+      {required String stateCode, required String countryCode}) {
+    return get(
+        "$serviceUrl/client/location/cities?stateCode=$stateCode&countryCode=$countryCode");
   }
 
   Future<WayaRequestResponse> businessKyc(dynamic data) {
-    return post('$serviceUrl/client/kyc/add-business-kyc', data, formdata: true);
+    return post('$serviceUrl/client/kyc/add-business-kyc', data,
+        formdata: true);
   }
 
   Future<WayaRequestResponse> getAccountType() async {
@@ -68,9 +91,31 @@ class AuthRepository extends BaseRepository {
     return get('$serviceUrl/client/businesses/types/all');
   }
 
-  Future<WayaRequestResponse> upgradeToBusiness({required UpgradeToBusinessModel payload, required String id}) {
-    return post('$serviceUrl/client/users/$id/upgrade-to-business', payload.toJson());
+  Future<WayaRequestResponse> upgradeToBusiness(
+      {required UpgradeToBusinessModel payload, required String id}) {
+    return post(
+        '$serviceUrl/client/users/$id/upgrade-to-business', payload.toJson(),
+        showErrors: true);
   }
 
+  Future<WayaRequestResponse> selectInterest(dynamic data) {
+    return post(
+      '$graphServiceUrl/interests',
+      data,
+    );
+  }
 
+  Future<WayaRequestResponse> getSelectedInterests(
+      {required String userId}) async {
+    return get('$graphServiceUrl/interests/$userId');
+  }
+
+  Future<WayaRequestResponse> getInterestsCategories() async {
+    return get("$graphServiceUrl/interests/categories");
+  }
+
+  Future<WayaRequestResponse> refreshToken({required String token}) async {
+    return post("$serviceUrl/client/auth/refresh-token", {"token": token});
+  }
+//
 }

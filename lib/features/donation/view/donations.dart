@@ -19,15 +19,25 @@ class _DonationsState extends ConsumerState<Donations> with SingleTickerProvider
 
   int _selectedIndex = 0;
 
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(donationVmProvider.notifier).getAllDonation(page: 1);
+      ref.read(donationVmProvider.notifier).getMyKYC();
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
+      resizeToAvoidBottomInset: false,
         title: "Donations",
         isLoading: viewModel.isLoading,
-        isScrollable: true,
+        isScrollable: false,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

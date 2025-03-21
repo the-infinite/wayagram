@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/logic/files.dart';
@@ -232,7 +233,7 @@ class _ChatFileListWidgetState extends State<ChatFileListWidget> with SingleTick
                         "+${files.length - 3} more",
                         style: WayaTextStyles.bodyMedium.copyWith(
                           color: WayaColors.primary,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                         ),
                       ),
                     ),

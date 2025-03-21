@@ -1,12 +1,17 @@
 import 'dart:convert';
+
+import 'package:wayagram/shared/features/profile/model/groups.dart';
+
 GetAllGroups getAllGroupsFromJson(String str) => GetAllGroups.fromJson(json.decode(str));
 String getAllGroupsToJson(GetAllGroups data) => json.encode(data.toJson());
+
 class GetAllGroups {
   GetAllGroups({
-      this.message,
-      this.status, 
-      this.statusCode, 
-      this.data,});
+    this.message,
+    this.status,
+    this.statusCode,
+    this.data,
+  });
 
   GetAllGroups.fromJson(dynamic json) {
     message = json['message'];
@@ -18,15 +23,18 @@ class GetAllGroups {
   bool? status;
   num? statusCode;
   Data? data;
-GetAllGroups copyWith({  String? message,
-  bool? status,
-  num? statusCode,
-  Data? data,
-}) => GetAllGroups(  message: message ?? this.message,
-  status: status ?? this.status,
-  statusCode: statusCode ?? this.statusCode,
-  data: data ?? this.data,
-);
+  GetAllGroups copyWith({
+    String? message,
+    bool? status,
+    num? statusCode,
+    Data? data,
+  }) =>
+      GetAllGroups(
+        message: message ?? this.message,
+        status: status ?? this.status,
+        statusCode: statusCode ?? this.statusCode,
+        data: data ?? this.data,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['message'] = message;
@@ -37,29 +45,30 @@ GetAllGroups copyWith({  String? message,
     }
     return map;
   }
-
 }
 
 Data dataFromJson(String str) => Data.fromJson(json.decode(str));
 String dataToJson(Data data) => json.encode(data.toJson());
+
 class Data {
   Data({
-      this.docs, 
-      this.totalDocs, 
-      this.limit, 
-      this.page, 
-      this.totalPages, 
-      this.hasNextPage, 
-      this.nextPage, 
-      this.hasPrevPage, 
-      this.prevPage, 
-      this.pagingCounter,});
+    this.docs,
+    this.totalDocs,
+    this.limit,
+    this.page,
+    this.totalPages,
+    this.hasNextPage,
+    this.nextPage,
+    this.hasPrevPage,
+    this.prevPage,
+    this.pagingCounter,
+  });
 
   Data.fromJson(dynamic json) {
     if (json['docs'] != null) {
       docs = [];
       json['docs'].forEach((v) {
-        docs?.add(GetAllGroupDocs.fromJson(v));
+        docs?.add(GroupModel.fromJson(v));
       });
     }
     totalDocs = json['totalDocs'];
@@ -72,7 +81,7 @@ class Data {
     prevPage = json['prevPage'];
     pagingCounter = json['pagingCounter'];
   }
-  List<GetAllGroupDocs>? docs;
+  List<GroupModel>? docs;
   num? totalDocs;
   num? limit;
   num? page;
@@ -82,27 +91,30 @@ class Data {
   bool? hasPrevPage;
   dynamic prevPage;
   num? pagingCounter;
-Data copyWith({  List<GetAllGroupDocs>? docs,
-  num? totalDocs,
-  num? limit,
-  num? page,
-  num? totalPages,
-  bool? hasNextPage,
-  num? nextPage,
-  bool? hasPrevPage,
-  dynamic prevPage,
-  num? pagingCounter,
-}) => Data(  docs: docs ?? this.docs,
-  totalDocs: totalDocs ?? this.totalDocs,
-  limit: limit ?? this.limit,
-  page: page ?? this.page,
-  totalPages: totalPages ?? this.totalPages,
-  hasNextPage: hasNextPage ?? this.hasNextPage,
-  nextPage: nextPage ?? this.nextPage,
-  hasPrevPage: hasPrevPage ?? this.hasPrevPage,
-  prevPage: prevPage ?? this.prevPage,
-  pagingCounter: pagingCounter ?? this.pagingCounter,
-);
+  Data copyWith({
+    List<GroupModel>? docs,
+    num? totalDocs,
+    num? limit,
+    num? page,
+    num? totalPages,
+    bool? hasNextPage,
+    num? nextPage,
+    bool? hasPrevPage,
+    dynamic prevPage,
+    num? pagingCounter,
+  }) =>
+      Data(
+        docs: docs ?? this.docs,
+        totalDocs: totalDocs ?? this.totalDocs,
+        limit: limit ?? this.limit,
+        page: page ?? this.page,
+        totalPages: totalPages ?? this.totalPages,
+        hasNextPage: hasNextPage ?? this.hasNextPage,
+        nextPage: nextPage ?? this.nextPage,
+        hasPrevPage: hasPrevPage ?? this.hasPrevPage,
+        prevPage: prevPage ?? this.prevPage,
+        pagingCounter: pagingCounter ?? this.pagingCounter,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (docs != null) {
@@ -119,26 +131,26 @@ Data copyWith({  List<GetAllGroupDocs>? docs,
     map['pagingCounter'] = pagingCounter;
     return map;
   }
-
 }
 
 GetAllGroupDocs docsFromJson(String str) => GetAllGroupDocs.fromJson(json.decode(str));
 String docsToJson(GetAllGroupDocs data) => json.encode(data.toJson());
+
 class GetAllGroupDocs {
   GetAllGroupDocs({
-      this.id,
-      this.url,
-      this.name, 
-      this.description,
-      this.memberCount,
-      this.isOpen,
-      this.isPrivate, 
-      this.coverImage, 
-      this.profileImage, 
-      this.deletedAt, 
-      this.createdAt, 
-      this.updatedAt, 
-      });
+    this.id,
+    this.url,
+    this.name,
+    this.description,
+    this.memberCount,
+    this.isOpen,
+    this.isPrivate,
+    this.coverImage,
+    this.profileImage,
+    this.deletedAt,
+    this.createdAt,
+    this.updatedAt,
+  });
 
   GetAllGroupDocs.fromJson(dynamic json) {
     id = json['id'];
@@ -172,30 +184,31 @@ class GetAllGroupDocs {
   GetAllGroupDocs copyWith({
     String? id,
     String? url,
-  String? name,
-  String? description,
+    String? name,
+    String? description,
     num? memberCount,
-  bool? isOpen,
-  bool? isPrivate,
-  String? coverImage,
-  String? profileImage,
-  dynamic deletedAt,
-  String? createdAt,
-  String? updatedAt,
-}) => GetAllGroupDocs(
-    id: id ?? this.id,
-  url: url ?? this.url,
-  name: name ?? this.name,
-  description: description ?? this.description,
-    memberCount: memberCount ?? this.memberCount,
-  isOpen: isOpen ?? this.isOpen,
-  isPrivate: isPrivate ?? this.isPrivate,
-  coverImage: coverImage ?? this.coverImage,
-  profileImage: profileImage ?? this.profileImage,
-  deletedAt: deletedAt ?? this.deletedAt,
-  createdAt: createdAt ?? this.createdAt,
-  updatedAt: updatedAt ?? this.updatedAt,
-);
+    bool? isOpen,
+    bool? isPrivate,
+    String? coverImage,
+    String? profileImage,
+    dynamic deletedAt,
+    String? createdAt,
+    String? updatedAt,
+  }) =>
+      GetAllGroupDocs(
+        id: id ?? this.id,
+        url: url ?? this.url,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        memberCount: memberCount ?? this.memberCount,
+        isOpen: isOpen ?? this.isOpen,
+        isPrivate: isPrivate ?? this.isPrivate,
+        coverImage: coverImage ?? this.coverImage,
+        profileImage: profileImage ?? this.profileImage,
+        deletedAt: deletedAt ?? this.deletedAt,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -214,5 +227,4 @@ class GetAllGroupDocs {
     map['updated_at'] = updatedAt;
     return map;
   }
-
 }

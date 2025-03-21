@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 class UgtLeaderboardCard extends ConsumerWidget {
   final Contest model;
@@ -24,47 +25,78 @@ class UgtLeaderboardCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+    final notifier = ref.read(votersContestNotifier.notifier);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          onTap: () {},
-          visualDensity: VisualDensity(horizontal: -4, vertical: -4),
-          leading: Text(
-            "$position",
-            overflow: TextOverflow.ellipsis,
-            style: wayaTheme.textTheme.bodyMedium,
-          ),
-          title: Row(
-            children: [
-              ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(45), // Adjust the radius as needed
-                child: Image.network(
-                  contestantData.profilePhoto ?? "",
-                  height: 45,
-                  width: 45,
-                  fit: BoxFit
-                      .cover, // Ensures the image covers the area properly
+    bool isUserLoggedIn =
+        contestantData.profileId == notifier.getLoggedInUserId();
+
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      margin: EdgeInsets.symmetric(vertical: 2),
+      decoration: BoxDecoration(
+        color: isUserLoggedIn
+            ? wayaTheme.primaryColor
+            : Colors.transparent, // Background color
+        borderRadius: BorderRadius.circular(20), // Rounded corners
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            onTap: () {},
+            visualDensity: VisualDensity(horizontal: -4, vertical: -4),
+            leading: Text(
+              "$position",
+              overflow: TextOverflow.ellipsis,
+              style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                  color: isUserLoggedIn
+                      ? Colors.white
+                      : wayaTheme.colorScheme.black),
+            ),
+            title: Row(
+              children: [
+                ClipRRect(
+                    borderRadius: BorderRadius.circular(
+                        45), // Adjust the radius as needed
+                    child: WayaImage(
+                      imageUrl: contestantData.profilePhoto ?? "",
+                      height: 45,
+                      width: 45,
+                      fit: BoxFit.cover,
+                      radius: BorderRadius.circular(45),
+                    )
+
+                    /*    Image.network(
+                    contestantData.profilePhoto ?? "",
+                    height: 45,
+                    width: 45,
+                    fit: BoxFit
+                        .cover, // Ensures the image covers the area properly
+                  ), */
+                    ),
+                Gap(10),
+                Text(
+                  contestantData.contestApplicant?.fullName ?? "",
+                  overflow: TextOverflow.ellipsis,
+                  style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                      color: isUserLoggedIn
+                          ? Colors.white
+                          : wayaTheme.colorScheme.black),
                 ),
-              ),
-              Gap(10),
-              Text(
-                contestantData.contestApplicant?.fullName ?? "",
-                overflow: TextOverflow.ellipsis,
-                style: wayaTheme.textTheme.bodyMedium,
-              ),
-            ],
+              ],
+            ),
+            trailing: Text(
+              '${contestantData.votes} Votes',
+              style: wayaTheme.textTheme.hintStyle.copyWith(
+                  color: isUserLoggedIn
+                      ? Colors.white
+                      : wayaTheme.colorScheme.greyColor400),
+            ),
           ),
-          trailing: Text(
-            '${contestantData.votes} Votes',
-            style: wayaTheme.textTheme.hintStyle,
-          ),
-        ),
-        // const Gap(10)
-      ],
+          // const Gap(10)
+        ],
+      ),
     );
   }
 }

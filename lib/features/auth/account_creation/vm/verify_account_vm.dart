@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
@@ -87,7 +88,8 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
     try {
       final email = ref.watch(personalFirstStepProvider).email.text;
-      final response = await _authRepository.verifyOtp(VerifyOtp(email: email, otp: code));
+      final response =
+          await _authRepository.verifyOtp(VerifyOtp(email: email, otp: code));
       if (response.success) {
         final token = response.data['data']['token']['token'];
         final refreshToken = response.data['data']['token']['refreshToken'];
@@ -109,8 +111,10 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
       final response = await _authRepository.resendOtp(email);
       _logger.d(" result ${response.data['message']}");
       if (response.data["statusCode"] == 200) {
-        _snackbarService.showCustomSnackbar(variant: SnackbarType.success, message: "OTP has been resend to $email");
-state = state.copyWith(isResend: false);
+        _snackbarService.showCustomSnackbar(
+            variant: SnackbarType.success,
+            message: "OTP has been resend to $email");
+        state = state.copyWith(isResend: false);
         //? Start the countdown since our attempt to resend the OTP was successful.
         _startCountdown();
       }
@@ -119,11 +123,52 @@ state = state.copyWith(isResend: false);
     }
   }
 
+  Future<void> resendOtpForRegisteredButNotVerifiedUser(
+      {required String email}) async {
+    try {
+      final response = await _authRepository.resendOtp(email);
+      _logger.d(" result ${response.data['message']}");
+      if (response.data["statusCode"] == 200) {
+        _snackbarService.showCustomSnackbar(
+            variant: SnackbarType.success,
+            message: "OTP has been resend to $email");
+        state = state.copyWith(isResend: false);
+        //? Start the countdown since our attempt to resend the OTP was successful.
+        _startCountdown();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+    }
+  }
+
+  Future<void> verifyAccountForRegisteredButNotVerifiedUser(
+      String email, String code) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final response =
+          await _authRepository.verifyOtp(VerifyOtp(email: email, otp: code));
+      if (response.success) {
+        final token = response.data['data']['token']['token'];
+        final refreshToken = response.data['data']['token']['refreshToken'];
+
+        _secureDataSource.saveToken(token);
+        _secureDataSource.saveRefreshToken(refreshToken);
+        WayaNav.goBack();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   void cancelTimer() {
     _timer?.cancel();
   }
 }
 
-final verifyAccountProvider = NotifierProvider<VerifyAccountVm, VerifyAccountState>(() {
+final verifyAccountProvider =
+    NotifierProvider<VerifyAccountVm, VerifyAccountState>(() {
   return VerifyAccountVm(WayaLocalDataSource(), AuthRepository());
 });

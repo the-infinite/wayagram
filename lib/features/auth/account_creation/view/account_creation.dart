@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/features/auth/account_creation/data/select_account_data.dart';
 import 'package:wayagram/features/auth/account_creation/view/personal/personal_first_step_view.dart';
 import 'package:wayagram/features/auth/account_creation/view/select_account.dart';
 import 'package:wayagram/features/auth/account_creation/view/verify_account.dart';
@@ -34,8 +35,8 @@ class _AccountCreationState extends ConsumerState<AccountCreation> with SingleTi
   Widget build(BuildContext context) {
     final viewModel = ref.watch(accountCreationProvider.notifier);
 
-    void updateSelected(String type) {
-      viewModel.updateSelectedType(type);
+    void updateSelected(SelectAccountData type) {
+      viewModel.updateSelectedType(type.type);
       _goToNextTab();
     }
 

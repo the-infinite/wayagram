@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -22,7 +23,8 @@ class OrderAddressWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+              width: double.infinity,
+              padding: EdgeInsets.fromLTRB(8, 8, 0, 8),
               decoration: BoxDecoration(
                   border: Border.all(
                       color: wayaTheme.colorScheme.greyColor300, width: 1),
@@ -42,10 +44,10 @@ class OrderAddressWidget extends StatelessWidget {
                       SizedBox(
                         width: context.width * 0.8,
                         child: Text(
-                          address ?? '',
+                         address ?? '',
                           style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.greyColor500,
-                            fontSize: 13,
+                            fontSize: 13.sp,
                           ),
                         ),
                       )

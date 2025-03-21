@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -102,7 +103,7 @@ class MyMomentMetrics extends ConsumerWidget {
           Text(
             metric,
             style: TextStyle(
-                fontSize: 13,
+                fontSize: 13.sp,
                 color: wayaTheme.colorScheme.white,
                 fontWeight: FontWeight.w600),
           )

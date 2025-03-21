@@ -12,13 +12,19 @@ class PageModel {
   final String description;
   final bool isPublic;
   final String? coverImage;
-  final List<String> categories;
+  final List<String>? categories;
   final String? url;
   final String? profileImage;
   final DateTime? deletedAt;
-  final DateTime createdAt;
-  final DateTime updatedAt;
   final UserDetailsModel? owner;
+  @JsonKey(name: "createdAt")
+  final DateTime? aCreatedAt;
+  @JsonKey(name: "updatedAt")
+  final DateTime? aUpdatedAt;
+  @JsonKey(name: "created_at")
+  final DateTime? bCreatedAt;
+  @JsonKey(name: "updated_at")
+  final DateTime? bUpdatedAt;
 
   PageModel({
     required this.id,
@@ -32,10 +38,15 @@ class PageModel {
     required this.url,
     required this.profileImage,
     required this.deletedAt,
-    required this.createdAt,
-    required this.updatedAt,
+    required this.aCreatedAt,
+    required this.aUpdatedAt,
+    required this.bCreatedAt,
+    required this.bUpdatedAt,
     required this.owner,
   });
+
+  DateTime get createdAt => aCreatedAt ?? bCreatedAt!;
+  DateTime get updatedAt => aUpdatedAt ?? bUpdatedAt!;
 
   factory PageModel.fromJson(Map<String, dynamic> json) => _$PageModelFromJson(json);
 

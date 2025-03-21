@@ -1,15 +1,26 @@
 import 'package:logger/logger.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/features/user/repo/default.dart';
 
+typedef CachedUserDataTuple = (UserDetailsModel, SocialProfileModel);
+
 class UserResource {
   UserResource._();
-  static final userCache = <String, (UserDetailsModel, SocialProfileModel)>{};
+  static final userCache = <String, CachedUserDataTuple>{};
   static final cachedTimestamps = <String, DateTime>{};
   static final repo = UserRepository.instance;
   static final logger = Logger();
 
-  static Future<(UserDetailsModel, SocialProfileModel)?> getUserDetails(String id) async {
+  static Future<CachedUserDataTuple?> getUserDetails(String id) async {
+    //? If this is for me...
+    try {
+      if (id == ConversationState.self.id) {
+        return (ConversationState.self, ConversationState.profile);
+      }
+    } catch (_) {}
+
+    // Fine.
     final found = userCache[id];
     final now = DateTime.now();
 
@@ -34,7 +45,7 @@ class UserResource {
     return (await getUserDetails(id))?.$2;
   }
 
-  static Future<(UserDetailsModel, SocialProfileModel)?> _getAndSave(String id) async {
+  static Future<CachedUserDataTuple?> _getAndSave(String id) async {
     final response = await repo.getUserDetails(id);
 
     //? If it failed, return nothing.
@@ -53,7 +64,7 @@ class UserResource {
     return result;
   }
 
-  static Future<bool> _save(String id, (UserDetailsModel, SocialProfileModel) details) async {
+  static Future<bool> _save(String id, CachedUserDataTuple details) async {
     //? Try to do this later on.
     userCache[id] = details;
     cachedTimestamps[id] = DateTime.now();

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -32,10 +33,15 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
+
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
     return WayaScaffold(
         title: "Polls and Votes",
         isLoading: false,
         isScrollable: false,
+        onTapBackButton: (){
+          args == 'poll'?  WayaNav.offNamed(BottomView.route, arguments: 0): WayaNav.offNamed(BottomView.route, arguments: 0);
+        },
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,7 +84,7 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
                       Text(
                         "Create Poll",
                         style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                            color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
                       ),
                       const Gap(8),
                       Icon(
@@ -92,7 +98,7 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
                   callback: () {
                     WayaNav.toNamed('/create-poll');
                   },
-                  color: wayaTheme.colorScheme.primar50,
+                  color: wayaTheme.colorScheme.primary50,
                 ),
               ],
             ) :
@@ -118,7 +124,7 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
                       Text(
                         "Create Poll",
                         style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                            color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
                       ),
                       const Gap(8),
                       Icon(
@@ -132,7 +138,7 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
                     WayaNav.toNamed('/create-poll');
 
                   },
-                  color: wayaTheme.colorScheme.primar50,
+                  color: wayaTheme.colorScheme.primary50,
                 ),
               ],
             ),

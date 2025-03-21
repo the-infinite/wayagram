@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -72,7 +74,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -109,7 +111,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -140,7 +142,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -158,7 +160,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                     children: [
                       WayaPaginatedSelectField(
                           height: 0.3,
-                          uniqueKey: 'product-category',
+                          uniqueKey: "product-category",
                           displayText: viewModel.selectedCategory,
                           fetchData:
                               ref.watch(shopVmProvider.notifier).allCategories,
@@ -176,7 +178,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -249,7 +251,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -264,7 +266,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                     children: [
                       WayaSelectField<List<Select>>(
                           height: 0.3,
-                          uniqueKey: 'product-color',
+                          uniqueKey: Uuid().v4(),
                           label: "Product Color (Optional)",
                           value: viewModel.productColor,
                           hintText: 'Select Product Color',
@@ -292,7 +294,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Inlcude Measurements",
+                        Text("Include Measurements",
                             style: wayaTheme.textTheme.titleMedium),
                         const Gap(6),
                         Text(

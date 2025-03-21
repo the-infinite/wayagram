@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -13,17 +15,27 @@ class SingleOrderWidget extends ConsumerWidget {
   final Order order;
 
   final bool isSeller;
+  final bool fromRecent;
   const SingleOrderWidget(
-      {super.key, this.isSeller = false, required this.order});
+      {super.key,
+      this.isSeller = false,
+      required this.order,
+      this.fromRecent = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+
     // final viewModel = ref.watch(singleOrderWigdetViewModelProvider);
     return GestureDetector(
       onTap: () {
         if (isSeller) {
-          WayaNav.toNamed(SellerOrderDetails.route, arguments: order);
+          if (fromRecent) {
+            WayaNav.toNamed(SellerOrderDetails.route, arguments: order);
+
+            return;
+          }
+          WayaNav.replaceNamed(SellerOrderDetails.route, arguments: order);
         } else {
           WayaNav.toNamed(OrderDetails.route,
               arguments: OrderDetailArg(type: 'buyer', order: order));
@@ -42,7 +54,7 @@ class SingleOrderWidget extends ConsumerWidget {
               children: [
                 Row(
                   children: [
-                    SvgPicture.asset('assets/icons/order-van.svg'),
+                    SvgPicture.asset(WayaAssets.icons.orderVan.path),
                     const Gap(4),
                     Column(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -52,13 +64,22 @@ class SingleOrderWidget extends ConsumerWidget {
                           "Order #${order.id.substring(0, 6)}",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         ),
                         const Gap(8),
                         _buildOrderStatus(
                             context: context,
-                            status: order.deliveryType == 'Pickup' ? order.pickupStatusHistory.last.status : order.deliveryStatusHistory.last.status,
-                            deliveryType: order.deliveryType!)
+                            status: order.status == 'cancelled'
+                                ? 'cancelled'
+                                : order.deliveryType == 'Pickup'
+                                    ? order.pickupStatusHistory.isNotEmpty
+                                        ? order.pickupStatusHistory.last.status
+                                        : 'pending'
+                                    : order.deliveryStatusHistory.isNotEmpty
+                                        ? order
+                                            .deliveryStatusHistory.last.status
+                                        : 'pending',
+                            deliveryType: "")
                       ],
                     )
                   ],
@@ -68,17 +89,21 @@ class SingleOrderWidget extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      "${isSeller ? '+' : '-'}${WayaHelpers.formatPrice(double.parse(order.total).toInt())}",
+                      WayaHelpers.formatPrice(
+                          double.parse(order.total).toInt()),
                       style: TextStyle().wayaCopyWith(
-                          color:isSeller ? wayaTheme.colorScheme.success: wayaTheme.colorScheme.error700, fontSize: 13),
+                          color: isSeller
+                              ? wayaTheme.colorScheme.success
+                              : wayaTheme.colorScheme.error700,
+                          fontSize: 13.sp),
                     ),
                     const Gap(8),
                     Text(
                       WayaHelpers.formatDateString(
-                          order.updatedAt.toIso8601String()),
+                          order.createdAt.toIso8601String()),
                       style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor400,
-                          fontSize: 13),
+                          fontSize: 13.sp),
                     )
                   ],
                 )
@@ -104,6 +129,7 @@ class SingleOrderWidget extends ConsumerWidget {
       'completed': wayaTheme.colorScheme.success50,
       deliveryType == 'Delivery' ? 'onTransit' : 'pickUpScheduled':
           wayaTheme.colorScheme.info50,
+      'cancelled': wayaTheme.colorScheme.error50
     };
 
     Map<String, Color> textColors = {
@@ -113,6 +139,7 @@ class SingleOrderWidget extends ConsumerWidget {
       'completed': wayaTheme.colorScheme.success,
       deliveryType == 'Delivery' ? 'onTransit' : 'pickUpScheduled':
           wayaTheme.colorScheme.info,
+      'cancelled': wayaTheme.colorScheme.error700
     };
 
     final backgroundColor =
@@ -130,7 +157,7 @@ class SingleOrderWidget extends ConsumerWidget {
         style: TextStyle().wayaCopyWith(
           color: textColor,
           fontWeight: FontWeight.w500,
-          fontSize: 11,
+          fontSize: 11.sp,
         ),
       ),
     );

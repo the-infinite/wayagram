@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -41,6 +42,8 @@ class _UpdateStatusState extends State<UpdateStatus> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+
+    print(widget.currentStatus);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 14),
       decoration: BoxDecoration(
@@ -53,8 +56,8 @@ class _UpdateStatusState extends State<UpdateStatus> {
           children: [
             Text(
               widget.title,
-              style: const TextStyle(
-                fontSize: 20,
+              style: TextStyle(
+                fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -115,7 +118,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
                           color: isDisabled
                               ? wayaTheme.colorScheme.greyColor400
                               : wayaTheme.colorScheme.customBlack,
-                          fontSize: 14,
+                          fontSize: 14.sp,
                         ),
                       ),
                       onTap: isDisabled
@@ -134,14 +137,14 @@ class _UpdateStatusState extends State<UpdateStatus> {
             const Gap(24),
             WayaButton(
               callback: () {
-                Navigator.of(context).pop(selectedStatus);
+                WayaNav.goBack(result: selectedStatus);
               },
               text: "Confirm",
             ),
             const Gap(10),
             WayaButton(
               callback: () {
-                Navigator.of(context).pop();
+                WayaNav.goBack();
               },
               textColor: wayaTheme.colorScheme.greyColor500,
               color: wayaTheme.colorScheme.transparent,

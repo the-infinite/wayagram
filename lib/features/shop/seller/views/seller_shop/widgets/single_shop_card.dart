@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_image.dart';
@@ -25,6 +26,9 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+
+    print(widget.shop.logo);
+    print("dvdvdv");
 
     return Container(
       margin: EdgeInsets.only(bottom: 10.h),
@@ -51,22 +55,26 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.shop.name,
-                    style: TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14),
+                    widget.shop.name.capitalizeFirst!,
+                    style: TextStyle().wayaCopyWith(
+                        color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
                   ),
                   const Gap(8),
                   Container(
                     padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
                     decoration: BoxDecoration(
-                        color:
-                            widget.shop.deactivated ? wayaTheme.colorScheme.error200 : wayaTheme.colorScheme.success50,
+                        color: widget.shop.deactivated
+                            ? wayaTheme.colorScheme.error200
+                            : wayaTheme.colorScheme.success50,
                         borderRadius: BorderRadius.circular(6)),
                     child: Text(
                       widget.shop.deactivated ? "Inactive" : "Active",
                       style: TextStyle().wayaCopyWith(
-                        color: widget.shop.deactivated ? wayaTheme.colorScheme.error : wayaTheme.colorScheme.success,
+                        color: widget.shop.deactivated
+                            ? wayaTheme.colorScheme.error
+                            : wayaTheme.colorScheme.success,
                         fontWeight: FontWeight.w500,
-                        fontSize: 11,
+                        fontSize: 11.sp,
                       ),
                     ),
                   )
@@ -86,7 +94,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                     context: context,
                     onTap: () {
                       WayaNav.goBack();
-                      WayaNav.toNamed(ManageShop.route, arguments: widget.shop);
+                      WayaNav.toNamed(ManageShop.route, arguments: widget.shop.id);
                     },
                     asset: SvgPicture.asset(WayaAssets.icons.bShop.path),
                     text: "Shop Dashboard",
@@ -109,7 +117,8 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                       WayaNav.goBack();
                       WayaNav.toNamed(
                         CreateShop.route,
-                        arguments: UpdateShopArg(uniqueKey: "update-shop", singleShop: widget.shop),
+                        arguments: UpdateShopArg(
+                            uniqueKey: "update-shop", singleShop: widget.shop),
                       );
                     },
                     asset: Icon(
@@ -129,7 +138,10 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
   }
 
   InkWell _buildActionNav(
-      {required BuildContext context, required VoidCallback onTap, required Widget asset, required String text}) {
+      {required BuildContext context,
+      required VoidCallback onTap,
+      required Widget asset,
+      required String text}) {
     final wayaTheme = Theme.of(context);
     return InkWell(
       onTap: onTap,
@@ -142,8 +154,10 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
           const Gap(4),
           Text(
             text,
-            style: TextStyle()
-                .wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontWeight: FontWeight.w500, fontSize: 12),
+            style: TextStyle().wayaCopyWith(
+                color: wayaTheme.colorScheme.customBlack,
+                fontWeight: FontWeight.w500,
+                fontSize: 12.sp),
           )
         ],
       ),

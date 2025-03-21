@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_additional_shop_vm.dart';
 import 'package:wayagram/features/shop/widgets/upload_image.dart';
@@ -59,8 +62,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
         isLoading: viewModel.isLoading,
         isScrollable: true,
         title: uniqueKey.contains('update') ? 'Edit Shop' : 'Create Shop',
-        onTapBackButton: () =>
-            Navigator.pushNamed(context, BottomView.route, arguments: 1),
+        onTapBackButton: () => WayaNav.toNamed(BottomView.route, arguments: 1),
         body: Form(
             key: _formKey,
             child: Column(
@@ -104,7 +106,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -127,7 +129,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                             .textTheme
                             .bodyMedium
                             ?.wayaCopyWith(
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               color: wayaTheme.colorScheme.greyColor900,
                             ),
                       ),
@@ -183,7 +185,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -220,7 +222,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -240,6 +242,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                       WayaTextFormField(
                         line: 6,
                         keyboardType: TextInputType.text,
+                        padding: EdgeInsets.all(10),
                         controller: viewModel.description,
                         hintText: 'Enter Shop Description',
                         borderColor: formState.hasError &&
@@ -256,7 +259,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -290,7 +293,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -324,7 +327,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -363,7 +366,7 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -371,16 +374,19 @@ class _CreateShopState extends ConsumerState<CreateShop> {
                 }),
                 const Gap(30),
                 WayaButton(
-                    callback: () {
-                      
-                      if (_formKey.currentState!.validate()) {
-                        ref
-                            .read(createAdditionalShopVmProvider(uniqueKey)
-                                .notifier)
-                            .createSellerShop();
-                      }
-                    },
-                    text: viewModel.isEditingMode ? 'Edit Shop' : 'Create Shop'),
+                  callback: !viewModel.isLoading
+                      ? () {
+                          if (_formKey.currentState!.validate()) {
+                            ref
+                                .read(createAdditionalShopVmProvider(uniqueKey)
+                                    .notifier)
+                                .createSellerShop();
+                          }
+                        }
+                      : null,
+                  centerWidget:
+                      LoadingState(loading: viewModel.isLoading, text: 'Save'),
+                ),
               ],
             )));
   }

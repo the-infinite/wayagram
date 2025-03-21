@@ -16,15 +16,16 @@ run it in debug mode.
 This helps you do all the configuration necessary to get the project up and running on your own end
 so you can get up to speed with everything.
 
+A new Flutter project.
 
 ## Getting Started
+
 This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
 
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-- [RiverPod Documentation](https://riverpod.dev/docs/introduction/getting_started)
 
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,

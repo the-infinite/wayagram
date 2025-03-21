@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/widgets/about_event.dart';
 import 'package:gap/gap.dart';
@@ -14,8 +14,7 @@ class EventDetailWidget extends ConsumerStatefulWidget {
   const EventDetailWidget({super.key, required this.eventId});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _EventDetailWidgetState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _EventDetailWidgetState();
 }
 
 class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
@@ -34,9 +33,7 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
     return Expanded(
         child: RefreshIndicator(
             onRefresh: () async {
-              ref
-                  .read(eventVmProvider.notifier)
-                  .fetchSingleEvent(widget.eventId);
+              ref.read(eventVmProvider.notifier).fetchSingleEvent(widget.eventId);
             },
             child: ListView(
               children: [
@@ -49,59 +46,43 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                   )
                 ] else ...[
                   const Gap(15),
-                  GridView(
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 0,
-                        childAspectRatio: 1.9,
-                        crossAxisSpacing: 8),
-                    children: [
-                      InventoryWidget(
-                          metrics:
-                              "${viewModel.singleEvent?.noOfAttendees ?? 0}",
-                          color: Color(0xffE7F6EC),
-                          title: "Total Attendees"),
-                      InventoryWidget(
-                          metrics: WayaHelpers.formatPrice(
-                              viewModel.singleEvent?.totalRevenue ?? 0),
-                          color: Color(0xffFEF6E7),
-                          title: "Total Revenue")
-                    ],
-                  ),
+                  if (viewModel.singleEvent!.userId == ConversationState.self.id)
+                    GridView(
+                      shrinkWrap: true,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, mainAxisSpacing: 0, childAspectRatio: 1.9, crossAxisSpacing: 8),
+                      children: [
+                        InventoryWidget(
+                            metrics: "${viewModel.singleEvent?.noOfAttendees ?? 0}",
+                            color: Color(0xffE7F6EC),
+                            title: "Total Attendees"),
+                        InventoryWidget(
+                            metrics: WayaHelpers.formatPrice(viewModel.singleEvent?.totalRevenue ?? 0),
+                            color: Color(0xffFEF6E7),
+                            title: "Total Revenue")
+                      ],
+                    ),
+                  const Gap(15),
+                  AboutEvent(title: 'Title of Event', content: viewModel.singleEvent?.title.capitalizeFirst ?? ""),
                   const Gap(15),
                   AboutEvent(
-                      title: 'Title of Event',
-                      content: viewModel.singleEvent?.title.capitalizeFirst ?? ""),
+                      title: 'Organizer Name', content: viewModel.singleEvent?.organizerName.capitalizeFirst ?? ""),
                   const Gap(15),
                   AboutEvent(
-                      title: 'Organizer Name',
-                      content: viewModel.singleEvent?.organizerName.capitalizeFirst ?? ""),
-                  const Gap(15),
-                  AboutEvent(
-                      title: "Event Description",
-                      content: viewModel.singleEvent?.description!.capitalizeFirst ?? ""),
+                      title: "Event Description", content: viewModel.singleEvent?.description!.capitalizeFirst ?? ""),
                   const Gap(15),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: AboutEvent(
-                            title: 'Event Location',
-                            content: viewModel
-                                    .singleEvent?.location.capitalizeFirst ??
-                                ""),
+                            title: 'Event Location', content: viewModel.singleEvent?.location.capitalizeFirst ?? ""),
                       ),
                       Expanded(
                         child: AboutEvent(
                             title: 'Event Address',
-                            isLink:
-                                viewModel.singleEvent?.location.toLowerCase() ==
-                                        'physical'
-                                    ? false
-                                    : true,
-                            content:
-                                viewModel.singleEvent?.locationAddress ?? ""),
+                            isLink: viewModel.singleEvent?.location.toLowerCase() == 'physical' ? false : true,
+                            content: viewModel.singleEvent?.locationAddress ?? ""),
                       ),
                     ],
                   ),
@@ -116,15 +97,17 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                     children: [
                       Expanded(
                         child: AboutEvent(
-                            title: 'Start Date',
-                            content: WayaHelpers.formatDateMonthYear(
-                                viewModel.singleEvent!.startDate)),
+                          title: 'Start Date',
+                          content: WayaDateHelper.getDailyTimestamp(viewModel.singleEvent!.startDate),
+                        ),
                       ),
                       Expanded(
                         child: AboutEvent(
-                            title: 'Start Time',
-                            content: WayaHelpers.format24HRSToAPM(
-                                viewModel.singleEvent!.startTime)),
+                          title: 'Start Time',
+                          content: WayaHelpers.format24HRSToAPM(
+                            viewModel.singleEvent!.startTime,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -134,15 +117,17 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                     children: [
                       Expanded(
                         child: AboutEvent(
-                            title: 'EndDate',
-                            content: WayaHelpers.formatDateMonthYear(
-                                viewModel.singleEvent!.endDate)),
+                          title: 'End Date',
+                          content: WayaDateHelper.getDailyTimestamp(viewModel.singleEvent!.endDate),
+                        ),
                       ),
                       Expanded(
                         child: AboutEvent(
-                            title: 'End Time',
-                            content: WayaHelpers.format24HRSToAPM(
-                                viewModel.singleEvent!.endTime)),
+                          title: 'End Time',
+                          content: WayaHelpers.format24HRSToAPM(
+                            viewModel.singleEvent!.endTime,
+                          ),
+                        ),
                       ),
                     ],
                   ),
@@ -157,15 +142,11 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                     children: [
                       Expanded(
                         child: AboutEvent(
-                            title: 'Event Type',
-                            content:
-                                "${viewModel.singleEvent?.eventType.capitalizeFirst}"),
+                            title: 'Event Type', content: "${viewModel.singleEvent?.eventType.capitalizeFirst}"),
                       ),
                       Expanded(
                         child: AboutEvent(
-                            title: 'Event Fee',
-                            content: WayaHelpers.formatPrice(
-                                viewModel.singleEvent?.fee ?? 0)),
+                            title: 'Event Fee', content: WayaHelpers.formatPrice(viewModel.singleEvent?.fee ?? 0)),
                       ),
                     ],
                   ),
@@ -183,8 +164,7 @@ class _EventDetailWidgetState extends ConsumerState<EventDetailWidget> {
                       Expanded(
                         child: AboutEvent(
                             title: 'Privacy Settings',
-                            content:
-                                "${viewModel.singleEvent?.privacyOption.capitalizeFirst}"),
+                            content: "${viewModel.singleEvent?.privacyOption.capitalizeFirst}"),
                       ),
                     ],
                   ),

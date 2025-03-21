@@ -5,6 +5,10 @@ import 'package:wayagram/features/shop/seller/data/model/add_product_model.dart'
 
 class ShopRepository extends BaseRepository {
   static const serviceUrl = "wayagram-shop/api/v2";
+  static final instance = ShopRepository._();
+
+  ShopRepository._();
+
   Future<WayaRequestResponse> getShop() {
     return get("$serviceUrl/shop");
   }
@@ -73,6 +77,10 @@ class ShopRepository extends BaseRepository {
         "$serviceUrl/orders/complete-order", {"deliveryToken": deliveryToken});
   }
 
+  Future<WayaRequestResponse> getShopDetailsById(String id) {
+    return get("$serviceUrl/shops/shop/$id");
+  }
+
   Future<WayaRequestResponse> createRating(
       {required String raterId,
       String? productId,
@@ -87,15 +95,21 @@ class ShopRepository extends BaseRepository {
       'type': type
     };
 
-    if (productId != null) payload['productId'];
-    if (shopId != null) payload['shopId'];
+  
+
+    if (productId != null) payload['productId'] = productId;
+    if (shopId != null) payload['shopId'] = shopId;
+
+      print("Ewfwefewfwefewfewfwefwef $payload");
+
+  
 
     return post("$serviceUrl/rating/create", payload);
   }
 
   ///
   Future<WayaRequestResponse> getProductRating({required String productId}) {
-  return get('$serviceUrl/rating/userRatings?productId=$productId');
+    return get('$serviceUrl/rating/userRatings?productId=$productId');
   }
 
   //

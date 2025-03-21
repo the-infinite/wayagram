@@ -56,14 +56,14 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
                 Text(
                   "Add New Team Member",
                   style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
+                      color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
                 ),
               ],
             ),
             callback: () {
               WayaNav.toNamed('/addTeamMember');
             },
-            color: wayaTheme.colorScheme.primar50,
+            color: wayaTheme.colorScheme.primary50,
           ),
           const Gap(8),
           ListView.builder(
@@ -106,7 +106,7 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
                                 color: page?.role == 'admin' || page?.role == 'owner'?
                                 wayaTheme.colorScheme.success: WayaColors.primary700,
                                 fontWeight: FontWeight.w500,
-                                fontSize: 11,
+                                fontSize: 11.sp,
 
                               ),
                             ),
@@ -125,14 +125,14 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
                           Text(
                             '${page?.user?.firstName?.capitalizeFirst} ${page?.user?.lastName?.capitalizeFirst}',
                               style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                   fontWeight: FontWeight.w600,
                                   color: Theme.of(context).colorScheme.black ),),
                         ],),
                         subtitle:  Text(
                           '${page?.user?.email}',
                           style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 12,
+                              fontSize: 12.sp,
                               fontWeight: FontWeight.w400,
                               color: Theme.of(context).colorScheme.greyColor500 ),
                         ),),

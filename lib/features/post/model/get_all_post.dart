@@ -1,12 +1,17 @@
 import 'dart:convert';
+
+import 'package:wayagram/shared/features/profile/model/post.dart';
+
 GetAllPost getAllPostFromJson(String str) => GetAllPost.fromJson(json.decode(str));
 String getAllPostToJson(GetAllPost data) => json.encode(data.toJson());
+
 class GetAllPost {
   GetAllPost({
-      this.message,
-      this.status, 
-      this.statusCode, 
-      this.data,});
+    this.message,
+    this.status,
+    this.statusCode,
+    this.data,
+  });
 
   GetAllPost.fromJson(dynamic json) {
     message = json['message'];
@@ -18,15 +23,18 @@ class GetAllPost {
   bool? status;
   num? statusCode;
   GetAllPostData? data;
-GetAllPost copyWith({  String? message,
-  bool? status,
-  num? statusCode,
-  GetAllPostData? data,
-}) => GetAllPost(  message: message ?? this.message,
-  status: status ?? this.status,
-  statusCode: statusCode ?? this.statusCode,
-  data: data ?? this.data,
-);
+  GetAllPost copyWith({
+    String? message,
+    bool? status,
+    num? statusCode,
+    GetAllPostData? data,
+  }) =>
+      GetAllPost(
+        message: message ?? this.message,
+        status: status ?? this.status,
+        statusCode: statusCode ?? this.statusCode,
+        data: data ?? this.data,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['message'] = message;
@@ -37,29 +45,30 @@ GetAllPost copyWith({  String? message,
     }
     return map;
   }
-
 }
 
 GetAllPostData dataFromJson(String str) => GetAllPostData.fromJson(json.decode(str));
 String dataToJson(GetAllPostData data) => json.encode(data.toJson());
+
 class GetAllPostData {
   GetAllPostData({
-      this.totalDocs, 
-      this.docs, 
-      this.limit, 
-      this.page, 
-      this.totalPages, 
-      this.hasNextPage, 
-      this.nextPage, 
-      this.hasPrevPage, 
-      this.prevPage,});
+    this.totalDocs,
+    this.docs,
+    this.limit,
+    this.page,
+    this.totalPages,
+    this.hasNextPage,
+    this.nextPage,
+    this.hasPrevPage,
+    this.prevPage,
+  });
 
   GetAllPostData.fromJson(dynamic json) {
     totalDocs = json['totalDocs'];
     if (json['docs'] != null) {
       docs = [];
       json['docs'].forEach((v) {
-        docs?.add(GetAllPostDocs.fromJson(v));
+        docs?.add(PostModel.fromJson(v));
       });
     }
     limit = json['limit'];
@@ -71,7 +80,7 @@ class GetAllPostData {
     prevPage = json['prevPage'];
   }
   num? totalDocs;
-  List<GetAllPostDocs>? docs;
+  List<PostModel>? docs;
   num? limit;
   num? page;
   num? totalPages;
@@ -79,25 +88,28 @@ class GetAllPostData {
   num? nextPage;
   bool? hasPrevPage;
   dynamic prevPage;
-  GetAllPostData copyWith({  num? totalDocs,
-  List<GetAllPostDocs>? docs,
-  num? limit,
-  num? page,
-  num? totalPages,
-  bool? hasNextPage,
-  num? nextPage,
-  bool? hasPrevPage,
-  dynamic prevPage,
-}) => GetAllPostData(  totalDocs: totalDocs ?? this.totalDocs,
-  docs: docs ?? this.docs,
-  limit: limit ?? this.limit,
-  page: page ?? this.page,
-  totalPages: totalPages ?? this.totalPages,
-  hasNextPage: hasNextPage ?? this.hasNextPage,
-  nextPage: nextPage ?? this.nextPage,
-  hasPrevPage: hasPrevPage ?? this.hasPrevPage,
-  prevPage: prevPage ?? this.prevPage,
-);
+  GetAllPostData copyWith({
+    num? totalDocs,
+    List<PostModel>? docs,
+    num? limit,
+    num? page,
+    num? totalPages,
+    bool? hasNextPage,
+    num? nextPage,
+    bool? hasPrevPage,
+    dynamic prevPage,
+  }) =>
+      GetAllPostData(
+        totalDocs: totalDocs ?? this.totalDocs,
+        docs: docs ?? this.docs,
+        limit: limit ?? this.limit,
+        page: page ?? this.page,
+        totalPages: totalPages ?? this.totalPages,
+        hasNextPage: hasNextPage ?? this.hasNextPage,
+        nextPage: nextPage ?? this.nextPage,
+        hasPrevPage: hasPrevPage ?? this.hasPrevPage,
+        prevPage: prevPage ?? this.prevPage,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['totalDocs'] = totalDocs;
@@ -113,39 +125,40 @@ class GetAllPostData {
     map['prevPage'] = prevPage;
     return map;
   }
-
 }
 
 GetAllPostDocs docsFromJson(String str) => GetAllPostDocs.fromJson(json.decode(str));
 String docsToJson(GetAllPostDocs data) => json.encode(data.toJson());
+
 class GetAllPostDocs {
   GetAllPostDocs({
-      this.id, 
-      this.userId, 
-      this.groupId, 
-      this.pageId, 
-      this.contentType, 
-      this.content, 
-      this.media, 
-      this.hashtags, 
-      this.sourceType, 
-      this.linkedServiceId, 
-      this.privacy, 
-      this.url, 
-      this.status, 
-      this.likeCount, 
-      this.commentCount, 
-      this.shareCount, 
-      this.popularityScore, 
-      this.isPromoted, 
-      this.isReposted, 
-      this.promotionExpiry, 
-      this.deletedAt, 
-      this.originalPostId, 
-      this.createdAt, 
-      this.updatedAt, 
-      this.originalPost, 
-      this.user,});
+    this.id,
+    this.userId,
+    this.groupId,
+    this.pageId,
+    this.contentType,
+    this.content,
+    this.media,
+    this.hashtags,
+    this.sourceType,
+    this.linkedServiceId,
+    this.privacy,
+    this.url,
+    this.status,
+    this.likeCount,
+    this.commentCount,
+    this.shareCount,
+    this.popularityScore,
+    this.isPromoted,
+    this.isReposted,
+    this.promotionExpiry,
+    this.deletedAt,
+    this.originalPostId,
+    this.createdAt,
+    this.updatedAt,
+    this.originalPost,
+    this.user,
+  });
 
   GetAllPostDocs.fromJson(dynamic json) {
     id = json['id'];
@@ -207,60 +220,62 @@ class GetAllPostDocs {
   List<dynamic>? originalPost;
   User? user;
 
-
-  GetAllPostDocs copyWith({  String? id,
-  String? userId,
-  dynamic groupId,
-  dynamic pageId,
-  String? contentType,
-  String? content,
-  List<dynamic>? media,
-  List<dynamic>? hashtags,
-  String? sourceType,
-  dynamic linkedServiceId,
-  String? privacy,
-  dynamic url,
-  String? status,
-  num? likeCount,
-  num? commentCount,
-  num? shareCount,
-  num? popularityScore,
-  bool? isPromoted,
-  bool? isReposted,
-  dynamic promotionExpiry,
-  dynamic deletedAt,
-  dynamic originalPostId,
-  String? createdAt,
-  String? updatedAt,
-  List<dynamic>? originalPost,
-  User? user,
-}) => GetAllPostDocs(  id: id ?? this.id,
-  userId: userId ?? this.userId,
-  groupId: groupId ?? this.groupId,
-  pageId: pageId ?? this.pageId,
-  contentType: contentType ?? this.contentType,
-  content: content ?? this.content,
-  media: media ?? this.media,
-  hashtags: hashtags ?? this.hashtags,
-  sourceType: sourceType ?? this.sourceType,
-  linkedServiceId: linkedServiceId ?? this.linkedServiceId,
-  privacy: privacy ?? this.privacy,
-  url: url ?? this.url,
-  status: status ?? this.status,
-  likeCount: likeCount ?? this.likeCount,
-  commentCount: commentCount ?? this.commentCount,
-  shareCount: shareCount ?? this.shareCount,
-  popularityScore: popularityScore ?? this.popularityScore,
-  isPromoted: isPromoted ?? this.isPromoted,
-  isReposted: isReposted ?? this.isReposted,
-  promotionExpiry: promotionExpiry ?? this.promotionExpiry,
-  deletedAt: deletedAt ?? this.deletedAt,
-  originalPostId: originalPostId ?? this.originalPostId,
-  createdAt: createdAt ?? this.createdAt,
-  updatedAt: updatedAt ?? this.updatedAt,
-  originalPost: originalPost ?? this.originalPost,
-  user: user ?? this.user,
-);
+  GetAllPostDocs copyWith({
+    String? id,
+    String? userId,
+    dynamic groupId,
+    dynamic pageId,
+    String? contentType,
+    String? content,
+    List<dynamic>? media,
+    List<dynamic>? hashtags,
+    String? sourceType,
+    dynamic linkedServiceId,
+    String? privacy,
+    dynamic url,
+    String? status,
+    num? likeCount,
+    num? commentCount,
+    num? shareCount,
+    num? popularityScore,
+    bool? isPromoted,
+    bool? isReposted,
+    dynamic promotionExpiry,
+    dynamic deletedAt,
+    dynamic originalPostId,
+    String? createdAt,
+    String? updatedAt,
+    List<dynamic>? originalPost,
+    User? user,
+  }) =>
+      GetAllPostDocs(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        groupId: groupId ?? this.groupId,
+        pageId: pageId ?? this.pageId,
+        contentType: contentType ?? this.contentType,
+        content: content ?? this.content,
+        media: media ?? this.media,
+        hashtags: hashtags ?? this.hashtags,
+        sourceType: sourceType ?? this.sourceType,
+        linkedServiceId: linkedServiceId ?? this.linkedServiceId,
+        privacy: privacy ?? this.privacy,
+        url: url ?? this.url,
+        status: status ?? this.status,
+        likeCount: likeCount ?? this.likeCount,
+        commentCount: commentCount ?? this.commentCount,
+        shareCount: shareCount ?? this.shareCount,
+        popularityScore: popularityScore ?? this.popularityScore,
+        isPromoted: isPromoted ?? this.isPromoted,
+        isReposted: isReposted ?? this.isReposted,
+        promotionExpiry: promotionExpiry ?? this.promotionExpiry,
+        deletedAt: deletedAt ?? this.deletedAt,
+        originalPostId: originalPostId ?? this.originalPostId,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        originalPost: originalPost ?? this.originalPost,
+        user: user ?? this.user,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -299,45 +314,46 @@ class GetAllPostDocs {
     }
     return map;
   }
-
 }
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toJson());
+
 class User {
   User({
-      this.id, 
-      this.phoneNumber, 
-      this.email, 
-      this.passwordHash, 
-      this.firstName, 
-      this.lastName, 
-      this.gender, 
-      this.address, 
-      this.city, 
-      this.lga, 
-      this.state, 
-      this.country, 
-      this.countryCode, 
-      this.postalCode, 
-      this.middleName, 
-      this.dateOfBirth, 
-      this.twoFactorEnabled, 
-      this.profilePicture, 
-      this.fcmToken, 
-      this.emailVerified, 
-      this.phoneVerified, 
-      this.accountStatus, 
-      this.tcAgreement, 
-      this.policyAgreement, 
-      this.emailVerifiedDate, 
-      this.deletedAt, 
-      this.roleId, 
-      this.accountTypeId, 
-      this.v, 
-      this.createdAt, 
-      this.updatedAt, 
-      this.role,});
+    this.id,
+    this.phoneNumber,
+    this.email,
+    this.passwordHash,
+    this.firstName,
+    this.lastName,
+    this.gender,
+    this.address,
+    this.city,
+    this.lga,
+    this.state,
+    this.country,
+    this.countryCode,
+    this.postalCode,
+    this.middleName,
+    this.dateOfBirth,
+    this.twoFactorEnabled,
+    this.profilePicture,
+    this.fcmToken,
+    this.emailVerified,
+    this.phoneVerified,
+    this.accountStatus,
+    this.tcAgreement,
+    this.policyAgreement,
+    this.emailVerifiedDate,
+    this.deletedAt,
+    this.roleId,
+    this.accountTypeId,
+    this.v,
+    this.createdAt,
+    this.updatedAt,
+    this.role,
+  });
 
   User.fromJson(dynamic json) {
     id = json['id'];
@@ -405,71 +421,74 @@ class User {
   String? createdAt;
   String? updatedAt;
   Role? role;
-User copyWith({  String? id,
-  String? phoneNumber,
-  String? email,
-  String? passwordHash,
-  String? firstName,
-  String? lastName,
-  String? gender,
-  String? address,
-  String? city,
-  dynamic lga,
-  String? state,
-  String? country,
-  dynamic countryCode,
-  dynamic postalCode,
-  dynamic middleName,
-  String? dateOfBirth,
-  bool? twoFactorEnabled,
-  String? profilePicture,
-  dynamic fcmToken,
-  bool? emailVerified,
-  bool? phoneVerified,
-  String? accountStatus,
-  bool? tcAgreement,
-  bool? policyAgreement,
-  String? emailVerifiedDate,
-  dynamic deletedAt,
-  String? roleId,
-  String? accountTypeId,
-  String? v,
-  String? createdAt,
-  String? updatedAt,
-  Role? role,
-}) => User(  id: id ?? this.id,
-  phoneNumber: phoneNumber ?? this.phoneNumber,
-  email: email ?? this.email,
-  passwordHash: passwordHash ?? this.passwordHash,
-  firstName: firstName ?? this.firstName,
-  lastName: lastName ?? this.lastName,
-  gender: gender ?? this.gender,
-  address: address ?? this.address,
-  city: city ?? this.city,
-  lga: lga ?? this.lga,
-  state: state ?? this.state,
-  country: country ?? this.country,
-  countryCode: countryCode ?? this.countryCode,
-  postalCode: postalCode ?? this.postalCode,
-  middleName: middleName ?? this.middleName,
-  dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-  twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
-  profilePicture: profilePicture ?? this.profilePicture,
-  fcmToken: fcmToken ?? this.fcmToken,
-  emailVerified: emailVerified ?? this.emailVerified,
-  phoneVerified: phoneVerified ?? this.phoneVerified,
-  accountStatus: accountStatus ?? this.accountStatus,
-  tcAgreement: tcAgreement ?? this.tcAgreement,
-  policyAgreement: policyAgreement ?? this.policyAgreement,
-  emailVerifiedDate: emailVerifiedDate ?? this.emailVerifiedDate,
-  deletedAt: deletedAt ?? this.deletedAt,
-  roleId: roleId ?? this.roleId,
-  accountTypeId: accountTypeId ?? this.accountTypeId,
-  v: v ?? this.v,
-  createdAt: createdAt ?? this.createdAt,
-  updatedAt: updatedAt ?? this.updatedAt,
-  role: role ?? this.role,
-);
+  User copyWith({
+    String? id,
+    String? phoneNumber,
+    String? email,
+    String? passwordHash,
+    String? firstName,
+    String? lastName,
+    String? gender,
+    String? address,
+    String? city,
+    dynamic lga,
+    String? state,
+    String? country,
+    dynamic countryCode,
+    dynamic postalCode,
+    dynamic middleName,
+    String? dateOfBirth,
+    bool? twoFactorEnabled,
+    String? profilePicture,
+    dynamic fcmToken,
+    bool? emailVerified,
+    bool? phoneVerified,
+    String? accountStatus,
+    bool? tcAgreement,
+    bool? policyAgreement,
+    String? emailVerifiedDate,
+    dynamic deletedAt,
+    String? roleId,
+    String? accountTypeId,
+    String? v,
+    String? createdAt,
+    String? updatedAt,
+    Role? role,
+  }) =>
+      User(
+        id: id ?? this.id,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        email: email ?? this.email,
+        passwordHash: passwordHash ?? this.passwordHash,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        gender: gender ?? this.gender,
+        address: address ?? this.address,
+        city: city ?? this.city,
+        lga: lga ?? this.lga,
+        state: state ?? this.state,
+        country: country ?? this.country,
+        countryCode: countryCode ?? this.countryCode,
+        postalCode: postalCode ?? this.postalCode,
+        middleName: middleName ?? this.middleName,
+        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+        twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
+        profilePicture: profilePicture ?? this.profilePicture,
+        fcmToken: fcmToken ?? this.fcmToken,
+        emailVerified: emailVerified ?? this.emailVerified,
+        phoneVerified: phoneVerified ?? this.phoneVerified,
+        accountStatus: accountStatus ?? this.accountStatus,
+        tcAgreement: tcAgreement ?? this.tcAgreement,
+        policyAgreement: policyAgreement ?? this.policyAgreement,
+        emailVerifiedDate: emailVerifiedDate ?? this.emailVerifiedDate,
+        deletedAt: deletedAt ?? this.deletedAt,
+        roleId: roleId ?? this.roleId,
+        accountTypeId: accountTypeId ?? this.accountTypeId,
+        v: v ?? this.v,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        role: role ?? this.role,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -508,26 +527,29 @@ User copyWith({  String? id,
     }
     return map;
   }
-
 }
 
 Role roleFromJson(String str) => Role.fromJson(json.decode(str));
 String roleToJson(Role data) => json.encode(data.toJson());
+
 class Role {
   Role({
-      this.name,});
+    this.name,
+  });
 
   Role.fromJson(dynamic json) {
     name = json['name'];
   }
   String? name;
-Role copyWith({  String? name,
-}) => Role(  name: name ?? this.name,
-);
+  Role copyWith({
+    String? name,
+  }) =>
+      Role(
+        name: name ?? this.name,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['name'] = name;
     return map;
   }
-
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:uuid/uuid.dart';
@@ -67,7 +68,7 @@ class _ListedProductState extends ConsumerState<ListedProducts> {
                 arguments: AddWayagramArg(
                     uniqueKey: Uuid().v4(), isWayagram: true));
           },
-          color: wayaTheme.colorScheme.primar50,
+          color: wayaTheme.colorScheme.primary50,
           centerWidget: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -82,7 +83,7 @@ class _ListedProductState extends ConsumerState<ListedProducts> {
                 "List New Product",
                 style: TextStyle().wayaCopyWith(
                     color: wayaTheme.colorScheme.customPrimary,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500),
               )
             ],
@@ -151,7 +152,7 @@ class SellerProductEmptyState extends StatelessWidget {
                 "Add New Product",
                 style: TextStyle().wayaCopyWith(
                     color: wayaTheme.colorScheme.white,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500),
               )
             ],

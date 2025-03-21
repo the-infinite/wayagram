@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_image.dart';
@@ -49,13 +50,13 @@ class OrderedProductCard extends StatelessWidget {
                           orders.productName,
                           style: TextStyle(color: wayaTheme.colorScheme.customBlack,
                               fontWeight: FontWeight.w500,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const Gap(5),
                       SizedBox(
-                        width: context.width * 0.3,
+                        width: context.width * 0.4,
                         child: Text(
                         "Quantity: ${orders.quantity} x ${WayaHelpers.formatPrice(double.parse(orders.unitPrice).toInt())}",
                         style: wayaTheme.textTheme.hintStyle,
@@ -67,7 +68,7 @@ class OrderedProductCard extends StatelessWidget {
               ),
               Text(
                 WayaHelpers.formatPrice(orders.price),
-                style: wayaTheme.textTheme.bodyXtraMedium,
+                style: wayaTheme.textTheme.bodyXtraMedium.copyWith(fontWeight: FontWeight.w600),
               )
             ],
           ),
