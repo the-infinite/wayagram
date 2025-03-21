@@ -53,6 +53,33 @@ class CommentNotifier extends StateNotifier<CommentState> {
     }
   }
 
+  void removeCachedComment(String id) {
+    final inComment = state.comments.indexWhere((value) => value.id == id);
+    final inReplies = state.replies.indexWhere((value) => value.id == id);
+
+    //? If we found it in replies.
+    if (inReplies != -1) {
+      final replacement = state.replies;
+
+      //? This is fine.
+      replacement.removeAt(inReplies);
+      state = state.copyWith(replies: [...replacement]);
+      updateCacheNotifier.value = updateCacheNotifier.value + 1;
+      debugPrint("Comments Logs: Cache deleted for reply comment $id");
+    }
+
+    //? If we found it in comments.
+    if (inComment != -1) {
+      final replacement = state.comments;
+
+      //? This is fine.
+      replacement.removeAt(inComment);
+      state = state.copyWith(comments: [...replacement]);
+      updateCacheNotifier.value = updateCacheNotifier.value + 1;
+      debugPrint("Comments Logs: Cache updated for comment $id");
+    }
+  }
+
   /// Retrieve the comment in the cache with the provided.
   CommentModel? retrieveCachedComment(String commentId) {
     final inComment = state.comments.indexWhere((value) => value.id == commentId);
@@ -286,18 +313,10 @@ class CommentNotifier extends StateNotifier<CommentState> {
 
       if (response.success) {
         //? Since it is found...
-        final index = state.comments.indexWhere((item) => item.id == commentId);
-
-        //? If you did not find any such this.
-        if (index != -1) {
-          final current = state.comments;
-          current.removeAt(index);
-          state = state.copyWith(
-            comments: [...current],
-          );
-        }
+        removeCachedComment(commentId);
       }
 
+      // Now, return.
       return response.success;
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
