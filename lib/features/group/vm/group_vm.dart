@@ -14,7 +14,6 @@ import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
 import 'package:wayagram/features/group/data/model/group_popular_post_model.dart';
-import 'package:wayagram/features/group/data/model/group_post_model.dart';
 import 'package:wayagram/features/group/data/model/group_response.dart';
 import 'package:wayagram/features/group/data/model/join_request_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
@@ -27,6 +26,7 @@ import 'package:wayagram/shared/cache/post.dart';
 
 import 'package:wayagram/shared/features/file/repo/default.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
 
 import '../data/repo/group_repository.dart';
@@ -324,17 +324,34 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<void> getGroupSinglePosts(groupId) async {
+  Future<void> getGroupSinglePosts(String groupId) async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.fetchSingleGroupPost(groupId);
+      final response = await _groupRepository.fetchSingleGroupPost(groupId, state.allPostData?.data?.nextPage ?? 1);
       state = state.copyWith(isLoading: false);
 
       if (response.success) {
+        final result = <PostModel>[];
+
+        //? First, these ones.
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
         wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
-        state = state.copyWith(getAllPost: responseModel.data?.docs);
+
+        //? If the current post data is not the current page.
+        if ((state.allPostData?.data?.page ?? 1) > 1) {
+          result.addAll(state.getAllPost ?? []);
+        }
+
+        //? Now, add all the newer posts.
+        result.addAll(responseModel.data?.docs ?? []);
+
+        //? Now, move forward.
+        state = state.copyWith(
+          getAllPost: result,
+          postCount: responseModel.data?.totalDocs,
+          allPostData: responseModel,
+        );
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -350,13 +367,29 @@ class GroupVm extends StateNotifier<GroupState> {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.getGroupPost(groupId);
+      final response = await _groupRepository.getGroupPost(groupId, state.allPostData?.data?.nextPage ?? 1);
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        GroupPostModel responseModel = GroupPostModel.fromJson(response.data);
-        GroupPostModel postModel = GroupPostModel.fromJson(response.data);
+        final result = <PostModel>[];
+
+        //? First, these ones.
+        GetAllPost responseModel = GetAllPost.fromJson(response.data);
         wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
-        state = state.copyWith(groupPostdocs: responseModel.data?.docs, postCount: postModel.data?.totalDocs);
+
+        //? If the current post data is not the current page.
+        if ((state.allPostData?.data?.page ?? 1) > 1) {
+          result.addAll(state.getAllPost ?? []);
+        }
+
+        //? Now, add all the newer posts.
+        result.addAll(responseModel.data?.docs ?? []);
+
+        //? Now, move forward.
+        state = state.copyWith(
+          getAllPost: result,
+          postCount: responseModel.data?.totalDocs,
+          allPostData: responseModel,
+        );
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -560,9 +593,10 @@ final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
 
 final createGroupProvider = StateNotifierProvider<GroupVm, GroupState>((ref) {
   final groupRepository = ref.watch(groupProvider);
+  return GroupVm(ref, groupRepository);
+});
 
-  return GroupVm(
-    ref,
-    groupRepository,
-  );
+final singleGroupProvider = StateNotifierProvider.family<GroupVm, GroupState, String>((ref, key) {
+  final groupRepository = ref.watch(groupProvider);
+  return GroupVm(ref, groupRepository);
 });

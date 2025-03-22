@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
+import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 
@@ -19,6 +20,7 @@ class GroupState {
   String? name;
   String? desc;
   List<JoinRequestDocs>? docs;
+  GetAllPost? allPostData;
   List<GroupModel>? getAllGroups;
   List<EventDoc>? fetchAllEventDocs;
   List<AllGroupMemberDocs>? allGroupMemberDocs;
@@ -26,7 +28,7 @@ class GroupState {
   List<PostModel>? getAllPost;
   List<PostModel>? groupPostdocs;
   List<PostModel>? groupPopularPostdocs;
-  num? postCount;
+  int? postCount;
 
   final bool isReportingGroup;
   final bool isFocused;
@@ -35,11 +37,16 @@ class GroupState {
   final bool requireApproval;
   final String roleType;
 
+
+  //? If this has more posts, continue.
+  bool get hasMorePosts => allPostData?.data?.hasNextPage ?? true;
+
   GroupState({
     TextEditingController? groupName,
     TextEditingController? groupDescription,
     TextEditingController? username,
     TextEditingController? content,
+    this.allPostData,
     this.isFocused = false,
     this.isLoading = false,
     this.openToEveryone = false,
@@ -77,7 +84,7 @@ class GroupState {
     List<AllGroupMemberDocs>? allGroupMemberDocs,
     List<GroupModel>? recommendedGroupDocs,
     List<PostModel>? groupPostdocs,
-    num? postCount,
+    int? postCount,
     List<PostModel>? getAllPost,
     bool? isReportingGroup,
     bool? isFocused,
@@ -90,6 +97,7 @@ class GroupState {
     String? coverImage,
     String? name,
     String? desc,
+    GetAllPost? allPostData,
     File? image,
   }) {
     return GroupState(
@@ -113,6 +121,7 @@ class GroupState {
       requireApproval: requireApproval ?? this.requireApproval,
       roleType: roleType ?? this.roleType,
       image: image ?? this.image,
+      allPostData: allPostData,
       profileImage: profileImage ?? profileImage,
       coverImage: coverImage ?? coverImage,
       name: name ?? this.name,

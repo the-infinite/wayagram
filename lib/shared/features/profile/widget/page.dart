@@ -36,32 +36,7 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
   }
 
   void _toPage() {
-    //? This is fine.
-    if (widget.page.ownerId != ConversationState.self.id) {
-      WayaNav.toNamed('/publicPage', arguments: {
-        'pageId': widget.page.id,
-        'followerCount': '${widget.page.followerCount}',
-        'name': widget.page.name,
-        'desc': widget.page.description,
-        'coverImage': '${widget.page.coverImage}',
-        'profileImage': '${widget.page.profileImage}',
-      });
-    }
-
-    //? To the edit screen.
-    else {
-      WayaNav.toNamed(
-        '/privatePage',
-        arguments: {
-          'pageId': widget.page.id,
-          'followerCount': '${widget.page.followerCount}',
-          'name': widget.page.name,
-          'desc': widget.page.description,
-          'coverImage': '${widget.page.coverImage}',
-          'profileImage': '${widget.page.profileImage}',
-        },
-      );
-    }
+    WayaNav.toNamed(WayaAppRoutes.getPageDetailsPage(widget.page.id));
   }
 
   Future<void> _followPage() async {

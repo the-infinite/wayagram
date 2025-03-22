@@ -70,6 +70,9 @@ class CommentNotifier extends StateNotifier<CommentState> {
         final comment = CommentModel.fromJson(response.data["data"]);
         resetComments();
         await getCommentsStream(postId);
+        if (parentId != null) {
+          await getReplies(postId, parentId);
+        }
         await myPageNotifier.refreshPost(postId);
         return comment;
       }

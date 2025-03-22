@@ -494,17 +494,33 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> getPagePosts(pageId) async {
+  Future<void> getPagePosts(String pageId) async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.fetchSinglePagePost(pageId);
-      state = state.copyWith(isLoading: false);
+      final response = await _pageRepository.fetchSinglePagePost(pageId, state.allPostData?.data?.nextPage ?? 1);
 
       if (response.success) {
+        final result = <PostModel>[];
+
+        //? First, these ones.
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
         wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
-        state = state.copyWith(getAllPost: responseModel.data?.docs);
+
+        //? If the current post data is not the current page.
+        if ((state.allPostData?.data?.page ?? 1) > 1) {
+          result.addAll(state.getAllPost ?? []);
+        }
+
+        //? Now, add all the newer posts.
+        result.addAll(responseModel.data?.docs ?? []);
+
+        //? Now, move forward.
+        state = state.copyWith(
+          getAllPost: result,
+          postCount: responseModel.data?.totalDocs,
+          allPostData: responseModel,
+        );
       } else {}
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -513,7 +529,9 @@ class PageVm extends StateNotifier<PageState> {
         WayaDebugEventModule.pages,
         WayaDebugHelpers.getStackTrace(e),
       );
-    } finally {}
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
   }
 
   Future<void> deletePost(ctx, {required String postId, required String userId}) async {
@@ -808,6 +826,11 @@ class PageVm extends StateNotifier<PageState> {
 final pageProvider = Provider((ref) => PageRepository());
 
 final createPageProvider = StateNotifierProvider<PageVm, PageState>((ref) {
+  final pageRepository = ref.watch(pageProvider);
+  return PageVm(ref, pageRepository);
+});
+
+final singlePageProvider = StateNotifierProvider.family<PageVm, PageState, String>((ref, key) {
   final pageRepository = ref.watch(pageProvider);
   return PageVm(ref, pageRepository);
 });

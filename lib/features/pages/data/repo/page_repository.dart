@@ -24,8 +24,8 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/signed-url/$image");
   }
 
-  Future<WayaRequestResponse> fetchSinglePagePost(pageId) {
-    return get("$serviceUrl/posts?pageId=$pageId&status=active");
+  Future<WayaRequestResponse> fetchSinglePagePost(String pageId, [int page = 1, int limit = 15]) {
+    return get("$serviceUrl/posts?pageId=$pageId&status=active&page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> putImage(url, image) {

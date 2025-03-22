@@ -79,8 +79,8 @@ class GroupRepository extends BaseRepository {
     return get("$serviceUrl/groups?id=$id");
   }
 
-  Future<WayaRequestResponse> fetchSingleGroupPost(groupId) {
-    return get("$serviceUrl/posts?groupId=$groupId&status=active");
+  Future<WayaRequestResponse> fetchSingleGroupPost(String groupId, [int page = 1, int limit = 15]) {
+    return get("$serviceUrl/posts?groupId=$groupId&status=active&page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getMyGroups([int page = 1, int limit = 15]) {
@@ -91,8 +91,8 @@ class GroupRepository extends BaseRepository {
     return get("$serviceUrl/groups?limit=500");
   }
 
-  Future<WayaRequestResponse> getGroupPost(groupId) {
-    return get("$serviceUrl/posts?groupId=$groupId&status=active");
+  Future<WayaRequestResponse> getGroupPost(String groupId, [int page = 1, int limit = 15]) {
+    return get("$serviceUrl/posts?groupId=$groupId&status=active&page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> getGroupMember(groupId) {

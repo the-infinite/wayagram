@@ -20,7 +20,7 @@ import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 class MembersScreen extends ConsumerStatefulWidget {
-  static const route = '/membersScreen';
+  static const route = '/groups/members';
   const MembersScreen ({super.key});
 
   @override
