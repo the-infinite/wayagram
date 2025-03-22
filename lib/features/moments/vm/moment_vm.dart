@@ -9,6 +9,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/moments/data/moment_helper/moment_helper_funcs.dart';
@@ -531,6 +532,10 @@ class MomentVm extends StateNotifier<MomentState> {
     if (moment.contentType != 'text') {
       WayaNav.toNamed(MediaMoment.route);
     }
+  }
+
+  bool hasViewedMoment(String id) {
+    return WayaLocalDataSource.instance.getViewedMoments()?.contains(id) ?? false;
   }
 }
 

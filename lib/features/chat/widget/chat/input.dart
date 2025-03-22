@@ -1,8 +1,9 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -120,9 +121,7 @@ class ChatInputController {
     _isEditing.value = false;
     _contacts.value = [];
     _files.value = [];
-    _focusNode?.unfocus();
-    _focusNode?.dispose();
-    _focusNode = null;
+    _focusNode?.unfocus(disposition: UnfocusDisposition.scope);
     _focusedMessage.value = null;
     _isMedia.value = false;
     _momentId = null;
@@ -207,9 +206,6 @@ class ChatInputController {
     if (_focusNode!.canRequestFocus) {
       _focusNode!.requestFocus();
     }
-
-    //? Now, tell me the situation.
-    debugPrint("Is focused: ${_focusNode!.hasFocus}");
   }
 
   /// A helper function used to set the type of message that this is currently
@@ -340,6 +336,7 @@ class ChatInputController {
 class ChatInputWidget extends StatelessWidget {
   final ChatInputController controller;
   final ChatNotifier notifier;
+  final FocusNode focusNode;
   final bool voiceEnabled;
   final bool padded;
   final Future<ChatModel?> Function() createChat;
@@ -350,6 +347,7 @@ class ChatInputWidget extends StatelessWidget {
     required this.controller,
     required this.notifier,
     required this.createChat,
+    required this.focusNode,
     this.voiceEnabled = true,
     this.padded = true,
   });
@@ -463,6 +461,11 @@ class ChatInputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //? For each time this gets constructed, notify the controller that the focus
+    //? listener might have changed.
+    controller._focusNode = focusNode;
+
+    //? Return your widget.
     return Padding(
       padding: padded ? const EdgeInsets.only(left: 15, right: 15, bottom: 12) : EdgeInsets.zero,
       child: Column(
@@ -564,64 +567,51 @@ class ChatInputWidget extends StatelessWidget {
                                 );
                               },
                             ),
-                      secondChild: Consumer(
-                        builder: (context, ref, _) {
-                          //? Watch this for changes.
-                          ref.watch(chatProvider);
+                      secondChild: TextField(
+                        maxLines: 5,
+                        minLines: 1,
+                        focusNode: focusNode,
+                        onChanged: (value) {
+                          //? If this is a text message, allowing a user to send
+                          //? a message would need to ENTIRELY depend on the
+                          //? contents of the message text.
+                          if (controller._currentType.value == MessageType.text) {
+                            controller._canSend.value = value.trim().isNotEmpty;
+                          }
 
-                          //? Change the controller's focus node.
-                          controller._focusNode?.dispose();
-                          controller._focusNode = FocusNode();
+                          //? If this has no chat yet...
+                          if (controller._chat == null) return;
 
-                          //? Return the textfield.
-                          return TextField(
-                            maxLines: 5,
-                            minLines: 1,
-                            focusNode: controller._focusNode,
-                            onChanged: (value) {
-                              //? If this is a text message, allowing a user to send
-                              //? a message would need to ENTIRELY depend on the
-                              //? contents of the message text.
-                              if (controller._currentType.value == MessageType.text) {
-                                controller._canSend.value = value.trim().isNotEmpty;
-                              }
+                          //? If this is not in the state we are thinking of...
+                          if (!controller._isTyping.value) {
+                            WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, true));
+                            controller._isTyping.value = true;
+                          }
 
-                              //? If this has no chat yet...
-                              if (controller._chat == null) return;
-
-                              //? If this is not in the state we are thinking of...
-                              if (!controller._isTyping.value) {
-                                WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, true));
-                                controller._isTyping.value = true;
-                              }
-
-                              //? Since this is the case, emit the typing event so
-                              //? everyone knows this user is typing.
-                              debounce(key: "control-typing", delay: const Duration(milliseconds: 800), () {
-                                WayaSocketController.instance
-                                    .emit(WayaChatSocketArgs.typing(controller.chat.id, false));
-                                controller._isTyping.value = false;
-                              })();
-                            },
-                            style: WayaTextStyles.labelMedium,
-                            decoration: InputDecoration(
-                              isDense: true,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide.none,
-                                borderRadius: BorderRadius.circular(8.r),
-                              ),
-                              fillColor: WayaColors.greyColor200,
-                              filled: true,
-                              hintText: "Write a message here",
-                              hintStyle: WayaTextStyles.hintStyle,
-                              labelStyle: WayaTextStyles.labelSmall,
-                            ),
-                            textInputAction: TextInputAction.newline,
-                            keyboardType: TextInputType.multiline,
-                            controller: controller._textController,
-                          );
+                          //? Since this is the case, emit the typing event so
+                          //? everyone knows this user is typing.
+                          debounce(key: "control-typing", delay: const Duration(milliseconds: 800), () {
+                            WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, false));
+                            controller._isTyping.value = false;
+                          })();
                         },
+                        style: WayaTextStyles.labelMedium,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          fillColor: WayaColors.greyColor200,
+                          filled: true,
+                          hintText: "Write a message here",
+                          hintStyle: WayaTextStyles.hintStyle,
+                          labelStyle: WayaTextStyles.labelSmall,
+                        ),
+                        textInputAction: TextInputAction.newline,
+                        keyboardType: TextInputType.multiline,
+                        controller: controller._textController,
                       ),
                     ),
                   ),

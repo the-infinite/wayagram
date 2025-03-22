@@ -58,7 +58,7 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
     }
 
     return SizedBox(
-      height: 130.h,
+      height: 120.h,
       child: ValueListenableBuilder(
         valueListenable: otherUserMoments,
         builder: (context, refreshCount, _) => ListView.builder(
@@ -108,6 +108,7 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                 children: [
                   MomentsWidget(
                     moment: moment,
+                    hasMoment: !notifier.hasViewedMoment(moment.moments.first.id),
                     onTap: () => WayaNav.toNamed(
                       ViewMoment.route,
                       arguments: {
