@@ -63,13 +63,12 @@ class _ContestCardState extends ConsumerState<ContestCard> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    // width: context.width * 0.8,
+                  Expanded(
+                    flex: 4,
                     child: Row(
-                      //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
                           onTap: () {},
@@ -93,7 +92,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                                   ),
                           ),
                         ),
-
                         const Gap(10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -101,8 +99,9 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             SizedBox(
-                              width: context.width * 0.4,
+                              width: context.width * 0.45,
                               child: Text(
+                                //"you are going to print the form help me now qwerty",
                                 widget.post.title ?? "Title",
                                 overflow: TextOverflow.ellipsis,
                                 style: wayaTheme.textTheme.bodyMedium,
@@ -117,34 +116,33 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                                         fontWeight: FontWeight.w400)),
                           ],
                         ),
-                        // Spacer(),
-                        Gap(
-                          context.width * 0.15,
-                        ),
-                        //  post.isFollowing!
-                        widget.post.isFollowing == true
-                            ? WayaButton(
-                                text: 'UnFollow',
-                                height: 40,
-                                fontSize: 12.sp,
-                                color: wayaTheme.colorScheme.greyColor300,
-                                textColor: wayaTheme.colorScheme.customBlack,
-                                border: Border.all(
-                                    width: 1,
-                                    color: wayaTheme.colorScheme.greyColor300),
-                                callback: () {
-                                  widget.onFollowPressed(widget.post.id!);
-                                })
-                            : WayaButton(
-                                fontSize: 12.sp,
-                                callback: () =>
-                                    widget.onFollowPressed(widget.post.id!),
-                                height: 40,
-                                text: "   Follow  ",
-                              )
                       ],
                     ),
                   ),
+
+                  //  post.isFollowing!
+                  Expanded(
+                      flex: 1,
+                      child: widget.post.isFollowing == true
+                          ? WayaButton(
+                              text: 'UnFollow',
+                              height: 40,
+                              fontSize: 12.sp,
+                              color: wayaTheme.colorScheme.greyColor300,
+                              textColor: wayaTheme.colorScheme.customBlack,
+                              border: Border.all(
+                                  width: 1,
+                                  color: wayaTheme.colorScheme.greyColor300),
+                              callback: () {
+                                widget.onFollowPressed(widget.post.id!);
+                              })
+                          : WayaButton(
+                              fontSize: 12.sp,
+                              callback: () =>
+                                  widget.onFollowPressed(widget.post.id!),
+                              height: 40,
+                              text: "   Follow  ",
+                            )),
                 ],
               ),
               const Gap(20),
@@ -325,11 +323,9 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     ),
                   ),
                   const Gap(30),
-                  
                   GestureDetector(
                     onTap: () async {
-                      final result = await Share.share(
-                          'check out my website https://example.com');
+                      final result = await Share.share('i am here to cook');
 
                       if (result.status == ShareResultStatus.success) {
                         print('Thank you for sharing my website!');
