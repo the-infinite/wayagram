@@ -105,7 +105,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
   Future<void> submitDetail(BuildContext context, ValueNotifier<bool> isLoading,
       String mySelectedState, VoidCallback onPressed) async {
     isLoading.value = true;
-    // print("Mean  werr $state");
+    print("Mean  werr $state");
     List<Map<String, dynamic>> detailsList = state.map(
       (model) {
         String? image = model.imagePath;
