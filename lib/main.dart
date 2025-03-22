@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -25,7 +26,11 @@ import 'firebase_options.dart';
 void main() async {
   //? First, set up all Firebase services so we can report all crashes to firebase,
   //? have analytics, crashlytics, and push notifications set up.
-  WidgetsFlutterBinding.ensureInitialized();
+  //? needed the widget reference
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  //? splash screen preserving the state until after initialization
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   //? Second, setup the error handlers for synchronous errors here and asynchronous
@@ -94,9 +99,11 @@ void main() async {
           WayaDebugEvent(
             type: WayaDebugEventType.runtime,
             module: WayaDebugEventModule.unknown,
-            message: errorAndStacktrace.first.toString().split("\n").first.trim(),
+            message:
+                errorAndStacktrace.first.toString().split("\n").first.trim(),
             raw: errorAndStacktrace.first,
-            stackTrace: StackTrace.fromString(errorAndStacktrace.last.toString()),
+            stackTrace:
+                StackTrace.fromString(errorAndStacktrace.last.toString()),
             timestamp: DateTime.now(),
           ),
         );
@@ -114,7 +121,11 @@ void main() async {
   // TODO: Switch to native splash screens when possible.
 
   //? Fifth, configure our visibility detector.
-  VisibilityDetectorController.instance.updateInterval = const Duration(milliseconds: 50);
+  VisibilityDetectorController.instance.updateInterval =
+      const Duration(milliseconds: 50);
+
+  //? remove the splash screen
+  FlutterNativeSplash.remove();
 
   //? Finally, run the app.
   //? added DeepLinkListener to listen to incoming deepLinking urls
