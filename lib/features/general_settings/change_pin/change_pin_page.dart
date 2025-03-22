@@ -6,6 +6,8 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/auth/transaction_pin/vm/transaction_pin_vm.dart';
 import 'package:wayagram/features/auth/transaction_pin/widget/pin_input_field.dart';
 import 'package:wayagram/features/auth/transaction_pin/widget/pin_keyboard.dart';
@@ -27,6 +29,7 @@ class _ChangePinPageState extends ConsumerState<ChangePinPage> {
 
     final isInValid = ref.watch(isChangePinValidProvider);
     final viewModel = ref.read(transactionPinProvider.notifier);
+    final pinModel = ref.watch(credentialInputProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         isLoading: ref.watch(loadingProvider),
@@ -52,6 +55,25 @@ class _ChangePinPageState extends ConsumerState<ChangePinPage> {
                   ratio: 0.17,
                   margin: 8,
                   height: 55,
+                ),
+                const Gap(10),
+                Padding(
+                  padding: EdgeInsets.only(right: 50.w),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [// viewModel.onSubmit(() => widget.goToNextTab());
+                      InkWell(
+                        onTap: () => pinModel.onSubmitPin(()=> WayaNav.toNamed('/verify-your-identity')),
+                        child: Text("Forgot Old PIN?",
+                            style: WayaTextStyles.hintStyle.copyWith(
+                              color: wayaTheme.colorScheme.primary,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: WayaConstants.fontFamily,
+                            )),
+                      ),
+                    ],
+                  ),
                 ),
                 const Gap(10),
                 PinInputField(
