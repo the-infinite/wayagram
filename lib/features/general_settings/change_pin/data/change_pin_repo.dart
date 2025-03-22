@@ -12,15 +12,17 @@ class ChangePinRepo extends BaseRepository {
 
   Future<WayaRequestResponse> resetPin({
     required String userId, required String pin,
-    required String confirmPin}) {
+    required String confirmPin, required String otp,}) {
     final payload = {
     "userId": userId,
     "email": ConversationState.self.email,
-    "otp": "string (required)",
+    "otp": otp,
     "pin": pin,
     "confirmPin": confirmPin,
+      "purpose":'Reset_PIN'
       };
-    return patch('$serviceUrl/client/wallet-pin/reset-pin', payload);
+    print(payload);
+    return post('$serviceUrl/client/wallet-pin/reset-pin', payload);
   }
 
 }

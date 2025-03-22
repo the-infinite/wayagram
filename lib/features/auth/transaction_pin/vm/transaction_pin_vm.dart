@@ -131,7 +131,7 @@ class TransactionPinVm extends StateNotifier<void> {
     }
   }
 
-  Future<void> resetPin() async {
+  Future<void> resetPin(String otp) async {
     final pin = ref.read(pinProvider);
     final confirmPin = ref.read(confirmPinProvider);
     final newConfirmPin = ref.read(newPinConfirmationProvider);
@@ -139,13 +139,13 @@ class TransactionPinVm extends StateNotifier<void> {
 
     ref.read(isPinValidProvider.notifier).state = pin.length == 4 && pin == confirmPin;
 
-    if (pin.length == 4 && confirmPin.length == 4 && newConfirmPin == confirmPin) {
+    if ( confirmPin.length == 4 && newConfirmPin == confirmPin) {
       ref.read(loadingProvider.notifier).state = true;
       try {
         final userId = _localDataSource.getUserId();
 
         final response = await _changePinRepo.resetPin(userId: userId ?? '',
-            pin: pin, confirmPin: newConfirmPin);
+            pin: confirmPin, confirmPin: newConfirmPin, otp: otp);
 
         if (response.success) {
           WayaSnackBar.showToast('Pin Changed Successfully');

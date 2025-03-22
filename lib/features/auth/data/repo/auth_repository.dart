@@ -18,9 +18,9 @@ class AuthRepository extends BaseRepository {
         showErrors: true);
   }
 
-  Future<WayaRequestResponse> resendOtp(String email) {
+  Future<WayaRequestResponse> resendOtp(String email,{String purpose = 'REGISTER_USER'}) {
     return post('$serviceUrl/client/auth/resend-otp',
-        {"email": email, "purpose": 'REGISTER_USER'});
+        {"email": email, "purpose": purpose});
   }
 
     Future<WayaRequestResponse> oauth(String token, String authType) {
@@ -31,7 +31,7 @@ class AuthRepository extends BaseRepository {
 
   Future<WayaRequestResponse> verifyEmail(String email) {
     return post(
-        '$serviceUrl/client/auth/password/reset-password', {"email": email},
+        '$serviceUrl/client/auth/password/reset-password', {"email": email, },
         showErrors: true);
   }
 
