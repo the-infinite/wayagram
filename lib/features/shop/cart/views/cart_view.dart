@@ -16,6 +16,7 @@ class CartView extends ConsumerStatefulWidget {
 }
 
 class _CartViewState extends ConsumerState<CartView> {
+  bool isCartEmpty  =  false;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -28,12 +29,39 @@ class _CartViewState extends ConsumerState<CartView> {
   Widget build(BuildContext context) {
     final restructuredCart = ref.watch(cartVmProvider);
 
+ 
+    if (restructuredCart.cart == null) {
+      setState(() {
+        isCartEmpty =  true;
+      });
+    }
+    if (restructuredCart.cart != null) {
+
+      if (restructuredCart.cart?.items != null && restructuredCart.cart!.items.isEmpty)
+    {
+        setState(() {
+        isCartEmpty = true;
+      });
+    }
+    if (restructuredCart.cart?.items != null && restructuredCart.cart!.items.isNotEmpty)
+    {
+      setState(() {
+        isCartEmpty = false;
+      });
+    }
+    }
+
+   
+   
+
+
+
     return WayaScaffold(
         isLoading: restructuredCart.isLoading,
         isScrollable: true,
         onRefresh: () => ref.read(cartVmProvider.notifier).loadCart(),
         title: "Cart",
-        body: restructuredCart.cart == null
+        body: restructuredCart.cart == null || isCartEmpty
             ? Center(
                 child: CartEmptyState(),
               )
