@@ -27,7 +27,7 @@ class MediaMoment extends ConsumerWidget {
         return true;
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: SafeArea(
           child: Container(
             color: wayaTheme.colorScheme.black,
@@ -91,6 +91,10 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+    final insets = MediaQuery.of(context).viewInsets;
+
+    //? This is fine.
     if (!_isInitialized) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -101,7 +105,7 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
         Container(
           color: Colors.black,
           child: AspectRatio(
-            aspectRatio: _controller!.value.aspectRatio,
+            aspectRatio: insets.bottom == 0 ? _controller!.value.aspectRatio : size.aspectRatio,
             child: VideoPlayer(_controller!),
           ),
         ),

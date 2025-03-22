@@ -12,6 +12,7 @@ class VideoPreview extends ConsumerStatefulWidget {
   final MomentData data;
   final File file;
   final VoidCallback pause, resume;
+  final void Function(Duration) notifyDuration;
 
   const VideoPreview({
     super.key,
@@ -20,6 +21,7 @@ class VideoPreview extends ConsumerStatefulWidget {
     required this.data,
     required this.pause,
     required this.resume,
+    required this.notifyDuration,
   });
 
   @override
@@ -27,7 +29,7 @@ class VideoPreview extends ConsumerStatefulWidget {
 }
 
 class _VideoPreviewState extends ConsumerState<VideoPreview> {
-  final _controller = WayaVideoController();
+  final _controller = WayaVideoController(autoplay: true);
   bool downloaded = true;
 
   @override
@@ -43,12 +45,6 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
             downloaded = false;
           });
         }
-      }
-
-      //? Since this exists..
-      else {
-        _controller.setLooping(true);
-        _controller.play();
       }
     });
     super.initState();
@@ -91,11 +87,7 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
           widget.file,
           (result) async {
             if (result) {
-              await Future.delayed(const Duration(seconds: 1, milliseconds: 800));
-              try {
-                _controller.setLooping(true);
-                _controller.play();
-              } catch (_) {}
+              await Future.delayed(const Duration(seconds: 2, milliseconds: 500));
               setState(() {
                 downloaded = true;
               });
@@ -138,6 +130,8 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
         widget.file,
         controller: _controller,
         controls: WayaVideoControls.none,
+        canFocus: false,
+        onInitialized: () => widget.notifyDuration(_controller.value.duration),
         onPlaybackChanged: (isPlaying) {
           //? When the video is resumed, continue the animation timer.
           if (isPlaying) {

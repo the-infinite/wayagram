@@ -11,12 +11,13 @@ import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/moments/data/moment_helper/moment_helper_funcs.dart';
 import 'package:wayagram/features/moments/data/repo/moment_repository.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
 import 'package:wayagram/features/moments/views/trim_video.dart';
-import 'package:wayagram/shared/repo/upload_file_repository.dart';
+import 'package:wayagram/shared/features/file/repo/default.dart';
 import '../data/model/moment_state.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import '../views/media_moment.dart';
@@ -33,8 +34,7 @@ class MomentVm extends StateNotifier<MomentState> {
   final Ref ref;
   final MomentRepository _momentRepository;
   final WayaSecureDataSource _secureDataSource;
-  final UploadFileRepository _uploadFileRepository;
-  MomentVm(this._uploadFileRepository, this._secureDataSource, this._momentRepository, this.ref)
+  MomentVm(this._secureDataSource, this._momentRepository, this.ref)
       : super(MomentState(
           backgroundColor: const Color(0xFF1D2939),
           textStyle: GoogleFonts.roboto(
@@ -141,7 +141,7 @@ class MomentVm extends StateNotifier<MomentState> {
 
   Future<void> pickMedia(BuildContext context) async {
     try {
-      FilePickerResult? result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.platform.pickFiles(
         type: FileType.media,
         allowMultiple: false,
       );
@@ -161,7 +161,7 @@ class MomentVm extends StateNotifier<MomentState> {
             final videoFile = File(file.path!);
             final videoDuration = await _getVideoDuration(videoFile);
 
-            if (videoDuration > 15) {
+            if (videoDuration > 30) {
               final trimmedFile = await WayaNav.to(VideoTrimmerScreen(videoFile: videoFile));
 
               if (trimmedFile != null) {
@@ -288,15 +288,18 @@ class MomentVm extends StateNotifier<MomentState> {
       color = MomentHelper.colorToHex(backgroundColor);
     } else if (state.type == StatusType.media && state.mediaType == MediaType.image) {
       // image
-      contentType = 'image';
       if (state.selectedFile != null) {
-        String? publicUrl = await WayaUtils.uploadFile(repository: _uploadFileRepository, file: selectedAsset!);
+        final publicUrl = await WayaFileRepository.instance.uploadFile(
+          selectedAsset!,
+          "su-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(selectedAsset.path)}}",
+        );
 
         if (publicUrl != null) {
           content = publicUrl;
         } else {
           // image uploading failed
           state = state.copyWith(isCreatingMoment: false);
+          return;
         }
       } else if (state.mediaUrl != null) {
         content = state.mediaUrl!;
@@ -304,13 +307,17 @@ class MomentVm extends StateNotifier<MomentState> {
     } else if (state.type == StatusType.media && state.mediaType == MediaType.video) {
       contentType = 'video';
       if (state.selectedFile != null) {
-        String? publicUrl = await WayaUtils.uploadFile(repository: _uploadFileRepository, file: selectedAsset!);
+        final publicUrl = await WayaFileRepository.instance.uploadFile(
+          selectedAsset!,
+          "su-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(selectedAsset.path)}}",
+        );
 
         if (publicUrl != null) {
           content = publicUrl;
         } else {
           // image uploading failed
           state = state.copyWith(isCreatingMoment: false);
+          return;
         }
       } else if (state.mediaUrl != null) {
         content = state.mediaUrl!;
@@ -342,10 +349,26 @@ class MomentVm extends StateNotifier<MomentState> {
               color: color,
               fontType: fontType,
               contentType: contentType);
-      if (response.success && context.mounted) {
+      if (response.success) {
         reset();
-        WayaNav.replaceNamed(MyMoments.route);
-        // WayaNav.toNamed(MyMoments.route);
+        final momentData = MomentData.fromJson(response.data['data']);
+        if (content.trim().isNotEmpty && selectedAsset != null) {
+          final target = await WayaFileHelper.getMomentDirectory(momentData, "/x/x/$content");
+          try {
+            await selectedAsset.copy(target.path);
+          } catch (e) {
+            WayaDebugConsoleController.instance.addException(
+              WayaDebugHelpers.getMessage(e),
+              e,
+              WayaDebugEventModule.moments,
+              WayaDebugHelpers.getStackTrace(e),
+            );
+          }
+        }
+        WayaNav.removeUntilNamed(
+          MyMoments.route,
+          predicate: (route) => route.settings.name == BottomView.route,
+        );
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -540,5 +563,5 @@ class MomentVm extends StateNotifier<MomentState> {
 }
 
 final momentVmProvider = StateNotifierProvider<MomentVm, MomentState>((ref) {
-  return MomentVm(UploadFileRepository(), WayaSecureDataSource(), MomentRepository(), ref);
+  return MomentVm(WayaSecureDataSource(), MomentRepository(), ref);
 });
