@@ -22,6 +22,7 @@ import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/cache/page.dart';
 import 'package:wayagram/shared/cache/post.dart';
+import 'package:wayagram/shared/features/profile/model/pages.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
 import 'package:wayagram/features/post/model/saved_posts.dart';
@@ -821,10 +822,10 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  void prefillFunc(args) {
+  void prefillFunc(PageModel page) {
     state = state.copyWith(
-      pageName: TextEditingController(text: '${args['name']}'),
-      pageDescription: TextEditingController(text: '${args['desc']}'),
+      pageName: TextEditingController(text: page.name),
+      pageDescription: TextEditingController(text: page.description),
     );
   }
 }

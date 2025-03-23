@@ -95,7 +95,7 @@ class GroupRepository extends BaseRepository {
     return get("$serviceUrl/groups/popular-post?groupId=$groupId&page=$page&limit=$limit");
   }
 
-  Future<WayaRequestResponse> getGroupMember(groupId) {
+  Future<WayaRequestResponse> getGroupMember(String groupId) {
     return get("$serviceUrl/groups/members?groupId=$groupId");
   }
 
@@ -108,7 +108,7 @@ class GroupRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> joinRequest(String groupId) {
-    return get("$serviceUrl/groups/join-requests/$groupId?rstatus=pending");
+    return get("$serviceUrl/groups/join-requests/$groupId?rstatus=pending", showErrors: true);
   }
 
   Future<WayaRequestResponse> getJoinedGroup([int page = 1, int limit = 15]) {
@@ -122,17 +122,17 @@ class GroupRepository extends BaseRepository {
 
   Future<WayaRequestResponse> approveJoinRequest(String requestId) {
     final payload = {"targetUserId": "", "role": "member"};
-    return post("$serviceUrl/groups/join-requests/approve/$requestId", payload);
+    return post("$serviceUrl/groups/join-requests/approve/$requestId", payload, showErrors: true);
   }
 
   Future<WayaRequestResponse> rejectJoinRequest(String requestId) {
     final payload = {};
-    return post("$serviceUrl/groups/join-requests/reject/$requestId", payload);
+    return post("$serviceUrl/groups/join-requests/reject/$requestId", payload, showErrors: true);
   }
 
   Future<WayaRequestResponse> inviteUserToGroup(String groupId, String role, targetId) {
     final payload = {"targetUserId": targetId, "role": role};
-    return post("$serviceUrl/groups/invitations/$groupId", payload);
+    return post("$serviceUrl/groups/invitations/$groupId", payload, showErrors: true);
   }
 
   // recommended groups

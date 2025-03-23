@@ -68,9 +68,7 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
                 ),
               ],
             ),
-            callback: () {
-              WayaNav.toNamed('/addGroupMember', arguments: {'groupId': widget.groupId});
-            },
+            callback: () => WayaNav.toNamed(WayaAppRoutes.getAddGroupMemberPage(widget.groupId)),
             color: wayaTheme.colorScheme.primary50,
           ),
           Gap(10.h),
@@ -130,26 +128,31 @@ class _GroupTeamState extends ConsumerState<GroupTeam> with SingleTickerProvider
                         ListTile(
                           contentPadding: EdgeInsets.only(left: 0, right: 0, top: 0),
                           leading: CircleAvatar(
-                              radius: 20,
-                              backgroundColor: WayaColors.greyColor100,
-                              backgroundImage: NetworkImage('${group?.user?.profilePicture}')),
+                            radius: 20,
+                            backgroundColor: WayaColors.greyColor100,
+                            backgroundImage: NetworkImage(
+                              '${group?.user?.profilePicture}',
+                            ),
+                          ),
                           title: Row(
                             children: [
                               Text(
                                 '${group?.user?.firstName} ${group?.user?.lastName}',
                                 style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 14.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: Theme.of(context).colorScheme.black),
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: wayaTheme.colorScheme.black,
+                                ),
                               ),
                             ],
                           ),
                           subtitle: Text(
                             '${group?.user?.email}',
-                            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w400,
-                                color: Theme.of(context).colorScheme.greyColor500),
+                            style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w400,
+                              color: wayaTheme.colorScheme.greyColor500,
+                            ),
                           ),
                         ),
                       ],

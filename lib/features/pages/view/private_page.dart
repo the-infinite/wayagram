@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get_navigation/get_navigation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -9,6 +10,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'edit_page_info.dart';
 import 'page_post.dart';
 import 'team_page.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
@@ -87,8 +89,17 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
                   ),
                   Gap(15),
                   GestureDetector(
-                    onTap: () {
-                      WayaNav.toNamed('/editPageInfo');
+                    onTap: () async {
+                      final result = await WayaNav.to(
+                        transition: Transition.circularReveal,
+                        duration: const Duration(milliseconds: 500),
+                        EditPageInfo(
+                          page: widget.page,
+                        ),
+                      );
+
+                      //? If this is fine.
+                      if (result != null) return;
                     },
                     child: Container(
                       margin: EdgeInsets.only(right: 20.w),

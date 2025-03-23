@@ -136,7 +136,15 @@ class UserDetailsModel {
           : json['role'] is Map<String, dynamic>
               ? UserRole.fromJson(json['role']).name
               : json['role'],
-      accountType: $enumDecodeNullable(_$UserAccountTypeEnumMap, json['accountType']),
+      accountType: json['accountType'] is Map<String, dynamic>
+          ? $enumDecodeNullable(
+              _$UserAccountTypeEnumMap,
+              UserRole.fromJson(json['role']).name,
+            )
+          : $enumDecodeNullable(
+              _$UserAccountTypeEnumMap,
+              json['accountType'],
+            ),
       lga: json['lga'] as String?,
       postalCode: json['postalCode'] as String?,
     );

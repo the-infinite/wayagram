@@ -217,7 +217,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                     //? of group members.
                     if (myGroupNotifier.isMemberOf(widget.id) || !group.isPrivate)
                       GestureDetector(
-                        onTap: () => WayaNav.toNamed('/groups/members', arguments: widget.id),
+                        onTap: () => WayaNav.toNamed(WayaAppRoutes.getGroupMembersPage(group.id)),
                         child: Container(
                           margin: EdgeInsets.only(right: 20.w),
                           padding: EdgeInsets.all(5.0),
@@ -282,10 +282,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                       actionType(
                         WayaValueHelper.formatNumber(group.memberCount),
                         'Members',
-                        onPressed: () => WayaNav.toNamed(
-                          '/groups/members',
-                          arguments: widget.id,
-                        ),
+                        onPressed: () => WayaNav.toNamed(WayaAppRoutes.getGroupMembersPage(group.id)),
                       ),
                       const Gap(10),
 

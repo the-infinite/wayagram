@@ -29,14 +29,13 @@ class GroupState {
   List<PostModel>? groupPostdocs;
   List<PostModel>? groupPopularPostdocs;
   int? postCount;
-
+  final String? foundUserId;
   final bool isReportingGroup;
   final bool isFocused;
   final bool isLoading;
   final bool openToEveryone;
   final bool requireApproval;
   final String roleType;
-
 
   //? If this has more posts, continue.
   bool get hasMorePosts => allPostData?.data?.hasNextPage ?? true;
@@ -47,6 +46,7 @@ class GroupState {
     TextEditingController? username,
     TextEditingController? content,
     this.allPostData,
+    this.foundUserId,
     this.isFocused = false,
     this.isLoading = false,
     this.openToEveryone = false,
@@ -92,6 +92,7 @@ class GroupState {
     bool? joinGroupLoading,
     bool? openToEveryone,
     bool? requireApproval,
+    String? foundUserId,
     String? roleType,
     String? profileImage,
     String? coverImage,
@@ -106,6 +107,7 @@ class GroupState {
       username: username ?? this.username,
       content: content ?? this.content,
       postCount: postCount ?? this.postCount,
+      foundUserId: foundUserId ?? this.foundUserId,
       docs: docs ?? this.docs,
       groupPopularPostdocs: groupPopularPostdocs ?? this.groupPopularPostdocs,
       getAllPost: getAllPost ?? this.getAllPost,

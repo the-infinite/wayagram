@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -12,11 +13,14 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
+import 'package:wayagram/shared/features/profile/model/pages.dart';
 
 class EditPageInfo extends ConsumerStatefulWidget {
-  static const route = '/editPageInfo';
+  final PageModel page;
+
   const EditPageInfo({
     super.key,
+    required this.page,
   });
 
   @override
@@ -24,15 +28,17 @@ class EditPageInfo extends ConsumerStatefulWidget {
 }
 
 class _EditPageInfoState extends ConsumerState<EditPageInfo> {
+  late final pageProvider = singlePageProvider("page-${widget.page.id}");
+  late final notifier = ref.read(pageProvider.notifier);
+  final valueController = ValueNotifier(false);
   final _formKey = GlobalKey<FormState>();
-
   bool sel = false;
   bool sel2 = false;
   File? _selectedImage; // Holds the selected image
   File? _coverImage; // Holds the selected image
 
-  String? image;
-  String? editCoverImage;
+  late String? image = widget.page.profileImage;
+  late String? editCoverImage = widget.page.coverImage;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
@@ -57,20 +63,19 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final dynamic args = ModalRoute.of(context)?.settings.arguments;
-      setState(() {
-        image = args['profileImage'];
-        editCoverImage = args['coverImage'];
-      });
-      ref.read(createPageProvider.notifier).prefillFunc(args);
+      notifier.prefillFunc(widget.page);
     });
   }
 
   @override
+  void dispose() {
+    valueController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(createPageProvider);
-    //final  id  = ModalRoute.of(context)?.settings.arguments as String;
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    final viewModel = ref.watch(pageProvider);
 
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
@@ -80,31 +85,30 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
       isScrollable: true,
       appBarTrailing: Padding(
         padding: const EdgeInsets.only(right: 20),
-        child: WayaButton(
-          callback: !viewModel.isLoading
-              ? () async {
-                  if (_formKey.currentState!.validate()) {
-                    await myPageNotifier.editPage(
-                        viewModel.pageName.text,
-                        viewModel.pageDescription.text,
-                        sel ? true : false,
-                        _coverImage == null ? editCoverImage! : (_coverImage as File).path,
-                        _selectedImage == null ? image! : (_selectedImage as File).path,
-                        args['pageId']
-                        //args.id!
-                        //id
-                        );
-                    WayaNav.toNamed("/pages");
-                    ref.watch(createPageProvider.notifier).reset();
-                  }
-                }
-              : null,
+        child: WayaProgressiveButton(
+          notifier: valueController,
+          callback: () async {
+            if (_formKey.currentState!.validate()) {
+              await myPageNotifier.editPage(
+                viewModel.pageName.text,
+                viewModel.pageDescription.text,
+                sel ? true : false,
+                _coverImage == null ? editCoverImage! : (_coverImage as File).path,
+                _selectedImage == null ? image! : (_selectedImage as File).path,
+                widget.page.id,
+              );
+              WayaNav.toNamed("/pages");
+              notifier.reset();
+            }
+          },
           height: 30,
-          isLoading: viewModel.isLoading,
           text: 'Continue',
           horizontalPadding: 12,
-          textStyle: WayaTextStyles.bodySmall
-              .copyWith(fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+          textStyle: WayaTextStyles.bodySmall.copyWith(
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w600,
+            color: wayaTheme.colorScheme.white,
+          ),
         ),
       ),
       body: Column(
@@ -123,27 +127,25 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                         width: double.infinity,
                         height: 200, // Banner height
                         decoration: BoxDecoration(
-                            color: WayaColors.primaryBrown50,
-                            borderRadius: BorderRadius.circular(0),
-                            image: _selectedImage != null
-                                ? DecorationImage(
-                                    image: FileImage(_selectedImage!),
-                                    fit: BoxFit.cover,
-                                  )
-                                : image != null
-                                    ? DecorationImage(
-                                        image: NetworkImage(image!),
-                                        fit: BoxFit.cover,
-                                      )
-                                    : DecorationImage(
-                                        image: NetworkImage(args['']),
-                                        fit: BoxFit.cover,
-                                      )
-                            // const DecorationImage(
-                            //   image: AssetImage("assets/placeholder.jpg"),
-                            //   fit: BoxFit.cover,
-                            // ),
-                            ),
+                          color: WayaColors.primaryBrown50,
+                          borderRadius: BorderRadius.circular(0),
+                          image: _selectedImage != null
+                              ? DecorationImage(
+                                  image: FileImage(_selectedImage!),
+                                  fit: BoxFit.cover,
+                                )
+                              : image != null
+                                  ? DecorationImage(
+                                      image: NetworkImage(image!),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : DecorationImage(
+                                      image: NetworkImage(
+                                        WayaAssets.images.pages.imagePlaceholder.path,
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
+                        ),
                       ),
 
                       // Upload Icon Button
@@ -158,7 +160,7 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                           ),
                           padding: EdgeInsets.all(10),
                           constraints: BoxConstraints(),
-                          color: WayaColors.greyColor600, // Background overlay
+                          color: WayaColors.greyColor600,
                         ),
                       ),
                     ],
@@ -186,7 +188,8 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                                 ? CircleAvatar(
                                     radius: 20,
                                     backgroundColor: wayaTheme.colorScheme.greyColor200,
-                                    backgroundImage: NetworkImage(editCoverImage!))
+                                    backgroundImage: NetworkImage(editCoverImage!),
+                                  )
                                 : null,
                       ),
                     ],
@@ -201,19 +204,23 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Change photo',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff6B7280),
-                    )),
+                Text(
+                  'Change photo',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff6B7280),
+                  ),
+                ),
                 const Gap(20),
-                Text('Page information',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff6B7280),
-                    )),
+                Text(
+                  'Page information',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff6B7280),
+                  ),
+                ),
                 const Gap(30),
                 Form(
                     key: _formKey,
@@ -240,7 +247,7 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                                     : null,
                                 label: 'Page Name',
                               ),
-                              if (formState.hasError && viewModel.pageName.text.isEmpty)
+                              if (formState.hasError)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
@@ -272,7 +279,7 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                                     : null,
                                 label: 'Page Description',
                               ),
-                              if (formState.hasError && viewModel.pageDescription.text.isEmpty)
+                              if (formState.hasError)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
@@ -286,12 +293,14 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                         const Gap(20),
                       ],
                     )),
-                Text('Page Type',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    )),
+                Text(
+                  'Page Type',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
                 const Gap(15),
                 FittedBox(
                   fit: BoxFit.fitWidth,

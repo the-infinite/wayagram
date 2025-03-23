@@ -10,6 +10,7 @@ class WayaNavigationHelper {
   static Future<T> toImageDetailsScreen<T>(List<File>? media, List<String>? urls) {
     return WayaNav.to(
       transition: Transition.circularReveal,
+      duration: const Duration(milliseconds: 500),
       WayaImageDetailScreen(
         file: media?[0],
         imageUrl: urls?[0],

@@ -32,7 +32,6 @@ import 'package:wayagram/features/group/view/add_group_member.dart';
 import 'package:wayagram/features/group/view/confirm_group_details.dart';
 import 'package:wayagram/features/group/view/create_group.dart';
 import 'package:wayagram/features/group/view/create_group_post.dart';
-import 'package:wayagram/features/group/view/edit_group_info.dart';
 import 'package:wayagram/features/group/view/group_setting.dart';
 import 'package:wayagram/features/group/view/group_suggestion.dart';
 import 'package:wayagram/features/group/view/groups.dart';
@@ -50,7 +49,6 @@ import 'package:wayagram/features/pages/view/add_team_member.dart';
 import 'package:wayagram/features/pages/view/confirm_page_details.dart';
 import 'package:wayagram/features/pages/view/create_page.dart';
 import 'package:wayagram/features/pages/view/create_page_post.dart';
-import 'package:wayagram/features/pages/view/edit_page_info.dart';
 import 'package:wayagram/features/pages/view/pages.dart';
 import 'package:wayagram/features/pages/view/public_page.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
@@ -247,7 +245,9 @@ class WayaAppRoutes {
     PublicPage.route: () => PublicPage(
           id: WayaNav.search['id'].toString(),
         ),
-    MembersScreen.route: () => MembersScreen(),
+    MembersScreen.route: () => MembersScreen(
+          id: WayaNav.search['id'].toString(),
+        ),
     CreatePost.route: () => CreatePost(),
     CreateGroupPost.route: () => CreateGroupPost(),
     CreatePagePost.route: () => CreatePagePost(),
@@ -260,7 +260,6 @@ class WayaAppRoutes {
     PublicGroup.route: () => PublicGroup(
           id: WayaNav.search['id'].toString(),
         ),
-    EditPageInfo.route: () => EditPageInfo(),
     AddTeamMember.route: () => AddTeamMember(),
     SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
     ChatProfilePage.route: () => ChatProfilePage(chatId: WayaNav.search['id'].toString()),
@@ -279,8 +278,9 @@ class WayaAppRoutes {
           title: '',
           postId: '',
         ),
-    EditGroupInfo.route: () => EditGroupInfo(),
-    AddGroupMember.route: () => AddGroupMember(),
+    AddGroupMember.route: () => AddGroupMember(
+          id: WayaNav.search['id'].toString(),
+        ),
     SearchView.route: () => SearchView(),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
@@ -351,6 +351,14 @@ class WayaAppRoutes {
   /// Helper function used to generate the route that is supposed to take you a
   /// single group by its ID.
   static String getGroupDetailsPage(String id) => "${PublicGroup.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single group's members by its ID.
+  static String getGroupMembersPage(String id) => "${MembersScreen.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single group's screen for adding new members by its ID.
+  static String getAddGroupMemberPage(String id) => "${AddGroupMember.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed ot navigate to
   /// the chat profile of any given user.

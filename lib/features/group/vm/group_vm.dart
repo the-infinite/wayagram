@@ -57,10 +57,18 @@ class GroupVm extends StateNotifier<GroupState> {
     }
     final groupDoc = docs!.first;
     state = state.copyWith(
-        name: groupDoc.name,
-        desc: groupDoc.description,
-        profileImage: groupDoc.profileImage,
-        coverImage: groupDoc.coverImage);
+      name: groupDoc.name,
+      desc: groupDoc.description,
+      profileImage: groupDoc.profileImage,
+      coverImage: groupDoc.coverImage,
+    );
+  }
+
+  void setAddedUser(String? id) {
+    if (state.foundUserId == id) return;
+    state = state.copyWith(
+      foundUserId: id,
+    );
   }
 
   void reset() {
@@ -234,10 +242,10 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  void prefillFunc(args) {
+  void prefillFunc(GroupModel group) {
     state = state.copyWith(
-      groupName: TextEditingController(text: '${args['name']}'),
-      groupDescription: TextEditingController(text: '${args['desc']}'),
+      groupName: TextEditingController(text: group.name),
+      groupDescription: TextEditingController(text: group.description),
     );
   }
 
@@ -299,13 +307,7 @@ class GroupVm extends StateNotifier<GroupState> {
       final response = await _groupRepository.inviteUserToGroup(groupId, role, targetId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
-        // ScaffoldMessenger.of(ctx).showSnackBar(
-        //   const SnackBar(
-        //     content: Text('Request declined successfully!'),
-        //     backgroundColor: WayaColors.primary,
-        //     duration: Duration(seconds: 2),
-        //   ),
-        // );
+        await getGroupMembers(groupId);
       } else {
         WayaNav.goBack();
       }
@@ -442,7 +444,7 @@ class GroupVm extends StateNotifier<GroupState> {
     return null;
   }
 
-  Future<void> getGroupMembers(groupId) async {
+  Future<void> getGroupMembers(String groupId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _groupRepository.getGroupMember(groupId);
