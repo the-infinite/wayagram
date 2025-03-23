@@ -19,16 +19,12 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/typing.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/model/dispute_response_model.dart';
-import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/widgets/dispute_buyer_info.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/widgets/dispute_profile_picture.dart';
 import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
@@ -44,6 +40,8 @@ class DisputeChat extends ConsumerStatefulWidget {
 class _DisputeChatState extends ConsumerState<DisputeChat> {
   late final notifier = ref.read(sellerDisputeChatProvider.notifier);
   final handler = WayaObservableScrollController();
+  bool isButtonDisabled = false;
+  int noOfDaysLeft = 14;
 
   @override
   void initState() {
@@ -107,10 +105,19 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
         },
       );
 
-      int daysLeft = 14 -
-          DateTime.now().difference(disputeState.dispute!.createdAt).inDays;
+      if (disputeState.dispute != null) {
+        final order = Order.fromJson(
+            disputeState.dispute!.ticketBody.metadata.orderedItem);
 
-      bool isButtonEnabled = daysLeft <= 0;
+        String completedAt = order.deliveryStatusHistory.isNotEmpty
+            ? order.deliveryStatusHistory.last.updatedAt
+            : order.pickupStatusHistory.last.updatedAt;
+        int daysLeft =
+            14 - DateTime.now().difference(DateTime.parse(completedAt)).inDays;
+
+        isButtonDisabled = daysLeft <= 0;
+        noOfDaysLeft = daysLeft;
+      }
 
       //? This is fine.
       return PopScope(
@@ -131,6 +138,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
             surfaceTintColor: Colors.transparent,
             leading: Container(
               height: double.infinity,
+             
               alignment: Alignment.centerLeft,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -210,63 +218,65 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
 
                   //* Fourth, the audio call button.
                   Padding(
-                    padding: const EdgeInsets.only(right: 15),
+                    padding: const EdgeInsets.only(
+                      right: 15,
+                      top: 6
+                    ),
                     child: IntrinsicHeight(
-                      child: !isButtonEnabled
-                          ? WayaButton(
-                              callback: () {},
-                              height: null,
-                              color: WayaColors.primary50,
-                              horizontalPadding: 8,
-                              verticalPadding: 8,
-                              centerWidget: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                      WayaAssets.icons.dclock.path),
-                                  const Gap(3),
-                                  Text(
-                                    "$daysLeft ${daysLeft > 1 ? 'Days' : 'Day'} left",
-                                    style: theme.textTheme.hintStyle.copyWith(
-                                        color: theme.colorScheme.customPrimary,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w500),
-                                  )
-                                ],
-                              ))
-                          : WayaButton(
-                              callback: (disputeState.dispute!.escalatedBy !=
-                                      null)
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        WayaButton(
+                          callback:
+                              (disputeState.dispute?.escalatedBy != null ||
+                                      isButtonDisabled)
                                   ? null
                                   : () {
-                                      //     print(isButtonEnabled);
-
                                       final order = Order.fromJson(disputeState
                                           .dispute!
                                           .ticketBody
                                           .metadata
                                           .orderedItem);
-                                      final id = disputeState.dispute!.id;
+                                      final id = disputeState.dispute?.id;
                                       final bool isBuyer =
-                                          disputeState.dispute!.sellerId !=
+                                          disputeState.dispute?.sellerId !=
                                               ConversationState.self.id;
                                       escalateToMediator(
                                           context: context,
                                           order: order,
                                           tobeEscalatedBy:
                                               isBuyer ? "buyer" : "seller",
-                                          disputeId: id);
+                                          disputeId: id!);
                                     },
-                              height: null,
-                              textStyle: theme.textTheme.descriptionStyle
-                                  .copyWith(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.normal),
-                              text: "Escalate to mediator",
-                              horizontalPadding: 8,
-                              verticalPadding: 8,
+                          height: null,
+                          textStyle: theme.textTheme.descriptionStyle.copyWith(
+                              fontSize: 13.sp, fontWeight: FontWeight.w500),
+                          text: "Escalate to mediator",
+                          horizontalPadding: 8,
+
+                          verticalPadding: 5,
+                        ),
+                        const Gap(1),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              WayaAssets.icons.dclock.path,
+                              width: 14,
+                              height: 14,
                             ),
-                    ),
+                            const Gap(1),
+                            Text(
+                              "$noOfDaysLeft days left",
+                              style: theme.textTheme.hintStyle.copyWith(
+                                  color: theme.colorScheme.customPrimary,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                       // const Gap(2),
+                      ],
+                    )),
                   ),
                 ],
               ),

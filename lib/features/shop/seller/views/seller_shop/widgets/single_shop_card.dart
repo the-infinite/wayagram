@@ -30,111 +30,117 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
     print(widget.shop.logo);
     print("dvdvdv");
 
-    return Container(
-      margin: EdgeInsets.only(bottom: 10.h),
-      padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
-      decoration: BoxDecoration(
-        color: wayaTheme.colorScheme.scaffoldColor,
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
+    return GestureDetector(
+        onTap: () =>
+            WayaNav.toNamed(ManageShop.route, arguments: widget.shop.id),
+        child: Container(
+          margin: EdgeInsets.only(bottom: 10.h),
+          padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+          decoration: BoxDecoration(
+            color: wayaTheme.colorScheme.scaffoldColor,
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              WayaImage(
-                imageUrl: widget.shop.logo ?? '',
-                height: 40,
-                width: 40,
-                radius: BorderRadius.circular(40),
-              ),
-              const Gap(4),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              Row(
                 children: [
-                  Text(
-                    widget.shop.name.capitalizeFirst!,
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
+                  WayaImage(
+                    imageUrl: widget.shop.logo ?? '',
+                    height: 40,
+                    width: 40,
+                    radius: BorderRadius.circular(40),
                   ),
-                  const Gap(8),
-                  Container(
-                    padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
-                    decoration: BoxDecoration(
-                        color: widget.shop.deactivated
-                            ? wayaTheme.colorScheme.error200
-                            : wayaTheme.colorScheme.success50,
-                        borderRadius: BorderRadius.circular(6)),
-                    child: Text(
-                      widget.shop.deactivated ? "Inactive" : "Active",
-                      style: TextStyle().wayaCopyWith(
-                        color: widget.shop.deactivated
-                            ? wayaTheme.colorScheme.error
-                            : wayaTheme.colorScheme.success,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 11.sp,
+                  const Gap(4),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.shop.name.capitalizeFirst!,
+                        style: TextStyle().wayaCopyWith(
+                            color: wayaTheme.colorScheme.customBlack,
+                            fontSize: 14.sp),
                       ),
-                    ),
-                  )
+                      const Gap(8),
+                      Container(
+                        padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
+                        decoration: BoxDecoration(
+                            color: widget.shop.deactivated
+                                ? wayaTheme.colorScheme.error200
+                                : wayaTheme.colorScheme.success50,
+                            borderRadius: BorderRadius.circular(6)),
+                        child: Text(
+                          widget.shop.deactivated ? "Inactive" : "Active",
+                          style: TextStyle().wayaCopyWith(
+                            color: widget.shop.deactivated
+                                ? wayaTheme.colorScheme.error
+                                : wayaTheme.colorScheme.success,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 11.sp,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
                 ],
               ),
+              PopupMenuButton(
+                onSelected: (value) {},
+                iconColor: wayaTheme.colorScheme.greyColor400,
+                position: PopupMenuPosition.under,
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem<int>(
+                      value: 0,
+                      child: _buildActionNav(
+                        context: context,
+                        onTap: () {
+                          WayaNav.goBack();
+                          WayaNav.toNamed(ManageShop.route,
+                              arguments: widget.shop.id);
+                        },
+                        asset: SvgPicture.asset(WayaAssets.icons.bShop.path),
+                        text: "Shop Dashboard",
+                      ),
+                    ),
+                    PopupMenuItem<int>(
+                      value: 1,
+                      child: _buildActionNav(
+                        context: context,
+                        onTap: () {},
+                        asset: SvgPicture.asset(WayaAssets.icons.bBid.path),
+                        text: "Quotation Dashboard",
+                      ),
+                    ),
+                    PopupMenuItem<int>(
+                      value: 2,
+                      child: _buildActionNav(
+                        context: context,
+                        onTap: () {
+                          WayaNav.goBack();
+                          WayaNav.toNamed(
+                            CreateShop.route,
+                            arguments: UpdateShopArg(
+                                uniqueKey: "update-shop",
+                                singleShop: widget.shop),
+                          );
+                        },
+                        asset: Icon(
+                          Icons.edit_note_sharp,
+                          size: 22,
+                          color: wayaTheme.colorScheme.customBlack,
+                        ),
+                        text: "Edit Shop",
+                      ),
+                    )
+                  ];
+                },
+              )
             ],
           ),
-          PopupMenuButton(
-            onSelected: (value) {},
-            iconColor: wayaTheme.colorScheme.greyColor400,
-            position: PopupMenuPosition.under,
-            itemBuilder: (context) {
-              return [
-                PopupMenuItem<int>(
-                  value: 0,
-                  child: _buildActionNav(
-                    context: context,
-                    onTap: () {
-                      WayaNav.goBack();
-                      WayaNav.toNamed(ManageShop.route, arguments: widget.shop.id);
-                    },
-                    asset: SvgPicture.asset(WayaAssets.icons.bShop.path),
-                    text: "Shop Dashboard",
-                  ),
-                ),
-                PopupMenuItem<int>(
-                  value: 1,
-                  child: _buildActionNav(
-                    context: context,
-                    onTap: () {},
-                    asset: SvgPicture.asset(WayaAssets.icons.bBid.path),
-                    text: "Quotation Dashboard",
-                  ),
-                ),
-                PopupMenuItem<int>(
-                  value: 2,
-                  child: _buildActionNav(
-                    context: context,
-                    onTap: () {
-                      WayaNav.goBack();
-                      WayaNav.toNamed(
-                        CreateShop.route,
-                        arguments: UpdateShopArg(
-                            uniqueKey: "update-shop", singleShop: widget.shop),
-                      );
-                    },
-                    asset: Icon(
-                      Icons.edit_note_sharp,
-                      size: 22,
-                      color: wayaTheme.colorScheme.customBlack,
-                    ),
-                    text: "Edit Shop",
-                  ),
-                )
-              ];
-            },
-          )
-        ],
-      ),
-    );
+        ));
   }
 
   InkWell _buildActionNav(
