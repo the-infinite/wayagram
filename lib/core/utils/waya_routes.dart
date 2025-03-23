@@ -256,7 +256,7 @@ class WayaAppRoutes {
           id: WayaNav.search['id'].toString(),
         ),
     MutualPage.route: () => MutualPage(
-          initialTab: WayaNav.search['tab'] ?? 'mutual',
+          initialTab: WayaNav.search['tab'] ?? 'followers',
           userId: WayaNav.search['uid'].toString(),
           source: WayaNav.search['source'] ?? 'any',
         ),
@@ -347,7 +347,7 @@ class WayaAppRoutes {
   /// Helper function used to generate the route that is supposed to navigate to
   /// all the followers, followings, and mutuals that one user has with another
   /// one.
-  static String getFollowersPage(String uid, [String tab = 'mutual', String source = 'any']) =>
+  static String getFollowersPage(String uid, [String tab = 'followers', String source = 'any']) =>
       "${MutualPage.route}?tab=$tab&source=$source&uid=$uid";
 
   /// Helper function used to generate the route that is supposed to take you a
