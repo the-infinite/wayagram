@@ -7,12 +7,15 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/pages/data/model/pages_users_follow_model.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
+import 'package:wayagram/features/post/model/get_all_post.dart';
+import 'package:wayagram/shared/cache/page.dart';
+import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
 import 'package:wayagram/shared/features/profile/model/pages.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 
 class PageNotifier extends ValueNotifier<int> {
-  final int limit = 50;
+  final int limit = 200;
   final repo = PageRepository();
   int createdPage = 1;
   int followedPage = 1;
@@ -63,6 +66,7 @@ class PageNotifier extends ValueNotifier<int> {
 
       //? Now add the newly fetched groups.
       result.addAll(responseModel.data?.docs ?? []);
+      wayaPageCache.cacheAll(responseModel.data?.docs ?? []);
 
       //? Now, update our value.
       createdPages = result;
@@ -117,7 +121,8 @@ class PageNotifier extends ValueNotifier<int> {
       followedPage = responseModel.data?.nextPage?.toInt() ?? 1;
       hasMoreFollowedPages = responseModel.data?.hasNextPage ?? true;
 
-      //? Now add the newly fetched groups.
+      //? Now add the newly fetched pages.
+      wayaPageCache.cacheAll(responseModel.data?.docs ?? []);
       result.addAll(responseModel.data?.docs ?? []);
 
       //? Now, update our value.
@@ -169,6 +174,7 @@ class PageNotifier extends ValueNotifier<int> {
       if (response.success) {
         final result = PageModel.fromJson(response.data['data']);
         createdPages.insert(0, result);
+        wayaPageCache.cache(result.id, result);
         refresh();
         WayaSnackBar.showToast("Page created successfully");
         return result;
@@ -213,6 +219,7 @@ class PageNotifier extends ValueNotifier<int> {
       if (response.success) {
         final result = PageModel.fromJson(response.data["data"]);
         final found = createdPages.indexWhere((group) => group.id == pageId);
+        wayaPageCache.cache(result.id, result);
 
         //? If this was found, remove it and update.
         if (!found.isNegative) {
@@ -250,6 +257,7 @@ class PageNotifier extends ValueNotifier<int> {
       //? This is fine.
       if (response.success) {
         final found = createdPages.indexWhere((group) => group.id == pageId);
+        wayaPageCache.deleteItem(pageId);
 
         //? If this was found, remove it and update.
         if (!found.isNegative) {
@@ -291,6 +299,7 @@ class PageNotifier extends ValueNotifier<int> {
       if (response.success) {
         resetFollowedPages(false);
         await getPagesUserFollows();
+        await getSinglePage(pageId);
         WayaSnackBar.showToast("Followed the page successfully");
       }
 
@@ -307,6 +316,65 @@ class PageNotifier extends ValueNotifier<int> {
 
     //? Return false.
     return false;
+  }
+
+  /// Retrieves a single page from the database using its unique identifier.
+  ///
+  /// Parameters:
+  /// - [pageId]: The unique identifier string of the page to retrieve.
+  ///
+  /// Returns a [Future] that completes with a [PageModel] instance if the page is found,
+  /// or `null` if no page exists with the given ID.
+  ///
+  /// Throws an exception if there's an error during the database operation.
+  Future<PageModel?> getSinglePage(String pageId) async {
+    try {
+      // API call
+      final response = await repo.getSinglePage(pageId);
+
+      if (response.success) {
+        final responseModel = PagesUsersFollowModel.fromJson(response.data);
+        wayaPageCache.cacheAll(responseModel.data?.docs ?? []);
+        return responseModel.data?.docs?.first;
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.pages,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Return null.
+    return null;
+  }
+
+  /// Refreshes the specified post's data asynchronously.
+  ///
+  /// This method updates the state of a post identified by [postId] with the latest data.
+  ///
+  /// Parameters:
+  ///   * [postId] - The unique identifier of the post to be refreshed.
+  ///
+  /// Throws an error if the refresh operation fails.
+  Future<void> refreshPost(String postId) async {
+    try {
+      // API call
+      final response = await repo.fetchSinglePost(postId);
+
+      if (response.success) {
+        GetAllPost responseModel = GetAllPost.fromJson(response.data);
+        wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.posts,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
   }
 
   /// Unfollows a page with the specified ID.
@@ -330,6 +398,9 @@ class PageNotifier extends ValueNotifier<int> {
           followedPages.removeAt(found);
           refresh();
         }
+
+        //? Then this is fine.
+        await getSinglePage(pageId);
 
         //? Notify the user.
         WayaSnackBar.showToast("You have unfollowed the page");

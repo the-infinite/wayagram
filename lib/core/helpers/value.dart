@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/utils/waya_constants.dart';
 
 class WayaValueHelper {
   WayaValueHelper._();
@@ -46,6 +47,21 @@ class WayaValueHelper {
     return '${price ? '₦' : ''}${value.toStringAsFixed(2).replaceAll(RegExp(r'\.?0+$'), '')}${units[exp]}';
   }
 
+  /// Formats a numerical value into a price string representation.
+  ///
+  /// Takes a number and formats it with specified decimal digits (defaults to 2).
+  ///
+  /// Example:
+  /// ```dart
+  /// Value.formatPrice(1234.5678) // Returns "1,234.57"
+  /// Value.formatPrice(1234.5678, 3) // Returns "1,234.568"
+  /// ```
+  ///
+  /// Parameters:
+  /// - [number] The numerical value to format
+  /// - [decimalDigits] Optional number of decimal places (defaults to 2)
+  ///
+  /// Returns a formatted string with thousands separators and specified decimal places.
   static String formatPrice(num number, [int decimalDigits = 2]) {
     final format = NumberFormat.currency(decimalDigits: decimalDigits, symbol: "₦");
     return format.format(number);
@@ -89,4 +105,15 @@ class WayaValueHelper {
       WayaDebugEventType.runtime => 'Runtime',
     };
   }
+
+  /// Returns a shareable URL based on the provided route.
+  /// The URL format depends on whether the application is in production mode.
+  /// 
+  /// [route] The route path to be transformed into a shareable URL
+  /// 
+  /// Returns a [String] containing the complete shareable URL
+  static String getShareableUrl(String route) => switch (WayaConstants.isProduction) {
+        true => "https://wayagram.ng$route",
+        false => "https://staging.wayagram.ng$route",
+      };
 }

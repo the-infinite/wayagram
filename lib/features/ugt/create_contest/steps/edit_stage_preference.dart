@@ -626,7 +626,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
               if (priceForWinner.value == "No") {
                 _contestController.contestPrizeWinnerTextController.text = "0";
               }
-              if (entryType.value.toLowerCase() != "free") {
+              if (entryType.value.toLowerCase() == "free") {
                 _contestController.entryAmountController.text = "0";
               }
               if (_formKey.currentState!.validate()) {

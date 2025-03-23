@@ -37,6 +37,7 @@ class VideoFileWidget extends StatefulWidget {
 
 class _VideoFileWidgetState extends State<VideoFileWidget> {
   bool downloaded = true;
+  final controller = WayaVideoController();
 
   @override
   void initState() {
@@ -66,6 +67,12 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
       }
     });
     super.reassemble();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -171,7 +178,7 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                 height: !widget.interactive && widget.totalSize < 3 ? null : 100,
                 child: WayaVideoWidget.file(
                   widget.video,
-                  controller: WayaVideoController(),
+                  controller: controller,
                   controls: widget.interactive ? WayaVideoControls.message : WayaVideoControls.content,
                 ),
               ),

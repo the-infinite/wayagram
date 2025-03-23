@@ -8,6 +8,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
@@ -159,26 +160,37 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
 
           //? Since it is real, first, the document file itself.
           else
-            ClipPath(
-              clipBehavior: Clip.antiAlias,
-              clipper: ShapeBorderClipper(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+            GestureDetector(
+              onTap: () async {
+                final result = await WayaNavigationHelper.toImageDetailsScreen(
+                  [widget.image],
+                  null,
+                );
+
+                //? Do nothing.
+                if (result == null) return;
+              },
+              child: ClipPath(
+                clipBehavior: Clip.antiAlias,
+                clipper: ShapeBorderClipper(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-              ),
-              child: Image.file(
-                widget.image,
-                width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
-                height: !widget.interactive && widget.totalSize < 3 ? null : 100,
-                fit: BoxFit.cover,
-                errorBuilder: (context, e, _) {
-                  return CachedNetworkImage(
-                    imageUrl: widget.message?.media?.first.mediaUrl ?? "",
-                    width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
-                    height: !widget.interactive && widget.totalSize < 3 ? null : 100,
-                    fit: BoxFit.cover,
-                  );
-                },
+                child: Image.file(
+                  widget.image,
+                  width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
+                  height: !widget.interactive && widget.totalSize < 3 ? null : 100,
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, e, _) {
+                    return CachedNetworkImage(
+                      imageUrl: widget.message?.media?.first.mediaUrl ?? "",
+                      width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
+                      height: !widget.interactive && widget.totalSize < 3 ? null : 100,
+                      fit: BoxFit.cover,
+                    );
+                  },
+                ),
               ),
             ),
 

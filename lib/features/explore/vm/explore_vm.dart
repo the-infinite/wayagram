@@ -4,6 +4,7 @@ import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/data/repo/explore_repository.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
+import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 
 class ExploreState {
@@ -77,10 +78,14 @@ class ExploreVm extends StateNotifier<ExploreState> {
       if (response.success) {
         final data = response.data['data'];
         final posts = data['posts'] as List;
+        final recent = posts.map((e) => PostModel.fromJson(e));
 
         //? Fetch the posts.
         final result = [...state.posts];
-        result.addAll(posts.map((e) => PostModel.fromJson(e)));
+        result.addAll(recent);
+
+        //? Now, update the cache for all of the most recently added posts.
+        wayaPostCache.cacheAll(recent);
 
         //? Now update the state.
         state = state.copyWith(

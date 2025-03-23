@@ -66,52 +66,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
       title: "Contest Details",
       appBarTrailing: Row(
         children: [
-          //  Image.asset("assets/images/vector.png"),
-          /*    PopupMenuButton(
-            onSelected: (value) {},
-            position: PopupMenuPosition.under,
-            itemBuilder: (context1) {
-              return [
-                PopupMenuItem<int>(
-                  value: 0,
-                  child: _buildActionNav(
-                      context: context,
-                      onTap: () {
-                        WayaNav.goBack();
-                        WayaNav.toNamed('/contest-mydashboard-profile-page');
-                      },
-                      asset: SvgPicture.asset('assets/images/pages/flag.svg'),
-                      text: "Dashboard",
-                      color: wayaTheme.colorScheme.customBlack),
-                ),
-                PopupMenuItem<int>(
-                  value: 1,
-                  child: _buildActionNav(
-                      context: context,
-                      onTap: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Post deleted successfully!'),
-                            backgroundColor: WayaColors.primary,
-                            duration: Duration(seconds: 2),
-                          ),
-                        );
-                        WayaNav.goBack();
-                        WayaNav.toNamed('/pages');
-                      },
-                      asset: SvgPicture.asset(
-                        'assets/images/pages/delete.svg',
-                        color: wayaTheme.colorScheme.error500,
-                        height: 20,
-                      ),
-                      text: "Delete Contest",
-                      color: wayaTheme.colorScheme.error500),
-                )
-              ];
-            },
-            child: Image.asset("assets/images/vector.png"),
-          ),
- */
+        
           const Gap(20),
           ClipRRect(
             borderRadius: BorderRadius.circular(45),
@@ -132,30 +87,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /*   Container(
-                decoration: BoxDecoration(
-                  color: getColor(false,
-                      "You have 5 images and 1 video uploads left today"), // Background color
-                  borderRadius: BorderRadius.circular(20), // Rounded corners
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Center(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 4, horizontal: 8),
-                      child: Text(
-                        "You have 5 images and 1 video uploads left today",
-                        style: TextStyle(
-                            color: getColor(
-                                true, model?.status?.toLowerCase() ?? ""),
-                            fontSize: 12.sp),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
-                ),
-              ), */
+             
               const Gap(10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

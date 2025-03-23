@@ -94,7 +94,7 @@ class MomentData extends BaseModel<MomentData> {
   final String id;
   final String userId;
   final String name;
-  final String image;
+  final String? image;
   final String contentType;
   final String content;
   final String? color;

@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -14,17 +13,17 @@ import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
 import 'package:wayagram/features/group/data/model/group_popular_post_model.dart';
-import 'package:wayagram/features/group/data/model/group_post_model.dart';
-import 'package:wayagram/features/group/data/model/group_response.dart';
 import 'package:wayagram/features/group/data/model/join_request_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
 import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/view/groups.dart';
-//import 'package:wayagram/features/post/model/fetch_comment.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
+import 'package:wayagram/shared/cache/group.dart';
+import 'package:wayagram/shared/cache/post.dart';
 
 import 'package:wayagram/shared/features/file/repo/default.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
 
 import '../data/repo/group_repository.dart';
@@ -58,10 +57,18 @@ class GroupVm extends StateNotifier<GroupState> {
     }
     final groupDoc = docs!.first;
     state = state.copyWith(
-        name: groupDoc.name,
-        desc: groupDoc.description,
-        profileImage: groupDoc.profileImage,
-        coverImage: groupDoc.coverImage);
+      name: groupDoc.name,
+      desc: groupDoc.description,
+      profileImage: groupDoc.profileImage,
+      coverImage: groupDoc.coverImage,
+    );
+  }
+
+  void setAddedUser(String? id) {
+    if (state.foundUserId == id) return;
+    state = state.copyWith(
+      foundUserId: id,
+    );
   }
 
   void reset() {
@@ -147,7 +154,7 @@ class GroupVm extends StateNotifier<GroupState> {
     try {
       final response = await _groupRepository.deleteGroup(postId);
       if (response.success && ctx.mounted) {
-        //getAllGroups();
+        wayaGroupCache.deleteItem(postId);
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Group deleted successfully!'),
@@ -208,6 +215,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
+        await getSingleGroup(groupId);
         WayaNav.toNamed('/groups');
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
@@ -234,10 +242,10 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  void prefillFunc(args) {
+  void prefillFunc(GroupModel group) {
     state = state.copyWith(
-      groupName: TextEditingController(text: '${args['name']}'),
-      groupDescription: TextEditingController(text: '${args['desc']}'),
+      groupName: TextEditingController(text: group.name),
+      groupDescription: TextEditingController(text: group.description),
     );
   }
 
@@ -299,13 +307,7 @@ class GroupVm extends StateNotifier<GroupState> {
       final response = await _groupRepository.inviteUserToGroup(groupId, role, targetId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
-        // ScaffoldMessenger.of(ctx).showSnackBar(
-        //   const SnackBar(
-        //     content: Text('Request declined successfully!'),
-        //     backgroundColor: WayaColors.primary,
-        //     duration: Duration(seconds: 2),
-        //   ),
-        // );
+        await getGroupMembers(groupId);
       } else {
         WayaNav.goBack();
       }
@@ -321,16 +323,34 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<void> getGroupSinglePosts(groupId) async {
+  Future<void> getGroupSinglePosts(String groupId) async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.fetchSingleGroupPost(groupId);
+      final response = await _groupRepository.fetchSingleGroupPost(groupId, state.allPostData?.data?.nextPage ?? 1);
       state = state.copyWith(isLoading: false);
 
       if (response.success) {
+        final result = <PostModel>[];
+
+        //? First, these ones.
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
-        state = state.copyWith(getAllPost: responseModel.data?.docs);
+        wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
+
+        //? If the current post data is not the current page.
+        if ((state.allPostData?.data?.page ?? 1) > 1) {
+          result.addAll(state.getAllPost ?? []);
+        }
+
+        //? Now, add all the newer posts.
+        result.addAll(responseModel.data?.docs ?? []);
+
+        //? Now, move forward.
+        state = state.copyWith(
+          getAllPost: result,
+          postCount: responseModel.data?.totalDocs,
+          allPostData: responseModel,
+        );
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -346,12 +366,29 @@ class GroupVm extends StateNotifier<GroupState> {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.getGroupPost(groupId);
+      final response = await _groupRepository.getGroupPost(groupId, state.allPostData?.data?.nextPage ?? 1);
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        GroupPostModel responseModel = GroupPostModel.fromJson(response.data);
-        GroupPostModel postModel = GroupPostModel.fromJson(response.data);
-        state = state.copyWith(groupPostdocs: responseModel.data?.docs, postCount: postModel.data?.totalDocs);
+        final result = <PostModel>[];
+
+        //? First, these ones.
+        GetAllPost responseModel = GetAllPost.fromJson(response.data);
+        wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
+
+        //? If the current post data is not the current page.
+        if ((state.allPostData?.data?.page ?? 1) > 1) {
+          result.addAll(state.getAllPost ?? []);
+        }
+
+        //? Now, add all the newer posts.
+        result.addAll(responseModel.data?.docs ?? []);
+
+        //? Now, move forward.
+        state = state.copyWith(
+          getAllPost: result,
+          postCount: responseModel.data?.totalDocs,
+          allPostData: responseModel,
+        );
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -370,6 +407,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       if (response.success) {
         GetAllGroups responseModel = GetAllGroups.fromJson(response.data);
+        wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(getAllGroups: responseModel.data?.docs);
         return responseModel.data?.docs;
       }
@@ -391,6 +429,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       if (response.success) {
         GetAllGroups responseModel = GetAllGroups.fromJson(response.data);
+        wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(getAllGroups: responseModel.data?.docs);
         return responseModel.data?.docs;
       }
@@ -405,7 +444,7 @@ class GroupVm extends StateNotifier<GroupState> {
     return null;
   }
 
-  Future<void> getGroupMembers(groupId) async {
+  Future<void> getGroupMembers(String groupId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _groupRepository.getGroupMember(groupId);
@@ -433,6 +472,7 @@ class GroupVm extends StateNotifier<GroupState> {
 
       if (response.success) {
         GroupPopularPostModel responseModel = GroupPopularPostModel.fromJson(response.data);
+        wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(groupPopularPostdocs: responseModel.data?.docs);
       }
     } catch (e) {
@@ -452,6 +492,7 @@ class GroupVm extends StateNotifier<GroupState> {
       state = state.copyWith(isLoading: false);
       if (response.success) {
         RecommendedGroupModel responseModel = RecommendedGroupModel.fromJson(response.data);
+        wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(recommendedGroupDocs: responseModel.data?.docs);
       }
     } catch (e) {
@@ -542,18 +583,12 @@ class GroupVm extends StateNotifier<GroupState> {
   }
 }
 
-final groupResponseProvider = StateProvider<GroupResponse?>((ref) => null);
-
-final groupProvider = Provider((ref) => GroupRepository());
-final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
-  return WayaLocalDataSource();
+final createGroupProvider = StateNotifierProvider<GroupVm, GroupState>((ref) {
+  return GroupVm(ref, GroupRepository());
 });
 
-final createGroupProvider = StateNotifierProvider<GroupVm, GroupState>((ref) {
-  final groupRepository = ref.watch(groupProvider);
+typedef GroupProviderFamily = StateNotifierProvider<GroupVm, GroupState>;
 
-  return GroupVm(
-    ref,
-    groupRepository,
-  );
+final singleGroupProvider = StateNotifierProvider.family<GroupVm, GroupState, String>((ref, key) {
+  return GroupVm(ref, GroupRepository());
 });

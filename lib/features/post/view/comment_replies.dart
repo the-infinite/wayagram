@@ -102,7 +102,7 @@ class _WayaCommentRepliesScreenState extends ConsumerState<WayaCommentRepliesScr
                   isAtEnd: !state.replyHasNextPage,
                   handler: handler,
                   isEmpty: state.replyHasLoaded && state.replies.isEmpty,
-                  whenEmpty: Column(),
+                  whenEmpty: const SizedBox(),
                   builder: (context, index) => WayaCommentWidget(
                     index: index,
                     controller: inputController,

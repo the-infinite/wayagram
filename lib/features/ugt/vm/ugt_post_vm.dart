@@ -18,20 +18,20 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
   //? Simulate fetching paginated posts
   Future<void> fetchContestForYou(bool isFirst) async {
     try {
-      if (isFirst) {
-        state = state.copyWith(page: 1);
-      }
       if (state.isLastPage) {
         return;
       }
+
       if (state.isLoading == true) {
         return;
       }
-      state = state.copyWith(isLoading: true);
+
+      //  state = state.copyWith(isLoading: true);
     } catch (e) {}
 
     try {
-      final response = await _contestRepository.getContestForYou(state.page);
+      final response =
+          await _contestRepository.getContestForYou(isFirst ? 1 : state.page);
       //  List<Contest> contestList = [];
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);
