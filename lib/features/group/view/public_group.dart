@@ -321,7 +321,7 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
               ),
 
               // Some space.
-              Gap(20.h),
+              Gap(5.h),
 
               //? Selected content.
               _selectedIndex == 0
@@ -390,23 +390,23 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
           ],
         ),
       ),
-      floatingActionButton: SizedBox(
-        height: 50,
-        width: 50,
-        child: WayaButton(
-          callback: () {
-            WayaNav.toNamed('/createGroupPost', arguments: widget.id);
-          },
-          height: 50,
-          centerWidget: Center(
-            child: Icon(
-              Icons.add,
-              color: wayaTheme.colorScheme.white,
-              size: 40,
-            ),
-          ),
-        ),
-      ),
+      floatingActionButton: myGroupNotifier.isMemberOf(group.id) || group.ownerId == ConversationState.self.id
+          ? SizedBox(
+              height: 50,
+              width: 50,
+              child: WayaButton(
+                callback: () => WayaNav.toNamed(WayaAppRoutes.getGroupPostScreen(group.id)),
+                height: 50,
+                centerWidget: Center(
+                  child: Icon(
+                    Icons.add,
+                    color: wayaTheme.colorScheme.white,
+                    size: 40,
+                  ),
+                ),
+              ),
+            )
+          : null,
     );
   }
 

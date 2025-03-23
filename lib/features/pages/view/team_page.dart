@@ -8,7 +8,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'add_team_member.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 class TeamPage extends ConsumerStatefulWidget {
@@ -60,9 +59,7 @@ class _TeamPageState extends ConsumerState<TeamPage> with SingleTickerProviderSt
                 ),
               ],
             ),
-            callback: () {
-              WayaNav.toNamed(AddTeamMember.route);
-            },
+            callback: () => WayaNav.toNamed(WayaAppRoutes.getAddPageTeamMemberPage(widget.pageId)),
             color: wayaTheme.colorScheme.primary50,
           ),
           const Gap(8),

@@ -6,6 +6,9 @@
     <!-- For internet connections. -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- For targeting android 13 -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
     <!-- For storage. -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -51,13 +54,15 @@
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme"
             />
-              <!-- App Link sample -->
+            <!-- App Link sample -->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-               <data android:scheme="https" android:host="wayagram.ng" />
-               <data android:scheme="http" android:host="wayagram.ng" />
+                <data android:scheme="https" android:host="wayagram.ng" />
+                <data android:scheme="http" android:host="wayagram.ng" />
+                <data android:scheme="https" android:host="staging.wayagram.ng" />
+                <data android:scheme="http" android:host="staging.wayagram.ng" />
             </intent-filter>
 
             <!-- Deep Link sample -->
@@ -101,6 +106,14 @@
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT" />
             <data android:mimeType="text/plain" />
+        </intent>
+    </queries>
+
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
         </intent>
     </queries>
 </manifest>
