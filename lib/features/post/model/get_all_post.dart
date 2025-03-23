@@ -79,23 +79,23 @@ class GetAllPostData {
     hasPrevPage = json['hasPrevPage'];
     prevPage = json['prevPage'];
   }
-  num? totalDocs;
+  int? totalDocs;
   List<PostModel>? docs;
-  num? limit;
-  num? page;
-  num? totalPages;
+  int? limit;
+  int? page;
+  int? totalPages;
   bool? hasNextPage;
-  num? nextPage;
+  int? nextPage;
   bool? hasPrevPage;
   dynamic prevPage;
   GetAllPostData copyWith({
-    num? totalDocs,
+    int? totalDocs,
     List<PostModel>? docs,
-    num? limit,
-    num? page,
-    num? totalPages,
+    int? limit,
+    int? page,
+    int? totalPages,
     bool? hasNextPage,
-    num? nextPage,
+    int? nextPage,
     bool? hasPrevPage,
     dynamic prevPage,
   }) =>

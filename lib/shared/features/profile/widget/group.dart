@@ -36,37 +36,7 @@ class _SingleGroupWidgetState extends State<SingleGroupWidget> {
   }
 
   void _toGroup() {
-    //? If you can do this then.
-    if (widget.group.ownerId == ConversationState.self.id) {
-      WayaNav.toNamed(
-        '/privateGroup',
-        arguments: {
-          'memberCount': '${widget.group.memberCount}',
-          'name': widget.group.name,
-          'url': '${widget.group.url}',
-          'desc': widget.group.description,
-          'coverImage': '${widget.group.coverImage}',
-          'profileImage': '${widget.group.profileImage}',
-          'groupId': widget.group.id,
-        },
-      );
-    }
-
-    //? This is fine.
-    else {
-      WayaNav.toNamed(
-        '/publicGroup',
-        arguments: {
-          'memberCount': '${widget.group.memberCount}',
-          'name': widget.group.name,
-          'url': '${widget.group.url}',
-          'desc': widget.group.description,
-          'coverImage': '${widget.group.coverImage}',
-          'profileImage': '${widget.group.profileImage}',
-          'groupId': widget.group.id
-        },
-      );
-    }
+    WayaNav.toNamed(WayaAppRoutes.getGroupDetailsPage(widget.group.id));
   }
 
   Future<void> _joinGroup() async {

@@ -127,31 +127,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
-                                  postData.group?.isPrivate == true
-                                      ? WayaNav.toNamed(
-                                          '/privateGroup',
-                                          arguments: {
-                                            'memberCount': '${postData.group?.memberCount}',
-                                            'name': postData.group?.name,
-                                            'url': '${postData.group?.url}',
-                                            'desc': postData.group?.description,
-                                            'coverImage': '${postData.group?.coverImage}',
-                                            'profileImage': '${postData.group?.profileImage}',
-                                            'groupId': postData.group?.id,
-                                          },
-                                        )
-                                      : WayaNav.toNamed(
-                                          '/publicGroup',
-                                          arguments: {
-                                            'memberCount': '${postData.group?.memberCount}',
-                                            'name': postData.group?.name,
-                                            'url': '${postData.group?.url}',
-                                            'desc': postData.group?.description,
-                                            'coverImage': '${postData.group?.coverImage}',
-                                            'profileImage': '${postData.group?.profileImage}',
-                                            'groupId': postData.group?.id
-                                          },
-                                        );
+                                  WayaNav.toNamed(WayaAppRoutes.getGroupDetailsPage(postData.groupId!));
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -198,26 +174,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
-                                  postData.page?.isPublic == true
-                                      ? WayaNav.toNamed('/publicPage', arguments: {
-                                          'pageId': postData.page?.id,
-                                          'followerCount': '${postData.page?.followerCount}',
-                                          'name': postData.page?.name,
-                                          'desc': postData.page?.description,
-                                          'coverImage': '${postData.page?.coverImage}',
-                                          'profileImage': '${postData.page?.profileImage}',
-                                        })
-                                      : WayaNav.toNamed(
-                                          '/privatePage',
-                                          arguments: {
-                                            'pageId': postData.page?.id,
-                                            'followerCount': '${postData.page?.followerCount}',
-                                            'name': postData.page?.name,
-                                            'desc': postData.page?.description,
-                                            'coverImage': '${postData.page?.coverImage}',
-                                            'profileImage': '${postData.page?.profileImage}',
-                                          },
-                                        );
+                                  WayaNav.toNamed(WayaAppRoutes.getPageDetailsPage(postData.pageId!));
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,

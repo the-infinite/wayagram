@@ -10,63 +10,100 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
-import 'package:wayagram/features/pages/view/report_page.dart';
+import 'private_page.dart';
+import 'report_page.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/shared/cache/page.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
+import 'package:wayagram/shared/features/profile/model/pages.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 
 import '../../group/view/groups_for_you.dart';
 
 class PublicPage extends ConsumerStatefulWidget {
-  //final String pageId;
-  static const route = '/publicPage';
-  const PublicPage({super.key});
+  static const route = '/pages/public';
+  final String id;
+
+  // Construct.
+  const PublicPage({
+    super.key,
+    required this.id,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PublicPageState();
 }
 
 class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProviderStateMixin {
+  late final pageProvider = singlePageProvider("page-${widget.id}");
+  late final notifier = ref.read(pageProvider.notifier);
+  final handler = WayaObservableScrollController();
   final loadingController = ValueNotifier(false);
-  late final args = ModalRoute.of(context)?.settings.arguments as dynamic;
-  late final pageId = args?['pageId'];
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createPageProvider.notifier).getPagePosts(pageId);
-    });
-  }
+  PageModel? _thisPage;
 
   Future<void> _followPage() async {
     //? Then leave the page.
-    if (myPageNotifier.isMemberOf(pageId)) {
-      await myPageNotifier.unfollowPage(pageId);
+    if (myPageNotifier.isMemberOf(widget.id)) {
+      await myPageNotifier.unfollowPage(widget.id);
     }
 
     //? Then, join the page.
     else {
-      await myPageNotifier.followPage(pageId);
+      await myPageNotifier.followPage(widget.id);
     }
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final result = await myPageNotifier.getSinglePage(widget.id);
+      setState(() {
+        _thisPage = result;
+      });
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    loadingController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createPageProvider);
+    final state = ref.watch(pageProvider);
 
+    //? Return this component.
+    final page = wayaPageCache.getCachedData(widget.id) ?? _thisPage;
+
+    //? If this is not found.
+    if (page == null) {
+      return const ColoredBox(color: Colors.white);
+    }
+
+    //? Fetch the data of this page.
+    if (page.ownerId == ConversationState.self.id) {
+      return PrivatePage(page: page);
+    }
+
+    //? Return the Scaffolded screen here.
     return WayaScaffold(
       padding: EdgeInsets.zero,
-      isLoading: viewModel.isLoading,
-      isScrollable: true,
+      isLoading: false,
+      isScrollable: false,
       appBarTrailing: Row(
         spacing: 12,
         children: [
           WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
           InkWell(
-            onTap: () => Share.share('${args['url']}'),
+            onTap: () => Share.share(
+              WayaValueHelper.getShareableUrl(WayaAppRoutes.getPageDetailsPage(widget.id)),
+              subject: 'Share ${page.name}',
+            ),
             child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
           ),
           PopupMenuButton(
@@ -75,27 +112,28 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
             position: PopupMenuPosition.under,
             itemBuilder: (context) {
               return [
-                PopupMenuItem<int>(
-                  value: 0,
-                  onTap: () {
-                    WayaNav.goBack();
-                    //WayaNav.toNamed('/groupSetting');
-                  },
-                  child: WayaActionNav(
-                    context: context,
-                    asset: SvgPicture.asset(
-                      'assets/images/pages/mute.svg',
-                      height: 20,
-                    ),
-                    text: "  Mute Page",
-                    color: wayaTheme.colorScheme.customBlack,
-                  ),
-                ),
+                // PopupMenuItem<int>(
+                //   value: 0,
+                //   onTap: () {
+                //     WayaNav.goBack();
+                //     //WayaNav.toNamed('/groupSetting');
+                //   },
+                //   child: WayaActionNav(
+                //     context: context,
+                //     asset: SvgPicture.asset(
+                //       'assets/images/pages/mute.svg',
+                //       height: 20,
+                //     ),
+                //     text: "  Mute Page",
+                //     color: wayaTheme.colorScheme.customBlack,
+                //   ),
+                // ),
                 PopupMenuItem<int>(
                   value: 1,
-                  onTap: () {
-                    Share.share('${args['url']}', subject: 'Share Options');
-                  },
+                  onTap: () => Share.share(
+                    WayaValueHelper.getShareableUrl(WayaAppRoutes.getPageDetailsPage(widget.id)),
+                    subject: 'Share ${page.name}',
+                  ),
                   child: WayaActionNav(
                     context: context,
                     asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
@@ -107,173 +145,246 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
                   value: 2,
                   onTap: () async {
                     WayaNav.goBack();
-                    await WayaUtils.showModalSheet(context,
-                        child: ReportPage(statuses: pageReport, currentStatus: "", pageId: '${args['pageId']}'));
+                    await WayaUtils.showModalSheet(
+                      context,
+                      child: ReportPage(
+                        statuses: pageReport,
+                        currentStatus: "",
+                        pageId: widget.id,
+                      ),
+                    );
                   },
                   child: WayaActionNav(
-                      context: context,
-                      asset: SvgPicture.asset(
-                        'assets/images/pages/flag.svg',
-                      ),
-                      text: "  Report Page",
-                      color: wayaTheme.colorScheme.customBlack),
+                    context: context,
+                    asset: SvgPicture.asset(
+                      'assets/images/pages/flag.svg',
+                    ),
+                    text: "  Report Page",
+                    color: wayaTheme.colorScheme.customBlack,
+                  ),
                 ),
               ];
             },
-            child: WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
+            child: WayaAssets.icons.genSet.moreHorz.svg(
+              fit: BoxFit.none,
+            ),
           ),
           Gap(8)
         ],
       ),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            clipBehavior: Clip.none,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  //? This is fine.
-                  Container(
-                    width: double.infinity,
-                    height: 200, // Banner height
-                    decoration: BoxDecoration(
-                      color: WayaColors.primaryBrown50,
-                      borderRadius: BorderRadius.circular(0),
-                      image:
-                          //viewModel.profileImage!=null
-                          args['profileImage'] != null
-                              ? DecorationImage(
-                                  image: NetworkImage('${args['profileImage']}'),
-                                  //image: NetworkImage('${viewModel.profileImage}'),
-                                  fit: BoxFit.cover,
-                                )
-                              : DecorationImage(
-                                  image: AssetImage('assets/images/pages/image_placeholder.png'),
-                                  fit: BoxFit.cover,
+      body: WayaObservableScrollView(
+        handler: handler,
+        shouldFetch: !state.isLoading,
+        isAtEnd: !state.hasMorePosts,
+        scrollNotice: 120,
+        onReachEnd: () async => await notifier.getPagePosts(widget.id),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              clipBehavior: Clip.none,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    //? This is fine.
+                    Container(
+                      width: double.infinity,
+                      height: 200, // Banner height
+                      decoration: BoxDecoration(
+                        color: WayaColors.primaryBrown50,
+                        borderRadius: BorderRadius.circular(0),
+                        image: page.profileImage != null
+                            ? DecorationImage(
+                                image: NetworkImage(
+                                  page.profileImage!,
                                 ),
+                                fit: BoxFit.cover,
+                              )
+                            : DecorationImage(
+                                image: AssetImage(
+                                  WayaAssets.images.pages.imagePlaceholder.path,
+                                ),
+                                fit: BoxFit.cover,
+                              ),
+                      ),
+                    ),
+
+                    // Some there.
+                    Gap(15.h),
+
+                    //? This is fine.
+                    if (page.isPublic || myPageNotifier.isMemberOf(widget.id))
+                      ValueListenableBuilder(
+                        valueListenable: myPageNotifier,
+                        builder: (context, redraws, _) => GestureDetector(
+                          onTap: _followPage,
+                          child: Container(
+                            margin: EdgeInsets.only(right: 20.w),
+                            padding: EdgeInsets.all(5.0),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
+                              color: wayaTheme.colorScheme.white,
+                              borderRadius: BorderRadius.circular(7.r),
+                            ),
+                            child: Text(
+                              myPageNotifier.isMemberOf(widget.id) ? "Following" : "Follow",
+                              style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                color: wayaTheme.colorScheme.primary600,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ),
+                        ),
+                      )
+                  ],
+                ),
+                Positioned(
+                  left: 16.w,
+                  top: 190,
+                  child: WayaDp(
+                    radius: 30.r,
+                    image: page.profileImage,
+                    isSelf: false,
+                    isEdit: false,
+                  ),
+                ),
+              ],
+            ),
+
+            // Some space.
+            const Gap(10),
+
+            //? This section.
+            Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  //? First the name.
+                  Text(
+                    page.name,
+                    style: wayaTheme.textTheme.bodyMedium,
+                  ),
+
+                  //? Second the description.
+                  Text(
+                    page.description,
+                    style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: wayaTheme.colorScheme.greyColor500,
+                    ),
+                  ),
+                  const Gap(10),
+                  Row(
+                    children: [
+                      //? This is fine too.
+                      actionType2(
+                        WayaValueHelper.formatNumber(page.followerCount),
+                        'Followers',
+                      ),
+
+                      //? Some space.
+                      const Gap(10),
+
+                      //? Now here we are.
+                      actionType2(
+                        WayaValueHelper.formatNumber(state.postCount ?? 0),
+                        'Posts',
+                      ),
+                    ],
+                  ),
+
+                  // Some space.
+                  const Gap(10),
+                ],
+              ),
+            ),
+
+            //? If this page should be visible to the user...
+            if (myPageNotifier.isMemberOf(widget.id) || page.isPublic) ...[
+              Padding(
+                padding: EdgeInsets.only(left: 15.w),
+                child: Text(
+                  'Latest post',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: WayaColors.greyColor700,
+                    fontFamily: WayaConstants.fontFamily,
+                  ),
+                ),
+              ),
+
+              // Some space.
+              Gap(10.h),
+
+              //? This is fine.
+              if (state.getAllPost?.isEmpty ?? true)
+                PostEmptyState()
+              else
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: state.getAllPost?.length ?? 0,
+                    itemBuilder: (_, index) => WayaPostWidget(
+                      data: state.getAllPost![index],
+                      index: index,
+                    ),
+                  ),
+                )
+            ]
+
+            //? Since the user has not joined and it is private
+            else ...[
+              Gap(100.h),
+
+              //? Then the other children.
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  //? First, the lock icon.
+                  WayaAssets.icons.genSet.lock.svg(),
+
+                  // Some space.
+                  Gap(10.h),
+
+                  //? The private text.
+                  Text('This page is private', style: wayaTheme.textTheme.titleLarge),
+
+                  // Some space.
+                  Gap(10.h),
+
+                  //?
+                  Text(
+                    'You must join to see posts and participate',
+                    style: wayaTheme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w400,
+                      fontFamily: WayaConstants.fontFamily,
+                      fontSize: 16.sp,
                     ),
                   ),
 
-                  // Some there.
-                  Gap(15.h),
+                  // Some space.
+                  Gap(30.h),
 
-                  //? This is fine.
-                  ValueListenableBuilder(
-                    valueListenable: myPageNotifier,
-                    builder: (context, redraws, _) => GestureDetector(
-                      onTap: _followPage,
-                      child: Container(
-                        margin: EdgeInsets.only(right: 20.w),
-                        padding: EdgeInsets.all(5.0),
-                        decoration: BoxDecoration(
-                          border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
-                          color: wayaTheme.colorScheme.white,
-                          borderRadius: BorderRadius.circular(7.r),
-                        ),
-                        child: Text(
-                          myPageNotifier.isMemberOf(pageId) ? "Following" : "Follow",
-                          style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
-                            color: wayaTheme.colorScheme.primary600,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
+                  //? Now, let this fly.
+                  WayaProgressiveButton(
+                    notifier: loadingController,
+                    callback: () async => myPageNotifier.followPage(widget.id),
+                    text: 'Join & Request Access',
+                  ),
                 ],
               ),
-              Positioned(
-                left: 16.w,
-                top: 190,
-                child: CircleAvatar(
-                    radius: 30,
-                    backgroundColor: WayaColors.greyColor100,
-                    backgroundImage: NetworkImage('${args['coverImage']}')
-                    //NetworkImage('${viewModel.coverImage}'),
-                    ),
-              ),
             ],
-          ),
-          const Gap(10),
-          Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text('${args['name']}', style: wayaTheme.textTheme.bodyMedium),
-                Text(
-                  '${args['desc']}',
-                  style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 12, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
-                ),
-                const Gap(10),
-                Row(
-                  children: [
-                    actionType2(
-                      '${args['followerCount']}',
-                      'Followers',
-                    ),
-                    const Gap(10),
-                    actionType2('0', 'Posts'),
-                  ],
-                ),
-                const Gap(10),
-                // Row(
-                //   children: [
-                //     WayaTabButton(
-                //       isSelected: _selectedIndex == 0,
-                //       text: 'Posts',
-                //       onTap: () => setState(() => _selectedIndex = 0),
-                //     ),
-                //     WayaTabButton(
-                //       isSelected: _selectedIndex == 1,
-                //       text: 'Team',
-                //       onTap: () => setState(() => _selectedIndex = 1),
-                //     ),
-                //   ],
-                // ),
-
-                //const Gap(20),
-              ],
-            ),
-          ),
-          // const Gap(20),
-          // _selectedIndex == 0 ? PagePost(pageId: '${args['pageId']}') : TeamPage(pageId: '${args['pageId']}',)
-          Padding(
-            padding: const EdgeInsets.only(left: 15),
-            child: Text(
-              'Latest post',
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: WayaColors.greyColor700,
-                fontFamily: WayaConstants.fontFamily,
-              ),
-            ),
-          ),
-          if (viewModel.getAllPost?.isEmpty ?? true)
-            PostEmptyState()
-          else
-            SizedBox(
-              child: ListView.builder(
-                padding: EdgeInsets.only(
-                  left: 15,
-                  right: 15,
-                ),
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: viewModel.getAllPost?.length ?? 0,
-                itemBuilder: (_, index) => WayaPostWidget(
-                  data: viewModel.getAllPost![index],
-                  index: index,
-                ),
-              ),
-            )
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -290,12 +401,18 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
       onTap: onPressed,
       child: Row(
         children: [
-          Text(txt, style: wayaTheme.textTheme.bodySmall),
+          Text(
+            txt,
+            style: wayaTheme.textTheme.bodySmall,
+          ),
           const Gap(3),
           Text(
             txt2,
-            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                fontSize: 12.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor500),
+            style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w400,
+              color: wayaTheme.colorScheme.greyColor500,
+            ),
           ),
         ],
       ),

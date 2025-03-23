@@ -52,7 +52,7 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
                   ),
                   child: WayaDp(
                     image: widget.moment.image,
-                    radius: 50.r,
+                    radius: 20.r,
                     isSelf: false,
                     isEdit: false,
                     onTap: null,

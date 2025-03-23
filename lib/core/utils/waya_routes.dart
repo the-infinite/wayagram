@@ -33,12 +33,10 @@ import 'package:wayagram/features/group/view/add_group_member.dart';
 import 'package:wayagram/features/group/view/confirm_group_details.dart';
 import 'package:wayagram/features/group/view/create_group.dart';
 import 'package:wayagram/features/group/view/create_group_post.dart';
-import 'package:wayagram/features/group/view/edit_group_info.dart';
 import 'package:wayagram/features/group/view/group_setting.dart';
 import 'package:wayagram/features/group/view/group_suggestion.dart';
 import 'package:wayagram/features/group/view/groups.dart';
 import 'package:wayagram/features/group/view/members_screen.dart';
-import 'package:wayagram/features/group/view/private_group.dart';
 import 'package:wayagram/features/group/view/public_group.dart';
 import 'package:wayagram/features/group/view/success_group.dart';
 import 'package:wayagram/features/group/view/view_full_media.dart';
@@ -57,9 +55,7 @@ import 'package:wayagram/features/pages/view/public_page.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
-import 'package:wayagram/features/pages/view/edit_page_info.dart';
 import 'package:wayagram/features/follow/view/mutual_page.dart';
-import 'package:wayagram/features/pages/view/private_page.dart';
 import 'package:wayagram/features/polls_and_voting/views/add_choices.dart';
 import 'package:wayagram/features/polls_and_voting/views/poll_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/views/create_poll.dart';
@@ -248,9 +244,12 @@ class WayaAppRoutes {
     Groups.route: () => Groups(),
     Suggestion.route: () => Suggestion(),
     GroupSuggestion.route: () => GroupSuggestion(),
-    PrivatePage.route: () => PrivatePage(),
-    PublicPage.route: () => PublicPage(),
-    MembersScreen.route: () => MembersScreen(),
+    PublicPage.route: () => PublicPage(
+          id: WayaNav.search['id'].toString(),
+        ),
+    MembersScreen.route: () => MembersScreen(
+          id: WayaNav.search['id'].toString(),
+        ),
     CreatePost.route: () => CreatePost(),
     CreateGroupPost.route: () => CreateGroupPost(),
     CreatePagePost.route: () => CreatePagePost(),
@@ -260,10 +259,10 @@ class WayaAppRoutes {
           source: WayaNav.search['source'] ?? 'any',
         ),
     FollowRelationshipsPage.route: () => FollowRelationshipsPage(),
-    PublicGroup.route: () => PublicGroup(),
-    EditPageInfo.route: () => EditPageInfo(),
+    PublicGroup.route: () => PublicGroup(
+          id: WayaNav.search['id'].toString(),
+        ),
     AddTeamMember.route: () => AddTeamMember(),
-    PrivateGroup.route: () => PrivateGroup(),
     SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
     ChatProfilePage.route: () => ChatProfilePage(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route: () => DisplayFeed(),
@@ -281,8 +280,9 @@ class WayaAppRoutes {
           title: '',
           postId: '',
         ),
-    EditGroupInfo.route: () => EditGroupInfo(),
-    AddGroupMember.route: () => AddGroupMember(),
+    AddGroupMember.route: () => AddGroupMember(
+          id: WayaNav.search['id'].toString(),
+        ),
     SearchView.route: () => SearchView(),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
@@ -311,7 +311,6 @@ class WayaAppRoutes {
     SellerBuyRequestsScreen.route: () => SellerBuyRequestsScreen(),
     BuyerBuyRequestsScreen.route: () => BuyerBuyRequestsScreen(),
     RoleAccessPage.route: () => RoleAccessPage(),
-    
     AddTeamMemberPage.route: () => AddTeamMemberPage(),
     MemberDetailsPage.route: () => MemberDetailsPage(),
     VerifyEmail.route: () => VerifyEmail()
@@ -346,6 +345,22 @@ class WayaAppRoutes {
   /// one.
   static String getFollowersPage(String uid, [String tab = 'mutual', String source = 'any']) =>
       "${MutualPage.route}?tab=$tab&source=$source&uid=$uid";
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single page by its ID.
+  static String getPageDetailsPage(String id) => "${PublicPage.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single group by its ID.
+  static String getGroupDetailsPage(String id) => "${PublicGroup.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single group's members by its ID.
+  static String getGroupMembersPage(String id) => "${MembersScreen.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single group's screen for adding new members by its ID.
+  static String getAddGroupMemberPage(String id) => "${AddGroupMember.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed ot navigate to
   /// the chat profile of any given user.

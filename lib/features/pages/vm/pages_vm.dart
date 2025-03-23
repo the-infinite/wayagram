@@ -22,6 +22,7 @@ import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/cache/page.dart';
 import 'package:wayagram/shared/cache/post.dart';
+import 'package:wayagram/shared/features/profile/model/pages.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
 import 'package:wayagram/features/post/model/saved_posts.dart';
@@ -494,26 +495,50 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> getPagePosts(pageId) async {
+  Future<void> getPagePosts(String pageId) async {
+    //? When there is nothing more to give,
+    if (!state.hasMorePosts || state.isLoading) {
+      return;
+    }
+
+    //? Try to load more data.
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.fetchSinglePagePost(pageId);
-      state = state.copyWith(isLoading: false);
+      final response = await _pageRepository.fetchSinglePagePost(pageId, state.allPostData?.data?.nextPage ?? 1);
 
       if (response.success) {
+        final result = <PostModel>[];
+
+        //? First, these ones.
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
         wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
-        state = state.copyWith(getAllPost: responseModel.data?.docs);
-      } else {}
+
+        //? If the current post data is not the current page.
+        if ((state.allPostData?.data?.page ?? 1) > 1) {
+          result.addAll(state.getAllPost ?? []);
+        }
+
+        //? Now, add all the newer posts.
+        result.addAll(responseModel.data?.docs ?? []);
+
+        //? Now, move forward.
+        state = state.copyWith(
+          getAllPost: result,
+          postCount: responseModel.data?.totalDocs,
+          allPostData: responseModel,
+          isLoading: false,
+        );
+      }
     } catch (e) {
+      state = state.copyWith(isLoading: false);
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
         WayaDebugEventModule.pages,
         WayaDebugHelpers.getStackTrace(e),
       );
-    } finally {}
+    }
   }
 
   Future<void> deletePost(ctx, {required String postId, required String userId}) async {
@@ -797,17 +822,18 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  void prefillFunc(args) {
+  void prefillFunc(PageModel page) {
     state = state.copyWith(
-      pageName: TextEditingController(text: '${args['name']}'),
-      pageDescription: TextEditingController(text: '${args['desc']}'),
+      pageName: TextEditingController(text: page.name),
+      pageDescription: TextEditingController(text: page.description),
     );
   }
 }
 
-final pageProvider = Provider((ref) => PageRepository());
-
 final createPageProvider = StateNotifierProvider<PageVm, PageState>((ref) {
-  final pageRepository = ref.watch(pageProvider);
-  return PageVm(ref, pageRepository);
+  return PageVm(ref, PageRepository());
+});
+
+final singlePageProvider = StateNotifierProvider.family<PageVm, PageState, String>((ref, key) {
+  return PageVm(ref, PageRepository());
 });

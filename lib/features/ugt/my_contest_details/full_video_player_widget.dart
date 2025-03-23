@@ -8,7 +8,7 @@ class FullPageVideoPlayer extends StatefulWidget {
   const FullPageVideoPlayer({super.key, required this.videoUrl});
 
   @override
-  _FullPageVideoPlayerState createState() => _FullPageVideoPlayerState();
+  State<FullPageVideoPlayer> createState() => _FullPageVideoPlayerState();
 }
 
 class _FullPageVideoPlayerState extends State<FullPageVideoPlayer> {
