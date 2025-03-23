@@ -106,6 +106,36 @@ class PageState {
       isReportingPost: isReportingPost ?? this.isReportingPost,
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'pageName': pageName.text,
+      'pageDescription': pageDescription.text,
+      'content': content.text,
+      'images': images.map((image) => {'image': image.image?.path}).toList(),
+      'fetchAllPostData': fetchAllPostData?.map((post) => post.toJson()).toList(),
+      'getAllPost': getAllPost?.map((post) => post.toJson()).toList(),
+      'comments': comments?.map((comment) => comment.toJson()).toList(),
+      'postCount': postCount,
+      'allPostData': allPostData?.toJson(),
+      'recommendedPages': recommendedPages?.map((page) => page.toJson()).toList(),
+      'allPageModelDocs': allPageModelDocs?.map((page) => page.toJson()).toList(),
+      'getPageMemberDocs': getPageMemberDocs?.map((member) => member.toJson()).toList(),
+      'pagePopularPostDocs': pagePopularPostDocs?.map((post) => post.toJson()).toList(),
+      'data': data?.toJson(),
+      'docs': docs,
+      'shareModelData': shareModelData?.toJson(),
+      'isFocused': isFocused,
+      'isLoading': isLoading,
+      'isReportingPage': isReportingPage,
+      'isReportingPost': isReportingPost,
+    };
+  }
+
+  @override
+  String toString() {
+    return toJson().toString();
+  }
 }
 
 class PostImage {

@@ -35,8 +35,7 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
   Widget build(BuildContext context) {
     final state = ref.watch(disputeVmProvider);
 
-    final filteredDispute =
-        WayaUtils.search(state.disputes, ["status"], searchController.text);
+    final filteredDispute = WayaUtils.search(state.disputes, ["status"], searchController.text);
     return WayaScaffold(
       isLoading: false,
       isScrollable: false,
@@ -45,7 +44,9 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
         shouldFetch: !state.isLoading,
         isAtEnd: true,
         handler: handler,
-        onReachEnd: () async {},
+        onReachEnd: () async {
+          await ref.read(disputeVmProvider.notifier).getDisputes();
+        },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,

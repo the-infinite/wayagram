@@ -9,8 +9,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/pages/view/page_post.dart';
-import 'package:wayagram/features/pages/view/team_page.dart';
+import 'page_post.dart';
+import 'team_page.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/shared/features/profile/model/pages.dart';
 
@@ -34,7 +34,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(pageProvider);
+    final viewModel = ref.read(pageProvider);
 
     //? Our component.
     return WayaScaffold(
@@ -74,17 +74,15 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
                     decoration: BoxDecoration(
                       color: WayaColors.primaryBrown50,
                       borderRadius: BorderRadius.circular(0),
-                      image:
-                          //viewModel.profileImage!=null
-                          widget.page.coverImage != null
-                              ? DecorationImage(
-                                  image: NetworkImage(widget.page.coverImage!),
-                                  fit: BoxFit.cover,
-                                )
-                              : DecorationImage(
-                                  image: AssetImage('assets/images/pages/image_placeholder.png'),
-                                  fit: BoxFit.cover,
-                                ),
+                      image: widget.page.coverImage != null
+                          ? DecorationImage(
+                              image: NetworkImage(widget.page.coverImage!),
+                              fit: BoxFit.cover,
+                            )
+                          : DecorationImage(
+                              image: AssetImage('assets/images/pages/image_placeholder.png'),
+                              fit: BoxFit.cover,
+                            ),
                     ),
                   ),
                   Gap(15),

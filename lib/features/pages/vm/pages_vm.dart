@@ -495,6 +495,12 @@ class PageVm extends StateNotifier<PageState> {
   }
 
   Future<void> getPagePosts(String pageId) async {
+    //? When there is nothing more to give,
+    if (!state.hasMorePosts || state.isLoading) {
+      return;
+    }
+
+    //? Try to load more data.
     try {
       // API call
       state = state.copyWith(isLoading: true);
@@ -520,17 +526,17 @@ class PageVm extends StateNotifier<PageState> {
           getAllPost: result,
           postCount: responseModel.data?.totalDocs,
           allPostData: responseModel,
+          isLoading: false,
         );
-      } else {}
+      }
     } catch (e) {
+      state = state.copyWith(isLoading: false);
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
         WayaDebugEventModule.pages,
         WayaDebugHelpers.getStackTrace(e),
       );
-    } finally {
-      state = state.copyWith(isLoading: false);
     }
   }
 
@@ -823,14 +829,10 @@ class PageVm extends StateNotifier<PageState> {
   }
 }
 
-final pageProvider = Provider((ref) => PageRepository());
-
 final createPageProvider = StateNotifierProvider<PageVm, PageState>((ref) {
-  final pageRepository = ref.watch(pageProvider);
-  return PageVm(ref, pageRepository);
+  return PageVm(ref, PageRepository());
 });
 
 final singlePageProvider = StateNotifierProvider.family<PageVm, PageState, String>((ref, key) {
-  final pageRepository = ref.watch(pageProvider);
-  return PageVm(ref, pageRepository);
+  return PageVm(ref, PageRepository());
 });

@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -14,12 +13,10 @@ import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
 import 'package:wayagram/features/group/data/model/group_popular_post_model.dart';
-import 'package:wayagram/features/group/data/model/group_response.dart';
 import 'package:wayagram/features/group/data/model/join_request_model.dart';
 import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
 import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/view/groups.dart';
-//import 'package:wayagram/features/post/model/fetch_comment.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/cache/post.dart';
@@ -584,19 +581,12 @@ class GroupVm extends StateNotifier<GroupState> {
   }
 }
 
-final groupResponseProvider = StateProvider<GroupResponse?>((ref) => null);
-
-final groupProvider = Provider((ref) => GroupRepository());
-final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
-  return WayaLocalDataSource();
-});
-
 final createGroupProvider = StateNotifierProvider<GroupVm, GroupState>((ref) {
-  final groupRepository = ref.watch(groupProvider);
-  return GroupVm(ref, groupRepository);
+  return GroupVm(ref, GroupRepository());
 });
+
+typedef GroupProviderFamily = StateNotifierProvider<GroupVm, GroupState>;
 
 final singleGroupProvider = StateNotifierProvider.family<GroupVm, GroupState, String>((ref, key) {
-  final groupRepository = ref.watch(groupProvider);
-  return GroupVm(ref, groupRepository);
+  return GroupVm(ref, GroupRepository());
 });

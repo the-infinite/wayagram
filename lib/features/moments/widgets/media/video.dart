@@ -87,10 +87,12 @@ class _VideoPreviewState extends ConsumerState<VideoPreview> {
           widget.file,
           (result) async {
             if (result) {
-              await Future.delayed(const Duration(seconds: 2, milliseconds: 500));
-              setState(() {
-                downloaded = true;
-              });
+              await Future.delayed(const Duration(seconds: 7));
+              if (mounted) {
+                setState(() {
+                  downloaded = true;
+                });
+              }
             }
           },
         ),

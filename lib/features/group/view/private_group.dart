@@ -14,6 +14,7 @@ import 'package:wayagram/features/group/view/approval_screen.dart';
 import 'package:wayagram/features/group/view/events.dart';
 import 'package:wayagram/features/group/view/group_post.dart';
 import 'package:wayagram/features/group/view/group_team.dart';
+import 'package:wayagram/features/group/view/media_post.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/shared/features/group/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
@@ -28,13 +29,14 @@ class PrivateGroup extends ConsumerStatefulWidget {
 }
 
 class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerProviderStateMixin {
+  late final groupProvider = singleGroupProvider("group-${widget.group.id}");
+  late final notifier = ref.read(groupProvider.notifier);
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createGroupProvider);
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    final viewModel = ref.read(groupProvider);
 
     return WayaScaffold(
         padding: EdgeInsets.zero,
@@ -45,7 +47,10 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
             WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
             const Gap(12),
             InkWell(
-              onTap: () => Share.share('${args['url']}'),
+              onTap: () => Share.share(
+                WayaValueHelper.getShareableUrl(WayaAppRoutes.getGroupDetailsPage(widget.group.id)),
+                subject: 'Share ${widget.group.name}',
+              ),
               child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
             ),
             PopupMenuButton(
@@ -71,9 +76,10 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                     value: 1,
                     child: _buildActionNav(
                       context: context,
-                      onTap: () {
-                        Share.share('${args['url']}');
-                      },
+                      onTap: () => Share.share(
+                        WayaValueHelper.getShareableUrl(WayaAppRoutes.getGroupDetailsPage(widget.group.id)),
+                        subject: 'Share ${widget.group.name}',
+                      ),
                       asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
                       text: "Share Group link",
                       color: wayaTheme.colorScheme.customBlack,
@@ -127,33 +133,22 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                       width: double.infinity,
                       height: 200, // Banner height
                       decoration: BoxDecoration(
-                          color: WayaColors.primaryBrown50,
-                          borderRadius: BorderRadius.circular(0),
-                          image:
-                              //viewModel.profileImage!=null
-                              args['profileImage'] != null
-                                  ? DecorationImage(
-                                      image: NetworkImage('${args['profileImage']}'),
-                                      //image: NetworkImage('${viewModel.profileImage}'),
-                                      fit: BoxFit.cover,
-                                    )
-                                  : DecorationImage(
-                                      image: AssetImage('assets/images/pages/image_placeholder.png'),
-                                      fit: BoxFit.cover,
-                                    )
-                          //     : const DecorationImage(
-                          //   image: AssetImage("assets/placeholder.jpg"),
-                          //   fit: BoxFit.cover,
-                          // ),
-                          ),
+                        color: WayaColors.primaryBrown50,
+                        borderRadius: BorderRadius.circular(0),
+                        image: widget.group.coverImage != null
+                            ? DecorationImage(
+                                image: NetworkImage(widget.group.coverImage!),
+                                fit: BoxFit.cover,
+                              )
+                            : DecorationImage(
+                                image: AssetImage('assets/images/pages/image_placeholder.png'),
+                                fit: BoxFit.cover,
+                              ),
+                      ),
                     ),
                     Gap(15),
                     GestureDetector(
-                      onTap: () {
-                        WayaNav.toNamed('/editGroupInfo', arguments: args
-                            // '${args['groupId']}'
-                            );
-                      },
+                      onTap: () => WayaNav.toNamed('/editGroupInfo'),
                       child: Container(
                         margin: EdgeInsets.only(right: 20.w),
                         padding: EdgeInsets.all(5.0),
@@ -172,92 +167,116 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                   ],
                 ),
                 Positioned(
-                    left: 16.w,
-                    top: 190,
-                    child: CircleAvatar(
-                        radius: 30,
-                        backgroundColor: WayaColors.greyColor100,
-                        backgroundImage: NetworkImage('${args['coverImage']}')
-                        //NetworkImage('${viewModel.coverImage}'),
-                        )),
+                  left: 16.w,
+                  top: 190,
+                  child: WayaDp(
+                    radius: 30.r,
+                    image: widget.group.profileImage,
+                    isSelf: false,
+                    isEdit: false,
+                  ),
+                ),
               ],
             ),
             const Gap(10),
 
             Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
+              padding: const EdgeInsets.only(left: 15, right: 15),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                      //'${viewModel.name?.capitalizeFirst}',
-                      '${args['name']}',
-                      style: wayaTheme.textTheme.bodyMedium),
+                    widget.group.name,
+                    style: wayaTheme.textTheme.bodyMedium,
+                  ),
                   Text(
-                    '${args['desc']}',
-                    //'${viewModel.desc?.capitalizeFirst}',
-                    style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                        fontSize: 12.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Theme.of(context).colorScheme.greyColor500),
+                    widget.group.description,
+                    style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w400,
+                      color: wayaTheme.colorScheme.greyColor500,
+                    ),
                   ),
                   const Gap(10),
                   Row(
                     children: [
-                      actionType('${args['memberCount']}', 'Members',
-                          onPressed: () => WayaNav.toNamed('/groups/members', arguments: '${args['groupId']}')),
+                      actionType(
+                        WayaValueHelper.formatNumber(widget.group.memberCount),
+                        'Members',
+                        onPressed: () => WayaNav.toNamed('/groups/members', arguments: widget.group.id),
+                      ),
                       const Gap(10),
                       actionType('${ref.read(createGroupProvider).postCount}', 'Posts'),
                     ],
                   ),
-                  const Gap(10),
-                  Row(
-                    children: [
-                      WayaTabButton(
-                        isSelected: _selectedIndex == 0,
-                        text: 'Posts',
-                        onTap: () => setState(() => _selectedIndex = 0),
-                      ),
-                      WayaTabButton(
-                        isSelected: _selectedIndex == 1,
-                        text: 'Events',
-                        onTap: () => setState(() => _selectedIndex = 1),
-                      ),
-                      WayaTabButton(
-                        isSelected: _selectedIndex == 2,
-                        text: 'Media',
-                        onTap: () => setState(() => _selectedIndex = 2),
-                      ),
-                      WayaTabButton(
-                        isSelected: _selectedIndex == 3,
-                        text: 'Approvals',
-                        onTap: () => setState(() => _selectedIndex = 3),
-                      ),
-                      WayaTabButton(
-                        isSelected: _selectedIndex == 4,
-                        text: 'Team',
-                        onTap: () => setState(() => _selectedIndex = 4),
-                      ),
-                    ],
-                  ),
-
-                  //const Gap(20),
                 ],
               ),
             ),
 
+            const Gap(10),
+
+            Row(
+              children: [
+                WayaTabButton(
+                  isSelected: _selectedIndex == 0,
+                  text: 'Posts',
+                  onTap: () => setState(() => _selectedIndex = 0),
+                ),
+                WayaTabButton(
+                  isSelected: _selectedIndex == 1,
+                  text: 'Events',
+                  onTap: () => setState(() => _selectedIndex = 1),
+                ),
+                WayaTabButton(
+                  isSelected: _selectedIndex == 2,
+                  text: 'Media',
+                  onTap: () => setState(() => _selectedIndex = 2),
+                ),
+                WayaTabButton(
+                  isSelected: _selectedIndex == 3,
+                  text: 'Approvals',
+                  onTap: () => setState(() => _selectedIndex = 3),
+                ),
+                WayaTabButton(
+                  isSelected: _selectedIndex == 4,
+                  text: 'Team',
+                  onTap: () => setState(() => _selectedIndex = 4),
+                ),
+              ],
+            ),
+
+            //? Selected content.
             _selectedIndex == 0
-                ? GroupPost(groupId: '${args['groupId']}')
+                ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15.w),
+                    child: GroupPost(
+                      provider: groupProvider,
+                      id: widget.group.id,
+                    ),
+                  )
                 : _selectedIndex == 1
-                    ? const Events()
+                    ? Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15.w),
+                        child: Events(),
+                      )
                     : _selectedIndex == 2
-                        ? GroupPost(
-                            groupId: '${args['groupId']}',
+                        ? Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15.w),
+                            child: MediaPost(
+                              provider: groupProvider,
+                              id: widget.group.id,
+                            ),
                           )
                         : _selectedIndex == 3
-                            ? ApprovalScreen(groupId: '${args['groupId']}')
-                            : GroupTeam(groupId: '${args['groupId']}'),
+                            ? ApprovalScreen(
+                                provider: groupProvider,
+                                groupId: widget.group.id,
+                              )
+                            : GroupTeam(
+                                provider: groupProvider,
+                                groupId: widget.group.id,
+                              ),
             //AllOrders()
           ],
         ),
@@ -266,7 +285,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
           width: 50,
           child: WayaButton(
             callback: () {
-              WayaNav.toNamed('/createGroupPost', arguments: '${args['groupId']}');
+              WayaNav.toNamed('/createGroupPost', arguments: widget.group.id);
             },
             height: 50,
             centerWidget: Center(
@@ -292,11 +311,11 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
           const Gap(3),
           Text(
             txt2,
-            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 12.sp,
-                  fontWeight: FontWeight.w400,
-                  color: Theme.of(context).colorScheme.greyColor500,
-                ),
+            style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w400,
+              color: wayaTheme.colorScheme.greyColor500,
+            ),
           ),
         ],
       ),

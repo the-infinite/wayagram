@@ -6,7 +6,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/pages/view/pages_for_you.dart';
+import 'pages_for_you.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 import 'following_page.dart';

@@ -8,7 +8,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/pages/view/add_team_member.dart';
+import 'add_team_member.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 class TeamPage extends ConsumerStatefulWidget {
