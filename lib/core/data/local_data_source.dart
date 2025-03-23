@@ -78,6 +78,30 @@ class WayaLocalDataSource {
     return wayaFastStorageService.read<List<dynamic>?>(key: 'search-history')?.map((item) => item.toString()).toList();
   }
 
+  Future<void> saveViewedMoments(List<String> history) {
+    return wayaFastStorageService.write<List<String>>(key: 'viewed-moments', value: history);
+  }
+
+  List<String>? getViewedMoments() {
+    return wayaFastStorageService.read<List<dynamic>?>(key: 'viewed-moments')?.map((item) => item.toString()).toList();
+  }
+
+  Future<void> viewMoment(String momentId) {
+    final moments = getViewedMoments() ?? <String>[];
+    if (!moments.contains(momentId)) {
+      moments.add(momentId);
+    }
+    return saveViewedMoments(moments);
+  }
+
+  Future<void> removeViewedMoments(int index) {
+    final moments = getSearchHistory() ?? <String>[];
+    if (index < moments.length && index >= 0) {
+      moments.removeAt(index);
+    }
+    return saveViewedMoments(moments);
+  }
+
   Future<void> addSearchToHistory(String search) {
     if (search.length < 3) return Future.value(null);
     final history = getSearchHistory() ?? <String>[];

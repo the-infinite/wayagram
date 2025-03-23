@@ -106,8 +106,10 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
         widget.onReachEnd,
         key: "observable-scroll-${widget.handler.hashCode}",
         onFinish: (_) {
-          widget.handler.hasScrolled = false;
-          _loadingController.value = false;
+          try {
+            widget.handler.hasScrolled = false;
+            _loadingController.value = false;
+          } catch (_) {}
         },
       )();
     } catch (_) {}

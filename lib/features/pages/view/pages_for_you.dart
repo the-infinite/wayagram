@@ -55,17 +55,19 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Text(
-              'Based on pages you follow',
-              style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: WayaColors.greyColor700,
-              ),
+          Text(
+            'Based on pages you follow',
+            style: wayaTheme.textTheme.bodyMedium?.copyWith(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+              color: WayaColors.greyColor700,
             ),
           ),
+
+          // Some space.
+          Gap(10.h),
+
+          //? Then data.
           if (viewPage.pagePopularPostDocs?.isEmpty ?? true)
             ActivityLogsEmptyState(text: 'No post based on pages you follow')
           else

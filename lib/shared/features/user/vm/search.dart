@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/features/user/repo/default.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
@@ -97,7 +99,14 @@ class UserSearchNotifier extends StateNotifier<UserSearchState> {
       }
 
       return null;
-    } catch (_) {}
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.relationships,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
 
     //? This is fine too.
     return null;

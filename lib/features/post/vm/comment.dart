@@ -5,8 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
+import 'package:wayagram/features/post/controller/comment.dart';
 import 'package:wayagram/features/post/model/fetch_comment.dart';
 import 'package:wayagram/features/post/state/comment.dart';
+import 'package:wayagram/shared/cache/comment.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 
 import '../../../core/utils/utils.dart';
 
@@ -21,82 +24,19 @@ class CommentNotifier extends StateNotifier<CommentState> {
   /// This method modifies the existing comment data in the local cache to reflect
   /// the new state provided by the [CommentModel] parameter.
   void updateCachedComment(CommentModel comment) {
-    final inComment = state.comments.indexWhere((value) => value.id == comment.id);
-    final inReplies = state.replies.indexWhere((value) => value.id == comment.id);
-
-    //? If we found it in replies.
-    if (inReplies != -1) {
-      final old = state.replies[inReplies];
-      final replacement = state.replies;
-
-      //? This is fine.
-      replacement[inReplies] = comment.copyWith(user: old.user);
-      state = state.copyWith(
-        replies: [...replacement],
-      );
-      updateCacheNotifier.value = updateCacheNotifier.value + 1;
-      debugPrint("Comments Logs: Cache updated for reply comment ${comment.id}");
-    }
-
-    //? If we found it in comments.
-    if (inComment != -1) {
-      final old = state.comments[inComment];
-      final replacement = state.comments;
-
-      //? This is fine.
-      replacement[inComment] = comment.copyWith(user: old.user);
-      state = state.copyWith(
-        comments: [...replacement],
-      );
-      updateCacheNotifier.value = updateCacheNotifier.value + 1;
-      debugPrint("Comments Logs: Cache updated for comment ${comment.id}");
-    }
+    wayaCommentCache.cache(comment.id, comment);
   }
 
+  /// Removes a cached comment from memory using its unique identifier
+  ///
+  /// @param id The unique identifier of the comment to be removed
   void removeCachedComment(String id) {
-    final inComment = state.comments.indexWhere((value) => value.id == id);
-    final inReplies = state.replies.indexWhere((value) => value.id == id);
-
-    //? If we found it in replies.
-    if (inReplies != -1) {
-      final replacement = state.replies;
-
-      //? This is fine.
-      replacement.removeAt(inReplies);
-      state = state.copyWith(replies: [...replacement]);
-      updateCacheNotifier.value = updateCacheNotifier.value + 1;
-      debugPrint("Comments Logs: Cache deleted for reply comment $id");
-    }
-
-    //? If we found it in comments.
-    if (inComment != -1) {
-      final replacement = state.comments;
-
-      //? This is fine.
-      replacement.removeAt(inComment);
-      state = state.copyWith(comments: [...replacement]);
-      updateCacheNotifier.value = updateCacheNotifier.value + 1;
-      debugPrint("Comments Logs: Cache updated for comment $id");
-    }
+    wayaCommentCache.deleteItem(id);
   }
 
   /// Retrieve the comment in the cache with the provided.
   CommentModel? retrieveCachedComment(String commentId) {
-    final inComment = state.comments.indexWhere((value) => value.id == commentId);
-    final inReplies = state.replies.indexWhere((value) => value.id == commentId);
-
-    //? If we found it in comments.
-    if (inComment != -1) {
-      return state.comments.elementAtOrNull(inComment);
-    }
-
-    //? If we found it in replies.
-    if (inReplies != -1) {
-      return state.replies.elementAtOrNull(inReplies);
-    }
-
-    //? Return null.
-    return null;
+    return wayaCommentCache.getCachedData(commentId);
   }
 
   Future<bool> editComment(String postId, String commentId, String content) async {
@@ -130,7 +70,10 @@ class CommentNotifier extends StateNotifier<CommentState> {
         final comment = CommentModel.fromJson(response.data["data"]);
         resetComments();
         await getCommentsStream(postId);
-        updateCachedComment(comment);
+        if (parentId != null) {
+          await getReplies(postId, parentId);
+        }
+        await myPageNotifier.refreshPost(postId);
         return comment;
       }
     } catch (e) {
@@ -193,6 +136,7 @@ class CommentNotifier extends StateNotifier<CommentState> {
 
         //? Then add the newer parts.
         result.addAll(responseModel.data?.comments ?? []);
+        wayaCommentCache.cacheAll(responseModel.data?.comments ?? []);
 
         //? As we move on...
         state = state.copyWith(
@@ -239,6 +183,7 @@ class CommentNotifier extends StateNotifier<CommentState> {
 
         //? Then add the newer parts.
         result.addAll(responseModel.data?.comments ?? []);
+        wayaCommentCache.cacheAll(responseModel.data?.comments ?? []);
 
         //? As we move on...
         state = state.copyWith(
@@ -309,11 +254,16 @@ class CommentNotifier extends StateNotifier<CommentState> {
 
   Future<bool> deleteComment(String commentId) async {
     try {
+      final postId = CommentInputController.instance.postId;
       final response = await _pageRepository.deleteComment(commentId);
 
       if (response.success) {
         //? Since it is found...
         removeCachedComment(commentId);
+
+        if (postId != null) {
+          await myPageNotifier.refreshPost(postId);
+        }
       }
 
       // Now, return.
@@ -367,5 +317,3 @@ final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
 final createCommentProvider = StateNotifierProvider<CommentNotifier, CommentState>((ref) {
   return CommentNotifier(CommentState.initial, PageRepository());
 });
-
-final updateCacheNotifier = ValueNotifier(0);

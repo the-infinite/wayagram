@@ -57,6 +57,7 @@ class WayaErrorDialog extends StatelessWidget {
                 alignment: Alignment.center,
                 child: Text(
                   title,
+                  textAlign: TextAlign.center,
                   style: theme.textTheme.headlineMedium?.copyWith(
                     color: theme.colorScheme.customBlack,
                   ),

@@ -70,7 +70,7 @@ class _GroupsForYouState extends ConsumerState<GroupsForYou> with SingleTickerPr
         ),
 
         // Some space.
-        Gap(2.h),
+        Gap(10.h),
 
         //? Popular group posts.
         ListView.builder(

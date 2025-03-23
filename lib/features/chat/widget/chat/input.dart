@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
@@ -41,6 +43,9 @@ class ChatInputController {
 
   /// Our voice recorder.
   RecorderController? _soundRecorder;
+
+  /// Our nice way of keeping track of what you are currently focusing on.
+  FocusNode? _focusNode;
 
   /// Our momentId.
   String? _momentId;
@@ -116,8 +121,7 @@ class ChatInputController {
     _isEditing.value = false;
     _contacts.value = [];
     _files.value = [];
-    _soundRecorder?.dispose();
-    _soundRecorder = null;
+    _focusNode?.unfocus(disposition: UnfocusDisposition.scope);
     _focusedMessage.value = null;
     _isMedia.value = false;
     _momentId = null;
@@ -197,6 +201,11 @@ class ChatInputController {
     _replyTo.value = message;
     _isEditing.value = isEditing;
     _momentId = momentId;
+
+    //? If you can request focus
+    if (_focusNode!.canRequestFocus) {
+      _focusNode!.requestFocus();
+    }
   }
 
   /// A helper function used to set the type of message that this is currently
@@ -327,6 +336,7 @@ class ChatInputController {
 class ChatInputWidget extends StatelessWidget {
   final ChatInputController controller;
   final ChatNotifier notifier;
+  final FocusNode focusNode;
   final bool voiceEnabled;
   final bool padded;
   final Future<ChatModel?> Function() createChat;
@@ -337,6 +347,7 @@ class ChatInputWidget extends StatelessWidget {
     required this.controller,
     required this.notifier,
     required this.createChat,
+    required this.focusNode,
     this.voiceEnabled = true,
     this.padded = true,
   });
@@ -450,6 +461,11 @@ class ChatInputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //? For each time this gets constructed, notify the controller that the focus
+    //? listener might have changed.
+    controller._focusNode = focusNode;
+
+    //? Return your widget.
     return Padding(
       padding: padded ? const EdgeInsets.only(left: 15, right: 15, bottom: 12) : EdgeInsets.zero,
       child: Column(
@@ -551,10 +567,10 @@ class ChatInputWidget extends StatelessWidget {
                                 );
                               },
                             ),
-                      secondChild: WayaTextFormField(
-                        hintText: "Write a message here",
-                        showBorder: false,
+                      secondChild: TextField(
                         maxLines: 5,
+                        minLines: 1,
+                        focusNode: focusNode,
                         onChanged: (value) {
                           //? If this is a text message, allowing a user to send
                           //? a message would need to ENTIRELY depend on the
@@ -579,14 +595,22 @@ class ChatInputWidget extends StatelessWidget {
                             controller._isTyping.value = false;
                           })();
                         },
-                        onFieldSubmitted: (_) {
-                          WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, false));
-                        },
-                        isDense: true,
+                        style: WayaTextStyles.labelMedium,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          fillColor: WayaColors.greyColor200,
+                          filled: true,
+                          hintText: "Write a message here",
+                          hintStyle: WayaTextStyles.hintStyle,
+                          labelStyle: WayaTextStyles.labelSmall,
+                        ),
                         textInputAction: TextInputAction.newline,
                         keyboardType: TextInputType.multiline,
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-                        fillColor: WayaColors.greyColor200,
                         controller: controller._textController,
                       ),
                     ),

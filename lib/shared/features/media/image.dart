@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'package:wayagram/core/components/components.dart';
 
 class WayaImageDetailScreen extends StatefulWidget {
@@ -19,7 +20,11 @@ class WayaImageDetailScreen extends StatefulWidget {
 class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.sizeOf(context);
+    //? The both parameters cannot be null.
+    assert(widget.imageUrl != null || widget.file != null, "This must contain either a file or a network URL");
+    assert(widget.imageUrl == null || widget.file == null, "The two properties cannot have non-null values");
+
+    //? Show the widget.
     return WayaScaffold(
       padding: EdgeInsets.zero,
       backgroundColor: Colors.black,
@@ -34,19 +39,15 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
         child: SafeArea(
           child: Center(
             child: widget.file != null
-                ? IntrinsicHeight(
-                    child: Image.file(
-                      widget.file!,
-                      width: size.width,
-                      fit: BoxFit.contain,
-                    ),
+                ? PhotoView(
+                    imageProvider: FileImage(widget.file!),
+                    minScale: PhotoViewComputedScale.contained * 1,
+                    maxScale: PhotoViewComputedScale.covered * 5,
                   )
-                : IntrinsicHeight(
-                    child: Image.network(
-                      '${widget.imageUrl}',
-                      width: size.width,
-                      fit: BoxFit.contain,
-                    ),
+                : PhotoView(
+                    imageProvider: NetworkImage(widget.imageUrl!),
+                    minScale: PhotoViewComputedScale.contained * 1,
+                    maxScale: PhotoViewComputedScale.covered * 5,
                   ),
           ),
         ),

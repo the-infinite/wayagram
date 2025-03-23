@@ -7,7 +7,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 
 import '../../../assetsgen/assets.gen.dart';
@@ -15,8 +14,15 @@ import '../../post/view/create_post.dart';
 import '../../shop/widgets/empty_state.dart';
 
 class GroupPost extends ConsumerStatefulWidget {
-  final String groupId;
-  const GroupPost({super.key, required this.groupId});
+  final GroupProviderFamily provider;
+  final String id;
+
+  //? This is fine.
+  const GroupPost({
+    super.key,
+    required this.provider,
+    required this.id,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _GroupPostState();
@@ -29,47 +35,46 @@ class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProvider
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(createGroupProvider.notifier).getGroupSinglePosts(widget.groupId);
+      ref.read(widget.provider.notifier).getGroupSinglePosts(widget.id);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel2 = ref.watch(createPageProvider);
+    final viewModel2 = ref.watch(widget.provider);
 
-    return Padding(
-      padding: const EdgeInsets.only(left: 25),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Latest post',
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: WayaColors.greyColor700,
-              fontFamily: WayaConstants.fontFamily,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Latest post',
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w500,
+            color: WayaColors.greyColor700,
+            fontFamily: WayaConstants.fontFamily,
+          ),
+        ),
+
+        // Some space.
+        Gap(10.h),
+
+        //? Return this is fine.
+        if (viewModel2.getAllPost?.isEmpty ?? true)
+          PostEmptyState()
+        else
+          ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: viewModel2.getAllPost?.length ?? 0,
+            itemBuilder: (_, index) => WayaPostWidget(
+              data: viewModel2.getAllPost![index],
+              index: index,
             ),
           ),
-
-          //? Return this is fine.
-          if (viewModel2.getAllPost?.isEmpty ?? true)
-            PostEmptyState()
-          else
-            ListView.builder(
-              //padding: EdgeInsets.only(left: 15, right: 15,),
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: viewModel2.getAllPost?.length ?? 0,
-              itemBuilder: (_, index) => WayaPostWidget(
-                data: viewModel2.getAllPost![index],
-                index: index,
-              ),
-            ),
-          const Gap(25),
-        ],
-      ),
+        const Gap(25),
+      ],
     );
   }
 }

@@ -50,9 +50,6 @@ class _TabbedFeedWidgetState extends State<TabbedFeedWidget> {
           //? Shared moments.
           SharedMoments(),
 
-          // Some space.
-          Gap(15.h),
-
           //? Now, for our tab buttons.
           SizedBox(
             height: 35.h,

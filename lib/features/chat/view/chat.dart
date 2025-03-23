@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -32,7 +34,9 @@ class SingleChatScreen extends ConsumerStatefulWidget {
 
 class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   late final notifier = ref.watch(chatProvider.notifier);
+  final focusNode = FocusNode();
   final handler = WayaObservableScrollController();
+  bool _initialized = false;
 
   @override
   void initState() {
@@ -44,6 +48,12 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
 
     //? This is fine.
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -90,11 +100,14 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
           : null;
 
       // Set this up.
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) {
-          inputController.setChat(chat);
-        },
-      );
+      if (!_initialized) {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            _initialized = true;
+            inputController.setChat(chat);
+          },
+        );
+      }
 
       //? This is fine.
       return PopScope(
@@ -320,6 +333,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                   controller: inputController,
                   notifier: notifier,
                   createChat: _startConversation,
+                  focusNode: focusNode,
                 ),
               ],
             ),
