@@ -27,7 +27,9 @@ class PageState {
   final MediaUploadData? data;
   List<dynamic>? docs;
   final ShareModelData? shareModelData;
-
+  final TextEditingController username;
+  final String? foundUserId;
+  final String roleType;
   final bool isFocused;
   final bool isLoading;
   final bool isReportingPage;
@@ -40,6 +42,9 @@ class PageState {
     TextEditingController? pageName,
     TextEditingController? pageDescription,
     TextEditingController? content,
+    TextEditingController? username,
+    this.roleType = '',
+    this.foundUserId,
     this.isFocused = false,
     this.isLoading = false,
     this.isReportingPage = false,
@@ -57,7 +62,8 @@ class PageState {
     this.data,
     this.allPostData,
     this.shareModelData,
-  })  : pageName = pageName ?? TextEditingController(),
+  })  : username = username ?? TextEditingController(),
+        pageName = pageName ?? TextEditingController(),
         pageDescription = pageDescription ?? TextEditingController(),
         content = content ?? TextEditingController();
 
@@ -65,6 +71,9 @@ class PageState {
     TextEditingController? pageName,
     TextEditingController? pageDescription,
     TextEditingController? content,
+    TextEditingController? username,
+    String? foundUserId,
+    String? roleType,
     List<PostImage>? images,
     List<PostModel>? fetchAllPostData,
     List<PostModel>? getAllPost,
@@ -84,6 +93,9 @@ class PageState {
     bool? isReportingPost,
   }) {
     return PageState(
+      roleType: roleType ?? this.roleType,
+      username: username ?? this.username,
+      foundUserId: foundUserId ?? this.foundUserId,
       pageName: pageName ?? this.pageName,
       pageDescription: pageDescription ?? this.pageDescription,
       content: content ?? this.content,

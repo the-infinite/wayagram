@@ -47,16 +47,16 @@ class _AllOrdersState extends ConsumerState<AllOrders> {
             trailingWidget: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                   GroupedWidgetHeader(
-            isVisible: true,
-            subTitle: 'View and manage your orders',
-            title: 'Orders'),
-        const Gap(15),
-        FilterWidget(
-          hintText: 'Search Orders by ID, name, token, etc.',
-          search: searchController,
-        ),
-        const Gap(15),
+                GroupedWidgetHeader(
+                    isVisible: true,
+                    subTitle: 'View and manage your orders',
+                    title: 'Orders'),
+                const Gap(15),
+                FilterWidget(
+                  hintText: 'Search Orders by ID, name, token, etc.',
+                  search: searchController,
+                ),
+                const Gap(15),
               ],
             ),
             emptyState: EmptyState(

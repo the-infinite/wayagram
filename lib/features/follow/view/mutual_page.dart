@@ -90,11 +90,11 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
             //? This section for the tabs.
             Row(
               children: [
-                WayaTabButton(
-                  isSelected: _selectedIndex == 0,
-                  text: 'Mutuals',
-                  onTap: () => setState(() => _selectedIndex = 0),
-                ),
+                // WayaTabButton(
+                //   isSelected: _selectedIndex == 0,
+                //   text: 'Mutuals',
+                //   onTap: () => setState(() => _selectedIndex = 0),
+                // ),
 
                 //? The list of users the user in question is following.
                 WayaTabButton(

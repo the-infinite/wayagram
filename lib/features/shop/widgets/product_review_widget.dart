@@ -29,7 +29,7 @@ class ProductReviewWidget extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 WayaImage(
-                  imageUrl: "",
+                  imageUrl: review.raterProfilePhoto ?? "",
                   height: 40,
                   width: 40,
                   radius: BorderRadius.circular(40),

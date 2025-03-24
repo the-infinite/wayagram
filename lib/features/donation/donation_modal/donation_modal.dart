@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/data/local_data_source.dart';

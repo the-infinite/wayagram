@@ -14,20 +14,24 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
-import '../../../core/utils/waya_navigation.dart';
-
 class CreateGroupPost extends ConsumerStatefulWidget {
-  static const route = '/createGroupPost';
-  const CreateGroupPost({super.key});
+  static const route = '/groups/post/new';
+  final String id;
+
+  // Construct.
+  const CreateGroupPost({
+    super.key,
+    required this.id,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CreateGroupPostState();
 }
 
 class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTickerProviderStateMixin {
-  PageController pageController = PageController(
-    initialPage: 0,
-  );
+  late final groupProvider = singleGroupProvider("group-${widget.id}");
+  late final notifier = ref.read(groupProvider.notifier);
+  final pageController = PageController(initialPage: 0);
 
   final _formKey = GlobalKey<FormState>();
 
@@ -48,6 +52,12 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
 
   Future<void> _pickImages() async {
     try {
+      //? Dispose the older video controllers
+      for (final controller in videoControllers) {
+        controller.dispose();
+      }
+
+      //? Pick these,
       final List<XFile> images = await _pickers.pickMultiImage(
         imageQuality: 80, // Adjust image quality (0-100)
         maxWidth: 1200, // Max width of images
@@ -90,11 +100,9 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createGroupProvider);
+    final viewModel = ref.watch(groupProvider);
 
-    //final dynamic args  = ModalRoute.of(context)?.settings.arguments;
-    final groupId = ModalRoute.of(context)?.settings.arguments as String;
-
+    //? Return the scaffold.
     return WayaScaffold(
         resizeToAvoidBottomInset: true,
         isLoading: viewModel.isLoading,
@@ -122,11 +130,14 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
                           callback: !viewModel.isLoading
                               ? () async {
                                   if (_formKey.currentState!.validate()) {
-                                    await ref.watch(createGroupProvider.notifier).createGroupPost(context,
-                                        viewModel.content.text, sel ? "public" : "private", _selectedImages, groupId
-                                        //'${args['groupId']}'
-                                        );
-                                    ref.watch(createPageProvider.notifier).reset();
+                                    await notifier.createGroupPost(
+                                      context,
+                                      viewModel.content.text,
+                                      sel ? "public" : "private",
+                                      _selectedImages,
+                                      widget.id,
+                                    );
+                                    notifier.reset();
                                     WayaNav.replaceNamed("/groups");
                                   }
                                 }
@@ -135,7 +146,10 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
                           text: 'Post',
                           isLoading: viewModel.isLoading,
                           textStyle: WayaTextStyles.bodySmall.copyWith(
-                              fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.white,
+                          ),
                         ),
                 ),
               ),
@@ -227,7 +241,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
                           itemBuilder: (context, index) {
                             //? This is fine.
                             final resource = _selectedImages[index];
-                            final controller = videoControllers[index];
+                            final controller = videoControllers.elementAtOrNull(index);
 
                             //? Return the view.
                             return Stack(
@@ -242,7 +256,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
                                       borderRadius: BorderRadius.circular(8.r),
                                       child: WayaVideoWidget.file(
                                         File(resource.path),
-                                        controller: controller,
+                                        controller: controller!,
                                         controls: WayaVideoControls.none,
                                         canFocus: false,
                                       ),

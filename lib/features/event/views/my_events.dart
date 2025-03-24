@@ -45,7 +45,6 @@ class _MyEventState extends ConsumerState<MyEvents> {
 
   @override
   Widget build(BuildContext context) {
-  final wayaTheme = Theme.of(context);
     final state = ref.watch(eventVmProvider);
 
     return Expanded(
@@ -70,7 +69,9 @@ class _MyEventState extends ConsumerState<MyEvents> {
             shrinkWrap: true,
             itemCount: filteredEvents.length,
             itemBuilder: (context, index) {
-              return EventWidget(event: filteredEvents[index]);
+              return EventWidget(
+                event: filteredEvents[index],
+              );
             },
           );
         },

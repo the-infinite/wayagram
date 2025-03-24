@@ -251,10 +251,14 @@ class WayaAppRoutes {
           id: WayaNav.search['id'].toString(),
         ),
     CreatePost.route: () => CreatePost(),
-    CreateGroupPost.route: () => CreateGroupPost(),
-    CreatePagePost.route: () => CreatePagePost(),
+    CreateGroupPost.route: () => CreateGroupPost(
+          id: WayaNav.search['id'].toString(),
+        ),
+    CreatePagePost.route: () => CreatePagePost(
+          id: WayaNav.search['id'].toString(),
+        ),
     MutualPage.route: () => MutualPage(
-          initialTab: WayaNav.search['tab'] ?? 'mutual',
+          initialTab: WayaNav.search['tab'] ?? 'followers',
           userId: WayaNav.search['uid'].toString(),
           source: WayaNav.search['source'] ?? 'any',
         ),
@@ -262,7 +266,9 @@ class WayaAppRoutes {
     PublicGroup.route: () => PublicGroup(
           id: WayaNav.search['id'].toString(),
         ),
-    AddTeamMember.route: () => AddTeamMember(),
+    AddTeamMember.route: () => AddTeamMember(
+          id: WayaNav.search['id'].toString(),
+        ),
     SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
     ChatProfilePage.route: () => ChatProfilePage(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route: () => DisplayFeed(),
@@ -343,7 +349,7 @@ class WayaAppRoutes {
   /// Helper function used to generate the route that is supposed to navigate to
   /// all the followers, followings, and mutuals that one user has with another
   /// one.
-  static String getFollowersPage(String uid, [String tab = 'mutual', String source = 'any']) =>
+  static String getFollowersPage(String uid, [String tab = 'followers', String source = 'any']) =>
       "${MutualPage.route}?tab=$tab&source=$source&uid=$uid";
 
   /// Helper function used to generate the route that is supposed to take you a
@@ -362,9 +368,21 @@ class WayaAppRoutes {
   /// single group's screen for adding new members by its ID.
   static String getAddGroupMemberPage(String id) => "${AddGroupMember.route}?id=$id";
 
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single group's screen for adding new members by its ID.
+  static String getAddPageTeamMemberPage(String id) => "${AddTeamMember.route}?id=$id";
+
   /// Helper function used to generate the route that is supposed ot navigate to
   /// the chat profile of any given user.
   static String getChatProfile(String id) => "${ChatProfilePage.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed ot navigate to
+  /// the screen for making a new post for a page.
+  static String getPagePostScreen(String id) => "${CreatePagePost.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed ot navigate to
+  /// the screen for making a new post for a group.
+  static String getGroupPostScreen(String id) => "${CreateGroupPost.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages {

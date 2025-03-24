@@ -207,10 +207,10 @@ class LoginVm extends StateNotifier<LoginState> {
           if (response.success) {
             UserAccountModel userAccountModel =
                 UserAccountModel.fromJson(response.data);
-                    print("wqdwqdw ${userAccountModel.data!.userdata!.user!.role}");
+            print("wqdwqdw ${userAccountModel.data!.userdata!.user!.role}");
             _setupVm.state =
                 _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
-        
+
             if (userAccountModel.data != null &&
                 userAccountModel.data!.userdata!.user!.role != "PERSONAL") {
               final bizResponse = await _profileRepo.getBusinessDataRepo(
@@ -254,6 +254,7 @@ class LoginVm extends StateNotifier<LoginState> {
       }
     } catch (e) {
       _logger.e(e);
+      rethrow;
     } finally {
       //state = state.copyWith(isLoading: false);
       //? Hide the preloader.
