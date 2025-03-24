@@ -215,7 +215,7 @@ class SellerProductCard extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        // WayaNav.toNamed(ProductDetail.route, arguments: product);
+       WayaNav.toNamed(ProductDetail.route, arguments: product);
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

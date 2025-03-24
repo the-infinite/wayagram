@@ -61,6 +61,7 @@ class Product extends BaseModel<Product> {
   final String? discountTypeId;
   final String name;
   final String description;
+  final String? vendorId;
   final dynamic price;
   final int stockQuantity;
   final List<String> images;
@@ -89,7 +90,6 @@ class Product extends BaseModel<Product> {
   final bool isDeleted;
   final DateTime createdAt;
   final DateTime updatedAt;
-  
 
   Product(
       {required this.id,
@@ -114,6 +114,7 @@ class Product extends BaseModel<Product> {
       required this.options,
       required this.pickupAddress,
       this.rating,
+
       required this.discountPercentage,
       required this.shopId,
       required this.discountedPrice,
@@ -123,10 +124,9 @@ class Product extends BaseModel<Product> {
       required this.isDeleted,
       required this.createdAt,
       required this.updatedAt,
+      this.vendorId,
       this.shopRating,
-      this.shopLogo
-      
-      });
+      this.shopLogo});
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
@@ -163,9 +163,8 @@ class Product extends BaseModel<Product> {
         createdAt: DateTime.parse(json['createdAt'] ?? ''),
         updatedAt: DateTime.parse(json['updatedAt'] ?? ''),
         shopRating: json['shopRating'],
-        shopLogo: json['shopLogo']
-        
-        );
+        vendorId: json['vendorId'] ?? '',
+        shopLogo: json['shopLogo']);
   }
 
   Map<String, dynamic> toJson() {
@@ -202,7 +201,8 @@ class Product extends BaseModel<Product> {
       'shopPhone': shopPhone,
       'categoryName': categoryName,
       'shopRating': shopRating,
-      'shopLogo': shopLogo
+      'shopLogo': shopLogo,
+      'vendorId': vendorId
     };
   }
 
@@ -256,8 +256,8 @@ class Product extends BaseModel<Product> {
       String? shopPhone,
       String? categoryName,
       dynamic shopRating,
-      String? shopLogo
-      }) {
+      String? vendorId,
+      String? shopLogo}) {
     return Product(
         id: id ?? this.id,
         categoryId: categoryId ?? this.categoryId,
@@ -292,6 +292,7 @@ class Product extends BaseModel<Product> {
         shopPhone: shopPhone ?? this.shopPhone,
         categoryName: categoryName ?? this.categoryName,
         shopLogo: shopLogo ?? this.shopLogo,
+        vendorId: vendorId ?? this.vendorId,
         shopRating: shopRating ?? this.shopRating);
   }
 
