@@ -4,6 +4,7 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 
 class CredentialInputVm extends ChangeNotifier {
   final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
@@ -43,6 +44,26 @@ class CredentialInputVm extends ChangeNotifier {
         _snackbarService.showCustomSnackbar(
             variant: SnackbarType.success,
             message: "A Password reset Otp has been resend to ${email.text}");
+        onSuccess();
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> onSubmitPin(VoidCallback onSuccess) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+      final response = await _authRepository.resendOtp('${ConversationState.self.email}', purpose: 'Reset_PIN');
+
+      if (response.data["statusCode"] == 200) {
+        _snackbarService.showCustomSnackbar(
+            variant: SnackbarType.success,
+            message: "A Password reset Otp has been sent to ${ConversationState.self.email}");
         onSuccess();
       }
     } catch (e) {

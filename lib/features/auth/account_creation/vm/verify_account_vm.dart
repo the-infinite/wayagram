@@ -9,6 +9,7 @@ import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_v
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 
 class VerifyAccountState {
   bool isEditing;
@@ -90,6 +91,27 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
       final email = ref.watch(personalFirstStepProvider).email.text;
       final response =
           await _authRepository.verifyOtp(VerifyOtp(email: email, otp: code));
+      if (response.success) {
+        final token = response.data['data']['token']['token'];
+        final refreshToken = response.data['data']['token']['refreshToken'];
+
+        _secureDataSource.saveToken(token);
+        _secureDataSource.saveRefreshToken(refreshToken);
+        onSuccess();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> verifyYourIdentity(VoidCallback onSuccess, String code) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final response =
+      await _authRepository.verifyOtp(VerifyOtp(email: '${ConversationState.self.email}', otp: code));
       if (response.success) {
         final token = response.data['data']['token']['token'];
         final refreshToken = response.data['data']['token']['refreshToken'];

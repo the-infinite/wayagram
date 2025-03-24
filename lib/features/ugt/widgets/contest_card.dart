@@ -102,7 +102,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             SizedBox(
-                              width: context.width * 0.4,
+                              width: context.width * 0.35,
                               child: Text(
                                 widget.post.title ?? "Title",
                                 overflow: TextOverflow.ellipsis,

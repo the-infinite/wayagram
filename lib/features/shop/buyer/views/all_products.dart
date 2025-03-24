@@ -36,7 +36,6 @@ class _AllProductsState extends ConsumerState<AllProducts> {
 
   @override
   Widget build(BuildContext context) {
-   
     final state = ref.watch(shopVmProvider);
 
     final allProducts = state.products;
@@ -98,7 +97,6 @@ class _AllProductsState extends ConsumerState<AllProducts> {
                     uniqueKey: 'all-product',
                   ),
                   const Gap(20),
-                
                   GroupedWidgetHeader(
                     onTap: () {
                       WayaNav.toNamed(ProductsViewPage.route,

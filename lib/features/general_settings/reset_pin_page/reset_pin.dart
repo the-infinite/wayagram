@@ -11,8 +11,9 @@ import 'package:wayagram/features/auth/transaction_pin/widget/pin_input_field.da
 import 'package:wayagram/features/auth/transaction_pin/widget/pin_keyboard.dart';
 
 class ResetPinPage extends ConsumerStatefulWidget {
+
   static const route = '/reset-pin-page';
-  const ResetPinPage({super.key});
+  const ResetPinPage({super.key,});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ResetPinPageState();
@@ -27,6 +28,8 @@ class _ResetPinPageState extends ConsumerState<ResetPinPage> {
 
     final isInValid = ref.watch(isChangePinValidProvider);
     final viewModel = ref.read(transactionPinProvider.notifier);
+
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         isLoading: ref.watch(loadingProvider),
@@ -45,14 +48,14 @@ class _ResetPinPageState extends ConsumerState<ResetPinPage> {
                     Text("For added security, please create a 4-digit PIN \n to confirm your transactions",
                         style: WayaTextStyles.hintStyle),
                     const Gap(10),
-                    PinInputField(
+                  /*  PinInputField(
                       pin: pin,
-                      label: "Enter your old 4-digit PIN",
+                      label: "Enter your New 4-digit PIN",
                       digits: 4,
                       ratio: 0.17,
                       margin: 8,
                       height: 55,
-                    ),
+                    ),*/
                     const Gap(10),
                     PinInputField(
                       pin: confirmPin,
@@ -85,7 +88,9 @@ class _ResetPinPageState extends ConsumerState<ResetPinPage> {
             SizedBox(
                 child: PinKeyboard(
                     onKeyTap: viewModel.handleKeyPress,
-                    onSubmit: viewModel.resetPin,
+                    onSubmit: (){
+                      viewModel.resetPin('${args['code']}');
+                    },
                     onBackspace: viewModel.handleBackspace)),
           ],
         ));
