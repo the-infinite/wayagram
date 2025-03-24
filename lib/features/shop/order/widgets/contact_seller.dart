@@ -44,37 +44,38 @@ class ContactSeller extends StatelessWidget {
                 borderRadius: BorderRadius.circular(10)),
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: Text(
-              "Most issues are resolved directly between buyers and sellers",
+              "Most issues are resolved directly between buyers and sellers.",
               style: wayaTheme.textTheme.hintStyle
                   .copyWith(color: wayaTheme.colorScheme.greyColor600),
             ),
           ),
-          const Gap(10),
-          Container(
+           const Gap(10),
+            Container(
             width: double.infinity,
             decoration: BoxDecoration(
                 color: wayaTheme.colorScheme.greyColor100,
                 borderRadius: BorderRadius.circular(10)),
             padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
             child: Text(
-              "You have 14 days to resolve the issue before escalation",
+              "You have 14 days from receiving your order to resolve any disputes with the vendor or escalate the issue to a mediator if unresolved.",
               style: wayaTheme.textTheme.hintStyle
                   .copyWith(color: wayaTheme.colorScheme.greyColor600),
             ),
           ),
-          const Gap(10),
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.greyColor100,
-                borderRadius: BorderRadius.circular(10)),
-            padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-            child: Text(
-              "If unresolved, you can escalate this to a dispute to our mediators",
-              style: wayaTheme.textTheme.hintStyle
-                  .copyWith(color: wayaTheme.colorScheme.greyColor600),
-            ),
-          ),
+          // const Gap(10),
+          // Container(
+          //   width: double.infinity,
+          //   decoration: BoxDecoration(
+          //       color: wayaTheme.colorScheme.greyColor100,
+          //       borderRadius: BorderRadius.circular(10)),
+          //   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+          //   child: Text(
+          //     "You have 14 days to resolve the issue before escalation",
+          //     style: wayaTheme.textTheme.hintStyle
+          //         .copyWith(color: wayaTheme.colorScheme.greyColor600),
+          //   ),
+          // ),
+         
           const Gap(24),
           Container(
             width: double.infinity,

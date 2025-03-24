@@ -45,6 +45,11 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
 
   Future<void> _pickImages() async {
     try {
+      //? Dispose the older video controllers
+      for (final controller in videoControllers) {
+        controller.dispose();
+      }
+
       final images = await _pickers.pickMultiImage(
         imageQuality: 80, // Adjust image quality (0-100)
         maxWidth: 1200, // Max width of images
@@ -231,7 +236,7 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                           itemBuilder: (context, index) {
                             //? This is fine.
                             final resource = _selectedImages[index];
-                            final controller = videoControllers[index];
+                            final controller = videoControllers.elementAtOrNull(index);
 
                             //? Return the view.
                             return Stack(
@@ -246,7 +251,7 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                                       borderRadius: BorderRadius.circular(8.r),
                                       child: WayaVideoWidget.file(
                                         File(resource.path),
-                                        controller: controller,
+                                        controller: controller!,
                                         controls: WayaVideoControls.none,
                                         canFocus: false,
                                       ),

@@ -71,6 +71,10 @@ class GroupVm extends StateNotifier<GroupState> {
     );
   }
 
+  void selectRoleType(String value) {
+    state = state.copyWith(roleType: value.toLowerCase());
+  }
+
   void reset() {
     state = GroupState();
   }
@@ -81,10 +85,6 @@ class GroupVm extends StateNotifier<GroupState> {
 
   void updateRequireApproval(bool value) {
     state = state.copyWith(requireApproval: value);
-  }
-
-  void selectRoleType(String value) {
-    state = state.copyWith(roleType: value.toLowerCase());
   }
 
   Future<void> createGroupPost(ctx, content, postType, List<XFile> images, postId) async {
@@ -301,16 +301,18 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
-  Future<void> inviteUserToGroup(ctx, String groupId, String role, String targetId) async {
+  Future<bool> inviteUserToGroup(ctx, String groupId, String role, String targetId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _groupRepository.inviteUserToGroup(groupId, role, targetId);
       state = state.copyWith(isLoading: false);
-      if (response.success && ctx.mounted) {
+      if (response.success) {
         await getGroupMembers(groupId);
       } else {
         WayaNav.goBack();
       }
+
+      return response.success;
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
@@ -321,6 +323,8 @@ class GroupVm extends StateNotifier<GroupState> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
+
+    return false;
   }
 
   Future<void> getGroupSinglePosts(String groupId) async {

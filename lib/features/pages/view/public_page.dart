@@ -58,6 +58,8 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (wayaPageCache.getCachedData(widget.id) != null) return;
+
       final result = await myPageNotifier.getSinglePage(widget.id);
       setState(() {
         _thisPage = result;
@@ -258,7 +260,7 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
 
             //? This section.
             Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 20),
+              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,

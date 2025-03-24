@@ -42,6 +42,8 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
   final focusNode = FocusNode();
   final handler = WayaObservableScrollController();
   bool _initialized = false;
+  bool isButtonDisabled = false;
+  int noOfDaysLeft = 14;
 
   @override
   void dispose() {
@@ -114,9 +116,19 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
         );
       }
 
-      int daysLeft = 14 - DateTime.now().difference(disputeState.dispute!.createdAt).inDays;
+      if (disputeState.dispute != null) {
+        final order = Order.fromJson(
+            disputeState.dispute!.ticketBody.metadata.orderedItem);
 
-      bool isButtonEnabled = daysLeft <= 0;
+        String completedAt = order.deliveryStatusHistory.isNotEmpty
+            ? order.deliveryStatusHistory.last.updatedAt
+            : order.pickupStatusHistory.last.updatedAt;
+        int daysLeft =
+            14 - DateTime.now().difference(DateTime.parse(completedAt)).inDays;
+
+        isButtonDisabled = daysLeft <= 0;
+        noOfDaysLeft = daysLeft;
+      }
 
       //? This is fine.
       return PopScope(
@@ -137,6 +149,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
             surfaceTintColor: Colors.transparent,
             leading: Container(
               height: double.infinity,
+             
               alignment: Alignment.centerLeft,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -213,53 +226,65 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
 
                   //* Fourth, the audio call button.
                   Padding(
-                    padding: const EdgeInsets.only(right: 15),
+                    padding: const EdgeInsets.only(
+                      right: 15,
+                      top: 6
+                    ),
                     child: IntrinsicHeight(
-                      child: !isButtonEnabled
-                          ? WayaButton(
-                              callback: () {},
-                              height: null,
-                              color: WayaColors.primary50,
-                              horizontalPadding: 8,
-                              verticalPadding: 8,
-                              centerWidget: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(WayaAssets.icons.dclock.path),
-                                  const Gap(3),
-                                  Text(
-                                    "$daysLeft ${daysLeft > 1 ? 'Days' : 'Day'} left",
-                                    style: theme.textTheme.hintStyle.copyWith(
-                                        color: theme.colorScheme.customPrimary,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w500),
-                                  )
-                                ],
-                              ))
-                          : WayaButton(
-                              callback: (disputeState.dispute!.escalatedBy != null)
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        WayaButton(
+                          callback:
+                              (disputeState.dispute?.escalatedBy != null ||
+                                      isButtonDisabled)
                                   ? null
                                   : () {
-                                      //     print(isButtonEnabled);
-
-                                      final order =
-                                          Order.fromJson(disputeState.dispute!.ticketBody.metadata.orderedItem);
-                                      final id = disputeState.dispute!.id;
-                                      final bool isBuyer = disputeState.dispute!.sellerId != ConversationState.self.id;
+                                      final order = Order.fromJson(disputeState
+                                          .dispute!
+                                          .ticketBody
+                                          .metadata
+                                          .orderedItem);
+                                      final id = disputeState.dispute?.id;
+                                      final bool isBuyer =
+                                          disputeState.dispute?.sellerId !=
+                                              ConversationState.self.id;
                                       escalateToMediator(
                                           context: context,
                                           order: order,
-                                          tobeEscalatedBy: isBuyer ? "buyer" : "seller",
-                                          disputeId: id);
+                                          tobeEscalatedBy:
+                                              isBuyer ? "buyer" : "seller",
+                                          disputeId: id!);
                                     },
-                              height: null,
-                              textStyle: theme.textTheme.descriptionStyle
-                                  .copyWith(fontSize: 14.sp, fontWeight: FontWeight.normal),
-                              text: "Escalate to mediator",
-                              horizontalPadding: 8,
-                              verticalPadding: 8,
+                          height: null,
+                          textStyle: theme.textTheme.descriptionStyle.copyWith(
+                              fontSize: 13.sp, fontWeight: FontWeight.w500),
+                          text: "Escalate to mediator",
+                          horizontalPadding: 8,
+
+                          verticalPadding: 5,
+                        ),
+                        const Gap(1),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              WayaAssets.icons.dclock.path,
+                              width: 14,
+                              height: 14,
                             ),
-                    ),
+                            const Gap(1),
+                            Text(
+                              "$noOfDaysLeft days left",
+                              style: theme.textTheme.hintStyle.copyWith(
+                                  color: theme.colorScheme.customPrimary,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                       // const Gap(2),
+                      ],
+                    )),
                   ),
                 ],
               ),
