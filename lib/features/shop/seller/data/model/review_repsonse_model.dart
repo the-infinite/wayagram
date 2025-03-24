@@ -45,11 +45,12 @@ class ReviewData {
   final DateTime updatedAt;
   final String raterFirstName;
   final String raterLastName;
+  final String? raterProfilePhoto;
 
   ReviewData({
     required this.id,
     required this.raterId,
-   this.productId,
+    this.productId,
     this.shopId,
     required this.score,
     required this.review,
@@ -59,6 +60,7 @@ class ReviewData {
     required this.updatedAt,
     required this.raterFirstName,
     required this.raterLastName,
+    this.raterProfilePhoto
   });
 
   factory ReviewData.fromJson(Map<String, dynamic> json) {
@@ -75,6 +77,7 @@ class ReviewData {
       updatedAt: DateTime.parse(json['updatedAt']),
       raterFirstName: json['raterFirstName'] as String,
       raterLastName: json['raterLastName'] as String,
+      raterProfilePhoto: json['raterProfilePhoto']
     );
   }
 
@@ -92,6 +95,7 @@ class ReviewData {
       'updatedAt': updatedAt.toIso8601String(),
       'raterFirstName': raterFirstName,
       'raterLastName': raterLastName,
+      'raterProfilePhoto': raterProfilePhoto
     };
   }
 }

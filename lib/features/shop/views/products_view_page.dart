@@ -77,7 +77,7 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
                             'description'
                           ],
                           searchController.text);
-                          
+
                       // wayagram deal products
                       final wayagramProducts = filteredProducts.where((prod) {
                         return prod.wayagramDealApprove == true;
@@ -88,6 +88,8 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
                         return prod.wayagramDeal == null ||
                             prod.wayagramDeal == false;
                       }).toList();
+
+                      print(otherProducts.map((s) => s.toJson()));
 
                       return ProductsGrid(
                           products: arg == ProductDetailType.wayagramdeal
