@@ -56,7 +56,7 @@ class PageVm extends StateNotifier<PageState> {
     state = PageState();
   }
 
-  String _errorMessage = '';
+  final String _errorMessage = '';
   final int _totalPages = 0;
 
   String get errorMessage => _errorMessage;
@@ -804,12 +804,12 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  Future<void> updateTeamMember(ctx, role, pageId, memberId) async {
+  Future<bool> updateTeamMember(BuildContext ctx, String role, String pageId, String memberId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.updateTeamMember(role, pageId, memberId);
       state = state.copyWith(isLoading: false);
-      if (response.success && ctx.mounted) {}
+      return response.success;
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
@@ -820,6 +820,19 @@ class PageVm extends StateNotifier<PageState> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
+
+    return false;
+  }
+
+  void setAddedUser(String? id) {
+    if (state.foundUserId == id) return;
+    state = state.copyWith(
+      foundUserId: id,
+    );
+  }
+
+  void selectRoleType(String value) {
+    state = state.copyWith(roleType: value.toLowerCase());
   }
 
   void prefillFunc(PageModel page) {

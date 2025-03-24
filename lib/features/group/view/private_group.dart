@@ -300,9 +300,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () {
-            WayaNav.toNamed('/createGroupPost', arguments: widget.group.id);
-          },
+          callback: () => WayaNav.toNamed(WayaAppRoutes.getGroupPostScreen(widget.group.id)),
           height: 50,
           centerWidget: Center(
             child: Icon(

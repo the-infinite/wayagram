@@ -72,14 +72,21 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                   }
 
                   if (_formKey.currentState!.validate()) {
-                    await notifier.inviteUserToGroup(context, widget.id, viewModel.roleType, viewModel.foundUserId!);
-                    await showCustomDialog(
+                    //? If this went well.
+                    if (await notifier.inviteUserToGroup(
                       context,
-                      'Success!',
-                      '${viewModel.username.text} has been added as a Moderator. You can now collaborate seamlessly and manage the page together.',
-                    );
-                    notifier.reset();
-                    WayaNav.goBack();
+                      widget.id,
+                      viewModel.roleType,
+                      viewModel.foundUserId!,
+                    )) {
+                      await showCustomDialog(
+                        context,
+                        'Success!',
+                        '${viewModel.username.text} has been added as a Moderator. You can now collaborate seamlessly and manage the page together.',
+                      );
+                      notifier.reset();
+                      WayaNav.goBack();
+                    }
                   }
                 },
                 height: 30,
@@ -315,10 +322,14 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                                   WayaNav.replaceNamed('/groups');
                                   //WayaNav.goBack();
                                 },
-                                child: Image.asset(
-                                  WayaAssets.images.success.path,
-                                  height: 32,
-                                  width: 32,
+                                child: Container(
+                                  color: wayaTheme.colorScheme.scaffoldColor2,
+                                  padding: EdgeInsets.all(12.dg),
+                                  child: Image.asset(
+                                    WayaAssets.images.success.path,
+                                    height: 32.dg,
+                                    width: 32.dg,
+                                  ),
                                 ),
                               ),
                               Gap(10),

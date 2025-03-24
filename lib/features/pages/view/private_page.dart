@@ -196,7 +196,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
               ],
             ),
           ),
-          const Gap(20),
+          Gap(5.h),
           _selectedIndex == 0
               ? PagePost(
                   pageId: widget.page.id,
@@ -211,9 +211,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () {
-            WayaNav.toNamed('/createPagePost');
-          },
+          callback: () => WayaNav.toNamed(WayaAppRoutes.getPagePostScreen(widget.page.id)),
           height: 50,
           centerWidget: Center(
             child: Icon(
