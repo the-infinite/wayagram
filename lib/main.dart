@@ -16,6 +16,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/core/helpers/debug.dart';
 import 'package:wayagram/core/helpers/deep_linking_listener.dart';
 import 'package:wayagram/core/service/notification_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -23,6 +24,15 @@ import 'package:wayagram/core/theme/vm/theme_vm.dart';
 import 'package:wayagram/core/utils/task.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
+import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
+import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
+import 'package:wayagram/features/auth/login/view/login_cover_page.dart';
+import 'package:wayagram/features/bottom_view/bottom_view.dart';
+import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
+import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
+import 'package:wayagram/shared/features/follow/notifier/self.dart';
+import 'package:wayagram/shared/features/shop/resource/default.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -122,18 +132,25 @@ void main() async {
   //? Fourth, remove the native splash screen at this point in time.
   // TODO: Switch to native splash screens when possible.
 
-    final appLinks = AppLinks(); // AppLinks is singleton
+  final appLinks = AppLinks(); // AppLinks is singleton
 
-    // Subscribe to all events (initial link and further)
-    appLinks.uriLinkStream.listen((uri) {
-    
-      /*  log('URIME: ${uri.toString()}');
+  String path = "/";
+  getUserData().then((value) {
+    path = value;
+    print("path i dey here 1");
+  });
+
+  // Subscribe to all events (initial link and further)
+  appLinks.uriLinkStream.listen((uri) {
+    if (uri.toString().isNotEmpty) {
+      path = "/ugt-home";
+      print("path i dey here 2");
+    }
+    /*  log('URIME: ${uri.toString()}');
       WayaNav.toNamed("/ugt-home");
       log('URIME: ${uri.toString()}');
       //if (uri.pathSegments.first == 'ugt' && mounted) {} */
-    });
-
-
+  });
 
   //? remove the splash screen
   FlutterNativeSplash.remove();
@@ -144,43 +161,18 @@ void main() async {
 
   //? Finally, run the app.
   //? added DeepLinkListener to listen to incoming deepLinking urls
-  runApp(ProviderScope(child: const DeepLinkListener(child: Wayagram())));
+  runApp(ProviderScope(child: DeepLinkListener(child: Wayagram(path))));
 }
 
 class Wayagram extends ConsumerStatefulWidget {
-  const Wayagram({super.key});
+  final String path;
+  const Wayagram(this.path, {super.key});
 
   @override
   ConsumerState<Wayagram> createState() => _WayagramState();
 }
 
 class _WayagramState extends ConsumerState<Wayagram> {
-  String? deepLink;
-
-  @override
-  void initState() {
-    super.initState();
-    _handleDeepLinks();
-  }
-
-  /// Handle deep links when the app is already open
-  void _handleDeepLinks() async {
-    final appLinks = AppLinks(); // AppLinks is singleton
-
-    // Subscribe to all events (initial link and further)
-    appLinks.uriLinkStream.listen((uri) {
-      setState(() {
-        print('hhhMan $uri');
-        deepLink = uri.toString();
-      });
-
-      /*  log('URIME: ${uri.toString()}');
-      WayaNav.toNamed("/ugt-home");
-      log('URIME: ${uri.toString()}');
-      //if (uri.pathSegments.first == 'ugt' && mounted) {} */
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);
@@ -195,12 +187,12 @@ class _WayagramState extends ConsumerState<Wayagram> {
       minTextAdapt: true,
       splitScreenMode: true,
     );
-    print('hhhMan kk $deepLink');
+    print('path i dey ${widget.path}');
 
     return GetMaterialApp(
       //?if deepLink path is null, means it normally open
       //?else means it through a link the app is opened
-      initialRoute: deepLink == null ? '/' : getDeepLinkRoute(deepLink),
+      initialRoute: widget.path,
       title: WayaConstants.appName,
       theme: WayaTheme.lightTheme,
       darkTheme: WayaTheme.darkTheme,
@@ -213,10 +205,10 @@ class _WayagramState extends ConsumerState<Wayagram> {
           children: [
             //? First, the widget that is being laid out.
             child!,
-    
+
             //? Second, our preloader widget.
             if (showPreloader) WayaPreloaderOverlay(),
-    
+
             //? Third, the debug console.
             if (!WayaConstants.isProduction) WayaDebugConsole(),
           ],
@@ -226,4 +218,119 @@ class _WayagramState extends ConsumerState<Wayagram> {
   }
 }
 
+Future<String> getUserData() async {
+  try {
+    //? need ref to Pref
+    final WayaSecureDataSource secureDataSource = WayaSecureDataSource();
+    // check if user has a token
+    String? authToken = await secureDataSource.getToken();
 
+    if (authToken == null || authToken.isEmpty) {
+      return "/onboarding";
+    }
+    // check if user has an ID
+    final userId = await secureDataSource.getUserId();
+
+    if (userId == null || userId.isEmpty) {
+      return LoginCoverPage.route;
+    }
+
+    //>  get a new auth token
+    await getNewToken();
+    ProfileRepo profileRepo = ProfileRepo();
+    final response = await profileRepo.getUserDataRepo(userId: userId);
+
+    //? This was fine so move forward.
+    if (response.success) {
+      UserAccountModel userAccountModel =
+          UserAccountModel.fromJson(response.data);
+
+      // _setupVm.state =  _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
+
+      //? Now, it is time to save this one.
+      ConversationState.setSelf(
+        userAccountModel.data?.userdata?.user,
+        userAccountModel.data?.userdata?.profile,
+        userAccountModel.data?.userdata?.business,
+      );
+
+      // Now, in a contained region, load up this person's stores.
+      try {
+        await ShopResource.configureShop(ConversationState.self.id);
+      } catch (e) {
+        WayaDebugConsoleController.instance.addException(
+          WayaDebugHelpers.getMessage(e),
+          e,
+          WayaDebugEventModule.shops,
+          WayaDebugHelpers.getStackTrace(e),
+        );
+      }
+
+      //? Now, load this user's followers
+      try {
+        await myFollowProvider.getIfEmpty();
+      } catch (e) {
+        WayaDebugConsoleController.instance.addException(
+          WayaDebugHelpers.getMessage(e),
+          e,
+          WayaDebugEventModule.relationships,
+          WayaDebugHelpers.getStackTrace(e),
+        );
+      }
+
+      if (userAccountModel.data != null &&
+          userAccountModel.data!.userdata!.user!.role != 'PERSONAL') {
+        final bizResponse =
+            await profileRepo.getBusinessDataRepo(userId: userId);
+
+        if (bizResponse.success) {
+          BusinessAccountData bizData =
+              BusinessAccountData.fromJson(bizResponse.data["data"]);
+          //? Update the business configuration when there is a need to.
+          ConversationState.setSelf(
+            ConversationState.self
+                .copyWith(accountType: UserAccountType.business),
+            null,
+            BusinessDetailsModel.fromJson(bizResponse.data["data"]),
+          );
+          //  _setupVm.state = _setupVm.state.copyWith(business: bizData);
+          await secureDataSource.saveBusinessId(bizData.businessId);
+        }
+      }
+
+      return BottomView.route;
+    }
+
+    //? Go
+    else {
+      return LoginCoverPage.route;
+    }
+  } catch (e) {
+    return LoginCoverPage.route;
+  }
+}
+
+Future<void> getNewToken() async {
+  try {
+    //? need ref to Pref
+    final WayaSecureDataSource secureDataSource = WayaSecureDataSource();
+    final refreshToken = await secureDataSource.getRefreshToken();
+    //? ref to authrepo
+    AuthRepository repo = AuthRepository();
+    final response = await repo.refreshToken(token: refreshToken!);
+    if (response.success) {
+      final newToken = response.data['data']['token']['token'];
+      final newRefreshToken = response.data['data']['token']['refreshToken'];
+
+      await secureDataSource.saveToken(newToken);
+      await secureDataSource.saveRefreshToken(newRefreshToken);
+    }
+  } catch (e) {
+    WayaDebugConsoleController.instance.addException(
+      WayaDebugHelpers.getMessage(e),
+      e,
+      WayaDebugEventModule.unknown,
+      WayaDebugHelpers.getStackTrace(e),
+    );
+  }
+}
