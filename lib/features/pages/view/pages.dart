@@ -6,6 +6,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'create_page.dart';
 import 'pages_for_you.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
@@ -78,9 +79,7 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () {
-            WayaNav.toNamed('/createPost');
-          },
+          callback: () => WayaNav.toNamed(CreatePage.route),
           height: 50,
           centerWidget: Center(
             child: Icon(

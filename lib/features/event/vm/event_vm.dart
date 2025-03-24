@@ -4,6 +4,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/bottom_sheets/share/social_share.dart';
 import 'package:wayagram/features/event/data/model/event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
@@ -87,11 +88,18 @@ class EventVm extends StateNotifier<EventState> {
     }
   }
 
-  void getSingleEvent(EventDoc event) async {
-    state = state.copyWith(singleEvent: event);
-    final userId = await _secureDataSource.getUserId();
-    state = state.copyWith(isUserEvent: event.userId == userId);
-    //
+  Future<EventDoc?> getSingleEvent(String id) async {
+    final event = await fetchSingleEvent(id);
+
+    //? If this is fine.
+    state = state.copyWith(isUserEvent: event?.userId == ConversationState.self.id);
+
+    //? Return this.
+    return event;
+  }
+
+  void clearSingle() {
+    state = state.copyWith(singleEvent: null, isUserEvent: null);
   }
 
   Future<PaginatedResult<EventDoc>?> getUserEvents({required int page}) async {
@@ -237,7 +245,7 @@ class EventVm extends StateNotifier<EventState> {
     }
   }
 
-  Future<void> fetchSingleEvent(String id) async {
+  Future<EventDoc?> fetchSingleEvent(String id) async {
     try {
       state = state.copyWith(isLoadingSingleEvent: true);
       final response = await _eventRepository.getSingleEvent(id);
@@ -245,6 +253,7 @@ class EventVm extends StateNotifier<EventState> {
       if (response.success) {
         SingleEventResponse eventResponse = SingleEventResponse.fromJson(response.data);
         state = state.copyWith(singleEvent: eventResponse.data);
+        return eventResponse.data;
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -256,9 +265,11 @@ class EventVm extends StateNotifier<EventState> {
     } finally {
       state = state.copyWith(isLoadingSingleEvent: false);
     }
+
+    return null;
   }
 
-  void shareEvent({required BuildContext context, required String shareUrl}) async {
+  Future<void> shareEvent({required BuildContext context, required String shareUrl}) async {
     if (context.mounted) {
       await WayaUtils.showModalSheet(context, child: ShareSheet(shareUrl: shareUrl));
     }

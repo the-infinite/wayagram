@@ -203,8 +203,11 @@ class PageNotifier extends ValueNotifier<int> {
     String profileImage,
     String pageId,
   ) async {
-    final coverImageUrl = await WayaFileRepository.instance.uploadFile(File(coverImage));
-    final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage));
+    final coverImageUrl =
+        coverImage.startsWith("http") ? coverImage : await WayaFileRepository.instance.uploadFile(File(coverImage));
+    final profileImageUrl = profileImage.startsWith("http")
+        ? profileImage
+        : await WayaFileRepository.instance.uploadFile(File(profileImage));
 
     //? If either of this fails.
     if (coverImageUrl == null || profileImageUrl == null) {

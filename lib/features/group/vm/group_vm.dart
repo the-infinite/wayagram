@@ -200,13 +200,19 @@ class GroupVm extends StateNotifier<GroupState> {
   }
 
   Future<void> editGroup(
-      ctx, groupName, groupDesc, groupType, String coverImage, String profileImage, String groupId) async {
-    final coverImageUrl = await WayaFileRepository.instance.uploadFile(
-      File(coverImage),
-    );
-    final profileImageUrl = await WayaFileRepository.instance.uploadFile(
-      File(profileImage),
-    );
+    BuildContext ctx,
+    String groupName,
+    String groupDesc,
+    bool groupType,
+    String coverImage,
+    String profileImage,
+    String groupId,
+  ) async {
+    final coverImageUrl =
+        coverImage.startsWith("http") ? coverImage : await WayaFileRepository.instance.uploadFile(File(coverImage));
+    final profileImageUrl = profileImage.startsWith("http")
+        ? profileImage
+        : await WayaFileRepository.instance.uploadFile(File(profileImage));
 
     try {
       state = state.copyWith(isLoading: true);

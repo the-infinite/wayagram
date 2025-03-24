@@ -8,7 +8,6 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
-import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 
 class EventCard extends ConsumerWidget {
   final EventDoc event;
@@ -21,9 +20,7 @@ class EventCard extends ConsumerWidget {
     return Column(
       children: [
         GestureDetector(
-          onTap: () {
-            WayaNav.toNamed(EventDetail.route, arguments: event);
-          },
+          onTap: () => WayaNav.toNamed(WayaAppRoutes.getEventDetailsScreen(event.id)),
           child: Container(
             padding: EdgeInsets.all(8),
             decoration: BoxDecoration(color: wayaTheme.colorScheme.white, borderRadius: BorderRadius.circular(12)),
@@ -70,9 +67,7 @@ class EventCard extends ConsumerWidget {
                 SizedBox(
                   width: 60,
                   child: WayaButton(
-                    callback: () {
-                      WayaNav.toNamed(EventDetail.route, arguments: event);
-                    },
+                    callback: () => WayaNav.toNamed(WayaAppRoutes.getEventDetailsScreen(event.id)),
                     text: event.userId == userId ? 'View' : 'Register',
                     height: 30,
                     textStyle: wayaTheme.textTheme.hintStyle
