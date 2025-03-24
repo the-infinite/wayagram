@@ -132,25 +132,7 @@ void main() async {
   //? Fourth, remove the native splash screen at this point in time.
   // TODO: Switch to native splash screens when possible.
 
-  final appLinks = AppLinks(); // AppLinks is singleton
-
-  String path = "/";
-  getUserData().then((value) {
-    path = value;
-    print("path i dey here 1");
-  });
-
-  // Subscribe to all events (initial link and further)
-  appLinks.uriLinkStream.listen((uri) {
-    if (uri.toString().isNotEmpty) {
-      path = "/ugt-home";
-      print("path i dey here 2");
-    }
-    /*  log('URIME: ${uri.toString()}');
-      WayaNav.toNamed("/ugt-home");
-      log('URIME: ${uri.toString()}');
-      //if (uri.pathSegments.first == 'ugt' && mounted) {} */
-  });
+  String path = await getUserData() ?? "/";
 
   //? remove the splash screen
   FlutterNativeSplash.remove();
@@ -218,7 +200,7 @@ class _WayagramState extends ConsumerState<Wayagram> {
   }
 }
 
-Future<String> getUserData() async {
+Future<String?> getUserData() async {
   try {
     //? need ref to Pref
     final WayaSecureDataSource secureDataSource = WayaSecureDataSource();

@@ -2,37 +2,32 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/route_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_active_disqualify.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_contestants.dart';
-import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_gallery.dart.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_leaderboard.dart';
-import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_post_all.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/admin_card.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
-import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 
 import '../../../core/components/waya_scaffold.dart';
 
 class AdminContestDetails extends StatefulHookConsumerWidget {
   static const route = '/upcoming-manage-contest-details';
-  const AdminContestDetails({super.key});
+  final String id;
+  const AdminContestDetails({required this.id, super.key});
 
   @override
   ConsumerState<AdminContestDetails> createState() =>
@@ -43,9 +38,13 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final String myPassedContestId = Get.parameters['id'] ?? 'Unknown';
+    print("COntest DI $myPassedContestId");
     useEffect(() {
-      String contestId =
-          ref.read(selectedContestProvider.notifier).state?.id ?? "";
+      String contestId = ref.read(selectedContestProvider.notifier).state?.id ??
+          myPassedContestId;
+      print("COntest DI  2 $contestId");
+      ref.read(postProvider.notifier).fetchSingleContest(ref, contestId);
       ref
           .read(votersContestNotifier.notifier)
           .getContestantProfileVoteDetails(contestId);
@@ -66,7 +65,6 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
       title: "Contest Details",
       appBarTrailing: Row(
         children: [
-        
           const Gap(20),
           ClipRRect(
             borderRadius: BorderRadius.circular(45),
@@ -87,7 +85,6 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-             
               const Gap(10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -153,11 +150,10 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 children: [
                   UpcomingWidgetAdmin(
                       title: "Start Date",
-                      content: formatDate(model?.startDate ?? "")),
+                      content: formatDate(model?.startDate)),
                   const Gap(20),
                   UpcomingWidgetAdmin(
-                      title: "End Date",
-                      content: formatDate(model?.endDate ?? "")),
+                      title: "End Date", content: formatDate(model?.endDate)),
                   const Gap(20),
                   UpcomingWidgetAdmin(
                       title: "Entry Type", content: model?.entryType ?? ""),
@@ -165,7 +161,8 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                   UpcomingWidgetAdmin(
                       title: "Duration",
                       content: getRealDateDiffBtwDate(
-                          model?.startDate ?? "", model?.endDate ?? "")),
+                          model?.startDate ?? "2025-03-03T07:21:39.036Z",
+                          model?.endDate ?? "2025-03-03T07:21:39.036Z")),
                 ],
               ),
               const Gap(10),
@@ -315,9 +312,9 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 ],
               ),
               const Gap(10),
-              if (selectedViewIndex.value == 0) UgtPostAllContestant(model!),
-              if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(model!),
-              if (selectedViewIndex.value == 2) UgtDetailsContestants(model!),
+              if (selectedViewIndex.value == 0) UgtPostAllContestant(model),
+              if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(model),
+              if (selectedViewIndex.value == 2) UgtDetailsContestants(model),
               //  if (selectedViewIndex.value == 3) UgtDetailsGallery(model),
             ],
           ),

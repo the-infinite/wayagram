@@ -173,3 +173,11 @@ flutter:
           weight: 500
         - asset: assets/fonts/SF-Pro-Display-Regular.otf
           weight: 400
+
+  # for generating the splash screen        
+flutter_native_splash:
+  color: "#ffffff"   # Background color (Change to match your design)
+  image: assets/wayalogo.png  # Your logo (Use a proper image)
+  android_12:
+    color: "#ffffff"   # Background color (Change to match your design)
+
