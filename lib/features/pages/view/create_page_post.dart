@@ -11,21 +11,27 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 class CreatePagePost extends ConsumerStatefulWidget {
-  static const route = '/createPagePost';
-  const CreatePagePost({super.key});
+  static const route = '/pages/post/new';
+  final String id;
+
+  // Construct.
+  const CreatePagePost({
+    super.key,
+    required this.id,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CreatePagePostState();
 }
 
 class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTickerProviderStateMixin {
-  PageController pageController = PageController(
-    initialPage: 0,
-  );
+  late final pageProvider = singlePageProvider("page-${widget.id}");
+  late final notifier = ref.read(pageProvider.notifier);
+
+  PageController pageController = PageController(initialPage: 0);
 
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _pickers = ImagePicker();
@@ -45,6 +51,11 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
 
   Future<void> _pickImages() async {
     try {
+      //? Dispose the older video controllers
+      for (final controller in videoControllers) {
+        controller.dispose();
+      }
+
       final List<XFile> images = await _pickers.pickMultiImage(
         imageQuality: 80, // Adjust image quality (0-100)
         maxWidth: 1200, // Max width of images
@@ -87,10 +98,9 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(createGroupProvider);
+    final viewModel = ref.watch(pageProvider);
 
-    final pageId = ModalRoute.of(context)?.settings.arguments as String;
-
+    //? Return the scaffold.
     return WayaScaffold(
         resizeToAvoidBottomInset: true,
         isLoading: viewModel.isLoading,
@@ -121,14 +131,14 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                           callback: !viewModel.isLoading
                               ? () async {
                                   if (_formKey.currentState!.validate()) {
-                                    await ref.watch(createPageProvider.notifier).createPagePost(
-                                          context,
-                                          viewModel.content.text,
-                                          sel ? "public" : "private",
-                                          _selectedImages,
-                                          pageId,
-                                        );
-                                    ref.watch(createPageProvider.notifier).reset();
+                                    await notifier.createPagePost(
+                                      context,
+                                      viewModel.content.text,
+                                      sel ? "public" : "private",
+                                      _selectedImages,
+                                      widget.id,
+                                    );
+                                    notifier.reset();
                                     WayaNav.replaceNamed("/pages");
                                   }
                                 }
@@ -146,7 +156,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
               padding: const EdgeInsets.all(8.0),
               child: InkWell(
                   onTap: () {
-                    ref.watch(createPageProvider.notifier).reset();
+                    notifier.reset();
                     WayaNav.goBack();
                   },
                   child: Image.asset(
@@ -229,7 +239,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                           itemBuilder: (context, index) {
                             //? This is fine.
                             final resource = _selectedImages[index];
-                            final controller = videoControllers[index];
+                            final controller = videoControllers.elementAtOrNull(index);
 
                             //? Return the view.
                             return Stack(
@@ -244,7 +254,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                       borderRadius: BorderRadius.circular(8.r),
                                       child: WayaVideoWidget.file(
                                         File(resource.path),
-                                        controller: controller,
+                                        controller: controller!,
                                         controls: WayaVideoControls.none,
                                         canFocus: false,
                                       ),
