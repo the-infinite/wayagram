@@ -43,16 +43,16 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
   void getCurrentProduct({required Product product}) async {
     state = state.copyWith(product: product);
 
-    final ShopData? shop = ref.watch(manageShopVmProvider).singleShop;
-    if (shop != null) {
-     if (shop.vendorId == ConversationState.self.id){
-       bool isOwner = shop.id == product.shopId;
-      state = state.copyWith(isProductOwner: isOwner);
+    
+    
+     if (product.vendorId == ConversationState.self.id){
+      
+      state = state.copyWith(isProductOwner: true);
      }
      else {
       state = state.copyWith(isProductOwner: false);
      }
-    }
+    
     //getSimilarProduct(categoryId: product.categoryId, productId: product.id);
   }
 

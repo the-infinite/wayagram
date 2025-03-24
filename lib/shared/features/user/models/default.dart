@@ -19,7 +19,8 @@ class UserRole {
     required this.name,
   });
 
-  factory UserRole.fromJson(Map<String, dynamic> json) => _$UserRoleFromJson(json);
+  factory UserRole.fromJson(Map<String, dynamic> json) =>
+      _$UserRoleFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserRoleToJson(this);
 }
@@ -98,7 +99,8 @@ class UserDetailsModel {
     required this.postalCode,
   });
 
-  String get fullname => "${firstName.capitalizeFirst} ${lastName.capitalizeFirst}";
+  String get fullname =>
+      "${firstName.capitalizeFirst} ${lastName.capitalizeFirst}";
 
   factory UserDetailsModel.fromJson(Map<String, dynamic> json) {
     return UserDetailsModel(
@@ -115,7 +117,9 @@ class UserDetailsModel {
       country: json['country'] as String?,
       countryCode: json['countryCode'] as String?,
       middleName: json['middleName'] as String?,
-      dateOfBirth: json['dateOfBirth'] == null ? null : DateTime.parse(json['dateOfBirth'] as String),
+      dateOfBirth: json['dateOfBirth'] == null
+          ? null
+          : DateTime.parse(json['dateOfBirth'] as String),
       twoFactorEnabled: json['twoFactorEnabled'] as bool?,
       profilePicture: json['profilePicture'] as String?,
       fcmToken: json['fcmToken'] as String?,
@@ -124,13 +128,19 @@ class UserDetailsModel {
       accountStatus: json['accountStatus'] as String?,
       tcAgreement: json['tcAgreement'] as bool?,
       policyAgreement: json['policyAgreement'] as bool?,
-      emailVerifiedDate: json['emailVerifiedDate'] == null ? null : DateTime.parse(json['emailVerifiedDate'] as String),
+      emailVerifiedDate: json['emailVerifiedDate'] == null
+          ? null
+          : DateTime.parse(json['emailVerifiedDate'] as String),
       deletedAt: json['deletedAt'] as String?,
       roleId: json['roleId'] as String?,
       accountTypeId: json['accountTypeId'] as String?,
       v: json['_v'] as String?,
-      createdAt: json['createdAt'] == null ? null : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null ? null : DateTime.parse(json['updatedAt'] as String),
+      createdAt: json['createdAt'] == null
+          ? null
+          : DateTime.parse(json['createdAt'] as String),
+      updatedAt: json['updatedAt'] == null
+          ? null
+          : DateTime.parse(json['updatedAt'] as String),
       role: json['role'] == null
           ? null
           : json['role'] is Map<String, dynamic>
@@ -271,7 +281,8 @@ class SocialProfileModel {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
-  factory SocialProfileModel.fromJson(Map<String, dynamic> json) => _$SocialProfileModelFromJson(json);
+  factory SocialProfileModel.fromJson(Map<String, dynamic> json) =>
+      _$SocialProfileModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$SocialProfileModelToJson(this);
 }
@@ -289,10 +300,10 @@ class BusinessDetailsModel {
   final String businessId;
   final String? websiteUrl;
   final String address;
-  final String city;
-  final String lga;
-  final String state;
-  final String country;
+  final String? city;
+  final String? lga;
+  final String? state;
+  final String? country;
   final bool isActive;
   final DateTime? verifiedAt;
   final DateTime? deletedAt;
@@ -325,6 +336,7 @@ class BusinessDetailsModel {
     required this.updatedAt,
   });
 
-  factory BusinessDetailsModel.fromJson(Map<String, dynamic> json) => _$BusinessDetailsModelFromJson(json);
+  factory BusinessDetailsModel.fromJson(Map<String, dynamic> json) =>
+      _$BusinessDetailsModelFromJson(json);
   Map<String, dynamic> toJson() => _$BusinessDetailsModelToJson(this);
 }
