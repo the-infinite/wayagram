@@ -325,7 +325,8 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   const Gap(30),
                   GestureDetector(
                     onTap: () async {
-                      final result = await Share.share('i am here to cook');
+                      final result =
+                          await Share.shareUri(Uri.parse("http://wayagram.ngs"));
 
                       if (result.status == ShareResultStatus.success) {
                         print('Thank you for sharing my website!');

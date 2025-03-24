@@ -1,5 +1,6 @@
 import 'dart:isolate';
 
+import 'package:app_links/app_links.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -14,6 +15,7 @@ import 'package:visibility_detector/visibility_detector.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/controller/preloader.dart';
+import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/helpers/deep_linking_listener.dart';
 import 'package:wayagram/core/service/notification_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -120,12 +122,25 @@ void main() async {
   //? Fourth, remove the native splash screen at this point in time.
   // TODO: Switch to native splash screens when possible.
 
-  //? Fifth, configure our visibility detector.
-  VisibilityDetectorController.instance.updateInterval =
-      const Duration(milliseconds: 50);
+    final appLinks = AppLinks(); // AppLinks is singleton
+
+    // Subscribe to all events (initial link and further)
+    appLinks.uriLinkStream.listen((uri) {
+    
+      /*  log('URIME: ${uri.toString()}');
+      WayaNav.toNamed("/ugt-home");
+      log('URIME: ${uri.toString()}');
+      //if (uri.pathSegments.first == 'ugt' && mounted) {} */
+    });
+
+
 
   //? remove the splash screen
   FlutterNativeSplash.remove();
+
+  //? Fifth, configure our visibility detector.
+  VisibilityDetectorController.instance.updateInterval =
+      const Duration(milliseconds: 50);
 
   //? Finally, run the app.
   //? added DeepLinkListener to listen to incoming deepLinking urls
@@ -140,10 +155,38 @@ class Wayagram extends ConsumerStatefulWidget {
 }
 
 class _WayagramState extends ConsumerState<Wayagram> {
+  String? deepLink;
+
+  @override
+  void initState() {
+    super.initState();
+    _handleDeepLinks();
+  }
+
+  /// Handle deep links when the app is already open
+  void _handleDeepLinks() async {
+    final appLinks = AppLinks(); // AppLinks is singleton
+
+    // Subscribe to all events (initial link and further)
+    appLinks.uriLinkStream.listen((uri) {
+      setState(() {
+        print('hhhMan $uri');
+        deepLink = uri.toString();
+      });
+
+      /*  log('URIME: ${uri.toString()}');
+      WayaNav.toNamed("/ugt-home");
+      log('URIME: ${uri.toString()}');
+      //if (uri.pathSegments.first == 'ugt' && mounted) {} */
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);
+
     var size = MediaQuery.of(context).size;
+
     //? added this screenutil init here to register before getting to the theme
     //? else it will throw an error
     ScreenUtil.init(
@@ -152,9 +195,12 @@ class _WayagramState extends ConsumerState<Wayagram> {
       minTextAdapt: true,
       splitScreenMode: true,
     );
+    print('hhhMan kk $deepLink');
 
     return GetMaterialApp(
-      initialRoute: '/',
+      //?if deepLink path is null, means it normally open
+      //?else means it through a link the app is opened
+      initialRoute: deepLink == null ? '/' : getDeepLinkRoute(deepLink),
       title: WayaConstants.appName,
       theme: WayaTheme.lightTheme,
       darkTheme: WayaTheme.darkTheme,
@@ -179,3 +225,5 @@ class _WayagramState extends ConsumerState<Wayagram> {
     );
   }
 }
+
+
