@@ -204,15 +204,16 @@ class WayaImage extends StatelessWidget {
   final BoxFit? fit;
   final Color? color;
 
-  const WayaImage(
-      {super.key,
-      this.overlay,
-      required this.imageUrl,
-      this.radius,
-      this.fit,
-      this.width,
-      this.color,
-      required this.height});
+  const WayaImage({
+    super.key,
+    this.overlay,
+    required this.imageUrl,
+    this.radius,
+    this.fit,
+    this.width,
+    this.color,
+    required this.height,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -245,8 +246,10 @@ class WayaImage extends StatelessWidget {
         curve: Curves.easeInOut,
         height: height,
         width: width,
-        decoration:
-            BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: radius ?? BorderRadius.circular(8)),
+        decoration: BoxDecoration(
+          color: wayaTheme.colorScheme.greyColor100,
+          borderRadius: radius ?? BorderRadius.circular(8),
+        ),
       ),
     );
   }

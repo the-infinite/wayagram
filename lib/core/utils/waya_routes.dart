@@ -27,6 +27,8 @@ import 'package:wayagram/features/general_settings/notifications/view/default.da
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/general_settings/reset_pin_page/reset_pin.dart';
+import 'package:wayagram/features/general_settings/reset_pin_page/verify_your_identity_page.dart';
 import 'package:wayagram/features/group/view/add_group_member.dart';
 import 'package:wayagram/features/group/view/confirm_group_details.dart';
 import 'package:wayagram/features/group/view/create_group.dart';
@@ -171,6 +173,8 @@ class WayaAppRoutes {
     GeneralSettingsPage.route: () => GeneralSettingsPage(),
     ChangePasswordGenSettings.route: () => ChangePasswordGenSettings(),
     ChangePinPage.route: () => ChangePinPage(),
+    ResetPinPage.route: () => ResetPinPage(),
+    VerifyYourIdentityPage.route: ()=> VerifyYourIdentityPage(),
     WayaWebview.route: () => WayaWebview(),
     FundWalletOptionsScreen.route: () => FundWalletOptionsScreen(),
     WalletPage.route: () => WalletPage(),
@@ -360,3 +364,4 @@ class WayaAppRoutes {
     ).toList();
   }
 }
+

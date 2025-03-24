@@ -7,12 +7,13 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
 import 'package:wayagram/features/group/data/model/joined_group_model.dart';
 import 'package:wayagram/features/group/data/repo/group_repository.dart';
+import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 
 class GroupNotifier extends ValueNotifier<int> {
-  final int limit = 50;
+  final int limit = 200;
   final repo = GroupRepository();
   int createdGroupPage = 1;
   int joinedGroupPage = 1;
@@ -65,6 +66,7 @@ class GroupNotifier extends ValueNotifier<int> {
 
       //? Now add the newly fetched groups.
       result.addAll(responseModel.data?.docs ?? []);
+      wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
 
       //? Now, update our value.
       createdGroups = result;
@@ -119,6 +121,7 @@ class GroupNotifier extends ValueNotifier<int> {
 
       //? Now add the newly fetched groups.
       result.addAll(responseModel.data?.docs ?? []);
+      wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
 
       //? Now, update our value.
       joinedGroups = result;
@@ -138,6 +141,36 @@ class GroupNotifier extends ValueNotifier<int> {
     return result;
   }
 
+  /// Retrieves a single group from the database using its ID.
+  ///
+  /// Takes a [groupId] as a string parameter and attempts to fetch the corresponding group.
+  /// Returns a [Future] that resolves to a [GroupModel] if the group is found,
+  /// or `null` if the group doesn't exist.
+  ///
+  /// Throws an exception if the database operation fails.
+  Future<GroupModel?> getSingleGroup(String groupId) async {
+    try {
+      // API call
+      final response = await repo.getSingleGroup(groupId);
+
+      if (response.success) {
+        final responseModel = GetAllGroups.fromJson(response.data);
+        wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
+        return responseModel.data?.docs?.first;
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.pages,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Return null.
+    return null;
+  }
+
   /// Deletes a group with the specified group ID from the system.
   ///
   /// This asynchronous operation removes all associated group data.
@@ -154,6 +187,7 @@ class GroupNotifier extends ValueNotifier<int> {
       //? This is fine.
       if (response.success) {
         final found = createdGroups.indexWhere((group) => group.id == groupId);
+        wayaGroupCache.deleteItem(groupId);
 
         //? If this was found, remove it and update.
         if (!found.isNegative) {
@@ -209,6 +243,7 @@ class GroupNotifier extends ValueNotifier<int> {
       //? If this is fine...
       if (response.success) {
         final result = GroupModel.fromJson(response.data['data']);
+        wayaGroupCache.cache(result.id, result);
         createdGroups.insert(0, result);
         refresh();
         WayaSnackBar.showToast("Group created successfully");
@@ -284,6 +319,9 @@ class GroupNotifier extends ValueNotifier<int> {
           joinedGroups.removeAt(found);
           refresh();
         }
+
+        //? Now refresh the global state.
+        await getSingleGroup(groupId);
 
         //? Notify the user.
         WayaSnackBar.showToast("You have left the group");

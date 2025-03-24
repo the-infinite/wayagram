@@ -35,8 +35,7 @@ class _SharedEventState extends ConsumerState<SharedEvent> {
     final state = ref.watch(servicesProvider);
     final eventState = ref.watch(eventVmProvider);
     final wayaTheme = Theme.of(context);
-    // TODO: implement build
-
+  
     // my events
     List<EventDoc>? myEvents = widget.isExpanded
         ? eventState.myEvents
