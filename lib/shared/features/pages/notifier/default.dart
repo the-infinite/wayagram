@@ -15,7 +15,7 @@ import 'package:wayagram/shared/features/profile/model/pages.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 
 class PageNotifier extends ValueNotifier<int> {
-  final int limit = 200;
+  final int limit = 1000;
   final repo = PageRepository();
   int createdPage = 1;
   int followedPage = 1;
