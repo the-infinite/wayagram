@@ -10,7 +10,6 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/widgets/my_moment_widget.dart';
-import 'package:wayagram/features/post/model/post_reponse_model.dart';
 import 'package:wayagram/features/explore/search/model/user_detail.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/features/explore/search/widgets/user_widget.dart';

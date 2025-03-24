@@ -95,11 +95,6 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 iconPath: 'password',
                 onTap: () => WayaNav.toNamed('/change-pin-page'),
               ),
-              GeneralSettingsOptionModel(
-                title: 'Reset PIN',
-                iconPath: 'password',
-                onTap: () => WayaNav.toNamed('/change-pin-page'),
-              ),
             ],
           ),
 

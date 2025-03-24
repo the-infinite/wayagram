@@ -5,6 +5,7 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -15,6 +16,7 @@ import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/data/repo/moment_repository.dart';
+import 'package:wayagram/features/moments/vm/moment_vm.dart';
 
 class ReplyMomentWidget extends ConsumerStatefulWidget {
   final String uniqueKey;
@@ -34,8 +36,7 @@ class ReplyMomentWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ReplyMomentWidgetState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ReplyMomentWidgetState();
 }
 
 class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
@@ -169,20 +170,16 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
             GestureDetector(
               onTap: () {
                 setState(() {
-                  likedMoments[widget.moment.id] =
-                      !(likedMoments[widget.moment.id] ?? false);
+                  likedMoments[widget.moment.id] = !(likedMoments[widget.moment.id] ?? false);
                 });
-                notifier.toggleLiked(likedMoments[widget.moment.id]!,
-                    widget.moment.id, widget.moment.userId);
+                notifier.toggleLiked(likedMoments[widget.moment.id]!, widget.moment.id, widget.moment.userId);
               },
               child: Container(
                 width: 45,
                 height: 45,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isLiked
-                      ? wayaTheme.colorScheme.customPrimary
-                      : wayaTheme.colorScheme.transparent,
+                  color: isLiked ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.transparent,
                   border: Border.all(
                     width: 1,
                     color: wayaTheme.colorScheme.white,
@@ -214,12 +211,7 @@ class ReplyMomentState {
     this.comment = '',
   });
 
-  ReplyMomentState copyWith(
-      {bool? isLiked,
-      bool? isComment,
-      MomentData? moment,
-      bool? isLoading,
-      String? comment}) {
+  ReplyMomentState copyWith({bool? isLiked, bool? isComment, MomentData? moment, bool? isLoading, String? comment}) {
     return ReplyMomentState(
       isComment: isComment ?? this.isComment,
       isLiked: isLiked ?? this.isLiked,
@@ -230,19 +222,18 @@ class ReplyMomentState {
   }
 }
 
-final replyMomentVmProvider =
-    StateNotifierProvider.family<ReplyMomentVm, ReplyMomentState, String>(
-        (ref, uniqueKey) {
+final replyMomentVmProvider = StateNotifierProvider.family<ReplyMomentVm, ReplyMomentState, String>((ref, uniqueKey) {
+  ref.watch(momentVmProvider);
   return ReplyMomentVm(MomentRepository(), WayaSecureDataSource(), ref);
 });
 
 class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
   final Ref ref;
+  final localStorageService = WayaLocalDataSource();
   final WayaSecureDataSource _secureDataSource;
   final MomentRepository _momentRepository;
 
-  ReplyMomentVm(this._momentRepository, this._secureDataSource, this.ref)
-      : super(ReplyMomentState());
+  ReplyMomentVm(this._momentRepository, this._secureDataSource, this.ref) : super(ReplyMomentState());
 
   void initialize() {
     state = state.copyWith(isLiked: false);
@@ -262,8 +253,7 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
     await postSingleUserMoment(momentId: id, userId: userId);
   }
 
-  Future<void> postSingleUserMoment(
-      {required String momentId, required String userId}) async {
+  Future<void> postSingleUserMoment({required String momentId, required String userId}) async {
     try {
       final profileId = await _secureDataSource.getUserId();
       if (profileId == userId) return;
@@ -275,6 +265,8 @@ class ReplyMomentVm extends StateNotifier<ReplyMomentState> {
       );
 
       if (!response.success) return;
+      localStorageService.viewMoment(momentId);
+      state = state.copyWith();
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),

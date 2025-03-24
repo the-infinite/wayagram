@@ -42,7 +42,7 @@ class CommentState {
     isLoading: false,
     hasLoaded: false,
     comments: [],
-    limit: 100,
+    limit: 200,
     controller: ScrollController(),
     totalCount: 0,
     replies: [],

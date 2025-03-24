@@ -47,7 +47,6 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
         setState(() {
           isMine = args['isMine'];
           moments = args['moments'];
-          _startTimer();
         });
       }
     });
@@ -55,9 +54,6 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
 
   void _startTimer() {
     if (moments.isEmpty) return;
-    final moment = moments[currentIndex];
-    final duration = moment.contentType == 'video' ? 30 : 7;
-    _animationController.duration = Duration(seconds: duration);
     _animationController.forward(from: 0.0).whenComplete(() {
       if (mounted && !pauseController.value) {
         _nextMoment();
@@ -76,7 +72,6 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
         duration: const Duration(milliseconds: 300),
         curve: Curves.ease,
       );
-      _startTimer();
       return;
     }
 
@@ -118,7 +113,6 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
       setState(() {
         currentIndex = index;
         _animationController.reset();
-        _startTimer();
       });
     }
 
@@ -196,6 +190,11 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                             ref: ref,
                             moment: moment,
                             index: index,
+                            pause: () => pauseAnimation(false),
+                            resume: continueAnimating,
+                            setDuration: (duration) {
+                              _animationController.duration = duration;
+                            },
                           )
                         : _MediaMomentWidget(
                             index: index,
@@ -203,6 +202,9 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                             moment: moment,
                             pause: () => pauseAnimation(false),
                             resume: continueAnimating,
+                            setDuration: (duration) {
+                              _animationController.duration = duration;
+                            },
                           );
                   },
                 ),
@@ -351,13 +353,19 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
 class _TextMoment extends StatefulWidget {
   final WidgetRef ref;
   final MomentData moment;
+  final VoidCallback pause;
+  final VoidCallback resume;
   final int index;
+  final void Function(Duration) setDuration;
 
   // Construct.
   const _TextMoment({
     required this.ref,
     required this.moment,
     required this.index,
+    required this.pause,
+    required this.resume,
+    required this.setDuration,
   });
 
   @override
@@ -369,11 +377,24 @@ class __TextMomentState extends State<_TextMoment> {
 
   @override
   void initState() {
+    //? Then go on.
+    widget.setDuration(const Duration(seconds: 7));
+
+    //? This is fine.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    
+      //? Continue the animation.
+      widget.resume();
+
+      //? Mark this as viewed.
       notifier.postSingleUserMoment(momentId: widget.moment.id, userId: widget.moment.userId);
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.setDuration(Duration.zero);
+    super.dispose();
   }
 
   @override
@@ -396,6 +417,7 @@ class _MediaMomentWidget extends StatefulWidget {
   final VoidCallback pause;
   final VoidCallback resume;
   final int index;
+  final void Function(Duration) setDuration;
 
   const _MediaMomentWidget({
     required this.ref,
@@ -403,6 +425,7 @@ class _MediaMomentWidget extends StatefulWidget {
     required this.pause,
     required this.resume,
     required this.index,
+    required this.setDuration,
   });
 
   @override
@@ -414,11 +437,23 @@ class __MediaMomentWidgetState extends State<_MediaMomentWidget> {
 
   @override
   void initState() {
+    widget.setDuration(const Duration(seconds: 7));
     WidgetsBinding.instance.addPostFrameCallback((_) {
-    
+      //? Continue animating if this is a photo.
+      if (widget.moment.contentType != "video") {
+        widget.resume();
+      }
+
+      //? Next, We view it.
       notifier.postSingleUserMoment(momentId: widget.moment.id, userId: widget.moment.userId);
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    widget.setDuration(Duration.zero);
+    super.dispose();
   }
 
   @override
@@ -443,6 +478,7 @@ class __MediaMomentWidgetState extends State<_MediaMomentWidget> {
                 data: widget.moment,
                 pause: widget.pause,
                 resume: widget.resume,
+                notifyDuration: widget.setDuration,
               );
             },
           )

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -9,19 +8,13 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
-import 'package:wayagram/features/event/vm/event_vm.dart';
-import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 class ReportGroupPost extends ConsumerStatefulWidget {
   final String currentStatus;
   final String postId;
   final List<String> statuses;
-  const ReportGroupPost(
-      {super.key,
-        required this.statuses,
-        required this.currentStatus,
-        required this.postId});
+  const ReportGroupPost({super.key, required this.statuses, required this.currentStatus, required this.postId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReportGroupPostState();
@@ -56,8 +49,7 @@ class _ReportGroupPostState extends ConsumerState<ReportGroupPost> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Report ",
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
+          Text("Report ", style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
           const Gap(5),
           Text(
               maxLines: 3,
@@ -104,25 +96,19 @@ class _ReportGroupPostState extends ConsumerState<ReportGroupPost> {
                             ListTile(
                               minTileHeight: 30,
                               selectedTileColor:
-                              selectedStatus == widget.statuses[index]
-                                  ? wayaTheme.colorScheme.scaffoldColor
-                                  : null,
+                                  selectedStatus == widget.statuses[index] ? wayaTheme.colorScheme.scaffoldColor : null,
                               trailing: selectedStatus == widget.statuses[index]
                                   ? Icon(
-                                Icons.check_circle,
-                                size: 20,
-                                color:
-                                wayaTheme.colorScheme.customPrimary,
-                              )
+                                      Icons.check_circle,
+                                      size: 20,
+                                      color: wayaTheme.colorScheme.customPrimary,
+                                    )
                                   : null,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 1, horizontal: 1),
+                              contentPadding: EdgeInsets.symmetric(vertical: 1, horizontal: 1),
                               title: Text(
-                                WayaHelpers.removeCamelCaseAndUnderscore(
-                                    widget.statuses[index]),
-                                style: TextStyle().wayaCopyWith(
-                                    color: wayaTheme.colorScheme.customBlack,
-                                    fontSize: 14.sp),
+                                WayaHelpers.removeCamelCaseAndUnderscore(widget.statuses[index]),
+                                style:
+                                    TextStyle().wayaCopyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
                               ),
                               onTap: () {
                                 setState(() {
@@ -130,8 +116,7 @@ class _ReportGroupPostState extends ConsumerState<ReportGroupPost> {
                                 });
                               },
                             ),
-                            if (index < widget.statuses.length - 1)
-                              const Gap(0), // Adjust the gap as needed
+                            if (index < widget.statuses.length - 1) const Gap(0), // Adjust the gap as needed
                           ],
                         );
                       }),
@@ -156,29 +141,26 @@ class _ReportGroupPostState extends ConsumerState<ReportGroupPost> {
                   WayaButton(
                       callback: !reportState.isReportingPost
                           ? () {
-                        ref.read(createPageProvider.notifier).reportPost(
-                            postId: widget.postId,
-                            reason: selectedStatus,
-                            comment: comment.text,
-                            context: context);
-
-                      }
+                              ref.read(createPageProvider.notifier).reportPost(
+                                    postId: widget.postId,
+                                    reason: selectedStatus,
+                                    comment: comment.text,
+                                  );
+                            }
                           : null,
-                      centerWidget: LoadingState(
-                          loading: reportState.isReportingPost,
-                          text: "Submit Report")),
+                      centerWidget: LoadingState(loading: reportState.isReportingPost, text: "Submit Report")),
                 ],
               )),
           const Gap(10),
           WayaButton(
-              callback: () {
-                WayaNav.goBack();
-              },
-              textColor: wayaTheme.colorScheme.greyColor500,
-              color: wayaTheme.colorScheme.transparent,
-              border: Border.all(
-                  color: wayaTheme.colorScheme.greyColor500, width: 1),
-              text: 'Cancel')
+            callback: () {
+              WayaNav.goBack();
+            },
+            textColor: wayaTheme.colorScheme.greyColor500,
+            color: wayaTheme.colorScheme.transparent,
+            border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+            text: 'Cancel',
+          )
         ],
       ),
     );

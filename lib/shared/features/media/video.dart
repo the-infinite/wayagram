@@ -29,6 +29,10 @@ class _WayaVideoDetailScreenState extends State<WayaVideoDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //? The both parameters cannot be null.
+    assert(widget.videoUrl != null || widget.file != null);
+
+    //? This is the view in question.
     return WayaScaffold(
       padding: EdgeInsets.zero,
       backgroundColor: Colors.black,

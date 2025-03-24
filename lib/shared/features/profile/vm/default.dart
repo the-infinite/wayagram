@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/post/model/post_reponse_model.dart';
+import 'package:wayagram/shared/cache/post.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/profile/repo/default.dart';
 import 'package:wayagram/shared/features/profile/state/default.dart';
 
@@ -23,6 +24,9 @@ class PostNotifier extends StateNotifier<PostState> {
 
         //? Parse the posts as they are in the response object...
         final docs = (data['docs'] as List).map((doc) => PostModel.fromJson(doc));
+
+        //? Now, add these ones.
+        wayaPostCache.cacheAll(docs);
 
         //? Now, add these to what we have here.
         result.addAll(docs);

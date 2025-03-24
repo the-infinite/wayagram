@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,29 +8,23 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/helpers/date.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/buyer_dispute/modals/report.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/typing.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/model/dispute_response_model.dart';
-import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/widgets/dispute_buyer_info.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/widgets/dispute_profile_picture.dart';
 import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
@@ -43,7 +39,17 @@ class DisputeChat extends ConsumerStatefulWidget {
 
 class _DisputeChatState extends ConsumerState<DisputeChat> {
   late final notifier = ref.read(sellerDisputeChatProvider.notifier);
+  final focusNode = FocusNode();
   final handler = WayaObservableScrollController();
+  bool _initialized = false;
+  bool isButtonDisabled = false;
+  int noOfDaysLeft = 14;
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -101,16 +107,28 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
           : null;
 
       // Set this up.
-      WidgetsBinding.instance.addPostFrameCallback(
-        (_) {
-          inputController.setChat(chat);
-        },
-      );
+      if (!_initialized) {
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) {
+            _initialized = true;
+            inputController.setChat(chat);
+          },
+        );
+      }
 
-      int daysLeft = 14 -
-          DateTime.now().difference(disputeState.dispute!.createdAt).inDays;
+      if (disputeState.dispute != null) {
+        final order = Order.fromJson(
+            disputeState.dispute!.ticketBody.metadata.orderedItem);
 
-      bool isButtonEnabled = daysLeft <= 0;
+        String completedAt = order.deliveryStatusHistory.isNotEmpty
+            ? order.deliveryStatusHistory.last.updatedAt
+            : order.pickupStatusHistory.last.updatedAt;
+        int daysLeft =
+            14 - DateTime.now().difference(DateTime.parse(completedAt)).inDays;
+
+        isButtonDisabled = daysLeft <= 0;
+        noOfDaysLeft = daysLeft;
+      }
 
       //? This is fine.
       return PopScope(
@@ -131,6 +149,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
             surfaceTintColor: Colors.transparent,
             leading: Container(
               height: double.infinity,
+             
               alignment: Alignment.centerLeft,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -187,12 +206,9 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                                   //? For the message content...
                                   if (lastSeenText != null)
                                     Text(
-                                      userStatus == ChatUserActivity.online
-                                          ? "Online"
-                                          : lastSeenText,
+                                      userStatus == ChatUserActivity.online ? "Online" : lastSeenText,
                                       maxLines: 1,
-                                      style:
-                                          WayaTextStyles.titleMedium.copyWith(
+                                      style: WayaTextStyles.titleMedium.copyWith(
                                         fontWeight: FontWeight.normal,
                                         overflow: TextOverflow.ellipsis,
                                         color: WayaColors.greyColor500,
@@ -210,208 +226,197 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
 
                   //* Fourth, the audio call button.
                   Padding(
-                    padding: const EdgeInsets.only(right: 15),
+                    padding: const EdgeInsets.only(
+                      right: 15,
+                      top: 6
+                    ),
                     child: IntrinsicHeight(
-                      child: !isButtonEnabled
-                          ? WayaButton(
-                              callback: () {},
-                              height: null,
-                              color: WayaColors.primary50,
-                              horizontalPadding: 8,
-                              verticalPadding: 8,
-                              centerWidget: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                      WayaAssets.icons.dclock.path),
-                                  const Gap(3),
-                                  Text(
-                                    "$daysLeft ${daysLeft > 1 ? 'Days' : 'Day'} left",
-                                    style: theme.textTheme.hintStyle.copyWith(
-                                        color: theme.colorScheme.customPrimary,
-                                        fontSize: 12.sp,
-                                        fontWeight: FontWeight.w500),
-                                  )
-                                ],
-                              ))
-                          : WayaButton(
-                              callback: (disputeState.dispute!.escalatedBy !=
-                                      null)
+                        child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        WayaButton(
+                          callback:
+                              (disputeState.dispute?.escalatedBy != null ||
+                                      isButtonDisabled)
                                   ? null
                                   : () {
-                                      //     print(isButtonEnabled);
-
                                       final order = Order.fromJson(disputeState
                                           .dispute!
                                           .ticketBody
                                           .metadata
                                           .orderedItem);
-                                      final id = disputeState.dispute!.id;
+                                      final id = disputeState.dispute?.id;
                                       final bool isBuyer =
-                                          disputeState.dispute!.sellerId !=
+                                          disputeState.dispute?.sellerId !=
                                               ConversationState.self.id;
                                       escalateToMediator(
                                           context: context,
                                           order: order,
                                           tobeEscalatedBy:
                                               isBuyer ? "buyer" : "seller",
-                                          disputeId: id);
+                                          disputeId: id!);
                                     },
-                              height: null,
-                              textStyle: theme.textTheme.descriptionStyle
-                                  .copyWith(
-                                      fontSize: 14.sp,
-                                      fontWeight: FontWeight.normal),
-                              text: "Escalate to mediator",
-                              horizontalPadding: 8,
-                              verticalPadding: 8,
+                          height: null,
+                          textStyle: theme.textTheme.descriptionStyle.copyWith(
+                              fontSize: 13.sp, fontWeight: FontWeight.w500),
+                          text: "Escalate to mediator",
+                          horizontalPadding: 8,
+
+                          verticalPadding: 5,
+                        ),
+                        const Gap(1),
+                        Row(
+                          children: [
+                            SvgPicture.asset(
+                              WayaAssets.icons.dclock.path,
+                              width: 14,
+                              height: 14,
                             ),
-                    ),
+                            const Gap(1),
+                            Text(
+                              "$noOfDaysLeft days left",
+                              style: theme.textTheme.hintStyle.copyWith(
+                                  color: theme.colorScheme.customPrimary,
+                                  fontSize: 12.sp,
+                                  fontWeight: FontWeight.w500),
+                            ),
+                          ],
+                        ),
+                       // const Gap(2),
+                      ],
+                    )),
                   ),
                 ],
               ),
             ),
           ),
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              //? First, the divider.
-              Divider(color: WayaColors.greyColor200, height: 1),
+          body: SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                //? First, the divider.
+                Divider(color: WayaColors.greyColor200, height: 1),
 
-              //? Second, the chat messages.
-              if (state.messages.isEmpty && state.hasLoaded)
-                Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      //* First, the image.
-                      WayaAssets.icons.dispute.svg(
-                          height: 70,
-                          width: 70,
-                          fit: BoxFit.cover,
-                          colorFilter: ColorFilter.mode(
-                              theme.colorScheme.customPrimary,
-                              BlendMode.srcIn)),
-
-                      // Some space.
-                      const Gap(20),
-
-                      //* Some text
-                      Text(
-                        "Send the first message",
-                        style: WayaTextStyles.titleLarge.copyWith(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 24.sp,
-                        ),
-                      ),
-
-                      // Some space.
-                      const Gap(10),
-
-                      //* Some text
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40),
-                        child: Text(
-                          "Start a conversation with ${chat.other.chatUser?.displayName} by sending the first message",
-                          maxLines: 3,
-                          textAlign: TextAlign.center,
-                          style: WayaTextStyles.hintStyle,
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              else
-                Expanded(
-                  child: WayaPaginatedListView<MessageModel>(
-                    handler: handler,
-                    nextPage: state.page,
-                    itemCount: state.messages.length,
-                    isAtEnd: !state.hasNextPage,
-                    shouldFetch: !state.isLoading,
-                    direction: Axis.vertical,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
-                    physics: const AlwaysScrollableScrollPhysics(),
-                    reverse: true,
-                    getPage: (page) async {
-                      return notifier.getMessages();
-                    },
-                    builder: (context, index) => ChatBubbleWidget(
-                      index: index,
-                      previousDate: index == 0
-                          ? DateTime(1970)
-                          : state.messages[index - 1].createdAt,
-                      data: state.messages[index],
-                      controller: inputController,
-                      isLast: index == state.messages.length - 1,
-                    ),
-                    child: state.typing
-                        ? Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              PersonalTypingIndicator(),
-                            ],
-                          )
-                        : null,
-                  ),
-                ),
-
-              if (disputeState.dispute != null &&
-                  disputeState.dispute!.escalatedBy != null) ...[
-                Gap(30.h),
-                //> dispute state
-                buildDisputeStateIndicator(
-                    context: context, dispute: disputeState.dispute!),
-                //> Gap
-                Gap(30.h),
-
-                if (disputeState.dispute!.status != "open")
-                  //> text
-                  Container(
-                    alignment: Alignment.center,
-                    child: Row(
+                //? Second, the chat messages.
+                if (state.messages.isEmpty && state.hasLoaded)
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text("Chat Ended",
-                            style: theme.textTheme.bodySemiBold
-                                .copyWith(fontWeight: FontWeight.w600)),
-                        const Gap(2),
+                        //* First, the image.
+                        WayaAssets.icons.dispute.svg(
+                            height: 70,
+                            width: 70,
+                            fit: BoxFit.cover,
+                            colorFilter: ColorFilter.mode(theme.colorScheme.customPrimary, BlendMode.srcIn)),
+
+                        // Some space.
+                        const Gap(20),
+
+                        //* Some text
                         Text(
-                            "Dispute ${disputeState.dispute!.status.capitalizeFirst!}",
-                            style: theme.textTheme.bodySemiBold.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color:
-                                    disputeState.dispute!.status != "resolved"
-                                        ? theme.colorScheme.error700
-                                        : theme.colorScheme.customPrimary))
+                          "Send the first message",
+                          style: WayaTextStyles.titleLarge.copyWith(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 24.sp,
+                          ),
+                        ),
+
+                        // Some space.
+                        const Gap(10),
+
+                        //* Some text
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 40),
+                          child: Text(
+                            "Start a conversation with ${chat.other.chatUser?.displayName} by sending the first message",
+                            maxLines: 3,
+                            textAlign: TextAlign.center,
+                            style: WayaTextStyles.hintStyle,
+                          ),
+                        ),
                       ],
                     ),
                   )
+                else
+                  Expanded(
+                    child: WayaPaginatedListView<MessageModel>(
+                      handler: handler,
+                      nextPage: state.page,
+                      itemCount: state.messages.length,
+                      isAtEnd: !state.hasNextPage,
+                      shouldFetch: !state.isLoading,
+                      direction: Axis.vertical,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      reverse: true,
+                      getPage: (page) async {
+                        return notifier.getMessages();
+                      },
+                      builder: (context, index) => ChatBubbleWidget(
+                        index: index,
+                        previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
+                        data: state.messages[index],
+                        controller: inputController,
+                        isLast: index == state.messages.length - 1,
+                      ),
+                      child: state.typing
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                PersonalTypingIndicator(),
+                              ],
+                            )
+                          : null,
+                    ),
+                  ),
+
+                if (disputeState.dispute != null && disputeState.dispute!.escalatedBy != null) ...[
+                  Gap(30.h),
+                  //> dispute state
+                  buildDisputeStateIndicator(context: context, dispute: disputeState.dispute!),
+                  //> Gap
+                  Gap(30.h),
+
+                  if (disputeState.dispute!.status != "open")
+                    //> text
+                    Container(
+                      alignment: Alignment.center,
+                      child: Row(
+                        children: [
+                          Text("Chat Ended", style: theme.textTheme.bodySemiBold.copyWith(fontWeight: FontWeight.w600)),
+                          const Gap(2),
+                          Text("Dispute ${disputeState.dispute!.status.capitalizeFirst!}",
+                              style: theme.textTheme.bodySemiBold.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: disputeState.dispute!.status != "resolved"
+                                      ? theme.colorScheme.error700
+                                      : theme.colorScheme.customPrimary))
+                        ],
+                      ),
+                    )
+                ],
+
+                //? Third, the chat input widget.
+                if (disputeState.dispute != null && disputeState.dispute!.escalatedBy == null)
+                  ChatInputWidget(
+                    controller: inputController,
+                    notifier: notifier,
+                    createChat: _startConversation,
+                    voiceEnabled: false,
+                    focusNode: focusNode,
+                  ),
               ],
-
-              //? Third, the chat input widget.
-              if (disputeState.dispute != null &&
-                  disputeState.dispute!.escalatedBy == null)
-                ChatInputWidget(
-                  controller: inputController,
-                  notifier: notifier,
-                  createChat: _startConversation,
-                  voiceEnabled: false,
-                ),
-
-              // Some space for apple devices only
-              if (GetPlatform.isIOS) const Gap(20),
-            ],
+            ),
           ),
         ),
       );
     });
   }
 
-  Widget buildDisputeStateIndicator(
-      {required BuildContext context, required DisputeModel dispute}) {
+  Widget buildDisputeStateIndicator({required BuildContext context, required DisputeModel dispute}) {
     final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.all(12),
@@ -424,8 +429,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
             children: [
               Text(
                 "Dispute Resolution Progress",
-                style: theme.textTheme.bodySemiBold
-                    .copyWith(fontWeight: FontWeight.w600),
+                style: theme.textTheme.bodySemiBold.copyWith(fontWeight: FontWeight.w600),
               ),
               Container(
                 padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
@@ -458,15 +462,12 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                   fit: BoxFit.cover,
                 )
               : dispute.status == "resolved"
-                  ? Image.asset(WayaAssets.images.dresolved.path,
-                      width: double.infinity, fit: BoxFit.cover)
-                  : Image.asset(WayaAssets.images.ddismissed.path,
-                      width: double.infinity, fit: BoxFit.cover),
+                  ? Image.asset(WayaAssets.images.dresolved.path, width: double.infinity, fit: BoxFit.cover)
+                  : Image.asset(WayaAssets.images.ddismissed.path, width: double.infinity, fit: BoxFit.cover),
           const Gap(8),
           Text(
             "Date Submitted ${WayaHelpers.formatDateString(dispute.updatedAt.toIso8601String())}",
-            style: theme.textTheme.bodySemiBold
-                .copyWith(fontWeight: FontWeight.w500),
+            style: theme.textTheme.bodySemiBold.copyWith(fontWeight: FontWeight.w500),
           )
         ],
       ),
@@ -488,10 +489,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
           WayaNav.goBack();
 
           await WayaUtils.showModalSheet(context,
-              child: ReportDisputeModal(
-                  order: order,
-                  disputeId: disputeId,
-                  tobeEscalatedBy: tobeEscalatedBy));
+              child: ReportDisputeModal(order: order, disputeId: disputeId, tobeEscalatedBy: tobeEscalatedBy));
         },
         message:
             "Please confirm whether you’d like to escalate this dispute to a mediator. This cannot be undone when confirmed",

@@ -26,6 +26,7 @@ class SupportChatScreen extends ConsumerStatefulWidget {
 class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
   late final notifier = ref.read(supportChatProvider.notifier);
   final handler = WayaObservableScrollController();
+  final focusNode = FocusNode();
   final inputController = ChatInputController.instance;
   ChatModel? _currentChat;
 
@@ -41,6 +42,12 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
 
     //? This is fine.
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
   }
 
   @override
@@ -84,133 +91,136 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
         padding: EdgeInsets.zero,
         resizeToAvoidBottomInset: true,
         title: "Livechat Support",
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            //? First, the divider.
-            Divider(color: theme.colorScheme.greyColor200, height: 1),
+        body: SafeArea(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              //? First, the divider.
+              Divider(color: theme.colorScheme.greyColor200, height: 1),
 
-            //? Second, the chat messages.
-            if (state.messages.isEmpty && state.hasLoaded)
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    //* First, the image.
-                    WayaAssets.icons.mSupport.svg(
-                      height: 70,
-                      width: 70,
-                      fit: BoxFit.cover,
-                    ),
-
-                    // Some space.
-                    const Gap(20),
-
-                    //* Some text
-                    Text(
-                      "Have a problem?",
-                      style: WayaTextStyles.titleLarge.copyWith(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 24.sp,
-                      ),
-                    ),
-
-                    // Some space.
-                    const Gap(10),
-
-                    //* Some text
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 40),
-                      child: Text(
-                        "Start a conversation with a support agent today",
-                        maxLines: 3,
-                        textAlign: TextAlign.center,
-                        style: WayaTextStyles.hintStyle,
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            else
-              Expanded(
-                child: WayaPaginatedListView<MessageModel>(
-                  handler: handler,
-                  nextPage: state.page,
-                  itemCount: state.messages.length,
-                  isAtEnd: !state.hasNextPage,
-                  shouldFetch: !state.isLoading,
-                  direction: Axis.vertical,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  reverse: true,
-                  getPage: (page) async {
-                    return notifier.getSupportMessages();
-                  },
-                  builder: (context, index) => ChatBubbleWidget(
-                    index: index,
-                    previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
-                    data: state.messages[index],
-                    controller: inputController,
-                    isLast: index == state.messages.length - 1,
-                  ),
-                  child: state.typing
-                      ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            PersonalTypingIndicator(),
-                          ],
-                        )
-                      : null,
-                ),
-              ),
-
-            //? Third, the chat input widget.
-            if (_currentChat == null)
-              Container(
-                padding: EdgeInsets.symmetric(vertical: 25.h, horizontal: 10.h),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.primary.withAlpha(50),
-                ),
-                child: Text.rich(
-                  maxLines: 2,
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.visible,
-                  style: theme.textTheme.bodyMedium,
-                  TextSpan(
+              //? Second, the chat messages.
+              if (state.messages.isEmpty && state.hasLoaded)
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      //? First, the text itself.
-                      TextSpan(
-                        text: "Chat ended, ",
+                      //* First, the image.
+                      WayaAssets.icons.mSupport.svg(
+                        height: 70,
+                        width: 70,
+                        fit: BoxFit.cover,
                       ),
 
-                      //? Second, the other guy here.
-                      TextSpan(
-                        text: "start a new conversation ",
-                        recognizer: TapGestureRecognizer()..onTap = _startSupportChat,
-                        style: theme.textTheme.bodySemiBold.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.bold,
+                      // Some space.
+                      const Gap(20),
+
+                      //* Some text
+                      Text(
+                        "Have a problem?",
+                        style: WayaTextStyles.titleLarge.copyWith(
+                          fontWeight: FontWeight.w700,
+                          fontSize: 24.sp,
                         ),
                       ),
 
-                      //? Third, the closing part of the text.
-                      TextSpan(
-                        text: "to chat with an agent",
+                      // Some space.
+                      const Gap(10),
+
+                      //* Some text
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 40),
+                        child: Text(
+                          "Start a conversation with a support agent today",
+                          maxLines: 3,
+                          textAlign: TextAlign.center,
+                          style: WayaTextStyles.hintStyle,
+                        ),
                       ),
                     ],
                   ),
+                )
+              else
+                Expanded(
+                  child: WayaPaginatedListView<MessageModel>(
+                    handler: handler,
+                    nextPage: state.page,
+                    itemCount: state.messages.length,
+                    isAtEnd: !state.hasNextPage,
+                    shouldFetch: !state.isLoading,
+                    direction: Axis.vertical,
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    physics: const AlwaysScrollableScrollPhysics(),
+                    reverse: true,
+                    getPage: (page) async {
+                      return notifier.getSupportMessages();
+                    },
+                    builder: (context, index) => ChatBubbleWidget(
+                      index: index,
+                      previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
+                      data: state.messages[index],
+                      controller: inputController,
+                      isLast: index == state.messages.length - 1,
+                    ),
+                    child: state.typing
+                        ? Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              PersonalTypingIndicator(),
+                            ],
+                          )
+                        : null,
+                  ),
                 ),
-              )
-            else
-              ChatInputWidget(
-                controller: inputController,
-                notifier: notifier,
-                voiceEnabled: false,
-                createChat: _startConversation,
-              ),
-          ],
+
+              //? Third, the chat input widget.
+              if (_currentChat == null)
+                Container(
+                  padding: EdgeInsets.symmetric(vertical: 25.h, horizontal: 10.h),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primary.withAlpha(50),
+                  ),
+                  child: Text.rich(
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.visible,
+                    style: theme.textTheme.bodyMedium,
+                    TextSpan(
+                      children: [
+                        //? First, the text itself.
+                        TextSpan(
+                          text: "Chat ended, ",
+                        ),
+
+                        //? Second, the other guy here.
+                        TextSpan(
+                          text: "start a new conversation ",
+                          recognizer: TapGestureRecognizer()..onTap = _startSupportChat,
+                          style: theme.textTheme.bodySemiBold.copyWith(
+                            color: theme.colorScheme.primary,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        //? Third, the closing part of the text.
+                        TextSpan(
+                          text: "to chat with an agent",
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              else
+                ChatInputWidget(
+                  controller: inputController,
+                  notifier: notifier,
+                  voiceEnabled: false,
+                  createChat: _startConversation,
+                  focusNode: focusNode,
+                ),
+            ],
+          ),
         ),
       ),
     );

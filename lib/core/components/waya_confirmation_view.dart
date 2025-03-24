@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
@@ -28,6 +29,11 @@ class WayaConfirmationView<T> extends StatefulWidget {
   /// the argument is non-null.
   final String Function(T?) getText;
 
+  /// A function that would be invoked when a result has been generated. This
+  /// would only be called when you are done with your typing and are about to
+  /// search.
+  final void Function(T?)? onResult;
+
   /// The style of the text on this button. Whatever is the color in this text
   /// style would be the color of the cancel button.
   final TextStyle buttonTextStyle;
@@ -51,6 +57,7 @@ class WayaConfirmationView<T> extends StatefulWidget {
     required this.backgroundColor,
     required this.searchController,
     required this.buttonTextStyle,
+    this.onResult,
     this.hintText = "Search",
     this.debounceTimer = const Duration(milliseconds: 480),
   });
@@ -70,13 +77,22 @@ class _WayaConfirmationViewState<T> extends State<WayaConfirmationView<T>> {
   }
 
   void _lookupWithDebounce(String value) async {
-    controller.value = value.isEmpty ? _WayaConfirmationState.empty : _WayaConfirmationState.searching;
+    //? Then clear this out.
+    if (value.isEmpty) {
+      controller.value = _WayaConfirmationState.empty;
+      widget.onResult?.call(null);
+      return;
+    }
+
+    //? Then this is is fine.
+    controller.value = _WayaConfirmationState.searching;
     debounce(
       key: "waya-confirmation-$hashCode-view",
       delay: widget.debounceTimer,
       () async {
         //? Get the value of this.
         final result = await widget.getResult(value);
+        widget.onResult?.call(result);
 
         //? Update the value of this so we know downstream.
         _value = result;
@@ -137,26 +153,30 @@ class _WayaConfirmationViewState<T> extends State<WayaConfirmationView<T>> {
               hintText: widget.hintText,
             ),
 
-            //? Second, our text that shows who this user is.
-            Visibility(
-              visible: [_WayaConfirmationState.found, _WayaConfirmationState.notFound].contains(currentState),
-              child: Container(
-                padding: EdgeInsets.all(12.dg),
-                decoration: BoxDecoration(
-                  color: currentState == _WayaConfirmationState.notFound
-                      ? theme.colorScheme.greyColor50
-                      : widget.backgroundColor,
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Text(
-                  widget.getText(_value),
-                  textAlign: TextAlign.center,
-                  style: widget.buttonTextStyle.copyWith(
-                    color: currentState == _WayaConfirmationState.notFound ? theme.colorScheme.greyColor500 : null,
+            //? Second, our text that shows who this user is for example.
+            if ([_WayaConfirmationState.found, _WayaConfirmationState.notFound].contains(currentState))
+              GestureDetector(
+                onTap: () {
+                  widget.onResult?.call(_value);
+                  HapticFeedback.lightImpact();
+                },
+                child: Container(
+                  padding: EdgeInsets.all(12.dg),
+                  decoration: BoxDecoration(
+                    color: currentState == _WayaConfirmationState.notFound
+                        ? theme.colorScheme.greyColor50
+                        : widget.backgroundColor,
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Text(
+                    widget.getText(_value),
+                    textAlign: TextAlign.center,
+                    style: widget.buttonTextStyle.copyWith(
+                      color: currentState == _WayaConfirmationState.notFound ? theme.colorScheme.greyColor500 : null,
+                    ),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),

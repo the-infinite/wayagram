@@ -32,11 +32,12 @@ class InitDispute extends ConsumerStatefulWidget {
 
 class _DisputeChatState extends ConsumerState<InitDispute> {
   late final notifier = ref.read(sellerDisputeChatProvider.notifier);
-  late final  disputeNotifier = ref.read(disputeVmProvider.notifier);
+  late final disputeNotifier = ref.read(disputeVmProvider.notifier);
   late final conversation = ref.read(conversationProvider.notifier);
 
   Order? orderDetail;
   bool isLoading = false;
+  int noOfdaysLeft = 14;
 
   @override
   void initState() {
@@ -67,15 +68,14 @@ class _DisputeChatState extends ConsumerState<InitDispute> {
         setState(() {
           isLoading = true;
         });
-        final  result = await disputeNotifier.openTicket(
-            reason: reason,
-            sellerId: orderDetail!.vendorId,
-            orderedItem: orderDetail!,
-            reference: orderDetail!.id,
-            );
+        final result = await disputeNotifier.openTicket(
+          reason: reason,
+          sellerId: orderDetail!.vendorId,
+          orderedItem: orderDetail!,
+          reference: orderDetail!.id,
+        );
 
-        await conversation
-            .getChatDetails(result!['chatId']!).then((chat) {
+        await conversation.getChatDetails(result!['chatId']!).then((chat) {
           setState(() {
             isLoading = false;
           });
@@ -85,9 +85,24 @@ class _DisputeChatState extends ConsumerState<InitDispute> {
 
           //? If we could make this chat...
           notifier.setChat(chat);
-          WayaNav.replaceNamed(WayaAppRoutes.getDisputeChatsRoute(result['disputeId']!));
+          WayaNav.replaceNamed(
+              WayaAppRoutes.getDisputeChatsRoute(result['disputeId']!));
         });
       }
+    }
+
+    if (orderDetail != null) {
+      final order = orderDetail!;
+
+      String completedAt = order.deliveryStatusHistory.isNotEmpty
+          ? order.deliveryStatusHistory.last.updatedAt
+          : order.pickupStatusHistory.last.updatedAt;
+      int daysLeft =
+          14 - DateTime.now().difference(DateTime.parse(completedAt)).inDays;
+
+      //    setState(() {
+      noOfdaysLeft = daysLeft;
+      // });
     }
 
     //? This is fine.
@@ -190,7 +205,7 @@ class _DisputeChatState extends ConsumerState<InitDispute> {
                           SvgPicture.asset(WayaAssets.icons.dclock.path),
                           const Gap(3),
                           Text(
-                            "14 Days left",
+                            "$noOfdaysLeft Days left",
                             style: wayaTheme.textTheme.hintStyle.copyWith(
                                 color: wayaTheme.colorScheme.customPrimary,
                                 fontSize: 12.sp,
@@ -231,6 +246,7 @@ class _DisputeChatState extends ConsumerState<InitDispute> {
                     return IntrinsicWidth(
                       child: WayaButton(
                         callback: () async {
+                          if (noOfdaysLeft <= 0) return;
                           openTicket(reason: suggestion);
                         },
                         horizontalPadding: 6,

@@ -44,27 +44,29 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
       isScrollable: true,
       appBarTrailing: Padding(
         padding: const EdgeInsets.only(right: 20),
-        child: WayaProgressiveButton(
-          notifier: createController,
-          callback: () async {
-            await myPageNotifier.createPage(
-              viewModel.pageName.text,
-              viewModel.pageDescription.text,
-              args['type'] == 'Public Page' ? true : false,
-              (args['coverImage'] as File).path,
-              (args['image'] as File).path,
-            );
-            viewModel2.reset();
-            WayaNav.toNamed("/successPage");
-          },
-          height: null,
-          verticalPadding: 6.h,
-          horizontalPadding: 12.w,
-          text: 'Create',
-          textStyle: theme.textTheme.bodySmall?.copyWith(
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.white,
+        child: IntrinsicHeight(
+          child: WayaProgressiveButton(
+            notifier: createController,
+            callback: () async {
+              await myPageNotifier.createPage(
+                viewModel.pageName.text,
+                viewModel.pageDescription.text,
+                args['type'] == 'Public Page' ? true : false,
+                (args['coverImage'] as File).path,
+                (args['image'] as File).path,
+              );
+              viewModel2.reset();
+              WayaNav.toNamed("/successPage");
+            },
+            height: null,
+            verticalPadding: 6.h,
+            horizontalPadding: 12.w,
+            text: 'Create',
+            textStyle: theme.textTheme.bodySmall?.copyWith(
+              fontSize: 12.sp,
+              fontWeight: FontWeight.w600,
+              color: theme.colorScheme.white,
+            ),
           ),
         ),
       ),

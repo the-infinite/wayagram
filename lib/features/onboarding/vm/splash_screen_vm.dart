@@ -96,7 +96,7 @@ class SplashScreenVm extends StateNotifier<void> {
       
       //? Go 
       else {
-        WayaNav.toNamed(WelcomeBackPage.route);
+        WayaNav.toNamed(LoginCoverPage.route);
       }
     } catch (e) {
       WayaNav.toNamed(LoginCoverPage.route);

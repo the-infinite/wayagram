@@ -131,6 +131,7 @@ class _ExploreState extends ConsumerState<Explore> {
             ExploreOurServices(),
             const Gap(25),
             Text("Moments", style: wayaTheme.textTheme.titleLarge),
+            const Gap(15),
             SharedMoments(),
             const Gap(25),
             GroupedWidgetHeader(
@@ -176,8 +177,7 @@ class _ExploreState extends ConsumerState<Explore> {
             //? For the next section.
             GroupedWidgetHeader(
                 onTap: () {
-                  WayaNav.toNamed(BottomView.route,
-                      arguments: 1, preventDuplicates: false);
+                  WayaNav.toNamed(BottomView.route, arguments: 1, preventDuplicates: false);
                 },
                 subTitle: 'Explore Categories & Best Offers',
                 title: 'Shop'),
@@ -185,9 +185,7 @@ class _ExploreState extends ConsumerState<Explore> {
             CategoriesFilterWidget(setCategory: (value) {
               ref.read(shopVmProvider.notifier).setCategory(value);
               for (String categoryId in value) {
-                ref
-                    .read(productEngagementProvider.notifier)
-                    .addCategory(categoryId, ProductPoint.searchPoint.value);
+                ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
               }
             }),
             const Gap(25),

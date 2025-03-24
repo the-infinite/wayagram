@@ -16,6 +16,7 @@ class WayaNav<T> {
     Function(T)? onResult,
     bool preventDuplicates = false,
     Transition transition = Transition.cupertino,
+    Duration duration = const Duration(milliseconds: 500),
   }) {
     final completer = Completer<T>();
     try {
@@ -26,6 +27,7 @@ class WayaNav<T> {
       () => page,
       transition: transition,
       preventDuplicates: preventDuplicates,
+      duration: duration,
     )?.then((result) {
       if (onResult != null) {
         onResult(result);
@@ -38,11 +40,13 @@ class WayaNav<T> {
   // This remove all screens on the stack leaving just one screen
   static Future<T?>? removeUntil<T>(
     Widget page, [
+    Duration duration = const Duration(milliseconds: 500),
     Transition transition = Transition.cupertino,
   ]) {
     return Get.offAll(
       () => page,
       transition: transition,
+      duration: duration,
     );
   }
 
@@ -113,10 +117,13 @@ class WayaNav<T> {
     return completer.future;
   }
 
-  static Future<T?>? off<T>(Widget page) {
+  static Future<T?>? off<T>(
+    Widget page, {
+    Transition transition = Transition.cupertino,
+  }) {
     return Get.off(
       () => page,
-      transition: Transition.cupertino,
+      transition: transition,
     );
   }
 

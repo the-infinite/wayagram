@@ -45,24 +45,24 @@ class ProductCard extends ConsumerWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-         Stack(
-          children: [
-             WayaImage(
-            imageUrl: image,
-            height: 180,
-            width: double.infinity,
-            fit: BoxFit.cover,
-            radius: BorderRadius.circular(8),
-            color: wayaTheme.colorScheme.transparent,
+          Stack(
+            children: [
+              WayaImage(
+                imageUrl: image,
+                height: 180,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                radius: BorderRadius.circular(8),
+                color: wayaTheme.colorScheme.transparent,
+              ),
+            ],
           ),
-          ],
-         ),
           if (product.discountPercentage == 0)
             SizedBox(
               height: 22,
             ),
           Visibility(
-              visible: product.wayagramDeal == true,
+              visible: product.wayagramDealApprove == true,
               child: Column(
                 children: [
                   SizedBox(height: 3),
@@ -74,8 +74,8 @@ class ProductCard extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(6)),
                     child: Center(
                       child: Text("WAYAGRAM DEAL",
-                          style: TextStyle().wayaCopyWith(
-                              color: Colors.white,
+                          style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
+                              color: wayaTheme.colorScheme.white,
                               fontWeight: FontWeight.w500,
                               fontSize: 10.sp)),
                     ),
@@ -95,7 +95,7 @@ class ProductCard extends ConsumerWidget {
           Text(product.name.capitalizeFirst!,
               style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
-              visible: !isExplore ,
+              visible: !isExplore,
               child: Column(
                 children: [
                   SizedBox(height: 3),
@@ -125,7 +125,8 @@ class ProductCard extends ConsumerWidget {
                 children: [
                   SizedBox(height: 3),
                   Text(
-                    "₦${product.price}",
+                    WayaHelpers.formatPrice(
+                        double.parse(product.price).toInt()),
                     style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: wayaTheme.colorScheme.greyColor400,
@@ -138,9 +139,11 @@ class ProductCard extends ConsumerWidget {
           SizedBox(height: 3),
           Text(
               product.discountPercentage > 0
-                  ? WayaHelpers.calculatedDiscountPrice(
-                      product.price, product.discountPercentage)
-                  : "₦${product.price}",
+                  ? 
+                          WayaHelpers.calculatedDiscountPrice(
+                              product.price, product.discountPercentage)
+                  : WayaHelpers.formatPrice(
+                      double.parse(product.price).toInt()),
               style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary
@@ -182,7 +185,6 @@ class ProductCard extends ConsumerWidget {
                   )
                 ],
               )),
-         
           SizedBox(
             height: 10,
           )
@@ -240,8 +242,8 @@ class SellerProductCard extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(6)),
                     child: Center(
                       child: Text("WAYAGRAM DEAL",
-                          style: TextStyle().wayaCopyWith(
-                              color: Colors.white,
+                          style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
+                              color: wayaTheme.colorScheme.white,
                               fontWeight: FontWeight.w500,
                               fontSize: 10.sp)),
                     ),
@@ -291,12 +293,12 @@ class SellerProductCard extends ConsumerWidget {
                 children: [
                   SizedBox(height: 3),
                   Text(
-                    "₦${product.price}",
-                    style: TextStyle().wayaCopyWith(
+                    WayaHelpers.formatPrice(double.parse(product.price).toInt()),
+                    style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: wayaTheme.colorScheme.greyColor400,
                         fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
+                        fontWeight: FontWeight.w500,
                         color: wayaTheme.colorScheme.greyColor400),
                   ),
                 ],
@@ -306,7 +308,7 @@ class SellerProductCard extends ConsumerWidget {
               product.discountPercentage > 0
                   ? WayaHelpers.calculatedDiscountPrice(
                       product.price, product.discountPercentage.toInt())
-                  : "₦${product.price}",
+                  : WayaHelpers.formatPrice(double.parse(product.price).toInt()),
               style: TextStyle().wayaCopyWith(
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary
@@ -326,7 +328,7 @@ class SellerProductCard extends ConsumerWidget {
                     },
                     height: 38,
                     radius: 6,
-                    color:  wayaTheme.colorScheme.primary50,
+                    color: wayaTheme.colorScheme.primary50,
                     centerWidget: Text(
                       'Manage Product',
                       style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
@@ -337,7 +339,7 @@ class SellerProductCard extends ConsumerWidget {
                   )
                 ],
               )),
-              SizedBox(
+          SizedBox(
             height: 10,
           )
         ],

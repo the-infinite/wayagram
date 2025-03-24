@@ -213,10 +213,10 @@ class _WayagramState extends ConsumerState<Wayagram> {
           children: [
             //? First, the widget that is being laid out.
             child!,
-
+    
             //? Second, our preloader widget.
             if (showPreloader) WayaPreloaderOverlay(),
-
+    
             //? Third, the debug console.
             if (!WayaConstants.isProduction) WayaDebugConsole(),
           ],

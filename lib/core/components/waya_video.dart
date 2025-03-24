@@ -51,10 +51,10 @@ class WayaVideoController {
     _controller?.removeListener(listener);
   }
 
-  Future<void> dispose() {
+  Future<void> dispose() async {
     _isPlaying.dispose();
     _isMuted.dispose();
-    return _controller!.dispose();
+    _controller?.dispose();
   }
 
   Future<void> pause() {
@@ -142,6 +142,7 @@ class WayaVideoWidget extends StatefulWidget {
   final bool canFocus;
   final VideoPlayerOptions? options;
   final Future<ClosedCaptionFile>? subtitles;
+  final void Function()? onInitialized;
   final WayaVideoControls controls;
 
   // This is fine.
@@ -149,6 +150,7 @@ class WayaVideoWidget extends StatefulWidget {
     required this.controller,
     required this.controls,
     required this.canFocus,
+    required this.onInitialized,
     this.subtitles,
     this.options,
     this.asset,
@@ -169,6 +171,7 @@ class WayaVideoWidget extends StatefulWidget {
     VideoPlayerOptions? options,
     Future<ClosedCaptionFile>? subtitles,
     void Function(bool)? onPlaybackChanged,
+    void Function()? onInitialized,
   }) {
     //? Handle the change of playback state.
     controller._onPlaybackChanged = onPlaybackChanged;
@@ -181,6 +184,7 @@ class WayaVideoWidget extends StatefulWidget {
       options: options,
       subtitles: subtitles,
       canFocus: canFocus,
+      onInitialized: onInitialized,
     );
   }
 
@@ -194,6 +198,7 @@ class WayaVideoWidget extends StatefulWidget {
     VideoPlayerOptions? options,
     Future<ClosedCaptionFile>? subtitles,
     void Function(bool)? onPlaybackChanged,
+    void Function()? onInitialized,
   }) {
     //? Handle the change of playback state.
     controller._onPlaybackChanged = onPlaybackChanged;
@@ -206,6 +211,7 @@ class WayaVideoWidget extends StatefulWidget {
       options: options,
       subtitles: subtitles,
       canFocus: canFocus,
+      onInitialized: onInitialized,
     );
   }
 
@@ -219,6 +225,7 @@ class WayaVideoWidget extends StatefulWidget {
     VideoPlayerOptions? options,
     Future<ClosedCaptionFile>? subtitles,
     void Function(bool)? onPlaybackChanged,
+    void Function()? onInitialized,
   }) {
     //? Handle the change of playback state.
     controller._onPlaybackChanged = onPlaybackChanged;
@@ -231,6 +238,7 @@ class WayaVideoWidget extends StatefulWidget {
       options: options,
       subtitles: subtitles,
       canFocus: canFocus,
+      onInitialized: onInitialized,
     );
   }
 }
@@ -263,6 +271,9 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
           //? Ensure the first frame is shown after the video is initialized,
           //? even before the play button has been pressed.
           if (mounted) setState(() {});
+
+          //? Notify the parent that this has been initialized.
+          widget.onInitialized?.call();
 
           //? If this has autoplay enabled...
           if (widget.controller.autoplay) {
@@ -429,7 +440,7 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
           ? null
           : () async {
               final result = await WayaNav.to(
-                transition: Transition.downToUp,
+                transition: Transition.circularReveal,
                 WayaVideoDetailScreen(
                   file: widget.file,
                   videoUrl: widget.networkUrl.toString(),

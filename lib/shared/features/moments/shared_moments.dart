@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -21,14 +23,30 @@ class SharedMoments extends ConsumerStatefulWidget {
 
 class _SharedMomentsState extends ConsumerState<SharedMoments> {
   late final notifier = ref.read(momentVmProvider.notifier);
+  Timer? _timer;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifier.getUserMoments(1);
       otherUserMoments.getAllMoments();
+
+      //? This is fine.
+      _timer = Timer.periodic(
+        const Duration(minutes: 1),
+        (_) {
+          notifier.getUserMoments(1);
+          otherUserMoments.getAllMoments();
+        },
+      );
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -40,7 +58,7 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
     }
 
     return SizedBox(
-      height: 80,
+      height: 120.h,
       child: ValueListenableBuilder(
         valueListenable: otherUserMoments,
         builder: (context, refreshCount, _) => ListView.builder(
@@ -64,7 +82,10 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                             create: () => WayaNav.toNamed(MyMoments.route),
                             view: () => WayaNav.toNamed(
                               ViewMoment.route,
-                              arguments: {"moments": momentState.myMoments, "isMine": true},
+                              arguments: {
+                                "moments": momentState.myMoments,
+                                "isMine": true,
+                              },
                             ),
                           ),
                         );
@@ -87,9 +108,14 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                 children: [
                   MomentsWidget(
                     moment: moment,
-                    onTap: () async {
-                      WayaNav.toNamed(ViewMoment.route, arguments: {"moments": moment.moments, "isMine": false});
-                    },
+                    hasMoment: !notifier.hasViewedMoment(moment.moments.first.id),
+                    onTap: () => WayaNav.toNamed(
+                      ViewMoment.route,
+                      arguments: {
+                        "moments": moment.moments,
+                        "isMine": false,
+                      },
+                    ),
                   ),
                   const Gap(6),
                 ],
@@ -129,10 +155,7 @@ class PopModal extends StatelessWidget {
                 textAlign: TextAlign.start,
                 "Create New Moment",
                 style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
-                  color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14.sp,
-                   fontWeight: FontWeight.w500
-                ),
+                    color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp, fontWeight: FontWeight.w500),
               ),
             ),
             SizedBox(height: 10),
@@ -145,10 +168,7 @@ class PopModal extends StatelessWidget {
                 "View Moment",
                 textAlign: TextAlign.start,
                 style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
-                  color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500
-                ),
+                    color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp, fontWeight: FontWeight.w500),
               ),
             ),
           ],

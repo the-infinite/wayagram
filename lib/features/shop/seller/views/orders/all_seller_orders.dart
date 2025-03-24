@@ -29,6 +29,7 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
   late TextEditingController searchController;
   List<SalesMetric> orders = orderMetrics;
 
+  @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -48,9 +49,10 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
     super.dispose();
   }
 
-  @override
+ 
   @override
   Widget build(BuildContext context) {
+     final wayaTheme = Theme.of(context);
     final shopState = ref.watch(shopVmProvider);
 
     if (shopState.sellerMetrics != null) {
@@ -83,11 +85,42 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
         isScrollable: false,
         title: 'Orders',
         appBarTrailing: WayaCartIcon(),
-        body: Expanded(
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+                  Text("Orders", style: wayaTheme.textTheme.titleLarge),
+          const Gap(3),
+          Text(
+            'View and Manage your orders',
+            style: wayaTheme.textTheme.hintStyle,
+          ),
+          const Gap(20),
+          FilterWidget(
+            hintText: 'Search Order by ID, shop name, token etc',
+            search: searchController,
+          ),
+          const Gap(15),
+          GridView.builder(
+              itemCount: 3,
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: orders.length,
+                  mainAxisSpacing: 0,
+                  childAspectRatio: 1.22,
+                  crossAxisSpacing: 8),
+              itemBuilder: (context, index) {
+                return InventoryWidget(
+                    metrics: orders[index].metrics,
+                    color: orders[index].color!,
+                    title: orders[index].title);
+              }),
+          const Gap(20),
+            Expanded(
             child: PaginatedDataView<Order>(
                 uniqueKey: 'seller-orders',
-                trailingWidget:
-                    _buildTrailing(context: context, orders: orders),
+                // trailingWidget:
+                //     _buildTrailing(context: context, orders: orders),
                 emptyState: EmptyState(
                     assetImage:
                         WayaAssets.images.wallet.searchDocu.image(scale: 1.5),
@@ -118,45 +151,12 @@ class _AllSellerOrderState extends ConsumerState<AllSellerOrders> {
                           order: filteredOrder[index],
                         );
                       });
-                })));
+                }))
+          ],
+        )
+                
+                );
   }
 
-  Widget _buildTrailing(
-      {required BuildContext context, required List<SalesMetric> orders}) {
-    final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(sellerOrdersVmProvider);
-    return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Orders", style: wayaTheme.textTheme.titleLarge),
-          const Gap(3),
-          Text(
-            'View and Manage your orders',
-            style: wayaTheme.textTheme.hintStyle,
-          ),
-          const Gap(20),
-          FilterWidget(
-            hintText: 'Search Order by ID, shop name, token etc',
-            search: searchController,
-          ),
-          const Gap(15),
-          GridView.builder(
-              itemCount: 3,
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: orders.length,
-                  mainAxisSpacing: 0,
-                  childAspectRatio: 1.22,
-                  crossAxisSpacing: 8),
-              itemBuilder: (context, index) {
-                return InventoryWidget(
-                    metrics: orders[index].metrics,
-                    color: orders[index].color!,
-                    title: orders[index].title);
-              }),
-          const Gap(20),
-        ]);
-  }
+ 
 }
