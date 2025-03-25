@@ -7,11 +7,13 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
@@ -329,8 +331,15 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   const Gap(30),
                   GestureDetector(
                     onTap: () async {
-                      final result = await Share.shareUri(Uri.parse(
-                          "http://wayagram.ng/upcoming-manage-contest-details?id=${widget.post.id}"));
+                      final result = await Share.share(
+                        WayaValueHelper.getShareableUrl(
+                            WayaAppRoutes.getContestDetailRoute(
+                                widget.post.id ?? "")),
+                        subject: "Share Contest",
+
+                        /* Uri.parse(
+                          "http://wayagram.ng/upcoming-manage-contest-details?id=${widget.post.id}") */
+                      );
 
                       if (result.status == ShareResultStatus.success) {
                         if (hasClickedShared.value == false) {

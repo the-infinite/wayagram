@@ -392,6 +392,10 @@ class WayaAppRoutes {
   /// for the details of a single event.
   static String getEventDetailsScreen(String id) => "${EventDetail.route}?id=$id";
 
+    /// Helper that shows an example of the generator route pattern with GetX and
+  /// a little bit of hard coded magic.
+  static String getContestDetailRoute(String id) => "${AdminContestDetails.route}?id=$id";
+
   /// This is fine.
   static List<GetPage> get getPages {
     return routes.entries.map(

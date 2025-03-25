@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
 
 class WayaNav<T> {
@@ -173,6 +175,16 @@ class WayaNav<T> {
       arguments: arguments,
     );
   }
+
+  //close the whole app
+  // use case, when the app is opened with link
+  static closeApp() {
+  if (Platform.isAndroid) {
+    SystemNavigator.pop();
+  } else if (Platform.isIOS) {
+    exit(0);
+  }
+}
 
   static bool canPop() => Navigator.canPop(Get.context!);
 
