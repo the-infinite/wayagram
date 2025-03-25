@@ -153,17 +153,17 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (ConversationState.self.accountType ==
-                          UserAccountType.business)
-                        WayaButton(
-                          callback: () {
-                            ivalidateUGTVM(ref);
-                            WayaNav.toNamed('/create-contest');
-                          },
-                          color: wayaTheme.colorScheme.primary50,
-                          text: "Host a Contest",
-                          textColor: wayaTheme.colorScheme.customPrimary,
-                        ),
+                      /* if (ConversationState.self.accountType ==
+                          UserAccountType.business) */
+                      WayaButton(
+                        callback: () {
+                          ivalidateUGTVM(ref);
+                          WayaNav.toNamed('/create-contest');
+                        },
+                        color: wayaTheme.colorScheme.primary50,
+                        text: "Host a Contest",
+                        textColor: wayaTheme.colorScheme.customPrimary,
+                      ),
                       const Gap(10),
                       if (host.isEmpty &&
                           applied.listAppliedContest.isEmpty &&
@@ -287,15 +287,17 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc: ConversationState.self.accountType == UserAccountType.business
+        desc: /*  ConversationState.self.accountType == UserAccountType.business
             ? "You don’t have any active contest here. Create a \n contest and have different participant"
-            : "You don’t have any active contest here. Create a \n Business account to access more features",
+            : */
+            "You don’t have any active contest here. Create a \n Business account to access more features",
         title: "No Contest Created",
         buttonText: "Host a Contest",
         hideButton:
-            ConversationState.self.accountType == UserAccountType.business
+            /*  ConversationState.self.accountType == UserAccountType.business
                 ? true
-                : false,
+                : */
+            false,
         onTap: () {
           ivalidateUGTVM(ref);
           WayaNav.toNamed("/create-contest");

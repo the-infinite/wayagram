@@ -8,8 +8,8 @@ import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 class UgtPostAllContestant extends ConsumerStatefulWidget {
   //final  MyContestContestantModel? contestApplicant;
-    final Contest model;
-  const UgtPostAllContestant( this.model, {super.key});
+  final Contest? model;
+  const UgtPostAllContestant(this.model, {super.key});
 
   @override
   _UgtDetailsPostState createState() => _UgtDetailsPostState();
@@ -29,15 +29,14 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
 
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(votersContestNotifier);
-    
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        
         // UgtPostCard(),
         //  UgtPostCard(),
-         if ( viewModel.myPostList.isEmpty) emptyWidget(),
+        if (viewModel.myPostList.isEmpty) emptyWidget(),
         //  if (posts.isNotEmpty)
         ListView.builder(
           controller: _scrollController,
@@ -49,7 +48,8 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
               }
  */
             final post = viewModel.myPostList[index];
-            return GestureDetector(onTap: () {}, child: UgtPostAllCard(post, widget.model));
+            return GestureDetector(
+                onTap: () {}, child: UgtPostAllCard(post, widget.model!));
           },
         ),
       ],
@@ -63,10 +63,9 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
         title: "No Post Created",
         buttonText: "",
         hideButton: false,
-        onTap: () {
-         
-        });
+        onTap: () {});
   }
+
   @override
   void dispose() {
     _scrollController.dispose();

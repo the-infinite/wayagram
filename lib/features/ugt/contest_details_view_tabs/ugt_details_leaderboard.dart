@@ -11,7 +11,7 @@ import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 class UgtDetailsLeaderboard extends ConsumerStatefulWidget {
-  final Contest model;
+  final Contest? model;
   const UgtDetailsLeaderboard(this.model, {super.key});
 
   @override
@@ -63,7 +63,7 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
                 );
               },
               child: UgtLeaderboardCard(
-                  model: widget.model,
+                  model: widget.model!,
                   position: index + 1,
                   contestantData: post),
             );

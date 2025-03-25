@@ -223,7 +223,9 @@ class WayaAppRoutes {
     UpcomingContestDetails.route: () => UpcomingContestDetails(),
     CreateProfile.route: () => CreateProfile(),
     RegisterContest.route: () => RegisterContest(),
-    AdminContestDetails.route: () => AdminContestDetails(),
+    AdminContestDetails.route: () => AdminContestDetails(
+       id: WayaNav.search['id'].toString(),
+    ),
     ShareVotingLink.route: () => ShareVotingLink(),
     DeliveryRequest.route: () => DeliveryRequest(),
     SellerProducts.route: () => SellerProducts(),
