@@ -10,7 +10,7 @@ import 'package:wayagram/shared/features/profile/model/post.dart';
 class ExploreState {
   final bool isLoading;
   final String userId;
-  final String? cursor;
+  final int? cursor;
   final bool hasMore;
   final List<PostModel> posts;
 
@@ -27,13 +27,13 @@ class ExploreState {
     isLoading: false,
     userId: '',
     hasMore: true,
-    cursor: null,
+    cursor: 1,
   );
 
   ExploreState copyWith({
     bool? isLoading,
     String? userId,
-    String? cursor,
+    int? cursor,
     bool? hasMore,
     List<PostModel>? posts,
   }) {
@@ -71,13 +71,20 @@ class ExploreVm extends StateNotifier<ExploreState> {
   ];
 
   Future<void> getUserFeeds() async {
+    //? If this has no more...
+    if (!state.hasMore) {
+      return;
+    }
+
+    //? This is fine.
     try {
+      //? Continue.
       state = state.copyWith(isLoading: true);
-      final response = await _exploreRepository.getFeeds(state.cursor);
+      final response = await _exploreRepository.getFeeds(state.cursor ?? 1, 20);
 
       if (response.success) {
         final data = response.data['data'];
-        final posts = data['posts'] as List;
+        final posts = data['docs'] as List;
         final recent = posts.map((e) => PostModel.fromJson(e));
 
         //? Fetch the posts.
@@ -90,8 +97,8 @@ class ExploreVm extends StateNotifier<ExploreState> {
         //? Now update the state.
         state = state.copyWith(
           posts: result,
-          cursor: data['cursor'],
-          hasMore: data['hasMore'],
+          cursor: data['nextPage'],
+          hasMore: data['hasNextPage'],
         );
       }
     } catch (e) {

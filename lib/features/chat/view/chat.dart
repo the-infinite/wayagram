@@ -1,5 +1,4 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -69,10 +68,14 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   }
 
   // We start a video call.
-  void _startAudioCall() async {}
+  void _startAudioCall() async {
+    WayaNavigationHelper.showComingSoonModal(true);
+  }
 
   // We start a video call.
-  void _startVideoCall() async {}
+  void _startVideoCall() async {
+    WayaNavigationHelper.showComingSoonModal(true);
+  }
 
   Future<ChatModel?> _startConversation() async {
     return null;

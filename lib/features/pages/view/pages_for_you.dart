@@ -80,7 +80,11 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                 index: index,
               ),
             ),
-          const Gap(25),
+
+          // Some space.
+          Gap(25.h),
+
+          //? Suggestions.
           GroupedWidgetHeader(
             onTap: () {
               WayaNav.toNamed('/suggestion');
@@ -89,21 +93,22 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
             title: 'Suggestions',
           ),
           const Gap(25),
-          viewPage.recommendedPages?.isEmpty ?? true
-              ? ActivityLogsEmptyState(text: 'No pages to recommend just yet')
-              : SizedBox(
-                  height: 190,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
-                    itemCount: viewPage.recommendedPages?.length ?? 0,
-                    itemBuilder: (_, index) => SinglePageWidget(
-                      page: viewPage.recommendedPages![index],
-                      index: index,
-                      vertical: true,
-                    ),
-                  ),
+          if (viewPage.recommendedPages?.isEmpty ?? true)
+            ActivityLogsEmptyState(text: 'No pages to recommend just yet')
+          else
+            SizedBox(
+              height: 190,
+              child: ListView.builder(
+                shrinkWrap: true,
+                scrollDirection: Axis.horizontal,
+                itemCount: viewPage.recommendedPages?.length ?? 0,
+                itemBuilder: (_, index) => SinglePageWidget(
+                  page: viewPage.recommendedPages![index],
+                  index: index,
+                  vertical: true,
                 ),
+              ),
+            ),
           Gap(20),
           if (viewPage.pagePopularPostDocs?.isEmpty ?? true)
             PostEmptyState()

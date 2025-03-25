@@ -124,25 +124,34 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
 
   details(title, subTitle) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: Text(title,
-              style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: WayaColors.greyColor700,
-                  fontFamily: WayaConstants.fontFamily)),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w500,
+            color: WayaColors.greyColor700,
+            fontFamily: WayaConstants.fontFamily,
+          ),
         ),
-        const Spacer(),
+
+        //? This is fine.
         Expanded(
-          child: Text('$subTitle',
+          child: Padding(
+            padding: EdgeInsets.only(left: 15.h),
+            child: Text(
+              subTitle,
+              maxLines: 2,
+              textAlign: TextAlign.right,
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
                 color: Color(0xff6B7280),
-              )),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
         ),
       ],
     );

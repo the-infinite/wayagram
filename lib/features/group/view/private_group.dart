@@ -101,9 +101,9 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                 ),
                 PopupMenuItem<int>(
                   value: 3,
-                  onTap: () {
-                    myGroupNotifier.deleteGroup(widget.group.id);
-                    WayaNav.replaceNamed('/groups');
+                  onTap: () async {
+                    await myGroupNotifier.deleteGroup(widget.group.id);
+                    WayaNav.goBack();
                   },
                   child: WayaActionNav(
                     context: context,
@@ -239,11 +239,11 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                 text: 'Posts',
                 onTap: () => setState(() => _selectedIndex = 0),
               ),
-              WayaTabButton(
-                isSelected: _selectedIndex == 1,
-                text: 'Events',
-                onTap: () => setState(() => _selectedIndex = 1),
-              ),
+              //   WayaTabButton(
+              //     isSelected: _selectedIndex == 1,
+              //     text: 'Events',
+              //     onTap: () => setState(() => _selectedIndex = 1),
+              //   ),
               WayaTabButton(
                 isSelected: _selectedIndex == 2,
                 text: 'Media',

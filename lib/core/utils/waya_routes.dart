@@ -170,7 +170,7 @@ class WayaAppRoutes {
     ChangePasswordGenSettings.route: () => ChangePasswordGenSettings(),
     ChangePinPage.route: () => ChangePinPage(),
     ResetPinPage.route: () => ResetPinPage(),
-    VerifyYourIdentityPage.route: ()=> VerifyYourIdentityPage(),
+    VerifyYourIdentityPage.route: () => VerifyYourIdentityPage(),
     WayaWebview.route: () => WayaWebview(),
     FundWalletOptionsScreen.route: () => FundWalletOptionsScreen(),
     WalletPage.route: () => WalletPage(),
@@ -233,7 +233,9 @@ class WayaAppRoutes {
     Moment.route: () => Moment(),
     EventView.route: () => EventView(),
     AddEvent.route: () => AddEvent(),
-    EventDetail.route: () => EventDetail(),
+    EventDetail.route: () => EventDetail(
+          id: WayaNav.search['id'].toString(),
+        ),
     CreatePage.route: () => CreatePage(),
     CreateGroup.route: () => CreateGroup(),
     ConfirmPageDetails.route: () => ConfirmPageDetails(),
@@ -384,6 +386,10 @@ class WayaAppRoutes {
   /// the screen for making a new post for a group.
   static String getGroupPostScreen(String id) => "${CreateGroupPost.route}?id=$id";
 
+  /// Helper function used to generate the route that takes a user to the screen
+  /// for the details of a single event.
+  static String getEventDetailsScreen(String id) => "${EventDetail.route}?id=$id";
+
   /// This is fine.
   static List<GetPage> get getPages {
     return routes.entries.map(
@@ -397,4 +403,3 @@ class WayaAppRoutes {
     ).toList();
   }
 }
-

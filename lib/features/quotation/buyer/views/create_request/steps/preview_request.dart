@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -418,7 +419,10 @@ class EditHeader extends StatelessWidget {
                 border: Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1)),
             child: Row(
               children: [
-                Icon(Icons.edit_outlined),
+                WayaAssets.icons.ctxEdit.svg(
+                  height: 20.dg,
+                  width: 20.dg,
+                ),
                 const Gap(5),
                 Text(
                   "Edit",

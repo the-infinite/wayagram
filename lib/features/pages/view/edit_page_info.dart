@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -32,8 +33,8 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
   late final notifier = ref.read(pageProvider.notifier);
   final valueController = ValueNotifier(false);
   final _formKey = GlobalKey<FormState>();
-  bool sel = false;
-  bool sel2 = false;
+  late bool sel = widget.page.isPublic;
+  late bool sel2 = !sel;
   File? _selectedImage; // Holds the selected image
   File? _coverImage; // Holds the selected image
 
@@ -88,7 +89,12 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
         child: WayaProgressiveButton(
           notifier: valueController,
           callback: () async {
-            if (_formKey.currentState!.validate()) {
+            if (!sel && !sel2) {
+              WayaUtils.showModalSheet(context,
+                  child: WayaErrorDialog(
+                    title: "You are required to specify if you wish the group to be private or not",
+                  ));
+            } else if (_formKey.currentState!.validate()) {
               await myPageNotifier.editPage(
                 viewModel.pageName.text,
                 viewModel.pageDescription.text,

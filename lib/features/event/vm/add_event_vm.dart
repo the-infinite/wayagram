@@ -11,7 +11,6 @@ import 'package:wayagram/features/auth/add_business_account/vm/add_business_acco
 import 'package:wayagram/features/event/data/model/add_event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
-import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/shared/components/radio_select.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
@@ -98,30 +97,30 @@ class AddEventVm extends StateNotifier<AddEventState> {
     return startMinutes > endMinutes;
   }
 
-  Future<void> onSubmit({required BuildContext context}) async {
+  Future<bool> onSubmit({required BuildContext context}) async {
     try {
       // validate image
       if (state.eventImage.isEmpty) {
         WayaSnackBar.showToast("Add an Image");
-        return;
+        return false;
       }
 
       // validate date
       if (isStartDateAfterEndDate(state.startDate, state.endDate)) {
         WayaSnackBar.showToast("Start date must be before the end date");
-        return;
+        return false;
       }
 
       // validate time
       if (isStartTimeAfterEndTime(state.startTime, state.endTime)) {
         WayaSnackBar.showToast("Start time must be before the end time");
-        return;
+        return false;
       }
 
       // validate payment option
       if (state.eventType == 'Paid' && state.eventFee.text.isEmpty) {
         WayaSnackBar.showToast("Add price for a PAID event");
-        return;
+        return false;
       }
 
       if (state.eventType == 'Free' && state.eventFee.text.isEmpty) {
@@ -142,33 +141,34 @@ class AddEventVm extends StateNotifier<AddEventState> {
 
       if (response.success) {
         if (context.mounted) {
-          WayaUtils.showNotice(
-              context: context,
-              title: state.isEditingMode
-                  ? "Your Event has been updated successfully"
-                  : "Your Event has been created successfully",
-              message: "Your event is now live. Share it with your audience and start engaging with attendees today!",
-              onPress: () {
-                WayaNav.replaceNamed(EventView.route);
-                // WayaNav.goBack();
-              },
-              buttonText: 'Go To Event Home Page',
-              secondButtonText: 'Share Event Link',
-              onCancel: () {
-                ref.read(eventVmProvider.notifier).shareEvent(context: context, shareUrl: "shareUrl");
-              },
-              icon: Image.asset(
-                "assets/images/create-event-success.png",
-                scale: 1.5,
-              ));
+          await WayaUtils.showNotice(
+            context: context,
+            title: state.isEditingMode
+                ? "Your Event has been updated successfully"
+                : "Your Event has been created successfully",
+            message: "Your event is now live. Share it with your audience and start engaging with attendees today!",
+            onPress: () => WayaNav.goBack(),
+            buttonText: 'Go To Event Home Page',
+            secondButtonText: 'Share Event Link',
+            onCancel: () async {
+              await ref.read(eventVmProvider.notifier).shareEvent(context: context, shareUrl: "shareUrl");
+              WayaNav.goBack();
+            },
+            icon: Image.asset(
+              "assets/images/create-event-success.png",
+              scale: 1.5,
+            ),
+          );
         }
-        //reset();
+        return response.success;
       }
     } catch (error) {
       print(error);
     } finally {
       state = state.copyWith(isLoading: false);
     }
+
+    return false;
   }
 
   Future<void> initializeForEdit(EventDoc event) async {
