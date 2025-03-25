@@ -153,8 +153,8 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      /* if (ConversationState.self.accountType ==
-                          UserAccountType.business) */
+                      if (ConversationState.self.accountType ==
+                          UserAccountType.business)
                       WayaButton(
                         callback: () {
                           ivalidateUGTVM(ref);
