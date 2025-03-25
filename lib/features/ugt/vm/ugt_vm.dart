@@ -5,12 +5,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
+import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/create_ultimate.dart';
@@ -243,7 +246,6 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       isLoading.value = false;
 
       if (response.success) {
-        
         ref.read(postProvider.notifier).fetchContestForYou(true);
         //  ref.read(postProvider.notifier).fetchPosts();
         // ref.read(postProvider.notifier).fetchPosts();
@@ -255,21 +257,35 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
                   "Your contest is now live and visible to the public. Manage or share your contest details from your dashboard.",
               showCopyLink: true,
               buttonText: null,
+              onShareTap: () async {
+                await Share.share(
+                  WayaValueHelper.getShareableUrl(
+                      WayaAppRoutes.getContestDetailRoute(
+                          response?.data["data"]["contest"]["id"] ?? "")),
+                  subject: "Share Contest",
+
+                  /* Uri.parse(
+                          "http://wayagram.ng/upcoming-manage-contest-details?id=${widget.post.id}") */
+                );
+              },
               onTap: (_, __) {
                 // WayaNav.removeUntilNamed("/ugt-home");
                 WayaNav.removeAllUntil(UgtHome(), '/ugt-home');
               }),
         );
+      
       } else {
         WayaSnackBar.showToast(
             "Please try again later, unable to create contest");
       }
     } catch (e) {
       _logger.e(e.toString());
+     
     } finally {
       isLoading.value = false;
       state = state.copyWith(isLoading: false);
     }
+   
   }
 
   void createContestProfile(

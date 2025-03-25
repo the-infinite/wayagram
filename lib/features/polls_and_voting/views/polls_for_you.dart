@@ -12,19 +12,22 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/get_all_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
 class PollsForYou extends ConsumerStatefulWidget {
-  const PollsForYou({super.key});
+  const PollsForYou({super.key, });
+
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PollsForYouState();
 }
 
 class _PollsForYouState extends ConsumerState<PollsForYou> {
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -87,7 +90,11 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                     child: _buildActionNav(
                                       context: context,
                                       onTap: () {
-                                        Share.share('${poll.url}');
+                                        Share.share(
+                                          WayaValueHelper.getShareableUrl(WayaAppRoutes.getPollDetailsPage('${poll.id}')),
+                                          subject: 'Share Poll',
+                                        );
+
                                       },
                                       asset: WayaAssets.icons.genSet.share
                                           .svg(fit: BoxFit.none, height: 20, color: WayaColors.greyColor600),

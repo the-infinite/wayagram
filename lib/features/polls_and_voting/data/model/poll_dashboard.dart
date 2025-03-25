@@ -247,6 +247,7 @@ class PollDashboardModelDocs {
       json['choices'].forEach((v) {
         choices?.add(PollDashboardChoices.fromJson(v));
       });
+      choices?.sort((first, second)=> (second.voteCount ?? 0) - (first.voteCount ?? 0) );
     }
     userData = json['user_data'] != null ? UserData.fromJson(json['user_data']) : null;
   }
@@ -261,7 +262,7 @@ class PollDashboardModelDocs {
   num? maxVotesPerUser;
   String? pollType;
   String? feePerVote;
-  num? voteCount;
+  int? voteCount;
   num? numberOfVoters;
   String? amountGenerated;
   String? createdAt;
@@ -280,7 +281,7 @@ class PollDashboardModelDocs {
   num? maxVotesPerUser,
   String? pollType,
   String? feePerVote,
-  num? voteCount,
+  int? voteCount,
   num? numberOfVoters,
   String? amountGenerated,
   String? createdAt,
@@ -432,7 +433,7 @@ class PollDashboardChoices {
   String? description;
   String? imageUrl;
   num? order;
-  num? voteCount;
+  int? voteCount;
   num? uniqueVotes;
   String? createdAt;
   String? updatedAt;
@@ -442,7 +443,7 @@ class PollDashboardChoices {
   String? description,
   String? imageUrl,
   num? order,
-  num? voteCount,
+  int? voteCount,
   num? uniqueVotes,
   String? createdAt,
   String? updatedAt,

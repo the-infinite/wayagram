@@ -185,6 +185,7 @@ class Docs {
       json['choices'].forEach((v) {
         choices?.add(Choices.fromJson(v));
       });
+      choices?.sort((first, second)=> (second.voteCount ?? 0) - (first.voteCount ?? 0) );
     }
     userData =
         json['user_data'] != null ? UserData.fromJson(json['user_data']) : null;
@@ -553,7 +554,7 @@ class Choices {
   num? order;
   String? createdAt;
   String? updatedAt;
-  num? voteCount;
+  int? voteCount;
   num? uniqueVoters;
   num? votePercentage;
   num? uniqueVotersPercentage;
@@ -566,7 +567,7 @@ class Choices {
     num? order,
     String? createdAt,
     String? updatedAt,
-    num? voteCount,
+    int? voteCount,
     num? uniqueVoters,
     num? votePercentage,
     num? uniqueVotersPercentage,

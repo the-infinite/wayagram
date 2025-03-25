@@ -8,19 +8,20 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 
 import '../../../core/components/waya_buttons.dart';
 
-
 class SuccessfulModal extends StatefulHookConsumerWidget {
   final String title;
   final String subtitle;
   final String? buttonText;
   final bool showCopyLink;
-  final Function( BuildContext,WidgetRef) onTap;
+  final Function(BuildContext, WidgetRef) onTap;
+  final Function()? onShareTap;
   const SuccessfulModal(
       {required this.title,
       required this.subtitle,
       required this.showCopyLink,
       this.buttonText,
       required this.onTap,
+      this.onShareTap,
       super.key});
 
   @override
@@ -52,7 +53,7 @@ class _SuccessfulModalState extends ConsumerState<SuccessfulModal> {
             WayaButton(
               callback: () {
                 // WayaNav.goBack();
-                widget.onTap(context,ref);
+                widget.onTap(context, ref);
               },
               text: widget.buttonText ?? "Manage Contest",
             ),
@@ -64,7 +65,9 @@ class _SuccessfulModalState extends ConsumerState<SuccessfulModal> {
                   textColor: wayaTheme.colorScheme.customBlack,
                   border: Border.all(
                       width: 1, color: wayaTheme.colorScheme.greyColor300),
-                  callback: () {})
+                  callback: () {
+                    widget.onShareTap ! ();
+                  })
           ],
         ),
       ),
