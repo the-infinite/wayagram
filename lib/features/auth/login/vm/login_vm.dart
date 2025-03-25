@@ -30,7 +30,7 @@ class LoginState {
   final UserModel? userData;
   final TextEditingController emailController;
   final TextEditingController passwordController;
-  final TextEditingController businessIdController;
+  final TextEditingController businessAcctController;
 
   LoginState(
       {this.isPasswordFocused = false,
@@ -39,7 +39,7 @@ class LoginState {
       this.userData,
       required this.emailController,
       required this.passwordController,
-      required this.businessIdController});
+      required this.businessAcctController});
 
   LoginState copyWith(
       {bool? isPasswordFocused,
@@ -48,7 +48,7 @@ class LoginState {
       UserModel? userData,
       TextEditingController? emailController,
       TextEditingController? passwordController,
-      TextEditingController? businessIdController}) {
+      TextEditingController? businessAcctController}) {
     return LoginState(
         isPasswordFocused: isPasswordFocused ?? this.isPasswordFocused,
         isLoading: isLoading ?? this.isLoading,
@@ -56,8 +56,8 @@ class LoginState {
         userData: userData ?? this.userData,
         emailController: emailController ?? this.emailController,
         passwordController: passwordController ?? this.passwordController,
-        businessIdController:
-            businessIdController ?? this.businessIdController);
+        businessAcctController:
+            businessAcctController ?? this.businessAcctController);
   }
 }
 
@@ -77,7 +77,7 @@ class LoginVm extends StateNotifier<LoginState> {
       : super(LoginState(
             emailController: TextEditingController(),
             passwordController: TextEditingController(),
-            businessIdController: TextEditingController()));
+            businessAcctController: TextEditingController()));
 
   void togglePasswordVisibility() {
     state = state.copyWith(isPasswordVisible: !state.isPasswordVisible);
@@ -91,7 +91,7 @@ class LoginVm extends StateNotifier<LoginState> {
   void dispose() {
     state.emailController.dispose();
     state.passwordController.dispose();
-    state.businessIdController.dispose();
+    state.businessAcctController.dispose();
     super.dispose();
   }
 
@@ -114,7 +114,7 @@ class LoginVm extends StateNotifier<LoginState> {
         await FirebaseAuth.instance.signInWithCredential(credential);
     final String? idToken = await userCredential.user?.getIdToken();
     print(idToken);
-    print("vevvvvdvf");
+  
     // if (idToken != null) {
     //   await oauthSignIn(authType: 'GOOGLE', token: idToken);
     // }
@@ -144,15 +144,14 @@ class LoginVm extends StateNotifier<LoginState> {
     try {
       //? Show the preloader.
       WayaPreloaderController.instance.show();
-      //state = state.copyWith(isLoading: true);
+    
       //? added trim, add issue login in just cause of space issues
       final response = await _authRepository.login(
           isBusinessLogin: isBusinessLogin,
           email: email?.trim() ?? state.emailController.text.trim(),
-          businessId: state.businessIdController.text.trim(),
+          businessInfo: state.businessAcctController.text.trim(),
           password: state.passwordController.text.trim());
 
-      // _logger.d(" result ${response.data['message']}");
       if (response.success) {
         // clearStorage();
         final remoteUserData = UserModel.fromJson(response.data);
@@ -207,7 +206,7 @@ class LoginVm extends StateNotifier<LoginState> {
           if (response.success) {
             UserAccountModel userAccountModel =
                 UserAccountModel.fromJson(response.data);
-            print("wqdwqdw ${userAccountModel.data!.userdata!.user!.role}");
+           
             _setupVm.state =
                 _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
 
