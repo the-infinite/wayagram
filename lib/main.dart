@@ -1,6 +1,5 @@
 import 'dart:isolate';
 
-import 'package:app_links/app_links.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -111,11 +110,9 @@ void main() async {
           WayaDebugEvent(
             type: WayaDebugEventType.runtime,
             module: WayaDebugEventModule.unknown,
-            message:
-                errorAndStacktrace.first.toString().split("\n").first.trim(),
+            message: errorAndStacktrace.first.toString().split("\n").first.trim(),
             raw: errorAndStacktrace.first,
-            stackTrace:
-                StackTrace.fromString(errorAndStacktrace.last.toString()),
+            stackTrace: StackTrace.fromString(errorAndStacktrace.last.toString()),
             timestamp: DateTime.now(),
           ),
         );
@@ -129,17 +126,14 @@ void main() async {
   WayaSnackBar.setUpSnackBarUI();
   await TaskScheduler.init();
 
-  //? Fourth, remove the native splash screen at this point in time.
-  // TODO: Switch to native splash screens when possible.
-
+  //? Get the incoming
   String path = await getUserData() ?? "/";
 
-  //? remove the splash screen
+  //? Fourth, remove the native splash screen at this point in time.
   FlutterNativeSplash.remove();
 
   //? Fifth, configure our visibility detector.
-  VisibilityDetectorController.instance.updateInterval =
-      const Duration(milliseconds: 50);
+  VisibilityDetectorController.instance.updateInterval = const Duration(milliseconds: 50);
 
   //? Finally, run the app.
   //? added DeepLinkListener to listen to incoming deepLinking urls
@@ -169,11 +163,11 @@ class _WayagramState extends ConsumerState<Wayagram> {
       minTextAdapt: true,
       splitScreenMode: true,
     );
-    print('path i dey ${widget.path}');
 
+    //? Return the widget.
     return GetMaterialApp(
-      //?if deepLink path is null, means it normally open
-      //?else means it through a link the app is opened
+      //? If deepLink path is null, means it normally open
+      //? else means it through a link the app is opened
       initialRoute: widget.path,
       title: WayaConstants.appName,
       theme: WayaTheme.lightTheme,
@@ -224,8 +218,7 @@ Future<String?> getUserData() async {
 
     //? This was fine so move forward.
     if (response.success) {
-      UserAccountModel userAccountModel =
-          UserAccountModel.fromJson(response.data);
+      UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
 
       // _setupVm.state =  _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
 
@@ -260,18 +253,14 @@ Future<String?> getUserData() async {
         );
       }
 
-      if (userAccountModel.data != null &&
-          userAccountModel.data!.userdata!.user!.role != 'PERSONAL') {
-        final bizResponse =
-            await profileRepo.getBusinessDataRepo(userId: userId);
+      if (userAccountModel.data != null && userAccountModel.data!.userdata!.user!.role != 'PERSONAL') {
+        final bizResponse = await profileRepo.getBusinessDataRepo(userId: userId);
 
         if (bizResponse.success) {
-          BusinessAccountData bizData =
-              BusinessAccountData.fromJson(bizResponse.data["data"]);
+          BusinessAccountData bizData = BusinessAccountData.fromJson(bizResponse.data["data"]);
           //? Update the business configuration when there is a need to.
           ConversationState.setSelf(
-            ConversationState.self
-                .copyWith(accountType: UserAccountType.business),
+            ConversationState.self.copyWith(accountType: UserAccountType.business),
             null,
             BusinessDetailsModel.fromJson(bizResponse.data["data"]),
           );
