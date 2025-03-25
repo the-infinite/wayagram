@@ -38,7 +38,7 @@ class RoleAccessCard extends StatelessWidget {
                       )
                     : */
                     CircleAvatar(
-                  backgroundColor: Colors.pink[100],
+                  backgroundColor: wayaTheme.colorScheme.pending50,
                   radius: 20,
                   child: Text(
                     getInitials(user.email ?? ""),

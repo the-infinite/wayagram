@@ -5,9 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -16,6 +18,7 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
@@ -78,8 +81,6 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                     child: Row(
                       //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                      
-
                         WayaImage(
                           imageUrl: widget.contestApplicant?.profilePhoto ?? "",
                           height: 45,
@@ -182,8 +183,6 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
               Text(widget.post.description ?? "",
                   style: wayaTheme.textTheme.bodySmall),
               const Gap(20),
-    
-
               MediaCard(
                   //just a random id
                   ontap: (String url, MyFullMediaType type) {
@@ -234,10 +233,13 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                     children: [
                       GestureDetector(
                         onTap: () {
+                          //? to delay like for 2 seconds
                           if (hasClickedLiked.value == false) {
+                            hasClickedLiked.value = true;
                             notifier.toggleLike(
                                 widget.post.contestId ?? "", widget.post.id!);
                           }
+                          //? release the clicking after 2 seconds
                           Future.delayed(Duration(seconds: 2), () {
                             hasClickedLiked.value = false;
                           });
@@ -254,7 +256,9 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                               height: 35,
                               child: Center(
                                   child: Icon(
-                                widget.post.hasLiked == true? Icons.thumb_up_alt:Icons.thumb_up_alt_outlined,
+                                widget.post.hasLiked == true
+                                    ? Icons.thumb_up_alt
+                                    : Icons.thumb_up_alt_outlined,
                                 color: widget.post.hasLiked == true
                                     ? wayaTheme.colorScheme.primary
                                     : wayaTheme.colorScheme.greyColor500,
@@ -270,9 +274,17 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                       ),
                       const Gap(10),
                       GestureDetector(
-                        onTap: () {
+                        onTap: () async {
                           if (hasClickedShared.value == false) {
-                            notifier.toggleShare(widget.post.id!);
+                            final result = await Share.share(
+                              WayaValueHelper.getShareableUrl(
+                                  WayaAppRoutes.getContestDetailRoute(
+                                      widget.post.contestId ?? "")),
+                              subject: "Share Post",
+                            );
+                            if (result.status == ShareResultStatus.success) {
+                              notifier.toggleShare(widget.post.id!);
+                            }
                           }
                           Future.delayed(Duration(seconds: 2), () {
                             hasClickedShared.value = false;
@@ -314,7 +326,6 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                                   : false,
                           voteFee:
                               contestModel2?.amountPerVote?.toString() ?? "0",
-
                           model: ContestVoteModel(
                               contestId: widget.post.contestId ?? "",
                               contestantId:
@@ -324,7 +335,6 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                               numberOfVotes: "0",
                               profileId: "",
                               type: "PAID"),
-
                           candidateName: widget.contestApplicant
                                   ?.contestApplicant?.fullName ??
                               "Name",

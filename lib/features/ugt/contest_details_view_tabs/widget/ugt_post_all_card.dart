@@ -5,9 +5,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -15,6 +17,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
@@ -69,7 +72,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                     // width: context.width * 0.8,
                     child: Row(
                       //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      
+
                       children: [
                         GestureDetector(
                           onTap: () {
@@ -277,14 +280,29 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                       ),
                       const Gap(20),
                       GestureDetector(
-                        onTap: () {
-                          // if (hasClickedShared.value == false) {
-                          viewModel.toggleShare(widget.post.contestId ?? "",
-                              widget.post.id ?? "");
-                          //  }
-                          /*  Future.delayed(Duration(seconds: 2), () {
-                            hasClickedShared.value = false;
-                          }); */
+                        onTap: () async {
+                          //? delay clicking if rapidly clicked
+                          if (hasClickedShared.value == false) {
+                            hasClickedShared.value = true;
+                            //?do the sharing stuff
+                            final result = await Share.share(
+                              WayaValueHelper.getShareableUrl(
+                                  WayaAppRoutes.getContestDetailRoute(
+                                      widget.post.contestId ?? "")),
+                              subject: "Share Post",
+                            );
+                            //?if shared increase the count
+                            if (result.status == ShareResultStatus.success) {
+                              viewModel.toggleShare(widget.post.contestId ?? "",
+                                  widget.post.id ?? "");
+                            }
+                           
+                          
+                          }
+                           //? release the clicking after 2 seconds
+                            Future.delayed(Duration(seconds: 2), () {
+                              hasClickedShared.value = false;
+                            });
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
