@@ -153,7 +153,7 @@ class WayaAppRoutes {
     LoginPage.route: () => LoginPage(),
     WelcomeBackPage.route: () => WelcomeBackPage(),
     BottomView.route: () => BottomView(),
-    ProductDetail.route: () => ProductDetail(),
+    ProductDetail.route: () => ProductDetail(id: WayaNav.search['id'].toString()),
     OrderDetails.route: () => OrderDetails(),
     ConfirmOrderDelivery.route: () => ConfirmOrderDelivery(),
     CartView.route: () => CartView(),
@@ -395,6 +395,11 @@ class WayaAppRoutes {
     /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
   static String getContestDetailRoute(String id) => "${AdminContestDetails.route}?id=$id";
+
+   /// Helper function used to generate the route that takes a user to the screen
+  /// for the details of a single product.
+  static String getProductDetailScreen(String id) => "${ProductDetail.route}?id=$id";
+
 
   /// This is fine.
   static List<GetPage> get getPages {
