@@ -39,7 +39,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final String myPassedContestId = Get.parameters['id'] ?? 'Unknown';
-    print("COntest DI $myPassedContestId");
+  //  print("COntest DI $myPassedContestId");
     useEffect(() {
       String contestId = ref.read(selectedContestProvider.notifier).state?.id ??
           myPassedContestId;
