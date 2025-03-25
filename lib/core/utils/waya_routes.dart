@@ -71,6 +71,8 @@ import 'package:wayagram/features/quotation/seller/views/bids/map_screen.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/see_seller_bids.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
+import 'package:wayagram/features/referral/view/referral_history_page.dart';
+import 'package:wayagram/features/referral/view/referral_page.dart';
 import 'package:wayagram/features/role_access/view/add_team_member_page.dart';
 import 'package:wayagram/features/role_access/view/member_details_page.dart';
 import 'package:wayagram/features/role_access/view/role_access_page.dart';
@@ -323,7 +325,9 @@ class WayaAppRoutes {
     RoleAccessPage.route: () => RoleAccessPage(),
     AddTeamMemberPage.route: () => AddTeamMemberPage(),
     MemberDetailsPage.route: () => MemberDetailsPage(),
-    VerifyEmail.route: () => VerifyEmail()
+    VerifyEmail.route: () => VerifyEmail(),
+    ReferralPage.route: () => ReferralPage(),
+    ReferralHistoryPage.route: () => ReferralHistoryPage(),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and

@@ -69,6 +69,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
         } else {
           WayaNav.closeApp();
         }
+        
       },
       child: WayaScaffold(
         isLoading: false,
