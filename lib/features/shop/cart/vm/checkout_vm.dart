@@ -14,6 +14,8 @@ import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/features/shop/order/data/repo/order_repository.dart';
 
+import '../../../../shared/components/pin_entry_bottom_sheet.dart';
+
 class CheckoutState {
   final bool isLoading;
 
@@ -74,14 +76,23 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
             ));
       }
 
-      await placOrder(
-          cartId: cartId,
-          shopId: shopId,
-          pickupAddress: pickupAddress,
-          context: context);
+      if (context.mounted) {
+        final result = await WayaUtils.showModalSheet(context,
+            child: PinEntryBottomSheet());
+
+        if (result == true && context.mounted) {
+          await placOrder(
+              cartId: cartId,
+              shopId: shopId,
+              pickupAddress: pickupAddress,
+              context: context);
+        } else {
+          return;
+        }
+      }
     } catch (e) {
       print(e);
-    } finally {}
+    }
   }
 
   Future<void> placOrder(
@@ -97,8 +108,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
           cartId: cartId,
           shopId: shopId,
           userId: userId!,
-          pickupAddress: pickupAddress
-         );
+          pickupAddress: pickupAddress);
       if (response.success && context.mounted) {
         WayaUtils.showNotice(
           context: context,

@@ -280,8 +280,8 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FormField<String>(validator: (value) {
-                  if (viewModel.businessIdController.text.isEmpty) {
-                    return 'Business ID is required';
+                  if (viewModel.businessAcctController.text.isEmpty) {
+                    return 'Business ID/ Email is required';
                   }
 
                   return null;
@@ -291,16 +291,16 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                     children: [
                       WayaTextFormField(
                         keyboardType: TextInputType.text,
-                        controller: viewModel.businessIdController,
-                        hintText: 'Enter Your Business ID',
+                        controller: viewModel.businessAcctController,
+                        hintText: 'Enter Your Email or Business ID',
                         borderColor: formState.hasError &&
-                                viewModel.businessIdController.text.isEmpty
+                                viewModel.businessAcctController.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
-                        label: 'Business ID',
+                        label: 'Email Address/Business ID',
                       ),
                       if (formState.hasError &&
-                          viewModel.businessIdController.text.isEmpty)
+                          viewModel.businessAcctController.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(

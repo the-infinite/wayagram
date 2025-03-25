@@ -1,4 +1,5 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
+import 'package:wayagram/core/utils/waya_validators.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/data/model/upgrade_to_business_model.dart';
@@ -18,20 +19,23 @@ class AuthRepository extends BaseRepository {
         showErrors: true);
   }
 
-  Future<WayaRequestResponse> resendOtp(String email,{String purpose = 'REGISTER_USER'}) {
+  Future<WayaRequestResponse> resendOtp(String email,
+      {String purpose = 'REGISTER_USER'}) {
     return post('$serviceUrl/client/auth/resend-otp',
         {"email": email, "purpose": purpose});
   }
 
-    Future<WayaRequestResponse> oauth(String token, String authType) {
+  Future<WayaRequestResponse> oauth(String token, String authType) {
     return post('$serviceUrl/client/auth/login/oauth',
         {"oauthProvider": authType, "token": token});
   }
 
-
   Future<WayaRequestResponse> verifyEmail(String email) {
     return post(
-        '$serviceUrl/client/auth/password/reset-password', {"email": email, },
+        '$serviceUrl/client/auth/password/reset-password',
+        {
+          "email": email,
+        },
         showErrors: true);
   }
 
@@ -44,11 +48,17 @@ class AuthRepository extends BaseRepository {
   Future<WayaRequestResponse> login(
       {required String password,
       String? email,
-      String? businessId,
+      String? businessInfo,
       bool? isBusinessLogin}) {
     final payload = <String, dynamic>{};
-    if (isBusinessLogin == true) {
-      payload['businessId'] = businessId;
+    
+    if (isBusinessLogin == true && businessInfo != null) {
+      if (WayaValidators.isValidEmail(businessInfo) == null) {
+        payload['email'] = businessInfo;
+      } else {
+        payload['businessId'] = businessInfo;
+      }
+
       payload['password'] = password;
     } else {
       payload['email'] = email;
