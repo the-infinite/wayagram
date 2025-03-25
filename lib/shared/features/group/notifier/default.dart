@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/data/model/get_all_groups.dart';
 import 'package:wayagram/features/group/data/model/joined_group_model.dart';
 import 'package:wayagram/features/group/data/repo/group_repository.dart';
@@ -13,10 +14,11 @@ import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 
 class GroupNotifier extends ValueNotifier<int> {
-  final int limit = 200;
+  final int limit = 1000;
   final repo = GroupRepository();
   int createdGroupPage = 1;
   int joinedGroupPage = 1;
+  bool isLoading = false;
   bool hasMoreCreatedGroups = true;
   bool hasMoreJoinedGroups = true;
   int totalCreatedGroups = 0;
@@ -44,9 +46,15 @@ class GroupNotifier extends ValueNotifier<int> {
     //? If there is nothing to see or get, leave.
     if (!hasMoreCreatedGroups) return createdGroups;
 
+    //? This is loading.
+    isLoading = true;
+
+    //? Then refresh.
+    refresh();
+
     //? Now, try actually fetching the groups.
     try {
-      final response = await repo.getMyGroups(createdGroupPage, limit);
+      final response = await repo.getGroupsForUser(ConversationState.self.id, createdGroupPage, limit);
 
       //? If this was successful.
       if (!response.success) return createdGroups;
@@ -70,6 +78,7 @@ class GroupNotifier extends ValueNotifier<int> {
 
       //? Now, update our value.
       createdGroups = result;
+      isLoading = false;
 
       //? Now, refresh.
       refresh();
@@ -180,7 +189,7 @@ class GroupNotifier extends ValueNotifier<int> {
   ///
   /// Throws:
   ///   - Exception if the group deletion fails.
-  Future<void> deleteGroup(String groupId) async {
+  Future<bool> deleteGroup(String groupId) async {
     try {
       final response = await repo.deleteGroup(groupId);
 
@@ -198,6 +207,9 @@ class GroupNotifier extends ValueNotifier<int> {
         //? Now report.
         WayaSnackBar.showToast("Group deleted successfully");
       }
+
+      //? This is fine.
+      return response.success;
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
@@ -206,6 +218,9 @@ class GroupNotifier extends ValueNotifier<int> {
         WayaDebugHelpers.getStackTrace(e),
       );
     }
+
+    //? Return false.
+    return false;
   }
 
   /// Creates a new group.

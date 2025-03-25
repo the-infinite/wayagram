@@ -27,8 +27,7 @@ class EventWidget extends ConsumerWidget {
             decoration: BoxDecoration(
               color: wayaTheme.colorScheme.white,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                  color: wayaTheme.colorScheme.greyColor200, width: 1),
+              border: Border.all(color: wayaTheme.colorScheme.greyColor200, width: 1),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -37,9 +36,7 @@ class EventWidget extends ConsumerWidget {
                   imageUrl: event.image,
                   height: 180.h,
                   width: double.infinity,
-                  radius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12)),
+                  radius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
                 ),
                 Container(
                   padding: EdgeInsets.all(10),
@@ -103,9 +100,7 @@ class EventWidget extends ConsumerWidget {
                               height: 30,
                               color: wayaTheme.colorScheme.pending50,
                               textStyle: wayaTheme.textTheme.hintStyle.copyWith(
-                                  color: wayaTheme.colorScheme.pending,
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w500),
+                                  color: wayaTheme.colorScheme.pending, fontSize: 12.sp, fontWeight: FontWeight.w500),
                               radius: 14,
                             ),
                           ),
@@ -116,24 +111,17 @@ class EventWidget extends ConsumerWidget {
                       ),
                       EngagementRange(
                           bottomLeft: event.location.capitalizeFirst!,
-                          bottomRight: event.maxCapacity == null ||
-                                  event.maxCapacity == 0
+                          bottomRight: event.maxCapacity == null || event.maxCapacity == 0
                               ? "Unlimited"
                               : "${event.maxCapacity! - event.noOfAttendees} Ticket Left",
-                          range: event.maxCapacity == null ||
-                                  event.maxCapacity == 0
+                          range: event.maxCapacity == null || event.maxCapacity == 0
                               ? 0
-                              : (event.maxCapacity! -
-                                      (event.maxCapacity! -
-                                          event.noOfAttendees)) /
-                                  100),
+                              : (event.maxCapacity! - (event.maxCapacity! - event.noOfAttendees)) / 100),
                       SizedBox(
                         height: 6.h,
                       ),
                       WayaButton(
-                        callback: () {
-                          WayaNav.toNamed(EventDetail.route, arguments: event);
-                        },
+                        callback: () => WayaNav.toNamed(WayaAppRoutes.getEventDetailsScreen(event.id)),
                         color: wayaTheme.colorScheme.primary50,
                         textColor: wayaTheme.colorScheme.customPrimary,
                         text: isMyEvent ? "Manage Event" : "View Event",

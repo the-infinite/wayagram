@@ -39,66 +39,82 @@ class _JoinEventState extends ConsumerState<JoinEvent> {
           Text("Join Event ", style: wayaTheme.textTheme.titleLarge),
           const Gap(5),
           RichText(
-              text: TextSpan(children: [
-            TextSpan(
-                text: "Are you sure you want to join this event, this would cost ",
-                style: wayaTheme.textTheme.hintStyle),
-            TextSpan(
-                text: WayaHelpers.formatPrice(widget.event.fee),
-                style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                    color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w500, fontSize: 15.sp))
-          ])),
-          const Gap(30),
-          Container(
-            padding: EdgeInsets.all(12),
-            width: double.infinity,
-            decoration: BoxDecoration(color: wayaTheme.colorScheme.primary50, borderRadius: BorderRadius.circular(12)),
-            child: Center(
-                child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            text: TextSpan(
               children: [
-                Text(
-                  "Available Balance",
-                  style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                        fontSize: 14.sp,
-                        color: wayaTheme.colorScheme.greyColor900,
-                      ),
+                TextSpan(
+                  text: widget.event.eventType.toLowerCase() == "paid"
+                      ? "Are you sure you want to join this event, this would cost "
+                      : "Are you sure you wish to join this event?",
+                  style: wayaTheme.textTheme.hintStyle,
                 ),
-                const Gap(6),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.all(10),
-                  decoration:
-                      BoxDecoration(color: wayaTheme.colorScheme.white, borderRadius: BorderRadius.circular(12)),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(isInsufficientBalance ? "Insufficient Balance" : "Wallet Balance",
-                          style: isInsufficientBalance
-                              ? wayaTheme.textTheme.errorHintStyle
-                              : wayaTheme.textTheme.hintStyle),
-                      const Gap(3),
-                      WayaAmountFormatter(
-                        color: wayaTheme.colorScheme.customBlack,
-                        balanceColor: wayaTheme.colorScheme.customBlack,
-                        koboValueColor: wayaTheme.colorScheme.greyColor600,
-                        amount: double.parse(walletState.data?.balance ?? "0"),
-                      ),
-                    ],
+                if (widget.event.eventType.toLowerCase() == "paid")
+                  TextSpan(
+                    text: WayaHelpers.formatPrice(widget.event.fee),
+                    style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                      color: wayaTheme.colorScheme.customPrimary,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 15.sp,
+                    ),
                   ),
-                ),
               ],
-            )),
+            ),
           ),
           const Gap(30),
+          if (widget.event.eventType.toLowerCase() == "paid") ...[
+            Container(
+              padding: EdgeInsets.all(12),
+              width: double.infinity,
+              decoration:
+                  BoxDecoration(color: wayaTheme.colorScheme.primary50, borderRadius: BorderRadius.circular(12)),
+              child: Center(
+                  child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Available Balance",
+                    style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
+                          fontSize: 14.sp,
+                          color: wayaTheme.colorScheme.greyColor900,
+                        ),
+                  ),
+                  const Gap(6),
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(10),
+                    decoration:
+                        BoxDecoration(color: wayaTheme.colorScheme.white, borderRadius: BorderRadius.circular(12)),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(isInsufficientBalance ? "Insufficient Balance" : "Wallet Balance",
+                            style: isInsufficientBalance
+                                ? wayaTheme.textTheme.errorHintStyle
+                                : wayaTheme.textTheme.hintStyle),
+                        const Gap(3),
+                        WayaAmountFormatter(
+                          color: wayaTheme.colorScheme.customBlack,
+                          balanceColor: wayaTheme.colorScheme.customBlack,
+                          koboValueColor: wayaTheme.colorScheme.greyColor600,
+                          amount: double.parse(walletState.data?.balance ?? "0"),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )),
+            ),
+            const Gap(30),
+          ],
           WayaButton(
             callback: !eventState.isJoiningEvent
                 ? () async {
-                    if (isInsufficientBalance) {
+                    if (widget.event.eventType.toLowerCase() == "paid" && isInsufficientBalance) {
                       await WayaNav.toNamed(FundWalletOptionsScreen.route, arguments: '/events');
                       return;
                     }
-                    notifier.joinEvent(eventId: widget.event.id, context: context, event: widget.event);
+
+                    //? Then just join.
+                    await notifier.joinEvent(eventId: widget.event.id, context: context, event: widget.event);
                   }
                 : null,
             centerWidget: LoadingState(

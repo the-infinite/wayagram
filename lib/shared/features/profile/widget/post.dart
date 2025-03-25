@@ -17,6 +17,7 @@ import 'package:wayagram/features/post/view/comment.dart';
 import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
+import 'package:wayagram/shared/features/media/video.dart';
 import 'package:wayagram/shared/features/profile/logic/default.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
@@ -428,18 +429,32 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                     ),
 
                                     //? Now, that special thing on top that tells you it is playable.
-                                    Positioned.fill(
-                                      child: Center(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.white.withOpacity(0.7),
+                                    GestureDetector(
+                                      onTap: () async {
+                                        final result = await WayaNav.to(
+                                          transition: Transition.circularReveal,
+                                          WayaVideoDetailScreen(
+                                            file: null,
+                                            videoUrl: resource,
                                           ),
-                                          padding: EdgeInsets.all(8),
-                                          child: Icon(
-                                            Icons.play_arrow,
-                                            size: 30.dg,
-                                            color: Colors.black,
+                                        );
+
+                                        //? Do nothing.
+                                        if (result == null) return;
+                                      },
+                                      child: Positioned.fill(
+                                        child: Center(
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: Colors.white.withOpacity(0.7),
+                                            ),
+                                            padding: EdgeInsets.all(8),
+                                            child: Icon(
+                                              Icons.play_arrow,
+                                              size: 30.dg,
+                                              color: Colors.black,
+                                            ),
                                           ),
                                         ),
                                       ),

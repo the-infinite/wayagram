@@ -30,8 +30,7 @@ class _UgtHomeState extends ConsumerState<UgtHome> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    //  ConversationState.self.id
-    // print("UGT HOME ${ConversationState.self.role?.name}");
+
     useEffect(() {
       ref.read(postProvider.notifier).fetchContestForYou(true);
       return null;

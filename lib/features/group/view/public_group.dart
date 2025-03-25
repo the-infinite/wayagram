@@ -307,11 +307,11 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                     text: 'Posts',
                     onTap: () => setState(() => _selectedIndex = 0),
                   ),
-                  WayaTabButton(
-                    isSelected: _selectedIndex == 1,
-                    text: 'Events',
-                    onTap: () => setState(() => _selectedIndex = 1),
-                  ),
+                  //   WayaTabButton(
+                  //     isSelected: _selectedIndex == 1,
+                  //     text: 'Events',
+                  //     onTap: () => setState(() => _selectedIndex = 1),
+                  //   ),
                   WayaTabButton(
                     isSelected: _selectedIndex == 2,
                     text: 'Media',

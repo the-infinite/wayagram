@@ -173,3 +173,13 @@ flutter:
           weight: 500
         - asset: assets/fonts/SF-Pro-Display-Regular.otf
           weight: 400
+
+  # for generating the splash screen        
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/splash_image.png
+  
+  android_12:
+    color: "#ffffff"
+    image: assets/images/splash_image.png
+

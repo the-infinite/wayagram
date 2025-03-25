@@ -57,6 +57,10 @@ class GroupRepository extends BaseRepository {
     return put("$serviceUrl/groups/$groupId", payload, showErrors: true);
   }
 
+  Future<WayaRequestResponse> getGroupsForUser(String userId, int page, int limit) async {
+    return httpClient.getHttp("$serviceUrl/groups?ownerId=$userId&page=$page&limit=$limit");
+  }
+
   Future<WayaRequestResponse> leaveGroup(String groupId) {
     final payload = {};
     return post("$serviceUrl/groups/leave/$groupId", payload, showErrors: true);
