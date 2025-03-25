@@ -83,11 +83,11 @@ class WayaScaffold extends ConsumerWidget {
                     onRefresh: onRefresh!,
                     child: Container(
                       color: color,
-                      padding: paddedBody,
                       height: size.height,
                       width: size.width,
                       child: SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
+                        padding: paddedBody,
                         child: body,
                       ),
                     ),
@@ -96,9 +96,9 @@ class WayaScaffold extends ConsumerWidget {
                     color: color,
                     height: size.height,
                     width: size.width,
-                    child: Padding(
+                    child: SingleChildScrollView(
                       padding: paddedBody,
-                      child: SingleChildScrollView(child: body),
+                      child: body,
                     ),
                   )
             : Container(
