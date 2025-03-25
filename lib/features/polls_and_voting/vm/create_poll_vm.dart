@@ -763,7 +763,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  Future<void> getPollsById(String pollId) async {
+  Future<GetAllPollModel?> getPollsById(String pollId) async {
     state = state.copyWith(isLoading: true);
     final response = await _pollAndVotingRepository.getAllPollsById(pollId);
     state = state.copyWith(isLoading: false);

@@ -207,7 +207,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
                       return txt = '${index}th';
                     }
                   }
-                  return statisticCard('${poll.voteCount} ${poll.voteCount == 1 || poll.voteCount == 0? 'Vote' :'Votes'}',
+                  return statisticCard('${poll.voteCount} ${(poll.voteCount ?? 0 ) < 2? 'Vote' :'Votes'}',
                       '${position(index)}', '${poll.text?.capitalizeFirst}',
                       Theme.of(context).colorScheme.success50, index == 0);
 
