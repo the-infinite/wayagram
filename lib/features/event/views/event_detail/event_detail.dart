@@ -127,7 +127,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                       child: WayaButton(
                         callback: () => Share.share(
                           subject: "Share event",
-                          WayaValueHelper.getShareableUrl(WayaAppRoutes.getEventDetailsScreen(widget.id)),
+                          .getShareableUrl(WayaAppRoutes.getEventDetailsScreen(widget.id)),WayaValueHelper
                         ),
                         color: wayaTheme.colorScheme.transparent,
                         border: Border.all(width: 1, color: wayaTheme.colorScheme.customPrimary),
