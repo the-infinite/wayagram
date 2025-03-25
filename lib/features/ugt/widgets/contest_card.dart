@@ -129,7 +129,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                       flex: 1,
                       child: widget.post.isFollowing == true
                           ? WayaButton(
-                              text: 'UnFollow',
+                              text: 'Unfollow',
                               height: 40,
                               fontSize: 12.sp,
                               color: wayaTheme.colorScheme.greyColor300,
