@@ -26,7 +26,8 @@ import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 
 class ProductDetail extends ConsumerStatefulWidget {
   static const route = '/product-detail';
-  const ProductDetail({super.key});
+  final String id;
+  const ProductDetail({super.key, required this.id});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ProductDetailState();
@@ -37,20 +38,22 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final Product product =
-          ModalRoute.of(context)!.settings.arguments as Product;
-      ref
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      final product = await ref
           .read(productDetailVmProvider.notifier)
-          .getCurrentProduct(product: product);
+          .getCurrentProduct(id: widget.id);
 
       final provider = ref.read(productEngagementProvider.notifier);
 
       provider.startViewingProduct();
 
-      provider.addCategory(product.categoryId, ProductPoint.viewPoints.value);
+      if (product != null) {
+        provider.addCategory(product.categoryId, ProductPoint.viewPoints.value);
 
-      ref.read(shopVmProvider.notifier).getProductViews(productId: product.id);
+        ref
+            .read(shopVmProvider.notifier)
+            .getProductReviews(productId: product.id);
+      }
     });
   }
 
@@ -61,16 +64,21 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
     final addState = ref.watch(addProductProvider('add-product'));
     final wayaTheme = Theme.of(context);
 
-    if (viewModel.product == null) {
-      return CircularProgressIndicator();
+    if (viewModel.product == null && viewModel.isLoading) {
+      return Container(
+        height: context.height,
+        width: context.width,
+        decoration: BoxDecoration(color: wayaTheme.colorScheme.white),
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
-
-    print(viewModel.product?.shopRating);
 
     return WayaScaffold(
         title: "Product Details",
         isScrollable: true,
-        isLoading: viewModel.isLoading,
+        isLoading: false,
         appBarTrailing: WayaCartIcon(),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -116,8 +124,12 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                 ),
                 InkWell(
                   onTap: () {
-                    Share.share("Share");
+                    Share.share(
+                        subject: "Share Product",
+                        WayaValueHelper.getShareableUrl(
+                            WayaAppRoutes.getProductDetailScreen(widget.id)));
                   },
+                  splashFactory: NoSplash.splashFactory,
                   child: Container(
                       decoration: BoxDecoration(
                         color: wayaTheme.colorScheme.secondaryColor2,

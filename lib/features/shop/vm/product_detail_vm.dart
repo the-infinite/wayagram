@@ -40,19 +40,31 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
   final ShopRepository _shopRepository;
   ProductDetailVm(this._shopRepository, this.ref) : super(ProductDetailState());
 
-  void getCurrentProduct({required Product product}) async {
-    state = state.copyWith(product: product);
+  Future<Product?> getCurrentProduct({required String id}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _shopRepository.getProductById(id: id);
+      Product? singleProduct;
+      if (response.success) {
+        final ProductResponse data = ProductResponse.fromJson(response.data);
+        final Product product = data.data.data[0];
+        state = state.copyWith(product: product);
+        singleProduct = product;
+        if (product.vendorId == ConversationState.self.id) {
+          state = state.copyWith(isProductOwner: true);
+        } else {
+          state = state.copyWith(isProductOwner: false);
+        }
+      }
 
-    
-    
-     if (product.vendorId == ConversationState.self.id){
-      
-      state = state.copyWith(isProductOwner: true);
-     }
-     else {
-      state = state.copyWith(isProductOwner: false);
-     }
-    
+      return singleProduct;
+    } catch (error) {
+      print(error);
+      return null;
+    } finally {
+      state.copyWith(isLoading: false);
+    }
+
     //getSimilarProduct(categoryId: product.categoryId, productId: product.id);
   }
 
