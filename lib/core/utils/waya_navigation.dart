@@ -108,7 +108,7 @@ class WayaNav<T> {
   /// WayaNav.goBack(closeOverlays: true); // Navigate back and close overlays
   /// ```
   static void goBack<T>({T? result, bool closeOverlays = false}) {
-    Get.back(
+    return Get.back(
       result: result,
       closeOverlays: closeOverlays,
     );

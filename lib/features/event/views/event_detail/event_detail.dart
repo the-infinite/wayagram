@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -256,37 +254,37 @@ class EventDetailAction extends StatelessWidget {
           ),
 
           //? The destructive CTA.
-          if (isUser)
-            PopupMenuItem<int>(
-              value: 1,
-              onTap: () => WayaUtils.showNotice(
-                context: context,
-                title: "Delete event",
-                message: "Are you sure you wish to delete this event?",
-                icon: WayaAssets.icons.erWarning.svg(
-                  height: 32.h,
-                  width: 32.h,
-                  color: wayaTheme.colorScheme.pending,
-                ),
-                buttonText: "Yes",
-                secondButtonText: "Go Back",
-                onCancel: () => WayaNav.goBack(),
-                onPress: () async {
-                  //
-                },
-              ),
-              child: WayaActionNav(
-                context: context,
-                color: wayaTheme.colorScheme.error,
-                asset: Icon(
-                  Icons.delete_forever,
-                  size: 22,
-                  color: wayaTheme.colorScheme.error,
-                ),
-                text: "Delete Event",
-              ),
-            )
-          else
+          if (!isUser)
+            // PopupMenuItem<int>(
+            //   value: 1,
+            //   onTap: () => WayaUtils.showNotice(
+            //     context: context,
+            //     title: "Cancel event",
+            //     message: "Are you sure you wish to cancel this event?",
+            //     icon: WayaAssets.icons.erWarning.svg(
+            //       height: 32.h,
+            //       width: 32.h,
+            //       color: wayaTheme.colorScheme.pending,
+            //     ),
+            //     buttonText: "Yes",
+            //     secondButtonText: "Go Back",
+            //     onCancel: () => WayaNav.goBack(),
+            //     onPress: () async {
+            //
+            //     },
+            //   ),
+            //   child: WayaActionNav(
+            //     context: context,
+            //     color: wayaTheme.colorScheme.error,
+            //     asset: Icon(
+            //       Icons.delete_forever,
+            //       size: 22,
+            //       color: wayaTheme.colorScheme.error,
+            //     ),
+            //     text: "Cancel Event",
+            //   ),
+            // )
+            // else
             PopupMenuItem<int>(
               value: 1,
               onTap: () => WayaUtils.showModalSheet(

@@ -17,6 +17,7 @@ import 'package:wayagram/shared/features/profile/model/post.dart';
 class PageNotifier extends ValueNotifier<int> {
   final int limit = 1000;
   final repo = PageRepository();
+  bool isLoading = false;
   int createdPage = 1;
   int followedPage = 1;
   bool hasMoreCreatedPages = true;
@@ -44,6 +45,12 @@ class PageNotifier extends ValueNotifier<int> {
     //? If there is nothing to see or get, leave.
     if (!hasMoreCreatedPages) return createdPages;
 
+    //? If is now loading.
+    isLoading = true;
+
+    //? Refresh.
+    refresh();
+
     //? Now, try actually fetching the groups.
     try {
       final response = await repo.getAllPages(ConversationState.self.id, createdPage, limit);
@@ -70,6 +77,7 @@ class PageNotifier extends ValueNotifier<int> {
 
       //? Now, update our value.
       createdPages = result;
+      isLoading = false;
 
       //? Now, refresh.
       refresh();

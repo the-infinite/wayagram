@@ -16,6 +16,8 @@ import 'package:wayagram/core/utils/utils.dart';
 
 typedef WayaDownloadListener = void Function(double done, int totalSize);
 
+bool _signedOut = false;
+
 class RequestRepeater {
   final Future<WayaRequestResponse> Function(RequestRepeater) repeat;
   int depth;
@@ -404,13 +406,19 @@ class DioHttpClient implements WayaHttpClientInterface {
 
           //? Since it failed, probably redirect the user to the login screen.
           else {
-            await WayaNav.removeUntilNamed(LoginCoverPage.route);
-            WayaUtils.showModalSheet(
-              WayaNav.context,
-              child: WayaErrorDialog(
-                title: "Your session has expired. To continue, please log in to your account.",
-              ),
-            );
+            if (!_signedOut) {
+              _signedOut = true;
+              await WayaUtils.showModalSheet(
+                WayaNav.context,
+                child: WayaErrorDialog(
+                  title: "Your session has expired. To continue, please log in to your account.",
+                ),
+              );
+              await WayaNav.removeUntilNamed(LoginCoverPage.route);
+              _signedOut = false;
+            }
+
+            //? This is fine.
             return WayaHttpException.handleDioError(e);
           }
         }

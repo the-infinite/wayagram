@@ -47,17 +47,28 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(userState.userAccountModel?.data?.userdata?.profile?.username ?? 'n/a',
-                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500)),
+                Text(
+                  userState.userAccountModel?.data?.userdata?.profile?.username == null
+                      ? 'n/a'
+                      : "@${userState.userAccountModel?.data?.userdata?.profile?.username}",
+                  style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                    color: wayaTheme.colorScheme.greyColor500,
+                  ),
+                ),
                 Gap(5),
                 Container(
-                    padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
-                    decoration:
-                        BoxDecoration(color: wayaTheme.colorScheme.primary50, borderRadius: BorderRadius.circular(10)),
-                    child: Text(
-                      userState.userAccountModel?.data?.userdata?.profile?.referenceCode ?? '',
-                      style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.primary),
-                    )),
+                  padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: wayaTheme.colorScheme.primary50,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    userState.userAccountModel?.data?.userdata?.profile?.referenceCode ?? '',
+                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                      color: wayaTheme.colorScheme.primary,
+                    ),
+                  ),
+                ),
               ],
             ),
             trailing: SvgPicture.asset("assets/icons/arrow_keyboard_right.svg"),

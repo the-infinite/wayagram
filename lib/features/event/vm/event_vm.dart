@@ -66,9 +66,11 @@ class EventVm extends StateNotifier<EventState> {
       List<EventDoc> upcoming = [];
       bool hasNextPage = false;
       if (response.success) {
+        final now = DateTime.now();
         EventResponse eventResponse = EventResponse.fromJson(response.data);
         upcoming = eventResponse.data.docs
-            .where((event) => event.privacyOption == 'public' && event.eventStatus != 'paused')
+            .where((event) =>
+                event.privacyOption == 'public' && event.eventStatus != 'paused' && !event.endDate.isBefore(now))
             .toList();
         hasNextPage = eventResponse.data.hasNextPage;
         state = state.copyWith(upcomingEvents: upcoming);
@@ -110,9 +112,10 @@ class EventVm extends StateNotifier<EventState> {
       final response = await _eventRepository.getUserEvents(userId: userId!, page: page);
       List<EventDoc> myEvents = [];
       bool hasNextPage = false;
+      final now = DateTime.now();
       if (response.success) {
         EventResponse eventResponse = EventResponse.fromJson(response.data);
-        myEvents = eventResponse.data.docs;
+        myEvents = [...eventResponse.data.docs.where((event) => !event.endDate.isBefore(now))];
         hasNextPage = eventResponse.data.hasNextPage;
         state = state.copyWith(myEvents: myEvents);
       }
@@ -152,15 +155,11 @@ class EventVm extends StateNotifier<EventState> {
               WayaAssets.images.createEventSuccess.path,
               scale: 1.5,
             ),
-            onPress: () {
-              WayaNav.goBack();
-            },
+            onPress: () => WayaNav.goBack(),
             buttonText: 'View Event Details',
             title: "You've successfully joined the event",
             message: 'Your spot is confirmed. Stay tuned for updates and get ready for an amazing experience',
-            onCancel: () {
-              WayaNav.toNamed(EventView.route);
-            },
+            onCancel: () => WayaNav.toNamed(EventView.route),
           );
         }
       }
@@ -192,13 +191,8 @@ class EventVm extends StateNotifier<EventState> {
           await WayaUtils.showNotice(
               context: context,
               title: "Thank you for reporting",
-              onPress: () {
-                WayaNav.replaceNamed(EventView.route);
-              },
-              icon: Image.asset(
-                WayaAssets.images.eCheckEvent.path,
-                scale: 1.5,
-              ),
+              onPress: () => WayaNav.replaceNamed(EventView.route),
+              icon: Image.asset(WayaAssets.images.eCheckEvent.path, scale: 1.5),
               message: 'Your report has been submitted. Our team will review the issue and take appropriate action.',
               buttonText: 'Go to Event Page');
         }
@@ -224,14 +218,19 @@ class EventVm extends StateNotifier<EventState> {
       final response = await _eventRepository.joinedUsers(id: state.singleEvent!.id, page: page);
       List<Doc> attendees = [];
       bool hasNextPage = false;
+
+      //? This is fine.
       if (response.success) {
         AttendeeResponse attendeeResponse = AttendeeResponse.fromJson(response.data);
-
         attendees = attendeeResponse.data.docs;
         hasNextPage = attendeeResponse.data.hasNextPage;
       }
 
-      return PaginatedResult(hasNextPage: hasNextPage, items: attendees);
+      //? This is fine.
+      return PaginatedResult(
+        hasNextPage: hasNextPage,
+        items: attendees,
+      );
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
