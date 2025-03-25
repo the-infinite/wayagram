@@ -117,21 +117,35 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
 
   details(title, subTitle) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title,
-            style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: WayaColors.greyColor700,
-                fontFamily: WayaConstants.fontFamily)),
-        const Spacer(),
-        Text(subTitle,
-            style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w400,
-              color: Color(0xff6B7280),
-            )),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w500,
+            color: WayaColors.greyColor700,
+            fontFamily: WayaConstants.fontFamily,
+          ),
+        ),
+
+        //? This is fine.
+        Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(left: 15.h),
+            child: Text(
+              subTitle,
+              maxLines: 2,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+                color: Color(0xff6B7280),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }

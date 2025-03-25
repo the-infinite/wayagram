@@ -34,8 +34,8 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
   late String? editCoverImage = widget.group.coverImage;
   final _formKey = GlobalKey<FormState>();
 
-  bool sel = false;
-  bool sel2 = false;
+  late bool sel = !widget.group.isPrivate;
+  late bool sel2 = !sel;
 
   File? _selectedImage; // Holds the selected image
   File? _coverImage; // Holds the selected image
@@ -89,17 +89,7 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
         child: WayaProgressiveButton(
           notifier: valueController,
           callback: () async {
-            if (_formKey.currentState!.validate()) {
-              await notifier.editGroup(
-                context,
-                viewModel.groupName.text,
-                viewModel.groupDescription.text,
-                sel ? true : false,
-                _coverImage == null ? editCoverImage! : (_coverImage as File).path,
-                _selectedImage == null ? image! : (_selectedImage as File).path,
-                widget.group.id,
-              );
-            } else if (!sel && !sel2) {
+            if (!sel && !sel2) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text(
@@ -112,6 +102,16 @@ class _EditGroupInfoState extends ConsumerState<EditGroupInfo> {
                   backgroundColor: WayaColors.primary,
                   duration: Duration(seconds: 2),
                 ),
+              );
+            } else if (_formKey.currentState!.validate()) {
+              await notifier.editGroup(
+                context,
+                viewModel.groupName.text,
+                viewModel.groupDescription.text,
+                sel ? false : true,
+                _coverImage == null ? editCoverImage! : (_coverImage as File).path,
+                _selectedImage == null ? image! : (_selectedImage as File).path,
+                widget.group.id,
               );
             }
           },

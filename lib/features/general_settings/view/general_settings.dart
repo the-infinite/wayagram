@@ -20,8 +20,7 @@ class GeneralSettingsPage extends ConsumerStatefulWidget {
   static const route = '/general-settings';
   const GeneralSettingsPage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _GeneralSettingsPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _GeneralSettingsPageState();
 }
 
 class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
@@ -50,24 +49,25 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(
-
-                  title: 'Wallet',
-                  iconPath: 'wallet',
-                  onTap: () => WayaNav.toNamed(WalletPage.route)),
+                title: 'Wallet',
+                iconPath: 'wallet',
+                onTap: () => WayaNav.toNamed(WalletPage.route),
+              ),
               GeneralSettingsOptionModel(
-                  title: 'Referrals & Rewards', iconPath: 'confetti'),
+                title: 'Referrals & Rewards',
+                iconPath: 'confetti',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
               GeneralSettingsOptionModel(
-                  title: 'Roles & Access',
-                  iconPath: 'users',
-                  onTap: () {
-                    //? added role access route
-                    WayaNav.toNamed(RoleAccessPage.route);
-                  }),
-
+                title: 'Roles & Access',
+                iconPath: 'users',
+                onTap: () => WayaNav.toNamed(RoleAccessPage.route),
+              ),
               GeneralSettingsOptionModel(
-                  title: 'Logs & Audit Trails',
-                  iconPath: 'history',
-                  onTap: () => WayaNav.toNamed(LogsAndAuditTrials.route)),
+                title: 'Logs & Audit Trails',
+                iconPath: 'history',
+                onTap: () => WayaNav.toNamed(LogsAndAuditTrials.route),
+              ),
             ],
           ),
           GeneralSettingsOptionTile(
@@ -76,17 +76,14 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Edit Profile',
                 iconPath: 'edit',
-                onTap: () => WayaNav.toNamed(
-                    WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
+                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
               ),
 
               //
               GeneralSettingsOptionModel(
                 title: 'Change Password',
                 iconPath: 'password',
-                onTap: () => WayaNav.toNamed(
-                  '/change-password-gen-set',
-                ),
+                onTap: () => WayaNav.toNamed('/change-password-gen-set'),
               ),
 
               //
@@ -97,40 +94,55 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               ),
             ],
           ),
-
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(
-                  title: 'Privacy Settings', iconPath: 'shield_plus'),
+                title: 'Privacy Settings',
+                iconPath: 'shield_plus',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
               GeneralSettingsOptionModel(
-                  title: 'Profile Visibility', iconPath: 'user_settings'),
-            ],
-          ),
-          GeneralSettingsOptionTile(
-            genSettingsOption: [
-              GeneralSettingsOptionModel(
-                  title: 'Wallet Security', iconPath: 'card_stacked'),
-              GeneralSettingsOptionModel(
-                  title: 'Account Security', iconPath: 'shield_star'),
-            ],
-          ),
-          GeneralSettingsOptionTile(
-            genSettingsOption: [
-              GeneralSettingsOptionModel(
-                  title: 'Chat & Call Preferences', iconPath: 'chat2'),
-              GeneralSettingsOptionModel(
-                title: 'Notification Settings',
-                iconPath: 'bell',
-                onTap: () {
-                  WayaNav.toNamed(NotificationSettingsScreen.route);
-                },
+                title: 'Profile Visibility',
+                iconPath: 'user_settings',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
               ),
             ],
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(
-                  title: 'Friends & Followers', iconPath: 'users_group'),
+                title: 'Wallet Security',
+                iconPath: 'card_stacked',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Account Security',
+                iconPath: 'shield_star',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
+            ],
+          ),
+          GeneralSettingsOptionTile(
+            genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Chat & Call Preferences',
+                iconPath: 'chat2',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Notification Settings',
+                iconPath: 'bell',
+                onTap: () => WayaNav.toNamed(NotificationSettingsScreen.route),
+              ),
+            ],
+          ),
+          GeneralSettingsOptionTile(
+            genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Friends & Followers',
+                iconPath: 'users_group',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
             ],
           ),
           GeneralSettingsOptionTile(
@@ -138,6 +150,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Account Sync Settings',
                 iconPath: 'bell',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
               ),
             ],
           ),

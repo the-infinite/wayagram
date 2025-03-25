@@ -991,7 +991,7 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
                 WayaNav.goBack();
 
                 WayaNav.removeAllUntil(
-                    AdminContestDetails(), "/upcoming-manage-contest-details");
+                    AdminContestDetails(id:""), "/upcoming-manage-contest-details");
               },
               text: "Return to Contest Page",
             ),

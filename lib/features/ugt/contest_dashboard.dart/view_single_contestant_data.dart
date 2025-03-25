@@ -178,8 +178,8 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
                         showCopyLink: false,
                         buttonText: null,
                         onTap: (_, __) {
-                          WayaNav.removeAllUntil(AdminContestDetails(),
-                              '/upcoming-manage-contest-details');
+                          WayaNav.removeAllUntil(AdminContestDetails(id: ""),
+                              AdminContestDetails.route);
                           /*  WayaNav.removeUntilNamed(
                               '/contest-mydashboard-profile-page'); */
                         }),
@@ -220,8 +220,8 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
                             .fetchAllContestApplicant(model?.contestId ?? ""); */
                         /*  WayaNav.removeUntilNamed(
                             '/contest-mydashboard-profile-page'); */
-                        WayaNav.removeAllUntil(AdminContestDetails(),
-                            '/upcoming-manage-contest-details');
+                        WayaNav.removeAllUntil(AdminContestDetails(id: ""),
+                            AdminContestDetails.route);
                       } else {
                         WayaSnackBar.showToast(
                             "Please try again, unable to send request");

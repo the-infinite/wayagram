@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/route_manager.dart';
 
 class WayaNav<T> {
@@ -75,14 +77,54 @@ class WayaNav<T> {
     return completer.future;
   }
 
+  /// Closes routes in the navigation stack until a route matches the given [predicate].
+  ///
+  /// The [predicate] is a function that takes a [Route] and returns a boolean.
+  /// Routes will be popped from the stack until a route is found where [predicate]
+  /// returns true.
+  ///
+  /// Example:
+  /// ```dart
+  /// // Close until we find a route named 'home'
+  /// WayaNav.closeUntil((route) => route.settings.name == 'home');
+  /// ```
+  static void popUntil(bool Function(Route<dynamic>) predicate) {
+    return Get.until(predicate);
+  }
+
   //
+  /// Navigates back in the application's navigation stack.
+  ///
+  /// This method removes the current route from the navigation stack and returns
+  /// to the previous screen.
+  ///
+  /// Parameters:
+  /// - [result]: Optional data to pass back to the previous screen.
+  /// - [closeOverlays]: Whether to close any open overlays (like modals or
+  ///   popups) when navigating back. Defaults to false.
+  ///
+  /// Example:
+  /// ```dart
+  /// WayaNav.goBack(); // Simple navigation back
+  /// WayaNav.goBack(result: someData); // Navigate back with data
+  /// WayaNav.goBack(closeOverlays: true); // Navigate back and close overlays
+  /// ```
   static void goBack<T>({T? result, bool closeOverlays = false}) {
-    Get.back(
+    return Get.back(
       result: result,
       closeOverlays: closeOverlays,
     );
   }
 
+  /// Navigates to a named route asynchronously.
+  ///
+  /// Returns a Future that completes with a result of type [T] when the route is popped.
+  /// The [route] parameter specifies the name of the route to navigate to.
+  ///
+  /// Example:
+  /// ```dart
+  /// WayaNav.toNamed('/home');
+  /// ```
   static Future<T> toNamed<T>(String route,
       {dynamic arguments, Function(dynamic)? onResult, bool preventDuplicates = true}) {
     final completer = Completer<T>();
@@ -133,6 +175,16 @@ class WayaNav<T> {
       arguments: arguments,
     );
   }
+
+  //close the whole app
+  // use case, when the app is opened with link
+  static closeApp() {
+  if (Platform.isAndroid) {
+    SystemNavigator.pop();
+  } else if (Platform.isIOS) {
+    exit(0);
+  }
+}
 
   static bool canPop() => Navigator.canPop(Get.context!);
 

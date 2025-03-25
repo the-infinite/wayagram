@@ -127,19 +127,22 @@ class _BottomViewState extends ConsumerState<BottomView> {
       MoreView(),
     ];
 
-    final List<BottomNavigationBarItem> bottomNavigationItem = viewModel.barItems.asMap().entries.map((entry) {
-      final index = entry.key;
-      final item = entry.value;
+    final List<BottomNavigationBarItem> bottomNavigationItem = viewModel.barItems.asMap().entries.map(
+      (entry) {
+        final index = entry.key;
+        final item = entry.value;
 
-      final itemColor =
-          (_selectedIndex == index) ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.customBlack;
-      return BottomNavigationBarItem(
+        final itemColor =
+            (_selectedIndex == index) ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.customBlack;
+        return BottomNavigationBarItem(
           icon: SvgPicture.asset(
             item.icon,
             colorFilter: ColorFilter.mode(itemColor, BlendMode.srcIn),
           ),
-          label: item.label);
-    }).toList();
+          label: item.label,
+        );
+      },
+    ).toList();
 
     // This is fine.
     return PopScope(

@@ -138,7 +138,7 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
 
                         viewModel.fetchAllContestApplicant(widget.model?.contestId ?? "");
 
-                        WayaNav.removeAllUntil(AdminContestDetails(), '/upcoming-manage-contest-details');
+                        WayaNav.removeAllUntil(AdminContestDetails(id:""), AdminContestDetails.route);
                       },
                     ),
                   );
@@ -484,7 +484,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
               print("i am cooking");
               myRef.read(votersContestNotifier.notifier).fetchAllContestApplicant(widget.model?.contestId ?? "");
               // WayaNav.removeUntil(AdminContestDetails());
-              WayaNav.removeAllUntil(AdminContestDetails(), '/upcoming-manage-contest-details');
+              WayaNav.removeAllUntil(AdminContestDetails(id:""), AdminContestDetails.route);
               // WayaNav.goBack();
               //  WayaNav.toNamed("/create-profile-contest1");
             },

@@ -88,9 +88,7 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () {
-            WayaNav.toNamed('/createGroup', arguments: 'groupForYou');
-          },
+          callback: () => WayaNav.toNamed('/createGroup', arguments: 'groupForYou'),
           height: 50,
           centerWidget: Center(
             child: Icon(

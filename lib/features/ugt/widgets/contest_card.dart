@@ -7,11 +7,13 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
@@ -59,25 +61,26 @@ class _ContestCardState extends ConsumerState<ContestCard> {
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.white,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: wayaTheme.colorScheme.greyColor200, width: 1),
+            border:
+                Border.all(color: wayaTheme.colorScheme.greyColor200, width: 1),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    // width: context.width * 0.8,
+                  Expanded(
+                    flex: 4,
                     child: Row(
-                      //  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
                           onTap: () {},
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(45), // Adjust the radius as needed
+                            borderRadius: BorderRadius.circular(
+                                45), // Adjust the radius as needed
                             child: widget.post.uploadCoverImages != null
                                 ? WayaImage(
                                     imageUrl: widget.post.uploadCoverImages!,
@@ -90,11 +93,11 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                                     'assets/images/frameuni.png',
                                     height: 45,
                                     width: 45,
-                                    fit: BoxFit.cover, // Ensures the image covers the area properly
+                                    fit: BoxFit
+                                        .cover, // Ensures the image covers the area properly
                                   ),
                           ),
                         ),
-
                         const Gap(10),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -102,44 +105,50 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             SizedBox(
-                              width: context.width * 0.35,
+                              width: context.width * 0.45,
                               child: Text(
+                                //"you are going to print the form help me now qwerty",
                                 widget.post.title ?? "Title",
                                 overflow: TextOverflow.ellipsis,
                                 style: wayaTheme.textTheme.bodyMedium,
                               ),
                             ),
                             const Gap(8),
-                            Text('${widget.post.applicantCount ?? 0} Participants',
+                            Text(
+                                '${widget.post.applicantCount ?? 0} Participants',
                                 style: WayaTextStyles.hintStyleBold
-                                    .wayaCopyWith(color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
+                                    .wayaCopyWith(
+                                        color: WayaColors.greyColor500,
+                                        fontWeight: FontWeight.w400)),
                           ],
                         ),
-                        // Spacer(),
-                        Gap(
-                          context.width * 0.15,
-                        ),
-                        //  post.isFollowing!
-                        widget.post.isFollowing == true
-                            ? WayaButton(
-                                text: 'UnFollow',
-                                height: 40,
-                                fontSize: 12.sp,
-                                color: wayaTheme.colorScheme.greyColor300,
-                                textColor: wayaTheme.colorScheme.customBlack,
-                                border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-                                callback: () {
-                                  widget.onFollowPressed(widget.post.id!);
-                                })
-                            : WayaButton(
-                                fontSize: 12.sp,
-                                callback: () => widget.onFollowPressed(widget.post.id!),
-                                height: 40,
-                                text: "   Follow  ",
-                              )
                       ],
                     ),
                   ),
+
+                  //  post.isFollowing!
+                  Expanded(
+                      flex: 1,
+                      child: widget.post.isFollowing == true
+                          ? WayaButton(
+                              text: 'Unfollow',
+                              height: 40,
+                              fontSize: 12.sp,
+                              color: wayaTheme.colorScheme.greyColor300,
+                              textColor: wayaTheme.colorScheme.customBlack,
+                              border: Border.all(
+                                  width: 1,
+                                  color: wayaTheme.colorScheme.greyColor300),
+                              callback: () {
+                                widget.onFollowPressed(widget.post.id!);
+                              })
+                          : WayaButton(
+                              fontSize: 12.sp,
+                              callback: () =>
+                                  widget.onFollowPressed(widget.post.id!),
+                              height: 40,
+                              text: "   Follow  ",
+                            )),
                 ],
               ),
               const Gap(20),
@@ -158,7 +167,8 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   });
                 },
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10), // Adjust the radius as needed
+                  borderRadius:
+                      BorderRadius.circular(10), // Adjust the radius as needed
                   child: widget.post.uploadCoverImages != null
                       ? WayaImage(
                           imageUrl: widget.post.uploadCoverImages ?? "",
@@ -178,7 +188,8 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                       : Image.asset(
                           'assets/images/frameuni.png',
                           height: 200,
-                          fit: BoxFit.cover, // Ensures the image covers the area properly
+                          fit: BoxFit
+                              .cover, // Ensures the image covers the area properly
                         ),
                 ),
               ),
@@ -190,8 +201,9 @@ class _ContestCardState extends ConsumerState<ContestCard> {
               const Gap(20),
               Text(
                 widget.post.description ?? "Description",
-                style: WayaTextStyles.hintStyleBold
-                    .wayaCopyWith(color: WayaColors.greyColor500, fontWeight: FontWeight.w400),
+                style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                    color: WayaColors.greyColor500,
+                    fontWeight: FontWeight.w400),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
@@ -205,7 +217,9 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      AboutUgtWidget(title: "Start Date", content: formatDate(widget.post.startDate ?? "Date")),
+                      AboutUgtWidget(
+                          title: "Start Date",
+                          content: formatDate(widget.post.startDate)),
                       const Gap(30),
                       if (widget.post.status?.toLowerCase() != "active")
                         StatusWidget(
@@ -223,18 +237,23 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      AboutUgtWidget(title: "End Date", content: formatDate(widget.post.endDate ?? "")),
+                      AboutUgtWidget(
+                          title: "End Date",
+                          content: formatDate(widget.post.endDate)),
                       //  AboutUgtWidget(title: "Status", content: "Ongoing", ),
                       const Gap(30),
                       AboutUgtWidget(
                           title: "Prize",
-                          content: "NGN ${formatMoney(widget.post.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
+                          content:
+                              "NGN ${formatMoney(widget.post.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
                       const Gap(30),
                     ],
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
-                    child: AboutUgtWidget(title: "Category", content: widget.post.categoryName ?? "Category"),
+                    child: AboutUgtWidget(
+                        title: "Category",
+                        content: widget.post.categoryName ?? "Category"),
                   )
                 ],
               ),
@@ -244,20 +263,24 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                 callback: () {
                   //  print("Start Date: ${widget.post.startDate}");
                   //print("End Date: ${widget.post.endDate}");
-                  if (widget.post.profileId == voteNotifier.getLoggedInUserId()) {
-                    ref.read(selectedContestProvider.notifier).state = widget.post;
+                  if (widget.post.profileId ==
+                      voteNotifier.getLoggedInUserId()) {
+                    ref.read(selectedContestProvider.notifier).state =
+                        widget.post;
                     WayaNav.toNamed('/upcoming-manage-contest-details');
                     return;
                   }
                   if (isDateInFuture(widget.post.startDate ?? "")) {
-                    ref
-                        .read(registerFormProvider.notifier)
-                        .addDefault(widget.post.contestSettings?.formRequirements ?? [], widget.post);
+                    ref.read(registerFormProvider.notifier).addDefault(
+                        widget.post.contestSettings?.formRequirements ?? [],
+                        widget.post);
                     //  WayaNav.toNamed("/register-contest1");
-                    ref.read(selectedContestProvider.notifier).state = widget.post;
+                    ref.read(selectedContestProvider.notifier).state =
+                        widget.post;
                     WayaNav.toNamed("/upcoming-contest-details");
                   } else {
-                    ref.read(selectedContestProvider.notifier).state = widget.post;
+                    ref.read(selectedContestProvider.notifier).state =
+                        widget.post;
                     WayaNav.toNamed('/upcoming-manage-contest-details');
                   }
                 },
@@ -282,12 +305,16 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          decoration: BoxDecoration(shape: BoxShape.circle, color: wayaTheme.colorScheme.greyColor200),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: wayaTheme.colorScheme.greyColor200),
                           width: 35,
                           height: 35,
                           child: Center(
                               child: Icon(
-                            widget.post.hasLiked == true ? Icons.thumb_up_alt : Icons.thumb_up_alt_outlined,
+                            widget.post.hasLiked == true
+                                ? Icons.thumb_up_alt
+                                : Icons.thumb_up_alt_outlined,
                             color: widget.post.hasLiked == true
                                 ? wayaTheme.colorScheme.primary
                                 : wayaTheme.colorScheme.greyColor500,
@@ -302,14 +329,19 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     ),
                   ),
                   const Gap(30),
-                  
                   GestureDetector(
                     onTap: () async {
                       final result = await Share.share(
-                          'check out my website https://example.com');
+                        WayaValueHelper.getShareableUrl(
+                            WayaAppRoutes.getContestDetailRoute(
+                                widget.post.id ?? "")),
+                        subject: "Share Contest",
+
+                        /* Uri.parse(
+                          "http://wayagram.ng/upcoming-manage-contest-details?id=${widget.post.id}") */
+                      );
 
                       if (result.status == ShareResultStatus.success) {
-                        print('Thank you for sharing my website!');
                         if (hasClickedShared.value == false) {
                           widget.onSharePressed(widget.post.id!);
                         }
@@ -323,10 +355,14 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          decoration: BoxDecoration(shape: BoxShape.circle, color: wayaTheme.colorScheme.greyColor200),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: wayaTheme.colorScheme.greyColor200),
                           width: 35,
                           height: 35,
-                          child: Center(child: SvgPicture.asset("assets/icons/u-share.svg")),
+                          child: Center(
+                              child:
+                                  SvgPicture.asset("assets/icons/u-share.svg")),
                         ),
                         const Gap(3),
                         Text(
@@ -347,9 +383,10 @@ class _ContestCardState extends ConsumerState<ContestCard> {
   }
 }
 
-String formatDate(String isoDate) {
+String formatDate(String? isoDate) {
+  String realDate = isoDate ?? "2025-03-03T07:21:39.036Z";
   try {
-    DateTime date = DateTime.parse(isoDate);
+    DateTime date = DateTime.parse(realDate);
     String day = DateFormat('d').format(date);
     String suffix = getDaySuffix(int.parse(day));
     String month = DateFormat('MMM').format(date);
@@ -408,7 +445,8 @@ String getRealDateDiffBtwDate(String realStartDate, String realEndDate) {
   // int months = getMonthsDifference(startDate, endDate);
 }
 
-bool isCurrentDateBetween(String startDateStr, String endDateStr, String format) {
+bool isCurrentDateBetween(
+    String startDateStr, String endDateStr, String format) {
   try {
     DateTime startDate = DateFormat(format).parse(startDateStr);
     DateTime endDate = DateFormat(format).parse(endDateStr);

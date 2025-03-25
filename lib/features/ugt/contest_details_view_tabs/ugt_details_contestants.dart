@@ -13,7 +13,7 @@ import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 class UgtDetailsContestants extends ConsumerStatefulWidget {
-  final Contest model;
+  final Contest? model;
 
   const UgtDetailsContestants(this.model, {super.key});
 
@@ -70,7 +70,7 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
             final post = viewModel.myContestList[index];
             return GestureDetector(
               child: UgtContestantCard(
-                widget.model,
+                widget.model!,
                 post,
                 index + 1,
               ),

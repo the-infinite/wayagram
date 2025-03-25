@@ -47,7 +47,7 @@ class MoreVm {
         asset: WayaAssets.icons.mStream.path,
         content: "Start a live conversation and allows friends to interact",
         title: "Live Streaming",
-        onTap: () {},
+        onTap: () => WayaNavigationHelper.showComingSoonModal(false),
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mEvents.path,
@@ -77,7 +77,7 @@ class MoreVm {
         asset: WayaAssets.icons.mPromotion.path,
         content: "Promote your goods and services so it can be seen by more people.",
         title: "Promotion",
-        onTap: () {},
+        onTap: () => WayaNavigationHelper.showComingSoonModal(true),
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mFollow.path,
