@@ -87,7 +87,10 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                                   child: _buildActionNav(
                                     context: context,
                                     onTap: () {
-                                      Share.share('${poll.url}');
+                                      Share.share(
+                                        WayaValueHelper.getShareableUrl(WayaAppRoutes.getPollDetailsPage('${poll.id}')),
+                                        subject: 'Share Poll',
+                                      );
                                     },
                                     asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none, height: 20, color: WayaColors.greyColor600),
                                     text: " Share Poll link",

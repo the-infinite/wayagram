@@ -400,10 +400,13 @@ class WayaAppRoutes {
   /// a little bit of hard coded magic.
   static String getContestDetailRoute(String id) => "${AdminContestDetails.route}?id=$id";
 
-   /// Helper function used to generate the route that takes a user to the screen
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single poll by its ID.
+  static String getPollDetailsPage(String id) => "${PollAndVoting.route}?id=$id";
+
+  /// Helper function used to generate the route that takes a user to the screen
   /// for the details of a single product.
   static String getProductDetailScreen(String id) => "${ProductDetail.route}?id=$id";
-
 
   /// This is fine.
   static List<GetPage> get getPages {
