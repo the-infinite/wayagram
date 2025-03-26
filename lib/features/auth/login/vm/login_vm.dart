@@ -56,8 +56,7 @@ class LoginState {
         userData: userData ?? this.userData,
         emailController: emailController ?? this.emailController,
         passwordController: passwordController ?? this.passwordController,
-        businessAcctController:
-            businessAcctController ?? this.businessAcctController);
+        businessAcctController: businessAcctController ?? this.businessAcctController);
   }
 }
 
@@ -72,8 +71,7 @@ class LoginVm extends StateNotifier<LoginState> {
     scopes: ['email'],
   );
 
-  LoginVm(this._authRepository, this._localDataSource, this._secureDataSource,
-      this._setupVm, this._profileRepo)
+  LoginVm(this._authRepository, this._localDataSource, this._secureDataSource, this._setupVm, this._profileRepo)
       : super(LoginState(
             emailController: TextEditingController(),
             passwordController: TextEditingController(),
@@ -102,26 +100,23 @@ class LoginVm extends StateNotifier<LoginState> {
       return;
     }
 
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
     final OAuthCredential credential = GoogleAuthProvider.credential(
       idToken: googleAuth.idToken,
       accessToken: googleAuth.accessToken,
     );
 
-    final UserCredential userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
+    final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
     final String? idToken = await userCredential.user?.getIdToken();
     print(idToken);
-  
+
     // if (idToken != null) {
     //   await oauthSignIn(authType: 'GOOGLE', token: idToken);
     // }
   }
 
-  Future<void> oauthSignIn(
-      {required String token, required String authType}) async {
+  Future<void> oauthSignIn({required String token, required String authType}) async {
     try {
       final response = await _authRepository.oauth(token, authType);
 
@@ -139,12 +134,11 @@ class LoginVm extends StateNotifier<LoginState> {
     }
   }
 
-  Future<void> onSubmit(WidgetRef ref,
-      {String? email, bool? isBusinessLogin}) async {
+  Future<void> onSubmit(WidgetRef ref, {String? email, bool? isBusinessLogin}) async {
     try {
       //? Show the preloader.
       WayaPreloaderController.instance.show();
-    
+
       //? added trim, add issue login in just cause of space issues
       final response = await _authRepository.login(
           isBusinessLogin: isBusinessLogin,
@@ -157,14 +151,10 @@ class LoginVm extends StateNotifier<LoginState> {
         final remoteUserData = UserModel.fromJson(response.data);
         state = state.copyWith(userData: remoteUserData);
 
-        _localDataSource
-            .saveUserId(remoteUserData.data?.userdata?.user?.id as String);
-        await _secureDataSource
-            .saveUserId(remoteUserData.data?.userdata?.user?.id as String);
-        await _secureDataSource
-            .saveToken(remoteUserData.data?.token?.token as String);
-        await _secureDataSource.saveRefreshToken(
-            remoteUserData.data?.token?.refreshToken as String);
+        _localDataSource.saveUserId(remoteUserData.data?.userdata?.user?.id as String);
+        await _secureDataSource.saveUserId(remoteUserData.data?.userdata?.user?.id as String);
+        await _secureDataSource.saveToken(remoteUserData.data?.token?.token as String);
+        await _secureDataSource.saveRefreshToken(remoteUserData.data?.token?.refreshToken as String);
 
         //
         if (remoteUserData.data != null) {
@@ -200,22 +190,18 @@ class LoginVm extends StateNotifier<LoginState> {
           }
 
           //? Now we do the unnecessary part of things.
-          final response = await _profileRepo.getUserDataRepo(
-              userId: remoteUserData.data?.userdata?.user?.id as String);
+          final response =
+              await _profileRepo.getUserDataRepo(userId: remoteUserData.data?.userdata?.user?.id as String);
 
           if (response.success) {
-            UserAccountModel userAccountModel =
-                UserAccountModel.fromJson(response.data);
-           
-            _setupVm.state =
-                _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
+            UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
 
-            if (userAccountModel.data != null &&
-                userAccountModel.data!.userdata!.user!.role != "PERSONAL") {
-              final bizResponse = await _profileRepo.getBusinessDataRepo(
-                  userId: remoteUserData.data?.userdata?.user?.id as String);
-              BusinessAccountData bizData =
-                  BusinessAccountData.fromJson(bizResponse.data["data"]);
+            _setupVm.state = _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
+
+            if (userAccountModel.data != null && userAccountModel.data!.userdata!.user!.role != "PERSONAL") {
+              final bizResponse =
+                  await _profileRepo.getBusinessDataRepo(userId: remoteUserData.data?.userdata?.user?.id as String);
+              BusinessAccountData bizData = BusinessAccountData.fromJson(bizResponse.data["data"]);
 
               _setupVm.state = _setupVm.state.copyWith(business: bizData);
 
@@ -225,18 +211,25 @@ class LoginVm extends StateNotifier<LoginState> {
         }
 
         //? This is fine.
-        final notificationVm = ref.watch(notificationProvider.notifier);
+        final notificationVm = ref.read(notificationProvider.notifier);
 
-        //? If this has not yet generated any device tokens, send them across.
-        if (!WayaLocalDataSource().getIsFcmTokenFine()) {
+        try {
+          //? If this has not yet generated any device tokens, send them across.
           final result = await notificationVm.sendDeviceToken();
 
-          // If this was fine...b
-          if (result) WayaLocalDataSource().saveDeviceToken("TDNOINSO");
-        }
+          //? If this was fine...
+          if (result) WayaLocalDataSource().saveDeviceToken(WayaValueHelper.createUid());
 
-        // Before moving forward, try to retrieve the user's notifications.
-        notificationVm.getUserNotifications();
+          // Before moving forward, try to retrieve the user's notifications.
+          notificationVm.getUserNotifications();
+        } catch (e) {
+          WayaDebugConsoleController.instance.addException(
+            WayaDebugHelpers.getMessage(e),
+            e,
+            WayaDebugEventModule.notifications,
+            WayaDebugHelpers.getStackTrace(e),
+          );
+        }
 
         // This is good too.
         WayaNav.toNamed("/explore");
@@ -244,16 +237,13 @@ class LoginVm extends StateNotifier<LoginState> {
         if (response.data['responseCode'] == 625) {
           await ref
               .read(verifyAccountProvider.notifier)
-              .resendOtpForRegisteredButNotVerifiedUser(
-                  email: state.emailController.text);
+              .resendOtpForRegisteredButNotVerifiedUser(email: state.emailController.text);
 
-          WayaNav.toNamed(VerifyEmail.route,
-              arguments: state.emailController.text);
+          WayaNav.toNamed(VerifyEmail.route, arguments: state.emailController.text);
         }
       }
     } catch (e) {
       _logger.e(e);
-      rethrow;
     } finally {
       //state = state.copyWith(isLoading: false);
       //? Hide the preloader.
@@ -264,6 +254,5 @@ class LoginVm extends StateNotifier<LoginState> {
 
 final loginVmProvider = StateNotifierProvider<LoginVm, LoginState>((ref) {
   final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
-  return LoginVm(AuthRepository(), WayaLocalDataSource(),
-      WayaSecureDataSource(), successfulSetupVm, ProfileRepo());
+  return LoginVm(AuthRepository(), WayaLocalDataSource(), WayaSecureDataSource(), successfulSetupVm, ProfileRepo());
 });

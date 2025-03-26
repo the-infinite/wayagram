@@ -5,22 +5,28 @@ part 'notification_response.g.dart';
 
 @JsonSerializable()
 class NotificationResponseModel {
-  final List<NotificationModel> notifications;
-  final int total;
+  final List<NotificationModel> docs;
+  final int page;
   final int limit;
-  final int offset;
+  final int? nextPage;
+  final bool hasNextPage;
+  final bool hasPrevPage;
+  final int totalDocs;
 
   // Constructor.
   NotificationResponseModel({
-    required this.notifications,
-    required this.total,
+    required this.docs,
+    required this.page,
     required this.limit,
-    required this.offset,
+    required this.nextPage,
+    required this.hasNextPage,
+    required this.hasPrevPage,
+    required this.totalDocs,
   });
 
   // This is fine then.
   factory NotificationResponseModel.fromJson(Map<String, dynamic> json) => _$NotificationResponseModelFromJson(json);
-  
+
   // This is also fun.
   Map<String, dynamic> toJson() => _$NotificationResponseModelToJson(this);
 }

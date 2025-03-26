@@ -18,7 +18,7 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    //final viewModel = ref.watch(sellerBidsVmProvider);
+
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -30,7 +30,11 @@ class _SeeSellerBidsState extends ConsumerState<SeeSellerBids> {
             'assets/images/bid/map.png',
             fit: BoxFit.contain,
           ),
-          const Gap(10),
+
+          // Some space.
+          Gap(10.h),
+
+          //? Build the consumer's list of bids.
           ListView.builder(
             padding: EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 10),
             itemCount: 4,
