@@ -48,8 +48,8 @@ class ReferralPage extends StatelessWidget {
             SizedBox(height: 20),
 
             //?referral image
-            //WayaAssets.images.referralImage.image(),
-            WayaAssets.images.review.image(),
+            WayaAssets.images.referralImage.image(),
+          
 
             SizedBox(height: 16),
 
