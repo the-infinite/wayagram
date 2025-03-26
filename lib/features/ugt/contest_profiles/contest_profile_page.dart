@@ -3,9 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/route_manager.dart';
 // import 'package:get_thumbnail_video/index.dart';
 // import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -24,6 +27,7 @@ import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_details_stag
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/video_player.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
@@ -31,7 +35,10 @@ import '../../../core/components/waya_scaffold.dart';
 
 class ContestProfilePage extends StatefulHookConsumerWidget {
   static const route = '/contest-profile-page';
-  const ContestProfilePage({super.key});
+  final String id;
+  final String contest;
+  const ContestProfilePage(
+      {required this.id, required this.contest, super.key});
 
   @override
   ConsumerState<ContestProfilePage> createState() => _ContestProfilePageState();
@@ -58,24 +65,30 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     //
     // return thumbnailFile.path;
   }
+  
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     //var model = ref.watch(selectedContestProvider.notifier).state;
-    var model = ref.watch(selectedContestantProfile.notifier).state;
+    final String id = Get.parameters['id'] ?? 'Unknown';
+    final String contestId = Get.parameters['contest'] ?? 'Unknown';
+    var model = ref.watch(selectedContestantProfile);
     var viewModel = ref.watch(votersContestNotifier.notifier);
-    print("profile id ${model?.id}");
-    final imageUrl = useState(model!.profilePhoto ?? "");
+  //  print("profile id ${model?.id}");
+    final imageUrl = useState(model?.profilePhoto ?? "");
 
     useEffect(() {
-      if (viewModel.getLoggedInUserId() == model.profileId) {
-        model.stages?.forEach((element) {
-          print("i am looping");
+      ref.read(postProvider.notifier).fetchSingleContestantDetails(
+          ref, model?.contestId ?? contestId, model?.profileId ?? id);
+
+      if (viewModel.getLoggedInUserId() == model?.profileId) {
+        model?.stages?.forEach((element) {
+        //  print("i am looping");
           if (element.entryType?.toLowerCase() != "free" &&
               element.isActive == true &&
               element.hasPaid != true) {
-            print("looping and have picked one");
+          //  print("looping and have picked one");
             selectedStage = element;
             Future.delayed(Duration(seconds: 2), () {
               WayaUtils.showModalSheetUgt(
@@ -123,9 +136,10 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
           }
         });
       }
+
       ref
           .watch(ugtContestantProfileVm.notifier)
-          .fetchSingleContestantPosts(model.id ?? "");
+          .fetchSingleContestantPosts(model?.profileId ?? id);
 
       /*  getImageUrl(model.introVideo ?? "").then((value) {
         imageUrl.value = value;
@@ -140,8 +154,17 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
       appBarTrailing: Row(
         children: [
           GestureDetector(
-              onTap: () {
-                WayaNav.toNamed('/contest-mydashboard-profile-page');
+              onTap: () async {
+                await Share.share(
+                  WayaValueHelper.getShareableUrl(
+                      WayaAppRoutes.getContestantProfileRoute(
+                    model?.profileId ?? id,
+                    model?.contestId ?? contestId,
+                  )),
+                  subject: "Share Contestant Profile",
+
+                  // https://staging.wayagram.ng/contest-profile-page?id=acabf193-dd12-48c5-9030-157efa4c012a&contestId=10c8c1b5-f720-4633-a14e-646313230192
+                );
               },
               child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none)),
           const Gap(20),
@@ -161,7 +184,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                     GestureDetector(
                       onTap: () {
                         WayaNav.toNamed("/view-media-full-page", arguments: {
-                          "url": model.introVideo ?? "",
+                          "url": model?.introVideo ?? "",
                           "title": "",
                           "createdAt": "",
                           "likeCount": "",
@@ -174,7 +197,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                       },
                       child: VideoThumbnailPlayer(
                         imageUrl: imageUrl.value,
-                        videoUrl: model.introVideo ?? "",
+                        videoUrl: model?.introVideo ?? "",
                       ),
                     ),
                     const Gap(20),
@@ -220,7 +243,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                       radius: 35,
                       backgroundColor:
                           Colors.pink[100], // Background color behind image
-                      backgroundImage: NetworkImage(model.profilePhoto ?? ""),
+                      backgroundImage: NetworkImage(model?.profilePhoto ?? ""),
                     ),
                   ),
                 ),
@@ -232,7 +255,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                 print("Edit Profile");
                 WayaNav.toNamed('/edit-profile-contest');
               },
-              child: Text(model.contestApplicant?.fullName ?? "",
+              child: Text(model?.contestApplicant?.fullName ?? "",
                   style: wayaTheme.textTheme.bodyMedium),
             ),
             const Gap(5),
@@ -243,21 +266,21 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                         color: WayaColors.greyColor500,
                         fontWeight: FontWeight.w400)),
                 const Gap(2),
-                Text("${model.votes}",
+                Text("${model?.votes ?? ""}",
                     style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
                       color: WayaColors.primary,
                     )),
               ],
             ),
             Text("Your Bio", style: wayaTheme.textTheme.bodyMedium),
-            Text(model.bio ?? "",
+            Text(model?.bio ?? "",
                 style: WayaTextStyles.hintStyleBold.wayaCopyWith(
                     color: WayaColors.greyColor500,
                     fontWeight: FontWeight.w400)),
             const Gap(20),
             Text("what you expect from the voters",
                 style: wayaTheme.textTheme.bodyMedium),
-            Text(model.expectationFromVoters ?? "",
+            Text(model?.expectationFromVoters ?? "",
                 style: WayaTextStyles.hintStyleBold.wayaCopyWith(
                     color: WayaColors.greyColor500,
                     fontWeight: FontWeight.w400)),
@@ -279,17 +302,17 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
             const Gap(10),
             if (selectedViewIndex.value == 0) UgtDetailsPost(model),
             if (selectedViewIndex.value == 1)
-              ContestProfileStagesSection(model.stages),
+              ContestProfileStagesSection(model?.stages),
           ],
         ),
       ),
-      floatingActionButton: model.profileId == viewModel.getLoggedInUserId()
+      floatingActionButton: model?.profileId == viewModel.getLoggedInUserId()
           ? SizedBox(
               height: 50,
               width: 50,
               child: WayaButton(
                 callback: () {
-                  viewModel.updateContestantId(model.id);
+                  viewModel.updateContestantId(model?.id);
                   WayaNav.toNamed('/create-contest-post');
                 },
                 height: 50,

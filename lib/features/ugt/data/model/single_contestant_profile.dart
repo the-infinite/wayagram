@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 
 part 'single_contestant_profile.g.dart';
 
@@ -38,7 +39,7 @@ class Data {
     required this.metadata,
   });
 
-  final List<Doc>? docs;
+  final List<MyContestContestantModel>? docs;
   final int? totalDocs;
   final int? limit;
   final int? page;
@@ -55,103 +56,6 @@ class Data {
   Map<String, dynamic> toJson() => _$DataToJson(this);
 }
 
-@JsonSerializable()
-class Doc {
-  Doc({
-    required this.id,
-    required this.profileId,
-    required this.contestApplicationId,
-    required this.contestId,
-    required this.profilePhoto,
-    required this.bio,
-    required this.expectationFromVoters,
-    required this.introVideo,
-    required this.hasPaid,
-    required this.status,
-    required this.stages,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.contestApplicant,
-    required this.votes,
-  });
-
-  final String? id;
-  final String? profileId;
-  final String? contestApplicationId;
-  final String? contestId;
-  final String? profilePhoto;
-  final String? bio;
-  final String? expectationFromVoters;
-  final String? introVideo;
-  final bool? hasPaid;
-  final String? status;
-  final List<dynamic>? stages;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-  final ContestApplicant? contestApplicant;
-  final int? votes;
-
-  factory Doc.fromJson(Map<String, dynamic> json) => _$DocFromJson(json);
-
-  Map<String, dynamic> toJson() => _$DocToJson(this);
-}
-
-@JsonSerializable()
-class ContestApplicant {
-  ContestApplicant({
-    required this.id,
-    required this.contestId,
-    required this.userId,
-    required this.fullName,
-    required this.email,
-    required this.phoneNumber,
-    required this.state,
-    required this.address,
-    required this.applicationData,
-    required this.status,
-    required this.rejectionReason,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  final String? id;
-  final String? contestId;
-  final String? userId;
-  final String? fullName;
-  final String? email;
-  final String? phoneNumber;
-  final dynamic state;
-  final String? address;
-  final ApplicationData? applicationData;
-  final String? status;
-  final String? rejectionReason;
-  final DateTime? createdAt;
-  final DateTime? updatedAt;
-
-  factory ContestApplicant.fromJson(Map<String, dynamic> json) =>
-      _$ContestApplicantFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ContestApplicantToJson(this);
-}
-
-@JsonSerializable()
-class ApplicationData {
-  ApplicationData({
-    required this.birthName,
-    required this.birthCertificate,
-  });
-
-  @JsonKey(name: 'Birth name')
-  final String? birthName;
-
-  @JsonKey(name: 'birth certificate')
-  final String? birthCertificate;
-
-  factory ApplicationData.fromJson(Map<String, dynamic> json) =>
-      _$ApplicationDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ApplicationDataToJson(this);
-}
 
 @JsonSerializable()
 class Metadata {
