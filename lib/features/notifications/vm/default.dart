@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/service/notification_service.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
 import 'package:wayagram/features/notifications/models/notification_response.dart';
 import 'package:wayagram/features/notifications/repo/default.dart';
@@ -39,20 +42,36 @@ class NotificationVm extends StateNotifier<NotificationState> {
 
   /// Helper function used to send the generated device token to the back-end.
   Future<bool> sendDeviceToken() async {
-    final token = await PushNotifications.requestDeviceToken();
+    try {
+      final token = await PushNotifications.requestDeviceToken();
 
-    //? If no token was retrieved, this failed.
-    if (token == null) return false;
+      //? This is fine.
+      if(kDebugMode) {
+        debugPrint("Device Token: $token");
+      }
 
-    //? Next, try to make the request.
-    final response = await _repo.addDeviceToken(token);
+      //? If no token was retrieved, this failed.
+      if (token == null) return false;
 
-    // Return whether or not this was fine.
-    return response.success;
+      //? Next, try to make the request.
+      final response = await _repo.addDeviceToken(token);
+
+      // Return whether or not this was fine.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.notifications,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    return false;
   }
 
   /// Helper function used to get all notifications.
-  Future<List<NotificationModel>> getUserNotifications([int page = 0]) async {
+  Future<List<NotificationModel>> getUserNotifications([int page = 1]) async {
     final result = <NotificationModel>[];
 
     //? First, notify this guy that we are loading.
@@ -60,12 +79,17 @@ class NotificationVm extends StateNotifier<NotificationState> {
 
     //? Now, try to get the notifications and fall back when failed.
     try {
-      final response = await _repo.getUserNotifications();
+      final response = await _repo.getUserNotifications(state.page);
+
+      //? If this has passed the first page, we should add more notifications.
+      if (state.page > 1) {
+        result.addAll(state.notifications);
+      }
 
       //? If this went well...
       if (response.success) {
         final data = NotificationResponseModel.fromJson(response.data['data']);
-        result.addAll(data.notifications);
+        result.addAll(data.docs);
       }
 
       //? Since it failed, we should probably do failure cleanups in the future.
@@ -74,9 +98,15 @@ class NotificationVm extends StateNotifier<NotificationState> {
       //? Notify our listeners that the game has been switched up.
       state = state.copyWith(
         isLoading: false,
-        notifications: result.isEmpty ? NotificationState.initial.notifications : [...result],
+        notifications: result,
       );
     } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.notifications,
+        WayaDebugHelpers.getStackTrace(e),
+      );
       _logger.log(Level.error, e);
       state = state.copyWith(isLoading: false);
     }
