@@ -5,6 +5,7 @@ import 'package:wayagram/features/ugt/data/model/context_for_you_state.dart';
 import 'package:wayagram/features/ugt/data/model/single_contestant_profile.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 class ContestForYou extends StateNotifier<ContextForYouState> {
   final ContestRepo _contestRepository;
@@ -72,7 +73,7 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
   }
 
   Future<SingleContestProfileBase?> fetchSingleContestantDetails(
-      String contestId, String contestantProfileId) async {
+      WidgetRef ref, String contestId, String contestantProfileId) async {
     try {
       final response = await _contestRepository.fetchSingleContestantDetails(
           contestId, contestantProfileId);
@@ -80,6 +81,10 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
       if (response.success) {
         SingleContestProfileBase responseModel =
             SingleContestProfileBase.fromJson(response.data);
+
+        ref.read(selectedContestantProfile.notifier).state =
+            responseModel.data?.docs?.first;
+
         return responseModel;
       }
       // return contestList;

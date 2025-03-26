@@ -275,20 +275,18 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                       const Gap(10),
                       GestureDetector(
                         onTap: () async {
-                          if (hasClickedShared.value == false) {
-                            final result = await Share.share(
-                              WayaValueHelper.getShareableUrl(
-                                  WayaAppRoutes.getContestDetailRoute(
-                                      widget.post.contestId ?? "")),
-                              subject: "Share Post",
-                            );
-                            if (result.status == ShareResultStatus.success) {
-                              notifier.toggleShare(widget.post.id!);
-                            }
+                          // if (hasClickedShared.value == false) {
+                          final result = await Share.share(
+                            WayaValueHelper.getShareableUrl(
+                                WayaAppRoutes.getContestantProfileRoute(
+                              widget.contestApplicant?.profileId ?? "",
+                              widget.contestApplicant?.contestId ?? "",
+                            )),
+                            subject: "Share Post",
+                          );
+                          if (result.status == ShareResultStatus.success) {
+                            notifier.toggleShare(widget.post.id!);
                           }
-                          Future.delayed(Duration(seconds: 2), () {
-                            hasClickedShared.value = false;
-                          });
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,

@@ -110,6 +110,7 @@ Future<void> convertContestantToPDF(
                                       font: ttf,
                                       fontWeight: FontWeight.normal),
                             ),
+                            SizedBox(height: 5),
                             if (index == 1)
                               _positionWidget(
                                   PdfColor.fromHex('#FFF0EB'), cup, "1st"),

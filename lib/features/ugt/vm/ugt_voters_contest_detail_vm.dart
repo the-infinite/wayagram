@@ -247,7 +247,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  String getLoggedInUserId() {
+  String? getLoggedInUserId() {
     return _localDataSource.getUserId().toString();
   }
 

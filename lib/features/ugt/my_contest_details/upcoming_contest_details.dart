@@ -44,7 +44,8 @@ class _UpcomingContestDetailsState
       ref
           .read(postProvider.notifier)
           .fetchSingleContestantDetails(
-              model?.id ?? "", viewModel.getLoggedInUserId())
+            ref,
+              model?.id ?? "", viewModel.getLoggedInUserId()??"")
           .then((model) {
         if (model != null) {
           print("i am here");
