@@ -177,7 +177,16 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
                     colorFilter: ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
                   ),
                   color: Color(0xffFBEAE9),
-                  onTap: () => WayaNav.toNamed('/seller-settlement'),
+                  onTap: () {
+                    //? Show the coming soon modal.
+                    if (WayaConstants.isProduction) {
+                      WayaNavigationHelper.showComingSoonModal(true);
+                      return;
+                    }
+
+                    //? Now, continue as needed in staging.
+                    WayaNav.toNamed('/seller-settlement');
+                  },
                 ),
               ],
             ),
