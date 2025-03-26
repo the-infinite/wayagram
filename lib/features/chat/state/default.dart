@@ -32,6 +32,9 @@ class ConversationState {
   final int archivedPage;
   final bool archivedHasNextPage;
 
+  /// Utility function used to get the total number of all unread messages inside of the app.
+  int get totalUnreadCount => conversations.fold(0, (value, chat) => value + chat.unreadCount);
+
   // This is fine.
   const ConversationState({
     required this.hasLoaded,

@@ -6,8 +6,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/utils/routes.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
@@ -135,11 +134,10 @@ class _ExploreState extends ConsumerState<Explore> {
             SharedMoments(),
             const Gap(25),
             GroupedWidgetHeader(
-                onTap: () {
-                  WayaNav.removeUntilNamed(BottomView.route, arguments: 3);
-                },
-                subTitle: 'Have a buy request, just create a quote',
-                title: 'Get Quotation'),
+              onTap: () => WayaNav.removeUntilNamed(BottomView.route, arguments: 3),
+              subTitle: 'Have a buy request, just create a quote',
+              title: 'Get Quotation',
+            ),
             const Gap(20),
             WayaButton(
               centerWidget: Row(
