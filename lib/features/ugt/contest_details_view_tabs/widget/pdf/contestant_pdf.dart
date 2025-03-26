@@ -112,13 +112,13 @@ Future<void> convertContestantToPDF(
                             ),
                             if (index == 1)
                               _positionWidget(
-                                  PdfColor.fromHex('#FFFFFF'), cup, "1st"),
+                                  PdfColor.fromHex('#FFF0EB'), cup, "1st"),
                             if (index == 2)
                               _positionWidget(
                                   PdfColor.fromHex('#F0F2F5'), award1, "2nd"),
                             if (index == 3)
                               _positionWidget(
-                                  PdfColor.fromHex('#FFFFFF'), award2, "3rd"),
+                                  PdfColor.fromHex('#FEF6E7'), award2, "3rd"),
                           ]),
                           Text(
                             "${e.votes} votes",
@@ -181,7 +181,7 @@ Widget _buildStatCard(String title, String value, Widget widget) {
                     width: 3.0, // Optional: Border width
                   ),
                 ),
-                child: SizedBox(height: 10, width: 10, child: widget),
+                child: SizedBox(height: 5, width: 5, child: widget),
               )
             ],
           ),
@@ -205,11 +205,11 @@ Widget _positionWidget(PdfColor pdfColor, Widget widget, String position) {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(children: [
-        SizedBox(height: 10, width: 10, child: widget),
+        SizedBox(height: 15, width: 15, child: widget),
         Text(
           position,
           style: TextStyle(
-              color: PdfColor.fromHex('#0F57C5'),
+              color: PdfColor.fromHex('#FFFFFF'),
               fontSize: 16.0,
               // font: ttf,
               fontWeight: FontWeight.normal),

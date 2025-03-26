@@ -7,7 +7,9 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/referral/view/referral_history_page.dart';
+import 'package:wayagram/features/referral/widget/how_it_works.dart';
 
 class ReferralPage extends StatelessWidget {
   static const route = '/referral-page';
@@ -49,7 +51,6 @@ class ReferralPage extends StatelessWidget {
 
             //?referral image
             WayaAssets.images.referralImage.image(),
-          
 
             SizedBox(height: 16),
 
@@ -100,7 +101,11 @@ class ReferralPage extends StatelessWidget {
               children: [
                 _actionButton(context, Icons.share_outlined, "Share"),
                 _actionButton(context, Icons.copy, "Copy Link"),
-                _actionButton(context, Icons.info, "Learn More"),
+                GestureDetector(
+                    onTap: () {
+                      WayaUtils.showModalSheetUgt(context, child: HowItWorks());
+                    },
+                    child: _actionButton(context, Icons.info, "Learn More")),
               ],
             ),
 
