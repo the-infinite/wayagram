@@ -71,6 +71,8 @@ import 'package:wayagram/features/quotation/seller/views/bids/map_screen.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/see_seller_bids.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
+import 'package:wayagram/features/referral/view/referral_history_page.dart';
+import 'package:wayagram/features/referral/view/referral_page.dart';
 import 'package:wayagram/features/role_access/view/add_team_member_page.dart';
 import 'package:wayagram/features/role_access/view/member_details_page.dart';
 import 'package:wayagram/features/role_access/view/role_access_page.dart';
@@ -135,6 +137,7 @@ import '../../features/activity_logs/view/search_log.dart';
 import '../../features/activity_logs/view/user_action.dart';
 import '../../features/activity_logs/view/user_interaction.dart';
 import '../../features/activity_logs/view/visited_page.dart';
+import '../../features/referral/view/referral_page.dart';
 
 class WayaAppRoutes {
   WayaAppRoutes._();
@@ -153,7 +156,7 @@ class WayaAppRoutes {
     LoginPage.route: () => LoginPage(),
     WelcomeBackPage.route: () => WelcomeBackPage(),
     BottomView.route: () => BottomView(),
-    ProductDetail.route: () => ProductDetail(),
+    ProductDetail.route: () => ProductDetail(id: WayaNav.search['id'].toString()),
     OrderDetails.route: () => OrderDetails(),
     ConfirmOrderDelivery.route: () => ConfirmOrderDelivery(),
     CartView.route: () => CartView(),
@@ -323,7 +326,9 @@ class WayaAppRoutes {
     RoleAccessPage.route: () => RoleAccessPage(),
     AddTeamMemberPage.route: () => AddTeamMemberPage(),
     MemberDetailsPage.route: () => MemberDetailsPage(),
-    VerifyEmail.route: () => VerifyEmail()
+    VerifyEmail.route: () => VerifyEmail(),
+    ReferralPage.route: () => ReferralPage(),
+    ReferralHistoryPage.route: () => ReferralHistoryPage(),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -400,6 +405,10 @@ class WayaAppRoutes {
   /// Helper function used to generate the route that is supposed to take you a
   /// single poll by its ID.
   static String getPollDetailsPage(String id) => "${PollAndVoting.route}?id=$id";
+
+  /// Helper function used to generate the route that takes a user to the screen
+  /// for the details of a single product.
+  static String getProductDetailScreen(String id) => "${ProductDetail.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single donation by its ID.

@@ -6,6 +6,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/modals/logout.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
+import 'package:wayagram/features/referral/view/referral_page.dart';
 import 'package:wayagram/features/role_access/view/role_access_page.dart';
 import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
@@ -20,7 +21,8 @@ class GeneralSettingsPage extends ConsumerStatefulWidget {
   static const route = '/general-settings';
   const GeneralSettingsPage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _GeneralSettingsPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _GeneralSettingsPageState();
 }
 
 class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
@@ -56,7 +58,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Referrals & Rewards',
                 iconPath: 'confetti',
-                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+                onTap: () => WayaNav.toNamed(ReferralPage.route),
               ),
               GeneralSettingsOptionModel(
                 title: 'Roles & Access',
@@ -76,7 +78,8 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Edit Profile',
                 iconPath: 'edit',
-                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
+                onTap: () => WayaNav.toNamed(
+                    WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
               ),
 
               //

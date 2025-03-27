@@ -91,7 +91,7 @@ class ShopVm extends StateNotifier<ShopState> {
     }
   }
 
-  Future<void> getProductViews({required String productId}) async {
+  Future<void> getProductReviews({required String productId}) async {
     try {
       final response = await _repository.getProductRating(productId: productId);
 
