@@ -12,6 +12,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
@@ -26,29 +27,55 @@ class PollDashboard extends ConsumerStatefulWidget {
 
 class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
+  final timeNotifier = ValueNotifier(Duration.zero);
+
+ /* Timer? timer;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+
+       // startDate = DateTime.parse("${poll?.startDate}");
+      // endDate = DateTime.parse("${poll?.endDate}");
+
+      final pollId  = ModalRoute.of(context)?.settings.arguments as String?;
+      print('DASHBOARD POLL ID ==> $pollId');
+      ref.read(createPollVotingProvider.notifier).getDashboard(pollId);
+
+      //? If the status is not started, then we need to calculate the time left
+      //? until the bid starts.
+      //if (widget.data.status == BuyRequestStatus.notStarted) {
+        timeNotifier.value = DateTime.parse("${poll?.endDate}").difference(DateTime.now()).abs();
+     // }
+
+      //? If the status is active, then we need to calculate the time left until
+      //? bidding ends.
+      //else {
+        timeNotifier.value = DateTime.parse("${poll?.endDate}").difference(DateTime.now()).abs();
+      //}
+
+      //? Now, let the timer keep ticking.
+      timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        final eval = timeNotifier.value - const Duration(seconds: 1);
+
+        //? Update this guy in the list.
+        // if (eval.isNegative) {
+        //   await widget.notifier.getBuyRequest(widget.data.id);
+        //   return;
+        // }
+
+        //? Update the time we think it would take.
+        timeNotifier.value = eval;
+      });
+    });
+    super.initState();
+  }*/
+
+
   CreatePollVotingState? poll;
 
   late DateTime startDate;
   late DateTime endDate;
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-
-      // startDate = DateTime.parse("${poll?.startDate}");
-      // endDate = DateTime.parse("${poll?.endDate}");
-      print('DASHBOARD ===>>>${poll?.startDate}');
-
-      //_startCountdown();
-      final pollId  = ModalRoute.of(context)?.settings.arguments as String?;
-      print('DASHBOARD POLL ID ==> $pollId');
-      ref.read(createPollVotingProvider.notifier).getDashboard(pollId);
-    });
-  }
-
-  Duration remainingTime = Duration.zero;
-  Timer? countdownTimer;
 
   void _startCountdown() {
     countdownTimer?.cancel(); // Cancel existing timer if any
@@ -68,6 +95,26 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
       });
     }
   }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+
+      // startDate = DateTime.parse("${poll?.startDate}");
+      // endDate = DateTime.parse("${poll?.endDate}");
+      print('DASHBOARD ===>>>${poll?.startDate}');
+
+      final pollId  = ModalRoute.of(context)?.settings.arguments as String?;
+      ref.read(createPollVotingProvider.notifier).getDashboard(pollId);
+      _startCountdown();
+    });
+  }
+
+  Duration remainingTime = Duration.zero;
+  Timer? countdownTimer;
+
+
 
   String _formatDuration(Duration duration) {
     int days = duration.inDays;
@@ -153,6 +200,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
           ),
             const Gap(10),
             Text(
+              //'$_startCountdown',
               _formatDuration(remainingTime),
               //'12 days: 45hrs: 55min: 12sec',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
@@ -239,6 +287,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
+                fontFamily: WayaConstants.fontFamily,
                 color: Theme.of(context).colorScheme.black ),
           ),
           const Gap(10),
@@ -247,6 +296,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
+                fontFamily: WayaConstants.fontFamily,
                 color: Theme.of(context).colorScheme.black ),
           ),
           Spacer(),
@@ -255,6 +305,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
+                fontFamily: WayaConstants.fontFamily,
                 color: Theme.of(context).colorScheme.black ),
           ),
         ],
@@ -277,7 +328,8 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             child:  Text(
               name,
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 8.sp,
+                  fontSize: 12.sp,
+                  fontFamily: WayaConstants.fontFamily,
                   fontWeight: FontWeight.w500,
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),
@@ -287,6 +339,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             number,
             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                 fontSize: 24.sp,
+                fontFamily: WayaConstants.fontFamily,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.black ),
           ),

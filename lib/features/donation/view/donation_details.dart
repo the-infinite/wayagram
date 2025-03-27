@@ -137,7 +137,11 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.primary500),
             callback: () {
-              Share.share('${args['url']}', subject: 'Share Options');
+              Share.share(
+                WayaValueHelper.getShareableUrl(WayaAppRoutes.getDonationDetailsPage('${args['id']}')),
+                subject: 'Share Donation',
+              );
+              // Share.share('${args['url']}', subject: 'Share Options');
             },
             color: wayaTheme.colorScheme.white,
           ),
@@ -193,7 +197,6 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                     ),
                   );
                 }*/
-
                 WayaUtils.showModalSheet(
                   context,
                   child: DonationModal(

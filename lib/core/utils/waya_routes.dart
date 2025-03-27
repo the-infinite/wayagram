@@ -137,6 +137,7 @@ import '../../features/activity_logs/view/search_log.dart';
 import '../../features/activity_logs/view/user_action.dart';
 import '../../features/activity_logs/view/user_interaction.dart';
 import '../../features/activity_logs/view/visited_page.dart';
+import '../../features/referral/view/referral_page.dart';
 
 class WayaAppRoutes {
   WayaAppRoutes._();
@@ -319,7 +320,7 @@ class WayaAppRoutes {
         DisputeDetail(id: WayaNav.search['id'].toString()),
     ProductSearchResult.route: () => ProductSearchResult(),
     LogsAndAuditTrials.route: () => LogsAndAuditTrials(),
-    LoginActivity.route: () => LoginActivity(),
+    AccountActivity.route: () => AccountActivity(),
     VisitedPage.route: () => VisitedPage(),
     UserAction.route: () => UserAction(),
     CmsClicks.route: () => CmsClicks(),
@@ -425,6 +426,7 @@ class WayaAppRoutes {
   static String getContestantProfileRoute(String id, String contestId) =>
       "${ContestProfilePage.route}?id=$id&contest=$contestId";
 
+
   /// Helper function used to generate the route that is supposed to take you a
   /// single poll by its ID.
   static String getPollDetailsPage(String id) => "${PollAndVoting.route}?id=$id";
@@ -432,6 +434,10 @@ class WayaAppRoutes {
   /// Helper function used to generate the route that takes a user to the screen
   /// for the details of a single product.
   static String getProductDetailScreen(String id) => "${ProductDetail.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single donation by its ID.
+  static String getDonationDetailsPage(String id) => "${Donations.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages {
