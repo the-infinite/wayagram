@@ -1,22 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/referral/vm/referral_vm.dart';
 import 'package:wayagram/features/referral/widget/referral_card.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
+import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
-class ReferralHistoryPage extends StatefulWidget {
+class ReferralHistoryPage extends ConsumerStatefulWidget {
   static const route = '/referral-history-page';
   const ReferralHistoryPage({super.key});
 
   @override
-  State<ReferralHistoryPage> createState() => _ReferralHistoryPageState();
+  ConsumerState<ReferralHistoryPage> createState() =>
+      _ReferralHistoryPageState();
 }
 
-class _ReferralHistoryPageState extends State<ReferralHistoryPage> {
+class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
   final ScrollController _scrollController = ScrollController();
   double _previousScrollOffset = 0.0;
 
@@ -25,6 +30,7 @@ class _ReferralHistoryPageState extends State<ReferralHistoryPage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.addListener(_scrollListener);
+      ref.watch(referralVm.notifier).getAllUserReferrals(true);
     });
   }
 
@@ -35,8 +41,7 @@ class _ReferralHistoryPageState extends State<ReferralHistoryPage> {
     if (currentOffset > _previousScrollOffset &&
         _scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent - 100) {
-      // print("fetching .....${_scrollController.position.pixels}");
-      // ref.read(roleAccessVm.notifier).getAllMembers(false);
+      ref.watch(referralVm.notifier).getAllUserReferrals(false);
     }
     _previousScrollOffset = currentOffset;
   }
@@ -51,6 +56,8 @@ class _ReferralHistoryPageState extends State<ReferralHistoryPage> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final viewModel = ref.watch(referralVm);
+
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -62,7 +69,8 @@ class _ReferralHistoryPageState extends State<ReferralHistoryPage> {
             //onTap: onTapBackButton,
             ),
       ),
-      body: SingleChildScrollView(
+      body: SizedBox(
+        height: context.height,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -74,8 +82,10 @@ class _ReferralHistoryPageState extends State<ReferralHistoryPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _infoCard("Total Friends Referred", "20"),
-                    _infoCard("Total Rewards Earned", "₦4,500"),
+                    _infoCard("Total Friends Referred",
+                        viewModel.count?.toString() ?? ""),
+                    _infoCard("Total Rewards Earned",
+                        "₦${formatMoney(viewModel.earned?.toString() ?? "")}"),
                   ],
                 ),
               ),
@@ -91,25 +101,20 @@ class _ReferralHistoryPageState extends State<ReferralHistoryPage> {
               ),
             ),
             Gap(20),
-            ReferralCard(),
-            /*   Expanded(
+
+            if (viewModel.referralList.isEmpty) emptyWidget(),
+            Expanded(
               // height: context.height - 200,
               child: ListView.builder(
                 controller: _scrollController,
                 physics: AlwaysScrollableScrollPhysics(),
-                itemCount: viewModel.listMember.length,
+                itemCount: viewModel.referralList.length,
                 itemBuilder: (context, index) {
-                  final user = viewModel.listMember[index];
-                  return GestureDetector(
-                      onTap: () {
-                        ref.read(selectedRoleMemberProvider.notifier).state =
-                            user;
-                        WayaNav.toNamed(MemberDetailsPage.route);
-                      },
-                      child: RoleAccessCard(user: user));
+                  final user = viewModel.referralList[index];
+                  return ReferralCard(model: user);
                 },
               ),
-            ), */
+            ),
             Gap(100)
           ],
         ),
@@ -133,24 +138,13 @@ class _ReferralHistoryPageState extends State<ReferralHistoryPage> {
     );
   }
 
-  Widget _actionButton(BuildContext context, IconData icon, String label) {
-    final wayaTheme = Theme.of(context);
-    return Container(
-      decoration: BoxDecoration(
-        color: wayaTheme.colorScheme.primary50,
-        borderRadius: BorderRadius.circular(4), // Rounded corners
-      ),
-      width: context.width / 3.5,
-      padding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
-      child: Row(
-        children: [
-          Icon(icon, color: wayaTheme.colorScheme.primary500),
-          Gap(4),
-          Text(label,
-              style: WayaTextStyles.bodyMedium
-                  .copyWith(color: wayaTheme.colorScheme.primary500)),
-        ],
-      ),
-    );
+  Widget emptyWidget() {
+    return UgtEmptyState(
+        icon: Image.asset("assets/images/u-emptystate.png"),
+        desc: "No user referred yet",
+        title: "Referrals",
+        buttonText: "",
+        hideButton: false,
+        onTap: () {});
   }
 }
