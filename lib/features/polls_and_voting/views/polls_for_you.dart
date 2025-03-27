@@ -19,8 +19,9 @@ import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
 class PollsForYou extends ConsumerStatefulWidget {
-  const PollsForYou({super.key, });
-
+  const PollsForYou({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PollsForYouState();
@@ -90,7 +91,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                             const Gap(3),
                             Text('${poll.userData?.firstName?.capitalizeFirst}', style: wayaTheme.textTheme.titleLarge),
                             const Gap(3),
-                            Text(' • ${WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
+                            Text(
+                              ' • ${WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
                               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w400,
@@ -110,10 +112,10 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                       onTap: () {
                                         WayaNav.goBack();
                                         Share.share(
-                                          WayaValueHelper.getShareableUrl(WayaAppRoutes.getPollDetailsPage('${poll.id}')),
+                                          WayaValueHelper.getShareableUrl(
+                                              WayaAppRoutes.getPollDetailsPage('${poll.id}')),
                                           subject: 'Share Poll',
                                         );
-
                                       },
                                       asset: WayaAssets.icons.genSet.share
                                           .svg(fit: BoxFit.none, height: 20, color: WayaColors.greyColor600),
@@ -400,7 +402,9 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           Text(
                             name,
                             style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 14.sp, fontWeight: FontWeight.w600, color: Theme.of(ctx).colorScheme.primary600),
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(ctx).colorScheme.primary600),
                           ),
                         ],
                       ),

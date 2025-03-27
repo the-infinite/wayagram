@@ -11,8 +11,14 @@ import 'package:wayagram/features/shop/widgets/about_product.dart';
 import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
 
 class SellerBidDetails extends ConsumerWidget {
-  static const route = '/seller-bid-details';
-  const SellerBidDetails({super.key});
+  static const route = '/quotation/seller/bid';
+  final String id;
+
+  //? This is fine.
+  const SellerBidDetails({
+    super.key,
+    required this.id,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,9 +63,7 @@ class SellerBidDetails extends ConsumerWidget {
               color: wayaTheme.colorScheme.primary50,
             ),
             const Gap(30),
-            AboutProduct(
-                title: 'Product Name',
-                content: 'Samsung S24 Ultra'),
+            AboutProduct(title: 'Product Name', content: 'Samsung S24 Ultra'),
             const Gap(15),
             AboutProduct(title: 'Brand Name', content: 'Samsung'),
             const Gap(15),
@@ -70,16 +74,13 @@ class SellerBidDetails extends ConsumerWidget {
                   child: AboutProduct(title: 'Product Category', content: 'Technology'),
                 ),
                 Expanded(
-                  child: AboutProduct(
-                      title: 'Product Condition', content: 'Brand New'),
+                  child: AboutProduct(title: 'Product Condition', content: 'Brand New'),
                 )
               ],
             ),
             const Gap(15),
             AboutProduct(
-                title: 'Product Description',
-                content:
-                'Samsung S22 Ultra 5G Fairly Used in good condition. Graphite'),
+                title: 'Product Description', content: 'Samsung S22 Ultra 5G Fairly Used in good condition. Graphite'),
             const Gap(15),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,7 +132,7 @@ class SellerBidDetails extends ConsumerWidget {
               textColor: wayaTheme.colorScheme.greyColor900,
               border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-              //  viewModel.updateDeliveryStatus(context);
+                //  viewModel.updateDeliveryStatus(context);
               },
               text: "Change Delivery Status",
               leadingIcon: SvgPicture.asset(
@@ -146,7 +147,7 @@ class SellerBidDetails extends ConsumerWidget {
               textColor: wayaTheme.colorScheme.greyColor900,
               border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () {
-               // viewModel.updateOrderStatus(context);
+                // viewModel.updateOrderStatus(context);
               },
               text: "Change Order Status",
               leadingIcon: SvgPicture.asset(

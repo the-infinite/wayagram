@@ -44,6 +44,49 @@ enum BidActionAuthor {
   vendor,
 }
 
+enum QuotationOrderStatus {
+  @JsonValue('in-progress')
+  inProgress._('in-progress'),
+
+  @JsonValue('delivered')
+  completed._('delivered'),
+
+  @JsonValue('cancelled')
+  failed._('cancelled');
+
+  final String value;
+  const QuotationOrderStatus._(this.value);
+}
+
+enum QuotationDeliveryStatus {
+  pending,
+  processing,
+
+  @JsonValue('ready-for-dispatch')
+  readyForDispatch,
+
+  @JsonValue('in-transit')
+  inTransit,
+
+  @JsonValue('out-for-delivery')
+  outForDelivery,
+
+  delivered,
+}
+
+enum QuotationPickupStatus {
+  pending,
+
+  @JsonValue('ready-for-pickup')
+  ready,
+
+  @JsonValue('pickup-scheduled')
+  scheduled,
+
+  @JsonValue('pickup-completed')
+  collected,
+}
+
 @JsonSerializable()
 class BuyRequestModel {
   final String id;
@@ -243,4 +286,43 @@ class BidActionModel {
     result.removeWhere((key, value) => value == null);
     return result;
   }
+}
+
+@JsonSerializable()
+class BidOrderModel {
+  final String id;
+  final String buyerId;
+  final String vendorId;
+  final String shopId;
+  final String bidId;
+  final String requestId;
+  final QuotationOrderStatus orderStatus;
+  final String totalAmount;
+  final String deliveryAddress;
+  final bool isPaid;
+  final String? token;
+  final bool isDeleted;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  // Construct.
+  BidOrderModel({
+    required this.id,
+    required this.buyerId,
+    required this.vendorId,
+    required this.shopId,
+    required this.bidId,
+    required this.requestId,
+    required this.orderStatus,
+    required this.totalAmount,
+    required this.deliveryAddress,
+    required this.isPaid,
+    required this.token,
+    required this.isDeleted,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory BidOrderModel.fromJson(Map<String, dynamic> json) => _$BidOrderModelFromJson(json);
+  Map<String, dynamic> toJson() => _$BidOrderModelToJson(this);
 }

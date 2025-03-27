@@ -10,9 +10,9 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/buyer/views/create_request/create_request.dart';
 import 'package:wayagram/features/quotation/buyer/views/my_request.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
+import 'package:wayagram/features/shop/seller/views/seller_shop/seller_shop.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 import 'buy_request.dart';
-import 'manage_shop/manage_shop_quotation.dart';
 
 class WayaBuyerQuotation extends ConsumerStatefulWidget {
   const WayaBuyerQuotation({super.key});
@@ -94,8 +94,7 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation> with Si
               ? BuyRequests()
               : _selectedIndex == 1
                   ? MyRequests()
-                  : ManageShopQuotation()
-          //AllOrders()
+                  : SellerShop()
         ],
       ),
     );
