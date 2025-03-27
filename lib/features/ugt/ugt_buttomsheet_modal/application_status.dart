@@ -47,7 +47,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
       if (widget.post?.status?.toLowerCase() == "approved") {
         ref
             .read(postProvider.notifier)
-            .fetchSingleContestantDetails(widget.post?.contestId ?? "",
+            .fetchSingleContestantDetails(ref,widget.post?.contestId ?? "",
                 widget.post?.userId ?? "")
             .then((model) {
           if (model != null) {

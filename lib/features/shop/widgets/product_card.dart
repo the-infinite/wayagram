@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 
@@ -39,7 +40,7 @@ class ProductCard extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-        WayaNav.toNamed(ProductDetail.route, arguments: product);
+        WayaNav.toNamed(WayaAppRoutes.getProductDetailScreen(product.id));
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -215,7 +216,7 @@ class SellerProductCard extends ConsumerWidget {
 
     return GestureDetector(
       onTap: () {
-       WayaNav.toNamed(ProductDetail.route, arguments: product);
+        WayaNav.toNamed(WayaAppRoutes.getProductDetailScreen(product.id));
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,

@@ -149,6 +149,7 @@ class Docs {
     this.isPaid,
     this.isSettled,
     this.question,
+    this.description,
     this.url,
     this.startDate,
     this.endDate,
@@ -170,6 +171,7 @@ class Docs {
     isPaid = json['isPaid'];
     isSettled = json['isSettled'];
     question = json['question'];
+    description = json['description'];
     url = json['url'];
     startDate = json['startDate'];
     endDate = json['endDate'];
@@ -185,6 +187,7 @@ class Docs {
       json['choices'].forEach((v) {
         choices?.add(Choices.fromJson(v));
       });
+      choices?.sort((first, second)=> (second.voteCount ?? 0) - (first.voteCount ?? 0) );
     }
     userData =
         json['user_data'] != null ? UserData.fromJson(json['user_data']) : null;
@@ -197,6 +200,7 @@ class Docs {
   bool? isPaid;
   bool? isSettled;
   String? question;
+  String? description;
   String? url;
   String? startDate;
   String? endDate;
@@ -217,6 +221,7 @@ class Docs {
     bool? isPaid,
     bool? isSettled,
     String? question,
+    String? description,
     String? url,
     String? startDate,
     String? endDate,
@@ -235,6 +240,7 @@ class Docs {
         isPaid: isPaid ?? this.isPaid,
         isSettled: isSettled ?? this.isSettled,
         question: question ?? this.question,
+        description: description ?? this.description,
         url: url ?? this.url,
         categories: categories ?? this.categories,
         startDate: startDate ?? this.startDate,
@@ -255,6 +261,7 @@ class Docs {
     map['isPaid'] = isPaid;
     map['isSettled'] = isSettled;
     map['question'] = question;
+    map['description'] = description;
     map['url'] = url;
     map['startDate'] = startDate;
     map['endDate'] = endDate;
@@ -553,7 +560,7 @@ class Choices {
   num? order;
   String? createdAt;
   String? updatedAt;
-  num? voteCount;
+  int? voteCount;
   num? uniqueVoters;
   num? votePercentage;
   num? uniqueVotersPercentage;
@@ -566,7 +573,7 @@ class Choices {
     num? order,
     String? createdAt,
     String? updatedAt,
-    num? voteCount,
+    int? voteCount,
     num? uniqueVoters,
     num? votePercentage,
     num? uniqueVotersPercentage,

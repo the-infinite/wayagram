@@ -41,6 +41,10 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/products/get?page=$page');
   }
 
+  Future<WayaRequestResponse> getProductById({required String id}) {
+    return get('$serviceUrl/products/get?id=$id');
+  }
+
   ///products/:productId/shop/:shopId
 
   Future<WayaRequestResponse> deleteProductRequest(
@@ -95,14 +99,10 @@ class ShopRepository extends BaseRepository {
       'type': type
     };
 
-  
-
     if (productId != null) payload['productId'] = productId;
     if (shopId != null) payload['shopId'] = shopId;
 
-      print("Ewfwefewfwefewfewfwefwef $payload");
-
-  
+    print("Ewfwefewfwefewfewfwefwef $payload");
 
     return post("$serviceUrl/rating/create", payload);
   }

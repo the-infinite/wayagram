@@ -10,9 +10,9 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/buyer/views/create_request/create_request.dart';
 import 'package:wayagram/features/quotation/buyer/views/my_request.dart';
 import 'package:wayagram/features/quotation/buyer/vm/create_request_vm.dart';
+import 'package:wayagram/features/shop/seller/views/seller_shop/seller_shop.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 import 'buy_request.dart';
-import 'manage_shop/manage_shop_quotation.dart';
 
 class WayaBuyerQuotation extends ConsumerStatefulWidget {
   const WayaBuyerQuotation({super.key});
@@ -68,7 +68,6 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation> with Si
                       WayaAssets.icons.create.svg(
                         colorFilter: ColorFilter.mode(wayaTheme.colorScheme.primary200, BlendMode.srcIn),
                       ),
-
                       const Gap(8),
                       Text(
                         "Create Buying Request",
@@ -78,6 +77,13 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation> with Si
                     ],
                   ),
                   callback: () {
+                    //? Show the coming soon modal.
+                    if (WayaConstants.isProduction) {
+                      WayaNavigationHelper.showComingSoonModal(true);
+                      return;
+                    }
+
+                    //? Now, continue as needed in staging.
                     WayaNav.toNamed(CreateRequest.route);
                   },
                   color: wayaTheme.colorScheme.primary50,
@@ -88,8 +94,7 @@ class _WayaBuyerQuotationState extends ConsumerState<WayaBuyerQuotation> with Si
               ? BuyRequests()
               : _selectedIndex == 1
                   ? MyRequests()
-                  : ManageShopQuotation()
-          //AllOrders()
+                  : SellerShop()
         ],
       ),
     );

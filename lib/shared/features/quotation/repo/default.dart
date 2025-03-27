@@ -92,7 +92,7 @@ class QuotationRepository extends BaseRepository {
     return patch('$serviceUrl/vendor/bid-response', action.toJson());
   }
 
-  Future<WayaRequestResponse> retrieveOrder({required String requestId}) {
+  Future<WayaRequestResponse> retrieveOrder(String requestId) {
     return get("$serviceUrl/order/order/$requestId");
   }
 
@@ -100,7 +100,7 @@ class QuotationRepository extends BaseRepository {
     return get("$serviceUrl/order/track-delivery/$requestId");
   }
 
-  Future<WayaRequestResponse> updateOrderStatus({required String status, required String orderId}) {
+  Future<WayaRequestResponse> updateOrderStatus(String status, String orderId) {
     final payload = {"status": status};
     return patch('$serviceUrl/order/status/$orderId', payload);
   }
@@ -120,8 +120,8 @@ class QuotationRepository extends BaseRepository {
     return patch('$serviceUrl/order/payment-status/$orderId', payload);
   }
 
-  Future<WayaRequestResponse> completeOrder({required String status, required String orderId}) {
-    final payload = {"token": status};
+  Future<WayaRequestResponse> completeOrder({required String token, required String orderId}) {
+    final payload = {"token": token};
     return patch('$serviceUrl/order/complete/$orderId', payload);
   }
 }

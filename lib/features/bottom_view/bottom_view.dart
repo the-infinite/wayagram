@@ -133,11 +133,65 @@ class _BottomViewState extends ConsumerState<BottomView> {
         final item = entry.value;
 
         final itemColor =
-            (_selectedIndex == index) ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.customBlack;
+            _selectedIndex == index ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.customBlack;
+
+        //? If this is a chat.
+        if (entry.value.isChat) {
+          return BottomNavigationBarItem(
+            icon: Consumer(builder: (context, wRef, _) {
+              final chats = wRef.watch(conversationProvider);
+
+              return Stack(
+                fit: StackFit.loose,
+                clipBehavior: Clip.none,
+                children: [
+                  //? The icon.
+                  SvgPicture.asset(
+                    item.icon,
+                    colorFilter: ColorFilter.mode(
+                      itemColor,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+
+                  //? Our counter.
+                  if (chats.totalUnreadCount > 0)
+                    Positioned(
+                      top: -5.h,
+                      right: -5.w,
+                      child: ClipPath(
+                        clipper: ShapeBorderClipper(
+                          shape: StadiumBorder(),
+                        ),
+                        child: ColoredBox(
+                          color: wayaTheme.colorScheme.primary,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5.w),
+                            child: Text(
+                              WayaValueHelper.formatNumber(chats.totalUnreadCount),
+                              style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                color: wayaTheme.colorScheme.white,
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            }),
+            label: item.label,
+          );
+        }
+
         return BottomNavigationBarItem(
           icon: SvgPicture.asset(
             item.icon,
-            colorFilter: ColorFilter.mode(itemColor, BlendMode.srcIn),
+            colorFilter: ColorFilter.mode(
+              itemColor,
+              BlendMode.srcIn,
+            ),
           ),
           label: item.label,
         );

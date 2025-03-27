@@ -14,6 +14,7 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/create_poll_response.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard.dart';
@@ -73,17 +74,17 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     allChoices = List.from(state.choices);
 
     allChoices
-        .add(Choice(image: null, description: TextEditingController(text: ''), text: TextEditingController(text: '')));
+        .add(Choice(image: null, description: TextEditingController(text: ''),
+        text: TextEditingController(text: '')));
 
     state = state.copyWith(choices: allChoices);
   }
 
-  void removeChoice() {
+  void removeChoice(int index) {
     List<Choice> allChoices = [];
     allChoices = List.from(state.choices);
 
-    allChoices
-        .remove(Choice(image: null, description: TextEditingController(text: ''), text: TextEditingController(text: '')));
+    allChoices.removeAt(index);
 
     state = state.copyWith(choices: allChoices);
   }
@@ -513,7 +514,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
   }
 
   Future<void> createFreePoll(BuildContext context, String question, String startDate, String endDate, String maxVotes,
-      String choiceText, String description, String feePerVote, String pollType) async {
+      String choiceText, String description, String feePerVote, String pollType, String desc) async {
     //final List<Map<String, dynamic>> choices = [];
 
     final Map<String, dynamic> choiceMap = {};
@@ -532,10 +533,12 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       'question': question,
       'startDate': startDate,
       'endDate': endDate,
+      'description': desc,
       //'feePerVote': feePerVote,
       'maxVotesPerUser': maxVotes,
       //'ispaid': true,
       'pollType': pollType,
+
       ...choiceMap
     };
 
@@ -550,6 +553,8 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       final response = await _pollAndVotingRepository.createPoll(formdata);
       if (response.success && context.mounted) {
         CreatePollResponse createPollResponse = CreatePollResponse.fromJson(response.data);
+        await getAllPolls(page: 1);
+        await getMyPolls(page: 1);
         WayaUtils.showModalSheet(
           context,
           child: PollsModal(url: '${createPollResponse.data!.url}'),
@@ -575,7 +580,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
   }
 
   Future<void> createPoll(BuildContext context, String question, String startDate, String endDate, String maxVotes,
-      String choiceText, String description, String feePerVote, String pollType) async {
+      String choiceText, String description, String feePerVote, String pollType, String desc) async {
     //final List<Map<String, dynamic>> choices = [];
 
     final Map<String, dynamic> choiceMap = {};
@@ -596,6 +601,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       'endDate': endDate,
       'feePerVote': feePerVote,
       'maxVotesPerUser': maxVotes,
+      'description': desc,
       //'ispaid': true,
       'pollType': pollType,
       ...choiceMap
@@ -611,6 +617,8 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.createPoll(formdata);
       if (response.success && context.mounted) {
+        await getAllPolls(page: 1);
+        await getMyPolls(page: 1);
         showDialog(
             useRootNavigator: false,
             context: context,
@@ -632,18 +640,22 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
   }
 
   Future<void> castYourVote(
-      String amountPaid, String qty, String choiceId, String pollId, ctx, candidateName, votingLink) async {
+  String amountPaid, String qty, String choiceId,
+      String pollId, ctx, candidateName, votingLink) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pollAndVotingRepository.castVote(amountPaid, qty, choiceId, pollId);
+      final response = await _pollAndVotingRepository.castVote(amountPaid, qty,
+          choiceId, pollId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
+        await getAllPolls(page: 1);
         WayaNav.goBack();
         WayaUtils.showModalSheet(
           ctx,
           child: VoteSuccessModal(
             candidateName: candidateName,
             votingLink: votingLink,
+            pollId: pollId,
           ),
         );
 
@@ -661,6 +673,104 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  Future<bool> verifyWalletPin(String pin, ctx) async {
+    final response = await _pollAndVotingRepository
+        .confirmWalletPin(ConfirmWalletPin(userId: ConversationState.self.id ?? "", pin: pin));
+    if (response.success) {
+      return true;
+    } else if( response.data['error'] == 'User hasn\'t set wallet pin yet'){
+
+      ScaffoldMessenger.of(ctx).showSnackBar(
+        SnackBar(
+          content: Text(
+            'Kindly set your wallet pin',
+            style:
+            TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+          ),
+          backgroundColor: WayaColors.primary,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    }
+    else {
+      return false;
+    }
+    return false;
+  }
+
+
+
+  Future<void> castFreeVote(
+       num qty, String choiceId,
+      String pollId, ctx, candidateName, votingLink) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.castFreeVote(qty, choiceId, pollId);
+      state = state.copyWith(isLoading: false);
+      if (response.success && ctx.mounted) {
+        //WayaNav.goBack();
+        await getAllPolls(page: 1);
+      await  WayaUtils.showModalSheet(
+          ctx,
+          child: VoteSuccessModalTwo(
+            candidateName: candidateName,
+            votingLink: votingLink,
+            pollId: pollId,
+          ),
+        );
+
+        _logger.i(response.data['data']);
+      } else if (response.data['error'] == 'Insufficient wallet balance') {
+        WayaUtils.showModalSheet(ctx, child: VoteInsufficientModal());
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.polls,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> getActivePolls(int page) async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.getActivePolls(ConversationState.self.id, page);
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
+        state = state.copyWith(fetchAllPols: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      print(e);
+    } finally {}
+  }
+
+  Future<void> getInActivePolls(int page) async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.getInActivePolls(ConversationState.self.id, page);
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
+        state = state.copyWith(fetchAllPols: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      print(e);
+    } finally {}
   }
 
   Future<void> deletePoll(ctx, {required String postId}) async {
@@ -763,7 +873,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
-  Future<void> getPollsById(String pollId) async {
+  Future<GetAllPollModel?> getPollsById(String pollId) async {
     state = state.copyWith(isLoading: true);
     final response = await _pollAndVotingRepository.getAllPollsById(pollId);
     state = state.copyWith(isLoading: false);

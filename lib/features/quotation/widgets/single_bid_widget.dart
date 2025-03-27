@@ -23,10 +23,7 @@ class SingleBidWidget extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         if (isSeller) {
-          WayaNav.toNamed('/seller-bid-details', arguments: "id");
-          //viewModel.sellerBidAction(context);
-        } else {
-          WayaNav.toNamed('/seller-bid-details', arguments: "id");
+          WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id));
         }
       },
       child: Column(
@@ -145,20 +142,21 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
    */
   }
 
-  Future<void> sellerBidAction(BuildContext context) async {
+  Future<void> sellerBidAction(BuildContext context, QuotationBidModel bid) async {
     WayaUtils.showNotice(
-        context: context,
-        buttonText: 'Add Delivery Details',
-        secondButtonText: 'See your Order Details',
-        title: 'Populate Delivery Details',
-        message: "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
-        onPress: () async {
-          await addDeliveryDetail(context);
-        },
-        onCancel: () {
-          WayaNav.toNamed('/seller-bid-details', arguments: "id");
-        },
-        icon: Image.asset('assets/images/shop/delivery-van.png'));
+      context: context,
+      buttonText: 'Add Delivery Details',
+      secondButtonText: 'See your Order Details',
+      title: 'Populate Delivery Details',
+      message: "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
+      onPress: () async {
+        await addDeliveryDetail(context);
+      },
+      onCancel: () {
+        WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id));
+      },
+      icon: Image.asset('assets/images/shop/delivery-van.png'),
+    );
   }
 }
 

@@ -50,6 +50,9 @@ enum WayaDebugEventModule {
   /// An event that occurred in the pages module.
   pages,
 
+  /// An event that occurred in the notifications module.
+  notifications,
+
   /// An event that occurred in the follower and following module.
   relationships,
 

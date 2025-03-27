@@ -11,16 +11,8 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/donation/donation_modal/donation_modal.dart';
-import 'package:wayagram/features/donation/view/all_donations.dart';
-import 'package:wayagram/features/donation/view/my_donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
-import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
-import 'package:wayagram/features/kyc/view/kyc_update.dart';
-import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
 
 class DonationDetails extends ConsumerStatefulWidget {
@@ -137,7 +129,11 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.primary500),
             callback: () {
-              Share.share('${args['url']}', subject: 'Share Options');
+              Share.share(
+                WayaValueHelper.getShareableUrl(WayaAppRoutes.getDonationDetailsPage('${args['id']}')),
+                subject: 'Share Donation',
+              );
+              // Share.share('${args['url']}', subject: 'Share Options');
             },
             color: wayaTheme.colorScheme.white,
           ),
@@ -193,7 +189,6 @@ class _DonationDetailsState extends ConsumerState<DonationDetails> with SingleTi
                     ),
                   );
                 }*/
-
                 WayaUtils.showModalSheet(
                   context,
                   child: DonationModal(

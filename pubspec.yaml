@@ -2,7 +2,7 @@ name: wayagram
 description: The codebase for the entire WayaGram application
 homepage: https://wayagram.ng
 publish_to: "none" # NEVER PUBLISH TO pub.dev!
-version: 1.91.13+162
+version: 1.91.15+164
 
 
 environment:
@@ -89,6 +89,8 @@ dependencies:
   gallery_saver_plus: ^3.2.4
   #for native splash screen
   flutter_native_splash: ^2.4.5
+  #for pdf generation
+  pdf: ^3.11.3
   
 
 

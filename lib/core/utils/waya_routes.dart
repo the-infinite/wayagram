@@ -71,6 +71,8 @@ import 'package:wayagram/features/quotation/seller/views/bids/map_screen.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/see_seller_bids.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_bid_details.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/seller_settlement.dart';
+import 'package:wayagram/features/referral/view/referral_history_page.dart';
+import 'package:wayagram/features/referral/view/referral_page.dart';
 import 'package:wayagram/features/role_access/view/add_team_member_page.dart';
 import 'package:wayagram/features/role_access/view/member_details_page.dart';
 import 'package:wayagram/features/role_access/view/role_access_page.dart';
@@ -153,13 +155,13 @@ class WayaAppRoutes {
     LoginPage.route: () => LoginPage(),
     WelcomeBackPage.route: () => WelcomeBackPage(),
     BottomView.route: () => BottomView(),
-    ProductDetail.route: () => ProductDetail(),
+    ProductDetail.route: () => ProductDetail(id: WayaNav.search['id'].toString()),
     OrderDetails.route: () => OrderDetails(),
     ConfirmOrderDelivery.route: () => ConfirmOrderDelivery(),
     CartView.route: () => CartView(),
     AllSellerOrders.route: () => AllSellerOrders(),
     SellerOrderDetails.route: () => SellerOrderDetails(),
-    SellerBidDetails.route: () => SellerBidDetails(),
+    SellerBidDetails.route: () => SellerBidDetails(id: WayaNav.search['id'].toString()),
     SellerSettlement.route: () => SellerSettlement(),
     SeeSellerBids.route: () => SeeSellerBids(id: WayaNav.search['id'].toString()),
     SeeBuyerBids.route: () => SeeBuyerBids(id: WayaNav.search['id'].toString()),
@@ -203,7 +205,10 @@ class WayaAppRoutes {
     EditContestantProfile.route: () => EditContestantProfile(),
     ViewSingleContestantData.route: () => ViewSingleContestantData(),
     ContestActiveDisqualify.route: () => ContestActiveDisqualify(),
-    ContestProfilePage.route: () => ContestProfilePage(),
+    ContestProfilePage.route: () => ContestProfilePage(
+          id: WayaNav.search['id'].toString(),
+          contest: WayaNav.search['contest'].toString(),
+        ),
     ManageApplicationContest.route: () => ManageApplicationContest(),
     ManageStateSingleContest.route: () => ManageStateSingleContest(),
     DashboardContestPage.route: () => DashboardContestPage(),
@@ -224,8 +229,8 @@ class WayaAppRoutes {
     CreateProfile.route: () => CreateProfile(),
     RegisterContest.route: () => RegisterContest(),
     AdminContestDetails.route: () => AdminContestDetails(
-       id: WayaNav.search['id'].toString(),
-    ),
+          id: WayaNav.search['id'].toString(),
+        ),
     ShareVotingLink.route: () => ShareVotingLink(),
     DeliveryRequest.route: () => DeliveryRequest(),
     SellerProducts.route: () => SellerProducts(),
@@ -310,7 +315,7 @@ class WayaAppRoutes {
     DisputeDetail.route: () => DisputeDetail(id: WayaNav.search['id'].toString()),
     ProductSearchResult.route: () => ProductSearchResult(),
     LogsAndAuditTrials.route: () => LogsAndAuditTrials(),
-    LoginActivity.route: () => LoginActivity(),
+    AccountActivity.route: () => AccountActivity(),
     VisitedPage.route: () => VisitedPage(),
     UserAction.route: () => UserAction(),
     CmsClicks.route: () => CmsClicks(),
@@ -323,7 +328,9 @@ class WayaAppRoutes {
     RoleAccessPage.route: () => RoleAccessPage(),
     AddTeamMemberPage.route: () => AddTeamMemberPage(),
     MemberDetailsPage.route: () => MemberDetailsPage(),
-    VerifyEmail.route: () => VerifyEmail()
+    VerifyEmail.route: () => VerifyEmail(),
+    ReferralPage.route: () => ReferralPage(),
+    ReferralHistoryPage.route: () => ReferralHistoryPage(),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -392,9 +399,31 @@ class WayaAppRoutes {
   /// for the details of a single event.
   static String getEventDetailsScreen(String id) => "${EventDetail.route}?id=$id";
 
-    /// Helper that shows an example of the generator route pattern with GetX and
+  /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
   static String getContestDetailRoute(String id) => "${AdminContestDetails.route}?id=$id";
+
+  /// Helper that shows an example of the generator route pattern with GetX and
+  /// a little bit of hard coded magic.
+  static String getContestantProfileRoute(String id, String contestId) =>
+      "${ContestProfilePage.route}?id=$id&contest=$contestId";
+
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single poll by its ID.
+  static String getPollDetailsPage(String id) => "${PollAndVoting.route}?id=$id";
+
+  /// Helper function used to generate the route that takes a user to the screen
+  /// for the details of a single product.
+  static String getProductDetailScreen(String id) => "${ProductDetail.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single donation by its ID.
+  static String getDonationDetailsPage(String id) => "${Donations.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single 
+  static String getBidDetailsScreen(String id) => "${SellerBidDetails.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages {

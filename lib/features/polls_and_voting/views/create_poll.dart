@@ -59,8 +59,6 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
 
               }
             } : null,
-            //centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Create Poll'),
-            height: 30,
             text: 'Create',
             isLoading: viewModel.isLoading,
             horizontalPadding: 12,
@@ -105,11 +103,6 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                         children: [
                           WayaTextFormField(
                             keyboardType: TextInputType.text,
-                            // onChanged: (value){
-                            //   viewModel.pollTitle.text = value;
-                            //  //formData['pollTitle'] = value;
-                            //
-                            // },
                             controller: viewModel.pollTitle,
                             hintText: 'Enter Poll Title',
                             borderColor: formState.hasError &&
@@ -181,9 +174,8 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
 
                     const Gap(10),
                     FormField<String>(validator: (value) {
-                      //if (formData['pollCompanyDescription'].isEmpty) {
                       if (viewModel.pollCompanyDescription.text.isEmpty) {
-                        return 'Description is required';
+                        return null;
                       }
 
                       return null;
@@ -194,10 +186,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                           WayaTextFormField(
                             line: 5,
                             keyboardType: TextInputType.text,
-                            // onChanged: (value){
-                            //   //formData['pollCompanyDescription'] = value;
-                            //
-                            // },
+
                             controller: viewModel.pollCompanyDescription,
                             hintText: 'Describe the company this poll is taking place',
                             borderColor: formState.hasError &&
@@ -205,11 +194,10 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 viewModel.pollCompanyDescription.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
-                            label: 'Description of the company',
+                            label: 'Description of the company (Optional)',
                           ),
                           if (formState.hasError &&
                               viewModel.pollCompanyDescription.text.isEmpty
-                              //formData['pollCompanyDescription'].isEmpty
                           )
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
@@ -259,41 +247,6 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                         ],
                       );
                     }),
-                    ///
-
-                    /*FormField<String>(validator: (value) {
-                      if (viewModel.pollType.isEmpty) {
-                        return 'Poll Type is required';
-                      }
-                      return null;
-                    }, builder: (formState) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          WayaSelectField<String>(
-                              height: 0.3,
-                              label: "Poll Type",
-                              uniqueKey: 'poll_type',
-                              hintText: 'Select Poll Type',
-                              items: ref.read(createPollVotingProvider.notifier).restructuredPollType(),
-                              onSelected: (value) => ref
-                                  .read(createPollVotingProvider.notifier)
-                                  .update(value, "pollType")),
-                          if (formState.hasError &&
-                              viewModel.pollType.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Text(
-                                formState.errorText!,
-                                style: TextStyle(
-                                    color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
-                              ),
-                            ),
-                        ],
-                      );
-                    }),*/
-
                     const Gap(20),
 
                     Row(

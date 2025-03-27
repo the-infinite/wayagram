@@ -1,5 +1,6 @@
 import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 
 class PollAndVotingRepository extends BaseRepository {
   static const serviceUrl = "wayagram-products/api/v1";
@@ -20,18 +21,39 @@ class PollAndVotingRepository extends BaseRepository {
     return post("$serviceUrl/client/polls/$pollId/votes", payload, showErrors: true);
   }
 
+  Future<WayaRequestResponse> castFreeVote( num qty, String choiceId, String pollId) {
+    final payload = {
+      "choiceSelections": [
+        {"choiceId": choiceId, "quantity": qty}
+      ],
+      "paymentMethod": "WALLET",
+      //"amountPaid": amountPaid
+    };
+
+    return post("$serviceUrl/client/polls/$pollId/votes", payload, showErrors: true);
+  }
+
   Future<WayaRequestResponse> deletePoll(pollId) {
     return delete("$serviceUrl/client/polls/$pollId", showErrors: true);
   }
 
   Future<WayaRequestResponse> getAllPolls(int page, [int limit = 15, String? creatorId]) {
     return get(
-        "$serviceUrl/client/polls?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC${creatorId != null ? '&creatorId=$creatorId' : ''}");
+        "$serviceUrl/client/polls?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC&status=active${creatorId != null ? '&creatorId=$creatorId' : ''}");
   }
 
   Future<WayaRequestResponse> getMyPolls(String creatorId, int page) {
-    return get("$serviceUrl/client/polls?page=$page&creatorId=$creatorId&orderBy=createdAt&orderDirection=DESC");
+    return get("$serviceUrl/client/polls?page=$page&creatorId=$creatorId&orderBy=createdAt&orderDirection=DESC&status=active");
   }
+
+  Future<WayaRequestResponse> getActivePolls(String creatorId, int page) {
+    return get("$serviceUrl/client/polls?page=$page&creatorId=$creatorId&orderBy=createdAt&orderDirection=DESC&status=active");
+  }
+
+  Future<WayaRequestResponse> getInActivePolls(String creatorId, int page) {
+    return get("$serviceUrl/client/polls?page=$page&creatorId=$creatorId&orderBy=createdAt&orderDirection=DESC&status=inactive");
+  }
+
 
   Future<WayaRequestResponse> getDashboardPolls(String pollId) {
     return get("$serviceUrl/client/polls/$pollId/votes");
@@ -43,6 +65,10 @@ class PollAndVotingRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getAllPollsById(String id) {
     return get("$serviceUrl/client/polls/$id");
+  }
+
+  Future<WayaRequestResponse> confirmWalletPin(ConfirmWalletPin payload) {
+    return post('wayagram-wallet/api/v2/client/wallet-pin/confirm-pin', payload.toJson());
   }
 
   Future<WayaRequestResponse> getAPollsByUrl(String url) {

@@ -43,6 +43,7 @@ class QuotationsState {
   final int totalBids;
   final bool hasNextBid;
   final List<QuotationBidModel> bids;
+  final List<BuyRequestModel> bidRequests;
   final String? bidStatus;
   final BidDashboardModel? overview;
 
@@ -55,6 +56,16 @@ class QuotationsState {
   final List<BuyRequestModel> requests;
   final String? requestStatus;
 
+  // For orders.
+  final bool isLoadingOrders;
+  final int orderPage;
+  final int orderPages;
+  final int totalOrders;
+  final bool hasNextOrder;
+  final List<BidOrderModel> orders;
+  final String? orderStatus;
+
+  // Construct.
   QuotationsState({
     required this.hasLoadedBids,
     required this.hasLoadedRequests,
@@ -66,6 +77,7 @@ class QuotationsState {
     required this.totalBids,
     required this.hasNextBid,
     required this.bids,
+    required this.bidRequests,
     required this.bidStatus,
     required this.isLoadingRequests,
     required this.requestPage,
@@ -75,6 +87,13 @@ class QuotationsState {
     required this.requests,
     required this.requestStatus,
     required this.overview,
+    required this.isLoadingOrders,
+    required this.orderPage,
+    required this.orderPages,
+    required this.totalOrders,
+    required this.hasNextOrder,
+    required this.orders,
+    required this.orderStatus,
   });
 
   static final self = QuotationsState(
@@ -89,6 +108,7 @@ class QuotationsState {
     totalBids: 0,
     hasNextBid: false,
     bids: [],
+    bidRequests: [],
     bidStatus: null,
     requestPage: 1,
     requestPages: 1,
@@ -97,6 +117,13 @@ class QuotationsState {
     requests: [],
     requestStatus: null,
     overview: null,
+    isLoadingOrders: false,
+    orderPage: 1,
+    orderPages: 1,
+    totalOrders: 0,
+    hasNextOrder: false,
+    orders: [],
+    orderStatus: null,
   );
 
   static final others = QuotationsState(
@@ -111,6 +138,7 @@ class QuotationsState {
     totalBids: 0,
     hasNextBid: false,
     bids: [],
+    bidRequests: [],
     bidStatus: null,
     requestPage: 1,
     requestPages: 1,
@@ -119,6 +147,13 @@ class QuotationsState {
     requests: [],
     requestStatus: null,
     overview: null,
+    isLoadingOrders: false,
+    orderPage: 1,
+    orderPages: 1,
+    totalOrders: 0,
+    hasNextOrder: false,
+    orders: [],
+    orderStatus: null,
   );
 
   QuotationsState copyWith({
@@ -133,6 +168,7 @@ class QuotationsState {
     int? totalBids,
     bool? hasNextBid,
     List<QuotationBidModel>? bids,
+    List<BuyRequestModel>? bidRequests,
     String? bidStatus,
     int? requestPage,
     int? requestPages,
@@ -141,6 +177,13 @@ class QuotationsState {
     List<BuyRequestModel>? requests,
     String? requestStatus,
     BidDashboardModel? overview,
+    bool? isLoadingOrders,
+    int? orderPage,
+    int? orderPages,
+    int? totalOrders,
+    bool? hasNextOrder,
+    List<BidOrderModel>? orders,
+    String? orderStatus,
   }) {
     return QuotationsState(
       isLoadingBids: isLoadingBids ?? this.isLoadingBids,
@@ -154,6 +197,7 @@ class QuotationsState {
       totalBids: totalBids ?? this.totalBids,
       hasNextBid: hasNextBid ?? this.hasNextBid,
       bids: bids ?? this.bids,
+      bidRequests: bidRequests ?? this.bidRequests,
       bidStatus: bidStatus ?? this.bidStatus,
       requestPage: requestPage ?? this.requestPage,
       requestPages: requestPages ?? this.requestPages,
@@ -162,30 +206,13 @@ class QuotationsState {
       requests: requests ?? this.requests,
       requestStatus: requestStatus ?? this.requestStatus,
       overview: overview ?? this.overview,
+      isLoadingOrders: isLoadingOrders ?? this.isLoadingOrders,
+      orderPage: orderPage ?? this.orderPage,
+      orderPages: orderPages ?? this.orderPages,
+      totalOrders: totalOrders ?? this.totalOrders,
+      hasNextOrder: hasNextOrder ?? this.hasNextOrder,
+      orders: orders ?? this.orders,
+      orderStatus: orderStatus ?? this.orderStatus,
     );
-  }
-
-  String toJsonString() {
-    return {
-      'hasLoadedBids': hasLoadedBids,
-      'hasLoadedRequests': hasLoadedRequests,
-      'limit': limit,
-      'isUser': isUser,
-      'isLoadingBids': isLoadingBids,
-      'bidPage': bidPage,
-      'bidPages': bidPages,
-      'totalBids': totalBids,
-      'hasNextBid': hasNextBid,
-      'bids': bids.map((bid) => bid.toJson()).toList(),
-      'bidStatus': bidStatus,
-      'isLoadingRequests': isLoadingRequests,
-      'requestPage': requestPage,
-      'requestPages': requestPages,
-      'totalRequests': totalRequests,
-      'hasNextRequest': hasNextRequest,
-      'requests': requests.map((request) => request.toJson()).toList(),
-      'requestStatus': requestStatus,
-      'overview': overview?.toJson(),
-    }.toString();
   }
 }

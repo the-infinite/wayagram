@@ -5,20 +5,19 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/components/modals/error.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/shared/features/quotation/model/default.dart';
+import 'package:wayagram/shared/features/quotation/vm/default.dart';
 
-class QuotationModal extends StatefulWidget {
+class QuotationModal extends StatelessWidget {
   const QuotationModal({super.key});
 
-  @override
-  State<QuotationModal> createState() => _QuotationModalState();
-}
-
-class _QuotationModalState extends State<QuotationModal> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -189,14 +188,9 @@ class _QuotationModalState extends State<QuotationModal> {
   }
 }
 
-class BidWonModal extends StatefulWidget {
+class BidWonModal extends StatelessWidget {
   const BidWonModal({super.key});
 
-  @override
-  State<BidWonModal> createState() => _BidWonModalState();
-}
-
-class _BidWonModalState extends State<BidWonModal> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -349,8 +343,8 @@ class EditOfferModal extends StatefulWidget {
   const EditOfferModal({
     super.key,
     required this.delta,
-    this.title = 'Edit your Offer',
-    this.hint = 'Update your base price for this request',
+    required this.title,
+    required this.hint,
     this.maxAmount = 5000000,
   });
 
@@ -416,7 +410,7 @@ class _EditOfferModalState extends State<EditOfferModal> {
             //? Our title.
             Text(
               widget.title,
-              style: wayaTheme.textTheme.titleLarge,
+              style: wayaTheme.textTheme.headlineLarge,
             ),
 
             // Some space.
@@ -593,6 +587,139 @@ class NumPadButton extends StatelessWidget {
                     color: Colors.grey.shade800,
                   ),
                 ),
+        ),
+      ),
+    );
+  }
+}
+
+class ExtendBidTime extends StatelessWidget {
+  final BuyRequestModel request;
+  final QuotationsNotifier notifier;
+  final ValueNotifier<String?> time;
+  final ValueNotifier<bool> isLoading;
+
+  //? Added button
+  const ExtendBidTime({
+    super.key,
+    required this.request,
+    required this.notifier,
+    required this.time,
+    required this.isLoading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    //? Parametrics to build the modal.
+    final wayaTheme = Theme.of(context);
+
+    //? Return the modal.
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            //? Our title.
+            Text(
+              "Extend Bid Time",
+              style: wayaTheme.textTheme.headlineLarge,
+            ),
+
+            // Some space.
+            Gap(3.h),
+
+            //? The subtitle.
+            Text(
+              "Give vendors more time to respond. Choose the additional time you'd like to add",
+              style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+                color: wayaTheme.colorScheme.greyColor500,
+              ),
+            ),
+
+            // Some more space.
+            Gap(30.h),
+
+            //? The text for extending time.
+            WayaTextStrip(
+              "Select the time you want to add",
+              dividerColor: wayaTheme.colorScheme.greyColor100,
+              textColor: wayaTheme.colorScheme.customBlack,
+              backgroundColor: wayaTheme.colorScheme.scaffoldColor2,
+              style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+
+            // Some space.
+            Gap(30.h),
+
+            //? The time options.
+            ValueListenableBuilder(
+              valueListenable: time,
+              builder: (context, selectedTime, _) => WayaSelectField(
+                hintText: "Select Time Increment",
+                multi: false,
+                items: [
+                  Select(label: "1 hour", value: "1"),
+                  ...List.generate(
+                    11,
+                    (index) => Select(
+                      label: "${index + 2} hours",
+                      value: "${index + 2}",
+                    ),
+                  ),
+                ],
+                value: selectedTime,
+                onSelected: (value) {
+                  time.value = value.first.value;
+                },
+              ),
+            ),
+
+            // Some space.
+            Gap(50.h),
+
+            //? Confirm the extension.
+            WayaProgressiveButton(
+              notifier: isLoading,
+              callback: () async {
+                //? Doing well.
+                if (time.value == null) {
+                  WayaUtils.showModalSheet(
+                    context,
+                    child: WayaErrorDialog(
+                      title: "You must select a bid time.",
+                    ),
+                  );
+                  return;
+                }
+
+                //? Now, the new time.
+                final newTime = request.bidEnd.add(Duration(hours: int.parse(time.value!)));
+
+                //? Now, go back.
+                await notifier.extendBidTime(request.id, newTime.toIso8601String());
+                WayaNav.goBack();
+              },
+              text: "Extend Bid Time",
+            ),
+
+            // Some space.
+            Gap(10.h),
+
+            //? Cancel this one.
+            WayaButton(
+              callback: () => WayaNav.goBack(),
+              textColor: wayaTheme.colorScheme.greyColor500,
+              color: wayaTheme.colorScheme.transparent,
+              border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+              text: "Cancel",
+            ),
+          ],
         ),
       ),
     );

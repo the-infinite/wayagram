@@ -38,13 +38,14 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
     final setUp = ref.watch(successfulSetupVmProvider);
-
+    print('MY POLL TYPE ${viewModel.pollType}');
     String startDate = viewModel.startDate;
     String endDate = viewModel.endDate;
     DateFormat format = DateFormat("yyyy-M-d");
     DateTime parsedDate = format.parse(startDate);
     DateTime parsedDate2 = format.parse(endDate);
     num daysLeft = parsedDate2.difference(parsedDate).inDays;
+    print('POLL DESCRIPTION ${viewModel.pollDescription.text}');
     return WayaScaffold(
         title: "Polls Summary",
         isLoading: viewModel.isLoading,
@@ -54,6 +55,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
+              print('DIALA POLL');
               if (viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.personal) {
 
                 WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -75,11 +77,12 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                     viewModel.voteNumber.text,
                     viewModel.pollDescription.text,
                     viewModel.firstChoiceDescription.text,
-                    viewModel.votePrice.text,
-                    viewModel.pollType.toLowerCase()
+                    '${int.tryParse(viewModel.votePrice.text)}',
+                    viewModel.pollType.toLowerCase(),
+                  viewModel.pollDescription.text,
                 );
                 //poll.reset();
-              }if(viewModel.pollType == 'free' &&  ConversationState.self.accountType == UserAccountType.personal){
+              }if(viewModel.pollType == 'free' &&  ConversationState.self.accountType == UserAccountType.business){
                 await ref.read(createPollVotingProvider.notifier).createFreePoll(
                     context,
                     viewModel.pollTitle.text,
@@ -88,8 +91,24 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                     viewModel.voteNumber.text,
                     viewModel.pollDescription.text,
                     viewModel.firstChoiceDescription.text,
-                    viewModel.votePrice.text,
-                    viewModel.pollType.toLowerCase()
+                    '${int.tryParse(viewModel.votePrice.text)}',
+                    viewModel.pollType.toLowerCase(),
+                  viewModel.pollDescription.text,
+                );
+                //poll.reset();
+              }
+              if(viewModel.pollType == 'free' &&  ConversationState.self.accountType == UserAccountType.personal){
+                await ref.read(createPollVotingProvider.notifier).createFreePoll(
+                    context,
+                    viewModel.pollTitle.text,
+                    viewModel.startDate,
+                    viewModel.endDate,
+                    viewModel.voteNumber.text,
+                    viewModel.pollDescription.text,
+                    viewModel.firstChoiceDescription.text,
+                    '${int.tryParse(viewModel.votePrice.text)}',
+                    viewModel.pollType.toLowerCase(),
+                   viewModel.pollDescription.text,
                 );
                 //poll.reset();
               }
@@ -122,8 +141,6 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),
 
-
-
             const Gap(40),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -132,7 +149,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
                     '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.startDate)}\n',
                     'Host', setUp.user?.user?.firstName.capitalizeFirst ?? ''),
                 summary('End Date', '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.endDate)}\n', 'Times to Vote', viewModel.voteNumber.text),
-                summary('Poll Type', '${viewModel.pollType.capitalizeFirst}\n', 'Prize per vote', '₦${viewModel.votePrice.text}'
+                summary('Poll Type', '${viewModel.pollType.capitalizeFirst}\n', viewModel.pollType == 'free'?'': 'Prize per vote',viewModel.pollType == 'free'?'': '₦${viewModel.votePrice.text}'
                 ),
                 summary('Duration', '$daysLeft Weeks\n' , '', ''),
               ],

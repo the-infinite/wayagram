@@ -87,7 +87,11 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                                   child: _buildActionNav(
                                     context: context,
                                     onTap: () {
-                                      Share.share('${poll.url}');
+                                      WayaNav.goBack();
+                                      Share.share(
+                                        WayaValueHelper.getShareableUrl(WayaAppRoutes.getPollDetailsPage('${poll.id}')),
+                                        subject: 'Share Poll',
+                                      );
                                     },
                                     asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none, height: 20, color: WayaColors.greyColor600),
                                     text: " Share Poll link",
@@ -122,15 +126,22 @@ class _MyPollsState extends ConsumerState<MyPolls> {
 
                         Text("${poll.question?.toLowerCase().capitalizeFirst}", style: wayaTheme.textTheme.titleLarge),
                         const Gap(3),
-                        if(poll.choices != null)
+                       /* if(poll.choices != null)
                           ...poll.choices!.map((e)=>
                               Text(
-                                '${e.description?.toLowerCase().capitalizeFirst}',
+                                '${poll.description?.toLowerCase().capitalizeFirst}',
                                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                     fontSize: 12.sp,
                                     fontWeight: FontWeight.w400,
                                     color: Theme.of(context).colorScheme.greyColor500 ),
-                              ),),
+                              ),),*/
+                        Text(
+                          '${poll.description?.capitalizeFirst}',
+                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w400,
+                              color: Theme.of(context).colorScheme.greyColor500),
+                        ),
 
                         const Gap(10),
                         Text(
