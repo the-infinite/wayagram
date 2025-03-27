@@ -79,6 +79,7 @@ class WayaValueHelper {
       WayaDebugEventModule.feed => 'Feed',
       WayaDebugEventModule.groups => 'Groups',
       WayaDebugEventModule.moments => "Moments",
+      WayaDebugEventModule.notifications => "Notifications",
       WayaDebugEventModule.pages => 'Pages',
       WayaDebugEventModule.polls => 'Polls',
       WayaDebugEventModule.posts => 'Posts',
@@ -108,9 +109,9 @@ class WayaValueHelper {
 
   /// Returns a shareable URL based on the provided route.
   /// The URL format depends on whether the application is in production mode.
-  /// 
+  ///
   /// [route] The route path to be transformed into a shareable URL
-  /// 
+  ///
   /// Returns a [String] containing the complete shareable URL
   static String getShareableUrl(String route) => switch (WayaConstants.isProduction) {
         true => "https://wayagram.ng$route",

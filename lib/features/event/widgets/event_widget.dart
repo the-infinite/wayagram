@@ -9,7 +9,6 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
-import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
 
 class EventWidget extends ConsumerWidget {

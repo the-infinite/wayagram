@@ -60,6 +60,15 @@ class _TabbedFeedWidgetState extends State<TabbedFeedWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 10.w,
                 children: [
+                  //? For all.
+                  WayaCheckButton(
+                    onTap: () => updater.value = 8,
+                    isSelected: selectedTab == 8,
+                    hasBackground: true,
+                    isExpanded: false,
+                    text: "All",
+                  ),
+
                   //? For posts.
                   WayaCheckButton(
                     onTap: () => updater.value = 0,
@@ -222,6 +231,102 @@ class _TabbedFeedWidgetState extends State<TabbedFeedWidget> {
 
                 PollsFeedWidget(
                   isExpanded: true,
+                ),
+
+                // Some space.
+                Gap(25.h),
+              ],
+            8 => [
+                GroupedWidgetHeader(
+                  onTap: () => WayaNav.toNamed(DisplayFeed.route),
+                  subTitle: 'Based on your interests',
+                  title: 'Discover',
+                ),
+
+                // Some space.
+                Gap(10.h),
+
+                //? For posts.
+                SharedPosts(
+                  isExpanded: false,
+                ),
+
+                // Some space.
+                Gap(25.h),
+
+                //? For pages.
+                GroupedWidgetHeader(
+                  onTap: () => WayaNav.toNamed('/pages'),
+                  subTitle: 'View and manage pages',
+                  title: 'Pages',
+                ),
+
+                // For pages.
+                Gap(10.h),
+
+                //? For pages.
+                PagesFeedWidget(
+                  isFollow: true,
+                  isManaged: true,
+                  isRecommended: true,
+                  isExpanded: false,
+                ),
+
+                // Some space.
+                Gap(25.h),
+
+                //? Groups
+                GroupedWidgetHeader(
+                  onTap: () => WayaNav.toNamed('/groups'),
+                  subTitle: 'View and manage groups',
+                  title: 'Groups',
+                ),
+
+                // Some space.
+                Gap(10.h),
+
+                //? For groups
+                GroupsFeedWidget(
+                  isGroupIJoined: true,
+                  isMyGroups: true,
+                  isRecommended: true,
+                  isExpanded: false,
+                ),
+
+                // Some space.
+                Gap(25.h),
+
+                //? For events.
+                GroupedWidgetHeader(
+                  onTap: () => WayaNav.toNamed(EventView.route),
+                  subTitle: 'Join upcoming activities',
+                  title: 'Events',
+                ),
+
+                // Some space.
+                Gap(10.h),
+
+                //? For shared events.
+                SharedEvent(
+                  isChatAndSocial: true,
+                  isExpanded: false,
+                ),
+
+                // Some space.
+                Gap(25.h),
+
+                //? For events.
+                GroupedWidgetHeader(
+                  onTap: () => WayaNav.toNamed('/poll-and-voting'),
+                  subTitle: 'Join upcoming activities',
+                  title: 'Polls and Voting',
+                ),
+
+                // Some space.
+                Gap(10.h),
+
+                PollsFeedWidget(
+                  isExpanded: false,
                 ),
 
                 // Some space.

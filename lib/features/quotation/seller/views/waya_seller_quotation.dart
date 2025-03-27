@@ -7,6 +7,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/buyer/views/buy_request.dart';
+import 'package:wayagram/features/quotation/buyer/views/create_request/create_request.dart';
 import 'package:wayagram/features/quotation/buyer/views/my_request.dart';
 import 'package:wayagram/features/quotation/seller/views/bid_dashboard/bid_dashboard.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
@@ -92,7 +93,14 @@ class _WayaSellerQuotationState extends ConsumerState<WayaSellerQuotation> with 
               ],
             ),
             callback: () {
-              WayaNav.toNamed('/create-request');
+              //? Show the coming soon modal.
+              if (WayaConstants.isProduction) {
+                WayaNavigationHelper.showComingSoonModal(true);
+                return;
+              }
+
+              //? Now, continue as needed in staging.
+              WayaNav.toNamed(CreateRequest.route);
             },
             color: wayaTheme.colorScheme.primary50,
           ),

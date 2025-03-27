@@ -391,7 +391,7 @@ class GroupNotifier extends ValueNotifier<int> {
   /// Utility function used to check whether or not a user is a member of a
   /// group.
   bool isMemberOf(String groupId) {
-    return joinedGroups.any((group) => group.id == groupId) || createdGroups.any((group) => group.id == groupId);
+    return joinedGroups.any((group) => group.id == groupId);
   }
 
   /// Refreshes the current state and triggers a rebuild of dependent widgets.
