@@ -91,6 +91,10 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     if (response.success) {
       return true;
     } else {
+      WayaSnackBar.showToast(
+        response.data["message"],
+      );
+
       return false;
     }
   }
@@ -102,6 +106,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     if (response.success) {
       return true;
     } else {
+      WayaSnackBar.showToast(
+        response.data["message"],
+      );
       return false;
     }
   }
@@ -117,7 +124,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       return true;
     } else {
       WayaSnackBar.showToast(
-        "Please try again later",
+        response.data["message"],
       );
       return false;
     }
@@ -130,6 +137,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     if (response.success) {
       return true;
     } else {
+      WayaSnackBar.showToast(
+        response.data["message"],
+      );
       return false;
     }
   }
@@ -153,6 +163,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       state = state.copyWith(stageList: [...list]);
       return true;
     } else {
+      WayaSnackBar.showToast(
+        response.data["message"],
+      );
       return false;
     }
   }
@@ -168,6 +181,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
       return true;
     } else {
+      WayaSnackBar.showToast(
+        response.data["message"],
+      );
       return false;
     }
   }
@@ -182,6 +198,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
       return true;
     } else {
+      WayaSnackBar.showToast(
+        response.data["message"],
+      );
       return false;
     }
   }
@@ -200,6 +219,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       fetchAllContestApplicant(contestId);
       return true;
     } else {
+      WayaSnackBar.showToast(
+        response.data["message"],
+      );
       return false;
     }
   }
@@ -218,11 +240,14 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
           externalWallets: externalWallets,
           isLoading: false);
     } else {
+      WayaSnackBar.showToast(
+        response.data["message"],
+      );
       state = state.copyWith(isLoading: false);
     }
   }
 
-  String getLoggedInUserId() {
+  String? getLoggedInUserId() {
     return _localDataSource.getUserId().toString();
   }
 
@@ -243,6 +268,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         contestList = responseModel.data ?? [];
 
         MyContestContestantModel? model;
+        
 
         contestList.sort((a, b) => b.votes!.compareTo(a.votes!));
 

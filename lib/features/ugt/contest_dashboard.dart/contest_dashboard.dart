@@ -16,6 +16,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/pdf/contestant_pdf.dart';
 import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
 
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -94,38 +95,22 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Top Stats Section
-            Text("Dashboard",
-                style: wayaTheme.textTheme.displaySmall!
-                    .wayaCopyWith(fontWeight: FontWeight.w700)),
-            const Gap(5),
-            Text("Manage your contest activity",
-                style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                    fontSize: 16.sp, fontWeight: FontWeight.w400)),
-            //  Text("Your Bio", style: wayaTheme.textTheme.bodyMedium),
-            const Gap(20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                if (ConversationState.self.accountType ==
-                    UserAccountType.business)
-                  SizedBox(
-                    width: context.width / 2.5,
-                    child: WayaButton(
-                        horizontalPadding: 10,
-                        fontSize: 14.sp,
-                        height: 42,
-                        text: "Edit contest details",
-                        callback: () async {
-                          ivalidateUGTVM(ref);
-                          ref
-                              .read(stateIsEditingContestProvider.notifier)
-                              .state = true;
-                          ref.watch(selectedContestProvider.notifier).state =
-                              model;
-                          WayaNav.toNamed('/create-contest');
-                        }),
-                  ),
-                Gap(10),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text("Dashboard",
+                        style: wayaTheme.textTheme.displaySmall!
+                            .wayaCopyWith(fontWeight: FontWeight.w700)),
+                    const Gap(5),
+                    Text("Manage your contest activity",
+                        style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                            fontSize: 16.sp, fontWeight: FontWeight.w400)),
+                  ],
+                ),
                 PopupMenuButton(
                   onSelected: (value) {},
                   position: PopupMenuPosition.under,
@@ -155,6 +140,79 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   },
                   child: Container(
                     //  margin: EdgeInsets.only(right: 20.w),
+                    width: 130.w,
+                    padding: REdgeInsets.symmetric(
+                        vertical: 8.dg, horizontal: 12.dg),
+                    decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.greyColor100,
+                      border: Border.all(
+                        color: wayaTheme.colorScheme.greyColor300,
+                        width: 1.5,
+                      ),
+                      borderRadius: BorderRadius.circular(8.r),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        WayaAssets.icons.actionFilter.svg(
+                          color: wayaTheme.colorScheme.greyColor400,
+                          //  color: wayaTheme.colorScheme.primary600,
+                        ),
+                        Gap(5),
+                        Text(
+                          'Filter By',
+                          style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                            color: wayaTheme.colorScheme.greyColor400,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Gap(5),
+                        WayaAssets.icons.downArrow.svg(
+                          color: wayaTheme.colorScheme.greyColor400,
+                          //color: wayaTheme.colorScheme.primary600,
+                        )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+            //  Text("Your Bio", style: wayaTheme.textTheme.bodyMedium),
+            const Gap(20),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (ConversationState.self.accountType ==
+                    UserAccountType.business)
+                  SizedBox(
+                    width: context.width / 2.5,
+                    child: WayaButton(
+                        horizontalPadding: 10,
+                        fontSize: 14.sp,
+                        height: 42,
+                        text: "Edit contest details",
+                        callback: () async {
+                          ivalidateUGTVM(ref);
+                          ref
+                              .read(stateIsEditingContestProvider.notifier)
+                              .state = true;
+                          ref.watch(selectedContestProvider.notifier).state =
+                              model;
+                          WayaNav.toNamed('/create-contest');
+                        }),
+                  ),
+                Gap(10),
+                GestureDetector(
+                  onTap: () {
+                    //?added ability to conver to pdf
+
+                    convertContestantToPDF(viewModel.myContestList,
+                        "${viewModel.myContestApplicantList.length - viewModel.myFilteredContestApplicantList.length}");
+                  },
+                  child: Container(
+                    //  margin: EdgeInsets.only(right: 20.w),
+                    width: 130.w,
                     padding: REdgeInsets.symmetric(
                         vertical: 8.dg, horizontal: 12.dg),
                     decoration: BoxDecoration(
@@ -163,25 +221,28 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         width: 1.5,
                       ),
                       color: wayaTheme.colorScheme.white,
-                      borderRadius: BorderRadius.circular(5.r),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Row(
                       children: [
+                        WayaAssets.icons.export.svg(
+                          width: 18,
+                          height: 18,
+                          fit: BoxFit.scaleDown,
+                          color: wayaTheme.colorScheme.primary600,
+                        ),
+                        Gap(8),
                         Text(
-                          'Filter',
+                          'Export Data',
                           style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                             color: wayaTheme.colorScheme.primary600,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        Gap(5),
-                        WayaAssets.icons.actionFilter.svg(
-                          color: wayaTheme.colorScheme.primary600,
-                        )
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
             const Gap(20),
@@ -196,10 +257,10 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildStatCard("Number of participants",
+                _buildStatCard(context, "Number of participants",
                     "${dashboardVm.totalContestants}"),
                 //  _buildStatCard("Votes per contestant", "120"),
-                _buildStatCard("Contest Stage",
+                _buildStatCard(context, "Contest Stage",
                     model?.contestSettings?.stages?.length.toString() ?? "0"),
               ],
             ),
@@ -528,13 +589,14 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
     );
   } */
 
-  Widget _buildStatCard(String title, String value) {
+  Widget _buildStatCard(BuildContext context, String title, String value) {
+    final wayaTheme = Theme.of(context);
     return Expanded(
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 4),
         padding: EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.orange[50],
+          color: wayaTheme.colorScheme.primary50,
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
@@ -542,10 +604,9 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
           children: [
             Text(title,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
+                style: WayaTextStyles.hintStyleBold),
             Gap(10),
-            Text(value,
-                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+            Text(value, style: WayaTextStyles.headlineMedium),
           ],
         ),
       ),
@@ -599,7 +660,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
       padding: EdgeInsets.all(12),
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.orange[50],
+        color: wayaTheme.colorScheme.primary50,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
@@ -608,18 +669,15 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(title,
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
+              textAlign: TextAlign.center, style: WayaTextStyles.hintStyleBold),
           Gap(5),
           Row(
             children: [
-              Text(value,
-                  style:
-                      TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+              Text(value, style: WayaTextStyles.headlineMedium),
               Text(".00",
-                  style: TextStyle(
-                      color: wayaTheme.colorScheme.greyColor300,
-                      fontSize: 16.sp)),
+                  style: WayaTextStyles.headlineMedium.copyWith(
+                    color: wayaTheme.colorScheme.greyColor300,
+                  )),
             ],
           ),
         ],
