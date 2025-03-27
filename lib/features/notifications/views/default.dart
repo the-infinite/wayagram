@@ -18,6 +18,7 @@ class WayaNotifications extends ConsumerStatefulWidget {
 }
 
 class _WayaNotificationsState extends ConsumerState<WayaNotifications> with TickerProviderStateMixin {
+  late final notifier = ref.read(notificationProvider.notifier);
   TabController? _pageController;
 
   @override
@@ -28,11 +29,13 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
     // This is fine.
     _pageController?.addListener(() {
       final value = _pageController?.index;
-      final notifier = ref.watch(notificationProvider.notifier);
 
       // Notify this guy.
       notifier.setIsRequestsOnly(value == 1);
     });
+
+    //? Get the user's notifications.
+    WidgetsBinding.instance.addPostFrameCallback((_) => notifier.getUserNotifications());
   }
 
   @override
@@ -49,10 +52,9 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
 
   @override
   Widget build(BuildContext context) {
-    //final wayaTheme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
     final size = MediaQuery.of(context).size;
     final state = ref.watch(notificationProvider);
-    final notifier = ref.watch(notificationProvider.notifier);
 
     // Build the current screen.
     return WayaScaffold(
@@ -75,8 +77,8 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
               // Some space.
               Text(
                 "Getting your notifications...",
-                style: WayaTextStyles.bodyMedium.copyWith(
-                  color: WayaColors.primary,
+                style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                  color: wayaTheme.colorScheme.primary,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -93,7 +95,7 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
             padding: const EdgeInsets.all(8.0),
             child: Text(
               "Mark All As Read",
-              style: WayaTextStyles.bodyMedium.copyWith(
+              style: wayaTheme.textTheme.bodyMedium?.copyWith(
                 color: WayaColors.primary,
                 fontWeight: FontWeight.w600,
                 fontSize: 12.sp,

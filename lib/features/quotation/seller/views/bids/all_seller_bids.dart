@@ -47,7 +47,6 @@ class _AllSellerBidsState extends ConsumerState<AllSellerBids> {
       isLoading: false,
       isScrollable: false,
       title: 'Bids',
-      appBarTrailing: bidIcon(context),
       body: WayaObservableScrollView(
         handler: handler,
         shouldFetch: !state.isLoadingBids,
@@ -164,6 +163,13 @@ class _AllSellerBidsState extends ConsumerState<AllSellerBids> {
     final wayaTheme = Theme.of(ctx);
     return GestureDetector(
       onTap: () {
+        //? Show the coming soon modal.
+        if (WayaConstants.isProduction) {
+          WayaNavigationHelper.showComingSoonModal(true);
+          return;
+        }
+
+        //? Now, continue as needed in staging.
         WayaNav.toNamed("/map");
       },
       child: Row(

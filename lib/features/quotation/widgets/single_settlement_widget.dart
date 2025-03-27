@@ -5,6 +5,7 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/shared/features/quotation/model/default.dart';
 
 class SingleSettlementWidget extends ConsumerWidget {
   final bool isSeller;
@@ -17,14 +18,7 @@ class SingleSettlementWidget extends ConsumerWidget {
 
     //? This is fine.
     return GestureDetector(
-      onTap: () {
-        if (isSeller) {
-          WayaNav.toNamed('/seller-bid-details', arguments: "id");
-          //viewModel.sellerBidAction(context);
-        } else {
-          WayaNav.toNamed('/seller-bid-details', arguments: "id");
-        }
-      },
+      onTap: () {},
       child: Column(
         children: [
           Container(
@@ -53,7 +47,6 @@ class SingleSettlementWidget extends ConsumerWidget {
                         // Some space.
                         const Gap(8),
 
-                        
                         Container(
                           padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
                           decoration: BoxDecoration(
@@ -125,7 +118,7 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
    */
   }
 
-  Future<void> sellerBidAction(BuildContext context) async {
+  Future<void> sellerBidAction(BuildContext context, QuotationBidModel bid) async {
     WayaUtils.showNotice(
         context: context,
         buttonText: 'Add Delivery Details',
@@ -136,11 +129,12 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
           await addDeliveryDetail(context);
         },
         onCancel: () {
-          WayaNav.toNamed('/seller-bid-details', arguments: "id");
+          WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id));
         },
         icon: Image.asset('assets/images/shop/delivery-van.png'));
   }
 }
 
-final singleSettlementWidgetViewModelProvider =
-    ChangeNotifierProvider<SingleBidWidgetViewModel>((ref) => SingleBidWidgetViewModel(ref));
+final singleSettlementWidgetViewModelProvider = ChangeNotifierProvider<SingleBidWidgetViewModel>(
+  (ref) => SingleBidWidgetViewModel(ref),
+);

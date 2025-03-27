@@ -294,6 +294,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   GestureDetector(
                     onTap: () {
                       if (hasClickedLiked.value == false) {
+                        hasClickedLiked.value = true;
                         widget.onLikePressed(widget.post.id!);
                       }
                       Future.delayed(Duration(seconds: 2), () {

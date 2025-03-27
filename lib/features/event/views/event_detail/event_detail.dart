@@ -127,19 +127,25 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                       child: WayaButton(
                         callback: () => Share.share(
                           subject: "Share event",
-                          WayaValueHelper.getShareableUrl(WayaAppRoutes.getEventDetailsScreen(widget.id)),
+                          WayaValueHelper.getShareableUrl(
+                              WayaAppRoutes.getEventDetailsScreen(widget.id)),
                         ),
                         color: wayaTheme.colorScheme.transparent,
-                        border: Border.all(width: 1, color: wayaTheme.colorScheme.customPrimary),
+                        border: Border.all(
+                            width: 1,
+                            color: wayaTheme.colorScheme.customPrimary),
                         centerWidget: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(Icons.share, size: 22, color: wayaTheme.colorScheme.customPrimary),
+                            Icon(Icons.share,
+                                size: 22,
+                                color: wayaTheme.colorScheme.customPrimary),
                             const Gap(4),
                             Text(
                               'Share Event',
-                              style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                              style:
+                                  wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                                 fontWeight: FontWeight.w600,
                                 color: wayaTheme.colorScheme.customPrimary,
                               ),
@@ -153,7 +159,8 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                       width: context.width * 0.45,
                       child: WayaButton(
                         callback: () {
-                          WayaNav.toNamed(AddEvent.route, arguments: viewModel.singleEvent);
+                          WayaNav.toNamed(AddEvent.route,
+                              arguments: viewModel.singleEvent);
                         },
                         text: 'Edit Event Detail',
                       ),
@@ -169,19 +176,25 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                       child: WayaButton(
                         callback: () => Share.share(
                           subject: "Share event",
-                          WayaValueHelper.getShareableUrl(WayaAppRoutes.getEventDetailsScreen(widget.id)),
+                          WayaValueHelper.getShareableUrl(
+                              WayaAppRoutes.getEventDetailsScreen(widget.id)),
                         ),
                         color: wayaTheme.colorScheme.transparent,
-                        border: Border.all(width: 1, color: wayaTheme.colorScheme.customPrimary),
+                        border: Border.all(
+                            width: 1,
+                            color: wayaTheme.colorScheme.customPrimary),
                         centerWidget: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Icon(Icons.share, size: 22, color: wayaTheme.colorScheme.customPrimary),
+                            Icon(Icons.share,
+                                size: 22,
+                                color: wayaTheme.colorScheme.customPrimary),
                             const Gap(4),
                             Text(
                               'Share Event',
-                              style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                              style:
+                                  wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                                 fontWeight: FontWeight.w600,
                                 color: wayaTheme.colorScheme.customPrimary,
                               ),
@@ -193,16 +206,19 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                     SizedBox(
                       width: context.width * 0.45,
                       child: WayaButton(
-                        callback:
-                            (viewModel.singleEvent?.maxCapacity != null && viewModel.singleEvent!.maxCapacity != 0) &&
-                                    (viewModel.singleEvent!.maxCapacity! - viewModel.singleEvent!.noOfAttendees) == 0
-                                ? null
-                                : () async {
-                                    await WayaUtils.showModalSheet(
-                                      context,
-                                      child: JoinEvent(event: viewModel.singleEvent!),
-                                    );
-                                  },
+                        callback: (viewModel.singleEvent?.maxCapacity != null &&
+                                    viewModel.singleEvent!.maxCapacity != 0) &&
+                                (viewModel.singleEvent!.maxCapacity! -
+                                        viewModel.singleEvent!.noOfAttendees) ==
+                                    0
+                            ? null
+                            : () async {
+                                await WayaUtils.showModalSheet(
+                                  context,
+                                  child:
+                                      JoinEvent(event: viewModel.singleEvent!),
+                                );
+                              },
                         text: 'Join Event',
                       ),
                     ),
@@ -240,7 +256,8 @@ class EventDetailAction extends StatelessWidget {
             value: 0,
             onTap: () => Share.share(
               subject: "Share event",
-              WayaValueHelper.getShareableUrl(WayaAppRoutes.getEventDetailsScreen(eventId)),
+              WayaValueHelper.getShareableUrl(
+                  WayaAppRoutes.getEventDetailsScreen(eventId)),
             ),
             child: WayaActionNav(
                 context: context,

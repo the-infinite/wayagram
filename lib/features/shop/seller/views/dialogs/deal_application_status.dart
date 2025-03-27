@@ -59,7 +59,7 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
               Text(
                 "Application Status",
                 textAlign: TextAlign.start,
-                style:  TextStyle(
+                style: TextStyle(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                 ),
@@ -142,8 +142,8 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
               const Gap(40),
               WayaButton(
                   callback: () {
-                    WayaNav.toNamed(ProductDetail.route,
-                        arguments: widget.product as Product);
+                    WayaNav.toNamed(WayaAppRoutes.getProductDetailScreen(
+                        widget.product.id));
                   },
                   text: "View Product Details"),
               const Gap(10),

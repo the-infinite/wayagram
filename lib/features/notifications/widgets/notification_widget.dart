@@ -5,6 +5,8 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_rich_text.dart';
 import 'package:wayagram/core/helpers/date.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
 
@@ -37,14 +39,17 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
   // This is fine.
   @override
   Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+
+    //? Return this one.
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         //? First, the divider that only shows up on the off-chance.
         if (widget.index != 0)
-          const Divider(
-            color: WayaColors.greyColor400,
+          Divider(
+            color: wayaTheme.colorScheme.greyColor400,
           ),
 
         //? Second, the actual component. some padding to go with this thing.
@@ -62,7 +67,7 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
                     //? First, the notification icon.
                     DecoratedBox(
                       decoration: BoxDecoration(
-                        color: WayaColors.primary50,
+                        color: wayaTheme.colorScheme.primary50,
                         shape: BoxShape.circle,
                       ),
                       child: Padding(
@@ -73,17 +78,19 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
                             NotificationMessageType.comment => WayaAssets.icons.notifNewComment.path,
                             NotificationMessageType.donation => WayaAssets.icons.notifNewDonation.path,
                             NotificationMessageType.event => WayaAssets.icons.notifUpcomingEvent.path,
-                            NotificationMessageType.follower ||
-                            NotificationMessageType.followRequest ||
-                            NotificationMessageType.friendRequest =>
-                              WayaAssets.icons.notifNewFollower.path,
+                            NotificationMessageType.followRequest => WayaAssets.icons.notifNewFollower.path,
                             NotificationMessageType.poll => WayaAssets.icons.notifPollResults.path,
-                            NotificationMessageType.transaction => WayaAssets.icons.notifTransaction.path,
+                            NotificationMessageType.creditAlert || NotificationMessageType.debitAlert => WayaAssets.icons.notifTransaction.path,
                             NotificationMessageType.groupInvite => WayaAssets.icons.notifGroupRequest.path,
+                            NotificationMessageType.calls => WayaAssets.icons.notifCall.path,
+                            NotificationMessageType.like => WayaAssets.icons.notifLike.path,
+                            NotificationMessageType.share => WayaAssets.icons.notifShare.path,
+                            NotificationMessageType.view => WayaAssets.icons.notifView.path,
+                            NotificationMessageType.liveStream => WayaAssets.icons.notifLivestream.path,
                           },
                           height: 22,
                           width: 22,
-                          color: WayaColors.primary,
+                          color: wayaTheme.colorScheme.primary,
                         ),
                       ),
                     ),
@@ -100,8 +107,8 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
                           //* The notification title.
                           Text(
                             widget.data.message.subject,
-                            style: WayaTextStyles.bodySemiBold.copyWith(
-                              color: WayaColors.customBlack,
+                            style: wayaTheme.textTheme.bodySemiBold.copyWith(
+                              color: wayaTheme.colorScheme.customBlack,
                             ),
                           ),
 
@@ -109,7 +116,7 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
                           WayaRichText(
                             title1: "${widget.data.message.body}.",
                             title2: " ${widget.data.notificationAction}.",
-                            style1: WayaTextStyles.mediumDescriptionStyle.copyWith(
+                            style1: wayaTheme.textTheme.mediumDescriptionStyle.copyWith(
                               fontSize: 12.sp,
                             ),
                             style2: WayaTextStyles.smallActiveLinkStyle.copyWith(
@@ -124,8 +131,8 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
                           //* The notification time.
                           Text(
                             WayaDateHelper.getFullTimestamp(widget.data.createdAt),
-                            style: WayaTextStyles.descriptionStyle.copyWith(
-                              color: WayaColors.greyColor400,
+                            style: wayaTheme.textTheme.descriptionStyle.copyWith(
+                              color: wayaTheme.colorScheme.greyColor400,
                               fontSize: 13.sp,
                             ),
                           ),
@@ -145,7 +152,7 @@ class _NotificationCardWidgetState extends State<NotificationCardWidget> {
                           height: 22,
                           width: 22,
                           decoration: BoxDecoration(
-                            color: WayaColors.primary,
+                            color: wayaTheme.colorScheme.primary,
                             shape: BoxShape.circle,
                           ),
                         ),

@@ -29,6 +29,7 @@ import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 import '../../auth/transaction_pin/vm/transaction_pin_vm.dart';
+import '../data/model/account_activity_model.dart';
 import '../data/model/payment_activity_model.dart';
 import '../data/model/search_log_model.dart';
 import '../data/model/user_actions_model.dart';
@@ -45,20 +46,20 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       this.ref,)
       : super(ActivityLogsState());
 
-  Future<PaginatedResult<LoginHistoryDocs>?> getLoginActivity({required int page}) async {
+  Future<PaginatedResult<AccountActivityDocs>?> getAccountActivity({required int page}) async {
 
     try{
       state = state.copyWith(isLoading: true);
-      final response = await _activityLogsRepository.getLoginHistory(page);
-      List<LoginHistoryDocs>? fetchLoginHistoryDocs = [];
+      final response = await _activityLogsRepository.getAccountActivity(page);
+      List<AccountActivityDocs>? fetchLoginHistoryDocs = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        LoginHistoryModel responseModel = LoginHistoryModel.fromJson(response.data);
+        AccountActivityModel responseModel = AccountActivityModel.fromJson(response.data);
         fetchLoginHistoryDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(loginHistoryDocs: fetchLoginHistoryDocs);
-        state = state.copyWith(loginHistoryDocs: responseModel.data?.docs);
+        state = state.copyWith(accountActivityDocs: fetchLoginHistoryDocs);
+        state = state.copyWith(accountActivityDocs: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }

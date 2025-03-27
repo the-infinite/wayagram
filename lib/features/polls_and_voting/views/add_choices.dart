@@ -36,18 +36,45 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
         title: "Add Choices",
         isLoading: viewModel.isLoading,
         isScrollable: true,
-        appBarTrailing:
-       /* Padding(
+        appBarTrailing: Padding(
           padding: const EdgeInsets.only(right: 20),
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () {
-
-              if (_formKey.currentState!.validate()) {
-                print('Add cHOICES ==>>>');
-                WayaNav.toNamed("/poll-summary");
-              }
-            } : null,
+                    if (viewModel.choices.length < 2) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            'You need to add at least two choices',
+                            style: TextStyle(
+                                fontFamily: WayaConstants.fontFamily,
+                                fontSize: 12),
+                          ),
+                          backgroundColor: WayaColors.primary,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    } else if(viewModel.choices.length > 5){
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text(
+                            '',
+                            style: TextStyle(
+                                fontFamily: WayaConstants.fontFamily,
+                                fontSize: 12),
+                          ),
+                          backgroundColor: WayaColors.primary,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }else if (!_formKey.currentState!.validate()) {
+                      WayaNav.toNamed("/poll-summary");
+                      print('CREATE POLL');
+                    } else {
+                      WayaNav.toNamed("/poll-summary");
+                    }
+                  }
+                : null,
             height: 30,
             text: 'Create Poll',
             isLoading: viewModel.isLoading,
@@ -55,17 +82,16 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
             textStyle: WayaTextStyles.bodySmall.copyWith(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.white ),
+                color: Theme.of(context).colorScheme.white),
           ),
-        ),*/
-        createPoll(context),
+        ),
+        //createPoll(context),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Gap(10),
-            Text(
-                "${viewModel.pollTitle.text.capitalizeFirst}",
+            Text("${viewModel.pollTitle.text.capitalizeFirst}",
                 style: wayaTheme.textTheme.titleLarge),
             const Gap(5),
             Text(
@@ -87,171 +113,220 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                        padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                              color: Theme.of(context).colorScheme.greyColor300),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            FormField<String>(validator: (value) {
-                              if (viewModel.firstChoice.text.isEmpty) {
-                                return 'Choice ${index + 1} is required';
-                              }
-
-                              return null;
-                            }, builder: (formState) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  WayaTextFormField(
-                                    keyboardType: TextInputType.text,
-                                    controller: viewModel.choices[index].text,
-                                    hintText: 'Choice ${index + 1}',
-                                    borderColor: formState.hasError &&
-                                            viewModel.choices[index].text.text
-                                                .isEmpty
-                                        ? wayaTheme.colorScheme.error
-                                        : null,
-                                  ),
-                                  if (formState.hasError &&
-                                      viewModel
-                                          .choices[index].text.text.isEmpty)
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 5),
-                                      child: Text(
-                                        formState.errorText!,
-                                        style: TextStyle(
-                                            color: wayaTheme.colorScheme.error,
-                                            fontSize: 12.sp),
-                                      ),
-                                    ),
-                                ],
-                              );
-                            }),
-                            const Gap(10),
-                            FormField<String>(validator: (value) {
-                              if (viewModel
-                                  .choices[index].description.text.isEmpty) {
-                                return 'Description ${index + 1} is required';
-                              }
-
-                              return null;
-                            }, builder: (formState) {
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  WayaTextFormField(
-                                    line: 6,
-                                    keyboardType: TextInputType.text,
-                                    controller:
-                                        viewModel.choices[index].description,
-                                    hintText:
-                                        'Why should people care? Give a short,\nengaging reason',
-                                    borderColor: formState.hasError &&
-                                           viewModel.firstChoiceDescription.text.isEmpty
-                                        ? wayaTheme.colorScheme.error
-                                        : null,
-                                  ),
-                                  if (formState.hasError &&
-                                      viewModel.choices[index].description.text
-                                          .isEmpty)
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 5),
-                                      child: Text(
-                                        formState.errorText!,
-                                        style: TextStyle(
-                                            color: wayaTheme.colorScheme.error,
-                                            fontSize: 12.sp),
-                                      ),
-                                    ),
-                                ],
-                              );
-                            }),
-                            const Gap(10),
-                            InkWell(
-                              splashFactory: NoSplash.splashFactory,
-                              splashColor: Colors.transparent,
-                              onTap: () => ref
-                                  .read(createPollVotingProvider.notifier)
-                                  .addChoiceImage(index),
-                              child: viewModel.choices[index].image == null
-                                  ? Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: [
-                                        Image.asset(
-                                          'assets/images/polls/add_image.png',
-                                          height: 20.h,
-                                        ),
-                                        const Gap(10),
-                                        Text(
-                                          'Add Image/Video',
-                                          style: Theme.of(context).textTheme.bodyMedium!
-                                              .wayaCopyWith(fontSize: 14.sp,
-                                                  fontWeight: FontWeight.w400,
-                                                  color: Theme.of(context).colorScheme.customBlack200),
-                                        ),
-                                        const Gap(8),
-                                      ],
-                                    )
-                                  : Stack(
-                                clipBehavior: Clip.none,
-                                children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.file(
-                                    viewModel.choices[index].image!,
-                                    width: 100,
-                                    height: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Positioned(
-                                    left: 90,
-                                  top: -4,
-                                    child: InkWell(
-                                    onTap: () => ref.read(createPollVotingProvider.notifier)
-                          .removeChoiceAtindex(index),
-                                        child: Image.asset('assets/images/bid/close.png', height: 16.h,)),
-                                )
-                              ],),
+                            padding: const EdgeInsets.fromLTRB(8, 6, 8, 6),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .greyColor300),
                             ),
-                            const Gap(10),
-                          ],
-                          
-                        ),
-                       
-                      ),
-                      const Gap(20)
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                FormField<String>(validator: (value) {
+                                  if (viewModel.firstChoice.text.isEmpty) {
+                                    return 'Choice ${index + 1} is required';
+                                  }
+
+                                  return null;
+                                }, builder: (formState) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      WayaTextFormField(
+                                        keyboardType: TextInputType.text,
+                                        controller:
+                                            viewModel.choices[index].text,
+                                        hintText: 'Choice ${index + 1}',
+                                        borderColor: formState.hasError &&
+                                                viewModel.choices[index].text
+                                                    .text.isEmpty
+                                            ? wayaTheme.colorScheme.error
+                                            : null,
+                                      ),
+                                      if (formState.hasError &&
+                                          viewModel
+                                              .choices[index].text.text.isEmpty)
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5),
+                                          child: Text(
+                                            formState.errorText!,
+                                            style: TextStyle(
+                                                color:
+                                                    wayaTheme.colorScheme.error,
+                                                fontSize: 12.sp),
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                }),
+                                const Gap(10),
+                                FormField<String>(validator: (value) {
+                                  if (viewModel.choices[index].description.text
+                                      .isEmpty) {
+                                    return null;
+                                      //'Description ${index + 1} is required';
+                                  }
+
+                                  return null;
+                                }, builder: (formState) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      WayaTextFormField(
+                                        line: 6,
+                                        keyboardType: TextInputType.text,
+                                        controller: viewModel
+                                            .choices[index].description,
+                                        hintText:
+                                            'Why should people care? Give a short,\nengaging reason',
+                                        borderColor: formState.hasError &&
+                                                viewModel.firstChoiceDescription
+                                                    .text.isEmpty
+                                            ? wayaTheme.colorScheme.error
+                                            : null,
+                                      ),
+                                      if (formState.hasError &&
+                                          viewModel.choices[index].description
+                                              .text.isEmpty)
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5),
+                                          child: Text(
+                                            formState.errorText!,
+                                            style: TextStyle(
+                                                color:
+                                                    wayaTheme.colorScheme.error,
+                                                fontSize: 12.sp),
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                }),
+                                const Gap(10),
+
+                                InkWell(
+                                  splashFactory: NoSplash.splashFactory,
+                                  splashColor: Colors.transparent,
+                                  onTap: () => ref
+                                      .read(createPollVotingProvider.notifier)
+                                      .addChoiceImage(index),
+                                  child: viewModel.choices[index].image == null
+                                      ? Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Image.asset(
+                                              'assets/images/polls/add_image.png',
+                                              height: 20.h,
+                                            ),
+                                            const Gap(10),
+                                            Text(
+                                              'Add Image/Video',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .bodyMedium!
+                                                  .wayaCopyWith(
+                                                      fontSize: 14.sp,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .customBlack200),
+                                            ),
+                                            const Gap(8),
+                                          ],
+                                        )
+                                      : Stack(
+                                          clipBehavior: Clip.none,
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              child: Image.file(
+                                                viewModel.choices[index].image!,
+                                                width: 100,
+                                                height: 100,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            Positioned(
+                                              left: 90,
+                                              top: -4,
+                                              child: InkWell(
+                                                  onTap: () => ref
+                                                      .read(
+                                                          createPollVotingProvider
+                                                              .notifier)
+                                                      .removeChoiceAtindex(
+                                                          index),
+                                                  child: Image.asset(
+                                                    'assets/images/bid/close.png',
+                                                    height: 16.h,
+                                                  )),
+                                            )
+                                          ],
+                                        ),
+                                ),
+                                const Gap(10),
+                              ],
+                            ),
+                          ),
+                          const Gap(20),
+                          GestureDetector(
+                            onTap: () =>
+                                ref.read(createPollVotingProvider.notifier).removeChoice(index),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Remove Choice',
+                                  style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                      fontSize: 14.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: Theme.of(context).colorScheme.black),
+                                ),
+                                const Gap(8),
+                                Icon(
+                                  Icons.minimize_outlined,
+                                  size: 20,
+                                  color: wayaTheme.colorScheme.customPrimary,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Gap(20),
                         ],
                       );
-                    })
-                    ),
+                    })),
             const Gap(15),
-           GestureDetector(
-            onTap: () => ref.read(createPollVotingProvider.notifier).addChoice(),
-            child:  Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Add Another Choice',
-                  style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.black),
-                ),
-                const Gap(8),
-                Icon(
-                  Icons.add,
-                  size: 20,
-                  color: wayaTheme.colorScheme.customPrimary,
-                ),
-              ],
+            if(viewModel.choices.length < 5)
+            GestureDetector(
+              onTap: () =>
+                  ref.read(createPollVotingProvider.notifier).addChoice(),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Add Another Choice',
+                    style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.black),
+                  ),
+                  const Gap(8),
+                  Icon(
+                    Icons.add,
+                    size: 20,
+                    color: wayaTheme.colorScheme.customPrimary,
+                  ),
+                ],
+              ),
             ),
-           ),
 
           ],
         ));
@@ -263,7 +338,6 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
     final wayaTheme = Theme.of(ctx);
     return GestureDetector(
       onTap: () {
-
         WayaNav.toNamed("/poll-summary");
       },
       child: Row(

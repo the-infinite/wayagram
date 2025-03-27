@@ -139,7 +139,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),),
           const Gap(30),
-          filteredAllDonations.isEmpty ?DonationEmptyState() :
+          filteredAllDonations.isEmpty ? DonationEmptyState() :
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
