@@ -161,7 +161,7 @@ class WayaAppRoutes {
     CartView.route: () => CartView(),
     AllSellerOrders.route: () => AllSellerOrders(),
     SellerOrderDetails.route: () => SellerOrderDetails(),
-    SellerBidDetails.route: () => SellerBidDetails(),
+    SellerBidDetails.route: () => SellerBidDetails(id: WayaNav.search['id'].toString()),
     SellerSettlement.route: () => SellerSettlement(),
     SeeSellerBids.route: () => SeeSellerBids(id: WayaNav.search['id'].toString()),
     SeeBuyerBids.route: () => SeeBuyerBids(id: WayaNav.search['id'].toString()),
@@ -407,6 +407,10 @@ class WayaAppRoutes {
   /// Helper function used to generate the route that takes a user to the screen
   /// for the details of a single product.
   static String getProductDetailScreen(String id) => "${ProductDetail.route}?id=$id";
+
+  /// Helper function used to generate the route that takes a user to the screen
+  /// for a single bid's details.
+  static String getBidDetailsScreen(String id) => "${SellerBidDetails.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages {

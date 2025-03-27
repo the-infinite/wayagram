@@ -19,15 +19,15 @@ import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
 class PollsForYou extends ConsumerStatefulWidget {
-  const PollsForYou({super.key, });
-
+  const PollsForYou({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PollsForYouState();
 }
 
 class _PollsForYouState extends ConsumerState<PollsForYou> {
-
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -72,7 +72,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                             const Gap(3),
                             Text('${poll.userData?.firstName?.capitalizeFirst}', style: wayaTheme.textTheme.titleLarge),
                             const Gap(3),
-                            Text(' • ${WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
+                            Text(
+                              ' • ${WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
                               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w400,
@@ -91,10 +92,10 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                       context: context,
                                       onTap: () {
                                         Share.share(
-                                          WayaValueHelper.getShareableUrl(WayaAppRoutes.getPollDetailsPage('${poll.id}')),
+                                          WayaValueHelper.getShareableUrl(
+                                              WayaAppRoutes.getPollDetailsPage('${poll.id}')),
                                           subject: 'Share Poll',
                                         );
-
                                       },
                                       asset: WayaAssets.icons.genSet.share
                                           .svg(fit: BoxFit.none, height: 20, color: WayaColors.greyColor600),
@@ -117,13 +118,15 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                         const Gap(3),
                         if (poll.choices != null)
                           ...poll.choices!.map(
-                            (e) => e.description == null ? Container() :Text(
-                              '${e.description?.capitalizeFirst}',
-                              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w400,
-                                  color: Theme.of(context).colorScheme.greyColor500),
-                            ),
+                            (e) => e.description == null
+                                ? Container()
+                                : Text(
+                                    '${e.description?.capitalizeFirst}',
+                                    style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w400,
+                                        color: Theme.of(context).colorScheme.greyColor500),
+                                  ),
                           ),
                         const Gap(10),
                         Text(
@@ -140,7 +143,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                             if (poll.choices != null)
                               ...poll.choices!.map(
                                 (e) => choiceStatistics(
-                                  e.imageUrl == null ? '':'${e.imageUrl}',
+                                  e.imageUrl == null ? '' : '${e.imageUrl}',
                                   '${e.text}',
                                   context,
                                   true,
@@ -360,7 +363,9 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           Text(
                             name,
                             style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                                fontSize: 14.sp, fontWeight: FontWeight.w600, color: Theme.of(ctx).colorScheme.primary600),
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: Theme.of(ctx).colorScheme.primary600),
                           ),
                         ],
                       ),
@@ -408,7 +413,9 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                               Text(
                                 '$name  ',
                                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 14.sp, fontWeight: FontWeight.w600, color: Theme.of(ctx).colorScheme.white),
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(ctx).colorScheme.white),
                               ),
                             ],
                           )
