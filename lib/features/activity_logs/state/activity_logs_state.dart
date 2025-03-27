@@ -1,5 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:wayagram/features/activity_logs/data/model/account_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/login_history_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
@@ -11,6 +12,8 @@ import 'package:wayagram/features/activity_logs/data/model/visited_pages_model.d
 class ActivityLogsState{
   final TextEditingController title;
   List<LoginHistoryDocs> loginHistoryDocs;
+  List<AccountActivityDocs> accountActivityDocs;
+  List<AccountActivityDocs> accountActivityDocs1;
   List<CmsDocs> cmsDocs;
   List<CmsDocs> cmsDocs1;
   List<PaymentActivityDocs> paymentActivityDocs;
@@ -34,6 +37,8 @@ class ActivityLogsState{
     this.loginHistoryDocs = const [],
     this.cmsDocs = const [],
     this.cmsDocs1 = const [],
+    this.accountActivityDocs = const [],
+    this.accountActivityDocs1 = const [],
     this.paymentActivityDocs = const [],
     this.paymentActivityDocs1 = const [],
     this.searchLogDocs = const [],
@@ -53,6 +58,8 @@ class ActivityLogsState{
     List<LoginHistoryDocs>? loginHistoryDocs,
     List<CmsDocs>? cmsDocs,
     List<CmsDocs>? cmsDocs1,
+    List<AccountActivityDocs>? accountActivityDocs,
+    List<AccountActivityDocs>? accountActivityDocs1,
     List<PaymentActivityDocs>? paymentActivityDocs,
     List<PaymentActivityDocs>? paymentActivityDocs1,
     List<SearchLogDocs>? searchLogDocs,
@@ -73,6 +80,8 @@ class ActivityLogsState{
       loginHistoryDocs: loginHistoryDocs ?? this.loginHistoryDocs,
       cmsDocs: cmsDocs ?? this.cmsDocs,
       cmsDocs1: cmsDocs1 ?? this.cmsDocs1,
+      accountActivityDocs: accountActivityDocs ?? this.accountActivityDocs,
+      accountActivityDocs1: accountActivityDocs1 ?? this.accountActivityDocs1,
       paymentActivityDocs: paymentActivityDocs ?? this.paymentActivityDocs,
       paymentActivityDocs1: paymentActivityDocs1 ?? this.paymentActivityDocs1,
       searchLogDocs: searchLogDocs ?? this.searchLogDocs,

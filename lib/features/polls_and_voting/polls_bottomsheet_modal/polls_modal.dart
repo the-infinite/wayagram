@@ -55,6 +55,7 @@ class _PollsModalState extends ConsumerState<PollsModal> {
             SizedBox(height: 17.h),
             WayaButton(
               callback: () async {
+               // await ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
                 WayaNav.toNamed('/poll-and-voting', arguments: {'poll': 'poll'});
                 ref.read(createPollVotingProvider.notifier).reset();
               },
@@ -307,6 +308,219 @@ class _VoteOptionModalState extends ConsumerState<VoteOptionModal> {
   }
 }
 
+class PollPinEntryBottomSheet extends ConsumerStatefulWidget {
+  final String voteFee;
+  final String choiceId;
+  final String pollId;
+  final String candidateName;
+  final String votingLink;
+  final String amount;
+  const PollPinEntryBottomSheet({super.key, required this.voteFee,
+    required this.pollId, required this.choiceId,
+    required this.candidateName, required this.votingLink, required this.amount});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _PollPinEntryBottomSheetState();
+}
+
+class _PollPinEntryBottomSheetState extends ConsumerState<PollPinEntryBottomSheet> {
+  String _pin = '';
+  final int _pinLength = 4;
+
+
+  void _addDigit(String digit) {
+    if (_pin.length < _pinLength) {
+      setState(() {
+        _pin += digit;
+      });
+    }
+  }
+
+  void _removeDigit() {
+    if (_pin.isNotEmpty) {
+      setState(() {
+        _pin = _pin.substring(0, _pin.length - 1);
+      });
+    }
+  }
+
+  // void _submitPin() {
+  //   if (_pin.length == _pinLength) {
+  //
+  //     WayaNav.goBack();
+  //
+  //      WayaUtils.showModalSheet(
+  //       context,
+  //       child: DonationGenerosityModal(),
+  //     );
+  //
+  //
+  //
+  //   }
+  // }
+
+  void _submitPin() async {
+    if (_pin.length == _pinLength) {
+      // TODO: Submit PIN
+      // log('PIN submitted: $_pin');
+      var isPass =
+      await ref.read(createPollVotingProvider.notifier).verifyWalletPin(_pin, context);
+
+      if (isPass) {
+        //WayaNav.goBack();
+        print('Poll AMOUNT ${widget.amount}');
+         await ref.read(createPollVotingProvider.notifier).castYourVote(
+            '${num.parse(widget.amount) * num.parse(widget.voteFee)}',
+            widget.amount,
+            //'118ff236-2410-4b84-8976-1e96f26a2d47','89b12d4a-9f16-49c8-8592-8ff7402246f3',
+            widget.choiceId,
+            widget.pollId,
+            context,
+            widget.candidateName.toLowerCase().capitalizeFirst,
+            widget.votingLink);
+      } else {
+        WayaNav.goBack();
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Invalid pin',
+              style:
+              TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  final WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
+
+  @override
+  Widget build(BuildContext context) {
+    //print('DARLINGTON AMOUNT ${widget.amount}');
+    final viewModel = ref.watch(createPollVotingProvider.notifier);
+    return SafeArea(
+      child: Container(
+        height: 490.h,
+        padding: const EdgeInsets.all(16),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Enter your PIN',
+              style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 24),
+            GridView.builder(
+              itemCount: _pinLength,
+              physics: NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 4,
+                childAspectRatio: 1.5,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 12,
+              ),
+              itemBuilder: (context, index) => Container(
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.grey[300]!,
+                    width: 1,
+                  ),
+                  color: Colors.white,
+                ),
+                child: Center(
+                  child: index < _pin.length
+                      ? Text("*",
+                      style:  TextStyle(
+                        fontSize: 24.sp,
+                        fontWeight: FontWeight.bold,
+                      ))
+                      : null,
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            Expanded(
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  childAspectRatio: 1.7,
+                  crossAxisSpacing: 16,
+                  mainAxisSpacing: 16,
+                ),
+                itemCount: 12,
+                itemBuilder: (context, index) {
+                  if (index == 9) {
+                    return _buildKeypadButton(
+                      child: const Icon(Icons.backspace, color: Colors.black54),
+                      onPressed: _removeDigit,
+                    );
+                  } else if (index == 10) {
+                    return _buildKeypadButton(
+                      child:  Text('0', style: TextStyle(fontSize: 20.sp)),
+                      onPressed: () => _addDigit('0'),
+                    );
+                  } else if (index == 11) {
+                    return _buildKeypadButton(
+                        child: const Icon(Icons.arrow_forward, color: Colors.black54),
+                        onPressed: (){
+                          final userId = _wayaLocalDataSource.getUserId();
+                          if (_pin.length == _pinLength) {
+                            // viewModel.submitPins(context);
+                            // viewModel.verifyWalletPin(_pin);
+                            //WayaNav.goBack();
+                            _submitPin();
+
+
+                          }
+                        }
+                      // _submitPin,
+                    );
+                  } else {
+                    return _buildKeypadButton(
+                      child: Text('${index + 1}', style:  TextStyle(fontSize: 24.sp)),
+                      onPressed: () => _addDigit('${index + 1}'),
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildKeypadButton({required Widget child, required VoidCallback onPressed}) {
+    return Material(
+      color: Colors.transparent,
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(48), side: BorderSide(color: Colors.grey[300]!, width: 1)),
+      child: InkWell(
+        customBorder: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(48), side: BorderSide(color: Colors.grey[300]!, width: 1)),
+        onTap: onPressed,
+        child: Container(
+          alignment: Alignment.center,
+          child: child,
+        ),
+      ),
+    );
+  }
+}
+
+
 class ConfirmVoteOptionModal extends ConsumerStatefulWidget {
   //final String quantity;
   final String amountPaid;
@@ -331,8 +545,6 @@ class ConfirmVoteOptionModal extends ConsumerStatefulWidget {
 }
 
 class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal> {
-  WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
-
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -392,7 +604,7 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
               ),
             ),
             const Gap(200),
-            WayaButton(
+            /*WayaButton(
               callback: !viewModel.isLoading
                   ? () async {
                       await ref.read(createPollVotingProvider.notifier).castYourVote(
@@ -407,6 +619,19 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
                     }
                   : null,
               centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Yes, Vote'),
+            ),*/
+            WayaButton(
+              callback: (){
+                WayaNav.goBack();
+                WayaUtils.showModalSheet(
+                  context,
+                  child: PollPinEntryBottomSheet(
+                      voteFee: widget.voteFee, pollId: widget.pollId,
+                      choiceId: widget.choiceId, candidateName: widget.candidateName,
+                      votingLink: widget.votingLink, amount: widget.amountPaid,)
+                );
+              },
+                text: 'Yes, Vote'
             ),
             SizedBox(height: 17.h),
             WayaButton(
@@ -428,7 +653,9 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
 class VoteSuccessModal extends ConsumerStatefulWidget {
   final String candidateName;
   final String votingLink;
-  const VoteSuccessModal({super.key, required this.candidateName, required this.votingLink});
+  final String pollId;
+  const VoteSuccessModal({super.key, required this.candidateName,
+    required this.votingLink, required this.pollId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _VoteSuccessModalState();
@@ -478,6 +705,10 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
               color: Colors.white,
               callback: () async {
                 print('YOUR URL ${widget.votingLink}');
+                Share.share(
+                  WayaValueHelper.getShareableUrl(WayaAppRoutes.getPollDetailsPage(widget.pollId)),
+                  subject: 'Share Poll',
+                );
                 Share.share(widget.votingLink);
 
                 //WayaNav.toNamed('/share-voting', arguments: widget.votingLink);
@@ -491,6 +722,80 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
     );
   }
 }
+
+class VoteSuccessModalTwo extends ConsumerStatefulWidget {
+  final String candidateName;
+  final String votingLink;
+  final String pollId;
+  const VoteSuccessModalTwo({super.key, required this.candidateName,
+    required this.votingLink, required this.pollId});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _VoteSuccessModalTwoState();
+}
+
+class _VoteSuccessModalTwoState extends ConsumerState<VoteSuccessModalTwo> {
+  @override
+  Widget build(BuildContext context) {
+    final viewModel = ref.watch(createPollVotingProvider);
+    final wayaTheme = Theme.of(context);
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              'assets/images/polls/vote.png',
+              height: 116.h,
+            ),
+            SizedBox(height: 20.h),
+            Text(
+              'Thank you for voting!\nYour support means everything',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+                  .wayaCopyWith(fontSize: 24.sp, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 3.h),
+            Text(
+              "I just voted for ${widget.candidateName.toLowerCase().capitalizeFirst}! Join me in supporting them. #VoteNow",
+              style: wayaTheme.textTheme.hintStyle,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(height: 30.h),
+            WayaButton(
+              callback: () async {
+                WayaNav.goBack();
+                WayaNav.toNamed("/poll-and-voting");
+              },
+              text: "Return to Polls Page",
+            ),
+            SizedBox(height: 17.h),
+            WayaButton(
+              border: Border.all(color: WayaColors.greyColor300),
+              color: Colors.white,
+              callback: () async {
+                print('YOUR URL ${widget.votingLink}');
+                Share.share(
+                  WayaValueHelper.getShareableUrl(WayaAppRoutes.getPollDetailsPage(widget.pollId)),
+                  subject: 'Share Poll',
+                );
+                //Share.share(widget.votingLink);
+
+                //WayaNav.toNamed('/share-voting', arguments: widget.votingLink);
+              },
+              text: "Share Voting Invitation",
+              textColor: WayaColors.black,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 
 class VoteInsufficientModal extends StatefulWidget {
   const VoteInsufficientModal({super.key});

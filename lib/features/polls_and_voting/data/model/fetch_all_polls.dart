@@ -149,6 +149,7 @@ class Docs {
     this.isPaid,
     this.isSettled,
     this.question,
+    this.description,
     this.url,
     this.startDate,
     this.endDate,
@@ -170,6 +171,7 @@ class Docs {
     isPaid = json['isPaid'];
     isSettled = json['isSettled'];
     question = json['question'];
+    description = json['description'];
     url = json['url'];
     startDate = json['startDate'];
     endDate = json['endDate'];
@@ -198,6 +200,7 @@ class Docs {
   bool? isPaid;
   bool? isSettled;
   String? question;
+  String? description;
   String? url;
   String? startDate;
   String? endDate;
@@ -218,6 +221,7 @@ class Docs {
     bool? isPaid,
     bool? isSettled,
     String? question,
+    String? description,
     String? url,
     String? startDate,
     String? endDate,
@@ -236,6 +240,7 @@ class Docs {
         isPaid: isPaid ?? this.isPaid,
         isSettled: isSettled ?? this.isSettled,
         question: question ?? this.question,
+        description: description ?? this.description,
         url: url ?? this.url,
         categories: categories ?? this.categories,
         startDate: startDate ?? this.startDate,
@@ -256,6 +261,7 @@ class Docs {
     map['isPaid'] = isPaid;
     map['isSettled'] = isSettled;
     map['question'] = question;
+    map['description'] = description;
     map['url'] = url;
     map['startDate'] = startDate;
     map['endDate'] = endDate;

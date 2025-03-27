@@ -310,7 +310,7 @@ class WayaAppRoutes {
     DisputeDetail.route: () => DisputeDetail(id: WayaNav.search['id'].toString()),
     ProductSearchResult.route: () => ProductSearchResult(),
     LogsAndAuditTrials.route: () => LogsAndAuditTrials(),
-    LoginActivity.route: () => LoginActivity(),
+    AccountActivity.route: () => AccountActivity(),
     VisitedPage.route: () => VisitedPage(),
     UserAction.route: () => UserAction(),
     CmsClicks.route: () => CmsClicks(),
@@ -400,6 +400,10 @@ class WayaAppRoutes {
   /// Helper function used to generate the route that is supposed to take you a
   /// single poll by its ID.
   static String getPollDetailsPage(String id) => "${PollAndVoting.route}?id=$id";
+
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single donation by its ID.
+  static String getDonationDetailsPage(String id) => "${Donations.route}?id=$id";
 
   /// This is fine.
   static List<GetPage> get getPages {
