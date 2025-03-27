@@ -59,24 +59,24 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   }
 
   Future<void> selectState(Select value) async {
-    String _state = state.state;
+    String state = state.state;
     state = state.copyWith(state: value.label);
 
-    if (_state.isNotEmpty && value.label != _state) {
+    if (state.isNotEmpty && value.label != state) {
       state.copyWith(cities: []);
       state = state.copyWith(city: '');
       state.copyWith(lgas: []);
       state = state.copyWith(lga: '');
     }
-      await fetchLGA(value.value, 'NG');
+    await fetchLGA(value.value, 'NG');
     await fetchCities(value.value, 'NG');
   }
 
   Future<void> selectCountry(Select value) async {
-    String _country = state.country;
+    String country = state.country;
     state = state.copyWith(country: value.label);
 
-    if (_country.isNotEmpty && value.label != _country) {
+    if (country.isNotEmpty && value.label != country) {
       state.copyWith(states: []);
       state = state.copyWith(state: '');
       state.copyWith(cities: []);
@@ -92,10 +92,7 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   }
 
   void selectCity(Select value) {
-
     state = state.copyWith(city: value.label);
-  
-  
   }
 
   Future<void> fetchCities(String stateCode, String countryCode) async {
@@ -221,7 +218,7 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
       state = state.copyWith(isLoading: true);
       final accountState = ref.watch(selectAccountProvider);
       final bool isPersonal = accountState.selectedType!.type == 'PERSONAL';
-     // print("isPersonal $isPersonal");
+      // print("isPersonal $isPersonal");
       final response = await _authRepository.register(Register(
         email: state.email.text,
         password: state.password.text,
@@ -235,6 +232,7 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
         country: state.country,
         dateOfBirth: state.dateIsoFormat,
         tcAgreement: state.isAgreeToTerm,
+        referenceCode: state.referenceCode.text,
         policyAgreement: state.isAgreeToTerm,
         confirmPassword: state.confirmPassword.text,
         gender: state.gender.toUpperCase(),
@@ -332,5 +330,5 @@ class BusinessTypes extends StateNotifier<AsyncValue<List<Select>>> {
 final businessTypesProvider =
     StateNotifierProvider<BusinessTypes, AsyncValue<List<Select>>>((ref) {
   final authRepository = ref.watch(authRepositoryProvider);
-  return BusinessTypes( authRepository);
+  return BusinessTypes(authRepository);
 });
