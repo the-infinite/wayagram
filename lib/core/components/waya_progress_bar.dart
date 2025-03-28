@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/components/waya_measurable.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 
@@ -54,19 +55,28 @@ class _RawProgressBarState extends State<_RawProgressBar> {
   final sizeNotifier = ValueNotifier(Size.zero);
 
   @override
+  void dispose() {
+    sizeNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //? The size of the text in the progress bar.
     final textSize = _textDetails(context, widget.text, widget.fontSize);
 
     //? Then return the widget.
     return WayaMeasurableWidget(
-      onSized: (size) => sizeNotifier.value = size,
+      onSized: (size) {
+        sizeNotifier.value = size;
+      },
       child: ValueListenableBuilder(
         valueListenable: sizeNotifier,
         builder: (context, size, _) {
           final filledArea = size.width * widget.progress;
+          final consumedArea = textSize.width + (widget.image == null ? 0 : widget.height - 15.h);
 
-          //? Return the component.
+          //? Now, return this one.
           return Stack(
             fit: StackFit.loose,
             children: [
@@ -93,17 +103,35 @@ class _RawProgressBarState extends State<_RawProgressBar> {
 
               //? The text.
               SizedBox(
-                width: textSize.width,
+                width: size.width,
                 height: widget.height,
                 child: Container(
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.only(left: 5),
-                  child: Text(
-                    widget.text,
-                    style: TextStyle(
-                      color: filledArea > textSize.width ? widget.activeTextColor : widget.inactiveTextColor,
-                      fontSize: 14.sp,
-                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    spacing: 5.w,
+                    children: [
+                      //? Since there is an image here.
+                      if (widget.image != null)
+                        WayaImage(
+                          imageUrl: widget.image!,
+                          height: (widget.height - 7.5).h,
+                          width: (widget.height - 7.5).h,
+                        ),
+
+                      //? The text.
+                      Text(
+                        widget.text,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: filledArea > consumedArea ? widget.activeTextColor : widget.inactiveTextColor,
+                          fontSize: 14.sp,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
