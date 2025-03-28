@@ -104,7 +104,7 @@ class _ContestProfileStagesSectionState
                     // isFromDetailsPage: true,
                     title: "Prize for Winner",
                     content:
-                        "NGN${formatMoney(model.amountEarned.toString())}"),
+                        "₦${formatMoney(model.amountEarned.toString())}"),
               ],
             ),
             Column(

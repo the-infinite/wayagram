@@ -65,7 +65,6 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     //
     // return thumbnailFile.path;
   }
-  
 
   @override
   Widget build(BuildContext context) {
@@ -75,20 +74,24 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     final String contestId = Get.parameters['contest'] ?? 'Unknown';
     var model = ref.watch(selectedContestantProfile);
     var viewModel = ref.watch(votersContestNotifier.notifier);
-  //  print("profile id ${model?.id}");
+    //  print("profile id ${model?.id}");
     final imageUrl = useState(model?.profilePhoto ?? "");
 
     useEffect(() {
       ref.read(postProvider.notifier).fetchSingleContestantDetails(
           ref, model?.contestId ?? contestId, model?.profileId ?? id);
+      print("dedee ${model?.contestApplicant?.userId}");
+      print("dedee ${model?.profileId}");
+      print("dedee ${viewModel.getLoggedInUserId()}");
 
-      if (viewModel.getLoggedInUserId() == model?.profileId) {
+      if (viewModel.getLoggedInUserId() == model?.contestApplicant?.userId) {
         model?.stages?.forEach((element) {
-        //  print("i am looping");
+          //  print("i am looping");
           if (element.entryType?.toLowerCase() != "free" &&
               element.isActive == true &&
               element.hasPaid != true) {
-          //  print("looping and have picked one");
+            //  print("looping and have picked one");
+
             selectedStage = element;
             Future.delayed(Duration(seconds: 2), () {
               WayaUtils.showModalSheetUgt(

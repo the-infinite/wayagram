@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:intl/intl.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/referral/model/referral_model.dart';
+import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_contestant_card.dart';
+import 'package:wayagram/features/ugt/create_contest/steps/create_ultimate.dart';
 
 class ReferralCard extends StatelessWidget {
+  final ReferralModel model;
   const ReferralCard({
+    required this.model,
     super.key,
   });
 
@@ -28,21 +34,21 @@ class ReferralCard extends StatelessWidget {
             // Profile Avatar or Initials
             //  if (showImage)
             Container(
-              child: /* user != null
-                    ? CircleAvatar(
-                        backgroundImage: NetworkImage(user["image"]),
-                        radius: 20,
-                      )
-                    : */
-                  CircleAvatar(
-                backgroundColor: wayaTheme.colorScheme.pending50,
-                radius: 20,
-                child: Text(
-                  getInitials("Mango Man"),
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold, color: Colors.black),
-                ),
-              ),
+              child: model.referredUser?.avatar != null
+                  ? CircleAvatar(
+                      backgroundImage:
+                          NetworkImage(model.referredUser?.avatar ?? ""),
+                      radius: 20,
+                    )
+                  : CircleAvatar(
+                      backgroundColor: wayaTheme.colorScheme.pending50,
+                      radius: 20,
+                      child: Text(
+                        getInitials(model.referredUser?.displayName ?? ""),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, color: Colors.black),
+                      ),
+                    ),
             ),
             SizedBox(width: 12),
             // Name and Role
@@ -51,11 +57,11 @@ class ReferralCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Mango Man",
+                    model.referredUser?.displayName ?? "",
                     style: WayaTextStyles.bodyBold,
                   ),
                   Text(
-                    "Date Signed In: 12th Jul 2024",
+                    "Date Signed In: ${convertToUsableDateNew(model.createdAt ?? "")}",
                     style: WayaTextStyles.hintStyleBold,
                   ),
                 ],
@@ -85,5 +91,18 @@ class ReferralCard extends StatelessWidget {
         ? names[0][0] + names[1][0] // First letter of first & last name
         : names[0][0]; // Only first letter if single name
     return initials.toUpperCase();
+  }
+
+  String convertToUsableDateNew(String dateString) {
+    DateTime dateTime = DateTime.parse(dateString);
+
+    // Convert to the desired format
+    String formattedDate = DateFormat("d MMM y").format(dateTime);
+
+    // Add the ordinal suffix
+    String day = DateFormat("d").format(dateTime);
+    String suffix = getDaySuffix(int.parse(day));
+
+    return "$day$suffix ${DateFormat("MMM y").format(dateTime)}";
   }
 }

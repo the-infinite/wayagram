@@ -1,22 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
+import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
+import 'package:wayagram/features/event/bottom_sheets/share/share_provider.dart';
 import 'package:wayagram/features/referral/view/referral_history_page.dart';
+import 'package:wayagram/features/referral/vm/referral_vm.dart';
 import 'package:wayagram/features/referral/widget/how_it_works.dart';
+import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 
-class ReferralPage extends StatelessWidget {
+class ReferralPage extends ConsumerWidget {
   static const route = '/referral-page';
   const ReferralPage({super.key});
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final viewModel = ref.watch(referralVm);
+    final notifier = ref.watch(referralVm.notifier);
+    final shareService = ref.watch(shareProvider);
     final wayaTheme = Theme.of(context);
+    String url = WayaValueHelper.getShareableUrl(
+        WayaAppRoutes.getProfileRoute(notifier.getLoggedInUserId() ?? ""));
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -40,8 +54,10 @@ class ReferralPage extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _infoCard("Total Friends Referred", "20"),
-                    _infoCard("Total Rewards Earned", "₦4,500"),
+                    _infoCard("Total Friends Referred",
+                        viewModel.count?.toString() ?? ""),
+                    _infoCard("Total Rewards Earned",
+                        "₦${formatMoney(viewModel.earned?.toString() ?? "")}"),
                   ],
                 ),
               ),
@@ -82,7 +98,7 @@ class ReferralPage extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "https://wayagram.refer.com/WAYA9839h/eHxD/?referral_code",
+                        url,
                         overflow: TextOverflow.ellipsis,
                         style: WayaTextStyles.hintStyle,
                       ),
@@ -99,8 +115,21 @@ class ReferralPage extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _actionButton(context, Icons.share_outlined, "Share"),
-                _actionButton(context, Icons.copy, "Copy Link"),
+                GestureDetector(
+                    onTap: () async {
+                      await Share.share(
+                        WayaValueHelper.getShareableUrl(url),
+                        subject: 'Share link',
+                      );
+                    },
+                    child:
+                        _actionButton(context, Icons.share_outlined, "Share")),
+                GestureDetector(
+                    onTap: () {
+                      shareService.copyLink(url);
+                      WayaSnackBar.showToast("Copied");
+                    },
+                    child: _actionButton(context, Icons.copy, "Copy Link")),
                 GestureDetector(
                     onTap: () {
                       WayaUtils.showModalSheetUgt(context, child: HowItWorks());
