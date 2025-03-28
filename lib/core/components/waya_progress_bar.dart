@@ -206,7 +206,7 @@ class WayaInformativeProgressBar extends StatelessWidget {
           children: [
             //* The title text of this section.
             Text(
-              '${progress * 100}%',
+              '${(progress * 100).toStringAsFixed(2)}%',
               style: wayaTheme.textTheme.bodyMedium!.copyWith(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w700,
