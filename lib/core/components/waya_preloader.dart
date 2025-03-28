@@ -39,7 +39,7 @@ class _WayaPreloaderOverlayState extends State<WayaPreloaderOverlay> {
 
               //? Then this is dismissed.
               if (WayaPreloaderController.instance.hideOnEnd) {
-                await Future.delayed(const Duration(milliseconds: 750));
+                await Future.delayed(const Duration(milliseconds: 250));
                 WayaPreloaderController.instance.dismiss();
               }
 

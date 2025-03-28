@@ -65,9 +65,11 @@ class WayaIndexerWidget extends Stack {
   })  : assert(shadow.length == children.length),
         super(
           children: children
-            ..sort((Widget a, Widget b) {
-              int reverser = reversed ? -1 : 1;
-              return shadow[children.indexOf(a)] - shadow[children.indexOf(b)] * reverser;
-            }),
+            ..sort(
+              (Widget a, Widget b) {
+                int reverser = reversed ? -1 : 1;
+                return shadow[children.indexOf(a)] - shadow[children.indexOf(b)] * reverser;
+              },
+            ),
         );
 }

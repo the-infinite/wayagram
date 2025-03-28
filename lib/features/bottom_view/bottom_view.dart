@@ -171,7 +171,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
                               WayaValueHelper.formatNumber(chats.totalUnreadCount),
                               style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                 color: wayaTheme.colorScheme.white,
-                                fontSize: 10.sp,
+                                fontSize: 12.sp,
                               ),
                             ),
                           ),

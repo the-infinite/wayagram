@@ -31,10 +31,13 @@ class ActivityLogsRepository extends BaseRepository {
   Future<WayaRequestResponse> getPaymentActivity(int page) {
     return get("wayagram-wallet/api/v2/client/activity-logs?limit=10&page=$page&logType=payment-activity");
   }
-//https://services.staging.wayagram.ng/
 
   Future<WayaRequestResponse> getLoginHistory(int page) {
     return get("wayagram-profile/api/v2/client/activity-logs?limit=10&page=$page&logType=login-history");
+  }
+
+  Future<WayaRequestResponse> getAccountActivity(int page) {
+    return get("wayagram-profile/api/v2/client/activity-logs?page=$page");
   }
 
 }

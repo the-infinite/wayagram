@@ -47,7 +47,6 @@ class _AllSellerBidsState extends ConsumerState<AllSellerBids> {
       isLoading: false,
       isScrollable: false,
       title: 'Bids',
-      appBarTrailing: bidIcon(context),
       body: WayaObservableScrollView(
         handler: handler,
         shouldFetch: !state.isLoadingBids,

@@ -85,6 +85,8 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
     final amount = await WayaUtils.showModalSheet<double>(
       context,
       child: EditOfferModal(
+        title: 'Edit your Offer',
+        hint: 'Update your base price for this request',
         delta: widget.data.bidStartingAmount >= 3000000
             ? 25000
             : widget.data.bidStartingAmount >= 200000

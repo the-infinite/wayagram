@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -39,28 +40,21 @@ class _LogsAndAuditTrialsState extends ConsumerState<LogsAndAuditTrials> {
         ref.watch(createGroupProvider.notifier).reset();
       },
       body: Column(
-        spacing:10,
+        spacing:1,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Gap(10),
-         logCard('Login Activity',
-             'Review all login attempts to keep your account secure',()=> WayaNav.toNamed(LoginActivity.route)),
-          logCard('Visited Pages',
-              'Discover which pages you’ve accessed recently.',()=> WayaNav.toNamed(VisitedPage.route)),
-
-          logCard('CMS Clicks',
-              'Track your interactions with CMS elements across the platform',()=> WayaNav.toNamed(CmsClicks.route)),
-
-          logCard('User Actions',
-              'View all actions you’ve performed, including edits and updates.',()=> WayaNav.toNamed(UserAction.route)),
-
-          logCard('Payment Activity',
-              'Monitor all payments made through your account',()=>WayaNav.toNamed(PaymentActivity.route)),
-
-          logCard('User Interactions',
-              'Review your engagement, from messages sent to likes and shares',()=>WayaNav.toNamed(UserInteraction.route)),
-          logCard('Search Logs',
-              'Review your engagement, from messages sent to likes and shares',()=>WayaNav.toNamed(SearchLog.route)),
+          logCard('Account', WayaAssets.icons.genSet.account.path, ()=> WayaNav.toNamed(AccountActivity.route)),
+          logCard('Shop', WayaAssets.icons.genSet.shop.path,()=> WayaNav.toNamed(VisitedPage.route)),
+          logCard('Wallet', WayaAssets.icons.genSet.wallet2.path,()=> WayaNav.toNamed(CmsClicks.route)),
+          logCard('Events', WayaAssets.icons.genSet.event.path,()=> WayaNav.toNamed(UserAction.route)),
+          logCard('Chat & Socials', WayaAssets.icons.genSet.chat3.path,()=>WayaNav.toNamed(PaymentActivity.route)),
+          logCard('Polls & Voting', WayaAssets.icons.genSet.polls.path,()=>WayaNav.toNamed(UserInteraction.route)),
+          logCard('Pages', WayaAssets.icons.genSet.pages.path,()=>WayaNav.toNamed(UserInteraction.route)),
+          logCard('Groups', WayaAssets.icons.genSet.group.path,()=>WayaNav.toNamed(UserInteraction.route)),
+          logCard('Donation', WayaAssets.icons.genSet.donation.path,()=>WayaNav.toNamed(UserInteraction.route)),
+          logCard('UGT', WayaAssets.icons.genSet.ugt.path,()=>WayaNav.toNamed(SearchLog.route)),
+          logCard('Get Quotation', WayaAssets.icons.genSet.account.path,()=>WayaNav.toNamed(SearchLog.route)),
 
 
 
@@ -70,29 +64,30 @@ class _LogsAndAuditTrialsState extends ConsumerState<LogsAndAuditTrials> {
     );
   }
 
-  Widget logCard(title, subtitle, onTap){
+  Widget logCard(title, img, onTap){
     return  Container(
       decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12)),
       child: ListTile(
         onTap: onTap,
+        leading:SvgPicture.asset(img,),
         title:  Text(
             title,
             style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
               fontFamily: WayaConstants.fontFamily,
-              color: Colors.black,
+              color: WayaColors.greyColor700,
             )),
-        subtitle: Text(
+       /* subtitle: Text(
             subtitle,
             style: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w400,
               fontFamily: WayaConstants.fontFamily,
               color: Color(0xff6B7280),
-            )),
+            )),*/
         trailing: SvgPicture.asset('assets/images/forward.svg'),
       ),
     );

@@ -26,7 +26,7 @@ class WayaNoticeModal extends StatelessWidget {
       this.buttonCenterWidget,
       this.secondButtonCenterWidget,
       required this.onCancel,
-     required this.onPress});
+      required this.onPress});
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,7 @@ class WayaNoticeModal extends StatelessWidget {
             textAlign: TextAlign.center,
             softWrap: true,
             maxLines: 3,
-            style:  TextStyle(
+            style: TextStyle(
               fontSize: 20.sp,
               fontWeight: FontWeight.bold,
             ),
@@ -63,19 +63,17 @@ class WayaNoticeModal extends StatelessWidget {
             style: WayaTextStyles.descriptionStyle,
           ),
           const Gap(24),
-          
           WayaButton(
-                centerWidget: buttonCenterWidget,
-                callback: () {
-
-                  onPress();
-                },
-                text: buttonCenterWidget == null ? buttonText ?? '' : ''),
-            const Gap(10),
+            centerWidget: buttonCenterWidget,
+            callback: () {
+              onPress();
+            },
+            text: buttonCenterWidget == null ? buttonText ?? '' : '',
+          ),
+          const Gap(10),
           Visibility(
             visible: onCancel != null,
             child: WayaButton(
-            
               callback: () {
                 onCancel?.call();
               },
@@ -83,9 +81,9 @@ class WayaNoticeModal extends StatelessWidget {
               color: wayaTheme.transparent,
               centerWidget: secondButtonCenterWidget,
               border: Border.all(color: wayaTheme.greyColor500, width: 1),
-              text: secondButtonCenterWidget == null
-                  ? secondButtonText ?? 'Cancel'
-                  : ''))
+              text: secondButtonCenterWidget == null ? secondButtonText ?? 'Cancel' : '',
+            ),
+          ),
         ],
       ),
     );

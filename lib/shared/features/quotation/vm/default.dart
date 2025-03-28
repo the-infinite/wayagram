@@ -237,6 +237,7 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   /// made since origin and time past.
   Future<List<QuotationBidModel>> getBids(String shopId) async {
     final result = <QuotationBidModel>[];
+    final requests = <BuyRequestModel>[];
 
     try {
       //? Now, we are loading bro.
@@ -250,21 +251,29 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
         //? If the previous page had a next page, offload them onto this place.
         if (state.hasNextRequest) {
           result.addAll(state.bids);
+          requests.addAll(state.bidRequests);
         }
 
         //? The data.
         final data = response.data['data'];
 
-        //? Parse the conversations as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => QuotationBidModel.fromJson(doc)).toList();
+        //? Parse the buy requests first so we can extrapolate what we need.
+        final docs = (data['docs'] as List).map((doc) => BuyRequestModel.fromJson(doc)).toList();
 
-        //? This is fine.
-        result.addAll(docs);
+        //? Next, we can parse and add the bids to this place that they might be
+        //? worth generating and using.
+        for (final quote in docs) {
+          result.addAll(quote.bids?.where((bid) => bid.vendorId == ConversationState.self.id) ?? []);
+        }
+
+        //? Then add all the quotes (buy requests)
+        requests.addAll(docs);
 
         //? Update state.
         state = state.copyWith(
           hasLoadedBids: true,
           bids: result,
+          bidRequests: requests,
           totalBids: data['totalDocs'],
           bidPages: data['totalPages'],
           hasNextBid: data['hasNextPage'],
@@ -323,6 +332,140 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
     //? Since it failed.
     return null;
+  }
+
+  /// Helper function used to get the details of a single quotation order probably
+  /// in order to update the seller and buyer in "real-time."
+  Future<BidOrderModel?> getOrderDetails(String id) async {
+    try {
+      final response = await repo.retrieveOrder(id);
+
+      //? This is fine.
+      if (response.success) {
+        //? The data.
+        final data = response.data['data'];
+
+        //? Parse the single buy request to ensure we are doing things right.
+        final doc = BidOrderModel.fromJson(data);
+
+        //? Return the document.
+        return doc;
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Since it failed.
+    return null;
+  }
+
+  /// Helper function used to update the status of a single order. This is useful
+  /// when we want to update the status of a single order in the system.
+  Future<bool> updateOrderStatus(String id, QuotationOrderStatus status) async {
+    try {
+      final response = await repo.updateOrderStatus(id, status.value);
+
+      //? This is fine.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Since it failed.
+    return false;
+  }
+
+  /// Helper function used to extend the time of a bid. This is useful when we
+  /// want to extend the time of a bid in the system.
+  Future<bool> extendBidTime(String id, String time) async {
+    try {
+      final response = await repo.extendBidTime(id: id, time: time);
+
+      //? When this was fine, update the buy request in question.
+      if (response.success) {
+        await getBuyRequest(id);
+      }
+
+      //? This is fine.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Since it failed.
+    return false;
+  }
+
+  /// Helper function used to update the amount of a single request. This is useful
+  /// when we want to update the amount of a single request in the system.
+  Future<bool> updateRequestAmount(String id, double amount) async {
+    try {
+      final response = await repo.updateRequestAmount(id: id, amount: amount.toStringAsFixed(2));
+
+      //? When this was fine, update the buy request in question.
+      if (response.success) {
+        await getBuyRequest(id);
+      }
+
+      //? This is fine.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Since it failed.
+    return false;
+  }
+
+  /// Helper function used to complete an order. This is useful when we want to
+  /// complete an order in the system.
+  Future<bool> completeOrder(String id, String token) async {
+    try {
+      final response = await repo.completeOrder(orderId: id, token: token);
+
+      //? This is fine.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Since it failed.
+    return false;
+  }
+
+  /// Helper function used to search the list of quotes that this store has bid
+  /// on in an attempt to find the corresponding quote to a single bid. That
+  /// way, on the front-end, we do not drive ourselves somewhat insane and the
+  /// server-side needs write no additional code.
+  ///
+  /// Nice, right?
+  BuyRequestModel? getBidQuote(String id) {
+    return state.bidRequests.where((quote) => quote.id == id).firstOrNull;
   }
 
   /// Helper function used to reset the state of this quotations notifier back

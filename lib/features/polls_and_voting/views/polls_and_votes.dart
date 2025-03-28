@@ -12,6 +12,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/views/my_polls.dart';
+import 'package:wayagram/features/polls_and_voting/views/my_polls_two.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 import 'polls_for_you.dart';
@@ -28,6 +29,23 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
 
   int _selectedIndex = 0;
 
+  // @override
+  // void initState() {
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  //     ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
+  //   });
+  //
+  //   super.initState();
+  // }
+  //
+  // @override
+  // void reassemble() {
+  //   super.reassemble();
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+  //     ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
+  //   });
+  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +55,7 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
     final dynamic args  = ModalRoute.of(context)?.settings.arguments;
     return WayaScaffold(
         title: "Polls and Votes",
-        isLoading: false,
+        isLoading: viewModel.isLoading,
         isScrollable: false,
         onTapBackButton: (){
           args == 'poll'?  WayaNav.offNamed(BottomView.route, arguments: 0): WayaNav.offNamed(BottomView.route, arguments: 0);
@@ -144,7 +162,8 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
             ),
 
             const Gap(25),
-            _selectedIndex == 0 ? PollsForYou() : MyPolls(),
+            _selectedIndex == 0 ? PollsForYou() : MyPollsTwo()
+            //MyPolls(),
 
           ],
         ) );
