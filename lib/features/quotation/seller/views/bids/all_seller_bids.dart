@@ -114,19 +114,6 @@ class _AllSellerBidsState extends ConsumerState<AllSellerBids> {
               ],
             ),
 
-            WayaInformativeProgressBar(
-              title: "Hight",
-              subtitle: "Low",
-              text: WayaValueHelper.formatNumber(10405606),
-              progress: 0.3375,
-              height: 60.h,
-              filledRegion: wayaTheme.colorScheme.customPrimary,
-              unfilledRegion: Colors.grey,
-              count: 100,
-              imageUrl: "https://picsum.photos/150.png",
-              fontSize: 14.sp,
-            ),
-
             // Some space.
             const Gap(10),
 
