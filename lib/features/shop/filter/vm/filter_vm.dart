@@ -1,6 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
-import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
 class FilterState {
   final List<String> selectedCategory;
