@@ -45,6 +45,10 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
+      onRefresh: () {
+        rollAccessNotifier.getAllMembers(true);
+        return rollAccessNotifier.getRoleManagementMemberList();
+      },
       title: "Roles & Access",
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,

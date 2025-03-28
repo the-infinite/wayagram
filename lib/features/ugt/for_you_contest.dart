@@ -211,7 +211,10 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
             : "You don’t have any active contest here. Create a \n Business account to access more features",
         title: "No Contest Created",
         buttonText: "Host a Contest",
-        hideButton: true,
+        hideButton:
+            ConversationState.self.accountType == UserAccountType.business
+                ? true
+                : false,
         onTap: () {
           ivalidateUGTVM(ref);
           WayaNav.toNamed("/create-contest");
