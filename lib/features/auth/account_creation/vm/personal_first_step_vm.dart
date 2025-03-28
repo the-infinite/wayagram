@@ -59,10 +59,10 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   }
 
   Future<void> selectState(Select value) async {
-    String state = state.state;
+    String prevStates = state.state;
     state = state.copyWith(state: value.label);
 
-    if (state.isNotEmpty && value.label != state) {
+    if (prevStates.isNotEmpty && value.label != prevStates) {
       state.copyWith(cities: []);
       state = state.copyWith(city: '');
       state.copyWith(lgas: []);
