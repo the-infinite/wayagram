@@ -82,7 +82,7 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
               children: [
                 UpcomingWidget(title: "Entry type", content: widget.post?.entryType ?? ""),
                 //  const Gap(20),
-                UpcomingWidget(title: "Entry fee", content: formatMoney(widget.post?.entryAmount?.toString() ?? "")),
+                UpcomingWidget(title: "Entry fee", content: "₦${formatMoney(widget.post?.entryAmount?.toString() ?? "")}"),
                 //   const Gap(20),
                 UpcomingWidget(
                   title: "Vote to qualify",

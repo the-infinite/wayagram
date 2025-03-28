@@ -266,7 +266,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                       //? if it free and has profile details
                       : hasProfile.value
                           ? "View Contest Details"
-                          : "Pay NGN${formatMoney(widget.post?.contest?.amount?.toString() ?? "0")} to continue"
+                          : "Pay ₦${formatMoney(widget.post?.contest?.amount?.toString() ?? "0")} to continue"
                   : "View Contest Details",
             ),
             const Gap(10),
