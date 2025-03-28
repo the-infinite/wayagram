@@ -53,8 +53,9 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-              if (_formKey.currentState!.validate()) {
-             //WayaNav.goBack();
+              if(_formKey.currentState!.validate()) {
+
+                print('PAID POLL =>>>> ${viewModel.pollType}');
                 WayaNav.toNamed("/add-choices");
 
               }
@@ -62,6 +63,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
             text: 'Create',
             isLoading: viewModel.isLoading,
             horizontalPadding: 12,
+            height: 30,
             textStyle: WayaTextStyles.bodySmall.copyWith(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
@@ -143,13 +145,8 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                             line: 6,
                             keyboardType: TextInputType.text,
                             controller: viewModel.pollDescription,
-                            // onChanged: (value){
-                            //   //formData['pollDescription'] = value;
-                            //
-                            // },
                             hintText: 'Why should people care? Give a short, engaging reason',
                             borderColor: formState.hasError &&
-                                //formData['pollDescription'].isEmpty
                                 viewModel.pollDescription.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
@@ -157,7 +154,6 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                           ),
                           if (formState.hasError &&
                               viewModel.pollDescription.text.isEmpty
-                          //formData['pollDescription']
                           )
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
@@ -280,9 +276,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                         )
                       ],
                     ),
-                    const Gap(15),
-
-                    const Gap(10),
+                    const Gap(25),
                     EventDateWidget(
                         uniqueKey: 'start-date',
                         date: viewModel.startDate,
@@ -303,9 +297,16 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                             .read(createPollVotingProvider.notifier)
                             .selectEndDate),
                     const Gap(10),
+                    //if(viewModel.pollType == 'Paid' || viewModel.pollType.isEmpty)
                     viewModel.pollType == 'free' || viewModel.pollType.isEmpty ? Container():
                     FormField<String>(validator: (value) {
-                      return null;
+                      if(viewModel.pollType == 'paid'){
+                        return null;
+                          //'Price is required';
+                      }else{
+                        return null;
+                      }
+
                     }, builder: (formState) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -318,11 +319,9 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 viewModel.votePrice.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
-                            label: 'Price Per Vote (Optional)',
+                            label: 'Price Per Vote',
                           ),
-                          if (formState.hasError && viewModel.votePrice.text.isEmpty
-                              //formData['votePrice'].isEmpty
-                          )
+                          if (formState.hasError && viewModel.votePrice.text.isEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
