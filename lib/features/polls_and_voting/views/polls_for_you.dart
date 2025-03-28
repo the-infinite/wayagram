@@ -169,7 +169,22 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           children: [
                             if (poll.choices != null)
                               ...poll.choices!.map(
-                                (e) => choiceStatisticsSecond(
+                                /*  (e)=> WayaInformativeProgressBar(
+                                    title: '${e.text?.capitalizeFirst}',
+                                    text: '${e.text?.capitalizeFirst}',
+                                    subtitle: '',
+                                    progress: double.parse(((e.voteCount!) / viewModel.fetchAllPols[index].voteCount!).toStringAsFixed(2)),
+                                    height: 60.0,
+                                    filledRegion: wayaTheme.colorScheme.customPrimary,
+                                    unfilledRegion: wayaTheme.colorScheme.greyColor200,
+                                    count: e.voteCount!,
+                                    fontSize: 12,
+                                    activeTextColor:  wayaTheme.colorScheme.white,
+                                    inactiveTextColor:  wayaTheme.colorScheme.primary500,
+                                    imageUrl: '${e.imageUrl}',
+                                  ),*/
+                                (e) =>
+                                    choiceStatisticsSecond(
                                     e.imageUrl == null,
                                   e.imageUrl == null ? '':'${e.imageUrl}',
                                   '${e.text}',
@@ -197,7 +212,6 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                       );
                                     }else if(poll.pollType == 'free'){
                                       ref.read(createPollVotingProvider.notifier).castFreeVote(
-                                          //'0',
                                          1,
                                           '${e.id}',
                                           '${poll.id}',
@@ -303,8 +317,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                 width: MediaQuery.of(ctx).size.height / 12,
                                 child: Center(
                                   child:
-                                      //Image.asset('assets/images/home/profile_icon.png', height: 60.h, width: 70.w,)
-                                      Text('Image\nError',
+                                       Text('Image\nError',
                                           textAlign: TextAlign.center,
                                           style: TextStyle(color: Colors.white, fontSize: 8)),
                                 ),
@@ -512,9 +525,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
-                    //border: Border.all(color: voteCount == '0'? WayaColors.primary600:wayaTheme.colorScheme.white,),
                     color: wayaTheme.colorScheme.greyColor200,
-                    //color: wayaTheme.colorScheme.white,
                   ),
                   height: 60.h,
                   width: context.width * 0.72,
@@ -530,7 +541,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                   ),
                 ),
                 Gap(10),
-                //voteCount == '0'? Container():
+                voteCount == '0'? Container():
                 Expanded(
                   child: Column(
                     children: [
@@ -561,15 +572,16 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
               width: voteCount == '0' ? 0: 0.72*context.width * range,
               //
               child:  Row(
-
                 children: [
                   chkImg? Container():
-                  WayaImage(
-                    imageUrl: img,
-
-                    height: 44.h,
-                    width: 59.w,
-                    radius: BorderRadius.circular(4),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 15),
+                    child: WayaImage(
+                      imageUrl: img,
+                      height: 44.h,
+                      width: 59.w,
+                      radius: BorderRadius.circular(4),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 20),

@@ -706,7 +706,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
        num qty, String choiceId,
       String pollId, ctx, candidateName, votingLink) async {
     try {
-      state = state.copyWith(isLoading: true);
+      //state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.castFreeVote(qty, choiceId, pollId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
@@ -830,7 +830,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
   Future<PaginatedResult<Docs>?> getAllPolls({required int page}) async {
     try {
-      state = state.copyWith(isLoading: true);
+      //state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.getAllPolls(page);
       List<Docs>? fetchAllPols = [];
       bool? hasNextPage = false;

@@ -51,7 +51,7 @@ class _InActivePollsState extends ConsumerState<InActivePolls> {
     final wayaTheme = Theme.of(context);
     final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
-    return viewModel.fetchAllPols.isEmpty ? ActivityLogsEmptyState(text: "You don'\t have any inactive polls"):
+    return viewModel.fetchAllPols.isEmpty ? ActivityLogsEmptyState(text: "You don'\t have any completed polls"):
     SizedBox(
       height: 503.h,
       //height: Platform.isAndroid ? 300 : 460,
