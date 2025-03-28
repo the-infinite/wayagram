@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/core/components/waya_measurable.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 
 Size _textDetails(BuildContext context, String text, double fontSize) {
@@ -21,7 +22,7 @@ Size _textDetails(BuildContext context, String text, double fontSize) {
   return textPainter.size;
 }
 
-class _RawProgressBar extends StatelessWidget {
+class _RawProgressBar extends StatefulWidget {
   final double progress;
   final String text;
   final String? image;
@@ -46,55 +47,70 @@ class _RawProgressBar extends StatelessWidget {
   });
 
   @override
+  State<_RawProgressBar> createState() => _RawProgressBarState();
+}
+
+class _RawProgressBarState extends State<_RawProgressBar> {
+  final sizeNotifier = ValueNotifier(Size.zero);
+
+  @override
   Widget build(BuildContext context) {
     //? The size of the text in the progress bar.
-    final textSize = _textDetails(context, text, fontSize);
-    final renderBox = context.findRenderObject() as RenderBox?;
-    final size = renderBox?.size ?? Size.zero;
-    final filledArea = size.width * progress;
+    final textSize = _textDetails(context, widget.text, widget.fontSize);
 
     //? Then return the widget.
-    return Stack(
-      fit: StackFit.loose,
-      children: [
-        //? The progress bar.
-        Container(
-          width: size.width,
-          height: height,
-          decoration: BoxDecoration(
-            color: unfilledRegion,
-            borderRadius: BorderRadius.circular(5.r),
-          ),
-          child: FractionallySizedBox(
-            alignment: Alignment.centerLeft,
-            widthFactor: progress,
-            child: Container(
-              width: filledArea,
-              decoration: BoxDecoration(
-                color: filledRegion,
-                borderRadius: BorderRadius.circular(5),
-              ),
-            ),
-          ),
-        ),
+    return WayaMeasurableWidget(
+      onSized: (size) => sizeNotifier.value = size,
+      child: ValueListenableBuilder(
+        valueListenable: sizeNotifier,
+        builder: (context, size, _) {
+          final filledArea = size.width * widget.progress;
 
-        //? The text.
-        SizedBox(
-          width: textSize.width,
-          height: height,
-          child: Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.only(left: 5),
-            child: Text(
-              text,
-              style: TextStyle(
-                color: filledArea > textSize.width ? activeTextColor : inactiveTextColor,
-                fontSize: 14.sp,
+          //? Return the component.
+          return Stack(
+            fit: StackFit.loose,
+            children: [
+              //? The progress bar.
+              Container(
+                width: size.width,
+                height: widget.height,
+                decoration: BoxDecoration(
+                  color: widget.unfilledRegion,
+                  borderRadius: BorderRadius.circular(5.r),
+                ),
+                child: FractionallySizedBox(
+                  alignment: Alignment.centerLeft,
+                  widthFactor: widget.progress,
+                  child: Container(
+                    width: filledArea,
+                    decoration: BoxDecoration(
+                      color: widget.filledRegion,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
-      ],
+
+              //? The text.
+              SizedBox(
+                width: textSize.width,
+                height: widget.height,
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Text(
+                    widget.text,
+                    style: TextStyle(
+                      color: filledArea > textSize.width ? widget.activeTextColor : widget.inactiveTextColor,
+                      fontSize: 14.sp,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
