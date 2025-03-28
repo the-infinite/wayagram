@@ -169,7 +169,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           children: [
                             if (poll.choices != null)
                               ...poll.choices!.map(
-                                /*  (e)=> WayaInformativeProgressBar(
+                                  (e)=> WayaInformativeProgressBar(
                                     title: '${e.text?.capitalizeFirst}',
                                     text: '${e.text?.capitalizeFirst}',
                                     subtitle: '',
@@ -181,9 +181,9 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                     fontSize: 12,
                                     activeTextColor:  wayaTheme.colorScheme.white,
                                     inactiveTextColor:  wayaTheme.colorScheme.primary500,
-                                    imageUrl: '${e.imageUrl}',
-                                  ),*/
-                                (e) =>
+                                    imageUrl: e.imageUrl,
+                                  ),
+                               /* (e) =>
                                     choiceStatisticsSecond(
                                     e.imageUrl == null,
                                   e.imageUrl == null ? '':'${e.imageUrl}',
@@ -232,7 +232,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                       );
                                     }
                                   }, ((e.voteCount!) / viewModel.fetchAllPols[index].voteCount!)
-                                ),
+                                ),*/
                               ),
                           ],
                         )
@@ -537,6 +537,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           fontSize: 14.w, fontWeight: FontWeight.w600,
                           color: voteCount == '0'? Theme.of(ctx).colorScheme.primary600: Theme.of(ctx).colorScheme.black),
                           textAlign: TextAlign.start,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
@@ -591,6 +592,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           fontSize: 14.sp, fontWeight: FontWeight.w600,
                           color: Theme.of(ctx).colorScheme.white),
                       textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
