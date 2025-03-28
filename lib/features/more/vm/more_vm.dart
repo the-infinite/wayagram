@@ -3,6 +3,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/more/data/model/more_option_model.dart';
+import 'package:wayagram/features/promotion/views/promotion_dashboard.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/support/modal/default.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
@@ -27,7 +28,8 @@ class MoreVm {
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mGroup.path,
-        content: "Create groups and manage who is following you and who you follow.",
+        content:
+            "Create groups and manage who is following you and who you follow.",
         title: "Group",
         onTap: () => WayaNav.toNamed('/groups'),
       ),
@@ -39,7 +41,8 @@ class MoreVm {
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mQuotation.path,
-        content: "Create groups and manage who is following you and who you follow.",
+        content:
+            "Create groups and manage who is following you and who you follow.",
         title: "Get Quotation",
         onTap: () => WayaNav.removeUntilNamed(BottomView.route, arguments: 3),
       ),
@@ -75,15 +78,17 @@ class MoreVm {
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mPromotion.path,
-        content: "Promote your goods and services so it can be seen by more people.",
+        content:
+            "Promote your goods and services so it can be seen by more people.",
         title: "Promotion",
-        onTap: () => WayaNavigationHelper.showComingSoonModal(true),
+        onTap: () => WayaNav.toNamed(PromotionDashboard.route),
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mFollow.path,
         content: "Manage your following, followers in one place.",
         title: "Followers & Following",
-        onTap: () => WayaNav.toNamed('/follow/relationships/self', arguments: 'more'),
+        onTap: () =>
+            WayaNav.toNamed('/follow/relationships/self', arguments: 'more'),
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mSupport.path,
@@ -107,7 +112,8 @@ class MoreVm {
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mChat.path,
-        content: "If you believe there’s an error or issue within the app, please submit a dispute.",
+        content:
+            "If you believe there’s an error or issue within the app, please submit a dispute.",
         title: "Disputes",
         onTap: () => WayaNav.toNamed(SellerDispute.route),
       ),

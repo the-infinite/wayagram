@@ -26,7 +26,7 @@ class Promote extends ConsumerStatefulWidget {
 
 class _PromoteState extends ConsumerState<Promote> {
   final _formKey = GlobalKey<FormState>();
-  var values = RangeValues(16, 80);
+  var values = RangeValues(0.1, 0.5);
 
   @override
   void initState() {
@@ -191,18 +191,18 @@ class _PromoteState extends ConsumerState<Promote> {
                   ),
                 ),
               ),
-              RangeSlider(
-                values: values,
-                min: state.rangeStart,
-                max: state.rangeEnds,
-                divisions: 10,
-                labels: labels,
-                onChanged: (newValues) {
-                  setState(() {
-                    values = newValues;
-                  });
-                },
-              ),
+              // RangeSlider(
+              //   values: values,
+              //   min: state.rangeStart,
+              //   max: state.rangeEnds,
+              //   divisions: 10,
+              //   labels: labels,
+              //   onChanged: (newValues) {
+              //     setState(() {
+              //       values = newValues;
+              //     });
+              //   },
+              // ),
               Row(
                 spacing: 10,
                 children: [
@@ -233,7 +233,7 @@ class _PromoteState extends ConsumerState<Promote> {
                                   () {
                                     notifier.setRangeStart(double.tryParse(
                                             value.trim().replaceAll(',', '')) ??
-                                        18);
+                                        0.1);
                                   },
                                   key: 'age-range-start',
                                   delay: const Duration(milliseconds: 800),
@@ -285,7 +285,7 @@ class _PromoteState extends ConsumerState<Promote> {
                                   () {
                                     notifier.setRangeEnd(double.tryParse(
                                             value.trim().replaceAll(',', '')) ??
-                                        80);
+                                        0.5);
                                   },
                                   key: 'age-range-ends',
                                   delay: const Duration(milliseconds: 800),
@@ -313,7 +313,7 @@ class _PromoteState extends ConsumerState<Promote> {
               ),
               const Gap(10),
               FormField<String>(validator: (value) {
-                if (state.budget!.text.isEmpty) {
+                if (state.budget.text.isEmpty) {
                   return 'Price is required';
                 }
 
@@ -327,7 +327,7 @@ class _PromoteState extends ConsumerState<Promote> {
                         controller: state.budget,
                         hintText: 'Enter Price',
                         borderColor:
-                            formState.hasError && state.budget!.text.isEmpty
+                            formState.hasError && state.budget.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
                         label: 'Budget',
@@ -336,7 +336,7 @@ class _PromoteState extends ConsumerState<Promote> {
                           child: Text("Per day",
                               style: wayaTheme.textTheme.hintStyle),
                         )),
-                    if (formState.hasError && state.budget!.text.isEmpty)
+                    if (formState.hasError && state.budget.text.isEmpty)
                       Padding(
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
@@ -407,7 +407,7 @@ class _PromoteState extends ConsumerState<Promote> {
                           children: [
                             Text(
                               WayaHelpers.formatPrice(
-                                  int.parse(state.budget?.text ?? '0')),
+                                  int.parse('0')),
                               style: wayaTheme.textTheme.descriptionStyle
                                   .copyWith(
                                       color: wayaTheme.colorScheme.customBlack,

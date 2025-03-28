@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wayagram/core/data/model/model.dart';
 
 class PromotionState {
-  final TextEditingController? budget;
+  final TextEditingController budget;
   final TextEditingController minAge;
   final TextEditingController maxAge;
   final String duration;
