@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -13,7 +12,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class PollDashboard extends ConsumerStatefulWidget {
@@ -206,14 +204,11 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
             const Gap(10),
         ],),
         ),
-
-
-
           ],
         ) );
   }
 
-  statisticCard(vote, position, name, color, postionColor){
+  statisticCard(vote, position, name, color, positionColor){
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       height: 32.h,
@@ -221,8 +216,6 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
         color: color,
-        //chk == 0 ?  Theme.of(context).colorScheme.success50: color
-        //border: Border.all(color:Theme.of(context).colorScheme.greyColor100),
       ),
       child: Row(
         children: [
@@ -241,7 +234,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
                 fontFamily: WayaConstants.fontFamily,
-                color: postionColor,)
+                color: positionColor,)
           ),
           Spacer(),
           Text(

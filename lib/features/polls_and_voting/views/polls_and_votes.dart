@@ -29,24 +29,6 @@ class _PollAndVotingState extends ConsumerState<PollAndVoting> with SingleTicker
 
   int _selectedIndex = 0;
 
-  // @override
-  // void initState() {
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-  //     ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
-  //   });
-  //
-  //   super.initState();
-  // }
-  //
-  // @override
-  // void reassemble() {
-  //   super.reassemble();
-  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-  //     ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
-  //   });
-  // }
-
-
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);

@@ -425,7 +425,7 @@ class DioHttpClient implements WayaHttpClientInterface {
 
         //? Since this is something else.
         _logger.e('URI: ${e.requestOptions.uri.toString()}');
-        _logger.e('statusCode: ${e.response}');
+        _logger.e('statusCode: ${e.response?.statusCode}');
 
         try {
           message = e.response?.data['errors'] != null ? e.response?.data['errors'][0] : e.response?.data['message'];

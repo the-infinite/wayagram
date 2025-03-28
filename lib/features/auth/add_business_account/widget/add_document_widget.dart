@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -76,7 +77,9 @@ class _AddDocumentWidgetState extends ConsumerState<AddDocumentWidget> {
                         ),
                       ),
                 const Gap(20),
-                Column(
+                SizedBox(
+                  width: context.width * 0.5,
+                  child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -93,6 +96,7 @@ class _AddDocumentWidgetState extends ConsumerState<AddDocumentWidget> {
                     )
                   ],
                 ),
+                )
               ],
             ),
             widget.isUploaded

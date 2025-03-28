@@ -189,7 +189,7 @@ class LoginVm extends StateNotifier<LoginState> {
             );
           }
 
-          //? Now we do the unnecessary part of things.
+          //? Now we do the unnecessPary part of things.
           final response =
               await _profileRepo.getUserDataRepo(userId: remoteUserData.data?.userdata?.user?.id as String);
 
