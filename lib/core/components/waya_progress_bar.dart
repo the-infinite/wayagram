@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/components/waya_measurable.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 Size _textDetails(BuildContext context, String text, double fontSize) {
   final wayaTheme = Theme.of(context);
@@ -156,6 +157,7 @@ class WayaInformativeProgressBar extends StatelessWidget {
   final Color activeTextColor;
   final Color inactiveTextColor;
   final String? imageUrl;
+  final String unit, units;
 
   // Constructor.
   const WayaInformativeProgressBar({
@@ -169,6 +171,8 @@ class WayaInformativeProgressBar extends StatelessWidget {
     required this.unfilledRegion,
     required this.count,
     required this.fontSize,
+    this.unit = "vote",
+    this.units = "votes",
     this.activeTextColor = Colors.white,
     this.inactiveTextColor = Colors.black,
     this.imageUrl,
@@ -216,7 +220,7 @@ class WayaInformativeProgressBar extends StatelessWidget {
 
             //* The subtitle text of this section.
             Text(
-              '$count ${count == 1 ? 'vote' : 'votes'}',
+              '${WayaValueHelper.formatNumber(count)} ${count == 1 ? unit : units}',
               style: wayaTheme.textTheme.bodyMedium!.copyWith(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
