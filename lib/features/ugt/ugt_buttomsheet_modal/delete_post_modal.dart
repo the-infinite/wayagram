@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -9,7 +8,6 @@ import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
@@ -113,20 +111,15 @@ class _DeletePostModalState extends ConsumerState<DeletePostModal> {
                 notifier: buttonController,
                 color: theme.colorScheme.error,
                 callback: () async {
-                bool isSuccess =  await ref
+                  bool isSuccess = await ref
                       .read(votersContestNotifier.notifier)
-                      .deletePost(isLoading, widget.postId,
-                      widget.contestId,
-                       () {
+                      .deletePost(isLoading, widget.postId, widget.contestId, () {
                     WayaNav.goBack();
                   });
 
-                  if(isSuccess){
-                      ref
-          .watch(ugtContestantProfileVm.notifier)
-          .fetchSingleContestantPosts(widget.contestantId ?? "");
+                  if (isSuccess) {
+                    ref.watch(ugtContestantProfileVm.notifier).fetchSingleContestantPosts(widget.contestantId);
                   }
-
                 },
                 text: "Delete Post",
               ),

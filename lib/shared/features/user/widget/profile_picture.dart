@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -31,7 +30,7 @@ class ChatProfilePicture extends StatelessWidget {
             child: CircleAvatar(
               radius: radius,
               backgroundColor: WayaColors.greyColor200,
-              backgroundImage: user.profilePicture != null ? CachedNetworkImageProvider(user.profilePicture!) : null,
+              backgroundImage: user.profilePicture != null ? NetworkImage(user.profilePicture!) : null,
               child: user.profilePicture == null
                   ? Icon(
                       Icons.person,

@@ -1,6 +1,4 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -304,8 +302,9 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 //? FIrst, the background image.
-                                CachedNetworkImage(
-                                  errorWidget: (context, url, error) => Container(
+                                Image.network(
+                                  profile.coverImage.toString(),
+                                  errorBuilder: (context, url, error) => Container(
                                     height: (size.height * 0.2).h,
                                     color: wayaTheme.colorScheme.greyColor200,
                                     child: Center(
@@ -318,7 +317,6 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                                   fit: BoxFit.cover,
                                   width: double.infinity,
                                   height: (size.height * 0.2).h,
-                                  imageUrl: profile.coverImage.toString(),
                                 ),
 
                                 // Space.

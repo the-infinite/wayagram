@@ -81,7 +81,10 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     try {
       // This is fine too.
       final response = await repo.getFollowing(
-          ConversationState.self.id, state.followingNextPage ?? state.followingPage, state.limit);
+        ConversationState.self.id,
+        state.followingNextPage ?? state.followingPage,
+        state.limit,
+      );
 
       // If this was fine...
       if (response.success) {
@@ -156,17 +159,7 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
 
       // If this was fine...
       if (response.success) {
-        final user = FollowModel(
-          id: WayaValueHelper.createUid(),
-          followerId: ConversationState.self.id,
-          followingId: id,
-          followedBack: false,
-          status: FollowRelationship.accepted,
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-        );
-        final list = [...state.following, user];
-        state = state.copyWith(following: list);
+        await getUsersFollowing();
         otherUserMoments.getAllMoments();
         return true;
       }
