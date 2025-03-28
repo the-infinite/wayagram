@@ -81,7 +81,7 @@ class MoreVm {
         content:
             "Promote your goods and services so it can be seen by more people.",
         title: "Promotion",
-        onTap: () => WayaNav.toNamed(PromotionDashboard.route),
+        onTap: () => WayaNavigationHelper.showComingSoonModal(false),
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mFollow.path,
