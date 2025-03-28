@@ -10,6 +10,9 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/ugt/for_you_contest.dart';
 import 'package:wayagram/features/ugt/my_contest_details/my_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contests.dart';
+import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_contest_detail_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_followed_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
@@ -32,12 +35,19 @@ class _UgtHomeState extends ConsumerState<UgtHome> {
     final wayaTheme = Theme.of(context);
 
     useEffect(() {
+      //? added on refresh to contest page
+      ref.read(appliedContestProvider.notifier).fetchAppliedContest(true);
+      ref.read(contestDetailProvider.notifier).fetchHostedContest();
+      ref.read(followedContestProvider.notifier).fetchFollowedPosts();
       ref.read(postProvider.notifier).fetchContestForYou(true);
       return null;
     }, []);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
+      onRefresh: () {
+        return ref.read(postProvider.notifier).fetchContestForYou(true);
+      },
       title: "University Got Talent",
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,

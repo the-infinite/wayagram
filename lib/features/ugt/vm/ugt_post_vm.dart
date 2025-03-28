@@ -19,7 +19,7 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
   //? Simulate fetching paginated posts
   Future<void> fetchContestForYou(bool isFirst) async {
     try {
-      if (state.isLastPage) {
+      if (state.isLastPage && isFirst == false) {
         return;
       }
 

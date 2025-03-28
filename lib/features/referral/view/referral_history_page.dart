@@ -61,6 +61,9 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
+      onRefresh: () {
+        return ref.watch(referralVm.notifier).getAllUserReferrals(true);
+      },
       title: "Referral History",
       appBar: AppBar(
         backgroundColor: Colors.white,

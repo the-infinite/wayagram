@@ -102,7 +102,7 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
     if (isFirst) {
       state = state.copyWith(page: 1);
     }
-    if (state.isLastPage) {
+    if (state.isLastPage && isFirst == false) {
       return;
     }
     if (state.isLoading == true) {

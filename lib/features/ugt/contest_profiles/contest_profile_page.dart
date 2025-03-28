@@ -153,6 +153,14 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
+      onRefresh: (){
+
+         ref
+          .watch(ugtContestantProfileVm.notifier)
+          .fetchSingleContestantPosts(model?.profileId ?? id);
+        return  ref.read(postProvider.notifier).fetchSingleContestantDetails(
+          ref, model?.contestId ?? contestId, model?.profileId ?? id);
+      },
       title: "My Profile",
       appBarTrailing: Row(
         children: [

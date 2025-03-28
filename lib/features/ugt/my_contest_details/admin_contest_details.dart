@@ -39,10 +39,15 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final String myPassedContestId = Get.parameters['id'] ?? 'Unknown';
+    final myContestId = useState("");
     //  print("COntest DI $myPassedContestId");
     useEffect(() {
       String contestId = ref.read(selectedContestProvider.notifier).state?.id ??
           myPassedContestId;
+      Future.delayed(Duration(seconds: 2), () {
+        myContestId.value = contestId;
+      });
+
       print("COntest DI  2 $contestId");
       ref.read(postProvider.notifier).fetchSingleContest(ref, contestId);
       ref
@@ -63,17 +68,30 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     return PopScope(
       canPop: false, // Prevents automatic back navigation
       onPopInvokedWithResult: (didPop, _) async {
-       
         if (WayaNav.canPop()) {
           WayaNav.goBack();
         } else {
           WayaNav.closeApp();
         }
-        
       },
       child: WayaScaffold(
         isLoading: false,
         isScrollable: true,
+        onRefresh: () {
+          ref
+              .read(postProvider.notifier)
+              .fetchSingleContest(ref, myContestId.value);
+          ref
+              .read(votersContestNotifier.notifier)
+              .getContestantProfileVoteDetails(myContestId.value);
+
+          ref
+              .read(votersContestNotifier.notifier)
+              .fetchAllContestPosts(myContestId.value);
+          return ref
+              .read(votersContestNotifier.notifier)
+              .fetchAllContestApplicant(myContestId.value);
+        },
         title: "Contest Details",
         appBarTrailing: Row(
           children: [

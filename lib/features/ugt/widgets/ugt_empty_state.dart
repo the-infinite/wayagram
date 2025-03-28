@@ -30,10 +30,10 @@ class UgtEmptyState extends StatelessWidget {
     return SizedBox(
       width: context.width,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Gap(40),
+          // const Gap(40),
           icon,
           const Gap(20),
           Text(

@@ -11,39 +11,37 @@ class ReferralVm extends StateNotifier<ReferralState> {
 //this is ok
 
   ReferralVm(this._referralRepository, this._localDataSource)
-      : super(ReferralState()) {}
+      : super(ReferralState());
 
   Future<void> getReferralCount() async {
-    final response = await _referralRepository.getReferralCount(getLoggedInUserId()??"");
+    final response =
+        await _referralRepository.getReferralCount(getLoggedInUserId() ?? "");
     if (response.success == true) {
-      ReferralCountModel responseModel = ReferralCountModel.fromJson(response.data);
+      ReferralCountModel responseModel =
+          ReferralCountModel.fromJson(response.data);
       state = state.copyWith(count: responseModel.data);
-  
-    } else {
-    
-    }
-  }
-   Future<void> getReferralEarned() async {
-    final response = await _referralRepository.getReferralEarned(getLoggedInUserId()??"");
-    if (response.success == true) {
-      ReferralCountModel responseModel = ReferralCountModel.fromJson(response.data);
-      state = state.copyWith(count: responseModel.data);
-  
-    } else {
-    
-    }
+    } else {}
   }
 
-    String? getLoggedInUserId() {
+  Future<void> getReferralEarned() async {
+    final response =
+        await _referralRepository.getReferralEarned(getLoggedInUserId() ?? "");
+    if (response.success == true) {
+      ReferralCountModel responseModel =
+          ReferralCountModel.fromJson(response.data);
+      state = state.copyWith(count: responseModel.data);
+    } else {}
+  }
+
+  String? getLoggedInUserId() {
     return _localDataSource.getUserId().toString();
   }
-
 
   Future<void> getAllUserReferrals(bool isFirst) async {
     if (isFirst) {
       state = state.copyWith(page: 1);
     }
-    if (state.isLastPage) {
+    if (state.isLastPage && isFirst == false) {
       return;
     }
     if (state.isLoading == true) {
@@ -52,10 +50,11 @@ class ReferralVm extends StateNotifier<ReferralState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _referralRepository.getUserReferral(
-        getLoggedInUserId()??"", state.page);
+          getLoggedInUserId() ?? "", state.page);
       state = state.copyWith(isLoading: false);
       if (response.success == true) {
-        ReferralModelBase responseModel = ReferralModelBase.fromJson(response.data);
+        ReferralModelBase responseModel =
+            ReferralModelBase.fromJson(response.data);
         state = state.copyWith(
             isLastPage: responseModel.data?.hasNextPage == true ? false : true);
         if (isFirst) {
@@ -77,9 +76,6 @@ class ReferralVm extends StateNotifier<ReferralState> {
     } finally {}
   }
 }
-
-
-
 
 final referralVm = StateNotifierProvider<ReferralVm, ReferralState>(
   (ref) {

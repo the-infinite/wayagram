@@ -87,6 +87,13 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
+      onRefresh: (){
+          ref
+              .read(votersContestNotifier.notifier)
+              .fetchAllContestApplicant(model?.id??"");
+         dashboardNotifier.fetchTotalContestant(model?.id ?? "");
+     return dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
+      },
       title: "",
       backgroundColor: Colors.white,
       body: SingleChildScrollView(

@@ -28,7 +28,7 @@ class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
     }
     //? If last page dont go fetch again
 
-    if (state.isLastPage) {
+    if (state.isLastPage && isFirst == false) {
       return;
     }
 
