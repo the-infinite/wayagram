@@ -63,7 +63,7 @@ class _ChooseShopModalState extends State<ChooseShopModal> {
             //? Our title.
             Text(
               "Choose shop",
-              style: wayaTheme.textTheme.titleLarge,
+              style: wayaTheme.textTheme.headlineLarge,
             ),
 
             // Some space.

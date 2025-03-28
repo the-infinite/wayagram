@@ -38,6 +38,8 @@ class WayaDp extends ConsumerWidget {
             }
           : onTap ??
               () async {
+                if (image == null) return;
+
                 final result = await WayaNavigationHelper.toImageDetailsScreen(
                   null,
                   [image!],
@@ -107,6 +109,9 @@ class WayaImage2 extends ConsumerWidget {
             }
           : onTap ??
               () async {
+                if (imageUrl == null) return;
+
+                //? This is not null so we are good.
                 final result = await WayaNavigationHelper.toImageDetailsScreen(
                   null,
                   [imageUrl!],
@@ -193,6 +198,8 @@ class WayaImage3 extends ConsumerWidget {
                   }
                 : onTap ??
                     () async {
+                      if (imageUrl == null) return;
+
                       final result = await WayaNavigationHelper.toImageDetailsScreen(
                         null,
                         [imageUrl!],

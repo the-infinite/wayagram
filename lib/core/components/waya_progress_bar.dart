@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 Size _textDetails(BuildContext context, String text, double fontSize) {
   final wayaTheme = Theme.of(context);
@@ -52,6 +54,7 @@ class _RawProgressBar extends StatelessWidget {
     final renderBox = context.findRenderObject() as RenderBox?;
     final size = renderBox?.size ?? Size.zero;
     final filledArea = size.width * progress;
+    final consumedArea = textSize.width + (image == null ? 0 : height - 15.h);
 
     //? Then return the widget.
     return Stack(
@@ -80,17 +83,35 @@ class _RawProgressBar extends StatelessWidget {
 
         //? The text.
         SizedBox(
-          width: textSize.width,
+          width: size.width,
           height: height,
           child: Container(
             alignment: Alignment.centerLeft,
             padding: const EdgeInsets.only(left: 5),
-            child: Text(
-              text,
-              style: TextStyle(
-                color: filledArea > textSize.width ? activeTextColor : inactiveTextColor,
-                fontSize: 14.sp,
-              ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              spacing: 5.w,
+              children: [
+                //? Since there is an image here.
+                if (image != null)
+                  WayaImage(
+                    imageUrl: image!,
+                    height: (height - 7.5).h,
+                    width: (height - 7.5).h,
+                  ),
+
+                //? The text.
+                Text(
+                  text,
+                  maxLines: 1,
+                  style: TextStyle(
+                    color: filledArea > consumedArea ? activeTextColor : inactiveTextColor,
+                    fontSize: 14.sp,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
@@ -112,6 +133,8 @@ class WayaInformativeProgressBar extends StatelessWidget {
   final Color activeTextColor;
   final Color inactiveTextColor;
   final String? imageUrl;
+  final String unit;
+  final String units;
 
   // Constructor.
   const WayaInformativeProgressBar({
@@ -125,6 +148,8 @@ class WayaInformativeProgressBar extends StatelessWidget {
     required this.unfilledRegion,
     required this.count,
     required this.fontSize,
+    this.unit = "vote",
+    this.units = "votes",
     this.activeTextColor = Colors.white,
     this.inactiveTextColor = Colors.black,
     this.imageUrl,
@@ -137,7 +162,7 @@ class WayaInformativeProgressBar extends StatelessWidget {
     //? Return this row.
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       spacing: 10.w,
       children: [
         //? First, the raw progress bar component.
@@ -172,7 +197,7 @@ class WayaInformativeProgressBar extends StatelessWidget {
 
             //* The subtitle text of this section.
             Text(
-              '$count ${count == 1 ? 'vote' : 'votes'}',
+              '${WayaValueHelper.formatNumber(count)} ${count == 1 ? unit : units}',
               style: wayaTheme.textTheme.bodyMedium!.copyWith(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
