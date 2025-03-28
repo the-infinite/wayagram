@@ -65,6 +65,7 @@ import 'package:wayagram/features/polls_and_voting/views/share_voting_link.dart'
 import 'package:wayagram/features/post/view/edit_post.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/features/promotion/views/promotion_dashboard.dart';
+import 'package:wayagram/features/promotion/views/promotion_detail.dart';
 import 'package:wayagram/features/quotation/buyer/views/bid/see_buyer_bids.dart';
 import 'package:wayagram/features/quotation/buyer/views/buyer_checkout.dart';
 import 'package:wayagram/features/quotation/buyer/views/create_request/create_request.dart';
@@ -254,6 +255,7 @@ class WayaAppRoutes {
     GroupSuggestion.route: () => GroupSuggestion(),
     Promote.route:() => Promote(),
     PromotionDashboard.route:() => PromotionDashboard(),
+    PromotionDetail.route: () => PromotionDetail(),
     PublicPage.route: () => PublicPage(
           id: WayaNav.search['id'].toString(),
         ),
