@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
@@ -286,13 +285,13 @@ class ConversationVm extends StateNotifier<ConversationState> {
 
   /// Helper function used to report a user.
   Future<bool> reportUser(String id) async {
-    WayaSnackBar.showToast("This API does not exist yet");
+    await WayaNavigationHelper.showComingSoonModal(true);
     return false;
   }
 
   /// Helper function used to mute/unmute a user.
   Future<bool> muteOrUnmuteUser(String id) async {
-    WayaSnackBar.showToast("This API does not exist yet");
+    await WayaNavigationHelper.showComingSoonModal(true);
     return false;
   }
 

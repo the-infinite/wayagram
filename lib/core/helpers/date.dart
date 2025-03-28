@@ -62,12 +62,22 @@ class WayaDateHelper {
     return '${duration.inHours == 0 ? '' : '$hh:'}$mm:$ss';
   }
 
-  static String convertDurationToCountdown(Duration duration) {
+  static String _longFormatDuration(Duration duration) {
+    final hh = (duration.inHours).toString().padLeft(2, '0');
+    final mm = (duration.inMinutes % 60).toString().padLeft(2, '0');
+    final ss = (duration.inSeconds % 60).toString().padLeft(2, '0');
+    return '${duration.inHours == 0 ? '' : '$hh hours '}$mm minutes $ss seconds';
+  }
+
+  static String _shortFormatDuration(Duration duration) {
     final hh = (duration.inHours).toString().padLeft(2, '0');
     final mm = (duration.inMinutes % 60).toString().padLeft(2, '0');
     final ss = (duration.inSeconds % 60).toString().padLeft(2, '0');
     return '${duration.inHours == 0 ? '' : '${hh}h '}${mm}m ${ss}s';
   }
+
+  static String convertDurationToCountdown(Duration duration, [bool longFormat = false]) =>
+      longFormat ? _longFormatDuration(duration) : _shortFormatDuration(duration);
 
   static String getSocialTimestamp(DateTime timestamp, [bool extraPrecise = true]) {
     final now = DateTime.now();

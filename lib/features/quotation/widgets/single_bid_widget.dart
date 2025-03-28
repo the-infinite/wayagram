@@ -52,7 +52,7 @@ class SingleBidWidget extends ConsumerWidget {
                       children: [
                         //? The ID of this buy request.
                         Text(
-                          "Quote #${bid.requestId}",
+                          "Quote #${bid.requestId.replaceAll("-", "").substring(0, 16)}",
                           style: wayaTheme.textTheme.bodyMedium?.copyWith(
                             color: wayaTheme.colorScheme.customBlack,
                             fontSize: 14.sp,
