@@ -17,7 +17,6 @@ import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart'
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class PollDashboard extends ConsumerStatefulWidget {
-
   static const route = '/poll-dashboard';
   const PollDashboard({super.key,});
 
@@ -27,67 +26,28 @@ class PollDashboard extends ConsumerStatefulWidget {
 
 class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
-  final timeNotifier = ValueNotifier(Duration.zero);
-
- /* Timer? timer;
-
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-
-       // startDate = DateTime.parse("${poll?.startDate}");
-      // endDate = DateTime.parse("${poll?.endDate}");
-
-      final pollId  = ModalRoute.of(context)?.settings.arguments as String?;
-      print('DASHBOARD POLL ID ==> $pollId');
-      ref.read(createPollVotingProvider.notifier).getDashboard(pollId);
-
-      //? If the status is not started, then we need to calculate the time left
-      //? until the bid starts.
-      //if (widget.data.status == BuyRequestStatus.notStarted) {
-        timeNotifier.value = DateTime.parse("${poll?.endDate}").difference(DateTime.now()).abs();
-     // }
-
-      //? If the status is active, then we need to calculate the time left until
-      //? bidding ends.
-      //else {
-        timeNotifier.value = DateTime.parse("${poll?.endDate}").difference(DateTime.now()).abs();
-      //}
-
-      //? Now, let the timer keep ticking.
-      timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-        final eval = timeNotifier.value - const Duration(seconds: 1);
-
-        //? Update this guy in the list.
-        // if (eval.isNegative) {
-        //   await widget.notifier.getBuyRequest(widget.data.id);
-        //   return;
-        // }
-
-        //? Update the time we think it would take.
-        timeNotifier.value = eval;
-      });
-    });
     super.initState();
-  }*/
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
+      ref.read(createPollVotingProvider.notifier).getDashboard(args['id']);
+      _startCountdown(context);
+    });
+  }
 
-
-  CreatePollVotingState? poll;
-
-  late DateTime startDate;
-  late DateTime endDate;
-
-  void _startCountdown() {
+  void _startCountdown(context) {
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
     countdownTimer?.cancel(); // Cancel existing timer if any
-
+    final pollEndTime = DateTime.parse('${args['endDate']}').toLocal();
     setState(() {
-      remainingTime = endDate.difference(DateTime.now());
+      remainingTime = pollEndTime.difference(DateTime.now());
     });
 
     if (remainingTime.inSeconds > 0) {
       countdownTimer = Timer.periodic(Duration(seconds: 1), (timer) {
         setState(() {
-          remainingTime = endDate.difference(DateTime.now());
+          remainingTime = pollEndTime.difference(DateTime.now());
           if (remainingTime.isNegative) {
             timer.cancel();
           }
@@ -96,25 +56,8 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-
-      // startDate = DateTime.parse("${poll?.startDate}");
-      // endDate = DateTime.parse("${poll?.endDate}");
-      print('DASHBOARD ===>>>${poll?.startDate}');
-
-      final pollId  = ModalRoute.of(context)?.settings.arguments as String?;
-      ref.read(createPollVotingProvider.notifier).getDashboard(pollId);
-      _startCountdown();
-    });
-  }
-
   Duration remainingTime = Duration.zero;
   Timer? countdownTimer;
-
-
 
   String _formatDuration(Duration duration) {
     int days = duration.inDays;
@@ -132,7 +75,6 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
     countdownTimer?.cancel(); // Cleanup timer when widget is disposed
     super.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -191,6 +133,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
                 'Poll time remaining',
                 style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                     fontSize: 14.sp,
+                    fontFamily: WayaConstants.fontFamily,
                     fontWeight: FontWeight.w600,
                     color: Theme.of(context).colorScheme.greyColor500 ),
               ),
@@ -200,11 +143,10 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
           ),
             const Gap(10),
             Text(
-              //'$_startCountdown',
               _formatDuration(remainingTime),
-              //'12 days: 45hrs: 55min: 12sec',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14.sp,
+                  fontFamily: WayaConstants.fontFamily,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.primary500 ),
             ),
@@ -225,6 +167,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
               'Poll Statistics',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14.sp,
+                  fontFamily: WayaConstants.fontFamily,
                   fontWeight: FontWeight.w600,
                   color: Theme.of(context).colorScheme.black ),
             ),
@@ -236,28 +179,28 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
                 itemBuilder: (context, index) {
                   final poll = viewModel.pollDashboardChoices[index];
 
-                  print('DASHBOARD LENGTH ===>> ${viewModel.pollDashboardModelDocs.length}');
-
-                  // int daysLeft = DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
-
-                  // int hoursLeft = DateTime.now().difference(DateTime.parse('${poll.createdAt}')).inHours;
-
-                  //int daysLeft = DateTime.parse('${poll?.createdAt}').difference(DateTime.parse('${poll.startDate}')).inDays;
-
-                  position(txt){
-                    if(index == 0){
-                      return txt = '1st';
-                    }else if(index == 1){
-                      return txt = '2nd';
-                    }else if(index == 2){
-                      return txt = '3rd';
-                    }else if(index > 2){
-                      return txt = '${index}th';
+                  String getOrdinalPosition(int index) {
+                    int position = index + 1; // Positions start from 1
+                    if (position % 100 >= 11 && position % 100 <= 13) {
+                      return "${position}th"; // Special case for 11th, 12th, 13th
+                    }
+                    switch (position % 10) {
+                      case 1:
+                        return "${position}st";
+                      case 2:
+                        return "${position}nd";
+                      case 3:
+                        return "${position}rd";
+                      default:
+                        return "${position}th";
                     }
                   }
+
                   return statisticCard('${poll.voteCount} ${(poll.voteCount ?? 0 ) < 2? 'Vote' :'Votes'}',
-                      '${position(index)}', '${poll.text?.capitalizeFirst}',
-                      Theme.of(context).colorScheme.success50, index == 0);
+                      getOrdinalPosition(index), '${poll.text?.capitalizeFirst}',
+                      index ==0 ?Theme.of(context).colorScheme.success50: index == 1 ?
+                      Theme.of(context).colorScheme.pendingColor: Theme.of(context).colorScheme.greyColor200,
+                  index==0?Theme.of(context).colorScheme.success: index == 1? WayaColors.pendingColor2: Theme.of(context).colorScheme.greyColor700);
 
                 }),
             const Gap(10),
@@ -270,14 +213,15 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
         ) );
   }
 
-  statisticCard(vote, position, name, color, chk){
+  statisticCard(vote, position, name, color, postionColor){
     return Container(
       margin: EdgeInsets.only(bottom: 10),
       height: 32.h,
       padding: EdgeInsets.only(left: 10.w, right: 10.w,),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(6),
-        color: chk == 0 ?  Theme.of(context).colorScheme.success50: color
+        color: color,
+        //chk == 0 ?  Theme.of(context).colorScheme.success50: color
         //border: Border.all(color:Theme.of(context).colorScheme.greyColor100),
       ),
       child: Row(
@@ -297,7 +241,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
                 fontFamily: WayaConstants.fontFamily,
-                color: Theme.of(context).colorScheme.black ),
+                color: postionColor,)
           ),
           Spacer(),
           Text(
@@ -306,7 +250,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
                 fontFamily: WayaConstants.fontFamily,
-                color: Theme.of(context).colorScheme.black ),
+                color: Theme.of(context).colorScheme.greyColor700 ),
           ),
         ],
       ),

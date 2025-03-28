@@ -169,7 +169,22 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           children: [
                             if (poll.choices != null)
                               ...poll.choices!.map(
-                                (e) => choiceStatisticsSecond(
+                                /*  (e)=> WayaInformativeProgressBar(
+                                    title: '${e.text?.capitalizeFirst}',
+                                    text: '${e.text?.capitalizeFirst}',
+                                    subtitle: '',
+                                    progress: double.parse(((e.voteCount!) / viewModel.fetchAllPols[index].voteCount!).toStringAsFixed(2)),
+                                    height: 60.0,
+                                    filledRegion: wayaTheme.colorScheme.customPrimary,
+                                    unfilledRegion: wayaTheme.colorScheme.greyColor200,
+                                    count: e.voteCount!,
+                                    fontSize: 12,
+                                    activeTextColor:  wayaTheme.colorScheme.white,
+                                    inactiveTextColor:  wayaTheme.colorScheme.primary500,
+                                    imageUrl: '${e.imageUrl}',
+                                  ),*/
+                                (e) =>
+                                    choiceStatisticsSecond(
                                     e.imageUrl == null,
                                   e.imageUrl == null ? '':'${e.imageUrl}',
                                   '${e.text}',
@@ -563,14 +578,13 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
               child:  Row(
 
                 children: [
-                  chkImg? Container():
+                 /* chkImg? Container():
                   WayaImage(
                     imageUrl: img,
-
                     height: 44.h,
                     width: 59.w,
                     radius: BorderRadius.circular(4),
-                  ),
+                  ),*/
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 20),
                     child: Text(

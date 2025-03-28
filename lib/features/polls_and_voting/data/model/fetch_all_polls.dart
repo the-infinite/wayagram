@@ -196,7 +196,7 @@ class Docs {
 
   String? id;
   String? creatorId;
-  num? voteCount;
+  int? voteCount;
   bool? isPaid;
   bool? isSettled;
   String? question;
@@ -217,7 +217,7 @@ class Docs {
     String? id,
     String? creatorId,
     List<dynamic>? categories,
-    num? voteCount,
+    int? voteCount,
     bool? isPaid,
     bool? isSettled,
     String? question,
