@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/activity_logs/view/activity_log.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/buyer_dispute/views/detail.dart';
@@ -322,6 +323,7 @@ class WayaAppRoutes {
     ProductSearchResult.route: () => ProductSearchResult(),
     LogsAndAuditTrials.route: () => LogsAndAuditTrials(),
     AccountActivity.route: () => AccountActivity(),
+    ActivityLog.route: () => ActivityLog(),
     VisitedPage.route: () => VisitedPage(),
     UserAction.route: () => UserAction(),
     CmsClicks.route: () => CmsClicks(),
