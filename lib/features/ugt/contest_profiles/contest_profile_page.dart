@@ -12,6 +12,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
@@ -19,6 +20,7 @@ import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_stages_section.dart';
+import 'package:wayagram/features/ugt/create_contest_post/video_thumbnail_ugt.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart' as post;
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
@@ -153,13 +155,12 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
-      onRefresh: (){
-
-         ref
-          .watch(ugtContestantProfileVm.notifier)
-          .fetchSingleContestantPosts(model?.profileId ?? id);
-        return  ref.read(postProvider.notifier).fetchSingleContestantDetails(
-          ref, model?.contestId ?? contestId, model?.profileId ?? id);
+      onRefresh: () {
+        ref
+            .watch(ugtContestantProfileVm.notifier)
+            .fetchSingleContestantPosts(model?.profileId ?? id);
+        return ref.read(postProvider.notifier).fetchSingleContestantDetails(
+            ref, model?.contestId ?? contestId, model?.profileId ?? id);
       },
       title: "My Profile",
       appBarTrailing: Row(
@@ -200,15 +201,37 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                           "createdAt": "",
                           "likeCount": "",
                           "isLike": "",
-                          "showDescription": true,
+                          "showDescription": false,
                           "discription": "",
                           "shareCount": "",
                           "type": MyFullMediaType.video
                         });
                       },
-                      child: VideoThumbnailPlayer(
-                        imageUrl: imageUrl.value,
-                        videoUrl: model?.introVideo ?? "",
+                      child: Stack(
+                        children: [
+                          VideoThumbnail(
+                            model?.introVideo ?? "",
+                            context.width,
+                            context.height / 5,
+                          ),
+                          Positioned(
+                            top: context.width / 2,
+                            right: context.height / 5,
+                            // alignment: Alignment.center,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white.withOpacity(0.7),
+                              ),
+                              padding: EdgeInsets.all(8),
+                              child: Icon(
+                                Icons.play_arrow,
+                                size: 30,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     const Gap(20),
