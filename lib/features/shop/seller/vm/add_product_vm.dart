@@ -119,6 +119,31 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }
   }
 
+  Future<SelectTypePaginatedResult?> getDealsDiscounts(int page) async {
+    try {
+      final response = await _shopRepository.getAllDiscounts(page);
+      List<Select> allDiscounts = [];
+      if (response.success) {
+        DiscountsResponse responseModel =
+            DiscountsResponse.fromJson(response.data);
+        final filtered =
+            responseModel.discounts.where((v) => v.active && v.deal).toList();
+        allDiscounts = filtered.map((val) {
+          return Select(label: "${val.type} ${val.percentage}%", value: val.id);
+        }).toList();
+        state = state.copyWith(allDiscountTypes: allDiscounts);
+        state = state.copyWith(
+            totalNoOfDiscountPages: responseModel.pagination.totalPages);
+      }
+
+      return SelectTypePaginatedResult(
+          items: allDiscounts, totalPages: state.totalNoOfDiscountPages);
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   bool validateFields() {
     if (state.productName.text.trim().isEmpty) {
       WayaSnackBar.showToast("Product name is required");
@@ -159,6 +184,12 @@ class AddProductVm extends StateNotifier<AddProductState> {
 
       if (state.pickUpOption == "Delivery") {
         state = state.copyWith(pickUpAddress: TextEditingController(text: ''));
+      }
+
+      if (state.isWayagramDeal == true && state.discountType.isEmpty) {
+        WayaSnackBar.showToast(
+            "Kindly select your preferred deal in the discount section");
+        return;
       }
 
       if (state.pricePerUnit.text.isEmpty) {
@@ -295,6 +326,12 @@ class AddProductVm extends StateNotifier<AddProductState> {
 
   void initializeWayagramDeal() {
     state = state.copyWith(isWayagramDeal: true);
+    updateApplyDiscount(true);
+  }
+
+  void initializeAddProduct() {
+    state = state.copyWith(isWayagramDeal: null);
+    updateApplyDiscount(false);
   }
 
   Future<void> initializeForEdit(SellerProduct product) async {

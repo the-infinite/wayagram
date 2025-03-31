@@ -90,7 +90,7 @@ class SellerProduct {
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isDeleted;
-  final dynamic wayagramDealApprove;
+  final dynamic dealStatus;
   final dynamic shopRating;
   final String? vendorId;
 
@@ -109,7 +109,7 @@ class SellerProduct {
       required this.depth,
       required this.condition,
       required this.wayagramDeal,
-      this.wayagramDealApprove,
+      this.dealStatus,
       this.wayagramDealRejectedReason,
       required this.approve,
       required this.deliveryCharge,
@@ -148,7 +148,7 @@ class SellerProduct {
         depth: json['depth'],
         condition: json['condition'] ?? '',
         wayagramDeal: json['wayagramDeal'] ?? false,
-        wayagramDealApprove: json['wayagramDealApprove'] ?? false,
+        dealStatus: json['dealStatus'] ?? false,
         wayagramDealRejectedReason: json['wayagramDealRejectedReason'],
         approve: json['approve'] ?? false,
         deliveryCharge: json['deliveryCharge'] ?? false,
@@ -186,7 +186,7 @@ class SellerProduct {
       'wayagramDeal': wayagramDeal,
       'wayagramDealRejectedReason': wayagramDealRejectedReason,
       'approve': approve,
-      'wayagramDealApprove': wayagramDealApprove,
+      'dealStatus': dealStatus,
       'deliveryCharge': deliveryCharge,
       'options': options,
       'pickupAddress': pickupAddress,

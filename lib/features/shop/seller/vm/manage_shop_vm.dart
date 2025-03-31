@@ -174,16 +174,14 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
       {required int page}) async {
     state = state.copyWith(isLoading: true);
     try {
-      final response = await _shopRepository.getSellerProducts(
+      final response = await _shopRepository.getSellerListedWayaDealProducts(
           shopId: state.singleShop!.id, page: page);
       List<SellerProduct> sellerProducts = [];
       bool hasNextPage = false;
       if (response.success) {
         SellerProductResponseModel responseModel =
             SellerProductResponseModel.fromJson(response.data);
-        sellerProducts = responseModel.data.products
-            .where((c) => c.wayagramDealApprove == true)
-            .toList();
+        sellerProducts = responseModel.data.products;
         hasNextPage = responseModel.data.pagination.hasNextPage;
       }
       return PaginatedResult(hasNextPage: hasNextPage, items: sellerProducts);

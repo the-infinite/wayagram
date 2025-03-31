@@ -27,7 +27,12 @@ class _AllProductsState extends ConsumerState<AllProducts> {
   @override
   void initState() {
     super.initState();
-    ref.read(addProductProvider('filter').notifier).getAllDiscounts(1);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await ref
+          .read(shopVmProvider.notifier)
+          .getAllWayaDealProducts(page: 1, limit: 20);
+      await ref.read(addProductProvider('filter').notifier).getAllDiscounts(1);
+    });
     searchController = TextEditingController();
     searchController.addListener(() {
       setState(() {}); // Rebuild when search text changes
@@ -39,6 +44,7 @@ class _AllProductsState extends ConsumerState<AllProducts> {
     final state = ref.watch(shopVmProvider);
 
     final allProducts = state.products;
+    final allWayaDealProducts = state.wayaDealProducts;
 
     // search filter
     final searchFilteredProducts = WayaUtils.search<Product>(
@@ -54,6 +60,19 @@ class _AllProductsState extends ConsumerState<AllProducts> {
         ],
         searchController.text);
 
+     final searchFilteredWayaProducts = WayaUtils.search<Product>(
+      allWayaDealProducts,
+        [
+          'id',
+          'deliveryAddress',
+          'name',
+          'options',
+          'condition',
+          'materialType',
+          'description'
+        ],
+        searchController.text);   
+
     // category filter
     final categoriesFilteredProducts = searchFilteredProducts.where((prod) {
       if (categories.isNotEmpty && !categories.contains(prod.categoryId)) {
@@ -63,10 +82,16 @@ class _AllProductsState extends ConsumerState<AllProducts> {
       return true;
     }).toList();
 
-    // wayagram deal products
-    final wayagramProducts = categoriesFilteredProducts.where((prod) {
-      return prod.wayagramDealApprove == true;
+      final categoriesFilteredWayaProducts = searchFilteredWayaProducts.where((prod) {
+      if (categories.isNotEmpty && !categories.contains(prod.categoryId)) {
+        return false;
+      }
+
+      return true;
     }).toList();
+
+    // wayagram deal products
+    final wayagramProducts = categoriesFilteredWayaProducts;
 
     // Non - wayagram products
     final otherProducts = categoriesFilteredProducts.where((prod) {
@@ -75,9 +100,15 @@ class _AllProductsState extends ConsumerState<AllProducts> {
 
     return Expanded(
         child: RefreshIndicator(
-            onRefresh: () => ref
-                .read(shopVmProvider.notifier)
-                .getAllProducts(page: 1, limit: 20),
+            onRefresh: () async {
+              await ref
+                  .read(shopVmProvider.notifier)
+                  .getAllProducts(page: 1, limit: 20);
+
+              await ref
+                  .read(shopVmProvider.notifier)
+                  .getAllWayaDealProducts(page: 1, limit: 20);
+            },
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

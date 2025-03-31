@@ -28,21 +28,21 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
 
     String status = '';
 
-    if (widget.product.wayagramDealApprove == false &&
-        widget.product.wayagramDealRejectedReason == null) {
-      setState(() {
-        status = 'Pending';
-      });
-    } else if (widget.product.wayagramDealApprove == false &&
-        widget.product.wayagramDealRejectedReason != null) {
-      setState(() {
-        status = 'Rejected';
-      });
-    } else if (widget.product.wayagramDealApprove == true) {
-      setState(() {
-        status = 'Approved';
-      });
-    }
+    // if (widget.product.wayagramDealApprove == false &&
+    //     widget.product.wayagramDealRejectedReason == null) {
+    //   setState(() {
+    //     status = 'Pending';
+    //   });
+    // } else if (widget.product.wayagramDealApprove == false &&
+    //     widget.product.wayagramDealRejectedReason != null) {
+    //   setState(() {
+    //     status = 'Rejected';
+    //   });
+    // } else if (widget.product.wayagramDealApprove == true) {
+    //   setState(() {
+    //     status = 'Approved';
+    //   });
+    // }
 
     return Container(
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),

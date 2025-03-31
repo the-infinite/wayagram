@@ -27,6 +27,7 @@ class ShopRepository extends BaseRepository {
 
   Future<WayaRequestResponse> createProduct(
       {required AddProductModel payload, required String id}) {
+    print(payload.toJson());
     return post(
       "$serviceUrl/products/create/$id",
       payload.toJson(),
@@ -39,6 +40,11 @@ class ShopRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getProducts({required int page, int limit = 20}) {
     return get('$serviceUrl/products/get?page=$page');
+  }
+
+  Future<WayaRequestResponse> getOngoingWayaDealProducts(
+      {required int page, int limit = 20}) {
+    return get('$serviceUrl/products/get?page=$page&dealStatus=ongoing');
   }
 
   Future<WayaRequestResponse> getProductById({required String id}) {
@@ -60,6 +66,12 @@ class ShopRepository extends BaseRepository {
   Future<WayaRequestResponse> getSellerProducts(
       {required String shopId, required int page}) {
     return get('$serviceUrl/products/get?shopId=$shopId&page=$page');
+  }
+
+  Future<WayaRequestResponse> getSellerListedWayaDealProducts(
+      {required String shopId, required int page}) {
+    return get(
+        '$serviceUrl/products/get?shopId=$shopId&page=$page&dealStatus=ongoing');
   }
 
   Future<WayaRequestResponse> editShop(
