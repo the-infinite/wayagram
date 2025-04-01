@@ -75,7 +75,7 @@ class _RawProgressBarState extends State<_RawProgressBar> {
         valueListenable: sizeNotifier,
         builder: (context, size, _) {
           final filledArea = size.width * widget.progress;
-          final consumedArea = textSize.width + (widget.image == null ? 0 : widget.height - 15.h);
+          final consumedArea = textSize.width + 10.w + (widget.image == null ? 0 : widget.height - 2.5.h);
 
           //? Now, return this one.
           return Stack(
@@ -87,7 +87,7 @@ class _RawProgressBarState extends State<_RawProgressBar> {
                 height: widget.height,
                 decoration: BoxDecoration(
                   color: widget.unfilledRegion,
-                  borderRadius: BorderRadius.circular(5.r),
+                  borderRadius: BorderRadius.circular(10.r),
                 ),
                 child: FractionallySizedBox(
                   alignment: Alignment.centerLeft,
@@ -96,7 +96,7 @@ class _RawProgressBarState extends State<_RawProgressBar> {
                     width: filledArea,
                     decoration: BoxDecoration(
                       color: widget.filledRegion,
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius: BorderRadius.circular(10.r),
                     ),
                   ),
                 ),
@@ -108,7 +108,7 @@ class _RawProgressBarState extends State<_RawProgressBar> {
                 height: widget.height,
                 child: Container(
                   alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(left: 5),
+                  padding: EdgeInsets.only(left: 10.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -185,7 +185,7 @@ class WayaInformativeProgressBar extends StatelessWidget {
     //? Return this row.
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       spacing: 10.w,
       children: [
         //? First, the raw progress bar component.
