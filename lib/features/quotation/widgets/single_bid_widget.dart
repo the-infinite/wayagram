@@ -8,6 +8,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
+import 'package:wayagram/shared/features/quotation/widget/bid_status.dart';
 import 'package:wayagram/shared/features/quotation/widget/bid_timer.dart';
 
 class SingleBidWidget extends ConsumerWidget {
@@ -26,7 +27,7 @@ class SingleBidWidget extends ConsumerWidget {
     return GestureDetector(
       onTap: () {
         if (isSeller) {
-          WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id));
+          WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id, bid.requestId));
         }
       },
       child: Container(
@@ -108,35 +109,9 @@ class SingleBidWidget extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Container(
-                  padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
-                  decoration: BoxDecoration(
-                    color: switch (bid.status) {
-                      BidActionType.negotiate => wayaTheme.colorScheme.primary50,
-                      BidActionType.accept => wayaTheme.colorScheme.success50,
-                      BidActionType.reject => wayaTheme.colorScheme.error50,
-                      _ => wayaTheme.colorScheme.pending50,
-                    },
-                    borderRadius: BorderRadius.circular(6),
-                  ),
-                  child: Text(
-                    switch (bid.status) {
-                      BidActionType.negotiate => "Negotiating",
-                      BidActionType.accept => "Won",
-                      BidActionType.reject => "Rejected",
-                      _ => "Open",
-                    },
-                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                      color: switch (bid.status) {
-                        BidActionType.negotiate => wayaTheme.colorScheme.primary,
-                        BidActionType.accept => wayaTheme.colorScheme.success,
-                        BidActionType.reject => wayaTheme.colorScheme.error,
-                        _ => wayaTheme.colorScheme.pending,
-                      },
-                      fontWeight: FontWeight.w500,
-                      fontSize: 11.sp,
-                    ),
-                  ),
+                //? The status of the bid.
+                BidStatusCard(
+                  bid: bid,
                 ),
 
                 // Some space.
@@ -183,9 +158,7 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
       onPress: () async {
         await addDeliveryDetail(context);
       },
-      onCancel: () {
-        WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id));
-      },
+      onCancel: () => WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id, bid.requestId)),
       icon: Image.asset('assets/images/shop/delivery-van.png'),
     );
   }
