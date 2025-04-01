@@ -145,7 +145,7 @@ class Product extends BaseModel<Product> {
         materialType: json['materialType'] ?? '',
         depth: json['depth'],
         condition: json['condition'] ?? '',
-        wayagramDeal: json['wayagramDeal'] ?? false,
+        wayagramDeal: json['wayagramDeal'] ,
         dealStatus: json['dealStatus'] ?? false,
         wayagramDealRejectedReason: json['wayagramDealRejectedReason'],
         approve: json['approve'] ?? false,

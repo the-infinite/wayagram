@@ -148,7 +148,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Visibility(
-                  visible: viewModel.product!.wayagramDeal == true,
+                  visible: viewModel.product?.wayagramDeal != null,
                   child: Container(
                     width: 120,
                     padding: EdgeInsets.fromLTRB(8, 3, 8, 3),

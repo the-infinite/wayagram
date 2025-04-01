@@ -95,7 +95,7 @@ class _AllProductsState extends ConsumerState<AllProducts> {
 
     // Non - wayagram products
     final otherProducts = categoriesFilteredProducts.where((prod) {
-      return prod.wayagramDeal == null || prod.wayagramDeal == false;
+      return prod.wayagramDeal == null;
     }).toList();
 
     return Expanded(

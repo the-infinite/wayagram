@@ -14,6 +14,7 @@ import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/discount_type_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
+import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
@@ -226,14 +227,14 @@ class AddProductVm extends StateNotifier<AddProductState> {
             message:
                 "Your product has been submitted. We'll notify you \n once it's reviewed.",
             onPress: () {
-              WayaNav.toNamed('/wayagram-deal');
+              WayaNav.replaceNamed(WayaGramDeals.route);
               // reset();
             },
             icon: Image.asset('assets/images/shop/add-product-success.png'),
             buttonText: 'View Application Status',
             secondButtonText: 'Go to Dashboard',
             onCancel: () {
-              WayaNav.toNamed('/wayagram-deal');
+              WayaNav.replaceNamed(ManageShop.route, arguments: state.shopId);
               // reset();
             },
           );
@@ -355,7 +356,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
         selectedCategory:
             Select(label: product.categoryName, value: product.categoryId),
         includeDeliveryFee: product.deliveryCharge,
-        isWayagramDeal: product.wayagramDeal,
+        isWayagramDeal: product.wayagramDeal == null ? false : true,
         includeMeasurement:
             product.height != 0 || product.width != 0 || product.depth != 0,
         productHeight: TextEditingController(text: product.height.toString()),

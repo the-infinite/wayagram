@@ -229,7 +229,7 @@ class SellerProductCard extends ConsumerWidget {
             color: wayaTheme.colorScheme.transparent,
           ),
           Visibility(
-              visible: product.wayagramDeal == true,
+              visible: product.wayagramDeal != null,
               child: Column(
                 children: [
                   SizedBox(height: 3),

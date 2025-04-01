@@ -9,7 +9,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 
 class DealApplicationStatus extends ConsumerStatefulWidget {
@@ -26,7 +25,7 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    String status = '';
+    String status = widget.product.wayagramDeal;
 
     // if (widget.product.wayagramDealApprove == false &&
     //     widget.product.wayagramDealRejectedReason == null) {
@@ -116,11 +115,11 @@ class _DealApplicationStatusState extends ConsumerState<DealApplicationStatus> {
                         title: 'Application Status',
                         content: '',
                         contentWidget: Text(
-                          status,
+                           status.toString().capitalizeFirst!,
                           style: TextStyle().wayaCopyWith(
-                              color: status == 'Approved'
+                              color: status == 'approved'
                                   ? wayaTheme.colorScheme.success
-                                  : status == 'Pending'
+                                  : status == 'pending'
                                       ? wayaTheme.colorScheme.pending
                                       : wayaTheme.colorScheme.error,
                               fontWeight: FontWeight.w600,
