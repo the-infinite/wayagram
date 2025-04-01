@@ -115,7 +115,7 @@ class SingleBidWidget extends ConsumerWidget {
                       BidActionType.negotiate => wayaTheme.colorScheme.primary50,
                       BidActionType.accept => wayaTheme.colorScheme.success50,
                       BidActionType.reject => wayaTheme.colorScheme.error50,
-                      _ => wayaTheme.colorScheme.greyColor200,
+                      _ => wayaTheme.colorScheme.pending50,
                     },
                     borderRadius: BorderRadius.circular(6),
                   ),
@@ -124,14 +124,14 @@ class SingleBidWidget extends ConsumerWidget {
                       BidActionType.negotiate => "Negotiating",
                       BidActionType.accept => "Won",
                       BidActionType.reject => "Rejected",
-                      _ => "Sent",
+                      _ => "Open",
                     },
                     style: wayaTheme.textTheme.bodyMedium?.copyWith(
                       color: switch (bid.status) {
                         BidActionType.negotiate => wayaTheme.colorScheme.primary,
                         BidActionType.accept => wayaTheme.colorScheme.success,
                         BidActionType.reject => wayaTheme.colorScheme.error,
-                        _ => wayaTheme.colorScheme.greyColor500,
+                        _ => wayaTheme.colorScheme.pending,
                       },
                       fontWeight: FontWeight.w500,
                       fontSize: 11.sp,
@@ -144,7 +144,7 @@ class SingleBidWidget extends ConsumerWidget {
 
                 //? When this was made.
                 Text(
-                  WayaDateHelper.getDailyTimestamp(bid.createdAt),
+                  WayaDateHelper.getEffectiveTimestamp(bid.createdAt),
                   style: wayaTheme.textTheme.bodyMedium?.copyWith(
                     color: wayaTheme.colorScheme.greyColor400,
                     fontSize: 13.sp,
