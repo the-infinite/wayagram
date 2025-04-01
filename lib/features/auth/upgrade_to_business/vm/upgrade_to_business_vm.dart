@@ -52,7 +52,7 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
       state.copyWith(lgas: []);
       state = state.copyWith(lga: '');
     }
-     await fetchLGA(value.value, 'NG');
+    await fetchLGA(value.value, 'NG');
     await fetchCities(value.value, 'NG');
   }
 
@@ -76,9 +76,7 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
   }
 
   Future<void> selectCity(Select value) async {
-
     state = state.copyWith(city: value.label);
- 
   }
 
   Future<void> onSubmit() async {
@@ -129,11 +127,13 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
     }
   }
 
-  Future<void> fetchCities(String stateCode, String countryCode) async {
+  Future<List<Select>?> fetchCities(
+      String stateCode, String countryCode) async {
     try {
       final response = await _authRepository.getAllCities(
           stateCode: stateCode, countryCode: countryCode);
 
+      List<Select>? cities;
       if (response.success) {
         CitiesResponseModel responseModel =
             CitiesResponseModel.fromJson(response.data);
@@ -141,17 +141,21 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
         final List<Select> allCities = responseModel.data.map((val) {
           return Select(label: val.name, value: val.stateCode);
         }).toList();
+        cities = allCities;
         state = state.copyWith(cities: allCities);
       }
+
+      return cities;
     } catch (e) {
       _logger.e(e);
+      return null;
     }
   }
 
-  Future<void> fetchStates() async {
+  Future<List<Select>?> fetchStates() async {
     try {
       final response = await _authRepository.getAllStates();
-
+      List<Select>? states;
       if (response.success) {
         StatesResponseModel responseModel =
             StatesResponseModel.fromJson(response.data);
@@ -159,18 +163,23 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
         final List<Select> allStates = responseModel.data.map((val) {
           return Select(label: val.name, value: val.isoCode);
         }).toList();
+        states = allStates;
         state = state.copyWith(states: allStates);
       }
+
+      return states;
     } catch (e) {
       _logger.e(e);
+      return null;
     }
   }
 
-  Future<void> fetchLGA(String stateCode, String countryCode) async {
+  Future<List<Select>?> fetchLGA(String stateCode, String countryCode) async {
     try {
       final response = await _authRepository.getAllLGA(
           stateCode: stateCode, countryCode: countryCode);
 
+      List<Select>? allLgas;
       if (response.success) {
         LGAResponseModel responseModel =
             LGAResponseModel.fromJson(response.data);
@@ -180,8 +189,11 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
         }).toList();
         state = state.copyWith(lgas: lgas);
       }
+
+      return allLgas;
     } catch (e) {
       _logger.e(e);
+      return null;
     }
   }
 

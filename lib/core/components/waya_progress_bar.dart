@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/waya_image.dart';
+import 'package:wayagram/core/components/waya_measurable.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
@@ -23,7 +24,7 @@ Size _textDetails(BuildContext context, String text, double fontSize) {
   return textPainter.size;
 }
 
-class _RawProgressBar extends StatelessWidget {
+class _RawProgressBar extends StatefulWidget {
   final double progress;
   final String text;
   final String? image;
@@ -48,74 +49,97 @@ class _RawProgressBar extends StatelessWidget {
   });
 
   @override
+  State<_RawProgressBar> createState() => _RawProgressBarState();
+}
+
+class _RawProgressBarState extends State<_RawProgressBar> {
+  final sizeNotifier = ValueNotifier(Size.zero);
+
+  @override
+  void dispose() {
+    sizeNotifier.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //? The size of the text in the progress bar.
-    final textSize = _textDetails(context, text, fontSize);
-    final renderBox = context.findRenderObject() as RenderBox?;
-    final size = renderBox?.size ?? Size.zero;
-    final filledArea = size.width * progress;
-    final consumedArea = textSize.width + (image == null ? 0 : height - 15.h);
+    final textSize = _textDetails(context, widget.text, widget.fontSize);
 
     //? Then return the widget.
-    return Stack(
-      fit: StackFit.loose,
-      children: [
-        //? The progress bar.
-        Container(
-          width: size.width,
-          height: height,
-          decoration: BoxDecoration(
-            color: unfilledRegion,
-            borderRadius: BorderRadius.circular(5.r),
-          ),
-          child: FractionallySizedBox(
-            alignment: Alignment.centerLeft,
-            widthFactor: progress,
-            child: Container(
-              width: filledArea,
-              decoration: BoxDecoration(
-                color: filledRegion,
-                borderRadius: BorderRadius.circular(5),
-              ),
-            ),
-          ),
-        ),
+    return WayaMeasurableWidget(
+      onSized: (size) {
+        sizeNotifier.value = size;
+      },
+      child: ValueListenableBuilder(
+        valueListenable: sizeNotifier,
+        builder: (context, size, _) {
+          final filledArea = size.width * widget.progress;
+          final consumedArea = textSize.width + (widget.image == null ? 0 : widget.height - 15.h);
 
-        //? The text.
-        SizedBox(
-          width: size.width,
-          height: height,
-          child: Container(
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.only(left: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              spacing: 5.w,
-              children: [
-                //? Since there is an image here.
-                if (image != null)
-                  WayaImage(
-                    imageUrl: image!,
-                    height: (height - 7.5).h,
-                    width: (height - 7.5).h,
-                  ),
-
-                //? The text.
-                Text(
-                  text,
-                  maxLines: 1,
-                  style: TextStyle(
-                    color: filledArea > consumedArea ? activeTextColor : inactiveTextColor,
-                    fontSize: 14.sp,
-                    overflow: TextOverflow.ellipsis,
+          //? Now, return this one.
+          return Stack(
+            fit: StackFit.loose,
+            children: [
+              //? The progress bar.
+              Container(
+                width: size.width,
+                height: widget.height,
+                decoration: BoxDecoration(
+                  color: widget.unfilledRegion,
+                  borderRadius: BorderRadius.circular(5.r),
+                ),
+                child: FractionallySizedBox(
+                  alignment: Alignment.centerLeft,
+                  widthFactor: widget.progress,
+                  child: Container(
+                    width: filledArea,
+                    decoration: BoxDecoration(
+                      color: widget.filledRegion,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
-      ],
+              ),
+
+              //? The text.
+              SizedBox(
+                width: size.width,
+                height: widget.height,
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(left: 5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    spacing: 5.w,
+                    children: [
+                      //? Since there is an image here.
+                      if (widget.image != null)
+                        WayaImage(
+                          imageUrl: widget.image!,
+                          height: (widget.height - 7.5).h,
+                          width: (widget.height - 7.5).h,
+                        ),
+
+                      //? The text.
+                      Text(
+                        widget.text,
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: filledArea > consumedArea ? widget.activeTextColor : widget.inactiveTextColor,
+                          fontSize: 14.sp,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -133,8 +157,7 @@ class WayaInformativeProgressBar extends StatelessWidget {
   final Color activeTextColor;
   final Color inactiveTextColor;
   final String? imageUrl;
-  final String unit;
-  final String units;
+  final String unit, units;
 
   // Constructor.
   const WayaInformativeProgressBar({
@@ -162,7 +185,7 @@ class WayaInformativeProgressBar extends StatelessWidget {
     //? Return this row.
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       spacing: 10.w,
       children: [
         //? First, the raw progress bar component.
@@ -187,7 +210,7 @@ class WayaInformativeProgressBar extends StatelessWidget {
           children: [
             //* The title text of this section.
             Text(
-              '${progress * 100}%',
+              '${(progress * 100).toStringAsFixed(2)}%',
               style: wayaTheme.textTheme.bodyMedium!.copyWith(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.w700,

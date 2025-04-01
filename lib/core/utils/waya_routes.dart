@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/activity_logs/view/activity_log.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/buyer_dispute/views/detail.dart';
@@ -63,6 +64,9 @@ import 'package:wayagram/features/polls_and_voting/views/poll_summary.dart';
 import 'package:wayagram/features/polls_and_voting/views/polls_and_votes.dart';
 import 'package:wayagram/features/polls_and_voting/views/share_voting_link.dart';
 import 'package:wayagram/features/post/view/edit_post.dart';
+import 'package:wayagram/features/promotion/views/promote.dart';
+import 'package:wayagram/features/promotion/views/promotion_dashboard.dart';
+import 'package:wayagram/features/promotion/views/promotion_detail.dart';
 import 'package:wayagram/features/quotation/buyer/views/bid/see_buyer_bids.dart';
 import 'package:wayagram/features/quotation/buyer/views/buyer_checkout.dart';
 import 'package:wayagram/features/quotation/buyer/views/create_request/create_request.dart';
@@ -253,6 +257,9 @@ class WayaAppRoutes {
     Groups.route: () => Groups(),
     Suggestion.route: () => Suggestion(),
     GroupSuggestion.route: () => GroupSuggestion(),
+    Promote.route:() => Promote(),
+    PromotionDashboard.route:() => PromotionDashboard(),
+    PromotionDetail.route: () => PromotionDetail(),
     PublicPage.route: () => PublicPage(
           id: WayaNav.search['id'].toString(),
         ),
@@ -316,6 +323,7 @@ class WayaAppRoutes {
     ProductSearchResult.route: () => ProductSearchResult(),
     LogsAndAuditTrials.route: () => LogsAndAuditTrials(),
     AccountActivity.route: () => AccountActivity(),
+    ActivityLog.route: () => ActivityLog(),
     VisitedPage.route: () => VisitedPage(),
     UserAction.route: () => UserAction(),
     CmsClicks.route: () => CmsClicks(),
