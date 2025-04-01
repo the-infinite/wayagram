@@ -182,7 +182,7 @@ class WayaInformativeProgressBar extends StatelessWidget {
 
         //? Second, the text section.
         Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //* The title text of this section.

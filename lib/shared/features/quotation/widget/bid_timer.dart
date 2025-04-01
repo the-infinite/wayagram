@@ -11,10 +11,27 @@ class QuotationBidTimer extends StatefulWidget {
   /// The quotation buy request for the timer we are displaying.
   final BuyRequestModel request;
 
+  /// Is this bid timer one that exists inside another component, or does it
+  /// stand alone?
+  final bool isStandalone;
+
+  /// Is the time in short format?
+  final bool isShortTime;
+
+  /// The size of font to use in the timer.
+  final double? fontSize;
+
+  /// The color of text to use in the timer.
+  final Color? textColor;
+
   /// Construct.
   const QuotationBidTimer({
     super.key,
     required this.request,
+    this.isStandalone = true,
+    this.isShortTime = false,
+    this.fontSize,
+    this.textColor,
   });
 
   @override
@@ -69,6 +86,24 @@ class _QuotationBidTimerState extends State<QuotationBidTimer> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final view = ValueListenableBuilder(
+      valueListenable: timeNotifier,
+      builder: (context, timeLeft, _) => Text(
+        WayaDateHelper.convertDurationToCountdown(timeLeft, !widget.isShortTime),
+        textAlign: TextAlign.center,
+        style: wayaTheme.textTheme.descriptionStyle.copyWith(
+          color: widget.textColor ?? wayaTheme.colorScheme.customPrimary,
+          fontSize: widget.fontSize ?? 16.sp,
+          fontWeight: FontWeight.w400,
+        ),
+      ),
+    );
+
+    //? If this is not a standalone component, then we need to return just the
+    //? timer and nothing else.
+    if (!widget.isStandalone) {
+      return view;
+    }
 
     //? The component itself.
     return Container(
@@ -77,18 +112,7 @@ class _QuotationBidTimerState extends State<QuotationBidTimer> {
         color: wayaTheme.colorScheme.primary50,
         borderRadius: BorderRadius.circular(8.r),
       ),
-      child: ValueListenableBuilder(
-        valueListenable: timeNotifier,
-        builder: (context, timeLeft, _) => Text(
-          WayaDateHelper.convertDurationToCountdown(timeLeft, true),
-          textAlign: TextAlign.center,
-          style: wayaTheme.textTheme.descriptionStyle.copyWith(
-            color: wayaTheme.colorScheme.customPrimary,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
-      ),
+      child: view,
     );
   }
 }
