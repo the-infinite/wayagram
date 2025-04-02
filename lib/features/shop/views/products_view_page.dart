@@ -78,24 +78,15 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
                           ],
                           searchController.text);
 
-                      // wayagram deal products
-                      final wayagramProducts = filteredProducts.where((prod) {
-                        return prod.wayagramDealApprove == true;
-                      }).toList();
-
-                      // Non - wayagram products
-                      final otherProducts = filteredProducts.where((prod) {
-                        return prod.wayagramDeal == null ||
-                            prod.wayagramDeal == false;
-                      }).toList();
-
-                      print(otherProducts.map((s) => s.toJson()));
+                      print(filteredProducts.map((s) => s.toJson()));
 
                       return ProductsGrid(
-                          products: arg == ProductDetailType.wayagramdeal
-                              ? wayagramProducts
-                              : otherProducts);
-                    }))
+                          isWayaGramDeal: arg == ProductDetailType.wayagramdeal
+                              ? true
+                              : false,
+                          products: filteredProducts);
+                    })),
+                  
           ],
         ));
   }

@@ -385,6 +385,48 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
     return false;
   }
 
+  /// Helper function used to update the delivery status of a single order. This is
+  ///  useful when we want to update the status of a single order in the system.
+  Future<bool> updateDeliveryStatus(String id, QuotationDeliveryStatus status) async {
+    try {
+      final response = await repo.updateDeliveryStatus(id, status.value);
+
+      //? This is fine.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Since it failed.
+    return false;
+  }
+
+  /// Helper function used to update the pickup status of a single order. This is
+  ///  useful when we want to update the status of a single order in the system.
+  Future<bool> updatePickupStatus(String id, QuotationPickupStatus status) async {
+    try {
+      final response = await repo.updatePickupStatus(id, status.value);
+
+      //? This is fine.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Since it failed.
+    return false;
+  }
+
   /// Helper function used to extend the time of a bid. This is useful when we
   /// want to extend the time of a bid in the system.
   Future<bool> extendBidTime(String id, String time) async {
@@ -466,6 +508,12 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
   /// Nice, right?
   BuyRequestModel? getBidQuote(String id) {
     return state.bidRequests.where((quote) => quote.id == id).firstOrNull;
+  }
+
+  /// Helper function that is used to get the value of a single bid using its
+  /// ID.
+  QuotationBidModel? getBid(String id) {
+    return state.bids.where((bid) => bid.id == id).firstOrNull;
   }
 
   /// Helper function used to reset the state of this quotations notifier back

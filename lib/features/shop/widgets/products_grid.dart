@@ -7,16 +7,15 @@ import 'package:wayagram/features/shop/widgets/product_card.dart';
 
 class ProductsGrid extends StatelessWidget {
   final List<Product> products;
+  final bool isWayaGramDeal;
 
-  const ProductsGrid({
-    super.key,
-    required this.products,
-  });
+  const ProductsGrid(
+      {super.key, required this.products, this.isWayaGramDeal = false});
 
   @override
   Widget build(BuildContext context) {
-   
     final userId = ConversationState.self.id;
+
     return Column(
       children: [
         for (int i = 0; i < products.length; i += 2)
@@ -33,6 +32,7 @@ class ProductsGrid extends StatelessWidget {
                         product: products[i],
                         isExplore: false,
                         canbeAddedTocart: true,
+                        isWayaGramDeal: isWayaGramDeal,
                       ),
               ),
               if (i + 1 < products.length) ...[
@@ -49,6 +49,7 @@ class ProductsGrid extends StatelessWidget {
                           product: products[i + 1],
                           isExplore: false,
                           canbeAddedTocart: true,
+                          isWayaGramDeal: isWayaGramDeal,
                         ),
                 ),
               ] else ...[

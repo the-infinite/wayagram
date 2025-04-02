@@ -40,4 +40,16 @@ class ActivityLogsRepository extends BaseRepository {
     return get("wayagram-profile/api/v2/client/activity-logs?page=$page");
   }
 
+  Future<WayaRequestResponse> getDonationLogs(int page) {
+    return get("wayagram-products/api/v1/client/activity-logs?limit=10&page=$page&logType=donation");
+  }
+
+  Future<WayaRequestResponse> getPageLogs(int page) {
+    return get("wayagram-products/api/v1/client/activity-logs?limit=10&page=$page&logType=donation");
+  }
+
+  Future<WayaRequestResponse> getGroupLogs(int page) {
+    return get("wayagram-products/api/v1/client/activity-logs?limit=10&page=$page&logType=donation");
+  }
+
 }

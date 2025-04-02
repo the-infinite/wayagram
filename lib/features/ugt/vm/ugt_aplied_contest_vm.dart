@@ -58,7 +58,7 @@ class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
         //?to differentiate if it is first page or not
         if (isFirst) {
           state = state.copyWith(
-              listAppliedContest: responseModel.data?.docs ?? []);
+              listAppliedContest: responseModel.data?.docs ?? [], page:1);
         } else {
           state = state.copyWith(listAppliedContest: [
             ...state.listAppliedContest,

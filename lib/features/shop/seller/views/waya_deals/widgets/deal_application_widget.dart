@@ -25,34 +25,33 @@ class _DealApplicationWidgetState extends ConsumerState<DealApplicationWidget> {
   Widget build(
     BuildContext context,
   ) {
-
     final wayaTheme = Theme.of(context);
     final String image =
         widget.product.images.isEmpty ? "" : widget.product.images[0];
-    String status = '';
+    String status = widget.product.wayagramDeal;
 
-    if (widget.product.wayagramDealApprove == false &&
-        widget.product.wayagramDealRejectedReason == null) {
-      setState(() {
-        status = 'Pending';
-      });
-    } else if (widget.product.wayagramDealApprove == false &&
-        widget.product.wayagramDealRejectedReason != null) {
-      setState(() {
-        status = 'Rejected';
-      });
-    } else if (widget.product.wayagramDealApprove == true) {
-      setState(() {
-        status = 'Approved';
-      });
-    }
+    // if (widget.product.wayagramDealApprove == false &&
+    //     widget.product.wayagramDealRejectedReason == null) {
+    //   setState(() {
+    //     status = 'Pending';
+    //   });
+    // } else if (widget.product.wayagramDealApprove == false &&
+    //     widget.product.wayagramDealRejectedReason != null) {
+    //   setState(() {
+    //     status = 'Rejected';
+    //   });
+    // } else if (widget.product.wayagramDealApprove == true) {
+    //   setState(() {
+    //     status = 'Approved';
+    //   });
+    // }
 
     return Column(
       children: [
         GestureDetector(
           onTap: () async {
-              await WayaUtils.showModalSheet(
-        context, child:  DealApplicationStatus(product: widget.product));
+            await WayaUtils.showModalSheet(context,
+                child: DealApplicationStatus(product: widget.product));
           },
           child: Container(
             padding: EdgeInsets.fromLTRB(8, 2, 8, 2),
@@ -92,11 +91,11 @@ class _DealApplicationWidgetState extends ConsumerState<DealApplicationWidget> {
                         ),
                         const Gap(5),
                         Text(
-                          status,
+                          status.toString().capitalizeFirst!,
                           style: TextStyle().wayaCopyWith(
-                              color: status == 'Approved'
+                              color: status == 'approved'
                                   ? wayaTheme.colorScheme.success
-                                  : status == 'Pending'
+                                  : status == 'pending'
                                       ? wayaTheme.colorScheme.pending
                                       : wayaTheme.colorScheme.error,
                               fontWeight: FontWeight.w500,
@@ -109,7 +108,8 @@ class _DealApplicationWidgetState extends ConsumerState<DealApplicationWidget> {
                 Text(
                   WayaHelpers.formatPrice(
                       double.parse(widget.product.price).toInt()),
-                  style: wayaTheme.textTheme.bodyXtraMedium,
+                  style: wayaTheme.textTheme.bodyXtraMedium
+                      .copyWith(fontWeight: FontWeight.w600),
                 )
               ],
             ),
@@ -120,4 +120,3 @@ class _DealApplicationWidgetState extends ConsumerState<DealApplicationWidget> {
     );
   }
 }
-

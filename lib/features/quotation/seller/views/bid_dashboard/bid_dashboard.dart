@@ -10,8 +10,10 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/seller/views/bid_dashboard/widgets/inventory_widget.dart';
+import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.dart';
 import 'package:wayagram/features/quotation/widgets/single_bid_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
+import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/shop/resource/default.dart';
@@ -132,7 +134,7 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
                     height: 28,
                   ),
                   color: Color(0xffE7F6EC),
-                  onTap: () => WayaNav.toNamed('/seller-bids'),
+                  onTap: () => WayaNav.toNamed(AllSellerBids.route),
                   metric: 4,
                   isStacked: true,
                 ),
@@ -162,7 +164,7 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
                     height: 28,
                   ),
                   color: Color(0xffE3EFFC),
-                  onTap: () => WayaNav.toNamed('/seller-dispute'),
+                  onTap: () => WayaNav.toNamed(SellerDispute.route),
                 ),
 
                 // Some space.

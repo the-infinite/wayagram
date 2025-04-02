@@ -74,9 +74,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
           shopState.sellerMetrics!.totalOrders.completed.count +
           shopState.sellerMetrics!.totalOrders.pending.count +
           shopState.sellerMetrics!.totalOrders.processing.count;
-/**
 
- */
       // waya deals
       totalWayaDealProducts =
           shopState.sellerMetrics!.productMetrics.wayagramDealApprove +

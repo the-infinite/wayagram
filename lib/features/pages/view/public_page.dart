@@ -197,10 +197,10 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
                       decoration: BoxDecoration(
                         color: WayaColors.primaryBrown50,
                         borderRadius: BorderRadius.circular(0),
-                        image: page.profileImage != null
+                        image: page.coverImage != null
                             ? DecorationImage(
                                 image: NetworkImage(
-                                  page.profileImage!,
+                                  page.coverImage!,
                                 ),
                                 fit: BoxFit.cover,
                               )
@@ -217,8 +217,12 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
                     Gap(15.h),
 
                     //? This is fine.
-                    if (page.isPublic || myPageNotifier.isMemberOf(widget.id))
-                      ValueListenableBuilder(
+                    Visibility(
+                      visible: page.isPublic || myPageNotifier.isMemberOf(widget.id),
+                      maintainState: true,
+                      maintainAnimation: true,
+                      maintainSize: true,
+                      child: ValueListenableBuilder(
                         valueListenable: myPageNotifier,
                         builder: (context, redraws, _) => GestureDetector(
                           onTap: _followPage,
@@ -239,12 +243,15 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
                             ),
                           ),
                         ),
-                      )
+                      ),
+                    )
                   ],
                 ),
+
+                //? This is fine.
                 Positioned(
                   left: 16.w,
-                  top: 190,
+                  top: 170.h,
                   child: WayaDp(
                     radius: 30.r,
                     image: page.profileImage,
@@ -254,9 +261,6 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
                 ),
               ],
             ),
-
-            // Some space.
-            const Gap(10),
 
             //? This section.
             Padding(
@@ -347,42 +351,45 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
               Gap(100.h),
 
               //? Then the other children.
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //? First, the lock icon.
-                  WayaAssets.icons.genSet.lock.svg(),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //? First, the lock icon.
+                    WayaAssets.icons.genSet.lock.svg(),
 
-                  // Some space.
-                  Gap(10.h),
+                    // Some space.
+                    Gap(10.h),
 
-                  //? The private text.
-                  Text('This page is private', style: wayaTheme.textTheme.titleLarge),
+                    //? The private text.
+                    Text('This page is private', style: wayaTheme.textTheme.titleLarge),
 
-                  // Some space.
-                  Gap(10.h),
+                    // Some space.
+                    Gap(10.h),
 
-                  //?
-                  Text(
-                    'You must join to see posts and participate',
-                    style: wayaTheme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w400,
-                      fontFamily: WayaConstants.fontFamily,
-                      fontSize: 16.sp,
+                    //?
+                    Text(
+                      'You must join to see posts and participate',
+                      style: wayaTheme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: WayaConstants.fontFamily,
+                        fontSize: 16.sp,
+                      ),
                     ),
-                  ),
 
-                  // Some space.
-                  Gap(30.h),
+                    // Some space.
+                    Gap(30.h),
 
-                  //? Now, let this fly.
-                  WayaProgressiveButton(
-                    notifier: loadingController,
-                    callback: () async => myPageNotifier.followPage(widget.id),
-                    text: 'Join & Request Access',
-                  ),
-                ],
+                    //? Now, let this fly.
+                    WayaProgressiveButton(
+                      notifier: loadingController,
+                      callback: () async => myPageNotifier.followPage(widget.id),
+                      text: 'Join & Request Access',
+                    ),
+                  ],
+                ),
               ),
             ],
           ],

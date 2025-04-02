@@ -86,11 +86,7 @@ class ReferralCard extends StatelessWidget {
   }
 
   String getInitials(String name) {
-    List<String> names = name.split(" ");
-    String initials = names.length > 1
-        ? names[0][0] + names[1][0] // First letter of first & last name
-        : names[0][0]; // Only first letter if single name
-    return initials.toUpperCase();
+    return name[0].toUpperCase();
   }
 
   String convertToUsableDateNew(String dateString) {
