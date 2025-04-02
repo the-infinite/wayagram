@@ -207,6 +207,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                           "type": MyFullMediaType.video
                         });
                       },
+                      
                       child: Stack(
                         children: [
                           VideoThumbnail(

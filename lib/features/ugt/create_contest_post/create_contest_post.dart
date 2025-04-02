@@ -40,7 +40,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
   final ImagePicker _pickers = ImagePicker();
   final List<MyMediaType> _selectedImages = [];
 
-  bool sel = false;
+  bool sel = true;
 
   Future<void> _pickImages() async {
     try {
