@@ -48,9 +48,10 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
       final businessProfile = await _profileRepo.getBusinessDataRepo(
           userId: ConversationState.self.id);
-      BusinessAccountData businessData =
-          BusinessAccountData.fromJson(businessProfile.data['data']);
+      BusinessAccountData businessData;
       if (businessProfile.success) {
+        businessData =
+            BusinessAccountData.fromJson(businessProfile.data['data']);
         print(businessProfile.data);
         state = state.copyWith(isPersonalNotUpgradedToBusiness: false);
       } else {
