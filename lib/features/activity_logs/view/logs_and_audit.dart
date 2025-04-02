@@ -8,7 +8,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/view/activity_log.dart';
-import 'login_activity.dart';
+import 'account_activity.dart';
 
 class LogsAndAuditTrials extends ConsumerStatefulWidget {
   static const route = '/logsAndAuditTrials';
@@ -27,10 +27,6 @@ class _LogsAndAuditTrialsState extends ConsumerState<LogsAndAuditTrials> {
       title: "Logs & Audit Trails    ",
       isLoading: false,
       isScrollable: true,
-      // onTapBackButton: (){
-      //   WayaNav.goBack();
-      //   ref.watch(createGroupProvider.notifier).reset();
-      // },
       body: Column(
         spacing:1,
         crossAxisAlignment: CrossAxisAlignment.start,

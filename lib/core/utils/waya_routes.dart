@@ -134,7 +134,7 @@ import 'package:wayagram/features/explore/search/search.dart';
 import 'package:wayagram/shared/features/quotation/view/all_buy_request.dart';
 
 import '../../features/activity_logs/view/cms_clicks.dart';
-import '../../features/activity_logs/view/login_activity.dart';
+import '../../features/activity_logs/view/account_activity.dart';
 import '../../features/activity_logs/view/logs_and_audit.dart';
 import '../../features/activity_logs/view/payment_activity.dart';
 import '../../features/activity_logs/view/search_log.dart';
