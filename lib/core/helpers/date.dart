@@ -35,6 +35,10 @@ class WayaDateHelper {
     return DateFormat("dd MMM, yyyy").format(timestamp.toLocal());
   }
 
+  static String getEffectiveTimestamp(DateTime timestamp) {
+    return DateFormat("MMM dd, hh:mm a").format(timestamp.toLocal());
+  }
+
   static String getMonthlyTimestamp(DateTime timestamp) {
     return DateFormat("MMMM yyyy").format(timestamp.toLocal());
   }

@@ -165,7 +165,10 @@ class WayaAppRoutes {
     CartView.route: () => CartView(),
     AllSellerOrders.route: () => AllSellerOrders(),
     SellerOrderDetails.route: () => SellerOrderDetails(),
-    SellerBidDetails.route: () => SellerBidDetails(id: WayaNav.search['id'].toString()),
+    SellerBidDetails.route: () => SellerBidDetails(
+          id: WayaNav.search['id'].toString(),
+          requestId: WayaNav.search['requestId'].toString(),
+        ),
     SellerSettlement.route: () => SellerSettlement(),
     SeeSellerBids.route: () => SeeSellerBids(id: WayaNav.search['id'].toString()),
     SeeBuyerBids.route: () => SeeBuyerBids(id: WayaNav.search['id'].toString()),
@@ -257,8 +260,8 @@ class WayaAppRoutes {
     Groups.route: () => Groups(),
     Suggestion.route: () => Suggestion(),
     GroupSuggestion.route: () => GroupSuggestion(),
-    Promote.route:() => Promote(),
-    PromotionDashboard.route:() => PromotionDashboard(),
+    Promote.route: () => Promote(),
+    PromotionDashboard.route: () => PromotionDashboard(),
     PromotionDetail.route: () => PromotionDetail(),
     PublicPage.route: () => PublicPage(
           id: WayaNav.search['id'].toString(),
@@ -416,7 +419,6 @@ class WayaAppRoutes {
   static String getContestantProfileRoute(String id, String contestId) =>
       "${ContestProfilePage.route}?id=$id&contest=$contestId";
 
-
   /// Helper function used to generate the route that is supposed to take you a
   /// single poll by its ID.
   static String getPollDetailsPage(String id) => "${PollAndVoting.route}?id=$id";
@@ -430,8 +432,9 @@ class WayaAppRoutes {
   static String getDonationDetailsPage(String id) => "${Donations.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed to take you a
-  /// single 
-  static String getBidDetailsScreen(String id) => "${SellerBidDetails.route}?id=$id";
+  /// single
+  static String getBidDetailsScreen(String id, String requestId) =>
+      "${SellerBidDetails.route}?id=$id&requestId=$requestId";
 
   /// This is fine.
   static List<GetPage> get getPages {
