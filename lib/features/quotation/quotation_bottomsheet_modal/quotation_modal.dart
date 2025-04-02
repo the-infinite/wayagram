@@ -1071,7 +1071,7 @@ class UpdatePickupStatusModal extends StatelessWidget {
             children: [
               //? Our title.
               Text(
-                "Update Order Status",
+                "Update Pick-up Status",
                 style: wayaTheme.textTheme.headlineLarge,
               ),
 
@@ -1080,7 +1080,7 @@ class UpdatePickupStatusModal extends StatelessWidget {
 
               //? The subtitle.
               Text(
-                "Choose the new order status you want this order to display for the buyer and yourself",
+                "Choose the new pick-up status you want this order to display for the buyer and yourself",
                 style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
@@ -1093,7 +1093,7 @@ class UpdatePickupStatusModal extends StatelessWidget {
 
               //? The text for extending time.
               WayaTextStrip(
-                "Choose New Order Status",
+                "Choose New Pick-up Status",
                 dividerColor: wayaTheme.colorScheme.greyColor100,
                 textColor: wayaTheme.colorScheme.customBlack,
                 backgroundColor: wayaTheme.colorScheme.scaffoldColor2,
@@ -1155,7 +1155,7 @@ class UpdatePickupStatusModal extends StatelessWidget {
                     WayaUtils.showModalSheet(
                       context,
                       child: WayaErrorDialog(
-                        title: "You must select an order status.",
+                        title: "You must select a pick-up status.",
                       ),
                     );
                     return;
