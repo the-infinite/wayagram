@@ -251,6 +251,14 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     return _localDataSource.getUserId().toString();
   }
 
+  void changeActive(bool isActive) {
+    state = state.copyWith(isActive: isActive);
+  }
+
+  bool getActive() {
+    return state.isActive ?? false;
+  }
+
   Future<void> getContestantProfileVoteDetails(String contestId) async {
     try {
       final response =
@@ -379,8 +387,10 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     for (var myImage in imageUrls) {
       listMap.add({"type": "IMAGE", "url": myImage});
     }
-    listMap.add({"type": "VIDEO", "url": videoUrl});
-    listMap.add({"type": "TEXT", "url": text});
+    if (videoUrl != null) {
+      listMap.add({"type": "VIDEO", "url": videoUrl});
+    }
+    // listMap.add({"type": "TEXT", "url": text});
 
     var map = {
       "contestantProfileId": state.createPostId,

@@ -44,8 +44,7 @@ class _UpcomingContestDetailsState
       ref
           .read(postProvider.notifier)
           .fetchSingleContestantDetails(
-            ref,
-              model?.id ?? "", viewModel.getLoggedInUserId()??"")
+              ref, model?.id ?? "", viewModel.getLoggedInUserId() ?? "")
           .then((model) {
         if (model != null) {
           print("i am here");
@@ -56,6 +55,8 @@ class _UpcomingContestDetailsState
               print("i am here 3");
               hasProfile.value = true;
             }
+          } else {
+            hasProfile.value = false;
           }
         }
       });
@@ -281,8 +282,7 @@ class _UpcomingContestDetailsState
             AboutUgtWidget(
                 // isFromDetailsPage: true,
                 title: "Prize for Winner",
-                content:
-                    "₦${formatMoney(model.priceOfTheWinner.toString())}"),
+                content: "₦${formatMoney(model.priceOfTheWinner.toString())}"),
             const Gap(20),
           ],
         ),

@@ -77,7 +77,11 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     child: Row(
                       children: [
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            ref.read(selectedContestProvider.notifier).state =
+                                widget.post;
+                            WayaNav.toNamed('/upcoming-manage-contest-details');
+                          },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(
                                 45), // Adjust the radius as needed
