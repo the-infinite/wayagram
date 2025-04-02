@@ -2,6 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:wayagram/features/activity_logs/data/model/account_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/login_history_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/search_log_model.dart';
@@ -19,6 +20,12 @@ class ActivityLogsState{
   List<PaymentActivityDocs> paymentActivityDocs;
   List<PaymentActivityDocs> paymentActivityDocs1;
   List<SearchLogDocs> searchLogDocs;
+  List<DonationDocs> donationDocs;
+  List<DonationDocs> donationDocs1;
+  List<DonationDocs> pageDocs;
+  List<DonationDocs> pageDocs1;
+  List<DonationDocs> groupDocs;
+  List<DonationDocs> groupDocs1;
   List<SearchLogDocs> searchLogDocs1;
   List<UserActionsDocs> userActionsDocs;
   List<UserActionsDocs> userActionsDocs1;
@@ -41,6 +48,12 @@ class ActivityLogsState{
     this.accountActivityDocs1 = const [],
     this.paymentActivityDocs = const [],
     this.paymentActivityDocs1 = const [],
+    this.pageDocs = const [],
+    this.pageDocs1 = const [],
+    this.groupDocs = const [],
+    this.groupDocs1 = const [],
+    this.donationDocs = const [],
+    this.donationDocs1 = const [],
     this.searchLogDocs = const [],
     this.searchLogDocs1 = const [],
     this.userActionsDocs = const [],
@@ -58,6 +71,12 @@ class ActivityLogsState{
     List<LoginHistoryDocs>? loginHistoryDocs,
     List<CmsDocs>? cmsDocs,
     List<CmsDocs>? cmsDocs1,
+    List<DonationDocs>? donationDocs,
+    List<DonationDocs>? donationDocs1,
+    List<DonationDocs>? pageDocs,
+    List<DonationDocs>? pageDocs1,
+    List<DonationDocs>? groupDocs,
+    List<DonationDocs>? groupDocs1,
     List<AccountActivityDocs>? accountActivityDocs,
     List<AccountActivityDocs>? accountActivityDocs1,
     List<PaymentActivityDocs>? paymentActivityDocs,
@@ -80,6 +99,8 @@ class ActivityLogsState{
       loginHistoryDocs: loginHistoryDocs ?? this.loginHistoryDocs,
       cmsDocs: cmsDocs ?? this.cmsDocs,
       cmsDocs1: cmsDocs1 ?? this.cmsDocs1,
+      donationDocs: donationDocs ?? this.donationDocs,
+      donationDocs1: donationDocs1 ?? this.donationDocs1,
       accountActivityDocs: accountActivityDocs ?? this.accountActivityDocs,
       accountActivityDocs1: accountActivityDocs1 ?? this.accountActivityDocs1,
       paymentActivityDocs: paymentActivityDocs ?? this.paymentActivityDocs,
