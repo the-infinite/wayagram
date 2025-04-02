@@ -4,6 +4,7 @@ import 'package:wayagram/features/activity_logs/data/model/account_activity_mode
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/login_history_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/search_log_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_actions_model.dart';
@@ -22,8 +23,8 @@ class ActivityLogsState{
   List<SearchLogDocs> searchLogDocs;
   List<DonationDocs> donationDocs;
   List<DonationDocs> donationDocs1;
-  List<DonationDocs> pageDocs;
-  List<DonationDocs> pageDocs1;
+  List<PageDocs> pageDocs;
+  List<PageDocs> pageDocs1;
   List<DonationDocs> groupDocs;
   List<DonationDocs> groupDocs1;
   List<SearchLogDocs> searchLogDocs1;
@@ -73,8 +74,8 @@ class ActivityLogsState{
     List<CmsDocs>? cmsDocs1,
     List<DonationDocs>? donationDocs,
     List<DonationDocs>? donationDocs1,
-    List<DonationDocs>? pageDocs,
-    List<DonationDocs>? pageDocs1,
+    List<PageDocs>? pageDocs,
+    List<PageDocs>? pageDocs1,
     List<DonationDocs>? groupDocs,
     List<DonationDocs>? groupDocs1,
     List<AccountActivityDocs>? accountActivityDocs,

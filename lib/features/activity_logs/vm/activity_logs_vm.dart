@@ -12,6 +12,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/login_history_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_interaction_model.dart';
 import 'package:wayagram/features/activity_logs/view/visited_page.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
@@ -97,16 +98,16 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }
   }
 
-  Future<PaginatedResult<DonationDocs>?> getPageLogs({required int page}) async {
+  Future<PaginatedResult<PageDocs>?> getPageLogs({required int page}) async {
 
     try{
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getPageLogs(page);
-      List<DonationDocs>? fetchDonationDocs = [];
+      List<PageDocs>? fetchDonationDocs = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        DonationActivityModel responseModel = DonationActivityModel.fromJson(response.data);
+        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
         fetchDonationDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(pageDocs: fetchDonationDocs);

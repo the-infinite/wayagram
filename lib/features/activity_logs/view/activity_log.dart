@@ -11,6 +11,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_card_widget.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
@@ -678,7 +679,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
               ),
               Gap(10),
               Expanded(
-                child: PaginatedDataView<DonationDocs>(
+                child: PaginatedDataView<PageDocs>(
                     uniqueKey: 'page-logs',
                     loadingState: SizedBox(
                         height: context.height * 0.4,

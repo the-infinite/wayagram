@@ -36,6 +36,7 @@ class ActivityLogsRepository extends BaseRepository {
     return get("wayagram-profile/api/v2/client/activity-logs?limit=10&page=$page&logType=login-history");
   }
 
+
   Future<WayaRequestResponse> getAccountActivity(int page) {
     return get("wayagram-profile/api/v2/client/activity-logs?page=$page");
   }
@@ -45,11 +46,11 @@ class ActivityLogsRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getPageLogs(int page) {
-    return get("wayagram-products/api/v1/client/activity-logs?limit=10&page=$page&logType=donation");
+    return get("wayagram-graph/api/v2/client/activity-logs?limit=10&page=$page&logType=pages");
   }
 
   Future<WayaRequestResponse> getGroupLogs(int page) {
-    return get("wayagram-products/api/v1/client/activity-logs?limit=10&page=$page&logType=donation");
+    return get("wayagram-products/api/v1/client/activity-logs?limit=10&page=$page&logType=groups");
   }
 
 }
