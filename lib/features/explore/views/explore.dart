@@ -56,7 +56,7 @@ class _ExploreState extends ConsumerState<Explore> {
       ref.read(regionsProvider.notifier).getCurrentCountry();
       ref.read(selectInterestProvider.notifier).getUserInterest();
       ref.read(shopVmProvider.notifier).allCategories(1);
-      ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 1000);
+      ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 20);
       ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1);
       ref.read(cartVmProvider.notifier).loadCart();
     });

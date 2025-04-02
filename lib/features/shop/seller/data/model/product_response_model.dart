@@ -72,7 +72,7 @@ class Product extends BaseModel<Product> {
   final int depth;
   final String condition;
   final dynamic wayagramDeal;
-  final dynamic wayagramDealApprove;
+  final dynamic dealStatus;
   final String? wayagramDealRejectedReason;
   final bool approve;
   final bool deliveryCharge;
@@ -107,7 +107,7 @@ class Product extends BaseModel<Product> {
       required this.depth,
       required this.condition,
       this.wayagramDeal,
-      this.wayagramDealApprove,
+      this.dealStatus,
       this.wayagramDealRejectedReason,
       required this.approve,
       required this.deliveryCharge,
@@ -145,8 +145,8 @@ class Product extends BaseModel<Product> {
         materialType: json['materialType'] ?? '',
         depth: json['depth'],
         condition: json['condition'] ?? '',
-        wayagramDeal: json['wayagramDeal'] ?? false,
-        wayagramDealApprove: json['wayagramDealApprove'] ?? false,
+        wayagramDeal: json['wayagramDeal'] ,
+        dealStatus: json['dealStatus'] ?? false,
         wayagramDealRejectedReason: json['wayagramDealRejectedReason'],
         approve: json['approve'] ?? false,
         deliveryCharge: json['deliveryCharge'] ?? false,
@@ -184,7 +184,7 @@ class Product extends BaseModel<Product> {
       'depth': depth,
       'condition': condition,
       'wayagramDeal': wayagramDeal,
-      'wayagramDealApprove': wayagramDealApprove,
+      'dealStatus': dealStatus,
       'wayagramDealRejectedReason': wayagramDealRejectedReason,
       'approve': approve,
       'deliveryCharge': deliveryCharge,
@@ -238,7 +238,7 @@ class Product extends BaseModel<Product> {
       int? depth,
       String? condition,
       bool? wayagramDeal,
-      bool? wayagramDealApprove,
+      bool? dealStatus,
       String? wayagramDealRejectedReason,
       bool? approve,
       bool? deliveryCharge,
@@ -274,7 +274,7 @@ class Product extends BaseModel<Product> {
         depth: depth ?? this.depth,
         condition: condition ?? this.condition,
         wayagramDeal: wayagramDeal ?? this.wayagramDeal,
-        wayagramDealApprove: wayagramDealApprove ?? this.wayagramDealApprove,
+        dealStatus: dealStatus ?? this.dealStatus,
         wayagramDealRejectedReason:
             wayagramDealRejectedReason ?? this.wayagramDealRejectedReason,
         approve: approve ?? this.approve,

@@ -12,7 +12,7 @@ mixin ProductMixin {
       case ProductDetailType.wayagramdeal:
         return ProductDetailModel(
           title: 'Wayagram Deals',
-          fetchData: ref.read(shopVmProvider.notifier).getAllProducts
+          fetchData: ref.read(shopVmProvider.notifier).getAllWayaDealProducts
     ,
         );
       case ProductDetailType.recommended:

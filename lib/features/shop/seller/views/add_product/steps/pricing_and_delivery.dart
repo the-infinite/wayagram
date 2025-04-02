@@ -239,7 +239,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                   ],
                 ),
                 const Gap(20),
-                if (viewModel.applyDiscount)
+                if (viewModel.applyDiscount  && viewModel.isWayagramDeal != true)
                   Text(
                     "You can either add a discount percentage or select from the predefined discount types",
                     style: wayaTheme.textTheme.hintStyle,
@@ -257,10 +257,15 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                             label: "Discount Type",
                             hintText: 'Select a Discount Type',
                             displayText: viewModel.selectedDiscountType,
-                            fetchData: ref
-                                .watch(addProductProvider(widget.uniqueKey)
-                                    .notifier)
-                                .getAllDiscounts,
+                            fetchData: viewModel.isWayagramDeal == true
+                                ? ref
+                                    .watch(addProductProvider(widget.uniqueKey)
+                                        .notifier)
+                                    .getDealsDiscounts
+                                : ref
+                                    .watch(addProductProvider(widget.uniqueKey)
+                                        .notifier)
+                                    .getAllDiscounts,
                             onSelected: (value) => ref
                                 .read(addProductProvider(widget.uniqueKey)
                                     .notifier)
@@ -269,7 +274,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                     );
                   }),
                 const Gap(10),
-                if (viewModel.applyDiscount)
+                if (viewModel.applyDiscount && viewModel.isWayagramDeal != true)
                   FormField<String>(validator: (value) {
                     return null;
                   }, builder: (formState) {
@@ -314,7 +319,6 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
             border:
                 Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-            
               widget.gotoPreviousTab();
             })
       ],

@@ -57,7 +57,7 @@ class SellerProductsVm extends StateNotifier<SellerProductState> {
         }
       }
 
-      return product.wayagramDeal == null || product.wayagramDeal == false;
+      return product.wayagramDeal == null;
     }).toList();
   }
 

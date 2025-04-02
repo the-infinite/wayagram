@@ -177,7 +177,6 @@ class AddProductState {
         condition: productCondition,
         price: pricePerUnit.text,
         options: pickUpOption,
-        wayagramDeal: isWayagramDeal,
         discountTypeId: selectedDiscountType?.value,
         height: productHeight.text,
         width: productWidth.text,
@@ -210,3 +209,4 @@ class AddWayagramArg {
 
   AddWayagramArg({required this.uniqueKey, required this.isWayagram});
 }
+
