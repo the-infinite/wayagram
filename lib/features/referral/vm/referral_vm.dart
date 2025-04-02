@@ -38,9 +38,9 @@ class ReferralVm extends StateNotifier<ReferralState> {
   }
 
   Future<void> getAllUserReferrals(bool isFirst) async {
-    if (isFirst) {
+    /*  if (isFirst) {
       state = state.copyWith(page: 1);
-    }
+    } */
     if (state.isLastPage && isFirst == false) {
       return;
     }
@@ -50,7 +50,7 @@ class ReferralVm extends StateNotifier<ReferralState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _referralRepository.getUserReferral(
-          getLoggedInUserId() ?? "", state.page);
+          getLoggedInUserId() ?? "", isFirst ? 1 : state.page);
       state = state.copyWith(isLoading: false);
       if (response.success == true) {
         ReferralModelBase responseModel =
@@ -58,7 +58,8 @@ class ReferralVm extends StateNotifier<ReferralState> {
         state = state.copyWith(
             isLastPage: responseModel.data?.hasNextPage == true ? false : true);
         if (isFirst) {
-          state = state.copyWith(referralList: responseModel.data?.docs ?? []);
+          state = state.copyWith(
+              referralList: responseModel.data?.docs ?? [], page: 1);
         } else {
           state = state.copyWith(referralList: [
             ...state.referralList,
