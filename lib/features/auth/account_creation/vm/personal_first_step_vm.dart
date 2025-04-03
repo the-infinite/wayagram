@@ -191,6 +191,12 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
     }
   }
 
+  void updateReferralCode(String code) {
+    if (code.isNotEmpty) {
+      state = state.copyWith(referralCode: TextEditingController(text: code));
+    }
+  }
+
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
       final response = await showDatePicker(
@@ -232,7 +238,7 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
         country: state.country,
         dateOfBirth: state.dateIsoFormat,
         tcAgreement: state.isAgreeToTerm,
-        referenceCode: state.referenceCode.text,
+        referenceCode: state.referralCode.text,
         policyAgreement: state.isAgreeToTerm,
         confirmPassword: state.confirmPassword.text,
         gender: state.gender.toUpperCase(),
