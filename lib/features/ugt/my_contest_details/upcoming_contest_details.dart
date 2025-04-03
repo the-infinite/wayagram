@@ -209,17 +209,17 @@ class _UpcomingContestDetailsState
                 child: WayaButton(
                   callback: () {
                     //? if user has a profile
-                    if (hasProfile.value) {
+                    if (hasProfile.value || model?.hasApplied == true) {
                       ref.read(selectedContestProvider.notifier).state = model;
                       WayaNav.toNamed('/upcoming-manage-contest-details');
                       return;
                     }
-                    ivalidateUGTVM(ref);
+                  //  ivalidateUGTVM(ref);
                     WayaNav.toNamed('/register-contest1');
                   },
-                  text: hasProfile.value
+                  text:model?.hasApplied == true? hasProfile.value
                       ? "View Contest Details"
-                      : "Register For Contest",
+                      : "Register For Contest":"Register For Contest",
                 ),
               ),
             ],

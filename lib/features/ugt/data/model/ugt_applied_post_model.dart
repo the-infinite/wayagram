@@ -281,6 +281,7 @@ post.Contest mergeContest(AppliedContestModel model) {
       title: model.contest?.title,
       category: model.contest?.category,
       state: model.state ?? model.contest?.state,
+      hasApplied: model.status == "Approved",
       description: model.contest?.description,
       // voteCountToQualify:
       winnerPrize: model.contest?.winnerPrize,
@@ -298,7 +299,7 @@ post.Contest mergeContest(AppliedContestModel model) {
       shareCount: 0,
       followCount: 0,
       applicantCount: 0,
-     // numberOfDuration: model.contest?.numberOfDuration,
+      // numberOfDuration: model.contest?.numberOfDuration,
       participationStartDate: model.contest?.participationStartDate,
       descriptionOfAwards: model.contest?.descriptionOfAwards,
       startDate: model.contest?.startDate,
@@ -324,7 +325,6 @@ post.Contest mergeContest(AppliedContestModel model) {
                   numberOfPostPerWeek: e.numberOfPostPerWeek,
                   priceOfTheWinner: e.priceOfTheWinner,
                   startDate: e.startDate,
-                  
                   isActive: e.isActive,
                   endDate: e.endDate,
                   approveBeforeLive: e.approveBeforeLive,
