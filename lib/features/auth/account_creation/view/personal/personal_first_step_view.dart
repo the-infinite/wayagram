@@ -1,17 +1,20 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/core/utils/waya_validators.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/gender_data.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
 import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
+import 'package:wayagram/shared/features/browser/activity.dart';
 
 class PersonalFirstStepView extends ConsumerStatefulWidget {
   final Function goToNextTab;
@@ -717,9 +720,33 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                         text: TextSpan(
                           children: [
                             TextSpan(text: "I agree to the ", style: WayaTextStyles.bodySmall),
-                            TextSpan(text: "Terms and conditions ", style: WayaTextStyles.smallActiveLinkStyle),
+                            TextSpan(
+                              text: "Terms and conditions ",
+                              style: WayaTextStyles.smallActiveLinkStyle,
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async => await WayaNav.to(
+                                      transition: Transition.circularReveal,
+                                      duration: const Duration(milliseconds: 500),
+                                      WayaBrowserView(
+                                        name: "Terms and Conditions",
+                                        url: "https://wayagram.ng/terms",
+                                      ),
+                                    ),
+                            ),
                             TextSpan(text: "and ", style: WayaTextStyles.bodySmall),
-                            TextSpan(text: "Privacy policy", style: WayaTextStyles.smallActiveLinkStyle)
+                            TextSpan(
+                              text: "Privacy policy",
+                              style: WayaTextStyles.smallActiveLinkStyle,
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async => await WayaNav.to(
+                                      transition: Transition.circularReveal,
+                                      duration: const Duration(milliseconds: 500),
+                                      WayaBrowserView(
+                                        name: "Privacy Privacy",
+                                        url: "https://wayagram.ng/policy",
+                                      ),
+                                    ),
+                            )
                           ],
                         ),
                       ),

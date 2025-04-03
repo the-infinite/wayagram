@@ -12,6 +12,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/shared/components/multi_select.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 
@@ -610,7 +611,7 @@ class ExtendBidTime extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //? Parametrics to build the modal.
+    //? Parametric to build the modal.
     final wayaTheme = Theme.of(context);
 
     //? Return the modal.
@@ -720,6 +721,466 @@ class ExtendBidTime extends StatelessWidget {
               text: "Cancel",
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class UpdateOrderStatusModal extends StatelessWidget {
+  final BuyRequestModel request;
+  final QuotationBidModel bid;
+  final QuotationsNotifier notifier;
+  final ValueNotifier<QuotationOrderStatus?> controller;
+  final ValueNotifier<bool> isLoading;
+  final String orderId;
+
+  // Construct.
+  const UpdateOrderStatusModal({
+    super.key,
+    required this.request,
+    required this.bid,
+    required this.controller,
+    required this.notifier,
+    required this.isLoading,
+    required this.orderId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    //? Parametric.
+    final wayaTheme = Theme.of(context);
+
+    //? The component.
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
+      child: SingleChildScrollView(
+        child: ValueListenableBuilder(
+          valueListenable: controller,
+          builder: (context, selected, _) => Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              //? Our title.
+              Text(
+                "Update Order Status",
+                style: wayaTheme.textTheme.headlineLarge,
+              ),
+
+              // Some space.
+              Gap(3.h),
+
+              //? The subtitle.
+              Text(
+                "Choose the new order status you want this order to display for the buyer and yourself",
+                style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: wayaTheme.colorScheme.greyColor500,
+                ),
+              ),
+
+              // Some more space.
+              Gap(30.h),
+
+              //? The text for extending time.
+              WayaTextStrip(
+                "Choose New Order Status",
+                dividerColor: wayaTheme.colorScheme.greyColor100,
+                textColor: wayaTheme.colorScheme.customBlack,
+                backgroundColor: wayaTheme.colorScheme.scaffoldColor2,
+                style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+
+              // Some space.
+              Gap(30.h),
+
+              //? The first order option.
+              WayaMultipleSelectionButton(
+                name: "In Progress",
+                controller: controller,
+                value: QuotationOrderStatus.inProgress,
+              ),
+
+              // Some space.
+              Gap(5.h),
+
+              //? The second order option.
+              WayaMultipleSelectionButton(
+                name: "Delivered",
+                controller: controller,
+                value: QuotationOrderStatus.completed,
+              ),
+
+              // Some space.
+              Gap(5.h),
+
+              //? The second order option.
+              WayaMultipleSelectionButton(
+                name: "Cancelled",
+                controller: controller,
+                value: QuotationOrderStatus.failed,
+              ),
+
+              // Some space.
+              Gap(50.h),
+
+              //? Confirm the extension.
+              WayaProgressiveButton(
+                notifier: isLoading,
+                callback: () async {
+                  //? Doing well.
+                  if (controller.value == null) {
+                    WayaUtils.showModalSheet(
+                      context,
+                      child: WayaErrorDialog(
+                        title: "You must select an order status.",
+                      ),
+                    );
+                    return;
+                  }
+
+                  //? Now, go back.
+                  await notifier.updateOrderStatus(orderId, controller.value!);
+                  WayaNav.goBack();
+                },
+                text: "Confirm",
+              ),
+
+              // Some space.
+              Gap(10.h),
+
+              //? Cancel this one.
+              WayaButton(
+                callback: () => WayaNav.goBack(),
+                textColor: wayaTheme.colorScheme.greyColor500,
+                color: wayaTheme.colorScheme.transparent,
+                border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+                text: "Cancel",
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class UpdateDeliveryStatusModal extends StatelessWidget {
+  final BuyRequestModel request;
+  final QuotationBidModel bid;
+  final QuotationsNotifier notifier;
+  final String orderId;
+  final ValueNotifier<QuotationDeliveryStatus?> controller;
+  final ValueNotifier<bool> isLoading;
+
+  // Construct.
+  const UpdateDeliveryStatusModal({
+    super.key,
+    required this.request,
+    required this.bid,
+    required this.notifier,
+    required this.controller,
+    required this.isLoading,
+    required this.orderId,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    //? Parametric.
+    final wayaTheme = Theme.of(context);
+
+    //? The component.
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
+      child: SingleChildScrollView(
+        child: ValueListenableBuilder(
+          valueListenable: controller,
+          builder: (context, selected, _) => Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              //? Our title.
+              Text(
+                "Update Delivery Status",
+                style: wayaTheme.textTheme.headlineLarge,
+              ),
+
+              // Some space.
+              Gap(3.h),
+
+              //? The subtitle.
+              Text(
+                "Choose the new delivery status you want this order to display for the buyer and yourself",
+                style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: wayaTheme.colorScheme.greyColor500,
+                ),
+              ),
+
+              // Some more space.
+              Gap(30.h),
+
+              //? The text for extending time.
+              WayaTextStrip(
+                "Choose New Delivery Status",
+                dividerColor: wayaTheme.colorScheme.greyColor100,
+                textColor: wayaTheme.colorScheme.customBlack,
+                backgroundColor: wayaTheme.colorScheme.scaffoldColor2,
+                style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+
+              // Some space.
+              Gap(30.h),
+
+              //? The first order option.
+              WayaMultipleSelectionButton(
+                name: "Pending",
+                controller: controller,
+                value: QuotationDeliveryStatus.pending,
+              ),
+
+              // Some space.
+              Gap(5.h),
+
+              //? The second order option.
+              WayaMultipleSelectionButton(
+                name: "Processing",
+                controller: controller,
+                value: QuotationDeliveryStatus.processing,
+              ),
+
+              // Some space.
+              Gap(5.h),
+
+              //? The third order option.
+              WayaMultipleSelectionButton(
+                name: "Ready for Dispatch",
+                controller: controller,
+                value: QuotationDeliveryStatus.readyForDispatch,
+              ),
+
+              // Some space.
+              Gap(5.h),
+
+              //? The fourth order option.
+              WayaMultipleSelectionButton(
+                name: "In Transit",
+                controller: controller,
+                value: QuotationDeliveryStatus.inTransit,
+              ), // Some space.
+              Gap(5.h),
+
+              //? The fifth order option.
+              WayaMultipleSelectionButton(
+                name: "Out For Delivery",
+                controller: controller,
+                value: QuotationDeliveryStatus.outForDelivery,
+              ),
+
+              // Some space.
+              Gap(5.h),
+
+              //? The final order option.
+              WayaMultipleSelectionButton(
+                name: "Delivered",
+                controller: controller,
+                value: QuotationDeliveryStatus.delivered,
+              ),
+
+              // Some space.
+              Gap(50.h),
+
+              //? Confirm the extension.
+              WayaProgressiveButton(
+                notifier: isLoading,
+                callback: () async {
+                  //? Doing well.
+                  if (controller.value == null) {
+                    WayaUtils.showModalSheet(
+                      context,
+                      child: WayaErrorDialog(
+                        title: "You must select a delivery status.",
+                      ),
+                    );
+                    return;
+                  }
+
+                  //? Now, go back.
+                  await notifier.updateDeliveryStatus(orderId, controller.value!);
+                  WayaNav.goBack();
+                },
+                text: "Confirm",
+              ),
+
+              // Some space.
+              Gap(10.h),
+
+              //? Cancel this one.
+              WayaButton(
+                callback: () => WayaNav.goBack(),
+                textColor: wayaTheme.colorScheme.greyColor500,
+                color: wayaTheme.colorScheme.transparent,
+                border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+                text: "Cancel",
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class UpdatePickupStatusModal extends StatelessWidget {
+  final BuyRequestModel request;
+  final QuotationBidModel bid;
+  final QuotationsNotifier notifier;
+  final String orderId;
+  final ValueNotifier<QuotationPickupStatus?> controller;
+  final ValueNotifier<bool> isLoading;
+
+  const UpdatePickupStatusModal({
+    super.key,
+    required this.request,
+    required this.bid,
+    required this.notifier,
+    required this.orderId,
+    required this.controller,
+    required this.isLoading,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    //? Parametric.
+    final wayaTheme = Theme.of(context);
+
+    //? The component.
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
+      child: SingleChildScrollView(
+        child: ValueListenableBuilder(
+          valueListenable: controller,
+          builder: (context, selected, _) => Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              //? Our title.
+              Text(
+                "Update Pick-up Status",
+                style: wayaTheme.textTheme.headlineLarge,
+              ),
+
+              // Some space.
+              Gap(3.h),
+
+              //? The subtitle.
+              Text(
+                "Choose the new pick-up status you want this order to display for the buyer and yourself",
+                style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                  color: wayaTheme.colorScheme.greyColor500,
+                ),
+              ),
+
+              // Some more space.
+              Gap(30.h),
+
+              //? The text for extending time.
+              WayaTextStrip(
+                "Choose New Pick-up Status",
+                dividerColor: wayaTheme.colorScheme.greyColor100,
+                textColor: wayaTheme.colorScheme.customBlack,
+                backgroundColor: wayaTheme.colorScheme.scaffoldColor2,
+                style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+
+              // Some space.
+              Gap(30.h),
+
+              //? The first order option.
+              WayaMultipleSelectionButton(
+                name: "Pending",
+                controller: controller,
+                value: QuotationPickupStatus.pending,
+              ),
+
+              // Some space.
+              Gap(5.h),
+
+              //? The second order option.
+              WayaMultipleSelectionButton(
+                name: "Ready for Pick-up",
+                controller: controller,
+                value: QuotationPickupStatus.ready,
+              ),
+
+              // Some space.
+              Gap(5.h),
+
+              //? The third order option.
+              WayaMultipleSelectionButton(
+                name: "Pick-up scheduled",
+                controller: controller,
+                value: QuotationPickupStatus.scheduled,
+              ),
+
+              // Some space.
+              Gap(5.h),
+
+              //? The final order option.
+              WayaMultipleSelectionButton(
+                name: "Pick-up completed",
+                controller: controller,
+                value: QuotationPickupStatus.collected,
+              ),
+
+              // Some space.
+              Gap(50.h),
+
+              //? Confirm the extension.
+              WayaProgressiveButton(
+                notifier: isLoading,
+                callback: () async {
+                  //? Doing well.
+                  if (controller.value == null) {
+                    WayaUtils.showModalSheet(
+                      context,
+                      child: WayaErrorDialog(
+                        title: "You must select a pick-up status.",
+                      ),
+                    );
+                    return;
+                  }
+
+                  //? Now, go back.
+                  await notifier.updatePickupStatus(orderId, controller.value!);
+                  WayaNav.goBack();
+                },
+                text: "Confirm",
+              ),
+
+              // Some space.
+              Gap(10.h),
+
+              //? Cancel this one.
+              WayaButton(
+                callback: () => WayaNav.goBack(),
+                textColor: wayaTheme.colorScheme.greyColor500,
+                color: wayaTheme.colorScheme.transparent,
+                border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
+                text: "Cancel",
+              ),
+            ],
+          ),
         ),
       ),
     );

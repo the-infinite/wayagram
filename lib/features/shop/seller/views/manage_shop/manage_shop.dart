@@ -12,7 +12,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart';
-import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/delivery_request/delivery_request.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
@@ -75,9 +74,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
           shopState.sellerMetrics!.totalOrders.completed.count +
           shopState.sellerMetrics!.totalOrders.pending.count +
           shopState.sellerMetrics!.totalOrders.processing.count;
-/**
 
- */
       // waya deals
       totalWayaDealProducts =
           shopState.sellerMetrics!.productMetrics.wayagramDealApprove +
@@ -183,7 +180,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 }),
             const Gap(15),
             Text("Quick Action",
-                style: TextStyle().wayaCopyWith(
+                style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w600,
                     color: wayaTheme.colorScheme.customBlack)),

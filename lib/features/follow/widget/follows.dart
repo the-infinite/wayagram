@@ -141,28 +141,25 @@ class MyFollowingDataView extends StatelessWidget {
     //? The body of the page in question.
     return ValueListenableBuilder(
       valueListenable: myFollowProvider,
-      builder: (context, state, _) {
-        //? Since it has content.
-        return WayaPaginatedListView(
-          isEmpty: state.hasLoadedFollowing && state.following.isEmpty,
-          shouldFetch: !state.isLoadingFollowing,
-          isAtEnd: !state.followingHasNextPage,
-          nextPage: state.followingPage,
-          itemCount: state.following.length,
-          handler: handler,
-          getPage: (page) => myFollowProvider.getUsersFollowing(),
-          whenEmpty: Center(
-            child: EmptyState(
-              assetImage: WayaAssets.icons.emptyState.svg(),
-              message: "You are not following anyone yet",
-            ),
+      builder: (context, state, _) => WayaPaginatedListView(
+        isEmpty: state.hasLoadedFollowing && state.following.isEmpty,
+        shouldFetch: !state.isLoadingFollowing,
+        isAtEnd: !state.followingHasNextPage,
+        nextPage: state.followingPage,
+        itemCount: state.following.length,
+        handler: handler,
+        getPage: (page) => myFollowProvider.getUsersFollowing(),
+        whenEmpty: Center(
+          child: EmptyState(
+            assetImage: WayaAssets.icons.emptyState.svg(),
+            message: "You are not following anyone yet",
           ),
-          builder: (context, index) => FollowRelationshipWidget(
-            index: index,
-            data: state.following[index],
-          ),
-        );
-      },
+        ),
+        builder: (context, index) => FollowRelationshipWidget(
+          index: index,
+          data: state.following[index],
+        ),
+      ),
     );
   }
 }

@@ -56,7 +56,7 @@ class _ExploreState extends ConsumerState<Explore> {
       ref.read(regionsProvider.notifier).getCurrentCountry();
       ref.read(selectInterestProvider.notifier).getUserInterest();
       ref.read(shopVmProvider.notifier).allCategories(1);
-      ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 1000);
+      ref.read(shopVmProvider.notifier).getAllProducts(page: 1, limit: 20);
       ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1);
       ref.read(cartVmProvider.notifier).loadCart();
     });
@@ -72,253 +72,249 @@ class _ExploreState extends ConsumerState<Explore> {
     final eventState = ref.watch(eventVmProvider);
 
     return WayaScaffold(
-        isLoading: false,
-        backgroundColor: wayaTheme.colorScheme.scaffoldColor,
-        appBar: AppBar(
-          toolbarHeight: kToolbarHeight,
-          backgroundColor: wayaTheme.colorScheme.scaffoldColor2,
-          title: ExploreHeader(),
-          actions: [
-            Container(
-              padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  //? The notification button.
-                  Material(
-                    shape: CircleBorder(),
-                    child: Padding(
-                      padding: const EdgeInsets.all(3),
-                      child: InkWell(
-                        onTap: () {
-                          WayaNav.toNamed(WayaNotifications.route);
-                        },
-                        child: WayaAssets.icons.notifications.svg(
-                          height: 24,
-                          width: 24,
-                        ),
+      isLoading: false,
+      backgroundColor: wayaTheme.colorScheme.scaffoldColor,
+      appBar: AppBar(
+        toolbarHeight: kToolbarHeight,
+        backgroundColor: wayaTheme.colorScheme.scaffoldColor2,
+        title: ExploreHeader(),
+        actions: [
+          Container(
+            padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                //? The notification button.
+                Material(
+                  shape: CircleBorder(),
+                  child: Padding(
+                    padding: const EdgeInsets.all(3),
+                    child: InkWell(
+                      onTap: () {
+                        WayaNav.toNamed(WayaNotifications.route);
+                      },
+                      child: WayaAssets.icons.notifications.svg(
+                        height: 24,
+                        width: 24,
                       ),
                     ),
                   ),
+                ),
 
-                  // Some space.
-                  const Gap(15),
+                // Some space.
+                const Gap(15),
 
-                  //? The user's profile picture.
-                  WayaDp(
-                    onTap: () {
-                      WayaNav.toNamed('/general-settings');
-                    },
-                    radius: 18.r,
-                  ),
-                ],
-              ),
-            )
-          ],
-          leading: Container(
-            padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
-            child: WayaAssets.images.wayalogoUnlabelled.image(),
-          ),
-        ),
-        isScrollable: true,
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Gap(20),
-            ExploreOurServices(),
-            const Gap(25),
-            Text("Moments", style: wayaTheme.textTheme.titleLarge),
-            const Gap(15),
-            SharedMoments(),
-            const Gap(25),
-            GroupedWidgetHeader(
-              onTap: () => WayaNav.removeUntilNamed(BottomView.route, arguments: 3),
-              subTitle: 'Have a buy request, just create a quote',
-              title: 'Get Quotation',
-            ),
-            const Gap(20),
-            WayaButton(
-              centerWidget: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.add,
-                    size: 28,
-                    color: wayaTheme.colorScheme.primary600,
-                  ),
-                  const Gap(8),
-                  Text(
-                    "Create a Quote",
-                    style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.primary,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                ],
-              ),
-              callback: () {
-                WayaNav.toNamed(CreateRequest.route);
-              },
-              color: wayaTheme.colorScheme.primary50,
-            ),
-
-            // Some space.
-            const Gap(25),
-
-            //? The shared quotations widget.
-            const SharedOthersBuyRequestsWidget(isExpanded: false),
-
-            //? For the next section.
-            GroupedWidgetHeader(
-                onTap: () {
-                  WayaNav.toNamed(BottomView.route, arguments: 1, preventDuplicates: false);
-                },
-                subTitle: 'Explore Categories & Best Offers',
-                title: 'Shop'),
-            const Gap(10),
-            CategoriesFilterWidget(setCategory: (value) {
-              ref.read(shopVmProvider.notifier).setCategory(value);
-              for (String categoryId in value) {
-                ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
-              }
-            }),
-            const Gap(25),
-            state.isLoading
-                ? _buildProductLoadingState(context: context)
-                : _buildProductGrid(
-                    products: notifier.filteredProducts.length > 2
-                        ? notifier.filteredProducts.sublist(0, 2)
-                        : notifier.filteredProducts),
-            const Gap(25),
-
-            GroupedWidgetHeader(
-                onTap: () {
-                  WayaNav.toNamed(DisplayFeed.route);
-                },
-                subTitle: 'Explore content based on your interests and interactions.',
-                title: 'Discover'),
-            const Gap(25),
-            SharedPosts(),
-            const Gap(25),
-            GroupedWidgetHeader(
-              onTap: () {},
-              subTitle: 'Support a cause that matters',
-              title: 'Donations',
-            ),
-            const Gap(25),
-            DonationsFeedWidget(),
-            const Gap(25),
-
-            GroupedWidgetHeader(
-                onTap: () {
-                  WayaNav.toNamed('/pages');
-                },
-                subTitle: 'View and manage pages',
-                title: 'Pages'),
-            const Gap(25),
-            PagesFeedWidget(
-              isFollow: true,
-              isManaged: true,
-              isRecommended: true,
-            ),
-            const Gap(25),
-
-            GroupedWidgetHeader(
-                onTap: () {
-                  WayaNav.toNamed('/groups');
-                },
-                subTitle: 'View and manage groups',
-                title: 'Groups'),
-            const Gap(25),
-            GroupsFeedWidget(
-              isGroupIJoined: true,
-              isMyGroups: true,
-              isRecommended: true,
-            ),
-            const Gap(25),
-            if (eventState.upcomingEvents.isNotEmpty) ...[
-              GroupedWidgetHeader(
+                //? The user's profile picture.
+                WayaDp(
                   onTap: () {
-                    WayaNav.toNamed(EventView.route);
+                    WayaNav.toNamed('/general-settings');
                   },
-                  subTitle: 'Join upcoming activities',
-                  title: 'Events'),
-              const Gap(25),
-              ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: eventState.upcomingEvents.length > 2
-                      ? eventState.upcomingEvents.sublist(0, 2).length
-                      : eventState.upcomingEvents.length,
-                  itemBuilder: (context, index) {
-                    return EventCard(
-                        event: eventState.upcomingEvents.length > 2
-                            ? eventState.upcomingEvents.sublist(0, 2)[index]
-                            : eventState.upcomingEvents[index],
-                        userId: exploreState.userId);
-                  }),
-            ],
-            const Gap(25),
+                  radius: 18.r,
+                ),
+              ],
+            ),
+          )
+        ],
+        leading: Container(
+          padding: EdgeInsets.fromLTRB(15, 0, 0, 0),
+          child: WayaAssets.images.wayalogoUnlabelled.image(),
+        ),
+      ),
+      isScrollable: true,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Gap(20),
+          ExploreOurServices(),
+          const Gap(25),
+          Text("Moments", style: wayaTheme.textTheme.titleLarge),
+          const Gap(15),
+          SharedMoments(),
+          const Gap(25),
+          GroupedWidgetHeader(
+            onTap: () => WayaNav.removeUntilNamed(BottomView.route, arguments: 3),
+            subTitle: 'Have a buy request, just create a quote',
+            title: 'Get Quotation',
+          ),
+          const Gap(20),
+          WayaButton(
+            centerWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.add,
+                  size: 28,
+                  color: wayaTheme.colorScheme.primary600,
+                ),
+                const Gap(8),
+                Text(
+                  "Create a Quote",
+                  style: TextStyle().wayaCopyWith(
+                    color: wayaTheme.colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16.sp,
+                  ),
+                ),
+              ],
+            ),
+            callback: () => WayaNav.toNamed(CreateRequest.route),
+            color: wayaTheme.colorScheme.primary50,
+          ),
+
+          // Some space.
+          const Gap(25),
+
+          //? The shared quotations widget.
+          const SharedOthersBuyRequestsWidget(isExpanded: false),
+
+          //? For the next section.
+          GroupedWidgetHeader(
+              onTap: () {
+                WayaNav.toNamed(BottomView.route, arguments: 1, preventDuplicates: false);
+              },
+              subTitle: 'Explore Categories & Best Offers',
+              title: 'Shop'),
+          const Gap(10),
+          CategoriesFilterWidget(setCategory: (value) {
+            ref.read(shopVmProvider.notifier).setCategory(value);
+            for (String categoryId in value) {
+              ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
+            }
+          }),
+          const Gap(25),
+          state.isLoading
+              ? _buildProductLoadingState(context: context)
+              : _buildProductGrid(
+                  products: notifier.filteredProducts.length > 2
+                      ? notifier.filteredProducts.sublist(0, 2)
+                      : notifier.filteredProducts),
+          const Gap(25),
+          GroupedWidgetHeader(
+            onTap: () => WayaNav.toNamed(DisplayFeed.route),
+            subTitle: 'Explore content based on your interests and interactions.',
+            title: 'Discover',
+          ),
+          const Gap(25),
+          SharedPosts(),
+          const Gap(25),
+          GroupedWidgetHeader(
+            onTap: () {},
+            subTitle: 'Support a cause that matters',
+            title: 'Donations',
+          ),
+          const Gap(25),
+          DonationsFeedWidget(),
+          const Gap(25),
+          GroupedWidgetHeader(
+              onTap: () {
+                WayaNav.toNamed('/pages');
+              },
+              subTitle: 'View and manage pages',
+              title: 'Pages'),
+          const Gap(25),
+          PagesFeedWidget(
+            isFollow: true,
+            isManaged: true,
+            isRecommended: true,
+          ),
+          const Gap(25),
+
+          GroupedWidgetHeader(
+              onTap: () {
+                WayaNav.toNamed('/groups');
+              },
+              subTitle: 'View and manage groups',
+              title: 'Groups'),
+          const Gap(25),
+          GroupsFeedWidget(
+            isGroupIJoined: true,
+            isMyGroups: true,
+            isRecommended: true,
+          ),
+          const Gap(25),
+          if (eventState.upcomingEvents.isNotEmpty) ...[
             GroupedWidgetHeader(
                 onTap: () {
-                  WayaNav.toNamed(PollAndVoting.route);
+                  WayaNav.toNamed(EventView.route);
                 },
                 subTitle: 'Join upcoming activities',
-                title: 'Polls & Voting'),
+                title: 'Events'),
             const Gap(25),
-
-            PollsFeedWidget(
-              isExplore: true,
-            ),
-            const Gap(25),
-
-            //? I have plugged this in here for you. Gbayii omo iyami
-            GroupedWidgetHeader(
-              onTap: () {
-                WayaNav.removeUntilNamed(BottomView.route, arguments: 4);
-              },
-              subTitle: 'Connect with friends and communities',
-              title: 'Chats & Calls',
-            ),
-            const Gap(25),
-            const ConversationFeedWidget(isExpanded: false),
-
-            const Gap(25),
-            GroupedWidgetHeader(
-                onTap: () {
-                  //? navigate to ugt contest page
-                  WayaNav.toNamed("/ugt-home");
-                },
-                subTitle: 'Join Upcoming Activities',
-                title: 'University Got Talent'),
-            const Gap(25),
-            //?added ugt widget to the page
-            UgtContestWidget(
-              isExpanded: false,
-            )
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: eventState.upcomingEvents.length > 2
+                    ? eventState.upcomingEvents.sublist(0, 2).length
+                    : eventState.upcomingEvents.length,
+                itemBuilder: (context, index) {
+                  return EventCard(
+                      event: eventState.upcomingEvents.length > 2
+                          ? eventState.upcomingEvents.sublist(0, 2)[index]
+                          : eventState.upcomingEvents[index],
+                      userId: exploreState.userId);
+                }),
           ],
-        ),
-        floatingActionButton: SizedBox(
-          height: 50,
-          width: 50,
-          child: WayaButton(
-            callback: () {
-              WayaNav.toNamed('/createPost');
+          const Gap(25),
+          GroupedWidgetHeader(
+              onTap: () {
+                WayaNav.toNamed(PollAndVoting.route);
+              },
+              subTitle: 'Join upcoming activities',
+              title: 'Polls & Voting'),
+          const Gap(25),
+
+          PollsFeedWidget(
+            isExplore: true,
+          ),
+          const Gap(25),
+
+          //? I have plugged this in here for you. Gbayii omo iyami
+          GroupedWidgetHeader(
+            onTap: () {
+              WayaNav.removeUntilNamed(BottomView.route, arguments: 4);
             },
-            height: 50,
-            centerWidget: Center(
-              child: Icon(
-                Icons.add,
-                color: wayaTheme.colorScheme.white,
-                size: 40,
-              ),
+            subTitle: 'Connect with friends and communities',
+            title: 'Chats & Calls',
+          ),
+          const Gap(25),
+          const ConversationFeedWidget(isExpanded: false),
+
+          const Gap(25),
+          GroupedWidgetHeader(
+              onTap: () {
+                //? navigate to ugt contest page
+                WayaNav.toNamed("/ugt-home");
+              },
+              subTitle: 'Join Upcoming Activities',
+              title: 'University Got Talent'),
+          const Gap(25),
+          //?added ugt widget to the page
+          UgtContestWidget(
+            isExpanded: false,
+          )
+        ],
+      ),
+      floatingActionButton: SizedBox(
+        height: 50,
+        width: 50,
+        child: WayaButton(
+          callback: () {
+            WayaNav.toNamed('/createPost');
+          },
+          height: 50,
+          centerWidget: Center(
+            child: Icon(
+              Icons.add,
+              color: wayaTheme.colorScheme.white,
+              size: 40,
             ),
           ),
-        ));
+        ),
+      ),
+    );
   }
 
   Widget _buildProductGrid({required List<Product> products}) {

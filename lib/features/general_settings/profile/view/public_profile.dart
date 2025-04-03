@@ -1,6 +1,4 @@
 // ignore_for_file: deprecated_member_use_from_same_package
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -406,22 +404,10 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            //? FIrst, the background image.
-                            CachedNetworkImage(
-                              errorWidget: (context, url, error) => Container(
-                                height: (size.height * 0.2).h,
-                                color: wayaTheme.colorScheme.greyColor200,
-                                child: Center(
-                                  child: Icon(
-                                    Icons.image,
-                                    color: wayaTheme.colorScheme.greyColor600,
-                                  ),
-                                ),
-                              ),
-                              fit: BoxFit.cover,
-                              width: double.infinity,
-                              height: (size.height * 0.2).h,
-                              imageUrl: profile.coverImage.toString(),
+                            //? First, the background image.
+                            WayaImage2(
+                              height: size.height * 0.2,
+                              imageUrl: profile.coverImage,
                             ),
 
                             // Space.
@@ -488,6 +474,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                           bottom: 10.h,
                           child: ChatProfilePicture(
                             user: user,
+                            canMove: true,
                             radius: 28.r,
                             showActive: false,
                           ),

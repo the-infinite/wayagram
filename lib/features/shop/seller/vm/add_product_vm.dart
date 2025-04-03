@@ -14,6 +14,7 @@ import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/discount_type_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart';
+import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
@@ -119,6 +120,31 @@ class AddProductVm extends StateNotifier<AddProductState> {
     }
   }
 
+  Future<SelectTypePaginatedResult?> getDealsDiscounts(int page) async {
+    try {
+      final response = await _shopRepository.getAllDiscounts(page);
+      List<Select> allDiscounts = [];
+      if (response.success) {
+        DiscountsResponse responseModel =
+            DiscountsResponse.fromJson(response.data);
+        final filtered =
+            responseModel.discounts.where((v) => v.active && v.deal).toList();
+        allDiscounts = filtered.map((val) {
+          return Select(label: "${val.type} ${val.percentage}%", value: val.id);
+        }).toList();
+        state = state.copyWith(allDiscountTypes: allDiscounts);
+        state = state.copyWith(
+            totalNoOfDiscountPages: responseModel.pagination.totalPages);
+      }
+
+      return SelectTypePaginatedResult(
+          items: allDiscounts, totalPages: state.totalNoOfDiscountPages);
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   bool validateFields() {
     if (state.productName.text.trim().isEmpty) {
       WayaSnackBar.showToast("Product name is required");
@@ -161,6 +187,12 @@ class AddProductVm extends StateNotifier<AddProductState> {
         state = state.copyWith(pickUpAddress: TextEditingController(text: ''));
       }
 
+      if (state.isWayagramDeal == true && state.discountType.isEmpty) {
+        WayaSnackBar.showToast(
+            "Kindly select your preferred deal in the discount section");
+        return;
+      }
+
       if (state.pricePerUnit.text.isEmpty) {
         WayaSnackBar.showToast("Kindly add a price");
         return;
@@ -195,14 +227,14 @@ class AddProductVm extends StateNotifier<AddProductState> {
             message:
                 "Your product has been submitted. We'll notify you \n once it's reviewed.",
             onPress: () {
-              WayaNav.toNamed('/wayagram-deal');
+              WayaNav.replaceNamed(WayaGramDeals.route);
               // reset();
             },
             icon: Image.asset('assets/images/shop/add-product-success.png'),
             buttonText: 'View Application Status',
             secondButtonText: 'Go to Dashboard',
             onCancel: () {
-              WayaNav.toNamed('/wayagram-deal');
+              WayaNav.replaceNamed(ManageShop.route, arguments: state.shopId);
               // reset();
             },
           );
@@ -295,6 +327,12 @@ class AddProductVm extends StateNotifier<AddProductState> {
 
   void initializeWayagramDeal() {
     state = state.copyWith(isWayagramDeal: true);
+    updateApplyDiscount(true);
+  }
+
+  void initializeAddProduct() {
+    state = state.copyWith(isWayagramDeal: null);
+    updateApplyDiscount(false);
   }
 
   Future<void> initializeForEdit(SellerProduct product) async {
@@ -318,7 +356,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
         selectedCategory:
             Select(label: product.categoryName, value: product.categoryId),
         includeDeliveryFee: product.deliveryCharge,
-        isWayagramDeal: product.wayagramDeal,
+        isWayagramDeal: product.wayagramDeal == null ? false : true,
         includeMeasurement:
             product.height != 0 || product.width != 0 || product.depth != 0,
         productHeight: TextEditingController(text: product.height.toString()),

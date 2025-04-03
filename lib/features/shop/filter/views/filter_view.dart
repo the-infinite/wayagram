@@ -62,7 +62,7 @@ class _FilterViewState extends ConsumerState<FilterView> {
             (filterState.colors.isEmpty ||
                 (product.color != null &&
                     filterState.colors.contains(product.color))) &&
-            (product.wayagramDeal == null || product.wayagramDeal == false);
+            (product.wayagramDeal == null);
       }).toList();
     });
   }

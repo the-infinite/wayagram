@@ -13,6 +13,7 @@ import 'package:wayagram/features/moments/data/model/moment_response_model.dart'
 import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
+import 'package:wayagram/features/promotion/views/promote.dart';
 
 class MyMomentWidget extends ConsumerWidget {
   final MomentData moment;
@@ -20,7 +21,11 @@ class MyMomentWidget extends ConsumerWidget {
   final int index;
   final bool isMine;
   const MyMomentWidget(
-      {super.key, required this.moment, required this.allMoments, this.isMine = true, required this.index});
+      {super.key,
+      required this.moment,
+      required this.allMoments,
+      this.isMine = true,
+      required this.index});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +33,11 @@ class MyMomentWidget extends ConsumerWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        WayaNav.replaceNamed(ViewMoment.route, arguments: {"moments": allMoments, "isMine": isMine, 'index': index});
+        WayaNav.replaceNamed(ViewMoment.route, arguments: {
+          "moments": allMoments,
+          "isMine": isMine,
+          'index': index
+        });
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,15 +55,19 @@ class MyMomentWidget extends ConsumerWidget {
                       width: 50,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.center, colors: [
-                          Color(0xFFB43000),
-                          Color(0x99FFEF8C),
-                          Color(0xFFFF5D2E),
-                        ], stops: [
-                          0.0,
-                          0.5,
-                          1.0
-                        ]),
+                        gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.center,
+                            colors: [
+                              Color(0xFFB43000),
+                              Color(0x99FFEF8C),
+                              Color(0xFFFF5D2E),
+                            ],
+                            stops: [
+                              0.0,
+                              0.5,
+                              1.0
+                            ]),
                       ),
                       child: Padding(
                         padding: EdgeInsets.all(3),
@@ -139,8 +152,9 @@ class MyMomentWidget extends ConsumerWidget {
                         width: 3.w,
                       ),
                       Text(
-                        "${moment.totalViews} ${moment.totalViews > 1 ? 'VIEWS': 'VIEW'} ",
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                        "${moment.totalViews} ${moment.totalViews > 1 ? 'VIEWS' : 'VIEW'} ",
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w500),
                       )
                     ],
                   ),
@@ -172,7 +186,9 @@ class MyMomentActions extends StatelessWidget {
 
     Future<void> showDelete() async {
       await WayaUtils.showModalSheet(context,
-          child: ConfirmDeleteWidget(delete: () => ref.read(momentVmProvider.notifier).deleteMoment(moment.id)));
+          child: ConfirmDeleteWidget(
+              delete: () =>
+                  ref.read(momentVmProvider.notifier).deleteMoment(moment.id)));
     }
 
     return PopupMenuButton(
@@ -197,16 +213,17 @@ class MyMomentActions extends StatelessWidget {
                   ),
                   text: "Edit"),
             ),
-            // PopupMenuItem<int>(
-            //   value: 0,
-            //   child: _buildActionNav(
-            //       context: context,
-            //       onTap: () async {
-            //         WayaNav.goBack();
-            //       },
-            //       asset: SvgPicture.asset(WayaAssets.icons.mFire.path),
-            //       text: "Promote"),
-            // ),
+            PopupMenuItem<int>(
+              value: 0,
+              child: _buildActionNav(
+                  context: context,
+                  onTap: () async {
+                    WayaNav.goBack();
+                    WayaNav.toNamed(Promote.route);
+                  },
+                  asset: SvgPicture.asset(WayaAssets.icons.mFire.path),
+                  text: "Promote"),
+            ),
             PopupMenuItem<int>(
               value: 1,
               child: _buildActionNav(
@@ -245,7 +262,9 @@ class MyMomentActions extends StatelessWidget {
           const Gap(4),
           Text(text,
               style: TextStyle(
-                  color: textColor ?? wayaTheme.colorScheme.customBlack, fontWeight: FontWeight.w500, fontSize: 12))
+                  color: textColor ?? wayaTheme.colorScheme.customBlack,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12))
         ],
       ),
     );

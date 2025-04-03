@@ -33,6 +33,7 @@ class Discount {
   final String type;
   final int percentage;
   final bool active;
+  final bool deal;
   final DateTime? startDate;
   final DateTime? endDate;
   final bool isDeleted;
@@ -44,6 +45,7 @@ class Discount {
     required this.type,
     required this.percentage,
     required this.active,
+    required this.deal,
     this.startDate,
     this.endDate,
     required this.isDeleted,
@@ -64,6 +66,7 @@ class Discount {
           ? DateTime.parse(json['endDate'] as String)
           : json['endDate'],
       isDeleted: json['isDeleted'] as bool,
+      deal: json['deal'] ?? false,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );

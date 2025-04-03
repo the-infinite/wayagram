@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 
 class WayaDp extends ConsumerWidget {
@@ -35,7 +36,18 @@ class WayaDp extends ConsumerWidget {
           ? () {
               updateProfileImage(ref);
             }
-          : onTap,
+          : onTap ??
+              () async {
+                if (image == null) return;
+
+                final result = await WayaNavigationHelper.toImageDetailsScreen(
+                  null,
+                  [image!],
+                );
+
+                //? Do nothing.
+                if (result == null) return;
+              },
       child: Stack(
         children: [
           CircleAvatar(
@@ -95,7 +107,19 @@ class WayaImage2 extends ConsumerWidget {
           ? () {
               updateCoverPhoto(ref);
             }
-          : onTap,
+          : onTap ??
+              () async {
+                if (imageUrl == null) return;
+
+                //? This is not null so we are good.
+                final result = await WayaNavigationHelper.toImageDetailsScreen(
+                  null,
+                  [imageUrl!],
+                );
+
+                //? Do nothing.
+                if (result == null) return;
+              },
       child: Stack(
         children: [
           imageUrl == null && coverImage == null
@@ -156,6 +180,10 @@ class WayaImage3 extends ConsumerWidget {
 
   final double height;
 
+  void updateCoverPhoto(WidgetRef ref) {
+    ref.read(profileVmProvider.notifier).updateCoverPhoto();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
@@ -163,12 +191,31 @@ class WayaImage3 extends ConsumerWidget {
     final coverImage = ref.watch(profileVmProvider).userProfileModel?.data?.coverImage;
     return coverImage == null
         ? errorWidget(wayaTheme)
-        : CachedNetworkImage(
-            errorWidget: (context, url, error) => errorWidget(wayaTheme),
-            fit: BoxFit.fill,
-            width: double.infinity,
-            height: height,
-            imageUrl: imageUrl ?? coverImage);
+        : GestureDetector(
+            onTap: isEdit
+                ? () {
+                    updateCoverPhoto(ref);
+                  }
+                : onTap ??
+                    () async {
+                      if (imageUrl == null) return;
+
+                      final result = await WayaNavigationHelper.toImageDetailsScreen(
+                        null,
+                        [imageUrl!],
+                      );
+
+                      //? Do nothing.
+                      if (result == null) return;
+                    },
+            child: CachedNetworkImage(
+              errorWidget: (context, url, error) => errorWidget(wayaTheme),
+              fit: BoxFit.fill,
+              width: double.infinity,
+              height: height,
+              imageUrl: imageUrl ?? coverImage,
+            ),
+          );
   }
 
   Container errorWidget(ThemeData wayaTheme) {
@@ -183,11 +230,12 @@ class WayaImage3 extends ConsumerWidget {
           children: [
             if (isEdit)
               InkWell(
-                  onTap: onTap,
-                  child: Image.asset(
-                    'assets/images/pages/camera.png',
-                    height: 36.h,
-                  )),
+                onTap: onTap,
+                child: Image.asset(
+                  'assets/images/pages/camera.png',
+                  height: 36.h,
+                ),
+              ),
           ],
         ),
       ),
@@ -218,37 +266,48 @@ class WayaImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      imageBuilder: (context, imageProvider) => Container(
-        height: height,
-        width: width,
-        decoration: BoxDecoration(
-          borderRadius: radius ?? BorderRadius.circular(8),
-          color: color ?? wayaTheme.colorScheme.transparent,
-          image: DecorationImage(
-            image: imageProvider,
-            fit: fit ?? BoxFit.cover,
+    return GestureDetector(
+      onTap: () async {
+        final result = await WayaNavigationHelper.toImageDetailsScreen(
+          null,
+          [imageUrl],
+        );
+
+        //? Do nothing.
+        if (result == null) return;
+      },
+      child: CachedNetworkImage(
+        imageUrl: imageUrl,
+        imageBuilder: (context, imageProvider) => Container(
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            borderRadius: radius ?? BorderRadius.circular(8),
+            color: color ?? wayaTheme.colorScheme.transparent,
+            image: DecorationImage(
+              image: imageProvider,
+              fit: fit ?? BoxFit.cover,
+            ),
           ),
+          child: overlay ?? SizedBox.shrink(),
         ),
-        child: overlay ?? SizedBox.shrink(),
-      ),
-      placeholder: (context, url) => AnimatedContainer(
-        duration: const Duration(milliseconds: 700),
-        curve: Curves.easeInOut,
-        height: height,
-        width: width,
-        decoration:
-            BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: radius ?? BorderRadius.circular(8)),
-      ),
-      errorWidget: (context, url, error) => AnimatedContainer(
-        duration: const Duration(milliseconds: 700),
-        curve: Curves.easeInOut,
-        height: height,
-        width: width,
-        decoration: BoxDecoration(
-          color: wayaTheme.colorScheme.greyColor100,
-          borderRadius: radius ?? BorderRadius.circular(8),
+        placeholder: (context, url) => AnimatedContainer(
+          duration: const Duration(milliseconds: 700),
+          curve: Curves.easeInOut,
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+              color: wayaTheme.colorScheme.scaffoldColor, borderRadius: radius ?? BorderRadius.circular(8)),
+        ),
+        errorWidget: (context, url, error) => AnimatedContainer(
+          duration: const Duration(milliseconds: 700),
+          curve: Curves.easeInOut,
+          height: height,
+          width: width,
+          decoration: BoxDecoration(
+            color: wayaTheme.colorScheme.greyColor100,
+            borderRadius: radius ?? BorderRadius.circular(8),
+          ),
         ),
       ),
     );

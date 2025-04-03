@@ -1,10 +1,6 @@
 import 'package:flutter/widgets.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
-import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
@@ -129,6 +125,30 @@ class ShopVm extends StateNotifier<ShopState> {
     }
   }
 
+  Future<PaginatedResult<Product>?> getAllWayaDealProducts(
+      {required int page, int limit = 20}) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final response = await _repository.getOngoingWayaDealProducts(
+          page: page, limit: limit);
+      List<Product> allProducts = [];
+      bool hasNextPage = false;
+      if (response.success) {
+        ProductResponse productResponse =
+            ProductResponse.fromJson(response.data);
+        allProducts = productResponse.data.data;
+        hasNextPage = productResponse.data.pagination.hasNextPage;
+        state = state.copyWith(wayaDealProducts: allProducts);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage, items: allProducts);
+    } catch (e) {
+      print(e);
+      return null;
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   Future<void> getShopMetrics({required String shopId}) async {
     try {
       final response = await _repository.getShopMetrics(shopId: shopId);
@@ -161,30 +181,30 @@ class ShopVm extends StateNotifier<ShopState> {
             product.description.toLowerCase().contains(query);
       }
 
-      return product.wayagramDeal == null || product.wayagramDeal == false;
+      return product.wayagramDeal == null;
     }).toList();
   }
 
-  List<Product> get filteredWayagramDealProducts {
-    if (state.products.isEmpty) return [];
-    return state.products.where((product) {
-      // category filter
-      if (state.selectedCategoryId != null &&
-          state.selectedCategoryId!.isNotEmpty &&
-          !state.selectedCategoryId!.contains(product.categoryId)) {
-        return false;
-      }
+  // List<Product> get filteredWayagramDealProducts {
+  //   if (state.products.isEmpty) return [];
+  //   return state.products.where((product) {
+  //     // category filter
+  //     if (state.selectedCategoryId != null &&
+  //         state.selectedCategoryId!.isNotEmpty &&
+  //         !state.selectedCategoryId!.contains(product.categoryId)) {
+  //       return false;
+  //     }
 
-      // search filter
-      if (state.searchQuery.isNotEmpty) {
-        final query = state.searchQuery.toLowerCase();
-        return product.name.toLowerCase().contains(query) ||
-            product.description.toLowerCase().contains(query);
-      }
+  //     // search filter
+  //     if (state.searchQuery.isNotEmpty) {
+  //       final query = state.searchQuery.toLowerCase();
+  //       return product.name.toLowerCase().contains(query) ||
+  //           product.description.toLowerCase().contains(query);
+  //     }
 
-      return product.wayagramDeal == true;
-    }).toList();
-  }
+  //     return product.wayagramDeal == true;
+  //   }).toList();
+  // }
 }
 
 final shopVmProvider = StateNotifierProvider<ShopVm, ShopState>((ref) {

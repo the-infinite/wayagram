@@ -9,6 +9,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 
 import 'package:wayagram/core/theme/theme.dart';
@@ -17,6 +18,7 @@ import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotatio
 import 'package:wayagram/features/quotation/widgets/single_negotiation_bid.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
+import 'package:wayagram/shared/features/quotation/widget/bid_timer.dart';
 
 class SeeBuyerBids extends ConsumerStatefulWidget {
   static const route = '/quotation/buyer/bids';
@@ -103,26 +105,85 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
       body: ValueListenableBuilder(
         valueListenable: requestState,
         builder: (context, request, _) => Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: request?.bids?.isEmpty ?? true ? MainAxisAlignment.end : MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                itemCount: request?.bids?.length ?? 0,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  final bid = request!.bids![index];
+            //? If nobody has bid yet...
+            if (request?.bids?.isEmpty ?? true) ...[
+              Container(
+                margin: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+                decoration: BoxDecoration(
+                  color: wayaTheme.colorScheme.scaffoldColor,
+                  borderRadius: BorderRadius.circular(16.r),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    //? The bid icon.
+                    WayaAssets.images.bid.shop.image(
+                      height: 110.h,
+                      width: 110.w,
+                    ),
 
-                  //? Return this one.
-                  return SingleNegotiationBidWidget(
-                    negotiator: BidActionAuthor.buyer,
-                    request: request,
-                    bid: bid,
-                  );
-                },
+                    // Some space.
+                    SizedBox(height: 20.h),
+
+                    //? Tell the user we are awaiting vendors.
+                    Text(
+                      "Finding Vendors....",
+                      style: wayaTheme.textTheme.headlineLarge,
+                    ),
+
+                    // Some space.
+                    SizedBox(height: 3.h),
+
+                    //? The description.
+                    Text(
+                      "We're sending notifications to vendors around you to start bidding...",
+                      textAlign: TextAlign.center,
+                      style: wayaTheme.textTheme.hintStyle,
+                    ),
+                  ],
+                ),
               ),
-            ),
+
+              // Some space.
+              SizedBox(height: 17.h),
+
+              //? When this request exists...
+              if (request != null) ...[
+                //? Next, the timer.
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: QuotationBidTimer(
+                    request: request,
+                  ),
+                ),
+
+                // More space.
+                SizedBox(height: 17.h),
+              ]
+            ] else
+              //? This is fine.
+              Expanded(
+                child: ListView.builder(
+                  padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                  itemCount: request?.bids?.length ?? 0,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    final bid = request!.bids![index];
+
+                    //? Return this one.
+                    return SingleNegotiationBidWidget(
+                      negotiator: BidActionAuthor.buyer,
+                      request: request,
+                      bid: bid,
+                    );
+                  },
+                ),
+              ),
 
             //? This is fine.
             Container(

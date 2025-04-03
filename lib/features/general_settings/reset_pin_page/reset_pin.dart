@@ -22,10 +22,8 @@ class ResetPinPage extends ConsumerStatefulWidget {
 class _ResetPinPageState extends ConsumerState<ResetPinPage> {
   @override
   Widget build(BuildContext context) {
-    final pin = ref.watch(pinProvider);
     final confirmPin = ref.watch(confirmPinProvider);
     final confirmNewPin = ref.watch(newPinConfirmationProvider);
-
     final isInValid = ref.watch(isChangePinValidProvider);
     final viewModel = ref.read(transactionPinProvider.notifier);
 

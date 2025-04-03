@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/service/logger_service.dart';
+import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/features/onboarding/vm/splash_screen_vm.dart';
@@ -35,7 +36,8 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
   final _logger = getLogger('ManageShopVm');
 
-  ManageShopVm(this._orderRepository,this._profileRepo, this._shopRepository, this.ref)
+  ManageShopVm(
+      this._orderRepository, this._profileRepo, this._shopRepository, this.ref)
       : super(ManageShopState.initial());
 
   Future<void> getSellerShops() async {
@@ -46,8 +48,10 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
       final businessProfile = await _profileRepo.getBusinessDataRepo(
           userId: ConversationState.self.id);
-
+      BusinessAccountData businessData;
       if (businessProfile.success) {
+        businessData =
+            BusinessAccountData.fromJson(businessProfile.data['data']);
         print(businessProfile.data);
         state = state.copyWith(isPersonalNotUpgradedToBusiness: false);
       } else {
@@ -69,7 +73,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
         if (responseModel.data.shops.isEmpty) {
           await ref
               .read(createShopVmProvider.notifier)
-              .createSellerShop(hasNoShop: true);
+              .createSellerShop(hasNoShop: true, business: businessData);
           return;
         } else {
           state = state.copyWith(shop: responseModel.data.shops);
@@ -92,21 +96,17 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
       final result = await ref
           .read(manageShopVmProvider.notifier)
           .getShopDetails(id: shop!);
-          ShopData shopData = ShopData.fromJson(result!.shop.toJson());
+      ShopData shopData = ShopData.fromJson(result!.shop.toJson());
       state = state.copyWith(singleShop: shopData);
 
-       fetchData(shopId: shop);
+      fetchData(shopId: shop);
     } catch (error) {
       print(error);
     }
   }
 
   void fetchData({required String shopId}) async {
-    
-
-    await ref
-        .read(shopVmProvider.notifier)
-        .getShopMetrics(shopId: shopId);
+    await ref.read(shopVmProvider.notifier).getShopMetrics(shopId: shopId);
     final List<DeliveryRequestData>? requests =
         await ref.read(deliveryRequestVmProvider.notifier).getRequests();
 
@@ -134,9 +134,6 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
     }
   }
 
-
-  
-
   Future<ShopDetailsModel?> getShopDetails({required String id}) async {
     try {
       final response = await _shopRepository.getShopDetailsById(id);
@@ -155,10 +152,9 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
     }
   }
 
-   Future<PaginatedResult<Order>?> getOrders({required String shopId}) async {
+  Future<PaginatedResult<Order>?> getOrders({required String shopId}) async {
     try {
-      final response =
-          await _orderRepository.getSellerOrders(shopId, 1);
+      final response = await _orderRepository.getSellerOrders(shopId, 1);
       List<Order> orders = [];
       bool hasNextPage = false;
       if (response.success) {
@@ -173,23 +169,20 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
     } finally {}
   }
 
-
   // main endpoint to get seller paginated poduct --others will later be removed
 
   Future<PaginatedResult<SellerProduct>?> approvedWayaDeals(
       {required int page}) async {
     state = state.copyWith(isLoading: true);
     try {
-      final response = await _shopRepository.getSellerProducts(
+      final response = await _shopRepository.getSellerListedWayaDealProducts(
           shopId: state.singleShop!.id, page: page);
       List<SellerProduct> sellerProducts = [];
       bool hasNextPage = false;
       if (response.success) {
         SellerProductResponseModel responseModel =
             SellerProductResponseModel.fromJson(response.data);
-        sellerProducts = responseModel.data.products
-            .where((c) => c.wayagramDealApprove == true)
-            .toList();
+        sellerProducts = responseModel.data.products;
         hasNextPage = responseModel.data.pagination.hasNextPage;
       }
       return PaginatedResult(hasNextPage: hasNextPage, items: sellerProducts);
@@ -229,5 +222,6 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
 final manageShopVmProvider =
     StateNotifierProvider.autoDispose<ManageShopVm, ManageShopState>((ref) {
-  return ManageShopVm(OrderRepository(),ProfileRepo(), ShopRepository.instance, ref);
+  return ManageShopVm(
+      OrderRepository(), ProfileRepo(), ShopRepository.instance, ref);
 });
