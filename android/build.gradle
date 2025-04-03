@@ -6,32 +6,13 @@ allprojects {
 }
 
 rootProject.buildDir = "../build"
-
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
-    afterEvaluate { project ->
-       if (project.hasProperty('android')) {
-           project.android {
-               if (namespace == null) {
-                   namespace project.group
-               }
-           }
-       }
-   }
+}
+subprojects {
     project.evaluationDependsOn(":app")
 }
 
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
-}
-
-buildscript {
-  repositories {
-    google()  // Google's Maven repository
-    mavenCentral()  // Maven Central repository
-  }
-  
-  dependencies {
-    classpath 'com.google.gms:google-services:4.3.8'
-  }
 }
