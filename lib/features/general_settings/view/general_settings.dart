@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/modals/logout.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
+import 'package:wayagram/features/referral/view/referral_page.dart';
+import 'package:wayagram/features/role_access/view/role_access_page.dart';
+import 'package:wayagram/features/support/views/chat.dart';
+import 'package:wayagram/features/support/views/dispute.dart';
+import 'package:wayagram/features/support/views/request.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 
+import '../../activity_logs/view/logs_and_audit.dart';
 import '../data/model/model.dart';
 import 'components/components.dart';
 
@@ -15,7 +21,8 @@ class GeneralSettingsPage extends ConsumerStatefulWidget {
   static const route = '/general-settings';
   const GeneralSettingsPage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _GeneralSettingsPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _GeneralSettingsPageState();
 }
 
 class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
@@ -44,10 +51,25 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(
-                  title: 'Wallet', iconPath: 'wallet', onTap: () => WayaNav.toNamed(WalletPage.route)),
-              GeneralSettingsOptionModel(title: 'Referrals & Rewards', iconPath: 'confetti'),
-              GeneralSettingsOptionModel(title: 'Roles & Access', iconPath: 'users'),
-              GeneralSettingsOptionModel(title: 'Logs & Audit Trails', iconPath: 'history'),
+                title: 'Wallet',
+                iconPath: 'wallet',
+                onTap: () => WayaNav.toNamed(WalletPage.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Referrals & Rewards',
+                iconPath: 'confetti',
+                onTap: () => WayaNav.toNamed(ReferralPage.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Roles & Access',
+                iconPath: 'users',
+                onTap: () => WayaNav.toNamed(RoleAccessPage.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Logs & Audit Trails',
+                iconPath: 'history',
+                onTap: () => WayaNav.toNamed(LogsAndAuditTrials.route),
+              ),
             ],
           ),
           GeneralSettingsOptionTile(
@@ -56,16 +78,15 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Edit Profile',
                 iconPath: 'edit',
-                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
+                onTap: () => WayaNav.toNamed(
+                    WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
               ),
 
               //
               GeneralSettingsOptionModel(
                 title: 'Change Password',
                 iconPath: 'password',
-                onTap: () => WayaNav.toNamed(
-                  '/change-password-gen-set',
-                ),
+                onTap: () => WayaNav.toNamed('/change-password-gen-set'),
               ),
 
               //
@@ -78,31 +99,53 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
-              GeneralSettingsOptionModel(title: 'Privacy Settings', iconPath: 'shield_plus'),
-              GeneralSettingsOptionModel(title: 'Profile Visibility', iconPath: 'user_settings'),
-            ],
-          ),
-          GeneralSettingsOptionTile(
-            genSettingsOption: [
-              GeneralSettingsOptionModel(title: 'Wallet Security', iconPath: 'card_stacked'),
-              GeneralSettingsOptionModel(title: 'Account Security', iconPath: 'shield_star'),
-            ],
-          ),
-          GeneralSettingsOptionTile(
-            genSettingsOption: [
-              GeneralSettingsOptionModel(title: 'Chat & Call Preferences', iconPath: 'chat2'),
               GeneralSettingsOptionModel(
-                title: 'Notification Settings',
-                iconPath: 'bell',
-                onTap: () {
-                  WayaNav.toNamed(NotificationSettingsScreen.route);
-                },
+                title: 'Privacy Settings',
+                iconPath: 'shield_plus',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Profile Visibility',
+                iconPath: 'user_settings',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
               ),
             ],
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
-              GeneralSettingsOptionModel(title: 'Friends & Followers', iconPath: 'users_group'),
+              GeneralSettingsOptionModel(
+                title: 'Wallet Security',
+                iconPath: 'card_stacked',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Account Security',
+                iconPath: 'shield_star',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
+            ],
+          ),
+          GeneralSettingsOptionTile(
+            genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Chat & Call Preferences',
+                iconPath: 'chat2',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Notification Settings',
+                iconPath: 'bell',
+                onTap: () => WayaNav.toNamed(NotificationSettingsScreen.route),
+              ),
+            ],
+          ),
+          GeneralSettingsOptionTile(
+            genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Friends & Followers',
+                iconPath: 'users_group',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+              ),
             ],
           ),
           GeneralSettingsOptionTile(
@@ -110,14 +153,41 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Account Sync Settings',
                 iconPath: 'bell',
+                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
               ),
             ],
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
-              GeneralSettingsOptionModel(title: 'Livechat support', iconPath: 'chat'),
-              GeneralSettingsOptionModel(title: 'Support Request Form', iconPath: 'paper'),
-              GeneralSettingsOptionModel(title: 'Dispute Management', iconPath: 'info'),
+              GeneralSettingsOptionModel(
+                title: 'Livechat support',
+                iconPath: 'chat',
+                onTap: () => WayaNav.toNamed(SupportChatScreen.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Support Request Form',
+                iconPath: 'paper',
+                onTap: () => WayaNav.toNamed(SupportRequestScreen.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Dispute Management',
+                iconPath: 'info',
+                onTap: () => WayaNav.toNamed(SupportDisputeScreen.route),
+              ),
+            ],
+          ),
+          GeneralSettingsOptionTile(
+            genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Log Out',
+                iconPath: 'logout',
+                onTap: () => WayaUtils.showModalSheet(
+                  context,
+                  child: LogoutDialog(
+                    ref: ref,
+                  ),
+                ),
+              ),
             ],
           ),
         ],

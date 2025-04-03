@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 // Add this import for GetX
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/chat/view/default.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/donation/view/donations.dart';
 //import 'package:wayagram/features/chat/view/default.dart';
 import 'package:wayagram/features/explore/views/explore.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
@@ -45,9 +48,15 @@ class _BottomViewState extends ConsumerState<BottomView> {
     super.didChangeDependencies();
 
     if (!_isInitialized) {
-      final index = ModalRoute.of(context)?.settings.arguments as int?;
-      if (index != null) {
-        _selectedIndex = index;
+      final dynamic data = ModalRoute.of(context)?.settings.arguments;
+
+      // when another argument is passed to the argument except for the index
+      if (data != null && data is Map<String, dynamic>) {
+        _selectedIndex = data['index'];
+      }
+      // when only index is passed
+      if (data != null && data is int) {
+        _selectedIndex = data;
       }
       _isInitialized = true;
     }
@@ -66,18 +75,18 @@ class _BottomViewState extends ConsumerState<BottomView> {
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
-                  .wayaCopyWith(fontSize: 16, color: Theme.of(context).colorScheme.customBlack),
+                  .copyWith(fontSize: 16.sp, color: Theme.of(context).colorScheme.customBlack),
             ),
             content: Text(
               'Are you sure you want to exit?',
-              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor700),
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                  fontSize: 14.sp, fontWeight: FontWeight.w400, color: Theme.of(context).colorScheme.greyColor700),
             ),
             actions: <Widget>[
               SizedBox(
                 width: 60,
                 child: WayaButton(
-                  callback: () => Navigator.of(context).pop(false),
+                  callback: () => WayaNav.goBack(result: false),
                   text: 'No',
                   height: 35,
                   radius: 6,
@@ -105,34 +114,94 @@ class _BottomViewState extends ConsumerState<BottomView> {
     final viewModel = ref.watch(bottomViewVmProvider);
     final successfulSetupState = ref.watch(successfulSetupVmProvider);
     final userData = successfulSetupState.user;
-    final userType = userData?.user?.role?.name;
-    final List<Widget> _pages = [
+    final userType = userData?.user?.role;
+    final dynamic data = ModalRoute.of(context)?.settings.arguments;
+    final List<Widget> pages = [
       Explore(),
-      WayaShop(),
-      Explore(),
+      WayaShop(
+        currentIndex: data != null && data is Map<String, dynamic> ? data['current'] : 0,
+      ),
+      Donations(),
       userType == 'PERSONAL' ? WayaBuyerQuotation() : WayaSellerQuotation(),
       ConversationScreen(),
       MoreView(),
     ];
 
-    final List<BottomNavigationBarItem> bottomNavigationItem = viewModel.barItems.asMap().entries.map((entry) {
-      final index = entry.key;
-      final item = entry.value;
+    final List<BottomNavigationBarItem> bottomNavigationItem = viewModel.barItems.asMap().entries.map(
+      (entry) {
+        final index = entry.key;
+        final item = entry.value;
 
-      final itemColor =
-          (_selectedIndex == index) ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.customBlack;
-      return BottomNavigationBarItem(
+        final itemColor =
+            _selectedIndex == index ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.customBlack;
+
+        //? If this is a chat.
+        if (entry.value.isChat) {
+          return BottomNavigationBarItem(
+            icon: Consumer(builder: (context, wRef, _) {
+              final chats = wRef.watch(conversationProvider);
+
+              return Stack(
+                fit: StackFit.loose,
+                clipBehavior: Clip.none,
+                children: [
+                  //? The icon.
+                  SvgPicture.asset(
+                    item.icon,
+                    colorFilter: ColorFilter.mode(
+                      itemColor,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+
+                  //? Our counter.
+                  if (chats.totalUnreadCount > 0)
+                    Positioned(
+                      top: -5.h,
+                      right: -5.w,
+                      child: ClipPath(
+                        clipper: ShapeBorderClipper(
+                          shape: StadiumBorder(),
+                        ),
+                        child: ColoredBox(
+                          color: wayaTheme.colorScheme.primary,
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 5.w),
+                            child: Text(
+                              WayaValueHelper.formatNumber(chats.totalUnreadCount),
+                              style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                color: wayaTheme.colorScheme.white,
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            }),
+            label: item.label,
+          );
+        }
+
+        return BottomNavigationBarItem(
           icon: SvgPicture.asset(
             item.icon,
-            colorFilter: ColorFilter.mode(itemColor, BlendMode.srcIn),
+            colorFilter: ColorFilter.mode(
+              itemColor,
+              BlendMode.srcIn,
+            ),
           ),
-          label: item.label);
-    }).toList();
+          label: item.label,
+        );
+      },
+    ).toList();
 
     // This is fine.
     return PopScope(
       canPop: false,
-      onPopInvoked: (popDisposition) async {
+      onPopInvokedWithResult: (popDisposition, result) async {
         if (_selectedIndex != 0) {
           setState(() {
             _selectedIndex = 0;
@@ -144,7 +213,7 @@ class _BottomViewState extends ConsumerState<BottomView> {
       child: Scaffold(
         body: IndexedStack(
           index: _selectedIndex,
-          children: _pages,
+          children: pages,
         ),
         bottomNavigationBar: Container(
           decoration: BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor),
@@ -160,12 +229,12 @@ class _BottomViewState extends ConsumerState<BottomView> {
             type: BottomNavigationBarType.fixed,
             selectedLabelStyle: TextStyle().wayaCopyWith(
               color: wayaTheme.colorScheme.customPrimary,
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
             ),
             unselectedLabelStyle: TextStyle().wayaCopyWith(
               color: wayaTheme.colorScheme.customBlack,
-              fontSize: 12,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
             ),
             items: bottomNavigationItem,

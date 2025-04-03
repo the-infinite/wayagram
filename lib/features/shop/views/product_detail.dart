@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
@@ -9,11 +10,15 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/shared/engagement/provider/product_engagement_monitor.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/product_detail_vm.dart';
-
+import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/features/shop/widgets/product_description_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_image_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_review_widget.dart';
@@ -21,52 +26,59 @@ import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
 
 class ProductDetail extends ConsumerStatefulWidget {
   static const route = '/product-detail';
-  const ProductDetail({super.key});
+  final String id;
+  const ProductDetail({super.key, required this.id});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ProductDetailState();
 }
 
 class _ProductDetailState extends ConsumerState<ProductDetail> {
+  bool isLiked = false;
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final Product product =
-          ModalRoute.of(context)!.settings.arguments as Product;
-      ref
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      final product = await ref
           .read(productDetailVmProvider.notifier)
-          .getCurrentProduct(product: product);
+          .getCurrentProduct(id: widget.id);
 
       final provider = ref.read(productEngagementProvider.notifier);
 
       provider.startViewingProduct();
 
-      provider.addCategory(product.categoryId, ProductPoint.viewPoints.value );
+      if (product != null) {
+        provider.addCategory(product.categoryId, ProductPoint.viewPoints.value);
+
+        ref
+            .read(shopVmProvider.notifier)
+            .getProductReviews(productId: product.id);
+      }
     });
-  }
-
-// Stop tracking when the page is closed
-  @override
-  void dispose() {
-    ref.read(productEngagementProvider.notifier).stopViewingProduct();
-
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(productDetailVmProvider);
+    final shopState = ref.watch(shopVmProvider);
+    final addState = ref.watch(addProductProvider('add-product'));
     final wayaTheme = Theme.of(context);
 
-    if (viewModel.product == null) {
-      return CircularProgressIndicator();
+    if (viewModel.product == null && viewModel.isLoading) {
+      return Container(
+        height: context.height,
+        width: context.width,
+        decoration: BoxDecoration(color: wayaTheme.colorScheme.white),
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
     }
 
     return WayaScaffold(
         title: "Product Details",
         isScrollable: true,
-        isLoading: viewModel.isLoading,
+        isLoading: false,
         appBarTrailing: WayaCartIcon(),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -86,33 +98,47 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: wayaTheme.colorScheme.secondaryColor2,
-                    shape: BoxShape.circle,
-                  ),
-                  padding: EdgeInsets.all(7),
-                  child: InkWell(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                    },
-                    child: SvgPicture.asset(WayaAssets.icons.heart.path,
-                        fit: BoxFit.none),
+                InkWell(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    setState(() {
+                      isLiked = true;
+                    });
+                    ref.read(productDetailVmProvider.notifier).likeProduct();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.secondaryColor2,
+                      shape: BoxShape.circle,
+                    ),
+                    padding: EdgeInsets.all(7),
+                    child: SvgPicture.asset(
+                      isLiked
+                          ? WayaAssets.icons.mSmallHeart.path
+                          : WayaAssets.icons.heart.path,
+                      fit: BoxFit.none,
+                      width: 24,
+                      height: 24,
+                    ),
                   ),
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: wayaTheme.colorScheme.secondaryColor2,
-                    shape: BoxShape.circle,
-                  ),
-                  padding: EdgeInsets.all(7),
-                  child: InkWell(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                    },
-                    child: SvgPicture.asset(WayaAssets.icons.shareNetwork.path,
-                        fit: BoxFit.none),
-                  ),
+                InkWell(
+                  onTap: () {
+                    Share.share(
+                        subject: "Share Product",
+                        WayaValueHelper.getShareableUrl(
+                            WayaAppRoutes.getProductDetailScreen(widget.id)));
+                  },
+                  splashFactory: NoSplash.splashFactory,
+                  child: Container(
+                      decoration: BoxDecoration(
+                        color: wayaTheme.colorScheme.secondaryColor2,
+                        shape: BoxShape.circle,
+                      ),
+                      padding: EdgeInsets.all(7),
+                      child: SvgPicture.asset(
+                          WayaAssets.icons.shareNetwork.path,
+                          fit: BoxFit.none)),
                 )
               ],
             ),
@@ -122,7 +148,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Visibility(
-                  visible: viewModel.product!.wayagramDeal,
+                  visible: viewModel.product?.wayagramDeal != null,
                   child: Container(
                     width: 120,
                     padding: EdgeInsets.fromLTRB(8, 3, 8, 3),
@@ -134,25 +160,11 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                           style: TextStyle().wayaCopyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w600,
-                              fontSize: 12)),
+                              fontSize: 12.sp)),
                     ),
                   ),
                 ),
                 const Gap(8),
-                // Container(
-                //   width: 60,
-                //   padding: EdgeInsets.fromLTRB(4, 3, 4, 3),
-                //   decoration: BoxDecoration(
-                //       color: wayaTheme.colorScheme.primar50,
-                //       borderRadius: BorderRadius.circular(6)),
-                //   child: Center(
-                //     child: Text("12 Left",
-                //         style: TextStyle().wayaCopyWith(
-                //             color: wayaTheme.colorScheme.customPrimary,
-                //             fontWeight: FontWeight.w600,
-                //             fontSize: 12)),
-                //   ),
-                // ),
               ],
             ),
             const Gap(25),
@@ -182,7 +194,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
               "Product Description",
               style: wayaTheme.textTheme.titleMedium,
             ),
-            const Gap(20),
+            const Gap(10),
             ProductDescriptionWidget(
                 description: viewModel.product!.description),
             const Gap(25),
@@ -217,10 +229,12 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                         children: [
                           WayaDp(
                             radius: 18,
+                            image: viewModel.product?.shopLogo ??
+                                WayaConstants.shopLogo,
                           ),
                           const Gap(6),
                           Text(
-                            viewModel.product!.shopName,
+                            viewModel.product!.shopName.capitalizeFirst!,
                             style: wayaTheme.textTheme.labelMedium,
                           )
                         ],
@@ -231,10 +245,10 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      RatingStars(rating: 4),
+                      RatingStars(rating: viewModel.product?.shopRating ?? 0),
                       const Gap(2),
                       Text(
-                        "4.0",
+                        "${viewModel.product?.shopRating ?? 0}",
                         style: wayaTheme.textTheme.hintStyle,
                       )
                     ],
@@ -244,7 +258,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
             ),
             const Gap(25),
             Visibility(
-                visible: true,
+                visible: shopState.reviews.isNotEmpty,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -253,13 +267,14 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                       style: wayaTheme.textTheme.titleMedium,
                     ),
                     const Gap(20),
-                    // ListView.builder(
-                    //     shrinkWrap: true,
-                    //     physics: const NeverScrollableScrollPhysics(),
-                    //     itemCount: reviews.length,
-                    //     itemBuilder: (context, index) {
-                    //       return ProductReviewWidget(review: reviews[index]);
-                    //     }),
+                    ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: shopState.reviews.length,
+                        itemBuilder: (context, index) {
+                          return ProductReviewWidget(
+                              review: shopState.reviews[index]);
+                        }),
                     const Gap(25),
                   ],
                 )),
@@ -298,78 +313,69 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     SizedBox(
                       width: context.width * 0.45,
                       child: WayaButton(
-                        callback: () {
-                          ref
-                              .read(productDetailVmProvider.notifier)
-                              .initiateDelete(context, viewModel.product!);
-                        },
-                        text: 'Delete Product',
+                        callback: !addState.isDeleting
+                            ? () {
+                                ref
+                                    .read(productDetailVmProvider.notifier)
+                                    .initiateDelete(
+                                        context, viewModel.product!);
+                              }
+                            : null,
+                        centerWidget: LoadingState(
+                            loading: addState.isDeleting,
+                            text: 'Delete Product'),
                         color: wayaTheme.colorScheme.error,
                       ),
                     )
                   ],
                 )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      width: context.width * 0.45,
-                      child: WayaButton(
-                        callback: () {
-                          final product = viewModel.product!;
-                          final String image =
-                              product.images.isEmpty ? "" : product.images[0];
-                          int intPrice = double.parse(product.price).toInt();
-                          int price = product.discountPercentage > 0
-                              ? (intPrice -
-                                      (intPrice *
-                                          product.discountPercentage /
-                                          100))
-                                  .toInt()
-                              : intPrice;
-                          ref.read(cartVmProvider.notifier).addToCart(
-                              count: 1,
-                              productId: product.id,
-                              productImage: image,
-                              productName: product.name,
-                              price: price,
-                              shopId: product.shopId);
-                        },
-                        centerWidget: Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Icon(
-                                Icons.shopping_cart_outlined,
-                                color: wayaTheme.colorScheme.customPrimary,
-                              ),
-                              const Gap(6),
-                              Text('Add To Cart',
-                                  style: TextStyle().wayaCopyWith(
-                                      color:
-                                          wayaTheme.colorScheme.customPrimary,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w500))
-                            ],
-                          ),
-                        ),
-                        color: wayaTheme.colorScheme.transparent,
-                        textColor: wayaTheme.colorScheme.customPrimary,
-                        border: Border.all(
+              : SizedBox(
+                  //alignment: Alignment.bottomCenter,
+                  width: context.width * 0.95,
+                  child: WayaButton(
+                    callback: () {
+                      final product = viewModel.product!;
+                      final String image =
+                          product.images.isEmpty ? "" : product.images[0];
+                      int intPrice = double.parse(product.price).toInt();
+                      int price = product.discountPercentage > 0
+                          ? (intPrice -
+                                  (intPrice * product.discountPercentage / 100))
+                              .toInt()
+                          : intPrice;
+                      ref.read(cartVmProvider.notifier).addToCart(
+                          count: 1,
+                          productId: product.id,
+                          productImage: image,
+                          productName: product.name,
+                          price: price,
+                          shopId: product.shopId);
+
+                      WayaSnackBar.showToast("Item added to cart");
+                    },
+                    centerWidget: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.shopping_cart_outlined,
                             color: wayaTheme.colorScheme.customPrimary,
-                            width: 1),
+                          ),
+                          const Gap(6),
+                          Text('Add To Cart',
+                              style: TextStyle().wayaCopyWith(
+                                  color: wayaTheme.colorScheme.customPrimary,
+                                  fontSize: 15.sp,
+                                  fontWeight: FontWeight.w500))
+                        ],
                       ),
                     ),
-                    SizedBox(
-                      width: context.width * 0.45,
-                      child: WayaButton(
-                        callback: () {},
-                        text: 'Buy Now',
-                      ),
-                    )
-                  ],
+                    color: wayaTheme.colorScheme.transparent,
+                    textColor: wayaTheme.colorScheme.customPrimary,
+                    border: Border.all(
+                        color: wayaTheme.colorScheme.customPrimary, width: 1),
+                  ),
                 ),
         ));
   }

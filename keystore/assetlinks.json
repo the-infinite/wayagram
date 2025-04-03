@@ -1,0 +1,14 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "ng.wayagram",
+      "sha256_cert_fingerprints": [
+        "C1:0E:5F:43:58:AA:FE:52:A0:FA:CA:83:9C:8E:63:62:F1:05:EF:37:F0:BB:30:9B:BC:1B:0E:E0:92:CA:89:E8"
+      ]
+    }
+  }
+]

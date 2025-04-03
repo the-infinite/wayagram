@@ -1,107 +1,134 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:svg_flutter/svg.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details.dart';
+import 'package:wayagram/shared/features/quotation/model/default.dart';
+import 'package:wayagram/shared/features/quotation/vm/default.dart';
+import 'package:wayagram/shared/features/quotation/widget/bid_status.dart';
+import 'package:wayagram/shared/features/quotation/widget/bid_timer.dart';
 
 class SingleBidWidget extends ConsumerWidget {
-  // final Order order;
-  //required this.order
   final bool isSeller;
-  const SingleBidWidget({super.key, this.isSeller = false});
+  final QuotationBidModel bid;
+
+  // Construct.
+  const SingleBidWidget({super.key, required this.bid, this.isSeller = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(singleBidWidgetViewModelProvider);
+    final notifier = ref.read(userQuotationsProvider.notifier);
+
+    //? This is our component.
     return GestureDetector(
       onTap: () {
         if (isSeller) {
-          WayaNav.toNamed('/seller-bid-details', arguments: "id");
-          //viewModel.sellerBidAction(context);
-        } else {
-          WayaNav.toNamed('/seller-bid-details', arguments: "id");
+          WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id, bid.requestId));
         }
       },
-      child: Column(
-        children: [
-          Container(
-            padding: EdgeInsets.fromLTRB(8, 6, 8, 6),
-            decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.scaffoldColor,
-                borderRadius: BorderRadius.circular(8)),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    SvgPicture.asset('assets/icons/bid-icon.svg'),
-                    const Gap(4),
-                    Column(
+      child: Container(
+        margin: EdgeInsets.only(bottom: 10.h),
+        padding: EdgeInsets.fromLTRB(8, 6, 8, 6),
+        decoration: BoxDecoration(
+          color: wayaTheme.colorScheme.scaffoldColor,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          spacing: 5.w,
+          children: [
+            //? Fix this BS.
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  //? This is fine.
+                  WayaAssets.icons.bidIcon.svg(),
+
+                  // Some space.
+                  const Gap(4),
+
+                  //? This should fill all space too.
+                  Expanded(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        //? The ID of this buy request.
                         Text(
-                          "Quote #43435353",
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 14),
+                          "Quote #${bid.requestId}",
+                          maxLines: 1,
+                          style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                            color: wayaTheme.colorScheme.customBlack,
+                            fontSize: 14.sp,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
+
+                        //
                         const Gap(8),
-                        RichText(
-                            text: TextSpan(children: [
-                          TextSpan(
-                              text: 'Time Remaining | ',
-                              style: wayaTheme.textTheme.hintStyle),
-                          TextSpan(
-                              text: '11h: 20m: 30s',
-                              style: TextStyle().wayaCopyWith(
-                                  color: wayaTheme.colorScheme.customPrimary,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400)),
-                        ])),
+
+                        //? How much time is left until this buy request is
+                        //? completed.
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //? First, text
+                            Text(
+                              'Time Remaining | ',
+                              style: wayaTheme.textTheme.hintStyle.copyWith(
+                                fontSize: 13.sp,
+                              ),
+                            ),
+
+                            //? Finally the timer.
+                            QuotationBidTimer(
+                              request: notifier.getBidQuote(bid.requestId)!,
+                              isShortTime: true,
+                              fontSize: 13.sp,
+                              isStandalone: false,
+                            ),
+                          ],
+                        ),
                       ],
-                    )
-                  ],
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
-                      decoration: BoxDecoration(
-                          color: wayaTheme.colorScheme.success50,
-                          borderRadius: BorderRadius.circular(6)),
-                      child: Text(
-                        "Won",
-                        style: TextStyle().wayaCopyWith(
-                            color: wayaTheme.colorScheme.success,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 11),
-                      ),
                     ),
-                    const Gap(8),
-                    Text(
-                      "Aug 11, 2024",
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.greyColor400,
-                          fontSize: 13),
-                    )
-                  ],
+                  )
+                ],
+              ),
+            ),
+
+            //? This is fine too.
+            Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                //? The status of the bid.
+                BidStatusCard(
+                  bid: bid,
+                ),
+
+                // Some space.
+                const Gap(8),
+
+                //? When this was made.
+                Text(
+                  WayaDateHelper.getEffectiveTimestamp(bid.createdAt),
+                  style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                    color: wayaTheme.colorScheme.greyColor400,
+                    fontSize: 13.sp,
+                  ),
                 )
               ],
-            ),
-          ),
-          const Gap(10)
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -121,24 +148,21 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
    */
   }
 
-  Future<void> sellerBidAction(BuildContext context) async {
+  Future<void> sellerBidAction(BuildContext context, QuotationBidModel bid) async {
     WayaUtils.showNotice(
-        context: context,
-        buttonText: 'Add Delivery Details',
-        secondButtonText: 'See your Order Details',
-        title: 'Populate Delivery Details',
-        message:
-            "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
-        onPress: () async {
-          await addDeliveryDetail(context);
-        },
-        onCancel: () {
-          WayaNav.toNamed('/seller-bid-details', arguments: "id");
-        },
-        icon: Image.asset('assets/images/shop/delivery-van.png'));
+      context: context,
+      buttonText: 'Add Delivery Details',
+      secondButtonText: 'See your Order Details',
+      title: 'Populate Delivery Details',
+      message: "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
+      onPress: () async {
+        await addDeliveryDetail(context);
+      },
+      onCancel: () => WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id, bid.requestId)),
+      icon: Image.asset('assets/images/shop/delivery-van.png'),
+    );
   }
 }
 
 final singleBidWidgetViewModelProvider =
-    ChangeNotifierProvider<SingleBidWidgetViewModel>(
-        (ref) => SingleBidWidgetViewModel(ref));
+    ChangeNotifierProvider<SingleBidWidgetViewModel>((ref) => SingleBidWidgetViewModel(ref));

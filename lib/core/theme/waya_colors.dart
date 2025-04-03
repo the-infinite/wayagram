@@ -43,6 +43,7 @@ static const Color info = Color(0xff0288D1);
   static const secondaryColor2 = Color(0xffF6F6F6);
   //
   static const pendingColor = Color(0xfffef6e7);
+  static const pendingColor2 = Color(0xff865503);
   static const testColor = Color(0xFF0000FF);
   //
   static const tertiary = Color(0xff000000);
@@ -56,6 +57,7 @@ static const Color info = Color(0xff0288D1);
   static const greyColor50 = Color(0xffF9FAFB);
   static const greyColor300 = Color(0xffD0D5DD);
   static const greyColor600 = Color(0xff475367);
+  static const greyColor800 = Color(0xff1D2739);
   static const greyColor900 = Color(0xff101928);
   static const darkGrey = Color(0xff343330);
 

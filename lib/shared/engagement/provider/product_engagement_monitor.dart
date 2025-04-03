@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/shared/engagement/model/default.dart';
 import 'package:wayagram/shared/engagement/provider/default.dart';
 
@@ -39,5 +40,5 @@ class ProductEngagementMonitor extends StateNotifier<void> {
 
 final productEngagementProvider =
     StateNotifierProvider<ProductEngagementMonitor, void>((ref) {
-  return ProductEngagementMonitor(EngagementNotifier());
+  return ProductEngagementMonitor(EngagementNotifier(WayaLocalDataSource()));
 });

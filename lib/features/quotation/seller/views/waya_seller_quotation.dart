@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/quotation/buyer/views/buy_request.dart';
+import 'package:wayagram/features/quotation/buyer/views/create_request/create_request.dart';
 import 'package:wayagram/features/quotation/buyer/views/my_request.dart';
 import 'package:wayagram/features/quotation/seller/views/bid_dashboard/bid_dashboard.dart';
-import 'package:wayagram/features/shop/order/views/all_orders.dart';
 import 'package:wayagram/features/shop/widgets/waya_cart_icon.dart';
-
-import '../../../../core/utils/waya_navigation.dart';
-import '../../buyer/views/buy_request.dart';
 
 class WayaSellerQuotation extends ConsumerStatefulWidget {
   const WayaSellerQuotation({super.key});
@@ -22,78 +19,99 @@ class WayaSellerQuotation extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _WayaSellerQuotationState();
 }
 
-class _WayaSellerQuotationState extends ConsumerState<WayaSellerQuotation>
-    with SingleTickerProviderStateMixin {
+class _WayaSellerQuotationState extends ConsumerState<WayaSellerQuotation> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
   PageController pageController = PageController(
     initialPage: 0,
   );
 
-
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
 
+    //? This one.
     return WayaScaffold(
-        isLoading: false,
-        isScrollable: true,
-        title: 'Get Quotation',
-        appBarTrailing: WayaCartIcon(),
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Gap(10),
-            Row(
+      isLoading: false,
+      isScrollable: true,
+      title: 'Get Quotation',
+      appBarTrailing: WayaCartIcon(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Opening space.
+          const Gap(10),
+
+          //? These ones.
+          Row(
+            children: [
+              WayaTabButton(
+                isSelected: _selectedIndex == 0,
+                text: 'All Quotations',
+                onTap: () => setState(() => _selectedIndex = 0),
+              ),
+              WayaTabButton(
+                isSelected: _selectedIndex == 1,
+                text: 'My Quotations',
+                onTap: () => setState(() => _selectedIndex = 1),
+              ),
+              WayaTabButton(
+                isSelected: _selectedIndex == 2,
+                text: 'Bid Dashboard',
+                onTap: () => setState(() => _selectedIndex = 2),
+              ),
+            ],
+          ),
+
+          // Some space.
+          const Gap(20),
+
+          //? The button to create a new buying request.
+          WayaButton(
+            centerWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                WayaTabButton(
-                  isSelected: _selectedIndex == 0,
-                  text: 'All Quotations',
-                  onTap: () => setState(() => _selectedIndex = 0),
+                //? Icon.
+                WayaAssets.icons.create.svg(
+                  colorFilter: ColorFilter.mode(wayaTheme.colorScheme.primary200, BlendMode.srcIn),
                 ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 1,
-                  text: 'My Quotations',
-                  onTap: () => setState(() => _selectedIndex = 1),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 2,
-                  text: 'Bid Dashboard',
-                  onTap: () => setState(() => _selectedIndex = 2),
+
+                // Space.
+                const Gap(8),
+
+                //? Text.
+                Text(
+                  "Create Buying Request",
+                  style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                    color: wayaTheme.colorScheme.customPrimary,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16.sp,
+                  ),
                 ),
               ],
             ),
-            const Gap(20),
-            WayaButton(
-              centerWidget: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/icons/create.svg',
-                    colorFilter: ColorFilter.mode(
-                        wayaTheme.colorScheme.primary200, BlendMode.srcIn),
-                  ),
+            callback: () {
+              //? Show the coming soon modal.
+              if (WayaConstants.isProduction) {
+                WayaNavigationHelper.showComingSoonModal(true);
+                return;
+              }
 
-                  const Gap(8),
-                  Text(
-                    "Create Buying Request",
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
-                  ),
-                ],
-              ),
-              callback: () {
-                WayaNav.toNamed('/create-request');
-              },
-              color: wayaTheme.colorScheme.primar50,
-            ),
-
-            const Gap(25),
-            _selectedIndex == 0 ? BuyRequests() : _selectedIndex == 1 ? MyRequests() : BidDashboard()
-          ],
-        ));
+              //? Now, continue as needed in staging.
+              WayaNav.toNamed(CreateRequest.route);
+            },
+            color: wayaTheme.colorScheme.primary50,
+          ),
+          const Gap(25),
+          _selectedIndex == 0
+              ? BuyRequests()
+              : _selectedIndex == 1
+                  ? MyRequests()
+                  : BidDashboard()
+        ],
+      ),
+    );
   }
 }

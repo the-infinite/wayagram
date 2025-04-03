@@ -1,32 +1,22 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
-import 'package:wayagram/features/group/state/group_state.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-
-import '../../pages/component/extras.dart';
-import '../../wallet/view/fund_wallet_options_screen.dart';
 
 class CreateGroup extends ConsumerStatefulWidget {
   static const route = '/createGroup';
-  const CreateGroup({super.key,});
+  const CreateGroup({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CreateGroupState();
@@ -35,9 +25,8 @@ class CreateGroup extends ConsumerStatefulWidget {
 class _CreateGroupState extends ConsumerState<CreateGroup> {
   final _formKey = GlobalKey<FormState>();
 
-
-  bool sel =  false;
-  bool sel2 =  false;
+  bool sel = false;
+  bool sel2 = false;
 
   File? _selectedImage; // Holds the selected image
   File? _coverImage; // Holds the selected image
@@ -48,7 +37,6 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
-        print('SELECTED IMAGES $_selectedImage');
       });
     }
   }
@@ -67,12 +55,12 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
     final viewModel = ref.watch(createGroupProvider);
     final viewModel2 = ref.watch(createGroupProvider.notifier);
     final wayaTheme = Theme.of(context);
+    // final args = ModalRoute.of(context)?.settings.arguments as dynamic;
     return WayaScaffold(
       title: "Create a Group",
-      onTapBackButton: (){
-        Navigator.pop(context);
+      onTapBackButton: () {
+        WayaNav.goBack();
         viewModel2.reset();
-
       },
       isLoading: viewModel.isLoading,
       isScrollable: true,
@@ -81,63 +69,57 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
         child: WayaButton(
           callback: !viewModel.isLoading
               ? () async {
-            if (_formKey.currentState!.validate()) {
-              if(!sel && !sel2){
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Select group type', style: TextStyle(
-                      fontFamily: WayaConstants.fontFamily,
-                      fontSize: 12
-                    ),),
-                    backgroundColor: Colors.red,
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              }else if(_selectedImage == null || _coverImage == null){
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Add Images', style: TextStyle(
-                        fontFamily: WayaConstants.fontFamily,
-                        fontSize: 12
-                    ),),
-                    backgroundColor: Colors.red,
-                    duration: Duration(seconds: 2),
-                  ),
-                );
-              } else{
-                WayaNav.toNamed("/confirmGroupDetails",
-                   arguments:{
-                  'image': _selectedImage,
-                   'coverImage': _coverImage,
-                   'type': sel?'Public Group': 'Private Group'
+                  if (_formKey.currentState!.validate()) {
+                    if (!sel && !sel2) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Select group type',
+                            style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+                          ),
+                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    } else if (_selectedImage == null || _coverImage == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Add Images',
+                            style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+                          ),
+                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    } else {
+                      WayaNav.toNamed("/confirmGroupDetails", arguments: {
+                        'image': _selectedImage,
+                        'coverImage': _coverImage,
+                        'type': sel ? 'Public Group' : 'Private Group'
+                      }
+                          // arguments: sel?'Public Group': 'Private Group',
+                          );
                     }
-                   // arguments: sel?'Public Group': 'Private Group',
-                );
-
-              }
-            }
-          } : null,
+                  }
+                }
+              : null,
           text: 'Create',
           horizontalPadding: 12,
-          textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.white ),
+          textStyle: WayaTextStyles.bodySmall
+              .copyWith(fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
           height: 30,
-
         ),
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Stack(
             clipBehavior: Clip.none,
             children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-
                   Stack(
                     children: [
                       // Banner Container
@@ -149,13 +131,13 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                           borderRadius: BorderRadius.circular(0),
                           image: _selectedImage != null
                               ? DecorationImage(
-                            image: FileImage(_selectedImage!),
-                            fit: BoxFit.cover,
-                          )
+                                  image: FileImage(_selectedImage!),
+                                  fit: BoxFit.cover,
+                                )
                               : const DecorationImage(
-                            image: AssetImage("assets/placeholder.jpg"),
-                            fit: BoxFit.cover,
-                          ),
+                                  image: AssetImage("assets/placeholder.jpg"),
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       ),
 
@@ -165,7 +147,10 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                         right: 10,
                         child: IconButton(
                           onPressed: _pickImage,
-                          icon: Image.asset('assets/images/pages/cam.png', height: 14.h,),
+                          icon: Image.asset(
+                            'assets/images/pages/cam.png',
+                            height: 14.h,
+                          ),
                           padding: EdgeInsets.all(10),
                           constraints: BoxConstraints(),
                           color: WayaColors.greyColor600, // Background overlay
@@ -174,12 +159,8 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                     ],
                   ),
                   Gap(15),
-
                 ],
               ),
-
-
-
               Positioned(
                 left: 16.w,
                 bottom: -20.h,
@@ -190,45 +171,29 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                       CircleAvatar(
                         radius: 20,
                         backgroundColor: wayaTheme.colorScheme.greyColor200,
-                        backgroundImage: _coverImage != null
-                            ?  FileImage(_coverImage!)
-                            : null,
+                        backgroundImage: _coverImage != null ? FileImage(_coverImage!) : null,
                         child: _coverImage == null
                             ? Icon(
-                          Icons.person,
-                          color: wayaTheme.colorScheme.greyColor600,
-                        )
+                                Icons.person,
+                                color: wayaTheme.colorScheme.greyColor600,
+                              )
                             : null,
                       ),
-                     /* if (_coverImage == null)
-                        Positioned.fill(
-                          child: CircleAvatar(
-                            radius: 10,
-                            backgroundColor: Colors.black.withOpacity(0.1), // Transparent overlay
-                            child: Icon(
-                              Icons.camera_alt_outlined,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),*/
                     ],
                   ),
                 ),
               ),
-
             ],
           ),
           const Gap(30),
-          Text(
-              'Change photo',
+          Text('Change photo',
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
                 color: Color(0xff6B7280),
               )),
           const Gap(20),
-          Text(
-              'Group information',
+          Text('Group information',
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w400,
@@ -255,22 +220,17 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                           keyboardType: TextInputType.text,
                           controller: viewModel.groupName,
                           hintText: 'Enter group name here',
-                          borderColor: formState.hasError &&
-                              viewModel.groupName.text.isEmpty
+                          borderColor: formState.hasError && viewModel.groupName.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Group Name',
                         ),
-                        if (formState.hasError &&
-                            viewModel.groupName.text.isEmpty
-                        )
+                        if (formState.hasError && viewModel.groupName.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -292,35 +252,26 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                           keyboardType: TextInputType.text,
                           controller: viewModel.groupDescription,
                           hintText: 'Describe what your group does',
-                          borderColor: formState.hasError &&
-                              viewModel.groupDescription.text.isEmpty
+                          borderColor: formState.hasError && viewModel.groupDescription.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Group Description',
                         ),
-                        if (formState.hasError &&
-                            viewModel.groupDescription.text.isEmpty
-                        )
+                        if (formState.hasError && viewModel.groupDescription.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12),
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                             ),
                           ),
                       ],
                     );
                   }),
                   const Gap(20),
-
-
                 ],
               )),
-
-          Text(
-              'Group Type',
+          Text('Group Type',
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
@@ -336,22 +287,28 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                 InkWell(
                   splashColor: Colors.transparent,
                   splashFactory: NoSplash.splashFactory,
-                  onTap: (){
+                  onTap: () {
                     setState(() {
                       sel = true;
                       sel2 = false;
                     });
-
                   },
-                  child: sel ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
+                  child: sel
+                      ? Image.asset(
+                          'assets/images/polls/check.png',
+                          height: 20.h,
+                        )
+                      : Image.asset(
+                          'assets/images/polls/uncheck.png',
+                          height: 20.h,
+                        ),
                 ),
                 const Gap(10),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Public Group",
-                        style: wayaTheme.textTheme.titleMedium),
+                    Text("Public Group", style: wayaTheme.textTheme.titleMedium),
                     const Gap(6),
                     FittedBox(
                       fit: BoxFit.contain,
@@ -365,7 +322,6 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
               ],
             ),
           ),
-
           const Gap(15),
           FittedBox(
             fit: BoxFit.fitWidth,
@@ -376,22 +332,28 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                 InkWell(
                   splashColor: Colors.transparent,
                   splashFactory: NoSplash.splashFactory,
-                  onTap: (){
+                  onTap: () {
                     setState(() {
                       sel = false;
                       sel2 = true;
                     });
-
                   },
-                  child: sel2 ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
+                  child: sel2
+                      ? Image.asset(
+                          'assets/images/polls/check.png',
+                          height: 20.h,
+                        )
+                      : Image.asset(
+                          'assets/images/polls/uncheck.png',
+                          height: 20.h,
+                        ),
                 ),
                 const Gap(10),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Private Group",
-                        style: wayaTheme.textTheme.titleMedium),
+                    Text("Private Group", style: wayaTheme.textTheme.titleMedium),
                     const Gap(6),
                     Text(
                       "Not everyone can see activity on the group except invited\nmembers",
@@ -403,12 +365,8 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
             ),
           ),
           const Gap(15),
-
         ],
       ),
     );
   }
-
-
-
 }

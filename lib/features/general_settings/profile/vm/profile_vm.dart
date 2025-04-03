@@ -3,12 +3,17 @@ import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
+import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_state_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
+import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/follow/notifier/self.dart';
+import 'package:wayagram/shared/features/moments/notifier/default.dart';
 
 class ProfileVm extends StateNotifier<ProfileState> {
   final ProfileRepo _profileRepo;
@@ -106,7 +111,11 @@ class ProfileVm extends StateNotifier<ProfileState> {
 
         //? Set who is currently logged in somewhere that is easily accessible
         //? for conversation's sake.
-        //ConversationState.setSelf(userAccountModel.data?.userdata?.user);
+        ConversationState.setSelf(
+          userAccountModel.data?.userdata?.user,
+          userAccountModel.data?.userdata?.profile,
+          userAccountModel.data?.userdata?.business,
+        );
 
         // Finally, update general state.
         state = state.copyWith(userAccountModel: userAccountModel, isLoading: false);
@@ -118,32 +127,15 @@ class ProfileVm extends StateNotifier<ProfileState> {
     }
   }
 
-  void logOutUser() async {
+  Future<void> logOutUser() async {
     await _secureDataSource.saveToken("");
     await _secureDataSource.saveRefreshToken("");
     await _secureDataSource.saveBusinessId("");
+    myFollowProvider.reset();
+    otherUserMoments.reset();
     _localDataSource.saveUserId("");
     await _secureDataSource.saveUserId("");
-
-    WayaNav.toNamed('/login-cover-page');
-
-    // void getUserProfile() async {
-    //   final userId = _localDataSource.getUserId();
-
-    //   try {
-    //     state = state.copyWith(isLoading: true);
-    //     final response = await _profileRepo.getUserProfileRepo(userId: userId);
-
-    //     if (response.success) {
-    //       UserProfileModel userProfileModel = UserProfileModel.fromJson(response.data);
-    //       state = state.copyWith(isLoading: false, userProfileModel: userProfileModel);
-    //     } else {
-    //       state = state.copyWith(isLoading: false);
-    //     }
-    //   } catch (e) {
-    //     state = state.copyWith(isLoading: false);
-    //   }
-    // }
+    WayaNav.removeUntilNamed(LoginCoverPage.route);
   }
 
   void updateProfilePicture() async {
@@ -166,6 +158,44 @@ class ProfileVm extends StateNotifier<ProfileState> {
         state = state.copyWith(isLoading: false);
       }
     }
+  }
+
+  void updateCoverPhoto() async {
+    File? profileImage = await WayaUtils.pickAndCropImage();
+
+    //? If this finishes early...
+    if (profileImage == null) return;
+
+    try {
+      //? First, show the preloader.
+      WayaPreloaderController.instance.show();
+
+      //? Second, try uploading this image.
+      final result = await WayaFileRepository.instance.uploadFile(profileImage,
+          '${DateTime.now().millisecondsSinceEpoch}-${ConversationState.self.id}-${WayaHelpers.extractFileName(profileImage)}');
+
+      //? If this failed.
+      if (result == null) {
+        WayaPreloaderController.instance.hide();
+        WayaSnackBar.showToast('Failed to update profile picture.');
+        return;
+      }
+
+      //? Now, try submitting the result to the person who needs it.
+      final response = await _profileRepo.updateProfileRepo(userId: ConversationState.self.id, coverPhoto: result);
+
+      //? This is fine too.
+      if (response.success) {
+        WayaSnackBar.showToast('Cover photo updated successfully');
+
+        //? Update this user's data.
+        refetchUserData();
+      }
+
+      //? Hide.
+    } catch (_) {}
+
+    WayaPreloaderController.instance.hide();
   }
 }
 

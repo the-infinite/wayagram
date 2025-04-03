@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -11,54 +10,64 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-
+import 'package:wayagram/shared/features/group/notifier/default.dart';
 
 class ConfirmGroupDetails extends ConsumerStatefulWidget {
   static const route = '/confirmGroupDetails';
-  const ConfirmGroupDetails({super.key,});
+  const ConfirmGroupDetails({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ConfirmGroupDetailsState();
 }
 
 class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
+  final createController = ValueNotifier(false);
+
+  @override
+  void dispose() {
+    createController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
-    final viewModel2 = ref.watch(createGroupProvider.notifier);
-    final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
-print('Group Type ====>>> ${args['type']}');
+    final notifier = ref.read(createGroupProvider.notifier);
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
-    final group = ref.watch(groupResponseProvider);
     return WayaScaffold(
       title: "Confirm Details",
       isLoading: viewModel.isLoading,
       isScrollable: true,
-      appBarTrailing:   Padding(
+      appBarTrailing: Padding(
         padding: const EdgeInsets.only(right: 20),
-        child: WayaButton(
-          callback: !viewModel.isLoading
-              ? () async {
-           final createdGroup = await viewModel2.createGroup(context, viewModel.groupName.text,
+        child: IntrinsicHeight(
+          child: WayaProgressiveButton(
+            notifier: createController,
+            callback: () async {
+              final createdGroup = await myGroupNotifier.createGroup(
+                viewModel.groupName.text,
                 viewModel.groupDescription.text,
                 args['type'] == 'Public Group' ? false : true,
-                (args['coverImage'] as File).path, ( args['image'] as File).path );
-            viewModel2.reset();
-            //WayaNav.toNamed("/successGroup", arguments: args['type']);
-            WayaNav.toNamed("/successGroup", arguments: {
-              'type': args['type'],
-              'id': createdGroup?.id
-            });
-          } : null,
-          height: 30,
-          isLoading: viewModel.isLoading,
-          text: 'Create',
-          horizontalPadding: 12,
-          textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
+                (args['coverImage'] as File).path,
+                (args['image'] as File).path,
+              );
+              notifier.reset();
+              WayaNav.toNamed("/successGroup", arguments: {'type': args['type'], 'id': createdGroup?.id});
+            },
+            height: null,
+            verticalPadding: 6.h,
+            horizontalPadding: 12.w,
+            text: 'Create',
+            textStyle: theme.textTheme.bodySmall?.copyWith(
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.white ),
+              color: theme.colorScheme.white,
+            ),
+          ),
         ),
       ),
       body: Column(
@@ -70,28 +79,35 @@ print('Group Type ====>>> ${args['type']}');
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  args['coverImage'] == null ? Image.asset('assets/images/pages/image_placeholder.png',
-                    height:Get.height * 0.2, width: double.infinity,
-                    alignment: Alignment.centerRight, fit: BoxFit.fitWidth,):
-                  Image.file(File('${args['image'].absolute.path}'),
-                      height:Get.height * 0.2, width: double.infinity,
-                  alignment: Alignment.centerRight, fit: BoxFit.fitWidth,),
+                  args['coverImage'] == null
+                      ? Image.asset(
+                          'assets/images/pages/image_placeholder.png',
+                          height: Get.height * 0.2,
+                          width: double.infinity,
+                          alignment: Alignment.centerRight,
+                          fit: BoxFit.fitWidth,
+                        )
+                      : Image.file(
+                          File('${args['image'].absolute.path}'),
+                          height: Get.height * 0.2,
+                          width: double.infinity,
+                          alignment: Alignment.centerRight,
+                          fit: BoxFit.fitWidth,
+                        ),
                   Gap(15),
-
                 ],
               ),
-
               Positioned(
                 left: 16.w,
                 bottom: -20.h,
-                child:  CircleAvatar(
-                  radius: 20,
-                  backgroundImage:
-                  //args['coverImage'].absolute.path != null?
+                child: CircleAvatar(
+                    radius: 20,
+                    backgroundImage:
+                        //args['coverImage'].absolute.path != null?
                         FileImage(File('${args['coverImage']?.absolute.path}'))
-                  // AssetImage('assets/images/pages/image_placeholder.png')
-                  )
-                ),
+                    // AssetImage('assets/images/pages/image_placeholder.png')
+                    ),
+              ),
             ],
           ),
           const Gap(50),
@@ -105,30 +121,37 @@ print('Group Type ====>>> ${args['type']}');
       ),
     );
   }
-  details(title, subTitle){
+
+  details(title, subTitle) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Expanded(
-          child: Text(
-              title,
-              style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: WayaColors.greyColor700,
-                  fontFamily: WayaConstants.fontFamily
-              )),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w500,
+            color: WayaColors.greyColor700,
+            fontFamily: WayaConstants.fontFamily,
+          ),
         ),
-        const Spacer(),
+
+        //? This is fine.
         Expanded(
-          child: Text(
-              '$subTitle',
+          child: Padding(
+            padding: EdgeInsets.only(left: 15.h),
+            child: Text(
+              subTitle,
+              maxLines: 2,
+              textAlign: TextAlign.right,
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
                 color: Color(0xff6B7280),
-              )),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ),
         ),
       ],
     );

@@ -2,23 +2,33 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 
 import '../../../core/components/waya_buttons.dart';
-import '../../../core/components/waya_select_field.dart';
-import '../../../core/components/waya_text_form_field.dart';
-import '../../../core/utils/waya_navigation.dart';
 
-class SuccessfulModal extends StatefulWidget {
-  const SuccessfulModal({super.key});
+class SuccessfulModal extends StatefulHookConsumerWidget {
+  final String title;
+  final String subtitle;
+  final String? buttonText;
+  final bool showCopyLink;
+  final Function(BuildContext, WidgetRef) onTap;
+  final Function()? onShareTap;
+  const SuccessfulModal(
+      {required this.title,
+      required this.subtitle,
+      required this.showCopyLink,
+      this.buttonText,
+      required this.onTap,
+      this.onShareTap,
+      super.key});
 
   @override
-  State<SuccessfulModal> createState() => _SuccessfulModalState();
+  ConsumerState<SuccessfulModal> createState() => _SuccessfulModalState();
 }
 
-class _SuccessfulModalState extends State<SuccessfulModal> {
+class _SuccessfulModalState extends ConsumerState<SuccessfulModal> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -28,35 +38,36 @@ class _SuccessfulModalState extends State<SuccessfulModal> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset('assets/images/successugt.png', ),
+            Image.asset(
+              'assets/images/successugt.png',
+            ),
             SizedBox(height: 20.h),
-            Text(
-                "Contest created Successfully",
-                style: wayaTheme.textTheme.bodyMedium),
+            Text(widget.title, style: wayaTheme.textTheme.bodyMedium),
             SizedBox(height: 3.h),
             Text(
-              "Your contest is now live and visible to the public.\n Manage or  share your contest details from your dashboard.",
-
-              style: wayaTheme.textTheme.hintStyle, textAlign: TextAlign.center,),
-
+              widget.subtitle,
+              style: wayaTheme.textTheme.hintStyle,
+              textAlign: TextAlign.center,
+            ),
             SizedBox(height: 17.h),
             WayaButton(
-              callback: () async{
-                Navigator.pop(context);
-              //  WayaNav.toNamed("/contest-setting-content");
+              callback: () {
+                // WayaNav.goBack();
+                widget.onTap(context, ref);
               },
-              text: "Manage Contest",
+              text: widget.buttonText ?? "Manage Contest",
             ),
             const Gap(10),
-            WayaButton(
-                text: 'Copy Contest Invite Link',
-                color: wayaTheme.colorScheme.greyColor300,
-                textColor: wayaTheme.colorScheme.customBlack,
-                border:
-                Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-                callback: () {
-
-                })
+            if (widget.showCopyLink)
+              WayaButton(
+                  text: 'Copy Contest Invite Link',
+                  color: wayaTheme.colorScheme.greyColor300,
+                  textColor: wayaTheme.colorScheme.customBlack,
+                  border: Border.all(
+                      width: 1, color: wayaTheme.colorScheme.greyColor300),
+                  callback: () {
+                    widget.onShareTap ! ();
+                  })
           ],
         ),
       ),

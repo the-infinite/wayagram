@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -98,7 +98,7 @@ class ConversationWidget extends StatelessWidget {
               ),
               text: chat.self.isPined ? "Unpin" : "Pin",
               textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                fontSize: 13,
+                fontSize: 13.sp,
               ),
             ),
 
@@ -122,7 +122,7 @@ class ConversationWidget extends StatelessWidget {
               ),
               text: chat.self.isArchived ? "Unarchive" : "Archive",
               textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                fontSize: 13,
+                fontSize: 13.sp,
               ),
             ),
 
@@ -145,7 +145,7 @@ class ConversationWidget extends StatelessWidget {
               ),
               text: chat.self.isDeletedChat ? "Unmute" : "Mute",
               textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                fontSize: 13,
+                fontSize: 13.sp,
               ),
             ),
 
@@ -174,7 +174,7 @@ class ConversationWidget extends StatelessWidget {
               ),
               text: "Delete conversation",
               textStyle: WayaTextStyles.bodySemiBold.copyWith(
-                fontSize: 13,
+                fontSize: 13.sp,
               ),
             ),
 
@@ -269,7 +269,7 @@ class ConversationWidget extends StatelessWidget {
                         fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
                         overflow: TextOverflow.ellipsis,
                         color: unread < 1 ? WayaColors.greyColor400 : WayaColors.greyColor500,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                       ),
                     ),
                 ],
@@ -291,7 +291,7 @@ class ConversationWidget extends StatelessWidget {
                     fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
                     overflow: TextOverflow.ellipsis,
                     color: unread < 1 ? WayaColors.black : WayaColors.primary,
-                    fontSize: 13,
+                    fontSize: 13.sp,
                   ),
                 ),
 
@@ -310,12 +310,24 @@ class ConversationWidget extends StatelessWidget {
                       chat.unreadText,
                       style: WayaTextStyles.bodyMedium.copyWith(
                         color: WayaColors.white,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                       ),
                     ),
                   )
-                else if (isMine)
+                else if (isMine && chat.lastMessage?.readAt != null)
                   WayaAssets.icons.cRead.svg(
+                    color: WayaColors.primary,
+                    height: 16,
+                    width: 16,
+                  )
+                else if (isMine && chat.lastMessage?.deliveredAt != null)
+                  WayaAssets.icons.cRead.svg(
+                    color: WayaColors.greyColor400,
+                    height: 16,
+                    width: 16,
+                  )
+                else if (isMine && chat.lastMessage?.createdAt != null)
+                  WayaAssets.icons.cSent.svg(
                     color: WayaColors.greyColor400,
                     height: 16,
                     width: 16,

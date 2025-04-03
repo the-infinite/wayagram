@@ -13,10 +13,11 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
+import 'package:wayagram/features/event/widgets/event_date_widget.dart';
 
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
-import '../data/model/create_poll_state_model.dart';
+import '../state/create_poll_state.dart';
 import '../data/poll_type_data.dart';
 
 class CreatePoll extends ConsumerStatefulWidget {
@@ -40,6 +41,10 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
+      onTapBackButton: (){
+        WayaNav.goBack();
+        ref.watch(createPollVotingProvider.notifier).reset();
+      },
         title: "Create Poll",
         isLoading: false,
         isScrollable: true,
@@ -48,18 +53,19 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-              if (_formKey.currentState!.validate()) {
-             //Navigator.pop(context);
+              if(_formKey.currentState!.validate()) {
+
+                print('PAID POLL =>>>> ${viewModel.pollType}');
                 WayaNav.toNamed("/add-choices");
+
               }
             } : null,
-            //centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Create Poll'),
-            height: 30,
             text: 'Create',
             isLoading: viewModel.isLoading,
             horizontalPadding: 12,
+            height: 30,
             textStyle: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 12,
+                fontSize: 12.sp,
                 fontWeight: FontWeight.w600,
                 color: Theme.of(context).colorScheme.white ),
           ),
@@ -75,7 +81,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
             Text(
               'Create engaging polls that captivate and spark conversations in just a few clicks',
               style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w400,
                   color: Theme.of(context).colorScheme.greyColor500 ),
             ),
@@ -99,11 +105,6 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                         children: [
                           WayaTextFormField(
                             keyboardType: TextInputType.text,
-                            // onChanged: (value){
-                            //   viewModel.pollTitle.text = value;
-                            //  //formData['pollTitle'] = value;
-                            //
-                            // },
                             controller: viewModel.pollTitle,
                             hintText: 'Enter Poll Title',
                             borderColor: formState.hasError &&
@@ -123,7 +124,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 formState.errorText!,
                                 style: TextStyle(
                                     color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -144,13 +145,8 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                             line: 6,
                             keyboardType: TextInputType.text,
                             controller: viewModel.pollDescription,
-                            // onChanged: (value){
-                            //   //formData['pollDescription'] = value;
-                            //
-                            // },
                             hintText: 'Why should people care? Give a short, engaging reason',
                             borderColor: formState.hasError &&
-                                //formData['pollDescription'].isEmpty
                                 viewModel.pollDescription.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
@@ -158,7 +154,6 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                           ),
                           if (formState.hasError &&
                               viewModel.pollDescription.text.isEmpty
-                          //formData['pollDescription']
                           )
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
@@ -166,7 +161,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 formState.errorText!,
                                 style: TextStyle(
                                     color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -175,9 +170,8 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
 
                     const Gap(10),
                     FormField<String>(validator: (value) {
-                      //if (formData['pollCompanyDescription'].isEmpty) {
                       if (viewModel.pollCompanyDescription.text.isEmpty) {
-                        return 'Description is required';
+                        return null;
                       }
 
                       return null;
@@ -188,10 +182,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                           WayaTextFormField(
                             line: 5,
                             keyboardType: TextInputType.text,
-                            // onChanged: (value){
-                            //   //formData['pollCompanyDescription'] = value;
-                            //
-                            // },
+
                             controller: viewModel.pollCompanyDescription,
                             hintText: 'Describe the company this poll is taking place',
                             borderColor: formState.hasError &&
@@ -199,11 +190,10 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 viewModel.pollCompanyDescription.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
-                            label: 'Description of the company',
+                            label: 'Description of the company (Optional)',
                           ),
                           if (formState.hasError &&
                               viewModel.pollCompanyDescription.text.isEmpty
-                              //formData['pollCompanyDescription'].isEmpty
                           )
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
@@ -211,7 +201,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 formState.errorText!,
                                 style: TextStyle(
                                     color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -222,7 +212,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                     ///
                     FormField<String>(validator: (value) {
                       if (viewModel.pollType.isEmpty) {
-                        return 'Poll  Type is required';
+                        return 'Poll Type is required';
                       }
 
                       return null;
@@ -230,7 +220,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          WayaSelectField(
+                          WayaSelectField<String>(
                               height: 0.3,
                               label: "Poll Type",
                               value: viewModel.pollType.capitalizeFirst,
@@ -239,7 +229,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                               items: pollTypes,
                               onSelected: (value) => ref
                                   .read(createPollVotingProvider.notifier)
-                                  .selectPollType(value.value)),
+                                  .selectPollType(value.first.value)),
                           if (formState.hasError && viewModel.pollType.isEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
@@ -247,47 +237,12 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 formState.errorText!,
                                 style: TextStyle(
                                     color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
                       );
                     }),
-                    ///
-
-                    /*FormField<String>(validator: (value) {
-                      if (viewModel.pollType.isEmpty) {
-                        return 'Poll Type is required';
-                      }
-                      return null;
-                    }, builder: (formState) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          WayaSelectField(
-                              height: 0.3,
-                              label: "Poll Type",
-                              uniqueKey: 'poll_type',
-                              hintText: 'Select Poll Type',
-                              items: ref.read(createPollVotingProvider.notifier).restructuredPollType(),
-                              onSelected: (value) => ref
-                                  .read(createPollVotingProvider.notifier)
-                                  .update(value, "pollType")),
-                          if (formState.hasError &&
-                              viewModel.pollType.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Text(
-                                formState.errorText!,
-                                style: TextStyle(
-                                    color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
-                              ),
-                            ),
-                        ],
-                      );
-                    }),*/
-
                     const Gap(20),
 
                     Row(
@@ -314,173 +269,44 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 style: wayaTheme.textTheme.titleMedium),
                             const Gap(6),
                             Text(
-                              "Display number of votes per choice",
+                              "Hide number of votes per choice",
                               style: wayaTheme.textTheme.hintStyle,
                             )
                           ],
                         )
                       ],
                     ),
+                    const Gap(25),
+                    EventDateWidget(
+                        uniqueKey: 'start-date',
+                        date: viewModel.startDate,
+                        formErrorMessage: "Date is required",
+                        hintText: 'Select Start Date',
+                        label: 'Select Start Date',
+                        selectDate: ref
+                            .read(createPollVotingProvider.notifier)
+                            .selectStartDate),
                     const Gap(15),
-
-                    FormField<String>(
-                      validator: (value) {
-                        if (viewModel.startDate.isEmpty) {
-                          return 'Start Date is required';
-                        }
-                        return null;
-                      },
-                      builder: (formState) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Select Start Date",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.wayaCopyWith(
-                                  fontSize: 14,
-                                  color: wayaTheme.colorScheme.greyColor900,
-                                )),
-                            const Gap(4),
-                            WayaButton(
-                              callback: () {
-                                ref.read(createPollVotingProvider.notifier).showDatePickerDialog(context);
-                              },
-                              horizontalPadding: 0,
-                              color: wayaTheme.colorScheme.transparent,
-                              centerWidget: Focus(
-                                  onFocusChange: (hasFocus) {
-                                    ref.read(createPollVotingProvider.notifier).focusChanged(hasFocus);
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 10),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                            viewModel.startDate.isEmpty
-                                                ? 'DD/MM/YYYY'
-                                                : viewModel.startDate,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodyMedium
-                                                ?.wayaCopyWith(
-                                              fontSize: 14,
-                                              color: viewModel
-                                                  .startDate.isEmpty
-                                                  ? wayaTheme.colorScheme
-                                                  .greyColor300
-                                                  : wayaTheme.colorScheme
-                                                  .customBlack,
-                                            )),
-                                        Icon(
-                                          Icons.arrow_drop_down,
-                                          color:
-                                          wayaTheme.colorScheme.greyColor300,
-                                        )
-                                      ],
-                                    ),
-                                  )),
-                              border: Border.all(
-                                  width: 1,
-                                  color:
-                                  //viewModel.isFocused ? wayaTheme.colorScheme.customPrimary :
-                                  wayaTheme.colorScheme.greyColor300),
-                            ),
-                            if (formState.hasError &&
-                                viewModel.startDate.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
-                    const Gap(15),
-
-                    FormField<String>(
-                      validator: (value) {
-                        if (viewModel.endDate.isEmpty) {
-                          return 'End Date is required';
-                        }
-                        return null;
-                      },
-                      builder: (formState) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("Select End Date",
-                                style: Theme.of(context).textTheme.bodyMedium
-                                    ?.wayaCopyWith(
-                                  fontSize: 14,
-                                  color: wayaTheme.colorScheme.greyColor900,
-                                )),
-                            const Gap(4),
-                            WayaButton(
-                              callback: () {
-                                ref.read(createPollVotingProvider.notifier).showDatePickerDialogTwo(context);
-                              },
-                              horizontalPadding: 0,
-                              color: wayaTheme.colorScheme.transparent,
-                              centerWidget: Focus(
-                                  onFocusChange: (hasFocus) {
-                                    ref.read(createPollVotingProvider.notifier).focusChanged(hasFocus);
-                                  },
-                                  child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 10),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                            viewModel.endDate.isEmpty ? 'DD/MM/YYYY' : viewModel.endDate,
-                                            style: Theme.of(context).textTheme.bodyMedium
-                                                ?.wayaCopyWith(
-                                              fontSize: 14,
-                                              color: viewModel.endDate.isEmpty
-                                                  ? wayaTheme.colorScheme.greyColor300
-                                                  : wayaTheme.colorScheme.customBlack,
-                                            )),
-                                        Icon(
-                                          Icons.arrow_drop_down,
-                                          color: wayaTheme.colorScheme.greyColor300,
-                                        )
-                                      ],
-                                    ),
-                                  )),
-                              border: Border.all(
-                                  width: 1,
-                                  color:
-                                  //viewModel.isFocused ? wayaTheme.colorScheme.customPrimary :
-                                  wayaTheme.colorScheme.greyColor300),
-                            ),
-                            if (formState.hasError &&
-                                viewModel.endDate.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12),
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
+                    EventDateWidget(
+                        uniqueKey: 'end-date4',
+                        date: viewModel.endDate,
+                        formErrorMessage: "Date is required",
+                        hintText: 'Select End Date',
+                        label: 'Select End Date',
+                        selectDate: ref
+                            .read(createPollVotingProvider.notifier)
+                            .selectEndDate),
                     const Gap(10),
+                    //if(viewModel.pollType == 'Paid' || viewModel.pollType.isEmpty)
+                    viewModel.pollType == 'free' || viewModel.pollType.isEmpty ? Container():
                     FormField<String>(validator: (value) {
-                      return null;
+                      if(viewModel.pollType == 'paid'){
+                        return null;
+                          //'Price is required';
+                      }else{
+                        return null;
+                      }
+
                     }, builder: (formState) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -493,18 +319,16 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 viewModel.votePrice.text.isEmpty
                                 ? wayaTheme.colorScheme.error
                                 : null,
-                            label: 'Price Per Vote (Optional)',
+                            label: 'Price Per Vote',
                           ),
-                          if (formState.hasError && viewModel.votePrice.text.isEmpty
-                              //formData['votePrice'].isEmpty
-                          )
+                          if (formState.hasError && viewModel.votePrice.text.isEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
                                 formState.errorText!,
                                 style: TextStyle(
                                     color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -531,17 +355,14 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                                 : null,
                             label: 'Number of times to vote',
                           ),
-                          if (formState.hasError &&
-                              viewModel.voteNumber.text.isEmpty
-
-                          )
+                          if (formState.hasError && viewModel.voteNumber.text.isEmpty)
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
                                 formState.errorText!,
                                 style: TextStyle(
                                     color: wayaTheme.colorScheme.error,
-                                    fontSize: 12),
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -580,7 +401,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.white,
                         fontWeight: FontWeight.w600,
-                        fontSize: 14),
+                        fontSize: 14.sp),
                   )
                 ],
               ),

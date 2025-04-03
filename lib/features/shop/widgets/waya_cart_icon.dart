@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 
@@ -11,13 +15,12 @@ class WayaCartIcon extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
 
     final cartItemCount = ref.watch(cartVmProvider).totalItem ?? 0;
     return GestureDetector(
       onTap: () {
-        WayaNav.toNamed('/cart');
+        WayaNav.toNamed(CartView.route);
       },
       child: Row(
         children: [
@@ -32,15 +35,14 @@ class WayaCartIcon extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(Icons.shopping_cart,
-                      size: 22, color: wayaTheme.colorScheme.white),
+                  SvgPicture.asset(WayaAssets.icons.shopcarticon.path),
                   const Gap(5),
                   Text(
                     "$cartItemCount",
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.white,
                         fontWeight: FontWeight.w600,
-                        fontSize: 14),
+                        fontSize: 14.sp),
                   )
                 ],
               ),

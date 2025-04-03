@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socket_io_client/socket_io_client.dart' as socket_io;
 import 'package:wayagram/core/data/secure_data_source.dart';
-import 'package:wayagram/core/utils/task.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
@@ -260,7 +259,7 @@ class WayaSocketController {
         final state = chatNotifier.getState();
 
         //? If this is not fine.
-        if (state.chat?.id != args.chatId) return;
+        if (state.chat?.id != args.chatId || args.senderId == ConversationState.self.id) return;
 
         // This is fine.
         chatNotifier.setTyping(true);
@@ -275,7 +274,7 @@ class WayaSocketController {
         final state = chatNotifier.getState();
 
         //? If this is not fine.
-        if (state.chat?.id != args.chatId) return;
+        if (state.chat?.id != args.chatId || args.senderId == ConversationState.self.id) return;
 
         // This is fine.
         chatNotifier.setTyping(false);

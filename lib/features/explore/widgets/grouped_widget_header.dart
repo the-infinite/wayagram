@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 
 class GroupedWidgetHeader extends StatelessWidget {
   final VoidCallback? onTap;
@@ -10,8 +10,13 @@ class GroupedWidgetHeader extends StatelessWidget {
   final String subTitle;
   final bool isVisible;
 
-  const GroupedWidgetHeader(
-      {super.key, this.onTap, required this.subTitle, this.isVisible = true, required this.title});
+  const GroupedWidgetHeader({
+    super.key,
+    this.onTap,
+    required this.subTitle,
+    this.isVisible = true,
+    required this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,20 +24,29 @@ class GroupedWidgetHeader extends StatelessWidget {
     return Visibility(
       visible: isVisible,
       child: Row(
+        spacing: 2.w,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(title, style: wayaTheme.textTheme.titleLarge),
-              const Gap(3),
-              Text(
-                subTitle,
-                style: wayaTheme.textTheme.hintStyle,
-              )
-            ],
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: wayaTheme.textTheme.titleLarge?.copyWith(),
+                ),
+                const Gap(3),
+                Text(
+                  subTitle,
+                  style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                    color: WayaColors.greyColor500,
+                    fontWeight: FontWeight.w400,
+                  ),
+                )
+              ],
+            ),
           ),
           Visibility(
             visible: onTap != null,
@@ -40,8 +54,7 @@ class GroupedWidgetHeader extends StatelessWidget {
               onTap: onTap,
               child: Text(
                 "See All",
-                style: TextStyle().wayaCopyWith(
-                    color: wayaTheme.colorScheme.customPrimary, fontSize: 14, fontWeight: FontWeight.w500),
+                style: WayaTextStyles.hintStyleBold.wayaCopyWith(color: WayaColors.primary500),
               ),
             ),
           )

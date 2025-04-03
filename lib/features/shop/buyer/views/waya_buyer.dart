@@ -23,7 +23,7 @@ class _WayaBuyerState extends ConsumerState<WayaBuyer>
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    final wayaTheme = Theme.of(context);
+ 
 
     return WayaScaffold(
         isLoading: false,

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
@@ -16,7 +16,6 @@ class OrderedProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
@@ -49,18 +48,17 @@ class OrderedProductCard extends StatelessWidget {
                         width: context.width * 0.3,
                         child: Text(
                           orders.productName,
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customBlack,
+                          style: TextStyle(color: wayaTheme.colorScheme.customBlack,
                               fontWeight: FontWeight.w500,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const Gap(5),
                       SizedBox(
-                        width: context.width * 0.3,
+                        width: context.width * 0.4,
                         child: Text(
-                        "Quantity: ${orders.quantity} x ${WayaHelpers.formatPrice(orders.price)}",
+                        "Quantity: ${orders.quantity} x ${WayaHelpers.formatPrice(double.parse(orders.unitPrice).toInt())}",
                         style: wayaTheme.textTheme.hintStyle,
                       ),
                       )
@@ -70,7 +68,7 @@ class OrderedProductCard extends StatelessWidget {
               ),
               Text(
                 WayaHelpers.formatPrice(orders.price),
-                style: wayaTheme.textTheme.bodyXtraMedium,
+                style: wayaTheme.textTheme.bodyXtraMedium.copyWith(fontWeight: FontWeight.w600),
               )
             ],
           ),

@@ -5,8 +5,10 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/features/shop/seller/data/model/add_product_model.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/widgets/upload_image.dart';
 
@@ -28,9 +30,9 @@ class AddProductImages extends ConsumerStatefulWidget {
 class _AddProductImagesState extends ConsumerState<AddProductImages> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final viewModel = ref.watch(addProductProvider(widget.uniqueKey));
     final provider = ref.read(addProductProvider(widget.uniqueKey).notifier);
+
     final wayaTheme = Theme.of(context);
     return Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -39,7 +41,7 @@ class _AddProductImagesState extends ConsumerState<AddProductImages> {
           Text("Add Product Images", style: wayaTheme.textTheme.titleLarge),
           const Gap(5),
           Text(
-              "Upload images and review your product details \n before submission",
+              "Upload images and review your product details before submission",
               style: wayaTheme.textTheme.hintStyle),
           const Gap(30),
           Text(
@@ -59,7 +61,9 @@ class _AddProductImagesState extends ConsumerState<AddProductImages> {
           Align(
             alignment: Alignment.center,
             child: UploadProductImage(
-                onUpload: ref.read(addProductProvider(widget.uniqueKey).notifier).uploadImages),
+                onUpload: ref
+                    .read(addProductProvider(widget.uniqueKey).notifier)
+                    .uploadImages),
           ),
 
           // UploadImage(onUpload: () => provider.uploadImage()),
@@ -156,7 +160,10 @@ class _AddProductImagesState extends ConsumerState<AddProductImages> {
           WayaButton(
               text: 'Review Product Details',
               callback: () {
-                //  ref.read(addProductProvider.notifier).submit();
+                final isValid = provider.validateFields();
+                if (!isValid) {
+                  return;
+                }
                 widget.gotoNextTab();
               }),
           const Gap(8),
@@ -191,7 +198,6 @@ class AddedImageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Stack(
       children: [

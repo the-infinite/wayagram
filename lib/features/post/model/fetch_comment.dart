@@ -1,6 +1,9 @@
 import 'dart:convert';
 
+import 'package:json_annotation/json_annotation.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
+
+part 'fetch_comment.g.dart';
 
 FetchComment fetchCommentFromJson(String str) => FetchComment.fromJson(json.decode(str));
 String fetchCommentToJson(FetchComment data) => json.encode(data.toJson());
@@ -68,7 +71,7 @@ class FetchCommentData {
     if (json['comments'] != null) {
       comments = [];
       json['comments'].forEach((v) {
-        comments?.add(Comments.fromJson(v));
+        comments?.add(CommentModel.fromJson(v));
       });
     }
     page = json['page'];
@@ -80,22 +83,22 @@ class FetchCommentData {
     prevPage = json['prevPage'];
   }
   num? total;
-  List<Comments>? comments;
+  List<CommentModel>? comments;
   num? page;
   num? limit;
   num? totalPages;
   bool? hasNextPage;
-  dynamic nextPage;
+  num? nextPage;
   bool? hasPrevPage;
   dynamic prevPage;
   FetchCommentData copyWith({
     num? total,
-    List<Comments>? comments,
+    List<CommentModel>? comments,
     num? page,
     num? limit,
     num? totalPages,
     bool? hasNextPage,
-    dynamic nextPage,
+    num? nextPage,
     bool? hasPrevPage,
     dynamic prevPage,
   }) =>
@@ -127,72 +130,62 @@ class FetchCommentData {
   }
 }
 
-Comments commentsFromJson(String str) => Comments.fromJson(json.decode(str));
-String commentsToJson(Comments data) => json.encode(data.toJson());
-
-class Comments {
-  Comments({
-    this.id,
-    this.postId,
-    this.userId,
-    this.content,
-    this.parentCommentId,
-    this.likeCount,
-    this.commentCount,
-    this.shareCount,
-    this.deletedAt,
-    this.createdAt,
-    this.updatedAt,
-    this.user,
+@JsonSerializable()
+class CommentModel {
+  final String id;
+  final String postId;
+  final String userId;
+  final String content;
+  final bool? isLiked;
+  final String? parentCommentId;
+  final int likeCount;
+  final int commentCount;
+  final int shareCount;
+  final dynamic deletedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final UserDetailsModel? user;
+  
+  CommentModel({
+    required this.id,
+    required this.isLiked,
+    required this.postId,
+    required this.userId,
+    required this.content,
+    required this.likeCount,
+    required this.commentCount,
+    required this.shareCount,
+    required this.deletedAt,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.parentCommentId,
+    required this.user,
   });
 
-  Comments.fromJson(dynamic json) {
-    id = json['id'];
-    postId = json['postId'];
-    userId = json['userId'];
-    content = json['content'];
-    parentCommentId = json['parentCommentId'];
-    likeCount = json['likeCount'];
-    commentCount = json['commentCount'];
-    shareCount = json['shareCount'];
-    deletedAt = json['deletedAt'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    createdAt = json['created_at'];
-    updatedAt = json['updated_at'];
-    user = json['user'] != null ? UserDetailsModel.fromJson(json['user']) : null;
-  }
-  String? id;
-  String? postId;
-  String? userId;
-  String? content;
-  dynamic parentCommentId;
-  num? likeCount;
-  num? commentCount;
-  num? shareCount;
-  dynamic deletedAt;
-  String? createdAt;
-  String? updatedAt;
-  UserDetailsModel? user;
-  Comments copyWith({
+  factory CommentModel.fromJson(Map<String, dynamic> json) => _$CommentModelFromJson(json);
+  Map<String, dynamic> toJson() => _$CommentModelToJson(this);
+
+  CommentModel copyWith({
     String? id,
     String? postId,
     String? userId,
     String? content,
-    dynamic parentCommentId,
-    num? likeCount,
-    num? commentCount,
-    num? shareCount,
+    bool? isLiked,
+    String? parentCommentId,
+    int? likeCount,
+    int? commentCount,
+    int? shareCount,
     dynamic deletedAt,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     UserDetailsModel? user,
   }) =>
-      Comments(
+      CommentModel(
         id: id ?? this.id,
         postId: postId ?? this.postId,
         userId: userId ?? this.userId,
         content: content ?? this.content,
+        isLiked: isLiked ?? this.isLiked,
         parentCommentId: parentCommentId ?? this.parentCommentId,
         likeCount: likeCount ?? this.likeCount,
         commentCount: commentCount ?? this.commentCount,
@@ -202,24 +195,4 @@ class Comments {
         updatedAt: updatedAt ?? this.updatedAt,
         user: user ?? this.user,
       );
-  Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['id'] = id;
-    map['postId'] = postId;
-    map['userId'] = userId;
-    map['content'] = content;
-    map['parentCommentId'] = parentCommentId;
-    map['likeCount'] = likeCount;
-    map['commentCount'] = commentCount;
-    map['shareCount'] = shareCount;
-    map['deletedAt'] = deletedAt;
-    map['createdAt'] = createdAt;
-    map['updatedAt'] = updatedAt;
-    map['created_at'] = createdAt;
-    map['updated_at'] = updatedAt;
-    if (user != null) {
-      map['user'] = user?.toJson();
-    }
-    return map;
-  }
 }

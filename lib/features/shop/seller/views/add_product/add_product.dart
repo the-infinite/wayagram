@@ -42,6 +42,7 @@ class _AddProductState extends ConsumerState<AddProduct>
       ref.read(addProductProvider(uniqueKey).notifier).initializeWayagramDeal();
     } else if (args is AddProductArg) {
       uniqueKey = args.uniqueKey;
+      ref.read(addProductProvider(uniqueKey).notifier).initializeAddProduct();
     } else {
       throw ArgumentError('Unsupported arguments: $args');
     }
@@ -53,7 +54,7 @@ class _AddProductState extends ConsumerState<AddProduct>
   Widget build(BuildContext context) {
     final isLoading =
         ref.watch(addProductProvider(uniqueKey)).isLoadingEditingMode;
-    print("cscscsc $uniqueKey");
+
     return WayaScaffoldWithProgressBar(
       isLoading: isLoading,
       isScrollable: true,

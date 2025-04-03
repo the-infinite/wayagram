@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -206,7 +207,7 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
                             WayaFileHelper.getFileSize(total),
                             style: WayaTextStyles.bodySmall.copyWith(
                               color: durationColor,
-                              fontSize: 14,
+                              fontSize: 14.sp,
                             ),
                           ),
                         ),
@@ -312,7 +313,7 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
                             textColor: buttonColor,
                             color: buttonBackground,
                             textStyle: WayaTextStyles.bodySmall.copyWith(
-                              fontSize: 14,
+                              fontSize: 14.sp,
                               color: buttonColor,
                             ),
                           );
@@ -326,7 +327,7 @@ class _VoiceMessageWidgetState extends State<VoiceMessageWidget> {
                           WayaDateHelper.convertDurationToTimestamp((totalDuration - currentPosition)),
                           style: WayaTextStyles.bodySmall.copyWith(
                             color: durationColor,
-                            fontSize: 14,
+                            fontSize: 14.sp,
                           ),
                         ),
                       ),

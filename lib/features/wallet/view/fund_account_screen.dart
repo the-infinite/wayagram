@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -136,13 +137,13 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => WayaNav.goBack(),
         ),
-        title: const Text(
+        title:  Text(
           'Fund With Bank Account',
           style: TextStyle(
             color: Colors.black,
-            fontSize: 16,
+            fontSize: 16.sp,
             fontWeight: FontWeight.w500,
           ),
         ),
@@ -164,18 +165,18 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
                   'Funding option: ${name ?? ""}',
                   style: TextStyle(
                     color: Colors.black87,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                   ),
                 ),
               ],
             ),
           ),
           const SizedBox(height: 40),
-          const Text(
+           Text(
             'Enter Amount',
             style: TextStyle(
               color: Colors.black54,
-              fontSize: 14,
+              fontSize: 14.sp,
             ),
           ),
           const SizedBox(height: 8),
@@ -187,7 +188,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
               Text(
                 amount,
                 style: TextStyle(
-                  fontSize: 40,
+                  fontSize: 40.sp,
                   fontWeight: FontWeight.bold,
                   color: wayaTheme.primaryColor,
                 ),
@@ -195,7 +196,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
               Text(
                 ' NGN',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 16.sp,
                   color: wayaTheme.colorScheme.primary200,
                 ),
               ),
@@ -208,7 +209,7 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
                 errorMessage!,
                 style: TextStyle(
                   color: wayaTheme.colorScheme.error,
-                  fontSize: 12,
+                  fontSize: 12.sp,
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -289,7 +290,7 @@ class NumPadButton extends StatelessWidget {
               : Text(
                   text!,
                   style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 24.sp,
                     color: Colors.grey.shade800,
                   ),
                 ),

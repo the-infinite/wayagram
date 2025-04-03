@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wayagram/core/utils/waya_constants.dart';
 
 extension WayaTextStyleX on TextStyle {
   TextStyle wayaCopyWith({
@@ -24,7 +25,7 @@ extension WayaTextStyleX on TextStyle {
     TextDecorationStyle? decorationStyle,
     double? decorationThickness,
     String? debugLabel,
-    String? fontFamily,
+    String fontFamily = WayaConstants.fontFamily,
     List<String>? fontFamilyFallback,
     String? package,
     TextOverflow? overflow,

@@ -7,12 +7,9 @@ part 'default.g.dart';
 
 // Chat type enum
 enum ChatType {
-  personal("personal"),
-  group("group"),
-  dispute("dispute");
-
-  const ChatType(this.value);
-  final String value;
+  personal,
+  group,
+  dispute,
 }
 
 @JsonSerializable()
@@ -23,7 +20,7 @@ class ChatModel {
   final String? latestMessageId;
   final MessageModel? lastMessage;
   final int unreadCount;
-  final String chatType;
+  final ChatType chatType;
   final DateTime createdAt;
   final DateTime updatedAt;
   final List<ChatMember> chatMembers;
@@ -79,7 +76,7 @@ class ChatModel {
     String? latestMessageId,
     MessageModel? lastMessage,
     int? unreadCount,
-    String? chatType,
+    ChatType? chatType,
     DateTime? createdAt,
     DateTime? updatedAt,
     List<ChatMember>? chatMembers,

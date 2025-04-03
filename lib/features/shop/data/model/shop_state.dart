@@ -1,5 +1,7 @@
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/review_repsonse_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/seller_metrics_response_model.dart';
 
 class ShopState {
   final bool isLoading;
@@ -7,14 +9,22 @@ class ShopState {
   final List<String>? selectedCategoryId;
   final int totalNoOfCategoryPages;
   final String searchQuery;
+  final bool isReviewing;
   final List<Product> products;
+  final ShopMetricsData? sellerMetrics;
+  final List<ReviewData> reviews;
+  final List<Product> wayaDealProducts;
 
   ShopState(
       {this.categories = const [],
       this.isLoading = false,
       this.selectedCategoryId = const [],
       this.products = const [],
+      this.wayaDealProducts = const [],
       this.searchQuery = '',
+      this.sellerMetrics,
+      this.reviews = const [],
+      this.isReviewing = false,
       this.totalNoOfCategoryPages = 1});
 
   ShopState copyWith(
@@ -22,15 +32,23 @@ class ShopState {
       List<Select>? categories,
       List<String>? selectedCategoryId,
       List<Product>? products,
+      List<Product>? wayaDealProducts,
       String? searchQuery,
+      ShopMetricsData? sellerMetrics,
+      List<ReviewData>? reviews,
+      bool? isReviewing,
       int? totalNoOfCategoryPages}) {
     return ShopState(
         categories: categories ?? this.categories,
+        isReviewing: isReviewing ?? this.isReviewing,
         selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
+        reviews: reviews ?? this.reviews,
         totalNoOfCategoryPages:
             totalNoOfCategoryPages ?? this.totalNoOfCategoryPages,
         searchQuery: searchQuery ?? this.searchQuery,
         products: products ?? this.products,
+        wayaDealProducts: wayaDealProducts ?? this.wayaDealProducts,
+        sellerMetrics: sellerMetrics ?? this.sellerMetrics,
         isLoading: isLoading ?? this.isLoading);
   }
 }

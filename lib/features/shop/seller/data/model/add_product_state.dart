@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
@@ -17,7 +16,7 @@ class AddProductState {
   final TextEditingController productWidth;
   final TextEditingController productHeight;
   final TextEditingController productDepth;
-  final List<MultipartFile> images;
+  final List<String> images;
   final String shopId;
   final bool? isWayagramDeal;
   final bool includeMeasurement;
@@ -25,12 +24,14 @@ class AddProductState {
   final bool applyDiscount;
   final String productCategory;
   final Select? selectedCategory;
-
+  final String productId;
+  final bool isDeleting;
   final String productType;
 
   final String productCondition;
 
-  final String productColor;
+  final List<Select>? productColor;
+  final String? selectedColor;
   final String pickUpOption;
   final String discountType;
   final List<Select> categories;
@@ -52,9 +53,12 @@ class AddProductState {
       TextEditingController? pickUpAddress,
       TextEditingController? deliveryPrice,
       this.productCategory = '',
+      this.isDeleting = false,
       this.selectedCategory,
-      this.productColor = '',
+      this.productColor = const [],
+      this.selectedColor = '',
       this.productCondition = '',
+      this.productId = '',
       this.productType = '',
       this.selectedDiscountType,
       TextEditingController? productDepth,
@@ -99,10 +103,11 @@ class AddProductState {
       TextEditingController? productHeight,
       TextEditingController? productDepth,
       TextEditingController? stockQuantity,
+      bool? isDeleting,
       String? productCategory,
       Select? selectedCategory,
       bool? isEditMode,
-      String? productColor,
+      List<Select>? productColor,
       String? productCondition,
       String? productType,
       String? pickUpOption,
@@ -112,8 +117,9 @@ class AddProductState {
       bool? includeDeliveryFee,
       List<DocType>? uploadedDocuments,
       TextEditingController? discountPercentage,
-      List<MultipartFile>? images,
+      List<String>? images,
       File? productImage,
+      String? selectedColor,
       bool? isWayagramDeal,
       List<Select>? categories,
       List<Select>? allDiscountTypes,
@@ -121,6 +127,7 @@ class AddProductState {
       Select? selectedDiscountType,
       bool? isLoading,
       bool? isLoadingEditingMode,
+      String? productId,
       String? shopId}) {
     return AddProductState(
         productName: productName ?? this.productName,
@@ -144,11 +151,14 @@ class AddProductState {
         uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
         productImage: productImage ?? this.productImage,
         shopId: shopId ?? this.shopId,
+        selectedColor: selectedColor ?? this.selectedColor,
+        productId: productId ?? this.productId,
         isWayagramDeal: isWayagramDeal ?? this.isWayagramDeal,
         categories: categories ?? this.categories,
         discountPercentage: discountPercentage ?? this.discountPercentage,
         selectedCategory: selectedCategory ?? this.selectedCategory,
         isLoading: isLoading ?? this.isLoading,
+        isDeleting: isDeleting ?? this.isDeleting,
         allDiscountTypes: allDiscountTypes ?? this.allDiscountTypes,
         selectedDiscountType: selectedDiscountType ?? this.selectedDiscountType,
         totalNoOfDiscountPages:
@@ -167,11 +177,11 @@ class AddProductState {
         condition: productCondition,
         price: pricePerUnit.text,
         options: pickUpOption,
-        wayagramDeal: isWayagramDeal,
         discountTypeId: selectedDiscountType?.value,
         height: productHeight.text,
         width: productWidth.text,
         depth: productDepth.text,
+        color: selectedColor,
         pickupAddress: pickUpAddress.text,
         deliveryCharge: includeDeliveryFee,
         materialType: materialType.text,
@@ -199,3 +209,4 @@ class AddWayagramArg {
 
   AddWayagramArg({required this.uniqueKey, required this.isWayagram});
 }
+

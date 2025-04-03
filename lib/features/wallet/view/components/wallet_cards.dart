@@ -40,12 +40,17 @@ class InstructionContainer extends StatelessWidget {
                 alignment: Alignment.center,
                 height: 32.h,
                 width: 32.w,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: wayaTheme.colorScheme.primar50),
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: wayaTheme.colorScheme.primary50),
                 child: Text(position,
-                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.black)),
+                    style: wayaTheme.textTheme.labelSmall
+                        ?.wayaCopyWith(color: wayaTheme.colorScheme.black)),
               ),
               SizedBox(width: 10.w),
-              Text(title, style: wayaTheme.textTheme.titleMedium?.wayaCopyWith(color: wayaTheme.colorScheme.black)),
+              Text(title,
+                  style: wayaTheme.textTheme.titleMedium
+                      ?.wayaCopyWith(color: wayaTheme.colorScheme.black)),
             ],
           ),
           SizedBox(height: 6.h),
@@ -62,7 +67,8 @@ class WalletBalanceCard extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _WalletBalanceCardState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _WalletBalanceCardState();
 }
 
 class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
@@ -98,7 +104,8 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
         children: [
           SizedBox(height: 5.h),
           Text('Total Balance',
-              style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor100)),
+              style: wayaTheme.textTheme.labelSmall
+                  ?.wayaCopyWith(color: wayaTheme.colorScheme.greyColor100)),
           SizedBox(height: 10.h),
           WayaAmountFormatter(
             amount: double.parse(viewModel.data?.balance ?? "0"),
@@ -111,8 +118,10 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
                 text: 'Fund Wallet',
                 horizontalPadding: 22,
                 color: wayaTheme.colorScheme.onPrimary,
+                textColor: wayaTheme.colorScheme.customPrimary,
                 height: 36.h,
-                textStyle: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.primary),
+                textStyle: wayaTheme.textTheme.descriptionStyle
+                    .wayaCopyWith(color: wayaTheme.colorScheme.customPrimary, fontSize: 12),
                 callback: () => WayaNav.toNamed(FundWalletOptionsScreen.route),
               ),
               SizedBox(width: 10.w),
@@ -121,7 +130,8 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
                   height: 36.h,
                   color: wayaTheme.colorScheme.onPrimary.withOpacity(0.4),
                   text: 'Learn More',
-                  textStyle: wayaTheme.textTheme.labelSmall?.wayaCopyWith(color: wayaTheme.colorScheme.onPrimary),
+                  textStyle: wayaTheme.textTheme.labelSmall
+                      ?.wayaCopyWith(color: wayaTheme.colorScheme.onPrimary),
                   callback: () => WayaUtils.showModalSheet(
                         context,
                         child: LearnMoreInstructionsContent(),
@@ -142,7 +152,9 @@ class AccountDetailsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return Container(
-        decoration: BoxDecoration(color: wayaTheme.colorScheme.greyColor100, borderRadius: BorderRadius.circular(12.r)),
+        decoration: BoxDecoration(
+            color: wayaTheme.colorScheme.greyColor100,
+            borderRadius: BorderRadius.circular(12.r)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -155,13 +167,16 @@ class AccountDetailsCard extends StatelessWidget {
                     children: [
                       Text(
                         'Your Account Numbers',
-                        style: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.black),
+                        style: wayaTheme.textTheme.hintStyle
+                            .wayaCopyWith(color: wayaTheme.colorScheme.black),
                       ),
                       SizedBox(height: 5.h),
-                      if (externalAccounts != null && externalAccounts!.isNotEmpty)
+                      if (externalAccounts != null &&
+                          externalAccounts!.isNotEmpty)
                         Row(
                           children: externalAccounts!
-                              .map((externalAccount) => buildAccountDetails(wayaTheme,
+                              .map((externalAccount) => buildAccountDetails(
+                                  wayaTheme,
                                   accountType: externalAccount.providerName,
                                   accountNumber: externalAccount.accountNumber))
                               .toList(),
@@ -175,7 +190,8 @@ class AccountDetailsCard extends StatelessWidget {
         ));
   }
 
-  Widget buildAccountDetails(ThemeData wayaTheme, {required String accountType, required String accountNumber}) {
+  Widget buildAccountDetails(ThemeData wayaTheme,
+      {required String accountType, required String accountNumber}) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 12.h),
       decoration: BoxDecoration(
@@ -190,7 +206,8 @@ class AccountDetailsCard extends StatelessWidget {
               Text(accountType, style: wayaTheme.textTheme.labelSmall),
               SizedBox(height: 4.h),
               Text(accountNumber,
-                  style: wayaTheme.textTheme.hintStyleSemiBold.wayaCopyWith(color: wayaTheme.colorScheme.black)),
+                  style: wayaTheme.textTheme.hintStyleSemiBold
+                      .wayaCopyWith(color: wayaTheme.colorScheme.black)),
             ],
           ),
           SizedBox(width: 20.w),
@@ -214,7 +231,8 @@ buildCopyButton(String text, ThemeData wayaTheme) {
       ),
       child: Row(
         children: [
-          Icon(Icons.copy_sharp, size: 12, color: wayaTheme.colorScheme.primary),
+          Icon(Icons.copy_sharp,
+              size: 12, color: wayaTheme.colorScheme.primary),
           SizedBox(width: 3.w),
           Text('Copy', style: wayaTheme.textTheme.hintStyle),
         ],
@@ -247,14 +265,16 @@ class PaymentMethodTile extends StatelessWidget {
           height: 40.h,
           width: 40.w,
           decoration: BoxDecoration(
-            color: wayaTheme.colorScheme.primar50,
+            color: wayaTheme.colorScheme.primary50,
             shape: BoxShape.circle,
           ),
           child: iconPath.svg(fit: BoxFit.none)),
       title: Text(paymentMethod,
-          style: wayaTheme.textTheme.hintStyleSemiBold.wayaCopyWith(color: wayaTheme.colorScheme.black)),
-      subtitle:
-          Text(description, style: wayaTheme.textTheme.labelSmall!.wayaCopyWith(color: wayaTheme.colorScheme.black)),
+          style: wayaTheme.textTheme.hintStyleSemiBold
+              .wayaCopyWith(color: wayaTheme.colorScheme.black)),
+      subtitle: Text(description,
+          style: wayaTheme.textTheme.labelSmall!
+              .wayaCopyWith(color: wayaTheme.colorScheme.black)),
       trailing: Icon(
         Icons.arrow_forward_ios_rounded,
         size: 12,

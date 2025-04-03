@@ -7,18 +7,21 @@ import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/personal_state_model.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/response_model.dart';
+import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 
 class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   final AuthRepository _authRepository;
   final WayaLocalDataSource _localDataSource;
   final WayaSecureDataSource _secureDataSource;
+  final Ref ref;
 
   final _logger = getLogger('PersonalFirstStepVm');
 
-  PersonalFirstStepVm(
-      this._authRepository, this._localDataSource, this._secureDataSource)
+  PersonalFirstStepVm(this.ref, this._authRepository, this._localDataSource,
+      this._secureDataSource)
       : super(PersonalFirstStepState());
 
   void togglePasswordVisibility() {
@@ -56,28 +59,29 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
   }
 
   Future<void> selectState(Select value) async {
-    String _state = state.state;
+    String prevStates = state.state;
     state = state.copyWith(state: value.label);
 
-    if (_state.isNotEmpty && value.label != _state) {
-            state.copyWith(cities: []);
+    if (prevStates.isNotEmpty && value.label != prevStates) {
+      state.copyWith(cities: []);
       state = state.copyWith(city: '');
-        state.copyWith(lgas: []);
+      state.copyWith(lgas: []);
       state = state.copyWith(lga: '');
     }
+    await fetchLGA(value.value, 'NG');
     await fetchCities(value.value, 'NG');
   }
 
   Future<void> selectCountry(Select value) async {
-    String _country = state.country;
+    String country = state.country;
     state = state.copyWith(country: value.label);
 
-    if (_country.isNotEmpty && value.label != _country) {
+    if (country.isNotEmpty && value.label != country) {
       state.copyWith(states: []);
       state = state.copyWith(state: '');
-        state.copyWith(cities: []);
+      state.copyWith(cities: []);
       state = state.copyWith(city: '');
-        state.copyWith(lgas: []);
+      state.copyWith(lgas: []);
       state = state.copyWith(lga: '');
     }
     await fetchStates();
@@ -87,14 +91,8 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
     state = state.copyWith(lga: value.value);
   }
 
-  Future<void> selectCity(Select value) async {
-    String _city = state.city;
+  void selectCity(Select value) {
     state = state.copyWith(city: value.label);
-    await fetchLGA(value.value, 'NG');
-    if (_city.isNotEmpty && value.label != _city) {
-      state = state.copyWith(lgas: []);
-      state = state.copyWith(lga: '');
-    }
   }
 
   Future<void> fetchCities(String stateCode, String countryCode) async {
@@ -213,14 +211,14 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
     }
   }
 
-
   // Future<Waya>
 
   Future<void> onSubmit(Function gotoNextTab) async {
     try {
       state = state.copyWith(isLoading: true);
-      final bool isPersonal = _localDataSource.getUserType().type == 'PERSONAL';
-      print("isPersonal $isPersonal");
+      final accountState = ref.watch(selectAccountProvider);
+      final bool isPersonal = accountState.selectedType!.type == 'PERSONAL';
+      // print("isPersonal $isPersonal");
       final response = await _authRepository.register(Register(
         email: state.email.text,
         password: state.password.text,
@@ -234,11 +232,12 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
         country: state.country,
         dateOfBirth: state.dateIsoFormat,
         tcAgreement: state.isAgreeToTerm,
+        referenceCode: state.referenceCode.text,
         policyAgreement: state.isAgreeToTerm,
         confirmPassword: state.confirmPassword.text,
         gender: state.gender.toUpperCase(),
         lga: state.lga,
-        accountTypeId: _localDataSource.getUserType().id,
+        accountTypeId: accountState.selectedType!.id,
         business: isPersonal
             ? null
             : {
@@ -248,17 +247,23 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
                 "country": state.country,
                 "lga": state.lga,
                 "address": state.businessAddress.text,
-                "businessTypeId":_localDataSource.getSelectedBusinessType().value,
+                "businessTypeId":
+                    _localDataSource.getSelectedBusinessType().value,
               },
       ));
 
       if (response.success) {
         final responseModel = ResponseModel.fromJson(response.data);
         final user = responseModel.data.user;
+        final profile = responseModel.data.profile;
         state = state.copyWith(user: user);
 
-        _secureDataSource.saveUserId(user.id!);
-        _localDataSource.saveUserId(user.id!);
+        // This is fine.
+        ConversationState.setSelf(user, profile);
+
+        // This is fine.
+        _secureDataSource.saveUserId(user.id);
+        _localDataSource.saveUserId(user.id);
 
         if (!isPersonal) {
           final business = responseModel.data.business!;
@@ -286,7 +291,7 @@ final personalFirstStepProvider =
   final authRepository = ref.watch(authRepositoryProvider);
   final localDataSource = ref.watch(localDataSourceProvider);
   return PersonalFirstStepVm(
-      authRepository, localDataSource, WayaSecureDataSource());
+      ref, authRepository, localDataSource, WayaSecureDataSource());
 });
 
 class BusinessTypes extends StateNotifier<AsyncValue<List<Select>>> {

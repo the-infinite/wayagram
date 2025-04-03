@@ -74,91 +74,98 @@ class SellerProduct {
   final String materialType;
   final int depth;
   final String condition;
-  final bool wayagramDeal;
+  final dynamic wayagramDeal;
   final String? wayagramDealRejectedReason;
   final bool approve;
   final bool deliveryCharge;
   final String options;
   final String? pickupAddress;
-  final String? rating;
+  final int? rating;
   final double discountPercentage;
   final String shopId;
-  final String discountedPrice;
+  final String? discountedPrice;
   final String shopName;
   final String shopPhone;
   final String categoryName;
-  final String createdAt;
-  final String updatedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   final bool isDeleted;
+  final dynamic dealStatus;
+  final dynamic shopRating;
+  final String? vendorId;
 
-  SellerProduct({
-    required this.id,
-    required this.categoryId,
-    this.discountTypeId,
-    required this.name,
-    required this.description,
-    required this.price,
-    required this.images,
-    required this.height,
-    required this.width,
-    required this.color,
-    required this.materialType,
-    required this.depth,
-    required this.condition,
-    required this.wayagramDeal,
-    this.wayagramDealRejectedReason,
-    required this.approve,
-    required this.deliveryCharge,
-    required this.options,
-    required this.pickupAddress,
-    this.rating,
-    required this.discountPercentage,
-    required this.shopId,
-    required this.discountedPrice,
-    required this.shopName,
-    required this.shopPhone,
-    required this.categoryName,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.isDeleted,
-  });
+  SellerProduct(
+      {required this.id,
+      required this.categoryId,
+      this.discountTypeId,
+      required this.name,
+      required this.description,
+      required this.price,
+      required this.images,
+      required this.height,
+      required this.width,
+      required this.color,
+      required this.materialType,
+      required this.depth,
+      required this.condition,
+   this.wayagramDeal,
+      this.dealStatus,
+      this.wayagramDealRejectedReason,
+      required this.approve,
+      required this.deliveryCharge,
+      required this.options,
+      required this.pickupAddress,
+      this.rating,
+      required this.discountPercentage,
+      required this.shopId,
+      required this.discountedPrice,
+      required this.shopName,
+      required this.shopPhone,
+      required this.categoryName,
+      required this.createdAt,
+      required this.updatedAt,
+      required this.isDeleted,
+      this.vendorId,
+      this.shopRating});
 
   factory SellerProduct.fromJson(Map<String, dynamic> json) {
     var imageList = json['images'] as List;
     List<String> imageItems = List<String>.from(imageList);
 
     return SellerProduct(
-      id: json['id'],
-      categoryId: json['categoryId'],
-      discountTypeId: json['discountTypeId'],
-      name: json['name'],
-      description: json['description'],
-      price: json['price'],
-      images:  List<String>.from(json['images']),
-      height: json['height'],
-      width: json['width'],
-      color: json['color'] ?? '',
-      materialType: json['materialType'] ?? '',
-      depth: json['depth'],
-      condition: json['condition'],
-      wayagramDeal: json['wayagramDeal'],
-      wayagramDealRejectedReason: json['wayagramDealRejectedReason'],
-      approve: json['approve'],
-      deliveryCharge: json['deliveryCharge'],
-      options: json['options'],
-      pickupAddress: json['pickupAddress'] ?? '',
-      rating: json['rating'],
-      discountPercentage: json['discountPercentage'].toDouble(),
-      shopId: json['shopId'],
-      discountedPrice: json['discountedPrice'],
-      shopName: json['shopName'],
-      shopPhone: json['shopPhone'],
-      categoryName: json['categoryName'],
-      createdAt: json['createdAt'],
-      updatedAt: json['updatedAt'],
-  
-      isDeleted: json['isDeleted'],
-    );
+        id: json['id'],
+        categoryId: json['categoryId'] ?? '',
+        discountTypeId: json['discountTypeId'],
+        name: json['name'] ?? '',
+        description: json['description'] ?? '',
+        price: json['price'],
+        images:
+            (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
+        height: json['height'],
+        width: json['width'],
+        color: json['color'] ?? '',
+        materialType: json['materialType'] ?? '',
+        depth: json['depth'],
+        condition: json['condition'] ?? '',
+        wayagramDeal: json['wayagramDeal'],
+        dealStatus: json['dealStatus'] ?? false,
+        wayagramDealRejectedReason: json['wayagramDealRejectedReason'],
+        approve: json['approve'] ?? false,
+        deliveryCharge: json['deliveryCharge'] ?? false,
+        options: json['options'] ?? '',
+        pickupAddress: json['pickupAddress'] ?? '',
+        rating: json['rating'],
+        discountPercentage: json['discountPercentage'].toDouble(),
+        shopId: json['shopId'] ?? '',
+        discountedPrice: json['discountedPrice'],
+        shopName: json['shopName'] ?? '',
+        shopPhone: json['shopPhone'] ?? '',
+        categoryName: json['categoryName'] ?? '',
+        isDeleted: json['isDeleted'] ?? false,
+        createdAt: DateTime.parse(json['createdAt'] ?? ''),
+        updatedAt: DateTime.parse(json['updatedAt'] ?? ''),
+        vendorId: json['vendorId'] ?? '',
+        shopRating: json['shopRating']);
   }
 
   Map<String, dynamic> toJson() {
@@ -179,6 +186,7 @@ class SellerProduct {
       'wayagramDeal': wayagramDeal,
       'wayagramDealRejectedReason': wayagramDealRejectedReason,
       'approve': approve,
+      'dealStatus': dealStatus,
       'deliveryCharge': deliveryCharge,
       'options': options,
       'pickupAddress': pickupAddress,
@@ -192,7 +200,8 @@ class SellerProduct {
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'isDeleted': isDeleted,
+      'shopRating': shopRating,
+      'vendorId': vendorId
     };
   }
 }
-

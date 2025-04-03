@@ -1,23 +1,58 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
-import 'package:wayagram/core/utils/utils.dart';
 
-class SetNotificationVm extends ChangeNotifier {
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/vm/select_account_vm.dart';
+import 'package:wayagram/features/notifications/vm/default.dart';
+
+class States {
+  final bool isLoading;
+
+  States({this.isLoading = false});
+
+  States copyWith({bool? isLoading}) {
+    return States(isLoading: isLoading ?? this.isLoading);
+  }
+}
+
+class SetNotificationVm extends StateNotifier<States> {
   final Ref ref;
-  SetNotificationVm(this.ref);
-  final WayaLocalDataSource _localDataSource = WayaLocalDataSource();
+  SetNotificationVm(this.ref) : super(States());
 
   Future<void> setNotification() async {
-    if (_localDataSource.getUserType().type == "PERSONAL") {
-      WayaNav.toNamed('/account-setup-success');
-    } else {
-      WayaNav.toNamed('/add-business-account');
+    //? This is fine.
+    final notificationVm = ref.read(notificationProvider.notifier);
+
+    try {
+      //? If this has not yet generated any device tokens, send them across.
+      final result = await notificationVm.sendDeviceToken();
+
+      //? If this was fine...
+      if (result) {
+        WayaLocalDataSource().saveDeviceToken(WayaValueHelper.createUid());
+      }
+      // Before moving forward, try to retrieve the user's notifications.
+      notificationVm.getUserNotifications();
+
+      final accountTypeState = ref.watch(selectAccountProvider);
+      if (accountTypeState.selectedType!.type == "PERSONAL") {
+        WayaNav.toNamed('/account-setup-success');
+      } else {
+        WayaNav.toNamed('/add-business-account');
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.notifications,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 }
 
 final setNotificationVmProvider =
-    ChangeNotifierProvider<SetNotificationVm>((ref) {
+    StateNotifierProvider<SetNotificationVm, States>((ref) {
   return SetNotificationVm(ref);
 });

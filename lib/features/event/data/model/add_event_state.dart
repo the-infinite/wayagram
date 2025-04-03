@@ -1,9 +1,7 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/event/data/model/add_event_request_model.dart';
+import 'package:wayagram/features/event/data/model/update_event_request_model.dart';
 
 class AddEventState {
   final bool isLoading;
@@ -23,7 +21,7 @@ class AddEventState {
   final String endTime;
   final String startDateString;
   final String endDateString;
-  final DocType? eventImage;
+  final List<DocType> eventImage;
   final String? image;
   final String userId;
   final bool isEditingMode;
@@ -47,7 +45,7 @@ class AddEventState {
       this.endDate = '',
       this.endTime = '',
       this.image,
-      this.eventImage,
+      this.eventImage = const [],
       this.startDateString = '',
       this.userId = '',
       this.isEditingMode = false,
@@ -78,7 +76,7 @@ class AddEventState {
       String? startTime,
       String? endDate,
       String? endTime,
-      DocType? eventImage,
+      List<DocType>? eventImage,
       String? startDateString,
       String? image,
       String? userId,
@@ -170,6 +168,7 @@ class AddEventState {
         location: location.toLowerCase(),
         startDate: startDate,
         endDate: endDate,
+        description: description.text,
         endTime: endTime,
         startTime: startTime,
         eventType: eventType.toLowerCase(),
@@ -177,12 +176,36 @@ class AddEventState {
         privacyOption: privacyOption.toLowerCase(),
         image: image!,
         maxCapacity: maxCapacity!.text.isEmpty && isEditingMode
-            ? 0
+            ? null
             : maxCapacity!.text.isEmpty
-                ? 0
+                ? null
                 : int.parse(maxCapacity!.text),
         locationAddress: location == 'Physical' ? address.text : link.text,
         userId: userId);
+  }
+
+  //>
+  UpdateEventRequestModel get updateEvent {
+    print("wfefer");
+    return UpdateEventRequestModel(
+      title: title.text,
+      location: location.toLowerCase(),
+      startDate: startDate,
+      endDate: endDate,
+      description: description.text,
+      endTime: endTime,
+      startTime: startTime,
+      eventType: eventType.toLowerCase(),
+      fee: int.parse(eventType == "Free" ? "0" : eventFee.text),
+      privacyOption: privacyOption.toLowerCase(),
+      image: image!,
+      maxCapacity: maxCapacity!.text.isEmpty && isEditingMode
+          ? null
+          : maxCapacity!.text.isEmpty
+              ? null
+              : int.parse(maxCapacity!.text),
+      locationAddress: location == 'Physical' ? address.text : link.text,
+    );
   }
 }
 

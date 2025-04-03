@@ -156,7 +156,8 @@ class CartProduct {
   final String? pickUpAddress;
   final String deliveryOptions;
   final bool deliveryCharge;
-  final String productImage;
+  final String? productImage;
+  final dynamic unitPrice;
 
   CartProduct(
       {required this.price,
@@ -164,8 +165,9 @@ class CartProduct {
       required this.productId,
       required this.productName,
       required this.deliveryCharge,
-      required this.productImage,
+      this.productImage,
       this.pickUpAddress,
+      this.unitPrice,
       required this.deliveryOptions});
 
   CartProduct copyWith(
@@ -176,6 +178,7 @@ class CartProduct {
       bool? deliveryCharge,
       String? productImage,
       String? deliveryOptions,
+      dynamic unitPrice,
       String? pickUpAddress}) {
     return CartProduct(
         price: price ?? this.price,
@@ -185,6 +188,7 @@ class CartProduct {
         deliveryCharge: deliveryCharge ?? this.deliveryCharge,
         productImage: productImage ?? this.productImage,
         deliveryOptions: deliveryOptions ?? this.deliveryOptions,
+        unitPrice : unitPrice ?? this.unitPrice,
         pickUpAddress: pickUpAddress ?? this.pickUpAddress);
   }
 
@@ -197,6 +201,7 @@ class CartProduct {
         deliveryCharge: json['deliveryCharge'],
         productImage: json['productImage'],
         pickUpAddress: json['pickUpAddress'],
+        unitPrice: json['unitPrice'],
         deliveryOptions: json['deliveryOptions']);
   }
 
@@ -209,7 +214,8 @@ class CartProduct {
       'deliveryCharge': deliveryCharge,
       'productImage': productImage,
       'deliveryOptions': deliveryOptions,
-      'pickUpAddress': pickUpAddress
+      'pickUpAddress': pickUpAddress,
+      'unitPrice' : unitPrice
     };
   }
 }

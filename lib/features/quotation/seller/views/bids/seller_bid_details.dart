@@ -1,174 +1,413 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/features/shop/seller/vm/seller_order_detail_vm.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
-import 'package:wayagram/features/shop/widgets/dotted_border_order_info_widget.dart';
 import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
-import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
+import 'package:wayagram/shared/features/quotation/model/default.dart';
+import 'package:wayagram/shared/features/quotation/vm/default.dart';
+import 'package:wayagram/shared/features/quotation/widget/bid_status.dart';
+import 'package:wayagram/shared/features/quotation/widget/bid_timer.dart';
+import 'package:wayagram/shared/features/user/resource/default.dart';
 
-class SellerBidDetails extends ConsumerWidget {
-  static const route = '/seller-bid-details';
-  const SellerBidDetails({super.key});
+class SellerBidDetails extends ConsumerStatefulWidget {
+  static const route = '/quotation/seller/bid';
+  final String id;
+  final String requestId;
+
+  //? This is fine.
+  const SellerBidDetails({
+    super.key,
+    required this.id,
+    required this.requestId,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
-    final viewModel = ref.watch(sellerOrderDetailVmProvider);
+  ConsumerState<SellerBidDetails> createState() => _SellerBidDetailsState();
+}
+
+class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
+  //? Final attempt.
+
+  @override
+  Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final notifier = ref.read(userQuotationsProvider.notifier);
+    final bid = notifier.getBid(widget.id)!;
+    final request = notifier.getBidQuote(widget.requestId)!;
+
+    //? Return the component.
     return WayaScaffold(
-        isLoading: false,
-        isScrollable: true,
-        title: 'Bid Details',
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Bid Details", style: wayaTheme.textTheme.titleLarge),
-            const Gap(3),
-            Text(
-              'View and manage this bid',
+      isLoading: false,
+      isScrollable: true,
+      title: 'Bid Details',
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          //? Header 1.
+          Text(
+            "Bid Details",
+            style: wayaTheme.textTheme.headlineLarge,
+          ),
+
+          // Some space.
+          Gap(3.h),
+
+          //? Subtitle.
+          Text(
+            'View and manage this bid',
+            style: wayaTheme.textTheme.hintStyle,
+          ),
+
+          //? Some space.
+          Gap(20.h),
+
+          //? Some other text.
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              'Bid Time Remaining',
               style: wayaTheme.textTheme.hintStyle,
             ),
-            const Gap(20),
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                'View and manage this bid',
-                style: wayaTheme.textTheme.hintStyle,
-              ),
-            ),
-            const Gap(10),
-            WayaButton(
-              centerWidget: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "03 Hours : 34 Minutes : 40 Seconds",
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16),
-                  ),
-                ],
-              ),
-              callback: () {},
-              color: wayaTheme.colorScheme.primar50,
-            ),
-            const Gap(30),
-            AboutProduct(
-                title: 'Product Name',
-                content: 'Samsung S24 Ultra'),
-            const Gap(15),
-            AboutProduct(title: 'Brand Name', content: 'Samsung'),
-            const Gap(15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: AboutProduct(title: 'Product Category', content: 'Technology'),
-                ),
-                Expanded(
-                  child: AboutProduct(
-                      title: 'Product Condition', content: 'Brand New'),
-                )
-              ],
-            ),
-            const Gap(15),
-            AboutProduct(
-                title: 'Product Description',
-                content:
-                'Samsung S22 Ultra 5G Fairly Used in good condition. Graphite'),
-            const Gap(15),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: AboutProduct(title: 'Quantity', content: '1'),
-                ),
-                Expanded(
-                  flex: 2,
-                  child: AboutProduct(title: 'State of Purchase', content: 'Lagos State'),
-                ),
-                Expanded(
-                  child: AboutProduct(title: 'LGA', content: 'Alimosho'),
-                )
-              ],
-            ),
-            const Gap(30),
-            OrderInfoWidget(title: "Bid Starting Amount", description: '₦350,000.00'),
-            const Gap(25),
-            Text("Customer Details", style: wayaTheme.textTheme.bodyMedium),
-            const Gap(15),
-            OrderInfoWidget(title: "Customer's Name", description: 'Fasas Oyewole'),
-            const Gap(8),
-            OrderInfoWidget(title: "Delivery Type", description: 'Home Delivery'),
+          ),
 
-            const Gap(25),
-            Text("Bid Details", style: wayaTheme.textTheme.bodyMedium),
-            const Gap(10),
-            OrderInfoWidget(title: "Delivery Address", description: '62 Lekki Expressway, Lagos, Nigeria'),
-            const Gap(8),
-            OrderInfoWidget(title: "Bid Starting Amount", description: '₦350,000.00'),
-            const Gap(8),
-            OrderInfoWidget(title: "Bid Status", description: '-'),
-            const Gap(8),
-            OrderInfoWidget(title: "Delivery Price", description: '₦5,000.00'),
-            const Gap(8),
-            OrderInfoWidget(title: "Delivery Date", description: 'Jan 30th, 2024 '),
-            const Gap(8),
-            OrderInfoWidget(title: "Comment", description: '-'),
-            const Gap(30),
-            // WayaButton(
-            //   callback: () {
-            //     viewModel.acceptOrder(context);
-            //   },
-            //   text: "Accept Order",
+          // Some space.
+          Gap(10.h),
+
+          //? The quotation bid counter.
+          QuotationBidTimer(
+            request: request,
+          ),
+
+          // Some space.
+          Gap(30.h),
+
+          //? The product's name.
+          AboutProduct(
+            title: 'Product Name',
+            content: request.productName,
+          ),
+
+          // Some space.
+          Gap(15.h),
+
+          if (request.brand?.isNotEmpty ?? false) ...[
+            //? The brand name.
+            AboutProduct(
+              title: 'Brand Name',
+              content: request.brand!,
+            ),
+
+            // Some space.
+            Gap(15.h),
+          ],
+
+          //? The category and condition.
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: AboutProduct(
+                  title: 'Product Category',
+                  content: request.category,
+                ),
+              ),
+
+              //? This is fine.
+              Expanded(
+                child: AboutProduct(
+                  title: 'Product Condition',
+                  content: request.condition,
+                ),
+              )
+            ],
+          ),
+
+          // Some space.
+          Gap(15.h),
+
+          //?  The description of the product.
+          AboutProduct(
+            title: 'Product Description',
+            content: request.description,
+          ),
+
+          // Some space.
+          Gap(15.h),
+
+          //? The quantity, state of purchase and location.
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              //? First, quantity.
+              Expanded(
+                child: AboutProduct(
+                  title: 'Quantity',
+                  content: WayaValueHelper.formatNumber(request.quantity),
+                ),
+              ),
+
+              //? Second, the state it was bought in.
+              Expanded(
+                flex: 2,
+                child: AboutProduct(
+                  title: 'State of Purchase',
+                  content: request.stateOfPurchase,
+                ),
+              ),
+
+              //? Finally, the location.
+              Expanded(
+                child: AboutProduct(
+                  title: 'LGA',
+                  content: request.lga,
+                ),
+              )
+            ],
+          ),
+
+          // Some space.
+          Gap(30.h),
+
+          //? The starting amount for bidding.
+          OrderInfoWidget(
+            title: "Bid Starting Amount",
+            description: WayaValueHelper.formatPrice(request.bidStartingAmount),
+          ),
+
+          // Some space.
+          Gap(25.h),
+
+          //? The customer details section title..
+          Text(
+            "Customer Details",
+            style: wayaTheme.textTheme.bodyMedium,
+          ),
+
+          // Some space.
+          Gap(15.h),
+
+          //? The name of the customer.
+          WayaFutureSubscriber(
+            future: UserResource.getUserDetails(request.buyerId),
+            builder: (context, data) {
+              //? Return null as a failsafe.
+              if (data == null) {
+                return const SizedBox();
+              }
+
+              //? Then return the buyer's information.
+              return OrderInfoWidget(
+                title: "Customer's Name",
+                description: data.$1.fullname,
+              );
+            },
+          ),
+
+          // Some space.
+          Gap(8.h),
+
+          //? The delivery type.
+          OrderInfoWidget(
+            title: "Delivery Type",
+            description: request.deliveryType == BuyRequestDeliveryType.pickup ? 'Pickup' : 'Home Delivery',
+          ),
+
+          // Some space.
+          Gap(25.h),
+
+          //? The details of the bid, starting with the section title.
+          Text(
+            "Bid Details",
+            style: wayaTheme.textTheme.bodyMedium,
+          ),
+
+          // Some space.
+          Gap(10.h),
+
+          //? The delivery address.
+          if (request.deliveryType == BuyRequestDeliveryType.delivery) ...[
+            OrderInfoWidget(
+              title: "Delivery Address",
+              description: request.deliveryAddress ?? "No delivery address provided",
+            ),
+
+            // Some space.
+            Gap(8.h),
+          ] else ...[
+            // //
+            // OrderInfoWidget(
+            //   title: "Pickup Address",
+            //   description: bid.pickupAddress ?? "No pickup address provided",
             // ),
+
+            // // Some space.
+            // Gap(8.h),
+          ],
+
+          //? The bid's amount.
+          OrderInfoWidget(
+            title: "Bid Amount",
+            description: WayaValueHelper.formatPrice(bid.amount),
+          ),
+
+          // Some space.
+          Gap(8.h),
+
+          //? The status.
+          OrderInfoWidget(
+            title: "Bid Status",
+            child: BidStatusCard(bid: bid),
+          ),
+
+          // Some space.
+          Gap(8.h),
+
+          //? The delivery price of a bid.
+          OrderInfoWidget(
+            title: "Delivery Price",
+            description: WayaValueHelper.formatPrice(99999),
+          ),
+
+          // Some space.
+          Gap(8.h),
+
+          //? The delivery date.
+          OrderInfoWidget(
+            title: "Delivery Date",
+            description: WayaDateHelper.getDailyTimestamp(bid.updatedAt),
+          ),
+
+          // Some space.
+          Gap(8.h),
+
+          //? Comment on the order.
+          OrderInfoWidget(
+            title: "Comment",
+            description: '-',
+          ),
+
+          // Some space.
+          Gap(30.h),
+
+          //? The button to change the status of the delivery.
+          if (request.deliveryType == BuyRequestDeliveryType.delivery)
             WayaButton(
               color: wayaTheme.colorScheme.transparent,
               textColor: wayaTheme.colorScheme.greyColor900,
               border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-              callback: () {
-              //  viewModel.updateDeliveryStatus(context);
+              callback: () async {
+                final controller = ValueNotifier<QuotationDeliveryStatus?>(null);
+                final isLoading = ValueNotifier(false);
+
+                //? Show the modal sheet.
+                await WayaUtils.showModalSheet(
+                  context,
+                  child: UpdateDeliveryStatusModal(
+                    request: request,
+                    notifier: notifier,
+                    controller: controller,
+                    isLoading: isLoading,
+                    bid: bid,
+                    orderId: request.id,
+                  ),
+                );
+
+                //? Dispose these ones.
+                try {
+                  controller.dispose();
+                  isLoading.dispose();
+                } catch (_) {}
               },
               text: "Change Delivery Status",
-              leadingIcon: SvgPicture.asset(
-                'assets/icons/van-icon.svg',
+              leadingIcon: WayaAssets.icons.vanIcon.svg(
                 colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
                 width: 20,
               ),
-            ),
-            const Gap(10),
+            )
+          else
             WayaButton(
               color: wayaTheme.colorScheme.transparent,
               textColor: wayaTheme.colorScheme.greyColor900,
               border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-              callback: () {
-               // viewModel.updateOrderStatus(context);
+              callback: () async {
+                final controller = ValueNotifier<QuotationPickupStatus?>(null);
+                final isLoading = ValueNotifier(false);
+
+                //? Show the modal sheet.
+                await WayaUtils.showModalSheet(
+                  context,
+                  child: UpdatePickupStatusModal(
+                    request: request,
+                    notifier: notifier,
+                    controller: controller,
+                    isLoading: isLoading,
+                    bid: bid,
+                    orderId: request.id,
+                  ),
+                );
+
+                //? Dispose these ones.
+                try {
+                  controller.dispose();
+                  isLoading.dispose();
+                } catch (_) {}
               },
-              text: "Change Order Status",
-              leadingIcon: SvgPicture.asset(
-                'assets/icons/button-icon.svg',
+              text: "Change Pickup Status",
+              leadingIcon: WayaAssets.icons.vanIcon.svg(
                 colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
                 width: 20,
               ),
             ),
-            // WayaButton(
-            //   color: wayaTheme.colorScheme.transparent,
-            //   textColor: wayaTheme.colorScheme.greyColor500,
-            //   border: Border.all(
-            //       width: 1, color: wayaTheme.colorScheme.greyColor300),
-            //   callback: () {
-            //     viewModel.rejectOrder(context);
-            //   },
-            //   text: "Reject Order",
-            // )
-          ],
-        ));
+
+          // Some space.
+          Gap(10.h),
+
+          //? The button to change the order status.
+          WayaButton(
+            color: wayaTheme.colorScheme.transparent,
+            textColor: wayaTheme.colorScheme.greyColor900,
+            border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+            callback: () async {
+              final controller = ValueNotifier<QuotationOrderStatus?>(null);
+              final isLoading = ValueNotifier(false);
+
+              //? Show the modal sheet.
+              await WayaUtils.showModalSheet(
+                context,
+                child: UpdateOrderStatusModal(
+                  request: request,
+                  notifier: notifier,
+                  controller: controller,
+                  isLoading: isLoading,
+                  bid: bid,
+                  orderId: request.id,
+                ),
+              );
+
+              //? Dispose these ones.
+              try {
+                controller.dispose();
+                isLoading.dispose();
+              } catch (_) {}
+            },
+            text: "Change Order Status",
+            leadingIcon: WayaAssets.icons.buttonIcon.svg(
+              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+              width: 20,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

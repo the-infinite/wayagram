@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
-import 'package:wayagram/features/shop/data/model/shop_state.dart';
+import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
-import 'package:wayagram/features/shop/vm/shop_vm.dart';
 
 class ProductDetailState {
   final Product? product;
@@ -36,17 +37,47 @@ class ProductDetailState {
 
 class ProductDetailVm extends StateNotifier<ProductDetailState> {
   final Ref ref;
-  ProductDetailVm(this.ref) : super(ProductDetailState());
+  final ShopRepository _shopRepository;
+  ProductDetailVm(this._shopRepository, this.ref) : super(ProductDetailState());
 
-  void getCurrentProduct({required Product product}) async {
-    state = state.copyWith(product: product);
+  Future<Product?> getCurrentProduct({required String id}) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _shopRepository.getProductById(id: id);
+      Product? singleProduct;
+      if (response.success) {
+        final ProductResponse data = ProductResponse.fromJson(response.data);
+        final Product product = data.data.data[0];
+        state = state.copyWith(product: product);
+        singleProduct = product;
+        if (product.vendorId == ConversationState.self.id) {
+          state = state.copyWith(isProductOwner: true);
+        } else {
+          state = state.copyWith(isProductOwner: false);
+        }
+      }
 
-    final ShopData? shop = ref.watch(manageShopVmProvider).singleShop;
-    if (shop != null) {
-      bool isOwner = shop.id == product.shopId;
-      state = state.copyWith(isProductOwner: isOwner);
+      return singleProduct;
+    } catch (error) {
+      print(error);
+      return null;
+    } finally {
+      state.copyWith(isLoading: false);
     }
+
     //getSimilarProduct(categoryId: product.categoryId, productId: product.id);
+  }
+
+  Future<void> likeProduct() async {
+    try {
+      final response = await _shopRepository.addToFavorite(
+          productId: state.product!.id, shopId: state.product!.shopId);
+      if (response.success) {
+        WayaSnackBar.showToast("Added to your favorites");
+      }
+    } catch (error) {
+      print(error);
+    }
   }
 
   // add the api to get similar product when it is made available
@@ -85,4 +116,4 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
 
 final productDetailVmProvider =
     StateNotifierProvider<ProductDetailVm, ProductDetailState>(
-        (ref) => ProductDetailVm(ref));
+        (ref) => ProductDetailVm(ShopRepository.instance, ref));

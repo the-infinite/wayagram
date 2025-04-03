@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/model/message.dart';
@@ -36,7 +37,7 @@ class FileMessageWidget extends StatelessWidget {
           Text(
             data.content!,
             style: WayaTextStyles.bodyMedium.copyWith(
-              fontSize: 15,
+              fontSize: 15.sp,
               fontWeight: FontWeight.normal,
               color: textColor,
             ),

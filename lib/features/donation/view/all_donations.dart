@@ -1,0 +1,251 @@
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
+import 'package:svg_flutter/svg_flutter.dart';
+import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/donation/model/all_donation_model.dart';
+import 'package:wayagram/features/donation/view/my_donations.dart';
+import 'package:wayagram/features/donation/vm/donation_vm.dart';
+import 'package:wayagram/features/shop/widgets/filter_widget.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
+
+import '../../chat/state/default.dart';
+import '../widget/manage_donation_widget.dart';
+
+class AllDonations extends ConsumerStatefulWidget {
+  const AllDonations({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _AllDonationsState();
+}
+
+class _AllDonationsState extends ConsumerState<AllDonations> {
+
+  late TextEditingController searchController;
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(donationVmProvider.notifier).getAllDonation(page: 1);
+      ref.read(donationVmProvider.notifier).getMyKYC();
+    });
+    searchController = TextEditingController();
+    searchController.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+   final  viewModel = ref.watch(donationVmProvider);
+    final wayaTheme = Theme.of(context);
+   final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+   print('DONATION ARGS $args');
+
+   // Filter the allDonations
+   final filteredAllDonations = WayaUtils.search<AllDonationDocs>(
+     viewModel.allDonationDocs!,
+     ['title', ],
+     searchController.text,
+   );
+
+
+    return
+    Expanded(
+      child: ListView(
+        //crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          WayaButton(
+            centerWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+
+                SvgPicture.asset(
+                  'assets/icons/donation.svg',
+                  colorFilter: ColorFilter.mode(
+                      wayaTheme.colorScheme.primary300, BlendMode.srcIn),
+                ),
+                const Gap(10),
+                Text(
+                  "Create a Donation Post",
+                  style: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.customPrimary, fontWeight: FontWeight.w600, fontSize: 16.sp),
+                ),
+              ],
+            ),
+            callback: () {
+              print('DARLINGTON KYC is ====>> ${viewModel.kycStatus}');
+               if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
+                 WayaUtils.showNotice(
+                     context: context,
+                     title: "Update KYC Information ",
+                     message: 'You must complete KYC verification before creating a donation post',
+                     onPress: () {
+                       WayaNav.goBack();
+                       WayaNav.toNamed('/kycUpdate', arguments: {
+                         'kyc': '${viewModel.kycStatus}'
+                       });
+                     },
+                     buttonText: 'Update KYC',
+                     secondButtonText: 'Cancel',
+                     icon: Image.asset('assets/images/cp-shop.png'));
+              } else if (ConversationState.self.accountType == UserAccountType.personal) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  WayaUtils.showNotice(
+                      context: context,
+                      title: "You don't have a Business Account",
+                      message: 'Please upgrade to a business account to create a donation post',
+                      onPress: () {
+                        WayaNav.goBack();
+                        WayaNav.toNamed(UpgradeToBusiness.route);
+                      },
+                      buttonText: 'Upgrade to Business',
+                      secondButtonText: 'Cancel',
+                      icon: Image.asset('assets/images/cp-shop.png'));
+                });
+              } else{
+                WayaNav.toNamed('/createDonation');
+              }
+            },
+            color: wayaTheme.colorScheme.primary50,
+          ),
+          Gap(20),
+          FilterWidget(
+              search: searchController,
+              hintText: 'Search Donations'),
+          Gap(20),
+          Text("Featured Donations",
+              style: wayaTheme.textTheme.titleLarge),
+          Text(
+              "Support a Cause That Matters",
+              style: WayaTextStyles.bodySmall.copyWith(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w400,
+                  color: Theme.of(context).colorScheme.greyColor500 ),),
+          const Gap(30),
+          filteredAllDonations.isEmpty ? DonationEmptyState() :
+          ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: filteredAllDonations.length,
+              itemBuilder: (context, index){
+                final donation = filteredAllDonations[index];
+                int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
+                int amountRaised = double.parse(donation.amountRaised!).toInt();
+
+                int targetedAmount = double.parse(donation.targetAmount!).toInt();
+
+                double ratioLeft = amountRaised / targetedAmount;
+
+                return ManageDonationWidget(
+                  text:  "Donate",
+                  amountRaised:  WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
+                  targetAmount: WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
+                  title: donation.title?.capitalizeFirst,
+                  image: donation.imageURL,
+                  dayLeft: daysLeft < 0  ? '0' : '$daysLeft',
+                  donationCount: donation.donationCount,
+                  rangeRatio: ratioLeft,
+                  onTap: (){
+                    print('MY RATIO $ratioLeft');
+                    WayaNav.toNamed('/donationDetails',
+                        arguments: {
+                          'title':'${donation.title?.capitalizeFirst}',
+                          'image':'${donation.imageURL}',
+                          'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
+                          'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
+                          'desc': '${donation.description}',
+                          'solution': '${donation.solution}',
+                          'impact': '${donation.impact}',
+                          'url': '${donation.url}',
+                          'minimumDonationAmount':'${donation.minimumDonationAmount}',
+                          'daysLeft':'$daysLeft',
+                          'privacy':'${donation.privacy}',
+                          'id': '${donation.id}',
+                          'donationCount': '${donation.donationCount}',
+                          'ratioLeft': ratioLeft
+                        });
+                  },
+                  buttonWidth: 60.0,
+                );
+              }
+          ),
+          Gap(20),
+          Text("Based On Categories",
+              style: wayaTheme.textTheme.titleLarge),
+          Text(
+            "View donations based on their categories",
+            style: WayaTextStyles.bodySmall.copyWith(
+                fontSize: 12.sp,
+                fontWeight: FontWeight.w400,
+                color: Theme.of(context).colorScheme.greyColor500 ),),
+          const Gap(30),
+          filteredAllDonations.isEmpty ?DonationEmptyState() :
+          ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: viewModel.allDonationDocs?.length,
+              itemBuilder: (context, index){
+                final donation = viewModel.allDonationDocs?[index];
+                int daysLeft = DateTime.parse('${donation?.expirationDate}').difference(DateTime.parse('${donation?.startDate}')).inDays;
+
+                int amountRaised = double.parse('${donation?.amountRaised}').toInt();
+
+                int targetedAmount = double.parse('${donation?.targetAmount}').toInt();
+
+                double ratioLeft = amountRaised / targetedAmount;
+                return ManageDonationWidget(
+                  text: "Donate",
+                  amountRaised: donation?.amountRaised,
+                  targetAmount: WayaHelpers.formatPrice(double.parse('${donation?.targetAmount}').toInt()),
+                  title: donation?.title?.capitalizeFirst,
+                  image: donation?.imageURL,
+                  dayLeft: '$daysLeft',
+                  donationCount: donation?.donationCount!,
+                  rangeRatio: ratioLeft,
+                  onTap: (){
+                    WayaNav.toNamed('/donationDetails',
+                        arguments: {
+                          'title':'${donation?.title?.capitalizeFirst}',
+                          'image':'${donation?.imageURL}',
+                          'amountRaised': '${donation?.amountRaised?.replaceAll('.00', '')}',
+                          'targetAmount': '${donation?.targetAmount?.replaceAll('.00', '')}',
+                          'desc': '${donation?.description}',
+                          'solution': '${donation?.solution}',
+                          'impact': '${donation?.impact}',
+                          'url': '${donation?.url}',
+                          'minimumDonationAmount':'${donation?.minimumDonationAmount}',
+                          'daysLeft':'$daysLeft',
+                          'privacy':'${donation?.privacy}',
+                          'donationCount': '${donation?.donationCount}',
+                          'id': '${donation?.id}',
+                          'ratioLeft': ratioLeft
+
+                        });
+                  },
+                  buttonWidth: 60.0,
+                );
+              }
+          )
+
+        ],
+      ),
+    );
+  }
+}

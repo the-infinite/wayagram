@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -17,6 +19,7 @@ import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
+import 'package:wayagram/features/shop/widgets/products_grid.dart';
 
 class SellerProducts extends ConsumerStatefulWidget {
   static const route = '/seller-product';
@@ -66,9 +69,9 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                         callback: () {
                           WayaNav.toNamed(AddProduct.route,
                               arguments:
-                                  AddProductArg(uniqueKey: 'new-product'));
+                                  AddProductArg(uniqueKey: Uuid().v4()));
                         },
-                        color: wayaTheme.colorScheme.primar50,
+                        color: wayaTheme.colorScheme.primary50,
                         centerWidget: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -84,24 +87,25 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                               "Add New Product",
                               style: TextStyle().wayaCopyWith(
                                   color: wayaTheme.colorScheme.customPrimary,
-                                  fontSize: 14,
+                                  fontSize: 14.sp,
                                   fontWeight: FontWeight.w500),
                             )
                           ],
                         ),
                       ),
-                      const Gap(25),
+                      const Gap(10),
                       FilterWidget(
                         search: state.search,
                       ),
-                      const Gap(25),
-                      GroupedWidgetHeader(
-                          isVisible: false,
+                      const Gap(10),
+                      
+                    GroupedWidgetHeader(
+                          isVisible: true,
                           onTap: () {},
                           subTitle:
                               "Extensive view of all the products you have created",
                           title: "My Products"),
-                      const Gap(10),
+                           const Gap(10),
                       CategoriesFilterWidget(
                         setCategory: (value) => {
                           ref
@@ -110,7 +114,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                         },
                       ),
                       const Gap(25),
-                      _buildProductGrid(ref
+                      SellerProductGrid( products: ref
                           .watch(sellerProductsVmProvider.notifier)
                           .filteredProducts)
                     ],
@@ -194,7 +198,7 @@ class SellerProductEmptyState extends StatelessWidget {
         ),
         const Gap(25),
         Text(
-          "Your shop is empty. Start adding products to \n showcase your items.",
+          "Your shop is empty. Start adding products to showcase your items.",
           textAlign: TextAlign.center,
           style: wayaTheme.textTheme.descriptionStyle,
         ),
@@ -202,7 +206,7 @@ class SellerProductEmptyState extends StatelessWidget {
         WayaButton(
           callback: () {
             WayaNav.toNamed(AddProduct.route,
-                arguments: AddProductArg(uniqueKey: 'add-product'));
+                arguments: AddProductArg(uniqueKey: Uuid().v4()));
           },
           centerWidget: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -214,7 +218,7 @@ class SellerProductEmptyState extends StatelessWidget {
                 "Add New Product",
                 style: TextStyle().wayaCopyWith(
                     color: wayaTheme.colorScheme.white,
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500),
               )
             ],
@@ -230,7 +234,6 @@ class SellerShopEmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -267,7 +270,7 @@ class SellerShopEmptyState extends StatelessWidget {
                   "Create Shop",
                   style: TextStyle().wayaCopyWith(
                       color: wayaTheme.colorScheme.white,
-                      fontSize: 14,
+                      fontSize: 14.sp,
                       fontWeight: FontWeight.w500),
                 )
               ],

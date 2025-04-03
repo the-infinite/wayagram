@@ -1,14 +1,15 @@
+// ignore_for_file: deprecated_member_use_from_same_package
+
 import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/helpers/files.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/core/utils/task.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/features/chat/dto/chat.dart';
@@ -42,6 +43,12 @@ class ChatInputController {
 
   /// Our voice recorder.
   RecorderController? _soundRecorder;
+
+  /// Our nice way of keeping track of what you are currently focusing on.
+  FocusNode? _focusNode;
+
+  /// Our momentId.
+  String? _momentId;
 
   /// Where we keep the voice note currently being sent in chat.
   final _voiceMessage = ValueNotifier<String?>(null);
@@ -114,10 +121,10 @@ class ChatInputController {
     _isEditing.value = false;
     _contacts.value = [];
     _files.value = [];
-    _soundRecorder?.dispose();
-    _soundRecorder = null;
+    _focusNode?.unfocus(disposition: UnfocusDisposition.scope);
     _focusedMessage.value = null;
     _isMedia.value = false;
+    _momentId = null;
     _isTyping.value = false;
     _currentType.value = MessageType.text;
     _voiceMessage.value = null;
@@ -190,9 +197,15 @@ class ChatInputController {
 
   /// A helper function used to set the message that this input widget is
   /// supposed to be replying to.
-  void quoteMessage(MessageModel? message, [bool isEditing = false]) {
+  void quoteMessage(MessageModel? message, [bool isEditing = false, String? momentId]) {
     _replyTo.value = message;
     _isEditing.value = isEditing;
+    _momentId = momentId;
+
+    //? If you can request focus
+    if (_focusNode!.canRequestFocus) {
+      _focusNode!.requestFocus();
+    }
   }
 
   /// A helper function used to set the type of message that this is currently
@@ -228,9 +241,9 @@ class ChatInputController {
   }
 
   /// A helper function used to initialize this controller with a new chat.
-  void setChat(ChatModel chat) async {
+  void setChat(ChatModel? chat) async {
     _chat = chat;
-    _soundRecorder = RecorderController();
+    _soundRecorder ??= RecorderController();
 
     //? If permission was not granted.
     if (!await _soundRecorder!.checkPermission()) return;
@@ -309,6 +322,7 @@ class ChatInputController {
     return SendMessageDto(
       chatId: chat.id,
       type: _currentType.value,
+      momentId: _momentId,
       originalMessageId: _replyTo.value?.id,
       originalMessage: _replyTo.value,
       content: buildBody,
@@ -322,12 +336,20 @@ class ChatInputController {
 class ChatInputWidget extends StatelessWidget {
   final ChatInputController controller;
   final ChatNotifier notifier;
+  final FocusNode focusNode;
+  final bool voiceEnabled;
+  final bool padded;
+  final Future<ChatModel?> Function() createChat;
 
   // Construct.
   const ChatInputWidget({
     super.key,
     required this.controller,
     required this.notifier,
+    required this.createChat,
+    required this.focusNode,
+    this.voiceEnabled = true,
+    this.padded = true,
   });
 
   /// Helper function used to add an attachment.
@@ -345,7 +367,7 @@ class ChatInputWidget extends StatelessWidget {
     //? If there is actual data here and it is a file...
     if (result.type != MessageType.contact) {
       //? Change this to file.
-      controller._currentType.value = MessageType.file;
+      controller._currentType.value = result.type;
 
       //? Add all of the files that need to be added.
       controller._files.value.addAll(result.files?.map((file) => File(file)) ?? []);
@@ -386,6 +408,14 @@ class ChatInputWidget extends StatelessWidget {
 
   /// Helper function used to send a message.
   void _sendMessage() async {
+    //? If this conversation does not yet exist...
+    if (controller._chat == null) {
+      final chat = await createChat();
+      controller.setChat(chat);
+      if (chat != null) notifier.setChat(chat);
+    }
+
+    //? Since we are fine, do all the needful.
     final message = controller.buildMessage;
     final quoted = controller._replyTo.value;
     final isEdit = controller.isEditing;
@@ -431,8 +461,13 @@ class ChatInputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //? For each time this gets constructed, notify the controller that the focus
+    //? listener might have changed.
+    controller._focusNode = focusNode;
+
+    //? Return your widget.
     return Padding(
-      padding: const EdgeInsets.only(left: 15, right: 15, bottom: 12),
+      padding: padded ? const EdgeInsets.only(left: 15, right: 15, bottom: 12) : EdgeInsets.zero,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -514,7 +549,7 @@ class ChatInputWidget extends StatelessWidget {
                         ),
 
                   // Some space.
-                  const Gap(5),
+                  Gap(12.w),
 
                   //? Second, the input text
                   Expanded(
@@ -532,10 +567,10 @@ class ChatInputWidget extends StatelessWidget {
                                 );
                               },
                             ),
-                      secondChild: WayaTextFormField(
-                        hintText: "Write a message here",
-                        showBorder: false,
+                      secondChild: TextField(
                         maxLines: 5,
+                        minLines: 1,
+                        focusNode: focusNode,
                         onChanged: (value) {
                           //? If this is a text message, allowing a user to send
                           //? a message would need to ENTIRELY depend on the
@@ -543,6 +578,9 @@ class ChatInputWidget extends StatelessWidget {
                           if (controller._currentType.value == MessageType.text) {
                             controller._canSend.value = value.trim().isNotEmpty;
                           }
+
+                          //? If this has no chat yet...
+                          if (controller._chat == null) return;
 
                           //? If this is not in the state we are thinking of...
                           if (!controller._isTyping.value) {
@@ -557,26 +595,66 @@ class ChatInputWidget extends StatelessWidget {
                             controller._isTyping.value = false;
                           })();
                         },
-                        onFieldSubmitted: (_) {
-                          WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, false));
-                        },
-                        isDense: true,
+                        style: WayaTextStyles.labelMedium,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                            borderRadius: BorderRadius.circular(8.r),
+                          ),
+                          fillColor: WayaColors.greyColor200,
+                          filled: true,
+                          hintText: "Write a message here",
+                          hintStyle: WayaTextStyles.hintStyle,
+                          labelStyle: WayaTextStyles.labelSmall,
+                        ),
                         textInputAction: TextInputAction.newline,
                         keyboardType: TextInputType.multiline,
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-                        fillColor: WayaColors.greyColor200,
                         controller: controller._textController,
                       ),
                     ),
                   ),
 
                   // Some space.
-                  const Gap(5),
+                  Gap(12.w),
 
                   //? Third, the button for either sending messages.
                   ValueListenableBuilder(
                     valueListenable: controller._canSend,
                     builder: (context, canSend, _) {
+                      //? If voice messages cannot be sent
+                      if (!voiceEnabled) {
+                        return AnimatedCrossFade(
+                          duration: const Duration(milliseconds: 350),
+                          crossFadeState: canSend ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                          firstChild: WayaButton(
+                            callback: _sendMessage,
+                            height: null,
+                            color: WayaColors.primary,
+                            horizontalPadding: 10,
+                            verticalPadding: 10,
+                            centerWidget: WayaAssets.icons.cSend.svg(
+                              color: WayaColors.white,
+                              height: 18,
+                              width: 18,
+                            ),
+                          ),
+                          secondChild: WayaButton(
+                            callback: null,
+                            height: null,
+                            color: WayaColors.greyColor200,
+                            horizontalPadding: 10,
+                            verticalPadding: 10,
+                            centerWidget: WayaAssets.icons.cSend.svg(
+                              color: WayaColors.black,
+                              height: 18,
+                              width: 18,
+                            ),
+                          ),
+                        );
+                      }
+
                       //? Since we cannot send yet, show this message type's
                       //? protocol icon.
                       return AnimatedCrossFade(

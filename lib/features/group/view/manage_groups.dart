@@ -1,21 +1,12 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
-import 'package:get/get.dart';
 import 'package:svg_flutter/svg_flutter.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/group/widget/group_widget.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
-
+import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/profile/widget/group.dart';
 
 class ManageGroups extends ConsumerStatefulWidget {
   const ManageGroups({super.key});
@@ -25,75 +16,34 @@ class ManageGroups extends ConsumerStatefulWidget {
 }
 
 class _ManageGroupsState extends ConsumerState<ManageGroups> with SingleTickerProviderStateMixin {
-
-
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async{
-      ref.read(createGroupProvider.notifier).getAllGroups();
-      // ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
-      // print('THE PUBLIC GROUP ID is $id');
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      myGroupNotifier.getCreatedGroups();
     });
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-
-    final viewModel = ref.watch(createGroupProvider);
-
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        viewModel.getAllGroups!.isEmpty ? GroupEmptyState():
-        ListView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemCount: viewModel.getAllGroups?.length,
-            itemBuilder: (_, index){
-             final group = viewModel.getAllGroups?[index];
-              return GroupWidget(
-                  name: '${group?.name?.capitalizeFirst}',
-                  desc: '${group?.description?.capitalizeFirst}',
-                  image:'${group?.coverImage}', count: '${group?.memberCount} Members',
-                  buttonText: '',
-                  chk: false,
-                  onTap: (){
-
-                    print('DARLINGTON===>> ${group?.isPrivate}');
-                    group?.isPrivate == true?
-                    WayaNav.toNamed('/privateGroup',
-                        arguments: {
-                          'memberCount':'${group?.memberCount}',
-                          'name': '${group?.name}',
-                          'url': '${group?.url}',
-                          'desc': '${group?.description}',
-                          'coverImage': '${group?.coverImage}',
-                          'profileImage': '${group?.profileImage}',
-                          'groupId': '${group?.id}',
-                        }): WayaNav.toNamed('/publicGroup',
-                        arguments: {
-                          'memberCount':'${group?.memberCount}',
-                          'name': '${group?.name}',
-                          'url': '${group?.url}',
-                          'desc': '${group?.description}',
-                          'coverImage': '${group?.coverImage}',
-                          'profileImage': '${group?.profileImage}',
-                          'groupId': '${group?.id}'
-                        });
-                  });
-
-            }),
-
-      ],
+    return ValueListenableBuilder(
+      valueListenable: myGroupNotifier,
+      builder: (context, redraws, _) => myGroupNotifier.createdGroups.isEmpty
+          ? GroupEmptyState()
+          : ListView.builder(
+              padding: EdgeInsets.only(bottom: 40),
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: myGroupNotifier.createdGroups.length,
+              itemBuilder: (_, index) => SingleGroupWidget(
+                group: myGroupNotifier.createdGroups[index],
+                index: index,
+              ),
+            ),
     );
-
   }
-
 }
+
 class GroupEmptyState extends StatelessWidget {
   const GroupEmptyState({super.key});
 
@@ -111,8 +61,7 @@ class GroupEmptyState extends StatelessWidget {
             buttontext: 'Create Group',
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter:
-              ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
@@ -57,7 +58,7 @@ class QuotationCard extends StatelessWidget {
                                   "+${quotation.images.length - 1}",
                                   style: TextStyle().wayaCopyWith(
                                       color: wayaTheme.colorScheme.customBlack,
-                                      fontSize: 50,
+                                      fontSize: 50.sp,
                                       fontWeight: FontWeight.w600),
                                 ),
                               ),
@@ -87,7 +88,7 @@ class QuotationCard extends StatelessWidget {
                           "Open Bid",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.success,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         )
                       ],
                     ),
@@ -116,7 +117,7 @@ class QuotationCard extends StatelessWidget {
                     text: quotation.timeLeft,
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.customPrimary,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         fontWeight: FontWeight.w400)),
               ])),
               const Gap(20),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_image.dart';
@@ -25,13 +27,19 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    return Column(
-      children: [
-        Container(
+    print(widget.shop.logo);
+    print("dvdvdv");
+
+    return GestureDetector(
+        onTap: () =>
+            WayaNav.toNamed(ManageShop.route, arguments: widget.shop.id),
+        child: Container(
+          margin: EdgeInsets.only(bottom: 10.h),
           padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
           decoration: BoxDecoration(
-              color: wayaTheme.colorScheme.scaffoldColor,
-              borderRadius: BorderRadius.circular(8)),
+            color: wayaTheme.colorScheme.scaffoldColor,
+            borderRadius: BorderRadius.circular(8.r),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -39,7 +47,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
               Row(
                 children: [
                   WayaImage(
-                    imageUrl: widget.shop.logo,
+                    imageUrl: widget.shop.logo ?? '',
                     height: 40,
                     width: 40,
                     radius: BorderRadius.circular(40),
@@ -50,10 +58,10 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.shop.name,
+                        widget.shop.name.capitalizeFirst!,
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
-                            fontSize: 14),
+                            fontSize: 14.sp),
                       ),
                       const Gap(8),
                       Container(
@@ -66,11 +74,12 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                         child: Text(
                           widget.shop.deactivated ? "Inactive" : "Active",
                           style: TextStyle().wayaCopyWith(
-                              color: widget.shop.deactivated
-                                  ? wayaTheme.colorScheme.error
-                                  : wayaTheme.colorScheme.success,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 11),
+                            color: widget.shop.deactivated
+                                ? wayaTheme.colorScheme.error
+                                : wayaTheme.colorScheme.success,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 11.sp,
+                          ),
                         ),
                       )
                     ],
@@ -78,58 +87,60 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                 ],
               ),
               PopupMenuButton(
-                  onSelected: (value) {},
-                  iconColor: wayaTheme.colorScheme.greyColor400,
-                  position: PopupMenuPosition.under,
-                  itemBuilder: (context) {
-                    return [
-                      PopupMenuItem<int>(
-                        value: 0,
-                        child: _buildActionNav(
-                            context: context,
-                            onTap: () {
-                              Navigator.pop(context); 
-                              WayaNav.toNamed(ManageShop.route,
-                                  arguments: widget.shop);
-                            },
-                            asset:
-                                SvgPicture.asset(WayaAssets.icons.bShop.path),
-                            text: "Shop Dashboard"),
+                onSelected: (value) {},
+                iconColor: wayaTheme.colorScheme.greyColor400,
+                position: PopupMenuPosition.under,
+                itemBuilder: (context) {
+                  return [
+                    PopupMenuItem<int>(
+                      value: 0,
+                      child: _buildActionNav(
+                        context: context,
+                        onTap: () {
+                          WayaNav.goBack();
+                          WayaNav.toNamed(ManageShop.route,
+                              arguments: widget.shop.id);
+                        },
+                        asset: SvgPicture.asset(WayaAssets.icons.bShop.path),
+                        text: "Shop Dashboard",
                       ),
-                      PopupMenuItem<int>(
-                        value: 1,
-                        child: _buildActionNav(
-                            context: context,
-                            onTap: () {},
-                            asset: SvgPicture.asset(WayaAssets.icons.bBid.path),
-                            text: "Quotation Dashboard"),
+                    ),
+                    PopupMenuItem<int>(
+                      value: 1,
+                      child: _buildActionNav(
+                        context: context,
+                        onTap: () {},
+                        asset: SvgPicture.asset(WayaAssets.icons.bBid.path),
+                        text: "Quotation Dashboard",
                       ),
-                      PopupMenuItem<int>(
-                        value: 2,
-                        child: _buildActionNav(
-                            context: context,
-                            onTap: () {
-                              Navigator.pop(context); 
-                              WayaNav.toNamed(CreateShop.route,
-                                  arguments: UpdateShopArg(
-                                      uniqueKey: "update-shop",
-                                      singleShop: widget.shop));
-                            },
-                            asset: Icon(
-                              Icons.edit_note_sharp,
-                              size: 22,
-                              color: wayaTheme.colorScheme.customBlack,
-                            ),
-                            text: "Edit Shop"),
-                      )
-                    ];
-                  })
+                    ),
+                    PopupMenuItem<int>(
+                      value: 2,
+                      child: _buildActionNav(
+                        context: context,
+                        onTap: () {
+                          WayaNav.goBack();
+                          WayaNav.toNamed(
+                            CreateShop.route,
+                            arguments: UpdateShopArg(
+                                uniqueKey: "update-shop",
+                                singleShop: widget.shop),
+                          );
+                        },
+                        asset: Icon(
+                          Icons.edit_note_sharp,
+                          size: 22,
+                          color: wayaTheme.colorScheme.customBlack,
+                        ),
+                        text: "Edit Shop",
+                      ),
+                    )
+                  ];
+                },
+              )
             ],
           ),
-        ),
-        const Gap(10)
-      ],
-    );
+        ));
   }
 
   InkWell _buildActionNav(
@@ -152,7 +163,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
             style: TextStyle().wayaCopyWith(
                 color: wayaTheme.colorScheme.customBlack,
                 fontWeight: FontWeight.w500,
-                fontSize: 12),
+                fontSize: 12.sp),
           )
         ],
       ),

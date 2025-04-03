@@ -17,60 +17,63 @@ class LoginCoverPage extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       removeAppBar: true,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Gap(Get.height * 0.2),
-            WayaAssets.images.wayalogoUnlabelled.image(scale: 2),
-            Gap(10),
-            Text(
-              "Connect.Trade.Share\nAll in One Place",
-              style: wayaTheme.textTheme.headlineLarge,
-              textAlign: TextAlign.center,
+      isScrollable: true,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Gap(Get.height * 0.2),
+          WayaAssets.images.wayalogoUnlabelled.image(
+            scale: 2,
+          ),
+          Gap(10),
+          Text(
+            "Connect.Trade.Share\nAll in One Place",
+            style: wayaTheme.textTheme.headlineLarge,
+            textAlign: TextAlign.center,
+          ),
+          Gap(10),
+          Text(
+            "Welcome to Social Marketplace",
+            style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+              color: wayaTheme.colorScheme.greyColor600,
             ),
-            Gap(10),
-            Text(
-              "Welcome to Social Marketplace",
-              style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-                color: wayaTheme.colorScheme.greyColor600,
-              ),
-            ),
-            Gap(Get.height * 0.25),
-            WayaButton(
-              color: wayaTheme.colorScheme.secondaryColor,
-              callback: () {},
-              leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
-              text: "Continue with Google",
-              textColor: wayaTheme.colorScheme.black,
-            ),
-            Gap(10),
-            WayaButton(
-              color: wayaTheme.colorScheme.black,
-              callback: () {},
-              leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
-              text: "Continue with Apple",
-              textColor: wayaTheme.colorScheme.onPrimary,
-            ),
-            Gap(10),
-            WayaButton(
-              color: wayaTheme.colorScheme.primary500,
-              callback: () {
-                WayaNav.toNamed("/login");
-              },
-              text: "Continue with Email Address",
-              textColor: wayaTheme.colorScheme.onPrimary,
-            ),
-            Gap(30),
-            WayaRichText(
-              title1: 'Don\'t have an account? ',
-              title2: 'Create an account',
-              onTap2: () {
-                WayaNav.toNamed("/account-creation");
-              },
-            )
-          ],
-        ),
+          ),
+          Gap(Get.height * 0.25),
+          WayaButton(
+            color: wayaTheme.colorScheme.secondaryColor,
+            callback: () {},
+            leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
+            text: "Continue with Google",
+            textColor: wayaTheme.colorScheme.black,
+          ),
+          Gap(10),
+          WayaButton(
+            color: wayaTheme.colorScheme.black,
+            callback: () {},
+            leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
+            text: "Continue with Apple",
+            textColor: wayaTheme.colorScheme.onPrimary,
+          ),
+          Gap(10),
+          WayaButton(
+            color: wayaTheme.colorScheme.primary500,
+            callback: () {
+              WayaNav.toNamed("/login");
+            },
+            text: "Continue with Email Address",
+            textColor: wayaTheme.colorScheme.onPrimary,
+          ),
+          Gap(30),
+          WayaRichText(
+            title1: 'Don\'t have an account? ',
+            title2: 'Create an account',
+            onTap2: () {
+              WayaNav.toNamed("/account-creation");
+            },
+          )
+        ],
       ),
     );
   }

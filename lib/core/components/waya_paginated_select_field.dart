@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
 
 class WayaPaginatedSelectField extends ConsumerStatefulWidget {
@@ -14,7 +16,7 @@ class WayaPaginatedSelectField extends ConsumerStatefulWidget {
   final BorderRadius? radius;
   final Function(Select value) onSelected;
   final Future<SelectTypePaginatedResult?> Function(int page) fetchData;
-  final String Function(Select item) displayText;
+  final Select? displayText;
   final String uniqueKey;
 
   const WayaPaginatedSelectField(
@@ -39,8 +41,6 @@ class _WayaPaginatedSelectFieldState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-
-      print("wecw");
       ref
           .read(paginatedSelectFieldNotifierProvider(widget.uniqueKey).notifier)
           .initialize(widget.fetchData);
@@ -63,11 +63,11 @@ class _WayaPaginatedSelectFieldState
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
             child: Text(widget.label!,
-                style: wayaTheme.textTheme.bodyMedium?.copyWith(fontSize: 14)),
+                style: wayaTheme.textTheme.bodyMedium?.copyWith(fontSize: 14.sp)),
           ),
         WayaButton(
           callback: () async {
-            final selected = await showModalBottomSheet(
+            await showModalBottomSheet(
               context: context,
               builder: (context) {
                 return PaginatedBottomSheet(
@@ -76,16 +76,12 @@ class _WayaPaginatedSelectFieldState
                   displayText: widget.displayText,
                   uniqueKey: widget.uniqueKey,
                   onSelected: (value) {
-                    Navigator.pop(context, value);
+                    widget.onSelected(value);
+                    WayaNav.goBack();
                   },
                 );
               },
             );
-
-            if (selected != null) {
-              notifier.selectValue(widget.displayText(selected));
-              widget.onSelected(selected);
-            }
           },
           horizontalPadding: 0,
           color: wayaTheme.colorScheme.transparent,
@@ -99,15 +95,15 @@ class _WayaPaginatedSelectFieldState
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                        state.selectedValue.isEmpty
+                        widget.displayText == null
                             ? widget.hintText
-                            : state.selectedValue,
+                            : widget.displayText!.label,
                         style: Theme.of(context)
                             .textTheme
                             .bodyMedium
                             ?.wayaCopyWith(
-                              fontSize: 14,
-                              color: state.selectedValue.isEmpty
+                              fontSize: 14.sp,
+                              color: widget.displayText == null
                                   ? wayaTheme.colorScheme.greyColor300
                                   : wayaTheme.colorScheme.customBlack,
                             )),
@@ -132,7 +128,7 @@ class _WayaPaginatedSelectFieldState
 class PaginatedBottomSheet extends ConsumerStatefulWidget {
   final String title;
   final Future<SelectTypePaginatedResult?> Function(int page) fetchData;
-  final String Function(Select item) displayText;
+  final Select? displayText;
   final Function(Select value) onSelected;
   final String uniqueKey;
 
@@ -196,15 +192,14 @@ class _PaginatedBottomSheetState extends ConsumerState<PaginatedBottomSheet> {
               itemCount: state.items.length + 1,
               itemBuilder: (context, index) {
                 if (index == state.items.length) {
-                  
                   return const SizedBox.shrink();
                 }
                 final item = state.items[index];
                 return ListTile(
-                   minTileHeight: 25,
+                  minTileHeight: 25,
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 2, vertical: 0),
-                  title: Text(widget.displayText(item)),
+                  title: Text(item.label),
                   onTap: () => widget.onSelected(item),
                 );
               },
@@ -218,7 +213,6 @@ class _PaginatedBottomSheetState extends ConsumerState<PaginatedBottomSheet> {
 
 class WayaPaginatedSelectFieldState {
   final bool isFocused;
-  final String selectedValue;
   final List<Select> items;
   final bool isLoading;
   final int currentPage;
@@ -226,7 +220,6 @@ class WayaPaginatedSelectFieldState {
 
   const WayaPaginatedSelectFieldState({
     this.isFocused = false,
-    this.selectedValue = '',
     this.items = const [],
     this.isLoading = false,
     this.currentPage = 0,
@@ -235,7 +228,6 @@ class WayaPaginatedSelectFieldState {
 
   WayaPaginatedSelectFieldState copyWith({
     bool? isFocused,
-    String? selectedValue,
     List<Select>? items,
     bool? isLoading,
     int? currentPage,
@@ -243,7 +235,6 @@ class WayaPaginatedSelectFieldState {
   }) {
     return WayaPaginatedSelectFieldState(
         isFocused: isFocused ?? this.isFocused,
-        selectedValue: selectedValue ?? this.selectedValue,
         items: items ?? this.items,
         isLoading: isLoading ?? this.isLoading,
         currentPage: currentPage ?? this.currentPage,
@@ -257,57 +248,55 @@ class WayaPaginatedSelectFieldNotifier
   WayaPaginatedSelectFieldNotifier(this.ref)
       : super(WayaPaginatedSelectFieldState());
 
- Future<void> initialize(
-    Future<SelectTypePaginatedResult?> Function(int page) fetchData) async {
-  state = state.copyWith(isLoading: true);
-  try {
-    final result = await fetchData(1);
-    if (result != null) {
-      state = state.copyWith(
-        items: result.items,
-        currentPage: 1,
-        totalPages: result.totalPages,
-        isLoading: false,
-      );
-    } else {
-      state = state.copyWith(isLoading: false); 
+  Future<void> initialize(
+      Future<SelectTypePaginatedResult?> Function(int page) fetchData) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final result = await fetchData(1);
+      if (result != null) {
+        state = state.copyWith(
+          items: result.items,
+          currentPage: 1,
+          totalPages: result.totalPages,
+          isLoading: false,
+        );
+       //   print("itwems hjbjbkjnkjnknkn ${result.items}");
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+      rethrow;
     }
-  } catch (e) {
-    state = state.copyWith(isLoading: false);
-    rethrow;
   }
-}
 
-Future<void> loadMoreItems(
-    Future<SelectTypePaginatedResult?> Function(int page) fetchData) async {
-  if (state.currentPage >= state.totalPages) return;
+  Future<void> loadMoreItems(
+      Future<SelectTypePaginatedResult?> Function(int page) fetchData) async {
+    if (state.currentPage >= state.totalPages) return;
 
-  state = state.copyWith(isLoading: true);
+    state = state.copyWith(isLoading: true);
 
-  try {
-    final result = await fetchData(state.currentPage + 1);
-    if (result != null && result.items.isNotEmpty) {
-      state = state.copyWith(
-        items: [...state.items, ...result.items],
-        currentPage: state.currentPage + 1,
-        totalPages: result.totalPages,
-        isLoading: false,
-      );
-    } else {
-      state = state.copyWith(isLoading: false); 
+    try {
+      final result = await fetchData(state.currentPage + 1);
+      if (result != null && result.items.isNotEmpty) {
+        state = state.copyWith(
+          items: [...state.items, ...result.items],
+          currentPage: state.currentPage + 1,
+          totalPages: result.totalPages,
+          isLoading: false,
+        );
+      
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+      rethrow;
     }
-  } catch (e) {
-    state = state.copyWith(isLoading: false);
-    rethrow;
   }
-}
 
   void setFocus(bool isFocused) {
     state = state.copyWith(isFocused: isFocused);
-  }
-
-  void selectValue(String value) {
-    state = state.copyWith(selectedValue: value);
   }
 }
 

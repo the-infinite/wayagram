@@ -1,7 +1,6 @@
 import 'package:wayagram/features/shop/seller/data/model/pagination_model.dart';
 import 'package:wayagram/shared/model/base_model.dart';
 
-
 class OrdersResponse {
   final String message;
   final bool status;
@@ -33,24 +32,60 @@ class OrdersResponse {
 }
 
 class OrdersData {
-  final List<Order> data;
-  final Pagination pagination;
+  final List<Order> docs;
+  final int totalDocs;
+  final int limit;
+  final int page;
+  final int totalPages;
+  final bool hasNextPage;
+  final int? nextPage;
+  final bool hasPrevPage;
+  final int? prevPage;
+  final int pagingCounter;
+  final Metadata metadata;
 
   OrdersData({
-    required this.data,
-    required this.pagination,
+    required this.docs,
+    required this.totalDocs,
+    required this.limit,
+    required this.page,
+    required this.totalPages,
+    required this.hasNextPage,
+    this.nextPage,
+    required this.hasPrevPage,
+    this.prevPage,
+    required this.pagingCounter,
+    required this.metadata,
   });
 
   factory OrdersData.fromJson(Map<String, dynamic> json) {
     return OrdersData(
-      data: (json['data'] as List).map((e) => Order.fromJson(e)).toList(),
-      pagination: Pagination.fromJson(json['pagination']),
+      docs: (json['docs'] as List).map((e) => Order.fromJson(e)).toList(),
+      totalDocs: json['totalDocs'],
+      limit: json['limit'],
+      page: json['page'],
+      totalPages: json['totalPages'],
+      hasNextPage: json['hasNextPage'],
+      nextPage: json['nextPage'],
+      hasPrevPage: json['hasPrevPage'],
+      prevPage: json['prevPage'],
+      pagingCounter: json['pagingCounter'],
+      metadata: Metadata.fromJson(json['metadata']),
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'data': data.map((e) => e.toJson()).toList(),
-        'pagination': pagination.toJson(),
+        'docs': docs.map((e) => e.toJson()).toList(),
+        'totalDocs': totalDocs,
+        'limit': limit,
+        'page': page,
+        'totalPages': totalPages,
+        'hasNextPage': hasNextPage,
+        'nextPage': nextPage,
+        'hasPrevPage': hasPrevPage,
+        'prevPage': prevPage,
+        'pagingCounter': pagingCounter,
+        'metadata': metadata.toJson(),
       };
 }
 
@@ -63,18 +98,18 @@ class Order extends BaseModel<Order> {
   final String total;
   final String status;
   final String? pickupAddress;
-  final String pickupStatus;
   final String? deliveryAddress;
-  final int? deliveryFee;
+  final dynamic deliveryFee;
   final DateTime? deliveryDate;
-  final String deliveryStatus;
+  final String? deliveryToken;
   final String version;
   final DateTime createdAt;
   final DateTime updatedAt;
   final String shopName;
   final String shopPhone;
-  final String? deliveryToken;
   final String? deliveryType;
+  final List<CartOrderStatus> deliveryStatusHistory;
+  final List<CartOrderStatus> pickupStatusHistory;
 
   Order({
     required this.id,
@@ -84,19 +119,19 @@ class Order extends BaseModel<Order> {
     required this.vendorId,
     required this.total,
     required this.status,
-    this.deliveryType,
     this.pickupAddress,
-    required this.pickupStatus,
     this.deliveryAddress,
     this.deliveryFee,
     this.deliveryDate,
     this.deliveryToken,
-    required this.deliveryStatus,
     required this.version,
     required this.createdAt,
     required this.updatedAt,
     required this.shopName,
     required this.shopPhone,
+    this.deliveryType,
+    this.deliveryStatusHistory = const [],
+    this.pickupStatusHistory = const [],
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -109,20 +144,24 @@ class Order extends BaseModel<Order> {
       total: json['total'],
       status: json['status'],
       pickupAddress: json['pickupAddress'],
-      deliveryType: json['deliveryType'],
-      pickupStatus: json['pickupStatus'],
-      deliveryToken: json['deliveryToken'],
       deliveryAddress: json['deliveryAddress'],
-      deliveryFee: json['deliveryFee'] ?? '0',
+      deliveryFee: json['deliveryFee'],
       deliveryDate: json['deliveryDate'] != null
           ? DateTime.parse(json['deliveryDate'])
           : null,
-      deliveryStatus: json['deliveryStatus'],
+      deliveryToken: json['deliveryToken'],
       version: json['_v'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
       shopName: json['shopName'],
       shopPhone: json['shopPhone'],
+      deliveryType: json['deliveryType'],
+      deliveryStatusHistory: (json['deliveryStatusHistory'] as List)
+          .map((e) => CartOrderStatus.fromJson(e))
+          .toList(),
+      pickupStatusHistory: (json['pickupStatusHistory'] as List)
+          .map((e) => CartOrderStatus.fromJson(e))
+          .toList(),
     );
   }
 
@@ -135,18 +174,20 @@ class Order extends BaseModel<Order> {
         'total': total,
         'status': status,
         'pickupAddress': pickupAddress,
-        'pickupStatus': pickupStatus,
         'deliveryAddress': deliveryAddress,
         'deliveryFee': deliveryFee,
         'deliveryDate': deliveryDate?.toIso8601String(),
-        'deliveryStatus': deliveryStatus,
         'deliveryToken': deliveryToken,
-        'deliveryType': deliveryType,
         '_v': version,
         'createdAt': createdAt.toIso8601String(),
         'updatedAt': updatedAt.toIso8601String(),
         'shopName': shopName,
         'shopPhone': shopPhone,
+        'deliveryType': deliveryType,
+        'deliveryStatusHistory':
+            deliveryStatusHistory.map((e) => e.toJson()).toList(),
+        'pickupStatusHistory':
+            pickupStatusHistory.map((e) => e.toJson()).toList(),
       };
 
   @override
@@ -158,10 +199,8 @@ class Order extends BaseModel<Order> {
         'total': total,
         'status': status,
         'pickupAddress': pickupAddress,
-        'pickupStatus': pickupStatus,
         'deliveryAddress': deliveryAddress,
         'deliveryFee': deliveryFee,
-        'deliveryStatus': deliveryStatus,
         'shopName': shopName,
         'shopPhone': shopPhone,
         'deliveryToken': deliveryToken,
@@ -169,15 +208,45 @@ class Order extends BaseModel<Order> {
       };
 }
 
+class Metadata {
+  final int offset;
+  final bool searchApplied;
+  final List<String> searchFields;
+  final Map<String, dynamic> appliedFilters;
+
+  Metadata({
+    required this.offset,
+    required this.searchApplied,
+    required this.searchFields,
+    required this.appliedFilters,
+  });
+
+  factory Metadata.fromJson(Map<String, dynamic> json) {
+    return Metadata(
+      offset: json['offset'],
+      searchApplied: json['searchApplied'],
+      searchFields: List<String>.from(json['searchFields']),
+      appliedFilters: json['appliedFilters'],
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'offset': offset,
+        'searchApplied': searchApplied,
+        'searchFields': searchFields,
+        'appliedFilters': appliedFilters,
+      };
+}
+
 class OrderItem {
-  final String name;
-  final int price;
+  final String productName;
+  final String price;
   final int quantity;
   final String productId;
   final String? productImage;
 
   OrderItem({
-    required this.name,
+    required this.productName,
     required this.price,
     required this.quantity,
     required this.productId,
@@ -186,7 +255,7 @@ class OrderItem {
 
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
-      name: json['name'] ?? '',
+      productName: json['productName'] ?? '',
       price: json['price'],
       quantity: json['quantity'],
       productId: json['productId'],
@@ -195,10 +264,29 @@ class OrderItem {
   }
 
   Map<String, dynamic> toJson() => {
-        'name': name,
+        'productName': productName,
         'price': price,
         'quantity': quantity,
         'productId': productId,
         'productImage': productImage,
+      };
+}
+
+class CartOrderStatus {
+  final String status;
+  final String updatedAt;
+
+  CartOrderStatus({required this.status, required this.updatedAt});
+
+  factory CartOrderStatus.fromJson(Map<String, dynamic> json) {
+    return CartOrderStatus(
+      status: json['status'] ?? '',
+      updatedAt: json['updatedAt'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+        'status': status,
+        'updatedAt': updatedAt,
       };
 }

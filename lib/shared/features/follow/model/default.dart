@@ -1,9 +1,13 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/features/user/resource/default.dart';
 
 part 'default.g.dart';
 
 enum FollowRelationship {
   accepted,
+  none,
+  rejected,
 }
 
 @JsonSerializable()
@@ -29,6 +33,31 @@ class FollowModel {
   Map<String, dynamic> toJson() => _$FollowModelToJson(this);
 
   factory FollowModel.fromJson(Map<String, dynamic> json) => _$FollowModelFromJson(json);
+
+  ///
+  bool get isOtherFollowingMe {
+    return (followerId == ConversationState.self.id && followedBack) || followingId == ConversationState.self.id;
+  }
+
+  ///
+  bool get isUserFollowing {
+    return followerId == ConversationState.self.id || (followingId == ConversationState.self.id && followedBack);
+  }
+
+  /// Helper function used to get the user ID of the person in this follower following relationship that is not the user in question.
+  String get otherUserId => otherFollowerId(ConversationState.self.id);
+
+  /// Helper function used to get the user ID of the person in this relationship
+  /// that is not the person calling it.
+  Future<CachedUserDataTuple?> followerData(String userId) => UserResource.getUserDetails(otherFollowerId(userId));
+
+  /// Helper function used to get the user ID of the person who is not the user
+  /// in focus when making this request.
+  String otherFollowerId(String userId) => followerId == userId ? followingId : followerId;
+
+  /// Helper function used to get the user ID of the person in this relationship
+  /// that is not the logged in user.
+  Future<CachedUserDataTuple?> getOtherUser() => followerData(ConversationState.self.id);
 }
 
 @JsonSerializable()

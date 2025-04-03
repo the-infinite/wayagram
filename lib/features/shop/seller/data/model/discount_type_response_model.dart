@@ -33,8 +33,9 @@ class Discount {
   final String type;
   final int percentage;
   final bool active;
-  final DateTime startDate;
-  final DateTime endDate;
+  final bool deal;
+  final DateTime? startDate;
+  final DateTime? endDate;
   final bool isDeleted;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -44,8 +45,9 @@ class Discount {
     required this.type,
     required this.percentage,
     required this.active,
-    required this.startDate,
-    required this.endDate,
+    required this.deal,
+    this.startDate,
+    this.endDate,
     required this.isDeleted,
     required this.createdAt,
     required this.updatedAt,
@@ -57,13 +59,16 @@ class Discount {
       type: json['type'] as String,
       percentage: json['percentage'] as int,
       active: json['active'] as bool,
-      startDate: DateTime.parse(json['startDate'] as String),
-      endDate: DateTime.parse(json['endDate'] as String),
+      startDate: json['startDate'] != null
+          ? DateTime.parse(json['startDate'] as String)
+          : json['startDate'],
+      endDate: json['endDate'] != null
+          ? DateTime.parse(json['endDate'] as String)
+          : json['endDate'],
       isDeleted: json['isDeleted'] as bool,
+      deal: json['deal'] ?? false,
       createdAt: DateTime.parse(json['createdAt'] as String),
       updatedAt: DateTime.parse(json['updatedAt'] as String),
     );
   }
 }
-
-

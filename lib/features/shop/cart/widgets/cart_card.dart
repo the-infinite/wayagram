@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
@@ -10,7 +11,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
 import 'package:wayagram/features/shop/cart/widgets/cart_card_vm.dart';
@@ -73,14 +73,15 @@ class _CartCardState extends ConsumerState<CartCard> {
                         Text(
                           widget.cartItem.shopName,
                           style: TextStyle().wayaCopyWith(
-                              fontSize: 18,
+                              fontSize: 18.sp,
                               color: wayaTheme.colorScheme.customBlack),
                         ),
+                        if (isDeliveryCharge)
                         Text(
-                          "Delivery Date: ${WayaHelpers.formatDateString(widget.cartItem.deliveryDate != null ?widget.cartItem.deliveryDate: null)}",
+                          "Delivery Date: ${(widget.cartItem.deliveryDate != null && widget.cartItem.deliveryDate!.isNotEmpty) ? WayaHelpers.formatDateString(widget.cartItem.deliveryDate) : 'Not Requested'}",
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.greyColor400,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                         )
                       ],
                     )
@@ -209,7 +210,7 @@ class CartProductCard extends ConsumerWidget {
               Row(
                 children: [
                   WayaImage(
-                    imageUrl: cartProduct.productImage,
+                    imageUrl: cartProduct.productImage ?? '',
                     height: 70,
                     width: 50,
                     radius: BorderRadius.circular(8),
@@ -227,23 +228,22 @@ class CartProductCard extends ConsumerWidget {
                           style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
                               fontWeight: FontWeight.w500,
-                              fontSize: 14),
+                              fontSize: 14.sp),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       const Gap(5),
                       Text(
-                        "Quantity: ${cartProduct.quantity} x ${WayaHelpers.formatPrice(cartProduct.price)}",
+                        "Quantity: ${cartProduct.quantity} x ${WayaHelpers.formatPrice((double.parse(cartProduct.unitPrice)).toInt())}",
                         style: wayaTheme.textTheme.hintStyle,
                       ),
                       const Gap(5),
                       Text(
-                        WayaHelpers.formatPrice(
-                            cartProduct.quantity * cartProduct.price),
+                        WayaHelpers.formatPrice(double.parse(cartProduct.unitPrice).toInt() * cartProduct.quantity),
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
                             fontWeight: FontWeight.w600,
-                            fontSize: 14),
+                            fontSize: 14.sp),
                       ),
                     ],
                   )
@@ -257,9 +257,8 @@ class CartProductCard extends ConsumerWidget {
                           count: 1,
                           productId: cartProduct.productId,
                           shopId: shopId,
-                          price: (cartProduct.price / cartProduct.quantity)
-                              .toInt(),
-                          productImage: cartProduct.productImage,
+                          price: double.parse(cartProduct.unitPrice).toInt(),
+                          productImage: cartProduct.productImage ?? '',
                           productName: cartProduct.productName);
                     },
                     child: SvgPicture.asset('assets/icons/a-cart.svg'),
@@ -270,7 +269,7 @@ class CartProductCard extends ConsumerWidget {
                     style: TextStyle().wayaCopyWith(
                         color: wayaTheme.colorScheme.customPrimary,
                         fontWeight: FontWeight.w500,
-                        fontSize: 14),
+                        fontSize: 14.sp),
                   ),
                   const Gap(6),
                   GestureDetector(

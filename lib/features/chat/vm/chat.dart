@@ -6,10 +6,31 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/repo/message.dart';
 import 'package:wayagram/features/chat/state/chat.dart';
+import 'package:wayagram/features/shop/shop_dispute/data/repo/shop_dispute_repository.dart';
 
 class ChatNotifier extends StateNotifier<ChatState> {
   final repo = MessageRepository();
+  final shopDisputeRepo = ShopDisputeRepository();
+
   ChatNotifier(super.state);
+
+  /// Helper function used to get the list of messages from the back-end so they
+  /// can be stored locally on this device.
+  Future<List<MessageModel>> getSupportMessages([bool reset = false]) async {
+    final result = <MessageModel>[];
+
+    //? For now, pause for a bit to emulate network requests.
+    await Future.delayed(const Duration(milliseconds: 450));
+
+    //? Just update state.
+    state = state.copyWith(
+      hasLoaded: true,
+      messages: result,
+    );
+
+    //? Return this collated result.
+    return result;
+  }
 
   /// Helper function used to get the list of messages from the back-end so they
   /// can be stored locally on this device.
@@ -44,11 +65,6 @@ class ChatNotifier extends StateNotifier<ChatState> {
         hasNextPage: data['hasNextPage'],
         page: int.tryParse(data['nextPage'].toString()) ?? 1,
       );
-    }
-
-    //? Since it failed.
-    else {
-      // TODO: Actual error handling.
     }
 
     //? Return this collated result.
@@ -339,6 +355,6 @@ class ChatNotifier extends StateNotifier<ChatState> {
   }
 }
 
-final chatProvider = StateNotifierProvider<ChatNotifier, ChatState>((ref) {
-  return ChatNotifier(ChatState.initial);
-});
+final chatProvider = StateNotifierProvider<ChatNotifier, ChatState>(
+  (ref) => ChatNotifier(ChatState.initial),
+);

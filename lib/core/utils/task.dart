@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:isolate';
+import 'dart:math';
 
 import 'package:flutter/services.dart';
 
@@ -26,7 +27,12 @@ final _debounceTimers = <String, Timer?>{};
 ///   * [delay]: The duration to delay the function execution. Defaults to 300 milliseconds
 ///
 /// Returns a new function that wraps the original function with debounce functionality.
-Function debounce(Function func, {required String key, Duration delay = const Duration(milliseconds: 300)}) {
+Function debounce(
+  Function func, {
+  required String key,
+  Duration delay = const Duration(milliseconds: 300),
+  void Function(dynamic)? onFinish,
+}) {
   return () {
     final debounceTimer = _debounceTimers[key];
 
@@ -36,9 +42,10 @@ Function debounce(Function func, {required String key, Duration delay = const Du
     }
 
     //? Something like this.
-    _debounceTimers[key] = Timer(delay, () {
+    _debounceTimers[key] = Timer(delay, () async {
       _debounceTimers.remove(key);
-      func();
+      final result = await func();
+      onFinish?.call(result);
     });
   };
 }
@@ -161,6 +168,9 @@ class TaskExecutor {
     executor.broadcastReceiver = executor.receiver.asBroadcastStream();
     executor.communicatorSendPort = await executor.broadcastReceiver.first;
 
+    //? Then pause it as soon as it is created.
+    executor.pause();
+
     // Return the executor we just made.
     return executor;
   }
@@ -228,6 +238,9 @@ class TaskExecutor {
   /// This is a helper function that is used to execute a single task on the
   /// isolator that this task executor leaves running in the background.
   void execute<T>(Task task) async {
+    //? First, resume the isolate if it is paused.
+    if (_capability != null) resume();
+
     // Send the task to the task to the
     try {
       // This is fair enough.
@@ -283,7 +296,7 @@ class TaskScheduler {
   /// The maximum number of isolates that can be run in parallel. This is the value
   /// determines how many tasks can be run in parallel inside any app that uses this
   /// library.
-  static final int maxParallel = Platform.numberOfProcessors - 1;
+  static final int maxParallel = max((Platform.numberOfProcessors ~/ 2) - 1, 2);
 
   /// The list of all the isolates that were spawned in this application to
   /// assist with making the process of executing any given app using this core
@@ -293,6 +306,9 @@ class TaskScheduler {
   /// The number that represents the index for the next isolate that should be
   /// round-robin scheduled to execute the next task.
   int _currentIsolate = 0;
+
+  // Our scheduler singleton instance.
+  static TaskScheduler? _instance;
 
   /// This is used to modify the value of current isolate appropriately to allow
   ///  scheduling feel more simple.
@@ -315,10 +331,23 @@ class TaskScheduler {
   // Enclosed dummy constructor.
   TaskScheduler._();
 
+  /// How we get our singleton instance.
+  static TaskScheduler get instance => _instance!;
+
+  /// Helper function used to ensure that the task scheduler is initialized.
+  static Future<void> ensureInitialized() {
+    if (_instance == null) return init();
+
+    // This is fine.
+    return Future.value(null);
+  }
+
   /// This creates a new scheduler that preserves the total number of processors
   /// on this machine as the current number of isolates that can be spawned and
   /// used to consume and execute computations in the background.
-  static Future<TaskScheduler> init([int? maxParallel]) async {
+  static Future<void> init([int? maxParallel]) async {
+    if (_instance != null) return;
+
     final scheduler = TaskScheduler._();
     final schedulerCount = maxParallel ?? TaskScheduler.maxParallel;
 
@@ -329,13 +358,16 @@ class TaskScheduler {
     } while (scheduler._isolates.length < schedulerCount);
 
     // Return the scheduler.
-    return scheduler;
+    _instance = scheduler;
   }
 
   /// A helper function used to provision a function to run a new task on a dart
   /// isolate. It handles all the heavy logic associated with what to do when the
   /// number of tasks running are at the max possible value.
   Future<T> run<T>(Task<T> task) async {
+    // Wait for this to be initialized.
+    await ensureInitialized();
+
     /// This should take the heavy lifting away from you kind of.
     final executor = _nextExecutor;
     final completer = Completer<T>();

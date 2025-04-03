@@ -1,6 +1,7 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 class ChatProfilePicture extends StatelessWidget {
@@ -8,6 +9,7 @@ class ChatProfilePicture extends StatelessWidget {
   final double radius;
   final bool showActive;
   final DateTime? lastSeen;
+  final bool canMove;
 
   // This is fine.
   const ChatProfilePicture({
@@ -15,49 +17,63 @@ class ChatProfilePicture extends StatelessWidget {
     required this.user,
     required this.radius,
     this.showActive = true,
+    this.canMove = false,
     this.lastSeen,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(5),
-      child: Stack(
-        children: [
-          // First, the image itself.
-          ClipPath(
-            clipper: const ShapeBorderClipper(shape: CircleBorder()),
-            child: CircleAvatar(
-              radius: radius,
-              backgroundColor: WayaColors.greyColor200,
-              backgroundImage: user.profilePicture != null ? CachedNetworkImageProvider(user.profilePicture!) : null,
-              child: user.profilePicture == null
-                  ? Icon(
-                      Icons.person,
-                      color: WayaColors.greyColor600,
-                    )
-                  : null,
-            ),
-          ),
+    return GestureDetector(
+      onTap: canMove && user.profilePicture != null
+          ? () async {
+              final result = await WayaNavigationHelper.toImageDetailsScreen(
+                null,
+                [user.profilePicture!],
+              );
 
-          // Second, the activity marker.
-          if (showActive)
-            Positioned(
-              right: 0,
-              bottom: 0,
-              child: Container(
-                padding: const EdgeInsets.all(7),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: WayaColors.success,
-                  border: Border.all(
-                    color: WayaColors.white,
-                    width: 1,
+              //? Do nothing.
+              if (result == null) return;
+            }
+          : null,
+      child: Padding(
+        padding: const EdgeInsets.all(5),
+        child: Stack(
+          children: [
+            // First, the image itself.
+            ClipPath(
+              clipper: const ShapeBorderClipper(shape: CircleBorder()),
+              child: CircleAvatar(
+                radius: radius,
+                backgroundColor: WayaColors.greyColor200,
+                backgroundImage: user.profilePicture != null ? NetworkImage(user.profilePicture!) : null,
+                child: user.profilePicture == null
+                    ? Icon(
+                        Icons.person,
+                        color: WayaColors.greyColor600,
+                      )
+                    : null,
+              ),
+            ),
+
+            // Second, the activity marker.
+            if (showActive)
+              Positioned(
+                right: 4.w,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(7),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: WayaColors.success,
+                    border: Border.all(
+                      color: WayaColors.white,
+                      width: 1,
+                    ),
                   ),
                 ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

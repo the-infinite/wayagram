@@ -43,7 +43,7 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
     final productDetail = getProduct(type: arg!, ref: ref);
     return WayaScaffold(
         isLoading: false,
-        isScrollable: true,
+        isScrollable: false,
         title: productDetail.title,
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,30 +53,40 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
               search: searchController,
             ),
             const Gap(25),
-            PaginatedDataView<Product>(
-                uniqueKey: 'product',
-                emptyState: EmptyState(
-                    assetImage:
-                        WayaAssets.images.wallet.searchDocu.image(scale: 1.5),
-                    message: "No Product Yet"),
-                loadingState: _recommendedProductLoadingState(context: context),
-                fetchData: productDetail.fetchData,
-                result: (data,s) {
-                  final filteredProducts = WayaUtils.search<Product>(
-                      data,
-                      [
-                        'id',
-                        'categoryId',
-                        'deliveryAddress',
-                        'name',
-                        'options',
-                        'condition',
-                        'materialType',
-                        'description'
-                      ],
-                      searchController.text);
-                  return ProductsGrid(products: filteredProducts);
-                })
+            Expanded(
+                child: PaginatedDataView<Product>(
+                    uniqueKey: 'product',
+                    emptyState: EmptyState(
+                        assetImage: WayaAssets.images.wallet.searchDocu
+                            .image(scale: 1.5),
+                        message: "No Product Yet"),
+                    loadingState:
+                        _recommendedProductLoadingState(context: context),
+                    fetchData: productDetail.fetchData,
+                    result: (data, s) {
+                      final filteredProducts = WayaUtils.search<Product>(
+                          data,
+                          [
+                            'id',
+                            'categoryId',
+                            'deliveryAddress',
+                            'name',
+                            'options',
+                            'condition',
+                            'materialType',
+                            'description'
+                          ],
+                          searchController.text);
+
+                      print(filteredProducts.map((s) => s.toJson()));
+
+                      return ProductsGrid(
+                          isWayaGramDeal: arg == ProductDetailType.wayagramdeal
+                              ? true
+                              : false,
+                          products: filteredProducts);
+                    })),
+                  
           ],
         ));
   }

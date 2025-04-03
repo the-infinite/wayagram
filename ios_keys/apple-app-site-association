@@ -1,0 +1,25 @@
+{
+	"applinks": {
+		"apps": [],
+		"details": [
+			{
+				"appIDs": [
+					"CZDZW4FYQP.ng.wayagram"
+				],
+				"paths": [
+					"*"
+				],
+				"components": [
+					{
+						"/": "/*"
+					}
+				]
+			}
+		]
+	},
+	"webcredentials": {
+		"apps": [
+			"S8QB4VV633.ng.wayagram"
+		]
+	}
+}

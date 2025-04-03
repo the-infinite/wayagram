@@ -5,8 +5,13 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 class BottomBarItem {
   final String icon;
   final String label;
+  final bool isChat;
 
-  BottomBarItem({required this.icon, required this.label});
+  BottomBarItem({
+    required this.icon,
+    required this.label,
+    this.isChat = false,
+  });
 }
 
 class BottomViewVm extends ChangeNotifier {
@@ -17,14 +22,9 @@ class BottomViewVm extends ChangeNotifier {
     BottomBarItem(icon: WayaAssets.icons.bShop.path, label: 'Shop'),
     BottomBarItem(icon: WayaAssets.icons.bDonation.path, label: 'Donations'),
     BottomBarItem(icon: WayaAssets.icons.bBid.path, label: 'Bid'),
-    BottomBarItem(icon: WayaAssets.icons.bChat.path, label: 'Chat'),
-    BottomBarItem(icon: WayaAssets.icons.bMenu.path, label: 'Menu'),
+    BottomBarItem(icon: WayaAssets.icons.bChat.path, label: 'Chat', isChat: true),
+    BottomBarItem(icon: WayaAssets.icons.bMenu.path, label: 'More'),
   ];
-
-
-
-
 }
 
-final bottomViewVmProvider =
-    ChangeNotifierProvider.autoDispose((ref) => BottomViewVm(ref));
+final bottomViewVmProvider = ChangeNotifierProvider.autoDispose((ref) => BottomViewVm(ref));

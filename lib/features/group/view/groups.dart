@@ -9,12 +9,8 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/group/view/joined_group.dart';
 import 'package:wayagram/features/group/view/manage_groups.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/pages/view/pages_for_you.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
-import '../../bottom_view/bottom_view.dart';
 import 'groups_for_you.dart';
-
 
 class Groups extends ConsumerStatefulWidget {
   static const route = '/groups';
@@ -28,13 +24,21 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
   int _selectedIndex = 0;
 
   @override
+  void reassemble() {
+    super.reassemble();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      // final id  = ModalRoute.of(context)?.settings.arguments as String;
+      // final fetchGroup =  await ref.read(createGroupProvider.notifier).getSingleGroup(id);
+      // ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
+      //print('THE PUBLIC GROUP ID is $id');
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createGroupProvider);
-
+    final wayaTheme = Theme.of(context);
     return WayaScaffold(
-      onTapBackButton: () {
-        Navigator.pushNamed(context, BottomView.route, arguments: 0);
-      },
       isLoading: viewModel.isLoading,
       isScrollable: true,
       title: 'Groups',
@@ -73,8 +77,27 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
             ],
           ),
           const Gap(20),
-          _selectedIndex == 0 ? GroupsForYou() : _selectedIndex == 1 ? JoinedGroup() : ManageGroups()
+          _selectedIndex == 0
+              ? GroupsForYou()
+              : _selectedIndex == 1
+                  ? JoinedGroup()
+                  : ManageGroups()
         ],
+      ),
+      floatingActionButton: SizedBox(
+        height: 50,
+        width: 50,
+        child: WayaButton(
+          callback: () => WayaNav.toNamed('/createGroup', arguments: 'groupForYou'),
+          height: 50,
+          centerWidget: Center(
+            child: Icon(
+              Icons.add,
+              color: wayaTheme.colorScheme.white,
+              size: 40,
+            ),
+          ),
+        ),
       ),
     );
   }

@@ -13,6 +13,7 @@ class WayaTextFormField extends StatefulWidget {
   final int? line;
   final int? maxLines;
   final int? maxLength;
+  final bool autofocus;
   final bool hasError;
   final String? helperText;
   final String errorMessage;
@@ -40,6 +41,7 @@ class WayaTextFormField extends StatefulWidget {
   final VoidCallback? onTap;
   final bool? isReadOnly;
   final bool? isDense;
+  final FocusNode? focusNode;
 
   const WayaTextFormField({
     super.key,
@@ -51,7 +53,7 @@ class WayaTextFormField extends StatefulWidget {
     this.line = 1,
     this.maxLines,
     this.isDense,
-    this.style = WayaTextStyles.labelMedium,
+    this.style,
     this.maxLength,
     this.hasError = false,
     this.onTap,
@@ -62,6 +64,7 @@ class WayaTextFormField extends StatefulWidget {
     this.validator,
     this.inputFormatters,
     this.fillColor,
+    this.autofocus = false,
     this.showBorder = true,
     this.showFocusedBorder = true,
     this.borderColor = WayaColors.greyColor300,
@@ -76,6 +79,7 @@ class WayaTextFormField extends StatefulWidget {
     this.hintStyle,
     this.obscureText,
     this.callback,
+    this.focusNode,
     this.helperText,
     this.isReadOnly = false,
   });
@@ -85,7 +89,7 @@ class WayaTextFormField extends StatefulWidget {
 }
 
 class _AppFieldState extends State<WayaTextFormField> {
-  late FocusNode _focusNode;
+  late final _focusNode = widget.focusNode ?? FocusNode();
   late Color fillColor;
   late Color borderColor;
   bool isObscure = false;
@@ -93,7 +97,6 @@ class _AppFieldState extends State<WayaTextFormField> {
   @override
   void initState() {
     super.initState();
-    _focusNode = FocusNode();
     fillColor = widget.fillColor ?? WayaColors.scaffoldColor;
     borderColor = WayaColors.greyColor300;
 
@@ -120,10 +123,12 @@ class _AppFieldState extends State<WayaTextFormField> {
     final wayaTheme = Theme.of(context).colorScheme;
     Widget textFormField = TextFormField(
       readOnly: widget.isReadOnly ?? false,
+      onTapOutside: (event) => FocusManager.instance.primaryFocus?.unfocus(),
       onTap: widget.onTap,
       onChanged: widget.onChanged,
       focusNode: _focusNode,
       controller: widget.controller,
+      autofocus: widget.autofocus,
       keyboardType: widget.keyboardType,
       obscureText: widget.obscureText ?? isObscure,
       maxLines: widget.maxLines ?? widget.line ?? 1,
@@ -136,7 +141,7 @@ class _AppFieldState extends State<WayaTextFormField> {
       onFieldSubmitted: widget.onFieldSubmitted,
       textInputAction: widget.textInputAction,
       onSaved: widget.onSaved,
-      style: widget.style,
+      style: widget.style ?? WayaTextStyles.labelMedium,
       decoration: InputDecoration(
         isDense: widget.isDense,
         errorBorder: OutlineInputBorder(
@@ -198,7 +203,7 @@ class _AppFieldState extends State<WayaTextFormField> {
             child: Text(
               widget.label!,
               style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                    fontSize: 14,
+                    fontSize: 14.sp,
                     color: wayaTheme.greyColor900,
                   ),
             ),
@@ -210,8 +215,8 @@ class _AppFieldState extends State<WayaTextFormField> {
             child: Text(
               widget.helperText!,
               style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
-                    fontSize: 13,
-                    color: wayaTheme.greyColor300,
+                    fontSize: 13.sp,
+                    color: wayaTheme.greyColor400,
                   ),
             ),
           ),
@@ -347,7 +352,7 @@ class WayaFormField extends StatelessWidget {
                   formState.errorText!,
                   style: TextStyle(
                     color: wayaTheme.error,
-                    fontSize: 12,
+                    fontSize: 12.sp,
                   ),
                 ),
               ),

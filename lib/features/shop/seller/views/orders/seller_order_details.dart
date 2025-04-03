@@ -1,29 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/model/default.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
+import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
+import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_order_detail_vm.dart';
 import 'package:wayagram/features/shop/widgets/dotted_border_order_info_widget.dart';
 import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
+import 'package:wayagram/features/shop/widgets/ordered_product_card.dart';
+import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 
-class SellerOrderDetails extends ConsumerWidget {
+class SellerOrderDetails extends ConsumerStatefulWidget {
   static const route = '/seller-order-details';
   const SellerOrderDetails({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
+  ConsumerState<ConsumerStatefulWidget> createState() => _SellerOrderDetails();
+}
+
+class _SellerOrderDetails extends ConsumerState<SellerOrderDetails> {
+  String userName = "";
+  final ProfileRepo repo = ProfileRepo();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final Order? arg = ModalRoute.of(context)?.settings.arguments as Order?;
+      if (arg != null) {
+        getUser(userId: arg.userId);
+      }
+    });
+    super.initState();
+  }
+
+  void getUser({required String userId}) async {
+    final response = await repo.getUserDataRepo(userId: userId);
+    if (response.success) {
+      UserAccountModel reponseModel = UserAccountModel.fromJson(response.data);
+      String? firstName = reponseModel.data?.userdata?.user?.firstName ?? '';
+      String? lastName = reponseModel.data?.userdata?.user?.lastName ?? '';
+      setState(() {
+        userName = "$firstName $lastName";
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final viewModel = ref.watch(sellerOrderDetailVmProvider);
+    final notifier = ref.read(conversationProvider.notifier);
+    final chatNotifier = ref.read(chatProvider.notifier);
 
     final wayaTheme = Theme.of(context);
 
     final Order? arg = ModalRoute.of(context)?.settings.arguments as Order?;
+
+    void chatWithUser() async {
+      //? This is fine.
+      notifier.startChat(ChatType.personal, [arg!.userId]).then(
+        (chat) {
+          //? Stop if we could not make this chat.
+          if (chat == null) return;
+
+          //? If we could make this chat...
+          chatNotifier.setChat(chat);
+          WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
+        },
+      ).catchError(
+        (_) {
+          //? Leave here.
+          //   WayaNav.goBack();
+        },
+      );
+    }
+
+  
 
     return WayaScaffold(
         isLoading: false,
@@ -45,9 +107,19 @@ class SellerOrderDetails extends ConsumerWidget {
             ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 2,
+                itemCount: arg?.items.length,
                 itemBuilder: (context, index) {
-                  return Container(); // OrderedProductCard()
+                  CartProduct order = CartProduct(
+                      price:
+                          double.parse(arg?.items[index].price ?? '0').toInt(),
+                      quantity: arg?.items[index].quantity ?? 0,
+                      productId: arg?.items[index].productId ?? '',
+                      productName: arg?.items[index].productName ?? '',
+                      deliveryCharge: false,
+                      unitPrice: "${arg?.items[index].price ?? 0}",
+                      productImage: arg?.items[index].productImage ?? '',
+                      deliveryOptions: '');
+                  return OrderedProductCard(orders: order);
                 }),
             const Gap(10),
             DottedBorderOrderInfoWidget(
@@ -58,7 +130,8 @@ class SellerOrderDetails extends ConsumerWidget {
             Text("Customer Details", style: wayaTheme.textTheme.bodyMedium),
             const Gap(15),
             OrderInfoWidget(
-                title: "Customer's Name", description: 'Fasas Oyewole'),
+                title: "Customer's Name",
+                description: userName.capitalizeFirst!),
             const Gap(8),
             OrderInfoWidget(
                 title: "Order ID", description: '#${arg?.id.substring(0, 6)}'),
@@ -68,38 +141,33 @@ class SellerOrderDetails extends ConsumerWidget {
                 description: WayaHelpers.formatDateString(
                     arg?.updatedAt.toIso8601String())),
             const Gap(8),
-            OrderInfoWidget(
-                title: "Order Status",
-                description: arg?.deliveryType == 'Pickup'
-                    ? arg?.pickupStatus ?? ""
-                    : arg?.deliveryStatus ?? ""),
-            const Gap(8),
+
             OrderInfoWidget(
                 title: "Delivery Type", description: arg?.deliveryType ?? ''),
-            // const Gap(25),
-            // WayaButton(
-            //   centerWidget: Row(
-            //     mainAxisAlignment: MainAxisAlignment.center,
-            //     crossAxisAlignment: CrossAxisAlignment.center,
-            //     children: [
-            //       Icon(
-            //         Icons.chat_bubble_outline,
-            //         size: 28,
-            //         color: wayaTheme.colorScheme.customPrimary,
-            //       ),
-            //       const Gap(8),
-            //       Text(
-            //         "Send Message",
-            //         style: TextStyle().wayaCopyWith(
-            //             color: wayaTheme.colorScheme.customPrimary,
-            //             fontWeight: FontWeight.w600,
-            //             fontSize: 16),
-            //       ),
-            //     ],
-            //   ),
-            //   callback: () {},
-            //   color: wayaTheme.colorScheme.primar50,
-            // ),
+            const Gap(25),
+            WayaButton(
+              centerWidget: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.chat_bubble_outline,
+                    size: 28,
+                    color: wayaTheme.colorScheme.customPrimary,
+                  ),
+                  const Gap(8),
+                  Text(
+                    "Send Message",
+                    style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
+                        color: wayaTheme.colorScheme.customPrimary,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16),
+                  ),
+                ],
+              ),
+              callback: chatWithUser,
+              color: wayaTheme.colorScheme.primary50,
+            ),
             Visibility(
               visible: arg?.deliveryType == 'Delivery',
               child: Column(
@@ -113,9 +181,9 @@ class SellerOrderDetails extends ConsumerWidget {
                       title: "Delivery Address",
                       description: arg?.deliveryAddress ?? '-'),
                   const Gap(8),
-                  OrderInfoWidget(
-                      title: "Delivery Status",
-                      description: arg?.deliveryStatus ?? '-'),
+                  // OrderInfoWidget(
+                  //     title: "Delivery Status",
+                  //     description: arg?.deliveryStatus ?? '-'),
                   const Gap(8),
                   OrderInfoWidget(
                       title: "Delivery Price",
@@ -136,53 +204,73 @@ class SellerOrderDetails extends ConsumerWidget {
             //   },
             //   text: "Accept Order",
             // ),
-            if (arg?.deliveryType == 'Delivery')
+            if (arg?.status == 'cancelled' || ((arg?.deliveryStatusHistory.isNotEmpty == true &&
+                    arg?.deliveryStatusHistory.last.status == 'completed') ||
+                (arg?.pickupStatusHistory.isNotEmpty == true &&
+                    arg?.pickupStatusHistory.last.status == 'completed'))) ...[
+              SizedBox.shrink()
+            ] else ...[
+              if (arg?.deliveryType == 'Delivery')
+                WayaButton(
+                  color: wayaTheme.colorScheme.transparent,
+                  textColor: wayaTheme.colorScheme.greyColor900,
+                  border: Border.all(
+                      width: 1, color: wayaTheme.colorScheme.greyColor300),
+                  callback: () {
+                    if (arg != null) {
+                      viewModel.updateDeliveryStatus(
+                          shopId: arg.shopId,
+                          current: arg.deliveryStatusHistory.last.status,
+                          context: context,
+                          orderId: arg!.id);
+                    }
+                  },
+                  text: "Change Delivery Status",
+                  leadingIcon: SvgPicture.asset(
+                    'assets/icons/van-icon.svg',
+                    colorFilter: ColorFilter.mode(
+                        wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                    width: 20,
+                  ),
+                ),
+              if (arg?.deliveryType == 'Pickup')
+                WayaButton(
+                  color: wayaTheme.colorScheme.transparent,
+                  textColor: wayaTheme.colorScheme.greyColor900,
+                  border: Border.all(
+                      width: 1, color: wayaTheme.colorScheme.greyColor300),
+                  callback: () {
+                    viewModel.updateOrderStatus(
+                        shopId: arg?.shopId ?? '',
+                        current:
+                            arg?.pickupStatusHistory.last.status ?? 'pending',
+                        context: context,
+                        orderId: arg!.id);
+                  },
+                  text: "Change Pickup Status",
+                  leadingIcon: SvgPicture.asset(
+                    'assets/icons/button-icon.svg',
+                    colorFilter: ColorFilter.mode(
+                        wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                    width: 20,
+                  ),
+                ),
+              const Gap(10),
               WayaButton(
                 color: wayaTheme.colorScheme.transparent,
                 textColor: wayaTheme.colorScheme.greyColor900,
                 border: Border.all(
                     width: 1, color: wayaTheme.colorScheme.greyColor300),
                 callback: () {
-                  viewModel.updateDeliveryStatus(
-                      context: context, orderId: arg!.id);
+                  viewModel.rejectOrder(
+                    context,
+                    arg!.id,
+                    arg.shopId,
+                  );
                 },
-                text: "Change Delivery Status",
-                leadingIcon: SvgPicture.asset(
-                  'assets/icons/van-icon.svg',
-                  colorFilter: ColorFilter.mode(
-                      wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
-                  width: 20,
-                ),
-              ),
-
-            if (arg?.deliveryType == 'Pickup')
-              WayaButton(
-                color: wayaTheme.colorScheme.transparent,
-                textColor: wayaTheme.colorScheme.greyColor900,
-                border: Border.all(
-                    width: 1, color: wayaTheme.colorScheme.greyColor300),
-                callback: () {
-                  viewModel.updateOrderStatus(
-                      context: context, orderId: arg!.id);
-                },
-                text: "Change Pickup Status",
-                leadingIcon: SvgPicture.asset(
-                  'assets/icons/button-icon.svg',
-                  colorFilter: ColorFilter.mode(
-                      wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
-                  width: 20,
-                ),
-              ),
-            // WayaButton(
-            //   color: wayaTheme.colorScheme.transparent,
-            //   textColor: wayaTheme.colorScheme.greyColor500,
-            //   border: Border.all(
-            //       width: 1, color: wayaTheme.colorScheme.greyColor300),
-            //   callback: () {
-            //     viewModel.rejectOrder(context);
-            //   },
-            //   text: "Reject Order",
-            // )
+                text: "Reject Order",
+              )
+            ]
           ],
         ));
   }

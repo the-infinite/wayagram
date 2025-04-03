@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -7,12 +6,10 @@ import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
-import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
 import 'package:wayagram/shared/components/engagement_range.dart';
-import 'package:flutter/services.dart';
 
 class EventWidget extends ConsumerWidget {
   final EventDoc event;
@@ -20,16 +17,16 @@ class EventWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
+
+    final bool isMyEvent = event.userId == ConversationState.self.id;
     return Column(
       children: [
         Container(
             decoration: BoxDecoration(
               color: wayaTheme.colorScheme.white,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(
-                  color: wayaTheme.colorScheme.greyColor200, width: 1),
+              border: Border.all(color: wayaTheme.colorScheme.greyColor200, width: 1),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,9 +35,7 @@ class EventWidget extends ConsumerWidget {
                   imageUrl: event.image,
                   height: 180.h,
                   width: double.infinity,
-                  radius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12)),
+                  radius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
                 ),
                 Container(
                   padding: EdgeInsets.all(10),
@@ -104,9 +99,7 @@ class EventWidget extends ConsumerWidget {
                               height: 30,
                               color: wayaTheme.colorScheme.pending50,
                               textStyle: wayaTheme.textTheme.hintStyle.copyWith(
-                                  color: wayaTheme.colorScheme.pending,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500),
+                                  color: wayaTheme.colorScheme.pending, fontSize: 12.sp, fontWeight: FontWeight.w500),
                               radius: 14,
                             ),
                           ),
@@ -117,27 +110,20 @@ class EventWidget extends ConsumerWidget {
                       ),
                       EngagementRange(
                           bottomLeft: event.location.capitalizeFirst!,
-                          bottomRight: event.maxCapacity == null ||
-                                  event.maxCapacity == 0
+                          bottomRight: event.maxCapacity == null || event.maxCapacity == 0
                               ? "Unlimited"
                               : "${event.maxCapacity! - event.noOfAttendees} Ticket Left",
-                          range: event.maxCapacity == null ||
-                                  event.maxCapacity == 0
+                          range: event.maxCapacity == null || event.maxCapacity == 0
                               ? 0
-                              : (event.maxCapacity! -
-                                      (event.maxCapacity! -
-                                          event.noOfAttendees)) /
-                                  100),
+                              : (event.maxCapacity! - (event.maxCapacity! - event.noOfAttendees)) / 100),
                       SizedBox(
                         height: 6.h,
                       ),
                       WayaButton(
-                        callback: () {
-                          WayaNav.toNamed(EventDetail.route, arguments: event);
-                        },
-                        color: wayaTheme.colorScheme.primar50,
+                        callback: () => WayaNav.toNamed(WayaAppRoutes.getEventDetailsScreen(event.id)),
+                        color: wayaTheme.colorScheme.primary50,
                         textColor: wayaTheme.colorScheme.customPrimary,
-                        text: "View Event",
+                        text: isMyEvent ? "Manage Event" : "View Event",
                       ),
                     ],
                   ),

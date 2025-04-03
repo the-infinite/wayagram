@@ -15,7 +15,7 @@ class SellerProductsVm extends StateNotifier<SellerProductState> {
   Future<List<SellerProduct>?> sellerProducts({required String shopId}) async {
     state = state.copyWith(isLoading: true);
     try {
-      final userId = await _secureDataSource.getUserId();
+     
       final response = await _shopRepository.getSellerProducts(
           shopId: shopId, page: state.page);
       List<SellerProduct> sellerProducts = [];
@@ -57,12 +57,15 @@ class SellerProductsVm extends StateNotifier<SellerProductState> {
         }
       }
 
-      return !product.wayagramDeal;
+      return product.wayagramDeal == null;
     }).toList();
   }
+
+
+  // main function to get se
 }
 
 final sellerProductsVmProvider =
     StateNotifierProvider<SellerProductsVm, SellerProductState>((ref) {
-  return SellerProductsVm(ShopRepository(), WayaSecureDataSource(), ref);
+  return SellerProductsVm(ShopRepository.instance, WayaSecureDataSource(), ref);
 });

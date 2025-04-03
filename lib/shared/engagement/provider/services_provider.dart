@@ -1,31 +1,31 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
+import 'package:wayagram/features/polls_and_voting/data/repo/poll_and_voting_repository.dart';
 import 'package:wayagram/features/post/model/post_reponse_model.dart';
+import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
 import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/user/repo/default.dart';
 import 'package:wayagram/features/explore/search/model/user_detail.dart';
 
 class CategorizedPost {
-  final List<Post> posts;
+  final List<PostModel> posts;
   final int currentPage;
   final bool hasNextPage;
   final String categoryName;
 
   CategorizedPost(
-      {required this.posts,
-      required this.currentPage,
-      required this.categoryName,
-      required this.hasNextPage});
+      {required this.posts, required this.currentPage, required this.categoryName, required this.hasNextPage});
 
-  CategorizedPost copyWith(
-      {List<Post>? posts,
-      int? currentPage,
-      bool? hasNextPage,
-      String? categoryName}) {
+  CategorizedPost copyWith({List<PostModel>? posts, int? currentPage, bool? hasNextPage, String? categoryName}) {
     return CategorizedPost(
       posts: posts ?? this.posts,
       currentPage: currentPage ?? this.currentPage,
@@ -39,10 +39,11 @@ class States {
   final List<EventDoc> events;
   final List<EventDoc> topEvents;
   final String userId;
-  final List<Post> posts;
-  final List<Post> topPosts;
+  final List<PostModel> posts;
+  final List<PostModel> topPosts;
   final List<CategorizedPost> categorizedPosts;
   final List<UserDetails> usersDetails;
+  final List<Docs> feedPolls;
 
   States(
       {this.events = const [],
@@ -50,6 +51,7 @@ class States {
       this.topEvents = const [],
       this.categorizedPosts = const [],
       this.usersDetails = const [],
+      this.feedPolls = const [],
       this.posts = const [],
       this.topPosts = const []});
 
@@ -59,14 +61,16 @@ class States {
       List<EventDoc>? topEvents,
       List<CategorizedPost>? categorizedPosts,
       List<UserDetails>? usersDetails,
-      List<Post>? posts,
-      List<Post>? topPosts}) {
+      List<PostModel>? posts,
+      List<Docs>? feedPolls,
+      List<PostModel>? topPosts}) {
     return States(
         events: events ?? this.events,
         userId: userId ?? this.userId,
         topEvents: topEvents ?? this.topEvents,
         usersDetails: usersDetails ?? this.usersDetails,
         posts: posts ?? this.posts,
+        feedPolls: feedPolls ?? this.feedPolls,
         categorizedPosts: categorizedPosts ?? this.categorizedPosts,
         topPosts: topPosts ?? this.topPosts);
   }
@@ -76,10 +80,11 @@ class ServicesProvider extends StateNotifier<States> {
   final Ref ref;
   final EventRepository _eventRepository;
   final PageRepository _pageRepository;
+  final PollAndVotingRepository _pollAndVotingRepository;
   final WayaSecureDataSource _secureDataSource;
 
-  ServicesProvider(this._pageRepository, this._secureDataSource,
-      this._eventRepository, this.ref)
+  ServicesProvider(
+      this._pollAndVotingRepository, this._pageRepository, this._secureDataSource, this._eventRepository, this.ref)
       : super(States());
 
   Future<void> getEvents() async {
@@ -92,10 +97,8 @@ class ServicesProvider extends StateNotifier<States> {
         EventResponse eventResponse = EventResponse.fromJson(response.data);
 
         // Only public event and event with active status
-        List<EventDoc> allEvents = eventResponse.data.docs
-            .where(
-                (e) => e.privacyOption == 'public' && e.eventStatus != 'paused')
-            .toList();
+        List<EventDoc> allEvents =
+            eventResponse.data.docs.where((e) => e.privacyOption == 'public' && e.eventStatus != 'paused').toList();
 
         if (allEvents.isEmpty) {
           state = state.copyWith(events: [], topEvents: []);
@@ -103,16 +106,12 @@ class ServicesProvider extends StateNotifier<States> {
         }
 
         // Get rankings for event type and location
-        Map<String, int> locationRanks =
-            ref.read(eventEngagementProvider.notifier).getAllEventLocation();
-        Map<String, int> typeRanks =
-            ref.read(eventEngagementProvider.notifier).getAllEventType();
+        Map<String, int> locationRanks = ref.read(eventEngagementProvider.notifier).getAllEventLocation();
+        Map<String, int> typeRanks = ref.read(eventEngagementProvider.notifier).getAllEventType();
 
         // Calculate event scores (based on both location and type rankings)
         Map<EventDoc, int> eventScores = {
-          for (var event in allEvents)
-            event: (locationRanks[event.location] ?? 0) +
-                (typeRanks[event.eventType] ?? 0)
+          for (var event in allEvents) event: (locationRanks[event.location] ?? 0) + (typeRanks[event.eventType] ?? 0)
         };
 
         // Sort events by score (higher score first)
@@ -124,20 +123,16 @@ class ServicesProvider extends StateNotifier<States> {
         int totalSlots = 10;
 
         // Get unique scores in descending order
-        List<int> uniqueScores = eventScores.values.toSet().toList()
-          ..sort((b, a) => a.compareTo(b));
+        List<int> uniqueScores = eventScores.values.toSet().toList()..sort((b, a) => a.compareTo(b));
 
         // Calculate the ratio of event selection based on score levels
-        List<int> distribution =
-            _getScoreDistribution(uniqueScores.length, totalSlots);
+        List<int> distribution = _getScoreDistribution(uniqueScores.length, totalSlots);
 
         for (int i = 0; i < uniqueScores.length; i++) {
           int score = uniqueScores[i];
-          List<EventDoc> eventsWithScore =
-              sortedEvents.where((e) => eventScores[e] == score).toList();
+          List<EventDoc> eventsWithScore = sortedEvents.where((e) => eventScores[e] == score).toList();
 
-          int allowedEvents =
-              distribution[i]; // Events allowed from this score level
+          int allowedEvents = distribution[i]; // Events allowed from this score level
           int count = 0;
 
           for (var event in eventsWithScore) {
@@ -163,19 +158,22 @@ class ServicesProvider extends StateNotifier<States> {
           sortedByAttendee.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         }
 
-        List<EventDoc> topEvents = sortedByAttendee.take(3).toList();
+        List<EventDoc> topEvents = sortedByAttendee.take(8).toList();
 
-        state = state.copyWith(
-            events: finalEvents.take(10).toList(), topEvents: topEvents);
+        state = state.copyWith(events: finalEvents.take(10).toList(), topEvents: topEvents);
       }
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 
-  void invalidatePostData(String id,
-      {int? likeCount, int? commentCount, int? shareCount}) {
-    Post updatePost(Post post) {
+  void invalidatePostData(String id, {int? likeCount, int? commentCount, int? shareCount}) {
+    PostModel updatePost(PostModel post) {
       return post.id == id
           ? post.copyWith(
               likeCount: likeCount ?? post.likeCount,
@@ -199,27 +197,78 @@ class ServicesProvider extends StateNotifier<States> {
     try {
       final response = await _pageRepository.getAllPosts();
       if (response.success) {
-        PostReponseModel reponseModel =
-            PostReponseModel.fromJson(response.data);
-        state = state.copyWith(topPosts: reponseModel.data.docs);
+        PostResponseModel responseModel = PostResponseModel.fromJson(response.data);
+        final userInterests = ref.watch(selectInterestProvider).userInterests;
+        final List<PostModel> allPosts = responseModel.data.docs;
+
+        wayaPostCache.cacheAll(responseModel.data.docs);
+
+        // Map user interests to categories and scores
+        Map<String, int> interestMap = {for (var interest in userInterests) interest.category: interest.score};
+
+        // Filter posts that match user interests, handling null categories
+        List<PostModel> matchingPosts = allPosts
+            .where((post) =>
+                (post.categories?.isNotEmpty ?? false) &&
+                post.categories!.any((category) => interestMap.containsKey(category)))
+            .toList();
+
+        // Sort posts by highest matching interest score
+        matchingPosts.sort((a, b) {
+          int aMaxScore = (a.categories ?? [])
+              .map((c) => interestMap[c] ?? 0)
+              .fold(0, (prev, score) => score > prev ? score : prev);
+          int bMaxScore = (b.categories ?? [])
+              .map((c) => interestMap[c] ?? 0)
+              .fold(0, (prev, score) => score > prev ? score : prev);
+          return bMaxScore.compareTo(aMaxScore); // Higher scores first
+        });
+
+        // Get score distribution and select top posts
+        List<int> scoreDistribution = _getScoreDistribution(userInterests.length, 5);
+        List<PostModel> topPosts = [];
+        int index = 0;
+
+        for (int slots in scoreDistribution) {
+          for (int i = 0; i < slots && index < matchingPosts.length; i++) {
+            topPosts.add(matchingPosts[index++]);
+          }
+        }
+
+        // If fewer than 5 posts, add random non-matching posts
+        if (topPosts.length < 5) {
+          final remainingPosts =
+              allPosts.where((post) => !topPosts.contains(post) && (post.categories?.isNotEmpty ?? false)).toList();
+          remainingPosts.shuffle();
+          topPosts.addAll(remainingPosts.take(5 - topPosts.length));
+        }
+
+        // Update state
+        state = state.copyWith(topPosts: topPosts);
       }
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 
+  //> No more in use for now
+  @Deprecated("No more in use for now")
   Future<void> getEngagedPost() async {
     try {
       final response = await _pageRepository.getAllPosts();
       if (response.success) {
-        PostReponseModel responseModel =
-            PostReponseModel.fromJson(response.data);
+        PostResponseModel responseModel = PostResponseModel.fromJson(response.data);
 
-        List<Post> allPosts = responseModel.data.docs;
+        List<PostModel> allPosts = responseModel.data.docs;
+        wayaPostCache.cacheAll(responseModel.data.docs);
 
         // Get hashtag rankings from engagement provider
-        Map<String, int> tagRanks =
-            ref.read(postEngagementProvider.notifier).getAlltags();
+        Map<String, int> tagRanks = ref.read(postEngagementProvider.notifier).getAllTags();
 
         if (tagRanks.isEmpty) {
           state = state.copyWith(posts: []);
@@ -227,35 +276,28 @@ class ServicesProvider extends StateNotifier<States> {
         }
 
         // Compute hashtag scores for each post
-        Map<Post, int> postScores = {
-          for (var post in allPosts)
-            post:
-                post.hashtags.fold(0, (sum, tag) => sum + (tagRanks[tag] ?? 0))
+        Map<PostModel, int> postScores = {
+          for (var post in allPosts) post: post.hashtags.fold(0, (sum, tag) => sum + (tagRanks[tag] ?? 0))
         };
 
         // Sort posts by highest score first
-        List<Post> sortedPosts = postScores.keys.toList()
-          ..sort((a, b) => postScores[b]!.compareTo(postScores[a]!));
+        List<PostModel> sortedPosts = postScores.keys.toList()..sort((a, b) => postScores[b]!.compareTo(postScores[a]!));
 
-        List<Post> finalPosts = [];
+        List<PostModel> finalPosts = [];
         Set<String> seenPostIds = {}; // Ensure uniqueness
         int totalSlots = 10;
 
         // Get unique scores in descending order
-        List<int> uniqueScores = postScores.values.toSet().toList()
-          ..sort((b, a) => a.compareTo(b));
+        List<int> uniqueScores = postScores.values.toSet().toList()..sort((b, a) => a.compareTo(b));
 
         // Calculate the ratio of post selection based on score levels
-        List<int> distribution =
-            _getScoreDistribution(uniqueScores.length, totalSlots);
+        List<int> distribution = _getScoreDistribution(uniqueScores.length, totalSlots);
 
         for (int i = 0; i < uniqueScores.length; i++) {
           int score = uniqueScores[i];
-          List<Post> postsWithScore =
-              sortedPosts.where((p) => postScores[p] == score).toList();
+          List<PostModel> postsWithScore = sortedPosts.where((p) => postScores[p] == score).toList();
 
-          int allowedPosts =
-              distribution[i]; // Posts allowed from this score level
+          int allowedPosts = distribution[i]; // Posts allowed from this score level
           int count = 0;
 
           for (var post in postsWithScore) {
@@ -275,8 +317,72 @@ class ServicesProvider extends StateNotifier<States> {
         // Ensure we don't exceed 10 posts
         state = state.copyWith(posts: finalPosts.take(10).toList());
       }
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+  }
+
+  Future<void> getFeedPolls() async {
+    try {
+      final response = await _pollAndVotingRepository.getAllFeedPolls();
+
+      if (response.success) {
+        FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
+        final List<Docs> allPolls = responseModel.data?.docs ?? [];
+        final userInterests = ref.watch(selectInterestProvider).userInterests;
+
+        // Map user interests to categories and scores
+        Map<String, int> interestMap = {for (var interest in userInterests) interest.category: interest.score};
+
+        // Filter polls that match user interests, ignoring empty categories
+        List<Docs> matchingPolls = allPolls
+            .where((poll) =>
+                poll.categories!.isNotEmpty && poll.categories!.any((category) => interestMap.containsKey(category)))
+            .toList();
+
+        // Sort polls by highest matching interest score
+        matchingPolls.sort((a, b) {
+          int aMaxScore =
+              a.categories!.map((c) => interestMap[c] ?? 0).fold(0, (prev, score) => score > prev ? score : prev);
+          int bMaxScore =
+              b.categories!.map((c) => interestMap[c] ?? 0).fold(0, (prev, score) => score > prev ? score : prev);
+          return bMaxScore.compareTo(aMaxScore); // Higher scores first
+        });
+
+        // Get score distribution and select top polls
+        List<int> scoreDistribution = _getScoreDistribution(userInterests.length, 5);
+        List<Docs> feedPolls = [];
+        int index = 0;
+
+        for (int slots in scoreDistribution) {
+          for (int i = 0; i < slots && index < matchingPolls.length; i++) {
+            feedPolls.add(matchingPolls[index++]);
+          }
+        }
+
+        // If fewer than 5 polls, add random non-matching polls
+        if (feedPolls.length < 5) {
+          final remainingPolls =
+              allPolls.where((poll) => !feedPolls.contains(poll) && poll.categories!.isNotEmpty).toList();
+          remainingPolls.shuffle();
+          feedPolls.addAll(remainingPolls.take(5 - feedPolls.length));
+        }
+
+        // Update state
+        state = state.copyWith(feedPolls: feedPolls);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 
@@ -284,8 +390,7 @@ class ServicesProvider extends StateNotifier<States> {
   List<int> _getScoreDistribution(int levels, int maxSlots) {
     if (levels == 1) return [maxSlots]; // If only one level, take all slots
 
-    List<int> distribution =
-        List.filled(levels, 1); // Start with 1 post per level
+    List<int> distribution = List.filled(levels, 1); // Start with 1 post per level
     int remainingSlots = maxSlots - levels; // Remaining slots to distribute
 
     for (int i = 0; i < levels && remainingSlots > 0; i++) {
@@ -307,8 +412,7 @@ class ServicesProvider extends StateNotifier<States> {
   Future<void> fetchPostsByCategory({int page = 1}) async {
     try {
       // Get category rankings
-      Map<String, int> categoryRanks =
-          ref.read(postEngagementProvider.notifier).getAllCategories();
+      Map<String, int> categoryRanks = ref.read(postEngagementProvider.notifier).getAllCategories();
 
       if (categoryRanks.isEmpty) {
         state = state.copyWith(categorizedPosts: []);
@@ -322,11 +426,10 @@ class ServicesProvider extends StateNotifier<States> {
       List<CategorizedPost> categorizedPosts = [];
 
       for (String category in sortedCategories) {
-        final response = await _pageRepository.getAllPostsWithCategory(
-            category: category, page: page);
+        final response = await _pageRepository.getAllPostsWithCategory(category: category, page: page);
 
         if (response.success) {
-          final postResponse = PostReponseModel.fromJson(response.data);
+          final postResponse = PostResponseModel.fromJson(response.data);
 
           if (postResponse.data.docs.isNotEmpty) {
             categorizedPosts.add(
@@ -344,30 +447,33 @@ class ServicesProvider extends StateNotifier<States> {
       state = state.copyWith(categorizedPosts: categorizedPosts);
     } catch (e) {
       state = state.copyWith(categorizedPosts: []);
-      print('Error fetching posts by category: $e');
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 
   Future<void> loadMorePosts(String category) async {
     try {
       // Find the category in the existing state
-      final existingCategory = state.categorizedPosts
-          .firstWhere((cat) => cat.categoryName == category,
-              orElse: () => CategorizedPost(
-                    posts: [],
-                    currentPage: 0,
-                    categoryName: category,
-                    hasNextPage: false,
-                  ));
+      final existingCategory = state.categorizedPosts.firstWhere((cat) => cat.categoryName == category,
+          orElse: () => CategorizedPost(
+                posts: [],
+                currentPage: 0,
+                categoryName: category,
+                hasNextPage: false,
+              ));
 
       if (!existingCategory.hasNextPage) return;
 
       final nextPage = existingCategory.currentPage + 1;
-      final response = await _pageRepository.getAllPostsWithCategory(
-          category: category, page: nextPage);
+      final response = await _pageRepository.getAllPostsWithCategory(category: category, page: nextPage);
 
       if (response.success) {
-        final postResponse = PostReponseModel.fromJson(response.data);
+        final postResponse = PostResponseModel.fromJson(response.data);
 
         if (postResponse.data.docs.isNotEmpty) {
           state = state.copyWith(
@@ -385,7 +491,12 @@ class ServicesProvider extends StateNotifier<States> {
         }
       }
     } catch (e) {
-      print('Error loading more posts for category $category: $e');
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 
@@ -394,20 +505,21 @@ class ServicesProvider extends StateNotifier<States> {
       final response = await UserRepository.instance.getAllUsers();
 
       if (response.success) {
-        print(response.data);
         final data = response.data['data'];
-        final docs = (data['docs'] as List)
-            .map((doc) => UserDetails.fromJson(doc))
-            .toList();
+        final docs = (data['docs'] as List).map((doc) => UserDetails.fromJson(doc)).toList();
         state = state.copyWith(usersDetails: docs);
       }
-    } catch (error) {
-      print(error);
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.feed,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
   }
 }
 
 final servicesProvider = StateNotifierProvider<ServicesProvider, States>((ref) {
-  return ServicesProvider(
-      PageRepository(), WayaSecureDataSource(), EventRepository(), ref);
+  return ServicesProvider(PollAndVotingRepository(), PageRepository(), WayaSecureDataSource(), EventRepository(), ref);
 });

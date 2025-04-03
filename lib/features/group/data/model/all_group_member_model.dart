@@ -1,12 +1,15 @@
 import 'dart:convert';
+
 AllGroupMemberModel allGroupMemberModelFromJson(String str) => AllGroupMemberModel.fromJson(json.decode(str));
 String allGroupMemberModelToJson(AllGroupMemberModel data) => json.encode(data.toJson());
+
 class AllGroupMemberModel {
   AllGroupMemberModel({
-      this.message,
-      this.status, 
-      this.statusCode, 
-      this.data,});
+    this.message,
+    this.status,
+    this.statusCode,
+    this.data,
+  });
 
   AllGroupMemberModel.fromJson(dynamic json) {
     message = json['message'];
@@ -18,15 +21,18 @@ class AllGroupMemberModel {
   bool? status;
   num? statusCode;
   Data? data;
-AllGroupMemberModel copyWith({  String? message,
-  bool? status,
-  num? statusCode,
-  Data? data,
-}) => AllGroupMemberModel(  message: message ?? this.message,
-  status: status ?? this.status,
-  statusCode: statusCode ?? this.statusCode,
-  data: data ?? this.data,
-);
+  AllGroupMemberModel copyWith({
+    String? message,
+    bool? status,
+    num? statusCode,
+    Data? data,
+  }) =>
+      AllGroupMemberModel(
+        message: message ?? this.message,
+        status: status ?? this.status,
+        statusCode: statusCode ?? this.statusCode,
+        data: data ?? this.data,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['message'] = message;
@@ -37,23 +43,24 @@ AllGroupMemberModel copyWith({  String? message,
     }
     return map;
   }
-
 }
 
 Data dataFromJson(String str) => Data.fromJson(json.decode(str));
 String dataToJson(Data data) => json.encode(data.toJson());
+
 class Data {
   Data({
-      this.docs, 
-      this.totalDocs, 
-      this.limit, 
-      this.page, 
-      this.totalPages, 
-      this.hasNextPage, 
-      this.nextPage, 
-      this.hasPrevPage, 
-      this.prevPage, 
-      this.pagingCounter,});
+    this.docs,
+    this.totalDocs,
+    this.limit,
+    this.page,
+    this.totalPages,
+    this.hasNextPage,
+    this.nextPage,
+    this.hasPrevPage,
+    this.prevPage,
+    this.pagingCounter,
+  });
 
   Data.fromJson(dynamic json) {
     if (json['docs'] != null) {
@@ -82,27 +89,30 @@ class Data {
   bool? hasPrevPage;
   dynamic prevPage;
   num? pagingCounter;
-Data copyWith({  List<AllGroupMemberDocs>? docs,
-  num? totalDocs,
-  num? limit,
-  num? page,
-  num? totalPages,
-  bool? hasNextPage,
-  dynamic nextPage,
-  bool? hasPrevPage,
-  dynamic prevPage,
-  num? pagingCounter,
-}) => Data(  docs: docs ?? this.docs,
-  totalDocs: totalDocs ?? this.totalDocs,
-  limit: limit ?? this.limit,
-  page: page ?? this.page,
-  totalPages: totalPages ?? this.totalPages,
-  hasNextPage: hasNextPage ?? this.hasNextPage,
-  nextPage: nextPage ?? this.nextPage,
-  hasPrevPage: hasPrevPage ?? this.hasPrevPage,
-  prevPage: prevPage ?? this.prevPage,
-  pagingCounter: pagingCounter ?? this.pagingCounter,
-);
+  Data copyWith({
+    List<AllGroupMemberDocs>? docs,
+    num? totalDocs,
+    num? limit,
+    num? page,
+    num? totalPages,
+    bool? hasNextPage,
+    dynamic nextPage,
+    bool? hasPrevPage,
+    dynamic prevPage,
+    num? pagingCounter,
+  }) =>
+      Data(
+        docs: docs ?? this.docs,
+        totalDocs: totalDocs ?? this.totalDocs,
+        limit: limit ?? this.limit,
+        page: page ?? this.page,
+        totalPages: totalPages ?? this.totalPages,
+        hasNextPage: hasNextPage ?? this.hasNextPage,
+        nextPage: nextPage ?? this.nextPage,
+        hasPrevPage: hasPrevPage ?? this.hasPrevPage,
+        prevPage: prevPage ?? this.prevPage,
+        pagingCounter: pagingCounter ?? this.pagingCounter,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     if (docs != null) {
@@ -119,23 +129,24 @@ Data copyWith({  List<AllGroupMemberDocs>? docs,
     map['pagingCounter'] = pagingCounter;
     return map;
   }
-
 }
 
 AllGroupMemberDocs docsFromJson(String str) => AllGroupMemberDocs.fromJson(json.decode(str));
 String docsToJson(AllGroupMemberDocs data) => json.encode(data.toJson());
+
 class AllGroupMemberDocs {
   AllGroupMemberDocs({
-      this.id, 
-      this.groupId, 
-      this.userId, 
-      this.role, 
-      this.status, 
-      this.deletedAt, 
-      this.suspendedAt, 
-      this.createdAt, 
-      this.updatedAt,
-      this.user,});
+    this.id,
+    this.groupId,
+    this.userId,
+    this.role,
+    this.status,
+    this.deletedAt,
+    this.suspendedAt,
+    this.createdAt,
+    this.updatedAt,
+    this.user,
+  });
 
   AllGroupMemberDocs.fromJson(dynamic json) {
     id = json['id'];
@@ -161,27 +172,30 @@ class AllGroupMemberDocs {
   String? createdAt;
   String? updatedAt;
   User? user;
-  AllGroupMemberDocs copyWith({  String? id,
-  String? groupId,
-  String? userId,
-  String? role,
-  String? status,
-  dynamic deletedAt,
-  dynamic suspendedAt,
-  String? createdAt,
-  String? updatedAt,
-  User? user,
-}) => AllGroupMemberDocs(  id: id ?? this.id,
-  groupId: groupId ?? this.groupId,
-  userId: userId ?? this.userId,
-  role: role ?? this.role,
-  status: status ?? this.status,
-  deletedAt: deletedAt ?? this.deletedAt,
-  suspendedAt: suspendedAt ?? this.suspendedAt,
-  createdAt: createdAt ?? this.createdAt,
-  updatedAt: updatedAt ?? this.updatedAt,
-  user: user ?? this.user,
-);
+  AllGroupMemberDocs copyWith({
+    String? id,
+    String? groupId,
+    String? userId,
+    String? role,
+    String? status,
+    dynamic deletedAt,
+    dynamic suspendedAt,
+    String? createdAt,
+    String? updatedAt,
+    User? user,
+  }) =>
+      AllGroupMemberDocs(
+        id: id ?? this.id,
+        groupId: groupId ?? this.groupId,
+        userId: userId ?? this.userId,
+        role: role ?? this.role,
+        status: status ?? this.status,
+        deletedAt: deletedAt ?? this.deletedAt,
+        suspendedAt: suspendedAt ?? this.suspendedAt,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        user: user ?? this.user,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -200,45 +214,46 @@ class AllGroupMemberDocs {
     }
     return map;
   }
-
 }
 
 User userFromJson(String str) => User.fromJson(json.decode(str));
 String userToJson(User data) => json.encode(data.toJson());
+
 class User {
   User({
-      this.id, 
-      this.phoneNumber, 
-      this.email, 
-      this.passwordHash, 
-      this.firstName, 
-      this.lastName, 
-      this.gender, 
-      this.address, 
-      this.city, 
-      this.lga, 
-      this.state, 
-      this.country, 
-      this.countryCode, 
-      this.postalCode, 
-      this.middleName, 
-      this.dateOfBirth, 
-      this.twoFactorEnabled, 
-      this.profilePicture, 
-      this.fcmToken, 
-      this.emailVerified, 
-      this.phoneVerified, 
-      this.accountStatus, 
-      this.tcAgreement, 
-      this.policyAgreement, 
-      this.emailVerifiedDate, 
-      this.deletedAt, 
-      this.roleId, 
-      this.accountTypeId, 
-      this.v, 
-      this.createdAt, 
-      this.updatedAt, 
-      this.role,});
+    this.id,
+    this.phoneNumber,
+    this.email,
+    this.passwordHash,
+    this.firstName,
+    this.lastName,
+    this.gender,
+    this.address,
+    this.city,
+    this.lga,
+    this.state,
+    this.country,
+    this.countryCode,
+    this.postalCode,
+    this.middleName,
+    this.dateOfBirth,
+    this.twoFactorEnabled,
+    this.profilePicture,
+    this.fcmToken,
+    this.emailVerified,
+    this.phoneVerified,
+    this.accountStatus,
+    this.tcAgreement,
+    this.policyAgreement,
+    this.emailVerifiedDate,
+    this.deletedAt,
+    this.roleId,
+    this.accountTypeId,
+    this.v,
+    this.createdAt,
+    this.updatedAt,
+    this.role,
+  });
 
   User.fromJson(dynamic json) {
     id = json['id'];
@@ -306,71 +321,74 @@ class User {
   String? createdAt;
   String? updatedAt;
   Role? role;
-User copyWith({  String? id,
-  String? phoneNumber,
-  String? email,
-  String? passwordHash,
-  String? firstName,
-  String? lastName,
-  String? gender,
-  String? address,
-  String? city,
-  dynamic lga,
-  String? state,
-  String? country,
-  dynamic countryCode,
-  dynamic postalCode,
-  dynamic middleName,
-  String? dateOfBirth,
-  bool? twoFactorEnabled,
-  String? profilePicture,
-  dynamic fcmToken,
-  bool? emailVerified,
-  bool? phoneVerified,
-  String? accountStatus,
-  bool? tcAgreement,
-  bool? policyAgreement,
-  String? emailVerifiedDate,
-  dynamic deletedAt,
-  String? roleId,
-  String? accountTypeId,
-  String? v,
-  String? createdAt,
-  String? updatedAt,
-  Role? role,
-}) => User(  id: id ?? this.id,
-  phoneNumber: phoneNumber ?? this.phoneNumber,
-  email: email ?? this.email,
-  passwordHash: passwordHash ?? this.passwordHash,
-  firstName: firstName ?? this.firstName,
-  lastName: lastName ?? this.lastName,
-  gender: gender ?? this.gender,
-  address: address ?? this.address,
-  city: city ?? this.city,
-  lga: lga ?? this.lga,
-  state: state ?? this.state,
-  country: country ?? this.country,
-  countryCode: countryCode ?? this.countryCode,
-  postalCode: postalCode ?? this.postalCode,
-  middleName: middleName ?? this.middleName,
-  dateOfBirth: dateOfBirth ?? this.dateOfBirth,
-  twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
-  profilePicture: profilePicture ?? this.profilePicture,
-  fcmToken: fcmToken ?? this.fcmToken,
-  emailVerified: emailVerified ?? this.emailVerified,
-  phoneVerified: phoneVerified ?? this.phoneVerified,
-  accountStatus: accountStatus ?? this.accountStatus,
-  tcAgreement: tcAgreement ?? this.tcAgreement,
-  policyAgreement: policyAgreement ?? this.policyAgreement,
-  emailVerifiedDate: emailVerifiedDate ?? this.emailVerifiedDate,
-  deletedAt: deletedAt ?? this.deletedAt,
-  roleId: roleId ?? this.roleId,
-  accountTypeId: accountTypeId ?? this.accountTypeId,
-  v: v ?? this.v,
-  createdAt: createdAt ?? this.createdAt,
-  updatedAt: updatedAt ?? this.updatedAt,
-  role: role ?? this.role,
-);
+  User copyWith({
+    String? id,
+    String? phoneNumber,
+    String? email,
+    String? passwordHash,
+    String? firstName,
+    String? lastName,
+    String? gender,
+    String? address,
+    String? city,
+    dynamic lga,
+    String? state,
+    String? country,
+    dynamic countryCode,
+    dynamic postalCode,
+    dynamic middleName,
+    String? dateOfBirth,
+    bool? twoFactorEnabled,
+    String? profilePicture,
+    dynamic fcmToken,
+    bool? emailVerified,
+    bool? phoneVerified,
+    String? accountStatus,
+    bool? tcAgreement,
+    bool? policyAgreement,
+    String? emailVerifiedDate,
+    dynamic deletedAt,
+    String? roleId,
+    String? accountTypeId,
+    String? v,
+    String? createdAt,
+    String? updatedAt,
+    Role? role,
+  }) =>
+      User(
+        id: id ?? this.id,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        email: email ?? this.email,
+        passwordHash: passwordHash ?? this.passwordHash,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        gender: gender ?? this.gender,
+        address: address ?? this.address,
+        city: city ?? this.city,
+        lga: lga ?? this.lga,
+        state: state ?? this.state,
+        country: country ?? this.country,
+        countryCode: countryCode ?? this.countryCode,
+        postalCode: postalCode ?? this.postalCode,
+        middleName: middleName ?? this.middleName,
+        dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+        twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
+        profilePicture: profilePicture ?? this.profilePicture,
+        fcmToken: fcmToken ?? this.fcmToken,
+        emailVerified: emailVerified ?? this.emailVerified,
+        phoneVerified: phoneVerified ?? this.phoneVerified,
+        accountStatus: accountStatus ?? this.accountStatus,
+        tcAgreement: tcAgreement ?? this.tcAgreement,
+        policyAgreement: policyAgreement ?? this.policyAgreement,
+        emailVerifiedDate: emailVerifiedDate ?? this.emailVerifiedDate,
+        deletedAt: deletedAt ?? this.deletedAt,
+        roleId: roleId ?? this.roleId,
+        accountTypeId: accountTypeId ?? this.accountTypeId,
+        v: v ?? this.v,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        role: role ?? this.role,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['id'] = id;
@@ -409,26 +427,29 @@ User copyWith({  String? id,
     }
     return map;
   }
-
 }
 
 Role roleFromJson(String str) => Role.fromJson(json.decode(str));
 String roleToJson(Role data) => json.encode(data.toJson());
+
 class Role {
   Role({
-      this.name,});
+    this.name,
+  });
 
   Role.fromJson(dynamic json) {
     name = json['name'];
   }
   String? name;
-Role copyWith({  String? name,
-}) => Role(  name: name ?? this.name,
-);
+  Role copyWith({
+    String? name,
+  }) =>
+      Role(
+        name: name ?? this.name,
+      );
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['name'] = name;
     return map;
   }
-
 }

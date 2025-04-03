@@ -1,46 +1,67 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FilterState {
-  final String selectedCategory;
+  final List<String> selectedCategory;
   final String minPrice;
   final String maxPrice;
-  final String deliveryType;
-  final String discountType;
-  final String height;
-  final String depth;
+  final List<String> deliveryType;
+  final List<String> discountType;
+  final int minHeight; 
+  final int maxHeight; 
+  final int minWidth; 
+  final int maxWidth; 
+  final int minDepth; 
+  final int maxDepth; 
   final String location;
+  final List<String> condition;
+  final List<String> colors;
 
-  const FilterState({
-    this.selectedCategory = 'All Category',
-    this.minPrice = '',
-    this.maxPrice = '',
-    this.deliveryType = 'Both',
-    this.discountType = '',
-    this.height = 'Less than 30m',
-    this.depth = 'Less than 6ft',
-    this.location = 'Less than 6ft',
-  });
+  const FilterState(
+      {this.selectedCategory = const [],
+      this.minPrice = '',
+      this.maxPrice = '',
+      this.deliveryType = const [],
+      this.discountType = const [],
+      this.condition = const [],
+      this.minHeight = 0, 
+      this.maxHeight = 100, 
+      this.minWidth = 0, 
+      this.maxWidth = 100, 
+      this.minDepth = 0, 
+      this.maxDepth = 100, 
+      this.location = '',
+      this.colors = const []});
 
-  FilterState copyWith({
-    String? selectedCategory,
-    String? minPrice,
-    String? maxPrice,
-    String? deliveryType,
-    String? discountType,
-    String? height,
-    String? depth,
-    String? location,
-  }) {
+  FilterState copyWith(
+      {List<String>? selectedCategory,
+      String? minPrice,
+      String? maxPrice,
+      List<String>? deliveryType,
+      List<String>? discountType,
+      int? minHeight, 
+      int? maxHeight, 
+      int? minWidth, 
+      int? maxWidth, 
+      int? minDepth, 
+      int? maxDepth, 
+      String? location,
+      List<String>? colors,
+      List<String>? condition}) {
     return FilterState(
-      selectedCategory: selectedCategory ?? this.selectedCategory,
-      minPrice: minPrice ?? this.minPrice,
-      maxPrice: maxPrice ?? this.maxPrice,
-      deliveryType: deliveryType ?? this.deliveryType,
-      discountType: discountType ?? this.discountType,
-      height: height ?? this.height,
-      depth: depth ?? this.depth,
-      location: location ?? this.location,
-    );
+        selectedCategory: selectedCategory ?? this.selectedCategory,
+        minPrice: minPrice ?? this.minPrice,
+        maxPrice: maxPrice ?? this.maxPrice,
+        deliveryType: deliveryType ?? this.deliveryType,
+        discountType: discountType ?? this.discountType,
+        minHeight: minHeight ?? this.minHeight, 
+        maxHeight: maxHeight ?? this.maxHeight, 
+        minWidth: minWidth ?? this.minWidth, 
+        maxWidth: maxWidth ?? this.maxWidth, 
+        minDepth: minDepth ?? this.minDepth, 
+        maxDepth: maxDepth ?? this.maxDepth, 
+        location: location ?? this.location,
+        colors: colors ?? this.colors,
+        condition: condition ?? this.condition);
   }
 }
 
@@ -53,7 +74,15 @@ class FilterVm extends StateNotifier<FilterState> {
   FilterVm(this.ref) : super(const FilterState());
 
   void updateCategory(String category) {
-    state = state.copyWith(selectedCategory: category);
+    
+    List<String> c = List.from(state.selectedCategory);
+    if (c.contains(category)) {
+      c.remove(category);
+    } else {
+      c.add(category);
+    }
+
+    state = state.copyWith(selectedCategory: c);
   }
 
   void updatePriceRange(String min, String max) {
@@ -61,19 +90,59 @@ class FilterVm extends StateNotifier<FilterState> {
   }
 
   void updateDeliveryType(String type) {
-    state = state.copyWith(deliveryType: type);
+   
+     List<String> c = List.from(state.deliveryType);
+    if (c.contains(type)) {
+      c.remove(type);
+    } else {
+      c.add(type);
+    }
+     state = state.copyWith(deliveryType: c);
+  }
+
+  void updateCondition(String cond) {
+
+     List<String> c = List.from(state.condition);
+    if (c.contains(cond)) {
+      c.remove(cond);
+    } else {
+      c.add(cond);
+    }
+        state = state.copyWith(condition: c);
   }
 
   void updateDiscountType(String type) {
-    state = state.copyWith(discountType: type);
+    
+     List<String> c = List.from(state.discountType);
+    if (c.contains(type)) {
+      c.remove(type);
+    } else {
+      c.add(type);
+    }
+    state = state.copyWith(discountType: c);
   }
 
-  void updateHeight(String height) {
-    state = state.copyWith(height: height);
+  void updateHeight(int min, int max) {
+    state = state.copyWith(minHeight: min, maxHeight: max);
   }
 
-  void updateDepth(String depth) {
-    state = state.copyWith(depth: depth);
+  void updateColors(String color) {
+    List<String> c = List.from(state.colors);
+    if (c.contains(color)) {
+      c.remove(color);
+    } else {
+      c.add(color);
+    }
+
+    state = state.copyWith(colors: c);
+  }
+
+  void updateDepth(int min, int max) {
+    state = state.copyWith(minDepth: min, maxDepth: max);
+  }
+
+  void updateWidth(int min, int max) {
+    state = state.copyWith(minWidth: min, maxWidth: max);
   }
 
   void updateLocation(String location) {
@@ -83,6 +152,8 @@ class FilterVm extends StateNotifier<FilterState> {
   void reset() {
     state = const FilterState();
   }
+
+
 
   void applyFilters() {
     print('Applying filters: $state');

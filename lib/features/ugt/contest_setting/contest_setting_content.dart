@@ -4,21 +4,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/contest_signup_requirement.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/stage_contest_settings.dart';
+import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 
 import '../../../core/components/waya_scaffold.dart';
 import '../create_contest/steps/edit_stage_preference.dart';
 
-class ContestSettingContent extends ConsumerStatefulWidget  {
+class ContestSettingContent extends ConsumerStatefulWidget {
   static const route = '/contest-setting-content';
   const ContestSettingContent({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget > createState() => _ContestSettingContentState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ContestSettingContentState();
 }
 
-
-
-class _ContestSettingContentState extends ConsumerState<ContestSettingContent> with SingleTickerProviderStateMixin{
+class _ContestSettingContentState extends ConsumerState<ContestSettingContent>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -33,8 +34,6 @@ class _ContestSettingContentState extends ConsumerState<ContestSettingContent> w
     }
   }
 
-
-
   void _goToPreviousTab() {
     if (_tabController.index > 1) {
       _tabController.animateTo(_tabController.index - 1);
@@ -45,24 +44,24 @@ class _ContestSettingContentState extends ConsumerState<ContestSettingContent> w
     _tabController.animateTo(index);
   }
 
-
   @override
   Widget build(BuildContext context) {
-   return WayaScaffoldWithProgressBar(
+    // final viewModel = ref.watch(contestNotifierProvider);
+    return WayaScaffoldWithProgressBar(
         isLoading: false,
         isScrollable: true,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
-
-         StageContestSettings(
-           goToNextTab: _goToNextTab,
-         ),
-          ContestSignupRequirement(
+          StageContestSettings(
             goToNextTab: _goToNextTab,
           ),
-         // EditStagePreference(),
+          ContestSignupRequirement(
+            goToNextTab: _goToNextTab,
+            goToPrevTab: _goBack,
+          ),
+          // EditStagePreference(),
           // StageContestSettings(),
         ],
-        tabController: _tabController);;
+        tabController: _tabController);
   }
 }

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/shop/seller/views/dialogs/add_delivery_details.dart';
+import 'package:wayagram/shared/features/quotation/model/default.dart';
 
 class SingleSettlementWidget extends ConsumerWidget {
   final bool isSeller;
@@ -18,22 +15,16 @@ class SingleSettlementWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(singleSettlementWidgetViewModelProvider);
+
+    //? This is fine.
     return GestureDetector(
-      onTap: () {
-        if (isSeller) {
-          WayaNav.toNamed('/seller-bid-details', arguments: "id");
-          //viewModel.sellerBidAction(context);
-        } else {
-          WayaNav.toNamed('/seller-bid-details', arguments: "id");
-        }
-      },
+      onTap: () {},
       child: Column(
         children: [
           Container(
             padding: EdgeInsets.fromLTRB(8, 6, 8, 6),
-            decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.scaffoldColor,
-                borderRadius: BorderRadius.circular(8)),
+            decoration:
+                BoxDecoration(color: wayaTheme.colorScheme.scaffoldColor, borderRadius: BorderRadius.circular(8)),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -46,47 +37,60 @@ class SingleSettlementWidget extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        //? Title.
                         Text(
                           "Payment From Buyer",
-                          style: TextStyle().wayaCopyWith(
-                              color: wayaTheme.colorScheme.customBlack,
-                              fontSize: 14),
+                          style: wayaTheme.textTheme.bodyMedium
+                              ?.copyWith(color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
                         ),
+
+                        // Some space.
                         const Gap(8),
+
                         Container(
                           padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
                           decoration: BoxDecoration(
-                              color: wayaTheme.colorScheme.success50,
-                              borderRadius: BorderRadius.circular(6)),
+                            color: wayaTheme.colorScheme.success50,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
                           child: Text(
                             "Credit",
-                            style: TextStyle().wayaCopyWith(
-                                color: wayaTheme.colorScheme.success,
-                                fontWeight: FontWeight.w500,
-                                fontSize: 11),
+                            style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                              color: wayaTheme.colorScheme.success,
+                              fontWeight: FontWeight.w500,
+                              fontSize: 11.sp,
+                            ),
                           ),
                         ),
                       ],
                     )
                   ],
                 ),
+
+                //? This is fine.
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
                       "+₦12,500.00",
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.success,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 11),
+                      style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                        color: wayaTheme.colorScheme.success,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 11.sp,
+                      ),
                     ),
+
+                    // This is fine.
                     const Gap(8),
+
+                    //? This is fine too.
                     Text(
                       "Aug 11, 2024",
-                      style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.greyColor400,
-                          fontSize: 13),
+                      style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                        color: wayaTheme.colorScheme.greyColor400,
+                        fontSize: 13.sp,
+                      ),
                     )
                   ],
                 )
@@ -114,24 +118,23 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
    */
   }
 
-  Future<void> sellerBidAction(BuildContext context) async {
+  Future<void> sellerBidAction(BuildContext context, QuotationBidModel bid) async {
     WayaUtils.showNotice(
         context: context,
         buttonText: 'Add Delivery Details',
         secondButtonText: 'See your Order Details',
         title: 'Populate Delivery Details',
-        message:
-            "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
+        message: "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
         onPress: () async {
           await addDeliveryDetail(context);
         },
         onCancel: () {
-          WayaNav.toNamed('/seller-bid-details', arguments: "id");
+          WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id, bid.requestId));
         },
         icon: Image.asset('assets/images/shop/delivery-van.png'));
   }
 }
 
-final singleSettlementWidgetViewModelProvider =
-    ChangeNotifierProvider<SingleBidWidgetViewModel>(
-        (ref) => SingleBidWidgetViewModel(ref));
+final singleSettlementWidgetViewModelProvider = ChangeNotifierProvider<SingleBidWidgetViewModel>(
+  (ref) => SingleBidWidgetViewModel(ref),
+);

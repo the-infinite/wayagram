@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,28 +5,41 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
+import 'package:wayagram/shared/features/profile/model/pages.dart';
 
 class EditPageInfo extends ConsumerStatefulWidget {
-  static const route = '/editPageInfo';
-  const EditPageInfo({super.key,});
+  final PageModel page;
+
+  const EditPageInfo({
+    super.key,
+    required this.page,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _EditPageInfoState();
 }
 
 class _EditPageInfoState extends ConsumerState<EditPageInfo> {
+  late final pageProvider = singlePageProvider("page-${widget.page.id}");
+  late final notifier = ref.read(pageProvider.notifier);
+  final valueController = ValueNotifier(false);
   final _formKey = GlobalKey<FormState>();
-
-  bool sel =  false;
-  bool sel2 =  false;
+  late bool sel = widget.page.isPublic;
+  late bool sel2 = !sel;
   File? _selectedImage; // Holds the selected image
   File? _coverImage; // Holds the selected image
+
+  late String? image = widget.page.profileImage;
+  late String? editCoverImage = widget.page.coverImage;
   final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
@@ -35,7 +47,6 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
     if (pickedFile != null) {
       setState(() {
         _selectedImage = File(pickedFile.path);
-        print('SELECTED IMAGES $_selectedImage');
       });
     }
   }
@@ -49,14 +60,23 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      notifier.prefillFunc(widget.page);
+    });
+  }
 
+  @override
+  void dispose() {
+    valueController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(createPageProvider);
-    final editPage = ref.watch(createPageProvider.notifier);
-
-    final  id  = ModalRoute.of(context)?.settings.arguments as String;
+    final viewModel = ref.watch(pageProvider);
 
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
@@ -66,27 +86,35 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
       isScrollable: true,
       appBarTrailing: Padding(
         padding: const EdgeInsets.only(right: 20),
-        child: WayaButton(
-          callback: !viewModel.isLoading
-              ? () async {
-            if (_formKey.currentState!.validate()) {
-              await  editPage.editPage(context, viewModel.pageName.text,
-             viewModel.pageDescription.text, sel? true: false,
-                  ( _coverImage as File).path,
-                  id);
+        child: WayaProgressiveButton(
+          notifier: valueController,
+          callback: () async {
+            if (!sel && !sel2) {
+              WayaUtils.showModalSheet(context,
+                  child: WayaErrorDialog(
+                    title: "You are required to specify if you wish the group to be private or not",
+                  ));
+            } else if (_formKey.currentState!.validate()) {
+              await myPageNotifier.editPage(
+                viewModel.pageName.text,
+                viewModel.pageDescription.text,
+                sel ? true : false,
+                _coverImage == null ? editCoverImage! : (_coverImage as File).path,
+                _selectedImage == null ? image! : (_selectedImage as File).path,
+                widget.page.id,
+              );
               WayaNav.toNamed("/pages");
-              ref.watch(createPageProvider.notifier).reset();
-
+              notifier.reset();
             }
-          } : null,
+          },
           height: 30,
-          isLoading: viewModel.isLoading,
           text: 'Continue',
           horizontalPadding: 12,
           textStyle: WayaTextStyles.bodySmall.copyWith(
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
-              color: Theme.of(context).colorScheme.white ),
+            fontSize: 12.sp,
+            fontWeight: FontWeight.w600,
+            color: wayaTheme.colorScheme.white,
+          ),
         ),
       ),
       body: Column(
@@ -98,7 +126,6 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-
                   Stack(
                     children: [
                       // Banner Container
@@ -110,13 +137,20 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                           borderRadius: BorderRadius.circular(0),
                           image: _selectedImage != null
                               ? DecorationImage(
-                            image: FileImage(_selectedImage!),
-                            fit: BoxFit.cover,
-                          )
-                              : const DecorationImage(
-                            image: AssetImage("assets/placeholder.jpg"),
-                            fit: BoxFit.cover,
-                          ),
+                                  image: FileImage(_selectedImage!),
+                                  fit: BoxFit.cover,
+                                )
+                              : image != null
+                                  ? DecorationImage(
+                                      image: NetworkImage(image!),
+                                      fit: BoxFit.cover,
+                                    )
+                                  : DecorationImage(
+                                      image: NetworkImage(
+                                        WayaAssets.images.pages.imagePlaceholder.path,
+                                      ),
+                                      fit: BoxFit.cover,
+                                    ),
                         ),
                       ),
 
@@ -126,19 +160,20 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                         right: 10,
                         child: IconButton(
                           onPressed: _pickImage,
-                          icon: Image.asset('assets/images/pages/cam.png', height: 14.h,),
+                          icon: Image.asset(
+                            'assets/images/pages/cam.png',
+                            height: 14.h,
+                          ),
                           padding: EdgeInsets.all(10),
                           constraints: BoxConstraints(),
-                          color: WayaColors.greyColor600, // Background overlay
+                          color: WayaColors.greyColor600,
                         ),
                       ),
                     ],
                   ),
                   Gap(15),
-
                 ],
               ),
-
               Positioned(
                 left: 16.w,
                 bottom: -20.h,
@@ -149,44 +184,49 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                       CircleAvatar(
                         radius: 20,
                         backgroundColor: wayaTheme.colorScheme.greyColor200,
-                        backgroundImage: _coverImage != null
-                            ?  FileImage(_coverImage!)
-                            : null,
+                        backgroundImage: _coverImage != null ? FileImage(_coverImage!) : null,
                         child: _coverImage == null
                             ? Icon(
-                          Icons.person,
-                          color: wayaTheme.colorScheme.greyColor600,
-                        )
-                            : null,
+                                Icons.person,
+                                color: wayaTheme.colorScheme.greyColor600,
+                              )
+                            : editCoverImage != null
+                                ? CircleAvatar(
+                                    radius: 20,
+                                    backgroundColor: wayaTheme.colorScheme.greyColor200,
+                                    backgroundImage: NetworkImage(editCoverImage!),
+                                  )
+                                : null,
                       ),
                     ],
                   ),
                 ),
               ),
-
             ],
           ),
           const Gap(30),
           Padding(
-            padding:  EdgeInsets.only(left: 15, right: 15, bottom: 20),
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                    'Change photo',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff6B7280),
-                    )),
+                  'Change photo',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff6B7280),
+                  ),
+                ),
                 const Gap(20),
                 Text(
-                    'Page information',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff6B7280),
-                    )),
+                  'Page information',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xff6B7280),
+                  ),
+                ),
                 const Gap(30),
                 Form(
                     key: _formKey,
@@ -208,22 +248,17 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                                 keyboardType: TextInputType.text,
                                 controller: viewModel.pageName,
                                 hintText: 'Enter page name here',
-                                borderColor: formState.hasError &&
-                                    viewModel.pageName.text.isEmpty
+                                borderColor: formState.hasError && viewModel.pageName.text.isEmpty
                                     ? wayaTheme.colorScheme.error
                                     : null,
                                 label: 'Page Name',
                               ),
-                              if (formState.hasError &&
-                                  viewModel.pageName.text.isEmpty
-                              )
+                              if (formState.hasError)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style: TextStyle(
-                                        color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
+                                    style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                                   ),
                                 ),
                             ],
@@ -245,40 +280,33 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                                 keyboardType: TextInputType.text,
                                 controller: viewModel.pageDescription,
                                 hintText: 'Describe what your page does',
-                                borderColor: formState.hasError &&
-                                    viewModel.pageDescription.text.isEmpty
+                                borderColor: formState.hasError && viewModel.pageDescription.text.isEmpty
                                     ? wayaTheme.colorScheme.error
                                     : null,
                                 label: 'Page Description',
                               ),
-                              if (formState.hasError &&
-                                  viewModel.pageDescription.text.isEmpty
-                              )
+                              if (formState.hasError)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style: TextStyle(
-                                        color: wayaTheme.colorScheme.error,
-                                        fontSize: 12),
+                                    style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                                   ),
                                 ),
                             ],
                           );
                         }),
                         const Gap(20),
-
-
                       ],
                     )),
-
                 Text(
-                    'Page Type',
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black,
-                    )),
+                  'Page Type',
+                  style: TextStyle(
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
                 const Gap(15),
                 FittedBox(
                   fit: BoxFit.fitWidth,
@@ -289,22 +317,28 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                       InkWell(
                         splashColor: Colors.transparent,
                         splashFactory: NoSplash.splashFactory,
-                        onTap: (){
+                        onTap: () {
                           setState(() {
                             sel = true;
                             sel2 = false;
                           });
-
                         },
-                        child: sel ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
+                        child: sel
+                            ? Image.asset(
+                                'assets/images/polls/check.png',
+                                height: 20.h,
+                              )
+                            : Image.asset(
+                                'assets/images/polls/uncheck.png',
+                                height: 20.h,
+                              ),
                       ),
                       const Gap(10),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Public Page",
-                              style: wayaTheme.textTheme.titleMedium),
+                          Text("Public Page", style: wayaTheme.textTheme.titleMedium),
                           const Gap(6),
                           FittedBox(
                             fit: BoxFit.contain,
@@ -318,7 +352,6 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                     ],
                   ),
                 ),
-
                 const Gap(15),
                 FittedBox(
                   fit: BoxFit.fitWidth,
@@ -329,22 +362,28 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
                       InkWell(
                         splashColor: Colors.transparent,
                         splashFactory: NoSplash.splashFactory,
-                        onTap: (){
+                        onTap: () {
                           setState(() {
                             sel = false;
                             sel2 = true;
                           });
-
                         },
-                        child: sel2 ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
+                        child: sel2
+                            ? Image.asset(
+                                'assets/images/polls/check.png',
+                                height: 20.h,
+                              )
+                            : Image.asset(
+                                'assets/images/polls/uncheck.png',
+                                height: 20.h,
+                              ),
                       ),
                       const Gap(10),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Private Page",
-                              style: wayaTheme.textTheme.titleMedium),
+                          Text("Private Page", style: wayaTheme.textTheme.titleMedium),
                           const Gap(6),
                           Text(
                             "Not everyone can see activity on the group except invited\nmembers",
@@ -359,12 +398,8 @@ class _EditPageInfoState extends ConsumerState<EditPageInfo> {
               ],
             ),
           )
-
         ],
       ),
     );
   }
-
-
-
 }

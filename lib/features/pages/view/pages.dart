@@ -6,10 +6,10 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/pages/view/pages_for_you.dart';
+import 'create_page.dart';
+import 'pages_for_you.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
-import '../../bottom_view/bottom_view.dart';
 import 'following_page.dart';
 import 'manage_pages.dart';
 
@@ -30,9 +30,6 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
     final viewModel = ref.watch(createPageProvider);
 
     return WayaScaffold(
-      onTapBackButton: () {
-        Navigator.pushNamed(context, BottomView.route, arguments: 0);
-      },
       isLoading: viewModel.isLoading,
       isScrollable: true,
       title: 'Pages',
@@ -71,16 +68,18 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
             ],
           ),
           const Gap(20),
-          _selectedIndex == 0 ? PagesForYou() : _selectedIndex == 1 ? FollowingPage() : ManagePages()
+          _selectedIndex == 0
+              ? PagesForYou()
+              : _selectedIndex == 1
+                  ? FollowingPage()
+                  : ManagePages()
         ],
       ),
       floatingActionButton: SizedBox(
         height: 50,
         width: 50,
         child: WayaButton(
-          callback: () {
-            WayaNav.toNamed('/createPost');
-          },
+          callback: () => WayaNav.toNamed(CreatePage.route),
           height: 50,
           centerWidget: Center(
             child: Icon(

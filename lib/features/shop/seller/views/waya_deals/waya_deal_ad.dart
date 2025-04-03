@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -16,7 +18,6 @@ class WayaDealAd extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         isLoading: false,
@@ -39,7 +40,7 @@ class WayaDealAd extends ConsumerWidget {
               "How it Works?",
               style: TextStyle().wayaCopyWith(
                   color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 15,
+                  fontSize: 15.sp,
                   fontWeight: FontWeight.w600),
             ),
             const Gap(10),
@@ -77,7 +78,7 @@ class WayaDealAd extends ConsumerWidget {
               callback: () {
                 WayaNav.toNamed(AddProduct.route,
                     arguments: AddWayagramArg(
-                        uniqueKey: 'add-waya-product', isWayagram: true));
+                        uniqueKey: Uuid().v4(), isWayagram: true));
               },
               text: 'Participate',
             )
@@ -110,7 +111,7 @@ class AdList extends StatelessWidget {
               title,
               style: TextStyle().wayaCopyWith(
                   color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500),
             ),
           ],

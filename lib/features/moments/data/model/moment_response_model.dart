@@ -1,3 +1,5 @@
+import 'package:wayagram/shared/model/base_model.dart';
+
 class MomentResponseModel {
   final String message;
   final bool status;
@@ -88,11 +90,11 @@ class ResponseData {
   }
 }
 
-class MomentData {
+class MomentData extends BaseModel<MomentData> {
   final String id;
   final String userId;
   final String name;
-  final String image;
+  final String? image;
   final String contentType;
   final String content;
   final String? color;
@@ -163,7 +165,7 @@ class MomentData {
       'caption': caption,
       'totalViews': totalViews,
       'color': color,
-      'fontType':fontType,
+      'fontType': fontType,
       'totalLikes': totalLikes,
       'totalComments': totalComments,
       'active': active,
@@ -174,4 +176,49 @@ class MomentData {
       'updatedAt': updatedAt.toIso8601String(),
     };
   }
+
+  MomentData copyWith({
+    String? id,
+    String? userId,
+    String? name,
+    String? image,
+    String? contentType,
+    String? content,
+    String? caption,
+    String? color,
+    String? fontType,
+    int? totalViews,
+    int? totalLikes,
+    int? totalComments,
+    bool? active,
+    bool? isDeleted,
+    DateTime? expiresAt,
+    String? version,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return MomentData(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      name: name ?? this.name,
+      image: image ?? this.image,
+      contentType: contentType ?? this.contentType,
+      content: content ?? this.content,
+      caption: caption ?? this.caption,
+      color: color ?? this.color,
+      fontType: fontType ?? this.fontType,
+      totalViews: totalViews ?? this.totalViews,
+      totalLikes: totalLikes ?? this.totalLikes,
+      totalComments: totalComments ?? this.totalComments,
+      active: active ?? this.active,
+      isDeleted: isDeleted ?? this.isDeleted,
+      expiresAt: expiresAt ?? this.expiresAt,
+      version: version ?? this.version,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toMap() => {'caption': caption};
 }

@@ -1,4 +1,3 @@
-import 'package:dio/dio.dart';
 
 class AddEventRequestModel {
   final String title;
@@ -69,15 +68,14 @@ class AddEventRequestModel {
       'endTime': endTime,
       'eventType': eventType,
       'fee': fee,
-      'maxCapacity': maxCapacity,
       'privacyOption': privacyOption,
-      'image': image, 
+      'image': image,
       'userId': userId,
     };
 
     if (description != null) json['description'] = description;
-      if (maxCapacity != null) json['maxCapacity'] = maxCapacity;
-
+    if (maxCapacity != null) json['maxCapacity'] = maxCapacity;
+    
     return json;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
@@ -29,7 +30,7 @@ class EngagementRange extends StatelessWidget {
             topLeft!,
             style: TextStyle().wayaCopyWith(
                 color: wayaTheme.colorScheme.customBlack,
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w500),
           ),
         const Gap(8),
@@ -37,6 +38,7 @@ class EngagementRange extends StatelessWidget {
           width: double.infinity,
           height: 10,
           child: Stack(
+           clipBehavior: Clip.hardEdge,
             children: [
               Container(
                 decoration: BoxDecoration(
@@ -66,7 +68,7 @@ class EngagementRange extends StatelessWidget {
               bottomLeft,
               style: TextStyle().wayaCopyWith(
                   color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500),
             ),
             Text(
@@ -74,7 +76,7 @@ class EngagementRange extends StatelessWidget {
               textAlign: TextAlign.end,
               style: TextStyle().wayaCopyWith(
                   color: wayaTheme.colorScheme.customBlack,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500),
             ),
           ],

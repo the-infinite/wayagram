@@ -17,104 +17,114 @@ class MomentUserInfoWidget extends ConsumerStatefulWidget {
   final dynamic isMine;
   final Function() pause;
   final Function() continues;
-  const MomentUserInfoWidget(
-      {super.key,
-      required this.moment,
-      required this.continues,
-      required this.isMine,
-      required this.pause});
+  const MomentUserInfoWidget({
+    super.key,
+    required this.moment,
+    required this.continues,
+    required this.isMine,
+    required this.pause,
+  });
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _MomentUserInfoWidget();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MomentUserInfoWidget();
 }
 
 class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
+  late final notifier = ref.read(momentVmProvider.notifier);
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border:
-                      Border.all(width: 1, color: wayaTheme.colorScheme.white),
+    return GestureDetector(
+      onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(widget.moment.userId)),
+      child: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(width: 1, color: wayaTheme.colorScheme.white),
+                  ),
+                  child: WayaDp(
+                    image: widget.moment.image,
+                    radius: 20.r,
+                    isSelf: false,
+                    isEdit: false,
+                    onTap: null,
+                  ),
                 ),
-                child: WayaImage(
-                  imageUrl: widget.moment.image,
-                  radius: BorderRadius.circular(50),
-                  width: 50,
-                  height: 50,
+                SizedBox(
+                  width: 6.w,
                 ),
-              ),
-              SizedBox(
-                width: 6.w,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: 160.w,
-                    child: Text(
-                      widget.moment.name,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                          fontSize: 14,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 160.w,
+                      child: Text(
+                        widget.isMine ? "You" : widget.moment.name,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
-                          color: wayaTheme.colorScheme.white),
+                          color: wayaTheme.colorScheme.white,
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 5.h,
-                  ),
-                  Text(
-                    timeago.format(widget.moment.updatedAt),
-                    style: TextStyle(
-                        fontSize: 12,
+                    SizedBox(
+                      height: 5.h,
+                    ),
+                    Text(
+                      timeago.format(widget.moment.updatedAt),
+                      style: TextStyle(
+                        fontSize: 12.sp,
                         color: wayaTheme.colorScheme.scaffoldColor,
-                        fontWeight: FontWeight.w400),
-                  ),
-                ],
-              )
-            ],
-          ),
-          if (!widget.isMine)
-            GestureDetector(
-              onTap: () async {
-                Future<void> report(
-                    {required String reason,
+                        fontWeight: FontWeight.w400,
+                      ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+            if (!widget.isMine)
+              GestureDetector(
+                onTap: () async {
+                  Future<void> report({
+                    required String reason,
                     required BuildContext context,
-                    String? comment}) async {
-                  ref.read(momentVmProvider.notifier).reportMoment(
+                    String? comment,
+                  }) async {
+                    notifier.reportMoment(
                       momentId: widget.moment.id,
                       reason: reason,
-                      context: context);
-                }
+                      context: context,
+                    );
+                  }
 
-                widget.pause();
-                await WayaUtils.showModalSheet(context,
+                  widget.pause();
+                  await WayaUtils.showModalSheet(
+                    context,
                     child: Report(
-                        statuses: eventReport,
-                        currentStatus: '',
-                        report: report));
-                widget.continues();
-              },
-              child: SvgPicture.asset(
-                WayaAssets.icons.mThreeDots.path,
-                color: wayaTheme.colorScheme.white,
-              ),
-            )
-        ],
+                      statuses: eventReport,
+                      currentStatus: '',
+                      report: report,
+                    ),
+                  );
+                  widget.continues();
+                },
+                child: SvgPicture.asset(
+                  WayaAssets.icons.mThreeDots.path,
+                  color: wayaTheme.colorScheme.white,
+                ),
+              )
+          ],
+        ),
       ),
     );
   }

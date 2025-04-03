@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -32,7 +33,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
       children: [
         WayaButton(
           color: wayaTheme.colorScheme.secondaryColor,
-          callback: () {},
+          callback: ref.read(loginVmProvider.notifier).signinWithGoogle,
           leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
           text: "Continue with Google",
           textColor: wayaTheme.colorScheme.black,
@@ -100,15 +101,14 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                             : null,
                         label: 'Email Address',
                       ),
-                      if (formState.hasError &&
-                          viewModel.emailController.text.isEmpty)
+                      if (formState.hasError)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -159,7 +159,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -172,7 +172,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                     onTap: () => WayaNav.toNamed('/forgot-password'),
                     child: Text('Forgot Password?',
                         style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             color: wayaTheme.colorScheme.customPrimary)),
                   ),
                 ),
@@ -181,7 +181,9 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                   color: wayaTheme.colorScheme.primary500,
                   callback: !viewModel.isLoading
                       ? () async {
+
                           if (_formKey.currentState!.validate()) {
+                            print('TEST BUTTOn');
                             ref
                                 .read(loginVmProvider.notifier)
                                 .onSubmit(ref, isBusinessLogin: false);
@@ -278,8 +280,8 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 FormField<String>(validator: (value) {
-                  if (viewModel.businessIdController.text.isEmpty) {
-                    return 'Business ID is required';
+                  if (viewModel.businessAcctController.text.isEmpty) {
+                    return 'Business ID/ Email is required';
                   }
 
                   return null;
@@ -289,23 +291,23 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                     children: [
                       WayaTextFormField(
                         keyboardType: TextInputType.text,
-                        controller: viewModel.businessIdController,
-                        hintText: 'Enter Your Business ID',
+                        controller: viewModel.businessAcctController,
+                        hintText: 'Enter Your Email or Business ID',
                         borderColor: formState.hasError &&
-                                viewModel.businessIdController.text.isEmpty
+                                viewModel.businessAcctController.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
-                        label: 'Business ID',
+                        label: 'Email Address/Business ID',
                       ),
                       if (formState.hasError &&
-                          viewModel.businessIdController.text.isEmpty)
+                          viewModel.businessAcctController.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -356,7 +358,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -369,7 +371,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                     onTap: () => WayaNav.toNamed('/forgot-password'),
                     child: Text('Forgot Password?',
                         style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
-                            fontSize: 14,
+                            fontSize: 14.sp,
                             color: wayaTheme.colorScheme.customPrimary)),
                   ),
                 ),

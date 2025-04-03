@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -21,7 +22,6 @@ class _CopyCodeState extends ConsumerState<CopyCode> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    // TODO: implement build
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -38,13 +38,13 @@ class _CopyCodeState extends ConsumerState<CopyCode> {
               Text(
                 widget.title,
                 style: TextStyle().wayaCopyWith(
-                    color: wayaTheme.colorScheme.customBlack, fontSize: 14),
+                    color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp),
               ),
               const Gap(8),
               Text(
                 widget.code,
                 style: TextStyle().wayaCopyWith(
-                    color: wayaTheme.colorScheme.greyColor400, fontSize: 14),
+                    color: wayaTheme.colorScheme.greyColor400, fontSize: 14.sp),
               )
             ],
           ),

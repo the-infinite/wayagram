@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -12,7 +13,10 @@ class PricingAndDelivery extends ConsumerStatefulWidget {
   final Function gotoPreviousTab;
   final String uniqueKey;
   const PricingAndDelivery(
-      {super.key, required this.gotoPreviousTab, required this.gotoNextTab, required this.uniqueKey});
+      {super.key,
+      required this.gotoPreviousTab,
+      required this.gotoNextTab,
+      required this.uniqueKey});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -24,7 +28,6 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final viewModel = ref.watch(addProductProvider(widget.uniqueKey));
     final wayaTheme = Theme.of(context);
     return Column(
@@ -81,7 +84,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -97,16 +100,20 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WayaSelectField(
+                      WayaSelectField<String>(
                           height: 0.3,
                           uniqueKey: 'pickup-option',
                           label: "Delivery/Pickup Option",
                           hintText: 'Select Delivery or Pickup Option',
                           value: viewModel.pickUpOption,
-                          items: ref.read(addProductProvider(widget.uniqueKey).notifier).options,
+                          items: ref
+                              .read(
+                                  addProductProvider(widget.uniqueKey).notifier)
+                              .options,
                           onSelected: (value) => ref
-                              .read(addProductProvider(widget.uniqueKey).notifier)
-                              .update(value, "pickUpOption")),
+                              .read(
+                                  addProductProvider(widget.uniqueKey).notifier)
+                              .update(value.first, "pickUpOption")),
                       if (formState.hasError && viewModel.pickUpOption.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
@@ -114,63 +121,70 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                             formState.errorText!,
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
-                                fontSize: 12),
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
                   );
                 }),
-                const Gap(10),
-                FormField<String>(validator: (value) {
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      WayaTextFormField(
-                        keyboardType: TextInputType.streetAddress,
-                        controller: viewModel.pickUpAddress,
-                        hintText: 'Enter Pickup Address',
-                        borderColor: formState.hasError &&
-                                viewModel.pickUpAddress.text.isEmpty
-                            ? wayaTheme.colorScheme.error
-                            : null,
-                        label: 'PickUp Address',
-                        prefixIcon: Icon(
-                          Icons.location_on_outlined,
-                          color: wayaTheme.colorScheme.greyColor300,
-                          size: 24,
-                        ),
-                      ),
-                    ],
-                  );
-                }),
-                const Gap(20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Switch(
-                        value: viewModel.includeDeliveryFee,
-                        onChanged: (value) => ref
-                            .read(addProductProvider(widget.uniqueKey).notifier)
-                            .updateIncludeDeliveryFee(value)),
-                    const Gap(10),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
+                if (viewModel.pickUpOption == 'Pickup' ||
+                    viewModel.pickUpOption == 'Both') ...[
+                  const Gap(10),
+                  FormField<String>(validator: (value) {
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Inlcude Delivery Charges",
-                            style: wayaTheme.textTheme.titleMedium),
-                        const Gap(6),
-                        Text(
-                          "This means a certain amount will be \n charged for delivery of this product",
-                          style: wayaTheme.textTheme.hintStyle,
-                        )
+                        WayaTextFormField(
+                          keyboardType: TextInputType.streetAddress,
+                          controller: viewModel.pickUpAddress,
+                          hintText: 'Enter Pickup Address',
+                          borderColor: formState.hasError &&
+                                  viewModel.pickUpAddress.text.isEmpty
+                              ? wayaTheme.colorScheme.error
+                              : null,
+                          label: 'PickUp Address',
+                          prefixIcon: Icon(
+                            Icons.location_on_outlined,
+                            color: wayaTheme.colorScheme.greyColor300,
+                            size: 24,
+                          ),
+                        ),
                       ],
-                    )
-                  ],
-                ),
+                    );
+                  }),
+                ],
+                if (viewModel.pickUpOption == 'Delivery' ||
+                    viewModel.pickUpOption == 'Both') ...[
+                  const Gap(20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Switch(
+                          value: viewModel.includeDeliveryFee,
+                          onChanged: (value) => ref
+                              .read(
+                                  addProductProvider(widget.uniqueKey).notifier)
+                              .updateIncludeDeliveryFee(value)),
+                      const Gap(10),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Inlcude Delivery Charges",
+                              style: wayaTheme.textTheme.titleMedium),
+                          const Gap(6),
+                          Text(
+                            "This means a certain amount will be \n charged for delivery of this product",
+                            style: wayaTheme.textTheme.hintStyle,
+                          )
+                        ],
+                      )
+                    ],
+                  ),
+                ],
                 const Gap(20),
                 // if (viewModel.includeDeliveryFee)
                 //   FormField<String>(validator: (value) {
@@ -225,7 +239,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                   ],
                 ),
                 const Gap(20),
-                if (viewModel.applyDiscount)
+                if (viewModel.applyDiscount  && viewModel.isWayagramDeal != true)
                   Text(
                     "You can either add a discount percentage or select from the predefined discount types",
                     style: wayaTheme.textTheme.hintStyle,
@@ -242,18 +256,25 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                             uniqueKey: 'discount-type',
                             label: "Discount Type",
                             hintText: 'Select a Discount Type',
-                            displayText: (item) => item.label,
-                            fetchData: ref
-                                .watch(addProductProvider(widget.uniqueKey).notifier)
-                                .getAllDiscounts,
+                            displayText: viewModel.selectedDiscountType,
+                            fetchData: viewModel.isWayagramDeal == true
+                                ? ref
+                                    .watch(addProductProvider(widget.uniqueKey)
+                                        .notifier)
+                                    .getDealsDiscounts
+                                : ref
+                                    .watch(addProductProvider(widget.uniqueKey)
+                                        .notifier)
+                                    .getAllDiscounts,
                             onSelected: (value) => ref
-                                .read(addProductProvider(widget.uniqueKey).notifier)
+                                .read(addProductProvider(widget.uniqueKey)
+                                    .notifier)
                                 .update(value, "discountType")),
                       ],
                     );
                   }),
                 const Gap(10),
-                if (viewModel.applyDiscount)
+                if (viewModel.applyDiscount && viewModel.isWayagramDeal != true)
                   FormField<String>(validator: (value) {
                     return null;
                   }, builder: (formState) {
@@ -280,6 +301,11 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                 WayaButton(
                     text: 'Add Product Images',
                     callback: () {
+                      if (viewModel.discountPercentage.text.isNotEmpty &&
+                          viewModel.selectedDiscountType != null) {
+                        return WayaSnackBar.showToast(
+                            "You can only either of the two discount type");
+                      }
                       //  ref.read(addProductProvider.notifier).submit();
                       widget.gotoNextTab();
                     }),
@@ -293,7 +319,6 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
             border:
                 Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              //  ref.read(addProductProvider.notifier).submit();
               widget.gotoPreviousTab();
             })
       ],

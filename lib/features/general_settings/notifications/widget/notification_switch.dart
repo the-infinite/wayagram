@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/general_settings/notifications/vm/default.dart';
@@ -64,7 +65,7 @@ class _NotificationSwitchButtonState extends State<NotificationSwitchButton> {
                         Text(
                           widget.name,
                           style: WayaTextStyles.titleMedium.copyWith(
-                            fontSize: 15,
+                            fontSize: 15.sp,
                           ),
                         ),
 
@@ -72,7 +73,7 @@ class _NotificationSwitchButtonState extends State<NotificationSwitchButton> {
                         Text(
                           widget.description,
                           style: WayaTextStyles.mediumDescriptionStyle.copyWith(
-                            fontSize: 13,
+                            fontSize: 13.sp,
                           ),
                         ),
                       ],

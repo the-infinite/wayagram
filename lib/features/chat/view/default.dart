@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -108,7 +109,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                   "Messages",
                   style: WayaTextStyles.titleLarge.copyWith(
                     fontWeight: FontWeight.w700,
-                    fontSize: 24,
+                    fontSize: 24.sp,
                   ),
                 ),
               ),
@@ -117,49 +118,50 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               const Spacer(),
 
               //? Second, the archived chats button.
-              InkWell(
-                borderRadius: BorderRadius.circular(200),
-                splashColor: WayaColors.primary.withAlpha(30),
-                focusColor: WayaColors.primary.withAlpha(30),
-                highlightColor: WayaColors.primary.withAlpha(30),
-                onTap: () {
-                  notifier.dismissOverlay();
-                  notifier.setArchived(true);
-                  WayaNav.toNamed(ArchivedChatsScreen.route);
-                },
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(200),
-                    color: WayaColors.primary50,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      //? First, the reply icon.
-                      Icon(
-                        CupertinoIcons.archivebox_fill,
-                        color: WayaColors.primary,
-                        size: 18,
-                      ),
-
-                      // Some space.
-                      const Gap(5),
-
-                      //? Second, the text for replying.
-                      Text(
-                        "Archived chats",
-                        style: WayaTextStyles.bodySemiBold.copyWith(
+              if (conversationState.archived.isNotEmpty)
+                InkWell(
+                  borderRadius: BorderRadius.circular(200),
+                  splashColor: WayaColors.primary.withAlpha(30),
+                  focusColor: WayaColors.primary.withAlpha(30),
+                  highlightColor: WayaColors.primary.withAlpha(30),
+                  onTap: () {
+                    notifier.dismissOverlay();
+                    notifier.setArchived(true);
+                    WayaNav.toNamed(ArchivedChatsScreen.route);
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(200),
+                      color: WayaColors.primary50,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        //? First, the reply icon.
+                        Icon(
+                          CupertinoIcons.archivebox_fill,
                           color: WayaColors.primary,
-                          fontSize: 13,
+                          size: 18,
                         ),
-                      ),
-                    ],
+
+                        // Some space.
+                        const Gap(5),
+
+                        //? Second, the text for replying.
+                        Text(
+                          "Archived chats",
+                          style: WayaTextStyles.bodySemiBold.copyWith(
+                            color: WayaColors.primary,
+                            fontSize: 13.sp,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
               // Some space.
               const Gap(10),

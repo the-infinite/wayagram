@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/features/ugt/contest_setting/steps/stage_contest_settings.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/contest_timeline.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/create_ultimate.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/participant_details.dart';
+import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 
 class CreateContest extends ConsumerStatefulWidget {
   static const route = '/create-contest';
@@ -33,8 +32,6 @@ class _CreateContestState extends ConsumerState<CreateContest>
     }
   }
 
-
-
   void _goToPreviousTab() {
     if (_tabController.index > 1) {
       _tabController.animateTo(_tabController.index - 1);
@@ -47,7 +44,7 @@ class _CreateContestState extends ConsumerState<CreateContest>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    final viewModel = ref.watch(contestNotifierProvider);
     return WayaScaffoldWithProgressBar(
         isLoading: false,
         isScrollable: true,
@@ -58,10 +55,15 @@ class _CreateContestState extends ConsumerState<CreateContest>
           ),
           ParticipantDetails(
             goToNextTab: _goToNextTab,
+            goToPrevTab: _goBack,
           ),
-          ContestTimeline(),
-          EditStagePreference(),
-         // StageContestSettings(),
+          ContestTimeline(
+            goToPrevTab: _goBack,
+          ),
+          EditStagePreference(
+              // goToPrevTab: _goToPreviousTab,
+              ),
+          // StageContestSettings(),
         ],
         tabController: _tabController);
   }

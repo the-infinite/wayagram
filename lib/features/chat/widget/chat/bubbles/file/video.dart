@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_video.dart';
@@ -36,6 +37,7 @@ class VideoFileWidget extends StatefulWidget {
 
 class _VideoFileWidgetState extends State<VideoFileWidget> {
   bool downloaded = true;
+  final controller = WayaVideoController();
 
   @override
   void initState() {
@@ -65,6 +67,12 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
       }
     });
     super.reassemble();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -145,7 +153,7 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                             textAlign: TextAlign.center,
                             style: WayaTextStyles.bodySmall.copyWith(
                               color: WayaColors.primary,
-                              fontSize: 14,
+                              fontSize: 14.sp,
                             ),
                           ),
                         ],
@@ -170,7 +178,7 @@ class _VideoFileWidgetState extends State<VideoFileWidget> {
                 height: !widget.interactive && widget.totalSize < 3 ? null : 100,
                 child: WayaVideoWidget.file(
                   widget.video,
-                  controller: WayaVideoController(),
+                  controller: controller,
                   controls: widget.interactive ? WayaVideoControls.message : WayaVideoControls.content,
                 ),
               ),

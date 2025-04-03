@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
@@ -10,8 +8,8 @@ import 'package:wayagram/features/wallet/data/model/wallet_state_model.dart';
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 
 class WalletVm extends StateNotifier<WalletState> {
-  final WalletRepository? _walletRepository;
-  WalletVm(this._walletRepository) : super(WalletState());
+  final _walletRepository = WalletRepository.instance;
+  WalletVm() : super(WalletState());
 
   Future<void> getUserWallet() async {
     state = state.copyWith(isLoading: true);
@@ -19,13 +17,9 @@ class WalletVm extends StateNotifier<WalletState> {
     if (response.success == true) {
       final walletData = response.data["data"]["wallet"];
       final walletAccountsData = response.data["data"]["walletAccounts"];
-      final externalWallets = (walletAccountsData as List)
-          .map((walletAccount) => ExternalWalletModel.fromJson(walletAccount))
-          .toList();
-      state = state.copyWith(
-          data: Wallet.fromJson(walletData),
-          externalWallets: externalWallets,
-          isLoading: false);
+      final externalWallets =
+          (walletAccountsData as List).map((walletAccount) => ExternalWalletModel.fromJson(walletAccount)).toList();
+      state = state.copyWith(data: Wallet.fromJson(walletData), externalWallets: externalWallets, isLoading: false);
     } else {
       state = state.copyWith(isLoading: false);
     }
@@ -36,8 +30,7 @@ class WalletVm extends StateNotifier<WalletState> {
     final response = await _walletRepository!.checkWalletPinStatus(userId);
     if (response.success == true) {
       final walletData = response.data["data"]["wallet"];
-      state =
-          state.copyWith(data: Wallet.fromJson(walletData), isLoading: false);
+      state = state.copyWith(data: Wallet.fromJson(walletData), isLoading: false);
     } else {
       state = state.copyWith(isLoading: false);
     }
@@ -45,15 +38,14 @@ class WalletVm extends StateNotifier<WalletState> {
 }
 
 final walletVmProvider = StateNotifierProvider<WalletVm, WalletState>((ref) {
-  return WalletVm(WalletRepository());
+  return WalletVm();
 });
 
 class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
   final WalletRepository? _walletRepository;
   final WayaLocalDataSource _localDataSource;
   final SuccessfulSetUpState _setupState;
-  WalletFundingOptionsVm(
-      this._walletRepository, this._localDataSource, this._setupState)
+  WalletFundingOptionsVm(this._walletRepository, this._localDataSource, this._setupState)
       : super(WalletFundingOptionState());
 
   Future<void> getWalletFundingOptions() async {
@@ -61,9 +53,8 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
     final response = await _walletRepository!.getWalletFundingOptions();
     if (response.success == true) {
       final fundingData = response.data["data"];
-      final fundingOptions = (fundingData as List)
-          .map((fundOption) => WalletFundingOptionModel.fromJson(fundOption))
-          .toList();
+      final fundingOptions =
+          (fundingData as List).map((fundOption) => WalletFundingOptionModel.fromJson(fundOption)).toList();
       state = state.copyWith(fundingOptions: fundingOptions, isLoading: false);
     } else {
       state = state.copyWith(isLoading: false);
@@ -71,9 +62,7 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
   }
 
   Future<Map<String, dynamic>?> walletFunding(
-      {String? decription,
-      required double amount,
-      required String fundOptionCode}) async {
+      {String? decription, required double amount, required String fundOptionCode}) async {
     final user = _setupState.user?.user;
 
     final response = await _walletRepository!.fundWallet(FundWallet(
@@ -94,8 +83,7 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
 
   Future<bool> verifyWalletPin(String pin) async {
     final user = _setupState.user?.user;
-    final response = await _walletRepository!
-        .confirmWalletPin(ConfirmWalletPin(userId: user!.id ?? "", pin: pin));
+    final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(userId: user!.id ?? "", pin: pin));
     if (response.success) {
       return true;
     } else {
@@ -126,10 +114,7 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
   }
 }
 
-final walletFundingOptionsVmProvider =
-    StateNotifierProvider<WalletFundingOptionsVm, WalletFundingOptionState>(
-        (ref) {
+final walletFundingOptionsVmProvider = StateNotifierProvider<WalletFundingOptionsVm, WalletFundingOptionState>((ref) {
   final successfulSetupVm = ref.watch(successfulSetupVmProvider);
-  return WalletFundingOptionsVm(
-      WalletRepository(), WayaLocalDataSource(), successfulSetupVm);
+  return WalletFundingOptionsVm(WalletRepository.instance, WayaLocalDataSource(), successfulSetupVm);
 });

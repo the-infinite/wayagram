@@ -6,7 +6,9 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/routes.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/set_notification_vm.dart';
 
 class SetNotification extends ConsumerWidget {
@@ -16,7 +18,8 @@ class SetNotification extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(setNotificationVmProvider);
+    final viewModel = ref.read(setNotificationVmProvider.notifier);
+    final state = ref.watch(setNotificationVmProvider);
     return Scaffold(
         body: Padding(
       padding: WayaEdgeInsetsExtension.fromPercentage(
@@ -49,17 +52,22 @@ class SetNotification extends ConsumerWidget {
                 ),
                 const Gap(20),
                 WayaButton(
-                  callback: () {
-                    viewModel.setNotification();
-                  },
-                  text: "Turn on Notification",
+                  callback: state.isLoading
+                      ? null
+                      : () {
+                          viewModel.setNotification();
+                        },
+                  centerWidget: LoadingState(
+                      loading: state.isLoading, text: "Turn on Notification"),
                 ),
                 const Gap(20),
                 Align(
                     child: GestureDetector(
-                  onTap: () {
-                    WayaNav.toNamed('/select-interests');
-                  },
+                  onTap: state.isLoading
+                      ? null
+                      : () {
+                          WayaNav.toNamed(SelectInterest.route);
+                        },
                   child: Text(
                     "Skip for now",
                     style: TextStyle().wayaCopyWith(

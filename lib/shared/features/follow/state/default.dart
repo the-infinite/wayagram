@@ -52,7 +52,7 @@ class FollowState {
   });
 
   static final initial = FollowState(
-    limit: 100,
+    limit: 1500,
     userId: "",
     hasLoadedFollowers: false,
     isLoadingFollowers: false,

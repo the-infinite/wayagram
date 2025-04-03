@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -44,7 +45,7 @@ class BusinessAccountTypeWidget extends StatelessWidget {
                         ? wayaTheme.customPrimary
                         : wayaTheme.customBlack,
                     fontWeight: FontWeight.w600,
-                    fontSize: 16)),
+                    fontSize: 16.sp)),
             const Gap(10),
             Text(data.description,
                 textAlign: TextAlign.center,
@@ -53,7 +54,7 @@ class BusinessAccountTypeWidget extends StatelessWidget {
                         ? wayaTheme.customPrimary
                         : wayaTheme.greyColor400,
                     fontWeight: FontWeight.w500,
-                    fontSize: 12))
+                    fontSize: 12.sp))
           ],
         ),
       ),

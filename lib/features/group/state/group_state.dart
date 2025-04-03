@@ -1,17 +1,15 @@
-
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
-import 'package:wayagram/features/group/data/model/fetch_all_event_model.dart';
-import 'package:wayagram/features/group/data/model/get_all_groups.dart';
-import 'package:wayagram/features/group/data/model/joined_group_model.dart';
-import 'package:wayagram/features/group/data/model/recommended_group_model.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
+import 'package:wayagram/shared/features/profile/model/groups.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 
 import '../data/model/join_request_model.dart';
 
-class GroupState{
+class GroupState {
   final TextEditingController groupName;
   final TextEditingController groupDescription;
   final TextEditingController username;
@@ -22,43 +20,54 @@ class GroupState{
   String? name;
   String? desc;
   List<JoinRequestDocs>? docs;
-  List<GetAllGroupDocs>? getAllGroups;
-  List<FetchAllEventDocs>? fetchAllEventDocs;
+  GetAllPost? allPostData;
+  List<GroupModel>? getAllGroups;
+  List<EventDoc>? fetchAllEventDocs;
   List<AllGroupMemberDocs>? allGroupMemberDocs;
-  List<JoinedGroupDocs>? joinedGroup;
-  List<RecommendedGroupDocs>? recommendedGroupDocs;
-  List<GetAllPostDocs>? getAllPost;
-
+  List<GroupModel>? recommendedGroupDocs;
+  List<PostModel>? getAllPost;
+  List<PostModel>? groupPostdocs;
+  List<PostModel>? groupPopularPostdocs;
+  int? postCount;
+  final String? foundUserId;
+  final bool isReportingGroup;
   final bool isFocused;
   final bool isLoading;
   final bool openToEveryone;
   final bool requireApproval;
   final String roleType;
 
+  //? If this has more posts, continue.
+  bool get hasMorePosts => allPostData?.data?.hasNextPage ?? true;
+
   GroupState({
     TextEditingController? groupName,
     TextEditingController? groupDescription,
     TextEditingController? username,
     TextEditingController? content,
-
+    this.allPostData,
+    this.foundUserId,
     this.isFocused = false,
     this.isLoading = false,
     this.openToEveryone = false,
     this.requireApproval = false,
+    this.isReportingGroup = false,
+    this.postCount,
     this.roleType = '',
     this.profileImage = '',
     this.coverImage = '',
     this.name = '',
     this.desc = '',
+    this.groupPopularPostdocs = const [],
     this.docs = const [],
+    this.groupPostdocs = const [],
     this.allGroupMemberDocs = const [],
     this.getAllGroups = const [],
     this.fetchAllEventDocs = const [],
-    this.joinedGroup = const [],
     this.recommendedGroupDocs = const [],
     this.getAllPost = const [],
     this.image,
-  }):   groupName = groupName ?? TextEditingController(),
+  })  : groupName = groupName ?? TextEditingController(),
         groupDescription = groupDescription ?? TextEditingController(),
         username = username ?? TextEditingController(),
         content = content ?? TextEditingController();
@@ -69,48 +78,64 @@ class GroupState{
     TextEditingController? username,
     TextEditingController? content,
     List<JoinRequestDocs>? docs,
-    List<GetAllGroupDocs>? getAllGroups,
-    List<FetchAllEventDocs>? fetchAllEventDocs,
+    List<GroupModel>? getAllGroups,
+    List<EventDoc>? fetchAllEventDocs,
+    List<PostModel>? groupPopularPostdocs,
     List<AllGroupMemberDocs>? allGroupMemberDocs,
-    List<JoinedGroupDocs>? joinedGroup,
-    List<RecommendedGroupDocs>? recommendedGroupDocs,
-    List<GetAllPostDocs>? getAllPost,
-
+    List<GroupModel>? recommendedGroupDocs,
+    List<PostModel>? groupPostdocs,
+    int? postCount,
+    List<PostModel>? getAllPost,
+    bool? isReportingGroup,
     bool? isFocused,
     bool? isLoading,
+    bool? joinGroupLoading,
     bool? openToEveryone,
     bool? requireApproval,
+    String? foundUserId,
     String? roleType,
     String? profileImage,
     String? coverImage,
     String? name,
     String? desc,
-
+    GetAllPost? allPostData,
     File? image,
-  }){
+  }) {
     return GroupState(
       groupName: groupName ?? this.groupName,
       groupDescription: groupDescription ?? this.groupDescription,
       username: username ?? this.username,
       content: content ?? this.content,
+      postCount: postCount ?? this.postCount,
+      foundUserId: foundUserId ?? this.foundUserId,
       docs: docs ?? this.docs,
+      groupPopularPostdocs: groupPopularPostdocs ?? this.groupPopularPostdocs,
       getAllPost: getAllPost ?? this.getAllPost,
       getAllGroups: getAllGroups ?? this.getAllGroups,
       fetchAllEventDocs: fetchAllEventDocs ?? this.fetchAllEventDocs,
       allGroupMemberDocs: allGroupMemberDocs ?? this.allGroupMemberDocs,
+      groupPostdocs: groupPostdocs ?? this.groupPostdocs,
       recommendedGroupDocs: recommendedGroupDocs ?? this.recommendedGroupDocs,
-      joinedGroup: joinedGroup ?? this.joinedGroup,
       isFocused: isFocused ?? this.isFocused,
       isLoading: isLoading ?? this.isLoading,
+      isReportingGroup: isReportingGroup ?? this.isReportingGroup,
       openToEveryone: openToEveryone ?? this.openToEveryone,
       requireApproval: requireApproval ?? this.requireApproval,
       roleType: roleType ?? this.roleType,
       image: image ?? this.image,
+      allPostData: allPostData,
       profileImage: profileImage ?? profileImage,
       coverImage: coverImage ?? coverImage,
       name: name ?? this.name,
       desc: desc ?? this.desc,
-
     );
   }
 }
+
+const groupReport = [
+  "Spam or misleading content",
+  "Inappropriate_Content",
+  "Fraudulent_activity",
+  "Violates_terms_and_conditions",
+  "other"
+];

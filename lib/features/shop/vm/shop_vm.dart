@@ -1,9 +1,12 @@
+import 'package:flutter/widgets.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/review_repsonse_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/seller_metrics_response_model.dart';
 
 class ShopVm extends StateNotifier<ShopState> {
   final ShopRepository _repository;
@@ -49,10 +52,61 @@ class ShopVm extends StateNotifier<ShopState> {
     state = state.copyWith(searchQuery: query);
   }
 
-  Future<PaginatedResult<Product>?> getAllProducts(int page) async {
+  Future<bool?> reviewProduct(
+      {required String raterId,
+      String? productId,
+      String? shopId,
+      required int score,
+      required String review,
+      required BuildContext context}) async {
+    try {
+      print(productId);
+
+      state = state.copyWith(isReviewing: true);
+      final response = await _repository.createRating(
+          raterId: raterId,
+          score: score,
+          productId: productId,
+          review: review,
+          type: "Shop");
+
+      bool isSuccess = false;
+      if (response.success) {
+        print(response.data);
+        isSuccess = true;
+      } else {
+        isSuccess = false;
+      }
+
+      return isSuccess;
+    } catch (error) {
+      print(error);
+      return null;
+    } finally {
+      state = state.copyWith(isReviewing: false);
+    }
+  }
+
+  Future<void> getProductReviews({required String productId}) async {
+    try {
+      final response = await _repository.getProductRating(productId: productId);
+
+      if (response.success) {
+        ReviewRepsonseModel responseModel =
+            ReviewRepsonseModel.fromJson(response.data);
+        state = state.copyWith(reviews: responseModel.data);
+        print(response.data);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  Future<PaginatedResult<Product>?> getAllProducts(
+      {required int page, int limit = 20}) async {
     state = state.copyWith(isLoading: true);
     try {
-      final response = await _repository.getProducts(page);
+      final response = await _repository.getProducts(page: page, limit: limit);
       List<Product> allProducts = [];
       bool hasNextPage = false;
       if (response.success) {
@@ -68,6 +122,45 @@ class ShopVm extends StateNotifier<ShopState> {
       return null;
     } finally {
       state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<PaginatedResult<Product>?> getAllWayaDealProducts(
+      {required int page, int limit = 20}) async {
+    state = state.copyWith(isLoading: true);
+    try {
+      final response = await _repository.getOngoingWayaDealProducts(
+          page: page, limit: limit);
+      List<Product> allProducts = [];
+      bool hasNextPage = false;
+      if (response.success) {
+        ProductResponse productResponse =
+            ProductResponse.fromJson(response.data);
+        allProducts = productResponse.data.data;
+        hasNextPage = productResponse.data.pagination.hasNextPage;
+        state = state.copyWith(wayaDealProducts: allProducts);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage, items: allProducts);
+    } catch (e) {
+      print(e);
+      return null;
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> getShopMetrics({required String shopId}) async {
+    try {
+      final response = await _repository.getShopMetrics(shopId: shopId);
+
+      if (response.success) {
+        ShopMetricsResponse shopMetricResponse =
+            ShopMetricsResponse.fromJson(response.data);
+        state = state.copyWith(sellerMetrics: shopMetricResponse.data);
+        print(response.data);
+      }
+    } catch (error) {
+      print(error);
     }
   }
 
@@ -88,32 +181,32 @@ class ShopVm extends StateNotifier<ShopState> {
             product.description.toLowerCase().contains(query);
       }
 
-      return !product.wayagramDeal;
+      return product.wayagramDeal == null;
     }).toList();
   }
 
-  List<Product> get filteredWayagramDealProducts {
-    if (state.products.isEmpty) return [];
-    return state.products.where((product) {
-      // category filter
-      if (state.selectedCategoryId != null &&
-          state.selectedCategoryId!.isNotEmpty &&
-          !state.selectedCategoryId!.contains(product.categoryId)) {
-        return false;
-      }
+  // List<Product> get filteredWayagramDealProducts {
+  //   if (state.products.isEmpty) return [];
+  //   return state.products.where((product) {
+  //     // category filter
+  //     if (state.selectedCategoryId != null &&
+  //         state.selectedCategoryId!.isNotEmpty &&
+  //         !state.selectedCategoryId!.contains(product.categoryId)) {
+  //       return false;
+  //     }
 
-      // search filter
-      if (state.searchQuery.isNotEmpty) {
-        final query = state.searchQuery.toLowerCase();
-        return product.name.toLowerCase().contains(query) ||
-            product.description.toLowerCase().contains(query);
-      }
+  //     // search filter
+  //     if (state.searchQuery.isNotEmpty) {
+  //       final query = state.searchQuery.toLowerCase();
+  //       return product.name.toLowerCase().contains(query) ||
+  //           product.description.toLowerCase().contains(query);
+  //     }
 
-      return product.wayagramDeal;
-    }).toList();
-  }
+  //     return product.wayagramDeal == true;
+  //   }).toList();
+  // }
 }
 
 final shopVmProvider = StateNotifierProvider<ShopVm, ShopState>((ref) {
-  return ShopVm(ShopRepository(), ref);
+  return ShopVm(ShopRepository.instance, ref);
 });
