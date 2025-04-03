@@ -118,9 +118,14 @@ class ConversationVm extends StateNotifier<ConversationState> {
   }
 
   /// Helper function used to start a chat with a list of users.
-  Future<ChatModel?> startChat(ChatType type, List<String> users) async {
+  Future<ChatModel?> startChat(
+    ChatType type,
+    List<String> users, [
+    String? name,
+    String? description,
+  ]) async {
     //? This is fine.
-    final response = await repo.startConversation(type, users);
+    final response = await repo.startConversation(type, users, name, description);
 
     //? If this was fine...
     if (!response.success) {

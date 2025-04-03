@@ -185,27 +185,26 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                     final moment = moments[currentIndex];
 
                     //? This is fine.
-                    return moment.contentType == 'text'
-                        ? _TextMoment(
-                            ref: ref,
-                            moment: moment,
-                            index: index,
-                            pause: () => pauseAnimation(false),
-                            resume: continueAnimating,
-                            setDuration: (duration) {
-                              _animationController.duration = duration;
-                            },
-                          )
-                        : _MediaMomentWidget(
-                            index: index,
-                            ref: ref,
-                            moment: moment,
-                            pause: () => pauseAnimation(false),
-                            resume: continueAnimating,
-                            setDuration: (duration) {
-                              _animationController.duration = duration;
-                            },
-                          );
+                    if (moment.contentType.trim().toLowerCase() == 'text') {
+                      return _TextMoment(
+                        ref: ref,
+                        moment: moment,
+                        index: index,
+                        pause: () => pauseAnimation(false),
+                        resume: continueAnimating,
+                        setDuration: (duration) => _animationController.duration = duration,
+                      );
+                    }
+
+                    //? Do it like this.
+                    return _MediaMomentWidget(
+                      index: index,
+                      ref: ref,
+                      moment: moment,
+                      pause: () => pauseAnimation(false),
+                      resume: continueAnimating,
+                      setDuration: (duration) => _animationController.duration = duration,
+                    );
                   },
                 ),
 
@@ -399,13 +398,18 @@ class __TextMomentState extends State<_TextMoment> {
 
   @override
   Widget build(BuildContext context) {
+    // Keep this safe.
     return Container(
       padding: const EdgeInsets.all(24.0),
       alignment: Alignment.center,
       child: Text(
         widget.moment.content,
-        style: widget.moment.fontType != null ? MomentHelper.textStyleFromJson(widget.moment.fontType!) : null,
         textAlign: TextAlign.center,
+        style: widget.moment.fontType == null
+            ? null
+            : MomentHelper.textStyleFromJson(
+                widget.moment.fontType!,
+              ),
       ),
     );
   }
