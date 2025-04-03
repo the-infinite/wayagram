@@ -134,7 +134,7 @@ import 'package:wayagram/features/explore/search/search.dart';
 import 'package:wayagram/shared/features/quotation/view/all_buy_request.dart';
 
 import '../../features/activity_logs/view/cms_clicks.dart';
-import '../../features/activity_logs/view/login_activity.dart';
+import '../../features/activity_logs/view/account_activity.dart';
 import '../../features/activity_logs/view/logs_and_audit.dart';
 import '../../features/activity_logs/view/payment_activity.dart';
 import '../../features/activity_logs/view/search_log.dart';
@@ -167,8 +167,10 @@ class WayaAppRoutes {
     CartView.route: () => CartView(),
     AllSellerOrders.route: () => AllSellerOrders(),
     SellerOrderDetails.route: () => SellerOrderDetails(),
-    SellerBidDetails.route: () =>
-        SellerBidDetails(id: WayaNav.search['id'].toString()),
+    SellerBidDetails.route: () => SellerBidDetails(
+          id: WayaNav.search['id'].toString(),
+          requestId: WayaNav.search['requestId'].toString(),
+        ),
     SellerSettlement.route: () => SellerSettlement(),
     SeeSellerBids.route: () =>
         SeeSellerBids(id: WayaNav.search['id'].toString()),
@@ -458,8 +460,8 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single
-  static String getBidDetailsScreen(String id) =>
-      "${SellerBidDetails.route}?id=$id";
+  static String getBidDetailsScreen(String id, String requestId) =>
+      "${SellerBidDetails.route}?id=$id&requestId=$requestId";
 
   /// This is fine.
   static List<GetPage> get getPages {

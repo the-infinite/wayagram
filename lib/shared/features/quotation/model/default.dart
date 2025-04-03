@@ -59,32 +59,38 @@ enum QuotationOrderStatus {
 }
 
 enum QuotationDeliveryStatus {
-  pending,
-  processing,
+  pending._('pending'),
+  processing._('processing'),
 
   @JsonValue('ready-for-dispatch')
-  readyForDispatch,
+  readyForDispatch._('ready-for-dispatch'),
 
   @JsonValue('in-transit')
-  inTransit,
+  inTransit._('in-transit'),
 
   @JsonValue('out-for-delivery')
-  outForDelivery,
+  outForDelivery._('out-for-delivery'),
 
-  delivered,
+  delivered._('delivered');
+
+  final String value;
+  const QuotationDeliveryStatus._(this.value);
 }
 
 enum QuotationPickupStatus {
-  pending,
+  pending._('pending'),
 
   @JsonValue('ready-for-pickup')
-  ready,
+  ready._('ready-for-pickup'),
 
   @JsonValue('pickup-scheduled')
-  scheduled,
+  scheduled._('pickup-scheduled'),
 
   @JsonValue('pickup-completed')
-  collected,
+  collected._('pickup-completed');
+
+  final String value;
+  const QuotationPickupStatus._(this.value);
 }
 
 @JsonSerializable()
@@ -92,7 +98,7 @@ class BuyRequestModel {
   final String id;
   final String buyerId;
   final String productName;
-  final String brand;
+  final String? brand;
   final String category;
   final String condition;
   final String description;
@@ -147,7 +153,7 @@ class BuyRequestModel {
     this.bids,
   });
 
-  String get fullname => '${brand.isNotEmpty ? '${brand.capitalize} ' : ''}${productName.capitalize}';
+  String get fullname => '${brand?.isNotEmpty ?? false ? '${brand!.capitalize} ' : ''}${productName.capitalize}';
 
   factory BuyRequestModel.fromJson(Map<String, dynamic> json) => _$BuyRequestModelFromJson(json);
 
@@ -226,6 +232,8 @@ class QuotationBidModel {
   final DateTime updatedAt;
   final DateTime createdAt;
   final String? counterAmount;
+
+  double get amount => double.tryParse(bidAmount) ?? 0.0;
 
   QuotationBidModel({
     required this.id,

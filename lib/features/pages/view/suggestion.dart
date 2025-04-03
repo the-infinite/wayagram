@@ -5,8 +5,8 @@ import 'package:svg_flutter/svg_flutter.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
-import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/widget/page.dart';
 
 class Suggestion extends ConsumerStatefulWidget {
@@ -18,18 +18,22 @@ class Suggestion extends ConsumerStatefulWidget {
 }
 
 class _SuggestionState extends ConsumerState<Suggestion> with SingleTickerProviderStateMixin {
+  late final notifier = ref.watch(createPageProvider.notifier);
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      myPageNotifier.getCreatedPages();
+      notifier.getRecommendedPages();
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final state = ref.watch(createPageProvider);
 
+    //? This is fine.
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -40,16 +44,16 @@ class _SuggestionState extends ConsumerState<Suggestion> with SingleTickerProvid
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Gap(10),
-          if (myPageNotifier.createdPages.isEmpty)
+          if (state.recommendedPages?.isEmpty ?? true)
             PageEmptyState()
           else
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               padding: EdgeInsets.only(top: 15),
-              itemCount: myPageNotifier.createdPages.length,
+              itemCount: state.recommendedPages?.length ?? 0,
               itemBuilder: (_, index) => SinglePageWidget(
-                page: myPageNotifier.createdPages[index],
+                page: state.recommendedPages![index],
                 index: index,
               ),
             ),

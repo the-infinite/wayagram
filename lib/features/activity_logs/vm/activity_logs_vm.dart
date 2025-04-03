@@ -10,6 +10,7 @@ import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/login_history_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_interaction_model.dart';
 import 'package:wayagram/features/activity_logs/view/visited_page.dart';
@@ -70,6 +71,83 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
       state = state.copyWith(isLoading: false);
     }
   }
+
+  Future<PaginatedResult<DonationDocs>?> getDonationLogs({required int page}) async {
+
+    try{
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getDonationLogs(page);
+      List<DonationDocs>? fetchDonationDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        DonationActivityModel responseModel = DonationActivityModel.fromJson(response.data);
+        fetchDonationDocs = responseModel.data?.docs;
+        hasNextPage = responseModel.data?.hasNextPage;
+        state = state.copyWith(donationDocs: fetchDonationDocs);
+        state = state.copyWith(donationDocs: responseModel.data?.docs);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchDonationDocs!);
+    }catch (e){
+      _logger.e(e);
+    }finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<PaginatedResult<DonationDocs>?> getPageLogs({required int page}) async {
+
+    try{
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getPageLogs(page);
+      List<DonationDocs>? fetchDonationDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        DonationActivityModel responseModel = DonationActivityModel.fromJson(response.data);
+        fetchDonationDocs = responseModel.data?.docs;
+        hasNextPage = responseModel.data?.hasNextPage;
+        state = state.copyWith(pageDocs: fetchDonationDocs);
+        state = state.copyWith(pageDocs: responseModel.data?.docs);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchDonationDocs!);
+    }catch (e){
+      _logger.e(e);
+    }finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<PaginatedResult<DonationDocs>?> getGroupLogs({required int page}) async {
+
+    try{
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getGroupLogs(page);
+      List<DonationDocs>? fetchDonationDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        DonationActivityModel responseModel = DonationActivityModel.fromJson(response.data);
+        fetchDonationDocs = responseModel.data?.docs;
+        hasNextPage = responseModel.data?.hasNextPage;
+        state = state.copyWith(groupDocs: fetchDonationDocs);
+        state = state.copyWith(groupDocs: responseModel.data?.docs);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchDonationDocs!);
+    }catch (e){
+      _logger.e(e);
+    }finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+
 
   Future<PaginatedResult<VisitedPagesDocs>?>  getVisitedPages({required int page}) async {
 

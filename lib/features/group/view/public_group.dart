@@ -211,12 +211,16 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                     ),
 
                     // Some space.
-                    Gap(15),
+                    Gap(15.h),
 
                     //? The button to click when you want to see the profiles
                     //? of group members.
-                    if (myGroupNotifier.isMemberOf(widget.id) || !group.isPrivate)
-                      GestureDetector(
+                    Visibility(
+                      visible: myGroupNotifier.isMemberOf(widget.id) || !group.isPrivate,
+                      maintainState: true,
+                      maintainAnimation: true,
+                      maintainSize: true,
+                      child: GestureDetector(
                         onTap: () => WayaNav.toNamed(WayaAppRoutes.getGroupMembersPage(group.id)),
                         child: Container(
                           margin: EdgeInsets.only(right: 20.w),
@@ -235,13 +239,14 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                           ),
                         ),
                       ),
+                    ),
                   ],
                 ),
 
                 //? Now, for the group profile picture.
                 Positioned(
                   left: 16.w,
-                  top: 190,
+                  top: 170.h,
                   child: WayaDp(
                     radius: 30.r,
                     image: group.profileImage,
@@ -251,9 +256,6 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                 ),
               ],
             ),
-
-            //? Some space.
-            const Gap(10),
 
             //? Now, the section for its posts.
             Padding(
@@ -349,42 +351,47 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
             //? Since the user has not joined and it is private
             else if (group.isPrivate) ...[
               Gap(100.h),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  //? First, the lock icon.
-                  WayaAssets.icons.genSet.lock.svg(),
 
-                  // Some space.
-                  Gap(10.h),
+              //? Fair enough.
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    //? First, the lock icon.
+                    WayaAssets.icons.genSet.lock.svg(),
 
-                  //? The private text.
-                  Text('This group is private', style: wayaTheme.textTheme.titleLarge),
+                    // Some space.
+                    Gap(10.h),
 
-                  // Some space.
-                  Gap(10.h),
+                    //? The private text.
+                    Text('This group is private', style: wayaTheme.textTheme.titleLarge),
 
-                  //?
-                  Text(
-                    'You must join to see posts and participate',
-                    style: wayaTheme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w400,
-                      fontFamily: WayaConstants.fontFamily,
-                      fontSize: 16.sp,
+                    // Some space.
+                    Gap(10.h),
+
+                    //?
+                    Text(
+                      'You must join to see posts and participate',
+                      style: wayaTheme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w400,
+                        fontFamily: WayaConstants.fontFamily,
+                        fontSize: 16.sp,
+                      ),
                     ),
-                  ),
 
-                  // Some space.
-                  Gap(30.h),
+                    // Some space.
+                    Gap(30.h),
 
-                  //? Now, let this fly.
-                  WayaProgressiveButton(
-                    notifier: loadingController,
-                    callback: () async => await myGroupNotifier.joinGroup(widget.id),
-                    text: 'Join & Request Access',
-                  ),
-                ],
+                    //? Now, let this fly.
+                    WayaProgressiveButton(
+                      notifier: loadingController,
+                      callback: () async => await myGroupNotifier.joinGroup(widget.id),
+                      text: 'Join & Request Access',
+                    ),
+                  ],
+                ),
               ),
             ]
           ],

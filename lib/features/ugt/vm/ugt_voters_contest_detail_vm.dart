@@ -268,7 +268,6 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         contestList = responseModel.data ?? [];
 
         MyContestContestantModel? model;
-        
 
         contestList.sort((a, b) => b.votes!.compareTo(a.votes!));
 
@@ -397,10 +396,11 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       WayaSnackBar.showToast("Post created successfully!", showSuccess: true);
       getContestantProfileVoteDetails(
           ref.read(selectedContestProvider.notifier).state?.id ?? "");
+
       Future.delayed(
         Duration(seconds: 2),
         () {
-          onBackPressed;
+          onBackPressed();
         },
       );
     } else {

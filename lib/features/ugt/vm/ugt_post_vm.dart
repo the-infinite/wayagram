@@ -41,7 +41,7 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
             isLastPage: responseModel.data?.hasNextPage == true ? false : true);
         if (isFirst) {
           state =
-              state.copyWith(listContestForYou: responseModel.data?.docs ?? []);
+              state.copyWith(listContestForYou: responseModel.data?.docs ?? [], page:1);
         } else {
           state = state.copyWith(listContestForYou: [
             ...state.listContestForYou,

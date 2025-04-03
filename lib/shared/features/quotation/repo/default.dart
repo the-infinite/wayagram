@@ -103,12 +103,12 @@ class QuotationRepository extends BaseRepository {
     return patch('$serviceUrl/order/status/$orderId', payload, showErrors: true);
   }
 
-  Future<WayaRequestResponse> updatePickupStatus({required String status, required String orderId}) {
+  Future<WayaRequestResponse> updatePickupStatus(String orderId, String status) {
     final payload = {"status": status};
     return patch('$serviceUrl/order/pickup-status/$orderId', payload, showErrors: true);
   }
 
-  Future<WayaRequestResponse> updateDeliveryStatus({required String status, required String orderId}) {
+  Future<WayaRequestResponse> updateDeliveryStatus(String orderId, String status) {
     final payload = {"status": status};
     return patch('$serviceUrl/order/delivery-status/$orderId', payload, showErrors: true);
   }
