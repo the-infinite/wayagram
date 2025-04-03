@@ -12,6 +12,7 @@ class ChatRepository extends BaseRepository {
     List<String> members, [
     String? name,
     String? description,
+    String? image,
   ]) {
     return post(
       "$serviceUrl/client/chat/init",
@@ -21,6 +22,7 @@ class ChatRepository extends BaseRepository {
         "chatType": type.name,
         if (name != null) "name": name,
         if (description != null) "bio": description,
+        if (image != null) "image": image,
       },
     );
   }

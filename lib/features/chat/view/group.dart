@@ -58,6 +58,7 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
                 state.members.map((e) => e.id).toList(),
                 nameController.text.trim(),
                 descriptionController.text.trim(),
+                state.image,
               );
 
               //? This is fine.

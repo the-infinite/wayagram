@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
@@ -6,6 +8,7 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/repo/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/features/file/repo/default.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 
 class ConversationVm extends StateNotifier<ConversationState> {
@@ -123,9 +126,17 @@ class ConversationVm extends StateNotifier<ConversationState> {
     List<String> users, [
     String? name,
     String? description,
+    File? image,
   ]) async {
+    final imageUrl = image == null
+        ? null
+        : await WayaFileRepository.instance.uploadFile(
+            image,
+            "group-${WayaValueHelper.createUid()}.${WayaFileHelper.getFileExtension(image.path)}",
+          );
+
     //? This is fine.
-    final response = await repo.startConversation(type, users, name, description);
+    final response = await repo.startConversation(type, users, name, description, imageUrl);
 
     //? If this was fine...
     if (!response.success) {
