@@ -117,14 +117,14 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     onChanged: (String? value){
                       setState(() {
                         selTransact = value!;
-                        sortList(selTransact.toLowerCase(), viewModel.searchLogDocs, viewModel.searchLogDocs1 );
+                        sortList(selTransact.toLowerCase(), viewModel.shopDocs, viewModel.shopDocs1 );
                       });
                     }
                 ),
               ),
               Gap(10),
               Expanded(
-                child: PaginatedDataView<SearchLogDocs>(
+                child: PaginatedDataView<PageDocs>(
                     uniqueKey: 'shop-logs',
                     loadingState: SizedBox(
                         height: context.height * 0.4,
@@ -132,17 +132,17 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                           child: CircularProgressIndicator(),
                         )),
                     emptyState:ActivityLogsEmptyState(text: 'You don\'t have shop logs yet',),
-                    fetchData: ref.read(activityLogsVmProvider.notifier).getSearchLog,
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getShopLogs,
                     result: (data, s) {
 
-                      for(int i = 0; i < viewModel.searchLogDocs.length; i++){
-                        if(!dates.contains(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])){
-                          dates.add(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0]);
-                          viewModel.searchLogDocs.add(viewModel.searchLogDocs[i]);
+                      for(int i = 0; i < viewModel.shopDocs.length; i++){
+                        if(!dates.contains(viewModel.shopDocs[i].createdAt.toString().split('T')[0])){
+                          dates.add(viewModel.shopDocs[i].createdAt.toString().split('T')[0]);
+                          viewModel.shopDocs.add(viewModel.shopDocs[i]);
                         }
                       }
                       return SingleChildScrollView(
-                        child: viewModel.searchLogDocs.isEmpty ?
+                        child: viewModel.shopDocs.isEmpty ?
                         ActivityLogsEmptyState(text: 'You don\'t have Shop Logs for this week yet',):
                         ListView.builder(
                             padding: EdgeInsets.only(bottom: 80.h, top: 0),
@@ -154,7 +154,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])}',
+                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.shopDocs[i].createdAt.toString().split('T')[0])}',
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontFamily: WayaConstants.fontFamily,
@@ -166,15 +166,15 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                     shrinkWrap: true,
                                     physics: const ClampingScrollPhysics(),
                                     padding: EdgeInsets.only(bottom: 20.h, top: 0),
-                                    itemCount: viewModel.searchLogDocs.length,
+                                    itemCount: viewModel.shopDocs.length,
                                     itemBuilder: (context, index){
-                                      final searchLog = viewModel.searchLogDocs[index];
-                                      String dateTimeString = "${searchLog.createdAt}";
+                                      final shopLog = viewModel.shopDocs[index];
+                                      String dateTimeString = "${shopLog.createdAt}";
                                       DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                      if(viewModel.searchLogDocs[index].createdAt.toString().split('T')[0] == dates[i]){
+                                      if(viewModel.shopDocs[index].createdAt.toString().split('T')[0] == dates[i]){
                                         return ActivityImageWidget(
-                                          title: '${searchLog.description}',
-                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(searchLog.createdAt)}, '
+                                          title: '${shopLog.description}',
+                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(shopLog.createdAt)}, '
                                               '${DateFormat.jm().format(dateTime)}', image: 'assets/icons/search.svg'
                                           ,);
                                       }else{
@@ -228,14 +228,14 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     onChanged: (String? value){
                       setState(() {
                         selTransact = value!;
-                        sortList(selTransact.toLowerCase(), viewModel.searchLogDocs, viewModel.searchLogDocs1 );
+                        sortList(selTransact.toLowerCase(), viewModel.walletDocs, viewModel.walletDocs1 );
                       });
                     }
                 ),
               ),
               Gap(10),
               Expanded(
-                child: PaginatedDataView<SearchLogDocs>(
+                child: PaginatedDataView<PageDocs>(
                     uniqueKey: 'wallet-logs',
                     loadingState: SizedBox(
                         height: context.height * 0.4,
@@ -243,17 +243,17 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                           child: CircularProgressIndicator(),
                         )),
                     emptyState:ActivityLogsEmptyState(text: 'You don\'t have wallet logs yet',),
-                    fetchData: ref.read(activityLogsVmProvider.notifier).getSearchLog,
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getWalletLogs,
                     result: (data, s) {
 
-                      for(int i = 0; i < viewModel.searchLogDocs.length; i++){
-                        if(!dates.contains(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])){
-                          dates.add(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0]);
-                          viewModel.searchLogDocs.add(viewModel.searchLogDocs[i]);
+                      for(int i = 0; i < viewModel.walletDocs.length; i++){
+                        if(!dates.contains(viewModel.walletDocs[i].createdAt.toString().split('T')[0])){
+                          dates.add(viewModel.walletDocs[i].createdAt.toString().split('T')[0]);
+                          viewModel.walletDocs.add(viewModel.walletDocs[i]);
                         }
                       }
                       return SingleChildScrollView(
-                        child: viewModel.searchLogDocs.isEmpty ?
+                        child: viewModel.walletDocs.isEmpty ?
                         ActivityLogsEmptyState(text: 'You don\'t have Wallet Logs for this week yet',):
                         ListView.builder(
                             padding: EdgeInsets.only(bottom: 80.h, top: 0),
@@ -265,7 +265,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])}',
+                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.walletDocs[i].createdAt.toString().split('T')[0])}',
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontFamily: WayaConstants.fontFamily,
@@ -277,16 +277,16 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                     shrinkWrap: true,
                                     physics: const ClampingScrollPhysics(),
                                     padding: EdgeInsets.only(bottom: 20.h, top: 0),
-                                    itemCount: viewModel.searchLogDocs.length,
+                                    itemCount: viewModel.walletDocs.length,
                                     itemBuilder: (context, index){
-                                      final searchLog = viewModel.searchLogDocs[index];
-                                      String dateTimeString = "${searchLog.createdAt}";
+                                      final walletLog = viewModel.walletDocs[index];
+                                      String dateTimeString = "${walletLog.createdAt}";
                                       DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                      if(viewModel.searchLogDocs[index].createdAt.toString().split('T')[0] == dates[i]){
-                                        return ActivityImageWidget(
-                                          title: '${searchLog.description}',
-                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(searchLog.createdAt)}, '
-                                              '${DateFormat.jm().format(dateTime)}', image: 'assets/icons/search.svg'
+                                      if(viewModel.walletDocs[index].createdAt.toString().split('T')[0] == dates[i]){
+                                        return ActivityCardWidget(
+                                          title: '${walletLog.description}',
+                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(walletLog.createdAt)}, '
+                                              '${DateFormat.jm().format(dateTime)}'
                                           ,);
                                       }else{
                                         return Container();
@@ -339,14 +339,14 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     onChanged: (String? value){
                       setState(() {
                         selTransact = value!;
-                        sortList(selTransact.toLowerCase(), viewModel.searchLogDocs, viewModel.searchLogDocs1 );
+                        sortList(selTransact.toLowerCase(), viewModel.eventDocs, viewModel.eventDocs1 );
                       });
                     }
                 ),
               ),
               Gap(10),
               Expanded(
-                child: PaginatedDataView<SearchLogDocs>(
+                child: PaginatedDataView<PageDocs>(
                     uniqueKey: 'Event-logs',
                     loadingState: SizedBox(
                         height: context.height * 0.4,
@@ -354,17 +354,17 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                           child: CircularProgressIndicator(),
                         )),
                     emptyState:ActivityLogsEmptyState(text: 'You don\'t have event logs yet',),
-                    fetchData: ref.read(activityLogsVmProvider.notifier).getSearchLog,
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getEventLogs,
                     result: (data, s) {
 
-                      for(int i = 0; i < viewModel.searchLogDocs.length; i++){
-                        if(!dates.contains(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])){
-                          dates.add(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0]);
-                          viewModel.searchLogDocs.add(viewModel.searchLogDocs[i]);
+                      for(int i = 0; i < viewModel.eventDocs.length; i++){
+                        if(!dates.contains(viewModel.eventDocs[i].createdAt.toString().split('T')[0])){
+                          dates.add(viewModel.eventDocs[i].createdAt.toString().split('T')[0]);
+                          viewModel.eventDocs.add(viewModel.eventDocs[i]);
                         }
                       }
                       return SingleChildScrollView(
-                        child: viewModel.searchLogDocs.isEmpty ?
+                        child: viewModel.eventDocs.isEmpty ?
                         ActivityLogsEmptyState(text: 'You don\'t have Event Logs for this week yet',):
                         ListView.builder(
                             padding: EdgeInsets.only(bottom: 80.h, top: 0),
@@ -376,7 +376,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])}',
+                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.eventDocs[i].createdAt.toString().split('T')[0])}',
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontFamily: WayaConstants.fontFamily,
@@ -388,16 +388,16 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                     shrinkWrap: true,
                                     physics: const ClampingScrollPhysics(),
                                     padding: EdgeInsets.only(bottom: 20.h, top: 0),
-                                    itemCount: viewModel.searchLogDocs.length,
+                                    itemCount: viewModel.eventDocs.length,
                                     itemBuilder: (context, index){
-                                      final searchLog = viewModel.searchLogDocs[index];
-                                      String dateTimeString = "${searchLog.createdAt}";
+                                      final eventLog = viewModel.eventDocs[index];
+                                      String dateTimeString = "${eventLog.createdAt}";
                                       DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                      if(viewModel.searchLogDocs[index].createdAt.toString().split('T')[0] == dates[i]){
-                                        return ActivityImageWidget(
-                                          title: '${searchLog.description}',
-                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(searchLog.createdAt)}, '
-                                              '${DateFormat.jm().format(dateTime)}', image: 'assets/icons/search.svg'
+                                      if(viewModel.eventDocs[index].createdAt.toString().split('T')[0] == dates[i]){
+                                        return ActivityCardWidget(
+                                          title: '${eventLog.description}',
+                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(eventLog.createdAt)}, '
+                                              '${DateFormat.jm().format(dateTime)}'
                                           ,);
                                       }else{
                                         return Container();
@@ -450,14 +450,14 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     onChanged: (String? value){
                       setState(() {
                         selTransact = value!;
-                        sortList(selTransact.toLowerCase(), viewModel.searchLogDocs, viewModel.searchLogDocs1 );
+                        sortList(selTransact.toLowerCase(), viewModel.socialDocs, viewModel.socialDocs1 );
                       });
                     }
                 ),
               ),
               Gap(10),
               Expanded(
-                child: PaginatedDataView<SearchLogDocs>(
+                child: PaginatedDataView<PageDocs>(
                     uniqueKey: 'chat-logs',
                     loadingState: SizedBox(
                         height: context.height * 0.4,
@@ -465,17 +465,17 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                           child: CircularProgressIndicator(),
                         )),
                     emptyState:ActivityLogsEmptyState(text: 'You don\'t have chat logs yet',),
-                    fetchData: ref.read(activityLogsVmProvider.notifier).getSearchLog,
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getSocialLogs,
                     result: (data, s) {
 
-                      for(int i = 0; i < viewModel.searchLogDocs.length; i++){
-                        if(!dates.contains(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])){
+                      for(int i = 0; i < viewModel.socialDocs.length; i++){
+                        if(!dates.contains(viewModel.socialDocs[i].createdAt.toString().split('T')[0])){
                           dates.add(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0]);
-                          viewModel.searchLogDocs.add(viewModel.searchLogDocs[i]);
+                          viewModel.socialDocs.add(viewModel.socialDocs[i]);
                         }
                       }
                       return SingleChildScrollView(
-                        child: viewModel.searchLogDocs.isEmpty ?
+                        child: viewModel.socialDocs.isEmpty ?
                         ActivityLogsEmptyState(text: 'You don\'t have Chat Logs for this week yet',):
                         ListView.builder(
                             padding: EdgeInsets.only(bottom: 80.h, top: 0),
@@ -487,7 +487,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])}',
+                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.socialDocs[i].createdAt.toString().split('T')[0])}',
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontFamily: WayaConstants.fontFamily,
@@ -499,12 +499,12 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                     shrinkWrap: true,
                                     physics: const ClampingScrollPhysics(),
                                     padding: EdgeInsets.only(bottom: 20.h, top: 0),
-                                    itemCount: viewModel.searchLogDocs.length,
+                                    itemCount: viewModel.socialDocs.length,
                                     itemBuilder: (context, index){
-                                      final searchLog = viewModel.searchLogDocs[index];
+                                      final searchLog = viewModel.socialDocs[index];
                                       String dateTimeString = "${searchLog.createdAt}";
                                       DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                      if(viewModel.searchLogDocs[index].createdAt.toString().split('T')[0] == dates[i]){
+                                      if(viewModel.socialDocs[index].createdAt.toString().split('T')[0] == dates[i]){
                                         return ActivityImageWidget(
                                           title: '${searchLog.description}',
                                           subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(searchLog.createdAt)}, '
@@ -561,14 +561,14 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     onChanged: (String? value){
                       setState(() {
                         selTransact = value!;
-                        sortList(selTransact.toLowerCase(), viewModel.searchLogDocs, viewModel.searchLogDocs1 );
+                        sortList(selTransact.toLowerCase(), viewModel.pollDocs, viewModel.pollDocs1 );
                       });
                     }
                 ),
               ),
               Gap(10),
               Expanded(
-                child: PaginatedDataView<SearchLogDocs>(
+                child: PaginatedDataView<PageDocs>(
                     uniqueKey: 'poll-logs',
                     loadingState: SizedBox(
                         height: context.height * 0.4,
@@ -576,17 +576,17 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                           child: CircularProgressIndicator(),
                         )),
                     emptyState:ActivityLogsEmptyState(text: 'You don\'t have polls logs yet',),
-                    fetchData: ref.read(activityLogsVmProvider.notifier).getSearchLog,
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getPollLogs,
                     result: (data, s) {
 
-                      for(int i = 0; i < viewModel.searchLogDocs.length; i++){
-                        if(!dates.contains(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])){
-                          dates.add(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0]);
-                          viewModel.searchLogDocs.add(viewModel.searchLogDocs[i]);
+                      for(int i = 0; i < viewModel.pollDocs.length; i++){
+                        if(!dates.contains(viewModel.pollDocs[i].createdAt.toString().split('T')[0])){
+                          dates.add(viewModel.pollDocs[i].createdAt.toString().split('T')[0]);
+                          viewModel.pollDocs.add(viewModel.pollDocs[i]);
                         }
                       }
                       return SingleChildScrollView(
-                        child: viewModel.searchLogDocs.isEmpty ?
+                        child: viewModel.pollDocs.isEmpty ?
                         ActivityLogsEmptyState(text: 'You don\'t have Poll Logs for this week yet',):
                         ListView.builder(
                             padding: EdgeInsets.only(bottom: 80.h, top: 0),
@@ -598,7 +598,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])}',
+                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.pollDocs[i].createdAt.toString().split('T')[0])}',
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontFamily: WayaConstants.fontFamily,
@@ -610,17 +610,16 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                     shrinkWrap: true,
                                     physics: const ClampingScrollPhysics(),
                                     padding: EdgeInsets.only(bottom: 20.h, top: 0),
-                                    itemCount: viewModel.searchLogDocs.length,
+                                    itemCount: viewModel.pollDocs.length,
                                     itemBuilder: (context, index){
-                                      final searchLog = viewModel.searchLogDocs[index];
-                                      String dateTimeString = "${searchLog.createdAt}";
+                                      final pollsLog = viewModel.pollDocs[index];
+                                      String dateTimeString = "${pollsLog.createdAt}";
                                       DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                      if(viewModel.searchLogDocs[index].createdAt.toString().split('T')[0] == dates[i]){
-                                        return ActivityImageWidget(
-                                          title: '${searchLog.description}',
-                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(searchLog.createdAt)}, '
-                                              '${DateFormat.jm().format(dateTime)}', image: 'assets/icons/search.svg'
-                                          ,);
+                                      if(viewModel.pollDocs[index].createdAt.toString().split('T')[0] == dates[i]){
+                                        return ActivityCardWidget(
+                                          title: '${pollsLog.description}',
+                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(pollsLog.createdAt)}, '
+                                              '${DateFormat.jm().format(dateTime)}',);
                                       }else{
                                         return Container();
                                       }
@@ -727,10 +726,10 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                       String dateTimeString = "${pageLog.createdAt}";
                                       DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
                                       if(viewModel.pageDocs[index].createdAt.toString().split('T')[0] == dates[i]){
-                                        return ActivityImageWidget(
+                                        return ActivityCardWidget(
                                           title: '${pageLog.description}',
                                           subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(pageLog.createdAt)}, '
-                                              '${DateFormat.jm().format(dateTime)}', image: 'assets/icons/search.svg'
+                                              '${DateFormat.jm().format(dateTime)}'
                                           ,);
                                       }else{
                                         return Container();
@@ -834,7 +833,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                     padding: EdgeInsets.only(bottom: 20.h, top: 0),
                                     itemCount: viewModel.groupDocs.length,
                                     itemBuilder: (context, index){
-                                      final groupLog = viewModel.searchLogDocs[index];
+                                      final groupLog = viewModel.groupDocs[index];
                                       String dateTimeString = "${groupLog.createdAt}";
                                       DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
                                       if(viewModel.groupDocs[index].createdAt.toString().split('T')[0] == dates[i]){
@@ -1004,14 +1003,14 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     onChanged: (String? value){
                       setState(() {
                         selTransact = value!;
-                        sortList(selTransact.toLowerCase(), viewModel.searchLogDocs, viewModel.searchLogDocs1 );
+                        sortList(selTransact.toLowerCase(), viewModel.ugtDocs, viewModel.ugtDocs1 );
                       });
                     }
                 ),
               ),
               Gap(10),
               Expanded(
-                child: PaginatedDataView<SearchLogDocs>(
+                child: PaginatedDataView<PageDocs>(
                     uniqueKey: 'ugt-logs',
                     loadingState: SizedBox(
                         height: context.height * 0.4,
@@ -1019,17 +1018,17 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                           child: CircularProgressIndicator(),
                         )),
                     emptyState:ActivityLogsEmptyState(text: 'You don\'t have Ugt logs yet',),
-                    fetchData: ref.read(activityLogsVmProvider.notifier).getSearchLog,
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getUgtLogs,
                     result: (data, s) {
 
-                      for(int i = 0; i < viewModel.searchLogDocs.length; i++){
-                        if(!dates.contains(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])){
-                          dates.add(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0]);
-                          viewModel.searchLogDocs.add(viewModel.searchLogDocs[i]);
+                      for(int i = 0; i < viewModel.ugtDocs.length; i++){
+                        if(!dates.contains(viewModel.ugtDocs[i].createdAt.toString().split('T')[0])){
+                          dates.add(viewModel.ugtDocs[i].createdAt.toString().split('T')[0]);
+                          viewModel.ugtDocs.add(viewModel.ugtDocs[i]);
                         }
                       }
                       return SingleChildScrollView(
-                        child: viewModel.searchLogDocs.isEmpty ?
+                        child: viewModel.ugtDocs.isEmpty ?
                         ActivityLogsEmptyState(text: 'You don\'t have Ugt Logs for this week yet',):
                         ListView.builder(
                             padding: EdgeInsets.only(bottom: 80.h, top: 0),
@@ -1041,7 +1040,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])}',
+                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.ugtDocs[i].createdAt.toString().split('T')[0])}',
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontFamily: WayaConstants.fontFamily,
@@ -1053,17 +1052,16 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                     shrinkWrap: true,
                                     physics: const ClampingScrollPhysics(),
                                     padding: EdgeInsets.only(bottom: 20.h, top: 0),
-                                    itemCount: viewModel.searchLogDocs.length,
+                                    itemCount: viewModel.ugtDocs.length,
                                     itemBuilder: (context, index){
-                                      final searchLog = viewModel.searchLogDocs[index];
-                                      String dateTimeString = "${searchLog.createdAt}";
+                                      final ugtLog = viewModel.ugtDocs[index];
+                                      String dateTimeString = "${ugtLog.createdAt}";
                                       DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                      if(viewModel.searchLogDocs[index].createdAt.toString().split('T')[0] == dates[i]){
-                                        return ActivityImageWidget(
-                                          title: '${searchLog.description}',
-                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(searchLog.createdAt)}, '
-                                              '${DateFormat.jm().format(dateTime)}', image: 'assets/icons/search.svg'
-                                          ,);
+                                      if(viewModel.ugtDocs[index].createdAt.toString().split('T')[0] == dates[i]){
+                                        return ActivityCardWidget(
+                                          title: '${ugtLog.description}',
+                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(ugtLog.createdAt)}, '
+                                              '${DateFormat.jm().format(dateTime)}');
                                       }else{
                                         return Container();
                                       }
@@ -1115,32 +1113,32 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                     onChanged: (String? value){
                       setState(() {
                         selTransact = value!;
-                        sortList(selTransact.toLowerCase(), viewModel.searchLogDocs, viewModel.searchLogDocs1 );
+                        sortList(selTransact.toLowerCase(), viewModel.quotationDocs, viewModel.quotationDocs1 );
                       });
                     }
                 ),
               ),
               Gap(10),
               Expanded(
-                child: PaginatedDataView<SearchLogDocs>(
-                    uniqueKey: 'ugt-logs',
+                child: PaginatedDataView<PageDocs>(
+                    uniqueKey: 'Quotation-logs',
                     loadingState: SizedBox(
                         height: context.height * 0.4,
                         child: Center(
                           child: CircularProgressIndicator(),
                         )),
-                    emptyState:ActivityLogsEmptyState(text: 'You don\'t have Ugt logs yet',),
-                    fetchData: ref.read(activityLogsVmProvider.notifier).getSearchLog,
+                    emptyState:ActivityLogsEmptyState(text: 'You don\'t have Get Quotation logs yet',),
+                    fetchData: ref.read(activityLogsVmProvider.notifier).getQuotationLogs,
                     result: (data, s) {
 
-                      for(int i = 0; i < viewModel.searchLogDocs.length; i++){
-                        if(!dates.contains(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])){
-                          dates.add(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0]);
-                          viewModel.searchLogDocs.add(viewModel.searchLogDocs[i]);
+                      for(int i = 0; i < viewModel.quotationDocs.length; i++){
+                        if(!dates.contains(viewModel.quotationDocs[i].createdAt.toString().split('T')[0])){
+                          dates.add(viewModel.quotationDocs[i].createdAt.toString().split('T')[0]);
+                          viewModel.quotationDocs.add(viewModel.quotationDocs[i]);
                         }
                       }
                       return SingleChildScrollView(
-                        child: viewModel.searchLogDocs.isEmpty ?
+                        child: viewModel.quotationDocs.isEmpty ?
                         ActivityLogsEmptyState(text: 'You don\'t have Get Quotation Logs for this week yet',):
                         ListView.builder(
                             padding: EdgeInsets.only(bottom: 80.h, top: 0),
@@ -1152,7 +1150,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.searchLogDocs[i].createdAt.toString().split('T')[0])}',
+                                      '${ref.read(createPollVotingProvider.notifier).formatDt(viewModel.quotationDocs[i].createdAt.toString().split('T')[0])}',
                                       style: TextStyle(
                                         fontSize: 20.sp,
                                         fontFamily: WayaConstants.fontFamily,
@@ -1164,15 +1162,15 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                     shrinkWrap: true,
                                     physics: const ClampingScrollPhysics(),
                                     padding: EdgeInsets.only(bottom: 20.h, top: 0),
-                                    itemCount: viewModel.searchLogDocs.length,
+                                    itemCount: viewModel.quotationDocs.length,
                                     itemBuilder: (context, index){
-                                      final searchLog = viewModel.searchLogDocs[index];
-                                      String dateTimeString = "${searchLog.createdAt}";
+                                      final quotationLog = viewModel.quotationDocs[index];
+                                      String dateTimeString = "${quotationLog.createdAt}";
                                       DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-                                      if(viewModel.searchLogDocs[index].createdAt.toString().split('T')[0] == dates[i]){
+                                      if(viewModel.quotationDocs[index].createdAt.toString().split('T')[0] == dates[i]){
                                         return ActivityCardWidget(
-                                          title: '${searchLog.description}',
-                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(searchLog.createdAt)}, '
+                                          title: '${quotationLog.description}',
+                                          subTitle: '${ref.read(createPollVotingProvider.notifier).formatDt2(quotationLog.createdAt)}, '
                                               '${DateFormat.jm().format(dateTime)}'
                                           ,);
                                       }else{

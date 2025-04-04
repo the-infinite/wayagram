@@ -46,11 +46,39 @@ class ActivityLogsRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getPageLogs(int page) {
-    return get("wayagram-graph/api/v2/client/activity-logs?limit=10&page=$page&logType=pages");
+    return get("wayagram-graph/api/v2/activity-logs?limit=10&page=$page&logType=pages");
   }
 
   Future<WayaRequestResponse> getGroupLogs(int page) {
-    return get("wayagram-products/api/v1/client/activity-logs?limit=10&page=$page&logType=groups");
+    return get("wayagram-graph/api/v1/client/activity-logs?limit=10&page=$page&logType=groups");
+  }
+
+  Future<WayaRequestResponse> getEventLogs(int page) {
+    return get("wayagram-graph/api/v1/client/activity-logs?limit=10&page=$page&logType=events");
+  }
+
+  Future<WayaRequestResponse> getSocialLogs(int page) {
+    return get("wayagram-graph/api/v1/client/activity-logs?limit=10&page=$page&logType=chat-and-socials");
+  }
+
+  Future<WayaRequestResponse> getShopLogs(int page) {
+    return get("wayagram-graph/api/v1/client/activity-logs?limit=10&page=$page&logType=shop");
+  }
+
+  Future<WayaRequestResponse> getPollLogs(int page) {
+    return get("wayagram-products/api/v1/client/activity-logs?limit=10&page=$page&logType=polls-and-voting");
+  }
+
+  Future<WayaRequestResponse> getUgtLogs(int page) {
+    return get("wayagram-graph/api/v1/client/activity-logs?limit=10&page=$page&logType=ugt");
+  }
+
+  Future<WayaRequestResponse> getWalletLogs(int page) {
+    return get("wayagram-graph/api/v1/client/activity-logs?limit=10&page=$page&logType=wallets");
+  }
+
+  Future<WayaRequestResponse> getQuotationLogs(int page) {
+    return get("wayagram-shop/api/v2/activity-logs?limit=10&page=$page");
   }
 
 }

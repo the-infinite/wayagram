@@ -23,8 +23,22 @@ class ActivityLogsState{
   List<SearchLogDocs> searchLogDocs;
   List<DonationDocs> donationDocs;
   List<DonationDocs> donationDocs1;
+  List<PageDocs> shopDocs;
+  List<PageDocs> shopDocs1;
+  List<PageDocs> walletDocs;
+  List<PageDocs> walletDocs1;
+  List<PageDocs> quotationDocs;
+  List<PageDocs> quotationDocs1;
+  List<PageDocs> pollDocs;
+  List<PageDocs> pollDocs1;
+  List<PageDocs> eventDocs;
+  List<PageDocs> eventDocs1;
   List<PageDocs> pageDocs;
   List<PageDocs> pageDocs1;
+  List<PageDocs> socialDocs;
+  List<PageDocs> socialDocs1;
+  List<PageDocs> ugtDocs;
+  List<PageDocs> ugtDocs1;
   List<DonationDocs> groupDocs;
   List<DonationDocs> groupDocs1;
   List<SearchLogDocs> searchLogDocs1;
@@ -45,6 +59,20 @@ class ActivityLogsState{
     this.loginHistoryDocs = const [],
     this.cmsDocs = const [],
     this.cmsDocs1 = const [],
+    this.pollDocs = const [],
+    this.pollDocs1 = const [],
+    this.ugtDocs = const [],
+    this.ugtDocs1 = const [],
+    this.eventDocs = const [],
+    this.eventDocs1 = const [],
+    this.walletDocs = const [],
+    this.walletDocs1 = const [],
+    this.quotationDocs = const [],
+    this.quotationDocs1 = const [],
+    this.shopDocs = const [],
+    this.shopDocs1 = const [],
+    this.socialDocs = const [],
+    this.socialDocs1 = const [],
     this.accountActivityDocs = const [],
     this.accountActivityDocs1 = const [],
     this.paymentActivityDocs = const [],
@@ -70,6 +98,20 @@ class ActivityLogsState{
   ActivityLogsState copyWith({
     TextEditingController? title,
     List<LoginHistoryDocs>? loginHistoryDocs,
+    List<PageDocs>? ugtDocs,
+    List<PageDocs>? ugtDocs1,
+    List<PageDocs>? walletDocs,
+    List<PageDocs>? walletDocs1,
+    List<PageDocs>? shopDocs,
+    List<PageDocs>? shopDocs1,
+    List<PageDocs>? quotationDocs,
+    List<PageDocs>? quotationDocs1,
+    List<PageDocs>? pollDocs,
+    List<PageDocs>? pollDocs1,
+    List<PageDocs>? eventDocs,
+    List<PageDocs>? eventDocs1,
+    List<PageDocs>? socialDocs,
+    List<PageDocs>? socialDocs1,
     List<CmsDocs>? cmsDocs,
     List<CmsDocs>? cmsDocs1,
     List<DonationDocs>? donationDocs,
@@ -100,6 +142,20 @@ class ActivityLogsState{
       loginHistoryDocs: loginHistoryDocs ?? this.loginHistoryDocs,
       cmsDocs: cmsDocs ?? this.cmsDocs,
       cmsDocs1: cmsDocs1 ?? this.cmsDocs1,
+      quotationDocs: quotationDocs ?? this.quotationDocs,
+      quotationDocs1: quotationDocs1 ?? this.quotationDocs1,
+      pollDocs: pollDocs ?? this.pollDocs,
+      pollDocs1: pollDocs1 ?? this.pollDocs1,
+      walletDocs: walletDocs ?? this.walletDocs,
+      walletDocs1: walletDocs1 ?? this.walletDocs1,
+      socialDocs: socialDocs ?? this.socialDocs,
+      socialDocs1: socialDocs1 ?? this.socialDocs1,
+      eventDocs: eventDocs ?? this.eventDocs,
+      eventDocs1: eventDocs1 ?? this.eventDocs1,
+      ugtDocs: ugtDocs1 ?? this.ugtDocs,
+      ugtDocs1: ugtDocs1 ?? this.ugtDocs1,
+      pageDocs: pageDocs ?? this.pageDocs,
+      pageDocs1: pageDocs1 ?? this.pageDocs1,
       donationDocs: donationDocs ?? this.donationDocs,
       donationDocs1: donationDocs1 ?? this.donationDocs1,
       accountActivityDocs: accountActivityDocs ?? this.accountActivityDocs,

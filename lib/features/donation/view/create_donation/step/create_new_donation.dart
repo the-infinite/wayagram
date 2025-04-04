@@ -29,6 +29,14 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
   bool private = false;
 
   @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(donationVmProvider.notifier).fetchCategory();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final key = 'add-donation';
     final viewModel = ref.watch(donationVmProvider);
@@ -256,7 +264,7 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                     ],
                   );
                 }),
-                const Gap(20),
+               /* const Gap(20),
                 FormField<String>(validator: (value) {
                   if (viewModel.category.isEmpty) {
                     return 'Category is required';
@@ -285,6 +293,37 @@ class _CreateNewDonationState extends ConsumerState<CreateNewDonation> {
                             style: TextStyle(
                                 color: wayaTheme.colorScheme.error,
                                 fontSize: 12.sp),
+                          ),
+                        ),
+                    ],
+                  );
+                }),*/
+                const Gap(20),
+                FormField<String>(validator: (value) {
+                  if (viewModel.category.isEmpty) {
+                    return 'Category is required';
+                  }
+
+                  return null;
+                }, builder: (formState) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      WayaSelectField<String>(
+                          height: 0.2,
+                          uniqueKey: 'category-type',
+                          label: "Category",
+                          hintText: 'Select Category',
+                          value: viewModel.category.capitalizeFirst,
+                          items: viewModel.categories,
+                          onSelected: (value) =>
+                              ref.read(donationVmProvider.notifier).selectCategory(value.first)),
+                      if (formState.hasError && viewModel.category.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            formState.errorText!,
+                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
                           ),
                         ),
                     ],
