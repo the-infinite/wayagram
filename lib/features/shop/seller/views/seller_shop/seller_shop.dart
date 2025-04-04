@@ -20,10 +20,12 @@ class SellerShop extends ConsumerStatefulWidget {
 }
 
 class _SellerShopState extends ConsumerState<SellerShop> {
+  late final notifier = ref.read(manageShopVmProvider.notifier);
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(manageShopVmProvider.notifier).getSellerShops();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await notifier.getSellerShops();
+      await notifier.getManagedShops();
     });
     super.initState();
   }
@@ -31,7 +33,6 @@ class _SellerShopState extends ConsumerState<SellerShop> {
   @override
   Widget build(BuildContext context) {
     final manageShop = ref.watch(manageShopVmProvider);
-    
 
     final wayaTheme = Theme.of(context);
 
@@ -46,8 +47,8 @@ class _SellerShopState extends ConsumerState<SellerShop> {
             const Gap(20),
             Text(
               "You don't Have a Shop Yet",
-               textAlign: TextAlign.center,
-              style:  TextStyle(
+              textAlign: TextAlign.center,
+              style: TextStyle(
                 fontSize: 20.sp,
                 fontWeight: FontWeight.bold,
               ),
@@ -66,7 +67,6 @@ class _SellerShopState extends ConsumerState<SellerShop> {
               text: "Upgrade to Business",
             ),
             const Gap(10),
-           
           ],
         ),
       );
