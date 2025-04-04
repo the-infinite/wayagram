@@ -4,7 +4,6 @@ import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart'
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_contest_aplicant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
 

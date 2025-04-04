@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/features/ugt/vm/ugt_restructed/provider_notify/provider_notifyer.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 
-import '../../core/data/secure_data_source.dart';
 
 class UgtGetStarted extends ConsumerWidget {
   static const route = "/ugt-get-started";

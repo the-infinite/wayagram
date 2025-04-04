@@ -9,7 +9,6 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
-import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/promotion/vm/promotion_vm.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';

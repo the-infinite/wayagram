@@ -190,6 +190,7 @@ class DonationVm extends StateNotifier<DonationState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   // Future<PaginatedResult<AllDonationDocs>?> getDonatedDonation({required int page}) async {

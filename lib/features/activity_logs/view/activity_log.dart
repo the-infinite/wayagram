@@ -18,7 +18,6 @@ import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
-import '../data/model/search_log_model.dart';
 import '../widget/activity_image_widget.dart';
 
 class ActivityLog extends ConsumerStatefulWidget {

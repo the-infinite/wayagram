@@ -3,7 +3,6 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/more/data/model/more_option_model.dart';
-import 'package:wayagram/features/promotion/views/promotion_dashboard.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/support/modal/default.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';

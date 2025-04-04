@@ -5,7 +5,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/role_access/data/model/role_member.dart';
-import 'package:wayagram/features/role_access/data/model/shop_model.dart';
 
 class RoleAccessCard extends StatelessWidget {
   final ShopMember user;

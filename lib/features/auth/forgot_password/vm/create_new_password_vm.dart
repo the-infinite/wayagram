@@ -13,7 +13,7 @@ class CreateNewPasswordVm extends ChangeNotifier {
   bool _isButtonEnabled = false;
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
-  bool _isFocused = false;
+  final bool _isFocused = false;
   bool _isConfirmPasswordFocused = false;
   bool _isPasswordFocused = false;
   bool _isLoading = false;

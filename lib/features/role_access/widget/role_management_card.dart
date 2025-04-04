@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/role_access/data/model/role_management_model.dart';
-import 'package:wayagram/features/role_access/data/model/role_member.dart';
-import 'package:wayagram/features/role_access/data/model/shop_model.dart';
 
 class RoleManagementCard extends StatelessWidget {
   final RoleManagementModel user;

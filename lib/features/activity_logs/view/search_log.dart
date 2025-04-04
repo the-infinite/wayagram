@@ -10,9 +10,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
 import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
-import 'package:wayagram/features/activity_logs/widget/activity_card_widget.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
@@ -162,7 +160,7 @@ class _SearchLogState extends ConsumerState<SearchLog> {
   sortList(s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.searchLogDocs = [];
-    print('ACTIVITY End ====> ${s}');
+    print('ACTIVITY End ====> $s');
     setState(() {
       if(s == 'all time'){
         viewModel.searchLogDocs = viewModel.searchLogDocs1;

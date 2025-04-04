@@ -1,13 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/referral/model/referral_model.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_contestant_card.dart';
-import 'package:wayagram/features/ugt/create_contest/steps/create_ultimate.dart';
 
 class ReferralCard extends StatelessWidget {
   final ReferralModel model;

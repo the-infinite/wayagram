@@ -222,7 +222,7 @@ class _SellerOrderDetails extends ConsumerState<SellerOrderDetails> {
                           shopId: arg.shopId,
                           current: arg.deliveryStatusHistory.last.status,
                           context: context,
-                          orderId: arg!.id);
+                          orderId: arg.id);
                     }
                   },
                   text: "Change Delivery Status",
