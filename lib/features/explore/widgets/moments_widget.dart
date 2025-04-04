@@ -49,6 +49,8 @@ class MomentsWidget extends StatelessWidget {
                   child: Center(
                     child: WayaDp(
                       radius: 40.r,
+                      canFocus: false,
+                      onTap: onTap,
                     ),
                   ),
                 ),
@@ -124,9 +126,10 @@ class MomentsWidget extends StatelessWidget {
               child: WayaDp(
                 image: moment!.moments[0].image ?? data?.$1.profilePicture,
                 radius: 40.r,
+                canFocus: false,
                 isSelf: false,
                 isEdit: false,
-                onTap: null,
+                onTap: onTap,
               ),
             ),
 

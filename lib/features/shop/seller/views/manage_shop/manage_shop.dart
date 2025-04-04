@@ -60,9 +60,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
       return Container(
         width: double.infinity,
         height: context.height,
-        decoration: BoxDecoration(
-          color: wayaTheme.colorScheme.white
-        ),
+        decoration: BoxDecoration(color: wayaTheme.colorScheme.white),
         child: Center(
           child: CircularProgressIndicator(),
         ),
@@ -87,9 +85,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
           shopState.sellerMetrics!.totalOrders.pending.count;
 
       int totalSales = // products
-          shopState.sellerMetrics!.completedSales.both.totalAmount +
-              shopState.sellerMetrics!.completedSales.delivered.totalAmount +
-              shopState.sellerMetrics!.completedSales.pickup.totalAmount;
+          shopState.sellerMetrics!.totalOrders.completed.totalAmount;
 
       sales = sales.map((value) {
         if (value.title == "Pending Orders") {
@@ -102,7 +98,6 @@ class _ManageShopState extends ConsumerState<ManageShop> {
         return value;
       }).toList();
     }
-
 
     return WayaScaffold(
         title: viewModel.singleShop?.name.capitalizeFirst ?? '',
