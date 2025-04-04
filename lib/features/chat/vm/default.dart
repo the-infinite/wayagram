@@ -65,7 +65,10 @@ class ConversationVm extends StateNotifier<ConversationState> {
       final data = response.data['data'];
 
       //? Parse the conversations as they are in the response object...
-      final docs = (data['docs'] as List).map((doc) => ChatModel.fromJson(doc)).toList();
+      final docs = (data['docs'] as List)
+          .map((doc) => ChatModel.fromJson(doc))
+          .where((chat) => chat.latestMessageId != null)
+          .toList();
 
       //? First, we check each of the members in each conversation...
       for (var c = 0; c < docs.length; c++) {
@@ -333,7 +336,10 @@ class ConversationVm extends StateNotifier<ConversationState> {
       final data = response.data['data'];
 
       //? Parse the conversations as they are in the response object...
-      final docs = (data['docs'] as List).map((doc) => ChatModel.fromJson(doc)).toList();
+      final docs = (data['docs'] as List)
+          .map((doc) => ChatModel.fromJson(doc))
+          .where((chat) => chat.latestMessageId != null)
+          .toList();
 
       //? First, we check each of the members in each conversation...
       for (var c = 0; c < docs.length; c++) {
