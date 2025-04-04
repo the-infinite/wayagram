@@ -30,6 +30,7 @@ import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.d
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/delete_post_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
+import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 
 class UgtPostAllCard extends StatefulHookConsumerWidget {
   final UgtAllPostContestModel post;
@@ -279,8 +280,11 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                         ),
                       ),
                       const Gap(20),
-                      GestureDetector(
-                        onTap: () async {
+                      PostActionType(
+                        text: "${widget.post.shares ?? 0} Shares",
+                        image: WayaAssets.images.pages.share2.path,
+                        color: wayaTheme.colorScheme.primary,
+                        onPressed: () async {
                           //? delay clicking if rapidly clicked
                           if (hasClickedShared.value == false) {
                             hasClickedShared.value = true;
@@ -296,13 +300,16 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                               viewModel.toggleShare(widget.post.contestId ?? "",
                                   widget.post.id ?? "");
                             }
-                           
-                          
                           }
-                           //? release the clicking after 2 seconds
-                            Future.delayed(Duration(seconds: 2), () {
-                              hasClickedShared.value = false;
-                            });
+                          //? release the clicking after 2 seconds
+                          Future.delayed(Duration(seconds: 2), () {
+                            hasClickedShared.value = false;
+                          });
+                        },
+                      ),
+                      /*  GestureDetector(
+                        onTap: () async {
+                        
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -320,12 +327,13 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                             ),
                             const Gap(3),
                             Text(
-                              "${widget.post.shares} Shares",
+                              "${widget.post.shares ?? 0} Shares",
                               style: wayaTheme.textTheme.bodySmall,
                             )
                           ],
                         ),
                       ),
+                   */
                     ],
                   ),
                   WayaButton(

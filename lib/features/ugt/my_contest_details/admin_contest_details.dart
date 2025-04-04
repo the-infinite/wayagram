@@ -433,16 +433,17 @@ class UpcomingWidgetAdmin extends StatelessWidget {
         SizedBox(
           width: context.width * 0.18,
           child: Text(title,
-              style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+              style: WayaTextStyles.bodySmall.wayaCopyWith(
                   color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
         ),
         const Gap(5),
         if (!status)
           SizedBox(
-            width: context.width * 0.18,
+            width: context.width * 0.19,
             child: Text(content,
                 // overflow: TextOverflow.ellipsis,
-                style: WayaTextStyles.bodySmall),
+                style: wayaTheme.textTheme.bodySmall!
+                    .copyWith(fontWeight: FontWeight.w500)),
           ),
         if (status)
           Container(

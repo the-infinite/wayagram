@@ -95,8 +95,8 @@ class SingleContestantPosts {
       });
     }
     description = json['description'];
-    likes = json['likes'];
-    shares = json['shares'];
+    likes = json['likes'] ?? 0;
+    shares = json['shares'] ?? 0;
     isDeleted = json['isDeleted'];
     createdAt = json['createdAt'];
     hasLiked = json['hasLiked'];

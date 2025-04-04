@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -24,6 +25,7 @@ import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/about_ugt_widget.dart';
 import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
 import 'package:wayagram/features/ugt/widgets/status_widget.dart';
+import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 
 import '../../../core/utils/waya_navigation.dart';
 
@@ -77,7 +79,11 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     child: Row(
                       children: [
                         GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            ref.read(selectedContestProvider.notifier).state =
+                                widget.post;
+                            WayaNav.toNamed('/upcoming-manage-contest-details');
+                          },
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(
                                 45), // Adjust the radius as needed
@@ -127,13 +133,15 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   ),
 
                   //  post.isFollowing!
+                  //  if (widget.post.profileId != voteNotifier.getLoggedInUserId())
                   Expanded(
                       flex: 1,
                       child: widget.post.isFollowing == true
                           ? WayaButton(
                               text: 'Unfollow',
                               height: 40,
-                              fontSize: 12.sp,
+                              horizontalPadding: 2,
+                              fontSize: 11.sp,
                               color: wayaTheme.colorScheme.greyColor300,
                               textColor: wayaTheme.colorScheme.customBlack,
                               border: Border.all(
@@ -243,17 +251,23 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                       //  AboutUgtWidget(title: "Status", content: "Ongoing", ),
                       const Gap(30),
                       AboutUgtWidget(
+                          title: "Category",
+                          content: widget.post.categoryName ?? "Category"),
+                      const Gap(30),
+                      /*  AboutUgtWidget(
                           title: "Prize",
                           content:
                               "₦${formatMoney(widget.post.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
-                      const Gap(30),
+                      const Gap(30), */
                     ],
                   ),
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: AboutUgtWidget(
-                        title: "Category",
-                        content: widget.post.categoryName ?? "Category"),
+                        title: "Prize",
+                        content:
+                            "₦${formatMoney(widget.post.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
+                    //  const Gap(30),
                   )
                 ],
               ),
@@ -291,7 +305,25 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
+                  PostActionType(
+                    text:
+                        "${widget.post.likeCount} ${widget.post.likeCount! > 0 ? "Likes" : "Like"}",
+                    image: WayaAssets.images.pages.like2.path,
+                    color: widget.post.hasLiked == true
+                        ? wayaTheme.colorScheme.primary
+                        : wayaTheme.colorScheme.greyColor500,
+                    onPressed: () {
+                      if (hasClickedLiked.value == false) {
+                        hasClickedLiked.value = true;
+                        widget.onLikePressed(widget.post.id!);
+                      }
+                      Future.delayed(Duration(seconds: 2), () {
+                        hasClickedLiked.value = false;
+                      });
+                    },
+                  ),
+
+                  /*  GestureDetector(
                     onTap: () {
                       if (hasClickedLiked.value == false) {
                         hasClickedLiked.value = true;
@@ -328,10 +360,13 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                         )
                       ],
                     ),
-                  ),
+                  ), */
                   const Gap(30),
-                  GestureDetector(
-                    onTap: () async {
+                  PostActionType(
+                    text: "${widget.post.shareCount} Shares",
+                    image: WayaAssets.images.pages.share2.path,
+                    color: wayaTheme.colorScheme.primary,
+                    onPressed: () async {
                       final result = await Share.share(
                         WayaValueHelper.getShareableUrl(
                             WayaAppRoutes.getContestDetailRoute(
@@ -351,27 +386,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                         });
                       }
                     },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: wayaTheme.colorScheme.greyColor200),
-                          width: 35,
-                          height: 35,
-                          child: Center(
-                              child:
-                                  SvgPicture.asset("assets/icons/u-share.svg")),
-                        ),
-                        const Gap(3),
-                        Text(
-                          "${widget.post.shareCount} Shares",
-                          style: wayaTheme.textTheme.bodyMedium,
-                        )
-                      ],
-                    ),
                   ),
                 ],
               ),
