@@ -21,11 +21,11 @@ class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
   Future<void> fetchAppliedContest(bool isFirst) async {
     //? Added pagination to fetching applied contest
 
-    if (isFirst) {
+   /*  if (isFirst) {
       if (state.page != 1) {
         state = state.copyWith(page: 1);
       }
-    }
+    } */
     //? If last page dont go fetch again
 
     if (state.isLastPage && isFirst == false) {

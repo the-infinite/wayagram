@@ -86,6 +86,19 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
     }
   }
 
+  Future<void> getManagedShops() async {
+    try {
+      final response =
+          await _shopRepository.getManageShopById(ConversationState.self.id);
+
+      if (response.success) {
+        print(response.data);
+      }
+    } catch (error) {
+      print(error);
+    }
+  }
+
   Future<void> refreshShops() async {
     await getSellerShops();
   }

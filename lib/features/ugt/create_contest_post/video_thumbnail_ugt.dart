@@ -36,10 +36,24 @@ class _VideoThumbnailState extends State<VideoThumbnail> {
       height: widget.height,
       width: widget.height,
       child: _controller.value.isInitialized
-          ? SizedBox(
-              height: 100,
-              width: 150,
-              child: VideoPlayer(_controller),
+          ? Stack(
+              children: [
+                VideoPlayer(_controller),
+                Center(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white.withOpacity(0.7),
+                    ),
+                    padding: EdgeInsets.all(8),
+                    child: Icon(
+                      Icons.play_arrow,
+                      size: 30,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
             )
           : Center(
               child: CircularProgressIndicator(),

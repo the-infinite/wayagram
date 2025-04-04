@@ -295,7 +295,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
           ],
         ),
         bottomNavigationBar: Container(
-          padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+          padding: EdgeInsets.fromLTRB(15, 6, 15, 6),
           child: viewModel.isProductOwner
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

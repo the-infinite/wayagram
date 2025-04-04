@@ -12,6 +12,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/login_history_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_interaction_model.dart';
 import 'package:wayagram/features/activity_logs/view/visited_page.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
@@ -97,24 +98,24 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }
   }
 
-  Future<PaginatedResult<DonationDocs>?> getPageLogs({required int page}) async {
+  Future<PaginatedResult<PageDocs>?> getPageLogs({required int page}) async {
 
     try{
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getPageLogs(page);
-      List<DonationDocs>? fetchDonationDocs = [];
+      List<PageDocs>? fetchPageDocs = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        DonationActivityModel responseModel = DonationActivityModel.fromJson(response.data);
-        fetchDonationDocs = responseModel.data?.docs;
+        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+        fetchPageDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(pageDocs: fetchDonationDocs);
+        state = state.copyWith(pageDocs: fetchPageDocs);
         state = state.copyWith(pageDocs: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchDonationDocs!);
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchPageDocs!);
     }catch (e){
       _logger.e(e);
     }finally {
@@ -127,19 +128,19 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     try{
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getGroupLogs(page);
-      List<DonationDocs>? fetchDonationDocs = [];
+      List<DonationDocs>? fetchGroupDocs = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
         DonationActivityModel responseModel = DonationActivityModel.fromJson(response.data);
-        fetchDonationDocs = responseModel.data?.docs;
+        fetchGroupDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
-        state = state.copyWith(groupDocs: fetchDonationDocs);
+        state = state.copyWith(groupDocs: fetchGroupDocs);
         state = state.copyWith(groupDocs: responseModel.data?.docs);
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchDonationDocs!);
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchGroupDocs!);
     }catch (e){
       _logger.e(e);
     }finally {
@@ -147,7 +148,180 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }
   }
 
+  Future<PaginatedResult<PageDocs>?> getSocialLogs({required int page}) async {
 
+    try{
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getSocialLogs(page);
+      List<PageDocs>? fetchSocialDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+        fetchSocialDocs = responseModel.data?.docs;
+        hasNextPage = responseModel.data?.hasNextPage;
+        state = state.copyWith(socialDocs: fetchSocialDocs);
+        state = state.copyWith(socialDocs: responseModel.data?.docs);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchSocialDocs!);
+    }catch (e){
+      _logger.e(e);
+    }finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<PaginatedResult<PageDocs>?> getUgtLogs({required int page}) async {
+
+    try{
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getUgtLogs(page);
+      List<PageDocs>? fetchUgtDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+        fetchUgtDocs = responseModel.data?.docs;
+        hasNextPage = responseModel.data?.hasNextPage;
+        state = state.copyWith(ugtDocs: fetchUgtDocs);
+        state = state.copyWith(ugtDocs: responseModel.data?.docs);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchUgtDocs!);
+    }catch (e){
+      _logger.e(e);
+    }finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<PaginatedResult<PageDocs>?> getEventLogs({required int page}) async {
+
+    try{
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getEventLogs(page);
+      List<PageDocs>? fetchEventDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+        fetchEventDocs = responseModel.data?.docs;
+        hasNextPage = responseModel.data?.hasNextPage;
+        state = state.copyWith(ugtDocs: fetchEventDocs);
+        state = state.copyWith(ugtDocs: responseModel.data?.docs);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchEventDocs!);
+    }catch (e){
+      _logger.e(e);
+    }finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<PaginatedResult<PageDocs>?> getShopLogs({required int page}) async {
+
+    try{
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getShopLogs(page);
+      List<PageDocs>? fetchShopDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+        fetchShopDocs = responseModel.data?.docs;
+        hasNextPage = responseModel.data?.hasNextPage;
+        state = state.copyWith(ugtDocs: fetchShopDocs);
+        state = state.copyWith(ugtDocs: responseModel.data?.docs);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchShopDocs!);
+    }catch (e){
+      _logger.e(e);
+    }finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<PaginatedResult<PageDocs>?> getPollLogs({required int page}) async {
+
+    try{
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getPollLogs(page);
+      List<PageDocs>? fetchPollDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+        fetchPollDocs = responseModel.data?.docs;
+        hasNextPage = responseModel.data?.hasNextPage;
+        state = state.copyWith(pollDocs: fetchPollDocs);
+        state = state.copyWith(pollDocs: responseModel.data?.docs);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchPollDocs!);
+    }catch (e){
+      _logger.e(e);
+    }finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<PaginatedResult<PageDocs>?> getWalletLogs({required int page}) async {
+
+    try{
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getWalletLogs(page);
+      List<PageDocs>? fetchWalletDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+        fetchWalletDocs = responseModel.data?.docs;
+        hasNextPage = responseModel.data?.hasNextPage;
+        state = state.copyWith(walletDocs: fetchWalletDocs);
+        state = state.copyWith(walletDocs: responseModel.data?.docs);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchWalletDocs!);
+    }catch (e){
+      _logger.e(e);
+    }finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<PaginatedResult<PageDocs>?> getQuotationLogs({required int page}) async {
+
+    try{
+      state = state.copyWith(isLoading: true);
+      final response = await _activityLogsRepository.getQuotationLogs(page);
+      List<PageDocs>? fetchQuotationDocs = [];
+      bool? hasNextPage = false;
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PageActivityModel responseModel = PageActivityModel.fromJson(response.data);
+        fetchQuotationDocs = responseModel.data?.docs;
+        hasNextPage = responseModel.data?.hasNextPage;
+        state = state.copyWith(quotationDocs: fetchQuotationDocs);
+        state = state.copyWith(quotationDocs: responseModel.data?.docs);
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchQuotationDocs!);
+    }catch (e){
+      _logger.e(e);
+    }finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
 
   Future<PaginatedResult<VisitedPagesDocs>?>  getVisitedPages({required int page}) async {
 

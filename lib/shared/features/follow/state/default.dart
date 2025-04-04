@@ -72,6 +72,42 @@ class FollowState {
     following: [],
   );
 
+  List<String> get friends {
+    final result = <String>[];
+    final added = <String, bool>{};
+
+    //? First, look into all followers...
+    for (final follower in followers) {
+      //? If this user has been added...
+      if (added[follower.otherUserId] ?? false) {
+        continue;
+      }
+
+      //? If the two users follow each other...
+      if (follower.followedBack) {
+        result.add(follower.otherUserId);
+        added[follower.otherUserId] = true;
+      }
+    }
+
+    //? Second, for all users following.
+    for (final follower in following) {
+      //? If this user has been added...
+      if (added[follower.otherUserId] ?? false) {
+        continue;
+      }
+
+      //? If the two users follow each other...
+      if (follower.followedBack) {
+        result.add(follower.otherUserId);
+        added[follower.otherUserId] = true;
+      }
+    }
+
+    //? Return the created list.
+    return result;
+  }
+
   FollowState copyWith({
     int? limit,
     String? userId,

@@ -1,6 +1,7 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:get/get_connect/http/src/multipart/multipart_file.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/model/applied_donation_model.dart';
@@ -33,6 +34,7 @@ class DonationState{
     List<MyDonationDocs>? myDonationDocs;
     List<MyDonationDocs>? approvedDonations;
     List<MyDonationDocs>? rejectedDonations;
+    final List<Select> categories;
 
     final bool isLoading;
     final bool showAmountRaised;
@@ -53,6 +55,7 @@ class DonationState{
       this.approvedDonations = const [],
       this.rejectedDonations = const [],
       this.donationImage = const [],
+      this.categories = const [],
       this.image,
       this.startDate = '',
       this.category = '',
@@ -86,6 +89,7 @@ class DonationState{
     TextEditingController? targetAmount,
     TextEditingController? minimumDonationAmount,
     TextEditingController? details,
+      List<Select>? categories,
       List<AllDonationDocs>? allDonationDocs,
       List<AppliedDonationDocs>? appliedDonationDocs,
       List<MyDonationDocs>? myDonationDocs,
@@ -123,6 +127,7 @@ class DonationState{
       details: details ?? this.details,
       donationImage: donationImage ?? this.donationImage,
       category: category ?? this.category,
+      categories: categories ?? this.categories,
       image: image ?? this.image,
       privacyOption: privacyOption ?? this.privacyOption,
       accountType: accountType ?? this.accountType,

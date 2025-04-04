@@ -86,8 +86,13 @@ class ContestRepo extends BaseRepository {
     return get('$serviceUrl2/gallery/$contestantProfileId/gallery');
   }
 
-  Future<WayaRequestResponse> fetchAllContestGallery(String contestId) {
-    return get('$serviceUrl2/gallery/$contestId');
+  Future<WayaRequestResponse> fetchAllContestGallery(
+      String contestId, bool approved) {
+    return get('$serviceUrl2/gallery/$contestId?hostApproved=$approved');
+  }
+
+  Future<WayaRequestResponse> approveDisapprovePost(String galleryId) {
+    return patch('$serviceUrl2/gallery/$galleryId/approval', {});
   }
 
   Future<WayaRequestResponse> fetchAllContestApplicant(String contestId) {

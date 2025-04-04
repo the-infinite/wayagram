@@ -37,19 +37,9 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        WayaButton(
-          callback: () {
-            ref.read(editingRoleMemberProvider.notifier).state = false;
-            WayaNav.toNamed(AddTeamMemberPage.route);
-          },
-          color: wayaTheme.colorScheme.primary50,
-          text: "Add New Team Member",
-          textColor: wayaTheme.colorScheme.customPrimary,
-        ),
+       
         const Gap(10),
-        /*   if (posts.isEmpty) emptyWidget(),
-        if (postNotifier.isLoading) Center(child: CircularProgressIndicator()),
-        if (posts.isNotEmpty) */
+     
         if (viewModel.isLoading == true)
           Center(child: CircularProgressIndicator()),
         if (viewModel.listRoleManagement.isEmpty) emptyWidget(),

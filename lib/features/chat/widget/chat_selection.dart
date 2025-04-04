@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
+import 'package:wayagram/shared/features/user/resource/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class SelectConversationWidget extends StatelessWidget {
@@ -123,6 +126,147 @@ class SelectConversationWidget extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class SelectUserWidget extends StatelessWidget {
+  final String id;
+  final int index;
+  final ValueNotifier<List<UserDetailsModel>> controller;
+  final FutureOr<void> Function(UserDetailsModel, bool) onSelect;
+
+  const SelectUserWidget({
+    super.key,
+    required this.id,
+    required this.index,
+    required this.controller,
+    required this.onSelect,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return WayaFutureSubscriber(
+      future: UserResource.getUserDetails(id),
+      suspense: (context) => const SizedBox(),
+      builder: (context, data) => ValueListenableBuilder(
+        valueListenable: controller,
+        builder: (context, choices, _) {
+          final isSelected = choices.any((person) => person.id == id);
+
+          //? This is fine.
+          return Padding(
+            padding: index == 0 ? EdgeInsets.zero : const EdgeInsets.only(top: 10),
+            child: InkWell(
+              onTap: () {
+                final value = [...controller.value];
+
+                //? Fair enough.
+                if (isSelected) {
+                  value.removeWhere((user) => user.id == data.$1.id);
+                }
+
+                //? Do it like this.
+                else {
+                  value.add(data.$1);
+                }
+
+                //? This is fine.
+                controller.value = value;
+                onSelect(data.$1, isSelected);
+              },
+              splashColor: WayaColors.primary.withAlpha(30),
+              focusColor: WayaColors.primary.withAlpha(30),
+              highlightColor: WayaColors.primary.withAlpha(30),
+              borderRadius: BorderRadius.circular(10),
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  color: isSelected ? WayaColors.primary.withAlpha(30) : Colors.transparent,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // The user's chat profile picture.
+                    ChatProfilePicture(
+                      user: data!.$1,
+                      radius: 27.r,
+                      showActive: false,
+                    ),
+
+                    // Some space.
+                    const Gap(10),
+
+                    //* For the messages part.
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //* For the other person's name.
+                          Text(
+                            data.$1.fullname,
+                            maxLines: 1,
+                            style: WayaTextStyles.titleMedium.copyWith(
+                              fontWeight: FontWeight.w600,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+
+                          //? For the message content...
+                          if (data.$2.username != null)
+                            Text(
+                              "@${data.$2.username!}",
+                              maxLines: 1,
+                              style: WayaTextStyles.titleMedium.copyWith(
+                                fontWeight: FontWeight.w600,
+                                overflow: TextOverflow.ellipsis,
+                                color: WayaColors.greyColor500,
+                                fontSize: 14.sp,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+
+                    // Some space
+                    const Gap(10),
+
+                    //* Selection icon
+                    Checkbox(
+                      value: isSelected,
+                      tristate: false,
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      splashRadius: 12,
+                      fillColor: WidgetStateColor.resolveWith(
+                        (states) {
+                          //? If this is selected...
+                          if (states.contains(WidgetState.selected)) {
+                            return WayaColors.primary;
+                          }
+
+                          // Since it is not.
+                          return Colors.transparent;
+                        },
+                      ),
+                      side: BorderSide(
+                        color: isSelected ? WayaColors.greyColor300 : WayaColors.primary,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(100000),
+                      ),
+                      onChanged: (value) {
+                        onSelect(data.$1, isSelected);
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          );
+        },
       ),
     );
   }

@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+/* import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:video_player/video_player.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 
 class FullPageVideoPlayer extends StatefulWidget {
   final String videoUrl;
@@ -57,8 +58,10 @@ class _FullPageVideoPlayerState extends State<FullPageVideoPlayer> {
         children: [
           Center(
             child: _controller.value.isInitialized
-                ? AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
+                ? SizedBox(
+                    width: context.width,
+                    height: context.height - 150,
+                    //aspectRatio: _controller.value.aspectRatio,
                     child: VideoPlayer(_controller),
                   )
                 : CircularProgressIndicator(),
@@ -103,5 +106,57 @@ class _FullPageVideoPlayerState extends State<FullPageVideoPlayer> {
         ],
       ),
     );
+  }
+}
+ */
+
+import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
+
+class FullScreenVideoPlayer extends StatefulWidget {
+  final String videoUrl;
+
+  const FullScreenVideoPlayer({super.key, required this.videoUrl});
+  @override
+  _FullScreenVideoPlayerState createState() => _FullScreenVideoPlayerState();
+}
+
+class _FullScreenVideoPlayerState extends State<FullScreenVideoPlayer> {
+  late VideoPlayerController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = VideoPlayerController.networkUrl(
+      Uri.parse(widget.videoUrl),
+    )..initialize().then((_) {
+        setState(() {}); // Refresh UI after initialization
+        _controller.play();
+      });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          _controller.value.isInitialized
+              ? Center(
+                  child: AspectRatio(
+                    aspectRatio: _controller.value.aspectRatio,
+                    child: VideoPlayer(_controller),
+                  ),
+                )
+              : Center(child: CircularProgressIndicator()),
+        ],
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

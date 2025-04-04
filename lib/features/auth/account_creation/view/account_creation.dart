@@ -10,13 +10,16 @@ import 'package:wayagram/features/auth/account_creation/vm/account_creation_vm.d
 
 class AccountCreation extends ConsumerStatefulWidget {
   static const route = '/account-creation';
-  const AccountCreation({super.key});
+  final String? referral;
+  const AccountCreation({super.key, this.referral = ''});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _AccountCreationState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _AccountCreationState();
 }
 
-class _AccountCreationState extends ConsumerState<AccountCreation> with SingleTickerProviderStateMixin {
+class _AccountCreationState extends ConsumerState<AccountCreation>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -50,6 +53,7 @@ class _AccountCreationState extends ConsumerState<AccountCreation> with SingleTi
         ),
         PersonalFirstStepView(
           goToNextTab: _goToNextTab,
+          referral: widget.referral
         ),
         VerifyAccount(
           goToNextTab: _goToNextTab,
