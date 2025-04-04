@@ -39,7 +39,8 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
       rollAccessNotifier.email.text = "";
       if (isEditing) {
         rollAccessNotifier.email.text = viewModelSelected?.email ?? "";
-        rolePicker.value = viewModelSelected?.roles?.first.roleName ?? "Select Role";
+        rolePicker.value =
+            viewModelSelected?.roles?.first.roleName ?? "Select Role";
 
         shopId.value = viewModelSelected?.shopId ?? "";
         roleId.value = viewModelSelected?.roles?.first.roleId ?? "";
@@ -66,27 +67,34 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
           Padding(
             padding: const EdgeInsets.only(right: 10),
             child: SizedBox(
-                width: context.width * 0.15,
+                width: context.width * 0.25,
                 child: WayaButton(
                   callback: isLoading.value
                       ? null
                       : () {
                           if (_formKey.currentState!.validate()) {
                             rollAccessNotifier.addTeamMember(
-                                isLoading, shopId.value, roleId.value, viewModelSelected?.id ?? "", isEditing, () {
+                                isLoading,
+                                shopId.value,
+                                roleId.value,
+                                viewModelSelected?.id ?? "",
+                                isEditing, () {
                               if (isEditing) {
-                                WayaNav.removeAllUntil(RoleAccessPage(), "/role-access-page");
+                                WayaNav.removeAllUntil(
+                                    RoleAccessPage(), "/role-access-page");
                               } else {
                                 WayaNav.goBack();
                               }
                             });
                           }
                         },
-                  height: 30,
+                  height: 40,
                   text: isEditing ? "Update" : 'Add user',
                   isLoading: isLoading.value,
                   textStyle: WayaTextStyles.bodySmall.copyWith(
-                      fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.white),
                 )),
           ),
         ],
@@ -140,17 +148,21 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                         keyboardType: TextInputType.emailAddress,
                         controller: rollAccessNotifier.email,
                         hintText: 'example@gmail.com',
-                        borderColor: formState.hasError && rollAccessNotifier.email.text.isEmpty
+                        borderColor: formState.hasError &&
+                                rollAccessNotifier.email.text.isEmpty
                             ? wayaTheme.colorScheme.error
                             : null,
                         label: 'Email Address',
                       ),
-                      if (formState.hasError && rollAccessNotifier.email.text.isEmpty)
+                      if (formState.hasError &&
+                          rollAccessNotifier.email.text.isEmpty)
                         Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -159,7 +171,8 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
 
                 const Gap(20),
                 FormField<String>(validator: (value) {
-                  if (rolePicker.value.isEmpty || rolePicker.value == "Select Role") {
+                  if (rolePicker.value.isEmpty ||
+                      rolePicker.value == "Select Role") {
                     return 'Role is required';
                   }
 
@@ -184,7 +197,9 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -192,7 +207,8 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                 }),
                 const Gap(10),
                 FormField<String>(validator: (value) {
-                  if (shopPicker.value.isEmpty || shopPicker.value == "Select Shop") {
+                  if (shopPicker.value.isEmpty ||
+                      shopPicker.value == "Select Shop") {
                     return 'Shop is required';
                   }
 
@@ -217,7 +233,9 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             formState.errorText!,
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],

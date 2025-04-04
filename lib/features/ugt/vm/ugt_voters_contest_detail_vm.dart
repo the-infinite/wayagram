@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
@@ -304,9 +305,10 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
-  Future<void> fetchAllContestPosts(String id) async {
+  Future<void> fetchAllContestPosts(String id, {hostApproved = true}) async {
     try {
-      final response = await _contestRepository.fetchAllContestGallery(id);
+     
+     final  response = await _contestRepository.fetchAllContestGallery(id, hostApproved);
       List<UgtAllPostContestModel> contestList = [];
       if (response.success) {
         UgtAllPostContestModelBase responseModel =

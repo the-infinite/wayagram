@@ -296,13 +296,11 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                               viewModel.toggleShare(widget.post.contestId ?? "",
                                   widget.post.id ?? "");
                             }
-                           
-                          
                           }
-                           //? release the clicking after 2 seconds
-                            Future.delayed(Duration(seconds: 2), () {
-                              hasClickedShared.value = false;
-                            });
+                          //? release the clicking after 2 seconds
+                          Future.delayed(Duration(seconds: 2), () {
+                            hasClickedShared.value = false;
+                          });
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
@@ -320,7 +318,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                             ),
                             const Gap(3),
                             Text(
-                              "${widget.post.shares} Shares",
+                              "${widget.post.shares ?? 0} Shares",
                               style: wayaTheme.textTheme.bodySmall,
                             )
                           ],

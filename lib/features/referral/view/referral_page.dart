@@ -13,6 +13,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/bottom_sheets/share/share_provider.dart';
 import 'package:wayagram/features/referral/view/referral_history_page.dart';
 import 'package:wayagram/features/referral/vm/referral_vm.dart';
@@ -29,8 +30,8 @@ class ReferralPage extends ConsumerWidget {
     final notifier = ref.watch(referralVm.notifier);
     final shareService = ref.watch(shareProvider);
     final wayaTheme = Theme.of(context);
-    String url = WayaValueHelper.getShareableUrl(
-        WayaAppRoutes.getProfileRoute(notifier.getLoggedInUserId() ?? ""));
+    /*  String url = WayaValueHelper.getShareableUrl(
+        WayaAppRoutes.getProfileRoute(notifier.getLoggedInUserId() ?? "")); */
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -98,12 +99,19 @@ class ReferralPage extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        url,
+                        "Referral code :${ConversationState.profile.referenceCode}" ??
+                            "",
                         overflow: TextOverflow.ellipsis,
-                        style: WayaTextStyles.hintStyle,
+                        style: WayaTextStyles.hintStyleBold,
                       ),
                     ),
-                    //  Icon(Icons.copy, color: wayaTheme.primaryColor),
+                    GestureDetector(
+                        onTap: () {
+                          shareService.copyLink(
+                              ConversationState.profile.referenceCode ?? "");
+                          WayaSnackBar.showToast("Copied");
+                        },
+                        child: Icon(Icons.copy, color: wayaTheme.primaryColor)),
                   ],
                 ),
               ),
@@ -118,7 +126,8 @@ class ReferralPage extends ConsumerWidget {
                 GestureDetector(
                     onTap: () async {
                       await Share.share(
-                        WayaValueHelper.getShareableUrl(url),
+                        // WayaValueHelper.getShareableUrl(url),
+                        ConversationState.profile.referenceCode ?? "",
                         subject: 'Share link',
                       );
                     },
@@ -126,7 +135,8 @@ class ReferralPage extends ConsumerWidget {
                         _actionButton(context, Icons.share_outlined, "Share")),
                 GestureDetector(
                     onTap: () {
-                      shareService.copyLink(url);
+                      shareService.copyLink(
+                          ConversationState.profile.referenceCode ?? "");
                       WayaSnackBar.showToast("Copied");
                     },
                     child: _actionButton(context, Icons.copy, "Copy Link")),

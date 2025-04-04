@@ -39,6 +39,7 @@ class _UpcomingContestDetailsState
     var model = ref.watch(selectedContestProvider.notifier).state;
     var viewModel = ref.watch(votersContestNotifier.notifier);
     final hasProfile = useState(false);
+    print("my value ${model?.hasApplied}");
 
     useEffect(() {
       ref
@@ -71,8 +72,8 @@ class _UpcomingContestDetailsState
         children: [
           Image.asset("assets/images/Icon-left.png"),
           const Gap(20),
-          Image.asset("assets/images/vector.png"),
-          const Gap(30),
+          // Image.asset("assets/images/vector.png"),
+          //const Gap(30),
         ],
       ),
       body: Padding(
@@ -214,12 +215,15 @@ class _UpcomingContestDetailsState
                       WayaNav.toNamed('/upcoming-manage-contest-details');
                       return;
                     }
-                  //  ivalidateUGTVM(ref);
+                    //  ivalidateUGTVM(ref);
                     WayaNav.toNamed('/register-contest1');
                   },
-                  text:model?.hasApplied == true? hasProfile.value
-                      ? "View Contest Details"
-                      : "Register For Contest":"Register For Contest",
+                  text: model?.hasApplied == true
+                      ? /* hasProfile.value
+                          ? "View Contest Details"
+                          : */
+                      "View Contest Details"
+                      : "Register For Contest",
                 ),
               ),
             ],
@@ -228,6 +232,7 @@ class _UpcomingContestDetailsState
       ),
     );
   }
+  
 
   Color getColor(bool isText, String text) {
     if (text == "active") {
