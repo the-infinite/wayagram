@@ -21,6 +21,10 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/shops/$id');
   }
 
+    Future<WayaRequestResponse> getManageShopById(String id) {
+    return get('$serviceUrl/shopMember/get-shops/$id');
+  }
+
   Future<WayaRequestResponse> getAllCategories(int page) {
     return get('$serviceUrl/category/all?page=$page&limit=1000');
   }
