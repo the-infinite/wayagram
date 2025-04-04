@@ -107,7 +107,7 @@ class DonationRepository extends BaseRepository {
     String userId,
   ) {
     return get(
-        "https://services.staging.wayagram.ng/wayagram-profile/api/v2/client/kyc/get-business-kyc-by-user-id?userId=$userId",
+        "wayagram-profile/api/v2/client/kyc/get-business-kyc-by-user-id?userId=$userId",
         useBase: false);
   }
 

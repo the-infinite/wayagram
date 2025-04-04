@@ -110,22 +110,9 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                 ),
               ],
             ),
-            callback: () {
-              if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
-                WayaUtils.showNotice(
-                    context: context,
-                    title: "Update KYC Information ",
-                    message: 'You must complete KYC verification before creating a donation post',
-                    onPress: () {
-                      WayaNav.goBack();
-                      WayaNav.toNamed('/kycUpdate', arguments: {
-                        'kyc': '${viewModel.kycStatus}'
-                      });
-                    },
-                    buttonText: 'Update KYC',
-                    secondButtonText: 'Cancel',
-                    icon: Image.asset('assets/images/cp-shop.png'));
-              } else if (ConversationState.self.accountType == UserAccountType.personal) {
+            callback: () async{
+              await ref.read(donationVmProvider.notifier).getMyKYC();
+               if (ConversationState.self.accountType == UserAccountType.personal) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   WayaUtils.showNotice(
                       context: context,
@@ -139,11 +126,29 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                       secondButtonText: 'Cancel',
                       icon: Image.asset('assets/images/cp-shop.png'));
                 });
-              } else{
+                return;
+              }
+               if(viewModel.kycStatus != 'APPROVED'){
+                 WayaUtils.showNotice(
+                     context: context,
+                     title: "Update KYC Information ",
+                     message: 'You must complete KYC verification before creating a donation post',
+                     onPress: () {
+                       WayaNav.goBack();
+                       WayaNav.toNamed('/kycUpdate', arguments: {
+                         'kyc': '${viewModel.kycStatus}'
+                       });
+                     },
+                     buttonText: 'Update KYC',
+                     secondButtonText: 'Cancel',
+                     icon: Image.asset('assets/images/cp-shop.png'));
+               }
+               else{
                 WayaNav.toNamed('/createDonation');
               }
             },
             color: wayaTheme.colorScheme.primary50,
+            isLoading: viewModel.isLoading,
           ),
           Gap(20),
           FilterWidget(
