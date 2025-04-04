@@ -81,10 +81,10 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
 
     useEffect(() {
       ref.read(postProvider.notifier).fetchSingleContestantDetails(
-          ref, model?.contestId ?? contestId, model?.profileId ?? id);
-      print("dedee ${model?.contestApplicant?.userId}");
+          ref, model?.contestId ?? contestId, model?.id ?? id);
+      /*   print("dedee ${model?.contestApplicant?.userId}");
       print("dedee ${model?.profileId}");
-      print("dedee ${viewModel.getLoggedInUserId()}");
+      print("dedee ${viewModel.getLoggedInUserId()}"); */
 
       if (viewModel.getLoggedInUserId() == model?.contestApplicant?.userId) {
         model?.stages?.forEach((element) {
@@ -144,7 +144,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
 
       ref
           .watch(ugtContestantProfileVm.notifier)
-          .fetchSingleContestantPosts(model?.profileId ?? id);
+          .fetchSingleContestantPosts(model?.id ?? id);
 
       /*  getImageUrl(model.introVideo ?? "").then((value) {
         imageUrl.value = value;
@@ -158,9 +158,9 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
       onRefresh: () {
         ref
             .watch(ugtContestantProfileVm.notifier)
-            .fetchSingleContestantPosts(model?.profileId ?? id);
+            .fetchSingleContestantPosts(model?.id ?? id);
         return ref.read(postProvider.notifier).fetchSingleContestantDetails(
-            ref, model?.contestId ?? contestId, model?.profileId ?? id);
+            ref, model?.contestId ?? contestId, model?.id ?? id);
       },
       title: "My Profile",
       appBarTrailing: Row(
@@ -170,7 +170,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                 await Share.share(
                   WayaValueHelper.getShareableUrl(
                       WayaAppRoutes.getContestantProfileRoute(
-                    model?.profileId ?? id,
+                    model?.id ?? id,
                     model?.contestId ?? contestId,
                   )),
                   subject: "Share Contestant Profile",
@@ -207,32 +207,10 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                           "type": MyFullMediaType.video
                         });
                       },
-                      
-                      child: Stack(
-                        children: [
-                          VideoThumbnail(
-                            model?.introVideo ?? "",
-                            context.width,
-                            context.height / 5,
-                          ),
-                          Positioned(
-                            top: context.width / 2,
-                            right: context.height / 5,
-                            // alignment: Alignment.center,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white.withOpacity(0.7),
-                              ),
-                              padding: EdgeInsets.all(8),
-                              child: Icon(
-                                Icons.play_arrow,
-                                size: 30,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ],
+                      child: VideoThumbnail(
+                        model?.introVideo ?? "",
+                        context.width,
+                        context.height / 4,
                       ),
                     ),
                     const Gap(20),

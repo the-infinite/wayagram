@@ -7,7 +7,7 @@ class PersonalFirstStepState {
   final TextEditingController firstName;
   final TextEditingController lastName;
   final TextEditingController email;
-  final TextEditingController referenceCode;
+  final TextEditingController referralCode;
   final TextEditingController password;
   final TextEditingController confirmPassword;
   final TextEditingController phoneNumber;
@@ -43,7 +43,7 @@ class PersonalFirstStepState {
       {TextEditingController? firstName,
       TextEditingController? lastName,
       TextEditingController? email,
-      TextEditingController? referenceCode,
+      TextEditingController? referralCode,
       TextEditingController? password,
       TextEditingController? confirmPassword,
       TextEditingController? phoneNumber,
@@ -77,7 +77,7 @@ class PersonalFirstStepState {
       : firstName = firstName ?? TextEditingController(),
         lastName = lastName ?? TextEditingController(),
         email = email ?? TextEditingController(),
-        referenceCode = referenceCode ?? TextEditingController(),
+        referralCode = referralCode ?? TextEditingController(),
         password = password ?? TextEditingController(),
         confirmPassword = confirmPassword ?? TextEditingController(),
         phoneNumber = phoneNumber ?? TextEditingController(),
@@ -90,7 +90,7 @@ class PersonalFirstStepState {
       {TextEditingController? firstName,
       TextEditingController? lastName,
       TextEditingController? email,
-      TextEditingController? referenceCode,
+      TextEditingController? referralCode,
       TextEditingController? password,
       TextEditingController? confirmPassword,
       TextEditingController? phoneNumber,
@@ -127,7 +127,7 @@ class PersonalFirstStepState {
         firstName: firstName ?? this.firstName,
         lastName: lastName ?? this.lastName,
         email: email ?? this.email,
-        referenceCode: referenceCode ?? this.referenceCode,
+        referralCode: referralCode ?? this.referralCode,
         password: password ?? this.password,
         confirmPassword: confirmPassword ?? this.confirmPassword,
         phoneNumber: phoneNumber ?? this.phoneNumber,

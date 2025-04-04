@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
@@ -19,6 +20,7 @@ import 'package:wayagram/features/donation/donation_modal/donation_modal.dart';
 import 'package:wayagram/features/donation/model/all_donation_model.dart';
 import 'package:wayagram/features/donation/model/applied_donation_model.dart';
 import 'package:wayagram/features/donation/model/create_donation_response.dart';
+import 'package:wayagram/features/donation/model/donation_category_model.dart';
 import 'package:wayagram/features/donation/model/kyc_model.dart';
 import 'package:wayagram/features/donation/model/login_response.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
@@ -26,7 +28,6 @@ import 'package:wayagram/features/donation/state/donation_state.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
-import '../../auth/transaction_pin/vm/transaction_pin_vm.dart';
 
 class DonationVm extends StateNotifier<DonationState> {
   final Ref ref;
@@ -72,6 +73,11 @@ class DonationVm extends StateNotifier<DonationState> {
     state = state.copyWith(endDateString: date, endDate: date);
   }
 
+  void selectCategory(Select value) {
+    state = state.copyWith(category: value.value);
+  }
+
+
 
   void addFile(File file) {
     state = state.copyWith(donationImage: [
@@ -113,6 +119,23 @@ class DonationVm extends StateNotifier<DonationState> {
     int endMinutes = int.parse(endSplit[0]) * 60 + int.parse(endSplit[1]);
 
     return startMinutes > endMinutes;
+  }
+
+  Future<void> fetchCategory() async {
+    try {
+      final response = await _donationRepository.getDonationCategory();
+
+      if (response.success) {
+        DonationCategoryModel responseModel = DonationCategoryModel.fromJson(response.data);
+
+        final List<Select>? categories = responseModel.data?.docs?.map((val) {
+          return Select(label: '${val.title?.capitalizeFirst}', value: '${val.id}');
+        }).toList();
+        state = state.copyWith(categories: categories);
+      }
+    } catch (e) {
+      _logger.e(e);
+    }
   }
 
   Future<void> makeDonation(String campaignId, int amount, String message, ctx) async {

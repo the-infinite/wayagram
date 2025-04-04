@@ -62,6 +62,7 @@ class _ForwardMessageModalState extends State<ForwardMessageModal> with SingleTi
     animationController?.dispose();
     selection.dispose();
     controller.dispose();
+    loadingController.dispose();
     super.dispose();
   }
 

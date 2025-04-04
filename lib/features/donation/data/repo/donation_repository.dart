@@ -88,6 +88,12 @@ class DonationRepository extends BaseRepository {
     return get("$serviceUrl/client/campaigns?organizerId=$organizerId&status=closed");
   }
 
+  Future<WayaRequestResponse> getDonationCategory(
+
+      ) {
+    return get("$serviceUrl/client/campaigns/categories?limit=10&page=1");
+  }
+
   Future<WayaRequestResponse> getDonatedDonations(int page,
       ) {
     return get("$serviceUrl/client/campaigns/donated?page=$page");

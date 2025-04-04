@@ -39,13 +39,13 @@ class _UpcomingContestDetailsState
     var model = ref.watch(selectedContestProvider.notifier).state;
     var viewModel = ref.watch(votersContestNotifier.notifier);
     final hasProfile = useState(false);
+    print("my value ${model?.hasApplied}");
 
     useEffect(() {
       ref
           .read(postProvider.notifier)
           .fetchSingleContestantDetails(
-            ref,
-              model?.id ?? "", viewModel.getLoggedInUserId()??"")
+              ref, model?.id ?? "", viewModel.getLoggedInUserId() ?? "")
           .then((model) {
         if (model != null) {
           print("i am here");
@@ -56,6 +56,8 @@ class _UpcomingContestDetailsState
               print("i am here 3");
               hasProfile.value = true;
             }
+          } else {
+            hasProfile.value = false;
           }
         }
       });
@@ -70,8 +72,8 @@ class _UpcomingContestDetailsState
         children: [
           Image.asset("assets/images/Icon-left.png"),
           const Gap(20),
-          Image.asset("assets/images/vector.png"),
-          const Gap(30),
+          // Image.asset("assets/images/vector.png"),
+          //const Gap(30),
         ],
       ),
       body: Padding(
@@ -208,16 +210,19 @@ class _UpcomingContestDetailsState
                 child: WayaButton(
                   callback: () {
                     //? if user has a profile
-                    if (hasProfile.value) {
+                    if (hasProfile.value || model?.hasApplied == true) {
                       ref.read(selectedContestProvider.notifier).state = model;
                       WayaNav.toNamed('/upcoming-manage-contest-details');
                       return;
                     }
-                    ivalidateUGTVM(ref);
+                    //  ivalidateUGTVM(ref);
                     WayaNav.toNamed('/register-contest1');
                   },
-                  text: hasProfile.value
-                      ? "View Contest Details"
+                  text: model?.hasApplied == true
+                      ? /* hasProfile.value
+                          ? "View Contest Details"
+                          : */
+                      "View Contest Details"
                       : "Register For Contest",
                 ),
               ),
@@ -227,6 +232,7 @@ class _UpcomingContestDetailsState
       ),
     );
   }
+  
 
   Color getColor(bool isText, String text) {
     if (text == "active") {
@@ -281,8 +287,7 @@ class _UpcomingContestDetailsState
             AboutUgtWidget(
                 // isFromDetailsPage: true,
                 title: "Prize for Winner",
-                content:
-                    "₦${formatMoney(model.priceOfTheWinner.toString())}"),
+                content: "₦${formatMoney(model.priceOfTheWinner.toString())}"),
             const Gap(20),
           ],
         ),
