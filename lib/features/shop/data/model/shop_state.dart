@@ -13,12 +13,14 @@ class ShopState {
   final List<Product> products;
   final ShopMetricsData? sellerMetrics;
   final List<ReviewData> reviews;
+  final List<Product> wayaDealProducts;
 
   ShopState(
       {this.categories = const [],
       this.isLoading = false,
       this.selectedCategoryId = const [],
       this.products = const [],
+      this.wayaDealProducts = const [],
       this.searchQuery = '',
       this.sellerMetrics,
       this.reviews = const [],
@@ -30,6 +32,7 @@ class ShopState {
       List<Select>? categories,
       List<String>? selectedCategoryId,
       List<Product>? products,
+      List<Product>? wayaDealProducts,
       String? searchQuery,
       ShopMetricsData? sellerMetrics,
       List<ReviewData>? reviews,
@@ -44,6 +47,7 @@ class ShopState {
             totalNoOfCategoryPages ?? this.totalNoOfCategoryPages,
         searchQuery: searchQuery ?? this.searchQuery,
         products: products ?? this.products,
+        wayaDealProducts: wayaDealProducts ?? this.wayaDealProducts,
         sellerMetrics: sellerMetrics ?? this.sellerMetrics,
         isLoading: isLoading ?? this.isLoading);
   }

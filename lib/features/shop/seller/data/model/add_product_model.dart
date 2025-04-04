@@ -16,7 +16,6 @@ class AddProductModel {
   final String? pickupAddress;
   final bool? deliveryCharge;
   final List<String> images;
-  final bool? wayagramDeal;
   final String? discountTypeId;
 
   AddProductModel({
@@ -27,7 +26,6 @@ class AddProductModel {
     required this.condition,
     required this.price,
     required this.options,
-    required this.wayagramDeal,
     required this.discountTypeId,
     required this.images,
     this.color,
@@ -50,7 +48,6 @@ class AddProductModel {
         condition: json['condition'] as String,
         price: json['price'] as String,
         options: json['options'] as String,
-        wayagramDeal: json['wayagramDeal'] as bool?,
         discountTypeId: json['discountTypeId'] as String?,
         images: json['images'],
         color: json['color'] as String?,
@@ -86,7 +83,6 @@ class AddProductModel {
       json['discountPercentage'] = discountPercentage;
     if (pickupAddress != null) json['pickupAddress'] = pickupAddress;
     if (deliveryCharge != null) json['deliveryCharge'] = deliveryCharge;
-    if (wayagramDeal != null) json['wayagramDeal'] = wayagramDeal;
     
     return json;
   }

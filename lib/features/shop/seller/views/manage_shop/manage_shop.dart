@@ -12,7 +12,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart';
-import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/delivery_request/delivery_request.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
@@ -61,9 +60,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
       return Container(
         width: double.infinity,
         height: context.height,
-        decoration: BoxDecoration(
-          color: wayaTheme.colorScheme.white
-        ),
+        decoration: BoxDecoration(color: wayaTheme.colorScheme.white),
         child: Center(
           child: CircularProgressIndicator(),
         ),
@@ -75,9 +72,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
           shopState.sellerMetrics!.totalOrders.completed.count +
           shopState.sellerMetrics!.totalOrders.pending.count +
           shopState.sellerMetrics!.totalOrders.processing.count;
-/**
 
- */
       // waya deals
       totalWayaDealProducts =
           shopState.sellerMetrics!.productMetrics.wayagramDealApprove +
@@ -90,9 +85,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
           shopState.sellerMetrics!.totalOrders.pending.count;
 
       int totalSales = // products
-          shopState.sellerMetrics!.completedSales.both.totalAmount +
-              shopState.sellerMetrics!.completedSales.delivered.totalAmount +
-              shopState.sellerMetrics!.completedSales.pickup.totalAmount;
+          shopState.sellerMetrics!.totalOrders.completed.totalAmount;
 
       sales = sales.map((value) {
         if (value.title == "Pending Orders") {
@@ -105,7 +98,6 @@ class _ManageShopState extends ConsumerState<ManageShop> {
         return value;
       }).toList();
     }
-
 
     return WayaScaffold(
         title: viewModel.singleShop?.name.capitalizeFirst ?? '',
@@ -183,7 +175,7 @@ class _ManageShopState extends ConsumerState<ManageShop> {
                 }),
             const Gap(15),
             Text("Quick Action",
-                style: TextStyle().wayaCopyWith(
+                style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
                     fontSize: 15.sp,
                     fontWeight: FontWeight.w600,
                     color: wayaTheme.colorScheme.customBlack)),

@@ -129,7 +129,7 @@ class SingleBidWidgetViewModel extends ChangeNotifier {
           await addDeliveryDetail(context);
         },
         onCancel: () {
-          WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id));
+          WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id, bid.requestId));
         },
         icon: Image.asset('assets/images/shop/delivery-van.png'));
   }

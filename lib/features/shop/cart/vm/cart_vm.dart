@@ -71,7 +71,6 @@ class CartVm extends StateNotifier<CartState> {
       required String productImage,
       required String productId}) async {
     final existingCart = state.cart;
-   
 
     if (existingCart == null) {
       final newCart = CartData(
@@ -148,7 +147,9 @@ class CartVm extends StateNotifier<CartState> {
 
         final totalFee = updatedItems[i].products.fold<int>(
               0,
-              (sum, product) => sum + (double.parse(product.unitPrice).toInt() * product.quantity),
+              (sum, product) =>
+                  sum +
+                  (double.parse(product.unitPrice).toInt() * product.quantity),
             );
         updatedItems[i] = updatedItems[i].copyWith(totalFee: totalFee);
 
@@ -225,7 +226,9 @@ class CartVm extends StateNotifier<CartState> {
 
           final totalFee = updatedProducts.fold<int>(
             0,
-            (sum, product) => sum + (double.parse(product.unitPrice).toInt() * product.quantity),
+            (sum, product) =>
+                sum +
+                (double.parse(product.unitPrice).toInt() * product.quantity),
           );
 
           return item.copyWith(products: updatedProducts, totalFee: totalFee);
@@ -260,14 +263,18 @@ class CartVm extends StateNotifier<CartState> {
       final userId = await _secureDataSource.getUserId();
 
       final response = await _cartRepository.addItemToCart(
-          productId: id,
-          quantity: 1,
-          userId: userId!,
-          shopId: shopId,
-          );
+        productId: id,
+        quantity: 1,
+        userId: userId!,
+        shopId: shopId,
+      );
 
       if (response.success) {
         print(response.data);
+      } else if (response.data['responseCode'] == 703) {
+        removeFromCart(productId: id, shopId: shopId);
+        WayaSnackBar.showToast(
+            "You are not yet eligible to purchase another wayagram deal");
       }
     } catch (e) {
       print(e);

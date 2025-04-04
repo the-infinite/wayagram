@@ -36,10 +36,12 @@ class _UgtHomeState extends ConsumerState<UgtHome> {
 
     useEffect(() {
       //? added on refresh to contest page
-      ref.read(appliedContestProvider.notifier).fetchAppliedContest(true);
-      ref.read(contestDetailProvider.notifier).fetchHostedContest();
-      ref.read(followedContestProvider.notifier).fetchFollowedPosts();
-      ref.read(postProvider.notifier).fetchContestForYou(true);
+      Future.delayed(Duration(seconds: 1), () {
+        ref.read(appliedContestProvider.notifier).fetchAppliedContest(true);
+        ref.read(contestDetailProvider.notifier).fetchHostedContest();
+        ref.read(followedContestProvider.notifier).fetchFollowedPosts();
+        ref.read(postProvider.notifier).fetchContestForYou(true);
+      });
       return null;
     }, []);
     return WayaScaffold(

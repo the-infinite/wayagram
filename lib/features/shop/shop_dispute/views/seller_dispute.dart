@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
+// import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
 import 'package:wayagram/features/shop/shop_dispute/widgets/single_dispute_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
@@ -34,8 +34,9 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(disputeVmProvider);
+    // final filteredDispute = WayaUtils.search(state.disputes, ["status"], searchController.text);
 
-    final filteredDispute = WayaUtils.search(state.disputes, ["status"], searchController.text);
+    //? Return this.
     return WayaScaffold(
       isLoading: false,
       isScrollable: false,

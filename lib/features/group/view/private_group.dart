@@ -181,7 +181,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
               ),
               Positioned(
                 left: 16.w,
-                top: 190,
+                top: 170.h,
                 child: WayaDp(
                   radius: 30.r,
                   image: widget.group.profileImage,
@@ -191,7 +191,6 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
               ),
             ],
           ),
-          const Gap(10),
 
           Padding(
             padding: const EdgeInsets.only(left: 15, right: 15),

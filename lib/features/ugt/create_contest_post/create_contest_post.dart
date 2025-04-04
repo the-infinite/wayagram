@@ -6,8 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-// import 'package:get_thumbnail_video/index.dart';
-// import 'package:get_thumbnail_video/video_thumbnail.dart';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
@@ -16,6 +15,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/ugt/create_contest_post/video_thumbnail_ugt.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
@@ -40,7 +40,7 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
   final ImagePicker _pickers = ImagePicker();
   final List<MyMediaType> _selectedImages = [];
 
-  bool sel = false;
+  bool sel = true;
 
   Future<void> _pickImages() async {
     try {
@@ -79,19 +79,13 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
       //  Directory tempDir = await getTemporaryDirectory();
 
       //  File tempVideo = File("${tempDir.path}/assets/my_video_thumb.png");
+
       _videoFile = File(pickedFile.path);
-      /*  var myDat = await VideoThumbnail.thumbnailData(
-        video: pickedFile.path,
-        imageFormat: ImageFormat.JPEG,
-        maxHeight: 200,
-        maxWidth:
-            200, // specify the width of the thumbnail, let the height auto-scaled to keep the source aspect ratio
-        quality: 25,
-      );*/
+
       //var file = await uint8ListToFile(myDat, "my_video_thumb.jpeg");
       _selectedImages.removeWhere((e) => e.type == true);
       setState(() {
-        //_selectedImages.add(MyMediaType(path: file.path, type: true));
+        _selectedImages.add(MyMediaType(path: pickedFile.path, type: true));
       });
       // });
     }
@@ -297,20 +291,28 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost>
                               alignment: Alignment.center,
                               children: [
                                 // Video Thumbnail (Replace with Network or Asset Image)
-                                Container(
-                                  height: 100,
-                                  width: 168,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(8),
-                                    image: DecorationImage(
-                                      image: FileImage(File(
-                                        _selectedImages[index].path,
-                                      )),
-                                      fit: BoxFit.cover,
+                                if (!_selectedImages[index].type)
+                                  Container(
+                                    height: 100,
+                                    width: 168,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      image: DecorationImage(
+                                        image: FileImage(File(
+                                          _selectedImages[index].path,
+                                        )),
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
                                   ),
-                                ),
-
+                                if (_selectedImages[index].type)
+                                  SizedBox(
+                                      height: 100,
+                                      width: 150,
+                                      child: VideoThumbnail(
+                                          _selectedImages[index].path,
+                                          100,
+                                          150)),
                                 // Play Button Overlay
                                 if (_selectedImages[index].type)
                                   Container(

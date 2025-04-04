@@ -5,8 +5,6 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/deal_applications.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/listed_products.dart';
 
-import 'package:gap/gap.dart';
-
 class WayaGramDeals extends ConsumerStatefulWidget {
   static const route = '/wayagram-deal';
   const WayaGramDeals({super.key});
@@ -20,8 +18,6 @@ class _WayaGramDealState extends ConsumerState<WayaGramDeals> {
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
-
     return WayaScaffold(
         isLoading: false,
         isScrollable: false,

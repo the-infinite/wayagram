@@ -99,9 +99,9 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
   }
 
   Future<void> getAllMembers(bool isFirst) async {
-    if (isFirst) {
+    /*   if (isFirst) {
       state = state.copyWith(page: 1);
-    }
+    } */
     if (state.isLastPage && isFirst == false) {
       return;
     }
@@ -111,14 +111,15 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _roleAccessRepository.getMemberList(
-          _localDataSource.getUserId().toString(), state.page);
+          _localDataSource.getUserId().toString(), isFirst ? 1 : state.page);
       state = state.copyWith(isLoading: false);
       if (response.success == true) {
         ShopMemberBase responseModel = ShopMemberBase.fromJson(response.data);
         state = state.copyWith(
             isLastPage: responseModel.data?.hasNextPage == true ? false : true);
         if (isFirst) {
-          state = state.copyWith(listMember: responseModel.data?.docs ?? []);
+          state = state.copyWith(
+              listMember: responseModel.data?.docs ?? [], page: 1);
         } else {
           state = state.copyWith(listMember: [
             ...state.listMember,
