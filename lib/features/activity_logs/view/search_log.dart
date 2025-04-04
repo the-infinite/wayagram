@@ -162,7 +162,7 @@ class _SearchLogState extends ConsumerState<SearchLog> {
   sortList(s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.searchLogDocs = [];
-    print('ACTIVITY End ====> ${s}');
+    print('ACTIVITY End ====> $s');
     setState(() {
       if(s == 'all time'){
         viewModel.searchLogDocs = viewModel.searchLogDocs1;

@@ -71,6 +71,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<DonationDocs>?> getDonationLogs({required int page}) async {
@@ -96,6 +97,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getPageLogs({required int page}) async {
@@ -121,6 +123,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<DonationDocs>?> getGroupLogs({required int page}) async {
@@ -146,6 +149,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getSocialLogs({required int page}) async {
@@ -171,6 +175,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getUgtLogs({required int page}) async {
@@ -196,6 +201,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getEventLogs({required int page}) async {
@@ -221,6 +227,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getShopLogs({required int page}) async {
@@ -246,6 +253,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getPollLogs({required int page}) async {
@@ -271,6 +279,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getWalletLogs({required int page}) async {
@@ -296,6 +305,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getQuotationLogs({required int page}) async {
@@ -321,6 +331,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<VisitedPagesDocs>?>  getVisitedPages({required int page}) async {
@@ -348,6 +359,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<CmsDocs>?> getCmsClicks({required int page}) async {
@@ -374,6 +386,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<UserActionsDocs>?> getUserAction({required int page}) async {
@@ -400,6 +413,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PaymentActivityDocs>?> getPaymentActivity({required int page}) async {
@@ -426,6 +440,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<UserInteractionDocs>?> getUserInteraction({required int page}) async {
@@ -452,6 +467,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<SearchLogDocs>?> getSearchLog({required int page}) async {
@@ -478,6 +494,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
 

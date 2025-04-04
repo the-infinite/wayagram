@@ -162,7 +162,7 @@ class _UserInteractionState extends ConsumerState<UserInteraction > {
   sortList(s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.userInteractionDocs = [];
-    print('ACTIVITY End ====> ${s}');
+    print('ACTIVITY End ====> $s');
     setState(() {
       if(s == 'all time'){
         viewModel.userInteractionDocs = viewModel.userInteractionDocs1;

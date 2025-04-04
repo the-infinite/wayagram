@@ -68,6 +68,8 @@ class UgtCard extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
+                    return null;
+                  
                     // return EngagementRange(
                     //     topLeft: ugt.votes[index].name,
                     //     range: ugt.votes[index].noOfVotes,

@@ -159,7 +159,7 @@ class _UserActionState extends ConsumerState<UserAction> {
   sortList(s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.userActionsDocs = [];
-    print('ACTIVITY End ====> ${s}');
+    print('ACTIVITY End ====> $s');
     setState(() {
       if(s == 'all time'){
         viewModel.userActionsDocs = viewModel.userActionsDocs1;

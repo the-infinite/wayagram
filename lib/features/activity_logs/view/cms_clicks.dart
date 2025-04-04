@@ -155,7 +155,7 @@ var lsTransact = ['All Time', 'This week', 'This month', 'This Year'];
 sortList(s) {
   final viewModel = ref.watch(activityLogsVmProvider);
   viewModel.cmsDocs = [];
-  print('ACTIVITY End ====> ${s}');
+  print('ACTIVITY End ====> $s');
   setState(() {
     if(s == 'all time'){
       viewModel.cmsDocs = viewModel.cmsDocs1;

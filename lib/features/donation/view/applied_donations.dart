@@ -244,7 +244,7 @@ class DonationEmptyState extends StatelessWidget {
               WayaAssets.images.emptyEvent.path,
               scale: 1.5,
             ),
-            message: "You don\'t have applied donations yet"),
+            message: "You don't have applied donations yet"),
       ),
     );
   }

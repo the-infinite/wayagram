@@ -94,7 +94,7 @@ class AppTextField extends StatefulWidget {
   @Deprecated('Use TextFieldType.PASSWORD instead')
   final bool? isPassword;
 
-  AppTextField({
+  const AppTextField({
     this.controller,
     required this.textFieldType,
     this.decoration,
@@ -154,8 +154,8 @@ class AppTextField extends StatefulWidget {
     this.promptFieldInputDecorationChatGPT,
     this.shortReplyChatGPT = false,
     this.testWithoutKeyChatGPT = false,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   _AppTextFieldState createState() => _AppTextFieldState();
