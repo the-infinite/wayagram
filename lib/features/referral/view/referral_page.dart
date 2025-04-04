@@ -30,8 +30,8 @@ class ReferralPage extends ConsumerWidget {
     final notifier = ref.watch(referralVm.notifier);
     final shareService = ref.watch(shareProvider);
     final wayaTheme = Theme.of(context);
-    /*  String url = WayaValueHelper.getShareableUrl(
-        WayaAppRoutes.getProfileRoute(notifier.getLoggedInUserId() ?? "")); */
+    String url = WayaAppRoutes.getAccountCreationScreen(
+        ConversationState.profile.referenceCode ?? "");
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -99,10 +99,10 @@ class ReferralPage extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "Referral code :${ConversationState.profile.referenceCode}" ??
+                        "Referral Code:  ${ConversationState.profile.referenceCode}" ??
                             "",
                         overflow: TextOverflow.ellipsis,
-                        style: WayaTextStyles.hintStyleBold,
+                        style: WayaTextStyles.bodyMedium,
                       ),
                     ),
                     GestureDetector(
@@ -118,16 +118,22 @@ class ReferralPage extends ConsumerWidget {
             ),
 
             Gap(16),
-
+            Text(
+              "Invitation Link",
+              textAlign: TextAlign.start,
+              style: WayaTextStyles.hintStyleBold,
+            ),
+            Gap(16),
             // Action Buttons
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 GestureDetector(
                     onTap: () async {
                       await Share.share(
-                        // WayaValueHelper.getShareableUrl(url),
-                        ConversationState.profile.referenceCode ?? "",
+                        WayaValueHelper.getShareableUrl(url),
+                        //  ConversationState.profile.referenceCode ?? "",
                         subject: 'Share link',
                       );
                     },
@@ -189,6 +195,8 @@ class ReferralPage extends ConsumerWidget {
       width: context.width / 3.5,
       padding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, color: wayaTheme.colorScheme.primary500),
           Gap(4),

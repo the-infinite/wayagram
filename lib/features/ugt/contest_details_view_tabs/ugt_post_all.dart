@@ -46,45 +46,57 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
         //  UgtPostCard(),
         if (viewModelNotifier.getLoggedInUserId() == widget.model?.profileId)
           //? button to switch between approved contest
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
+          Column(
             children: [
-              Expanded(
-                child: WayaButton(
-                  callback: () {
-                    viewModelNotifier
-                        .fetchAllContestPosts(widget.model?.id ?? "");
-                  },
-                  color: Colors.white,
-                  text: "Active Posts",
-
-                  border: Border.all(color: wayaTheme.colorScheme.greyColor400),
-                  //   leadingIcon: WayaAssets.icons.caution.svg(),
-                  textColor: wayaTheme.colorScheme.greyColor700,
-                ),
-              ),
               Gap(10),
-              Expanded(
-                child: WayaButton(
-                  callback: () {
-                    viewModelNotifier.fetchAllContestPosts(
-                        widget.model?.id ?? "",
-                        hostApproved: false);
-                  },
-                  color: wayaTheme.colorScheme.primary50,
-                  text: "Pending Posts",
-                  leadingIcon: Container(),
-                  // border: Border.all(),
-                  // trailingIcon: WayaAssets.icons.caution.svg(),
-                  textColor: wayaTheme.colorScheme.customPrimary,
-                  trailingIcon: _counter(context),
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: WayaButton(
+                      callback: () {
+                        //?switch to active posts
+                        viewModelNotifier.changeActive(true);
+                        viewModelNotifier
+                            .fetchAllContestPosts(widget.model?.id ?? "");
+                      },
+                      color: Colors.white,
+                      text: "Active Posts",
+
+                      border:
+                          Border.all(color: wayaTheme.colorScheme.greyColor400),
+                      //   leadingIcon: WayaAssets.icons.caution.svg(),
+                      textColor: wayaTheme.colorScheme.greyColor700,
+                    ),
+                  ),
+                  Gap(10),
+                  Expanded(
+                    child: WayaButton(
+                      callback: () {
+                        //?switch to pending posts
+                        viewModelNotifier.changeActive(false);
+                        viewModelNotifier.fetchAllContestPosts(
+                            widget.model?.id ?? "",
+                            hostApproved: false);
+                      },
+                      color: wayaTheme.colorScheme.primary50,
+                      text: "Pending Posts",
+                      leadingIcon: Container(),
+                      // border: Border.all(),
+                      // trailingIcon: WayaAssets.icons.caution.svg(),
+                      textColor: wayaTheme.colorScheme.customPrimary,
+                      trailingIcon:
+                          _counter(context, viewModel.pendingPostCount ?? 0),
+                    ),
+                  ),
+                ],
               ),
+              Gap(15),
             ],
           ),
         if (viewModel.myPostList.isEmpty) emptyWidget(),
-        //  if (posts.isNotEmpty)
+        //? List of the post for a contest
 
         ListView.builder(
           controller: _scrollController,
@@ -138,7 +150,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
             // border: Border.all(),
             // trailingIcon: WayaAssets.icons.caution.svg(),
             textColor: wayaTheme.colorScheme.customPrimary,
-            trailingIcon: _counter(context),
+            trailingIcon: _counter(context, 0),
           ),
         ),
       ],
@@ -161,7 +173,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
     super.dispose();
   }
 
-  Widget _counter(BuildContext context) {
+  Widget _counter(BuildContext context, int count) {
     final wayaTheme = Theme.of(context);
     return Container(
       width: 25,
@@ -172,7 +184,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
       ),
       child: Center(
         child: Text(
-          "12",
+          "$count",
           style: WayaTextStyles.bodyBold.copyWith(color: Colors.white),
         ),
       ),

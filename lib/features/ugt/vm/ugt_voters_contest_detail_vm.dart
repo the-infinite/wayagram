@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/utils/utils.dart';
-
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
@@ -307,8 +304,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
   Future<void> fetchAllContestPosts(String id, {hostApproved = true}) async {
     try {
-     
-     final  response = await _contestRepository.fetchAllContestGallery(id, hostApproved);
+      final response =
+          await _contestRepository.fetchAllContestGallery(id, hostApproved);
       List<UgtAllPostContestModel> contestList = [];
       if (response.success) {
         UgtAllPostContestModelBase responseModel =
@@ -316,10 +313,26 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         contestList = responseModel.data?.docs ?? [];
 
         state = state.copyWith(myPostList: contestList);
+        if (state.isActive == false && !hostApproved) {
+          state = state.copyWith(pendingPostCount: contestList.length);
+        }
       }
     } catch (e) {
       //print(e);
     } finally {}
+  }
+
+  void approveDisapprovePost(String galleryId) async {
+    // print("do like stuff");
+    final response = await _contestRepository.approveDisapprovePost(galleryId);
+
+    if (response.success) {
+      WayaSnackBar.showToast("Post status updated successfully",
+          showSuccess: true);
+    } else {
+      WayaSnackBar.showToast("unable to update post status");
+      //  print("Contest already liked");
+    }
   }
 
   Future<void> fetchAllContestApplicant(String id) async {

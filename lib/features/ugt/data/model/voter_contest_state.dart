@@ -13,6 +13,7 @@ class VoterDetailState {
   final bool? isActive;
   final bool? ismakePaymentLoading;
   final String createPostId;
+  final int? pendingPostCount;
   final String? contestId;
   final Wallet? data;
   final List<contestant.MyContestContestantModel> myContestList;
@@ -30,6 +31,7 @@ class VoterDetailState {
     this.ismakePaymentLoading = false,
     this.data,
     this.createPostId = "",
+    this.pendingPostCount = 0,
     this.contestId = "",
     this.myPostList = const [],
     this.myApprovePostList = const [],
@@ -50,6 +52,7 @@ class VoterDetailState {
     bool? isActive,
     Wallet? data,
     String? createPostId,
+    int? pendingPostCount,
     String? contestId,
     List<UgtAllPostContestModel>? myPostList,
     List<UgtAllPostContestModel>? myApprovePostList,
@@ -74,6 +77,7 @@ class VoterDetailState {
         myFilteredContestApplicantList: myFilteredContestApplicantList ??
             this.myFilteredContestApplicantList,
         createPostId: createPostId ?? this.createPostId,
+        pendingPostCount: pendingPostCount ?? this.pendingPostCount,
         contestId: contestId ?? this.contestId,
         myContestList: myContestList ?? this.myContestList,
         myContestListCopy: myContestListCopy ?? this.myContestListCopy,

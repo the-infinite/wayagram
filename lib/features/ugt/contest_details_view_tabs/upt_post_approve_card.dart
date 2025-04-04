@@ -119,64 +119,6 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
                         Gap(
                           context.width * 0.15,
                         ),
-                        //  post.isFollowing!
-                        //  Image.asset("assets/images/vector.png"),
-                        PopupMenuButton(
-                          onSelected: (value) {},
-                          position: PopupMenuPosition.under,
-                          itemBuilder: (context) {
-                            return [
-                              PopupMenuItem<int>(
-                                value: 1,
-                                child: _buildActionNav(
-                                    context: context,
-                                    onTap: () {},
-                                    asset: WayaAssets.icons.genSet.share
-                                        .svg(fit: BoxFit.none),
-                                    text: "Share Post Link",
-                                    color: wayaTheme.colorScheme.customBlack),
-                              ),
-                              /*   if (viewModel.getLoggedInUserId() ==
-                                  widget.post.contestantProfileId) */
-                              // https://services.staging.wayagram.ng/school-contest/api/v1/gallery/f3c0f686-85fd-4125-8e3f-5a83e7910f32/gallery
-                              PopupMenuItem<int>(
-                                value: 1,
-                                child: _buildActionNav(
-                                    context: context,
-                                    onTap: () {
-                                      WayaNav.goBack();
-                                      WayaUtils.showModalSheet(
-                                        context,
-                                        child: DeletePostModal(
-                                          postId: widget.post.id ?? "",
-                                          contestantId: "",
-                                          contestId:
-                                              widget.post.contestId ?? "",
-                                        ),
-                                      );
-                                    },
-                                    asset: Icon(
-                                      Icons.delete_outline_outlined,
-                                      size: 24,
-                                    ),
-                                    text: "Delete Post",
-                                    color: wayaTheme.colorScheme.customBlack),
-                              )
-                            ];
-                          },
-                          child: Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: wayaTheme.colorScheme
-                                    .greyColor200, // Background color
-                                shape: BoxShape.circle, // Makes it circular
-                              ),
-                              child: Icon(
-                                Icons.more_horiz,
-                                color: Colors.black12,
-                              )),
-                        )
                       ],
                     ),
                   ),
@@ -234,7 +176,39 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
                             type: e.type ?? "", url: e.url ?? ""))
                   ]),
               const Gap(20),
-              _ourButtons(context)
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: WayaButton(
+                      callback: () {
+                        viewModel.approveDisapprovePost(widget.post.id ?? "");
+                      },
+                      color: wayaTheme.colorScheme.primary50,
+                      text: "Decline Posts",
+                      leadingIcon: Container(),
+                      // border: Border.all(),
+                      // trailingIcon: WayaAssets.icons.caution.svg(),
+                      textColor: wayaTheme.colorScheme.customPrimary,
+                    ),
+                  ),
+                  Gap(10),
+                  Expanded(
+                    child: WayaButton(
+                      callback: () {
+                        viewModel.approveDisapprovePost(widget.post.id ?? "");
+                      },
+                      color: wayaTheme.colorScheme.success50,
+                      text: "Approve Posts",
+                      leadingIcon: Container(),
+                      // border: Border.all(),
+                      // trailingIcon: WayaAssets.icons.caution.svg(),
+                      textColor: wayaTheme.colorScheme.success700,
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -242,64 +216,6 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
       ],
     );
   }
-}
-
-Widget _ourButtons(BuildContext context) {
-  final wayaTheme = Theme.of(context);
-  return Row(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Expanded(
-        child: WayaButton(
-          callback: () {},
-          color: wayaTheme.colorScheme.primary50,
-          text: "Decline Posts",
-          leadingIcon: Container(),
-          // border: Border.all(),
-          // trailingIcon: WayaAssets.icons.caution.svg(),
-          textColor: wayaTheme.colorScheme.customPrimary,
-        ),
-      ),
-      Gap(10),
-      Expanded(
-        child: WayaButton(
-          callback: () {},
-          color: wayaTheme.colorScheme.success50,
-          text: "Approve Posts",
-          leadingIcon: Container(),
-          // border: Border.all(),
-          // trailingIcon: WayaAssets.icons.caution.svg(),
-          textColor: wayaTheme.colorScheme.success700,
-        ),
-      ),
-    ],
-  );
-}
-
-InkWell _buildActionNav(
-    {required BuildContext context,
-    required VoidCallback onTap,
-    required Widget asset,
-    required String text,
-    required Color color}) {
-  //final wayaTheme = Theme.of(context);
-  return InkWell(
-    onTap: onTap,
-    splashFactory: NoSplash.splashFactory,
-    child: Row(
-      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        asset,
-        const Gap(8),
-        Text(
-          text,
-          style: WayaTextStyles.bodyMedium.copyWith(color: color),
-        ),
-      ],
-    ),
-  );
 }
 
 String formatDate(String isoDate) {
