@@ -4,9 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/waya_colors.dart';
-import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/modals/group_chat.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
@@ -30,6 +30,7 @@ class _StartConversationModalState extends State<StartConversationModal> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.sizeOf(context);
+    final theme = Theme.of(context);
 
     //? This is fine.
     return Padding(
@@ -54,10 +55,7 @@ class _StartConversationModalState extends State<StartConversationModal> {
                   //* The title.
                   Text(
                     "Send New Message",
-                    style: WayaTextStyles.titleLarge.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 24.sp,
-                    ),
+                    style: theme.textTheme.headlineLarge,
                   ),
 
                   //* The dismiss button.
@@ -66,10 +64,10 @@ class _StartConversationModalState extends State<StartConversationModal> {
                     style: IconButton.styleFrom(
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                       padding: const EdgeInsets.all(2),
-                      backgroundColor: WayaColors.greyColor200,
+                      backgroundColor: theme.colorScheme.greyColor200,
                     ),
                     icon: WayaAssets.icons.actonDismiss.svg(
-                      color: WayaColors.black,
+                      color: theme.colorScheme.black,
                     ),
                   ),
                 ],
@@ -92,7 +90,7 @@ class _StartConversationModalState extends State<StartConversationModal> {
                 //? Some text.
                 Text(
                   "Creating conversation...",
-                  style: WayaTextStyles.titleLarge,
+                  style: theme.textTheme.headlineLarge,
                 ),
 
                 // Some space.
@@ -130,7 +128,48 @@ class _StartConversationModalState extends State<StartConversationModal> {
                 ),
 
                 // Some  space.
-                const Gap(10),
+                Gap(10.h),
+
+                //? The button to start a group chat.
+                InkWell(
+                  onTap: () async {
+                    WayaNav.goBack();
+                    await WayaUtils.showModalSheet(context, child: StartConversationGroupModal());
+                  },
+                  borderRadius: BorderRadius.circular(10),
+                  splashColor: theme.colorScheme.primary.withAlpha(30),
+                  focusColor: theme.colorScheme.primary.withAlpha(30),
+                  highlightColor: theme.colorScheme.primary.withAlpha(30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.max,
+                    spacing: 10.w,
+                    children: [
+                      //* First, the child that is supposed to be for the icon.
+                      Container(
+                        padding: EdgeInsets.all(15.r),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: theme.colorScheme.primary50,
+                        ),
+                        child: WayaAssets.icons.notifGroupRequest.svg(
+                          height: 24.h,
+                          width: 24.h,
+                        ),
+                      ),
+
+                      //* Second, the button for creating
+                      Text(
+                        "Create a new group",
+                        style: theme.textTheme.titleMedium,
+                      )
+                    ],
+                  ),
+                ),
+
+                // Some  space.
+                Gap(15.h),
 
                 //? After this, a list of users you are following.
                 ValueListenableBuilder(
@@ -175,9 +214,9 @@ class _StartConversationModalState extends State<StartConversationModal> {
                                   });
                                 },
                                 borderRadius: BorderRadius.circular(10),
-                                splashColor: WayaColors.primary.withAlpha(30),
-                                focusColor: WayaColors.primary.withAlpha(30),
-                                highlightColor: WayaColors.primary.withAlpha(30),
+                                splashColor: theme.colorScheme.primary.withAlpha(30),
+                                focusColor: theme.colorScheme.primary.withAlpha(30),
+                                highlightColor: theme.colorScheme.primary.withAlpha(30),
                                 child: Container(
                                   margin: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 5.h),
                                   decoration: BoxDecoration(

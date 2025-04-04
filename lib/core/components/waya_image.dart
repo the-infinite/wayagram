@@ -13,12 +13,14 @@ class WayaDp extends ConsumerWidget {
   final String? image;
   final bool isEdit;
   final bool isSelf;
+  final bool canFocus;
 
   const WayaDp({
     this.radius = 75,
     this.onTap,
     this.isEdit = false,
     this.isSelf = true,
+    this.canFocus = true,
     this.image = '',
     super.key,
   });
@@ -38,6 +40,7 @@ class WayaDp extends ConsumerWidget {
             }
           : onTap ??
               () async {
+                if (!canFocus) return;
                 if (image == null) return;
 
                 final result = await WayaNavigationHelper.toImageDetailsScreen(
