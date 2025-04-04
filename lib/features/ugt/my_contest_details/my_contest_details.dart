@@ -33,7 +33,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
   double _previousScrollOffset = 0.0;
 
   final List<String> _tabs = [
-    "All Contests",
+    "Followed Contests",
     "Hosted Contests",
     "Applied Contests"
   ];
@@ -155,33 +155,17 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                     children: [
                       if (ConversationState.self.accountType ==
                           UserAccountType.business)
-                      WayaButton(
-                        callback: () {
-                          ivalidateUGTVM(ref);
-                          WayaNav.toNamed('/create-contest');
-                        },
-                        color: wayaTheme.colorScheme.primary50,
-                        text: "Host a Contest",
-                        textColor: wayaTheme.colorScheme.customPrimary,
-                      ),
+                        WayaButton(
+                          callback: () {
+                            ivalidateUGTVM(ref);
+                            WayaNav.toNamed('/create-contest');
+                          },
+                          color: wayaTheme.colorScheme.primary50,
+                          text: "Host a Contest",
+                          textColor: wayaTheme.colorScheme.customPrimary,
+                        ),
                       const Gap(10),
-                      if (host.isEmpty &&
-                          applied.listAppliedContest.isEmpty &&
-                          followed.isEmpty)
-                        emptyWidget(),
-                      /*  if (hostNotifier.isLoading)
-                        Center(child: CircularProgressIndicator()), */
-                      ListView.builder(
-                        controller: _hostedScrollController,
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: applied.listAppliedContest.length,
-                        itemBuilder: (context, index) {
-                          final post = applied.listAppliedContest[index];
-                          return ContestAppliedCard(post);
-                        },
-                      ),
-                      const Gap(10),
+                      if (followed.isEmpty) emptyWidget(),
                       ListView.builder(
                         //  controller: _hostedScrollController,
                         physics: NeverScrollableScrollPhysics(),
@@ -197,7 +181,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                         },
                       ),
                       const Gap(10),
-                      ListView.builder(
+                      /*   ListView.builder(
                         // controller: _hostedScrollController,
                         physics: NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
@@ -211,7 +195,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                           return ContestCard(post, hostNotifier.toggleLike,
                               hostNotifier.toggleShare, hostNotifier.doFollow);
                         },
-                      ),
+                      ), */
                       const Gap(200),
                     ],
                   ),

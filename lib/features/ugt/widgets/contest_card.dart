@@ -133,30 +133,30 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   ),
 
                   //  post.isFollowing!
-                  //  if (widget.post.profileId != voteNotifier.getLoggedInUserId())
-                  Expanded(
-                      flex: 1,
-                      child: widget.post.isFollowing == true
-                          ? WayaButton(
-                              text: 'Unfollow',
-                              height: 40,
-                              horizontalPadding: 2,
-                              fontSize: 11.sp,
-                              color: wayaTheme.colorScheme.greyColor300,
-                              textColor: wayaTheme.colorScheme.customBlack,
-                              border: Border.all(
-                                  width: 1,
-                                  color: wayaTheme.colorScheme.greyColor300),
-                              callback: () {
-                                widget.onFollowPressed(widget.post.id!);
-                              })
-                          : WayaButton(
-                              fontSize: 12.sp,
-                              callback: () =>
-                                  widget.onFollowPressed(widget.post.id!),
-                              height: 40,
-                              text: "   Follow  ",
-                            )),
+                  if (widget.post.profileId != voteNotifier.getLoggedInUserId())
+                    Expanded(
+                        flex: 1,
+                        child: widget.post.isFollowing == true
+                            ? WayaButton(
+                                text: 'Unfollow',
+                                height: 40,
+                                horizontalPadding: 2,
+                                fontSize: 11.sp,
+                                color: wayaTheme.colorScheme.greyColor300,
+                                textColor: wayaTheme.colorScheme.customBlack,
+                                border: Border.all(
+                                    width: 1,
+                                    color: wayaTheme.colorScheme.greyColor300),
+                                callback: () {
+                                  widget.onFollowPressed(widget.post.id!);
+                                })
+                            : WayaButton(
+                                fontSize: 12.sp,
+                                callback: () =>
+                                    widget.onFollowPressed(widget.post.id!),
+                                height: 40,
+                                text: "   Follow  ",
+                              )),
                 ],
               ),
               const Gap(20),
