@@ -13,11 +13,8 @@ import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart'
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
-import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/shop/seller/views/create_shop/vm/create_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/vm/delivery_request_vm.dart';
-import 'package:wayagram/features/shop/seller/vm/seller_orders_vm.dart';
-import 'package:wayagram/features/shop/seller/vm/seller_products_vm.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/shared/features/shop/model/default.dart';
 

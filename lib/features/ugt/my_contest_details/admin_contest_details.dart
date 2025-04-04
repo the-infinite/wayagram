@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -22,7 +20,6 @@ import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/admin_card.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 
-import '../../../core/components/waya_scaffold.dart';
 
 class AdminContestDetails extends StatefulHookConsumerWidget {
   static const route = '/upcoming-manage-contest-details';

@@ -23,7 +23,7 @@ Widget normalImage(
   BoxFit fit = BoxFit.cover,
   List<String?> images = const [],
 }) {
-  int _currentIndex = 0;
+  int currentIndex = 0;
   return Stack(
     children: [
       CachedNetworkImage(

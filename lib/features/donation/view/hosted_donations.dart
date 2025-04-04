@@ -228,7 +228,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                 itemCount: myDonations.length,
                 //filteredMyDonations.length,
                 itemBuilder: (context, index) {
-                  final donation = myDonations![index];
+                  final donation = myDonations[index];
                   //final donation = filteredMyDonations[index];
                   int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
 

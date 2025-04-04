@@ -1,4 +1,3 @@
-import 'package:wayagram/features/shop/seller/data/model/pagination_model.dart';
 import 'package:wayagram/shared/model/base_model.dart';
 
 class OrdersResponse {

@@ -79,8 +79,9 @@ class AddProductModel {
     if (width != null) json['width'] = width;
     if (depth != null) json['depth'] = depth;
     if (discountTypeId != null) json['discountTypeId'] = discountTypeId;
-    if (discountPercentage != null)
+    if (discountPercentage != null) {
       json['discountPercentage'] = discountPercentage;
+    }
     if (pickupAddress != null) json['pickupAddress'] = pickupAddress;
     if (deliveryCharge != null) json['deliveryCharge'] = deliveryCharge;
     

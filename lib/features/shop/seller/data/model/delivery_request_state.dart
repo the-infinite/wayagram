@@ -14,7 +14,7 @@ class DeliveryRequestState {
   DeliveryRequestState copyWith({
       bool? isLoading, TextEditingController? search, List<DeliveryRequestData>? deliveryRequest}) {
     return DeliveryRequestState(
-        deliveryRequests: deliveryRequest ?? this.deliveryRequests,
+        deliveryRequests: deliveryRequest ?? deliveryRequests,
         isLoading: isLoading ?? this.isLoading,
         search: search ?? this.search);
   }

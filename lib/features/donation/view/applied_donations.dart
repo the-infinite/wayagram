@@ -9,7 +9,6 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
-import 'dart:io' show Platform;
 
 class AppliedDonations extends ConsumerStatefulWidget {
   const AppliedDonations({super.key});

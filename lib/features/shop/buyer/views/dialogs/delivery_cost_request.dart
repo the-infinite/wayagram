@@ -29,7 +29,7 @@ class DeliveryCostRequest extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController _controller = TextEditingController();
+    final TextEditingController controller = TextEditingController();
     final wayaTheme = Theme.of(context);
     final state = ref.watch(cartVmProvider);
 
@@ -114,7 +114,7 @@ class DeliveryCostRequest extends ConsumerWidget {
               ),
               const Gap(24),
               WayaTextFormField(
-                controller: _controller,
+                controller: controller,
                 hintText: "Enter delivery address for this order",
                 line: 5,
                 padding: const EdgeInsets.all(12),
@@ -124,13 +124,13 @@ class DeliveryCostRequest extends ConsumerWidget {
               WayaButton(
                   callback: !state.isRequestingDelivery
                       ? () {
-                          if (_controller.text.isEmpty) {
+                          if (controller.text.isEmpty) {
                             return WayaSnackBar.showToast(
                                 "Enter a delivery address");
                           }
 
                           ref.read(cartVmProvider.notifier).deliveryRequest(
-                              shopId: shopId, address: _controller.text);
+                              shopId: shopId, address: controller.text);
                           WayaNav.goBack();
                         }
                       : null,
