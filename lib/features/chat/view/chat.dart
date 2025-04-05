@@ -150,9 +150,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                       highlightColor: theme.colorScheme.primary.withAlpha(30),
                       customBorder: StadiumBorder(),
                       splashFactory: NoSplash.splashFactory,
-                      onTap: () {
-                        WayaNav.toNamed(WayaAppRoutes.getChatProfile(chat.id));
-                      },
+                      onTap: () => WayaNav.toNamed(WayaAppRoutes.getChatProfile(chat.id)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -160,8 +158,9 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                           // First, the user's profile picture.
                           ChatProfilePicture(
                             user: chat.other.userData ?? ConversationState.self,
-                            showActive: userStatus == ChatUserActivity.online,
+                            showActive: chat.chatType != ChatType.group && userStatus == ChatUserActivity.online,
                             lastSeen: chat.other.chatUser?.lastSeen,
+                            chat: chat,
                             radius: 16,
                           ),
 
@@ -187,7 +186,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                   ),
 
                                   //? For the message content...
-                                  if (lastSeenText != null)
+                                  if (chat.chatType != ChatType.group && lastSeenText != null)
                                     Text(
                                       userStatus == ChatUserActivity.online ? "Online" : lastSeenText,
                                       maxLines: 1,

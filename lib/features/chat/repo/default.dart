@@ -21,8 +21,8 @@ class ChatRepository extends BaseRepository {
         "otherUsers": members,
         "chatType": type.name,
         if (name != null) "name": name,
-        if (description != null) "bio": description,
-        if (image != null) "image": image,
+        if (description != null) "description": description,
+        if (image != null) "groupImage": image,
       },
     );
   }

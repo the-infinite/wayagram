@@ -217,6 +217,7 @@ class ConversationWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final isMine = chat.lastMessage?.senderId == ConversationState.self.id;
     final unread = chat.unreadCount;
+    final userStatus = chat.other.chatUser?.onlineStatus;
 
     // The thing that you are sending.
     return InkWell(
@@ -237,7 +238,8 @@ class ConversationWidget extends StatelessWidget {
             ChatProfilePicture(
               user: chat.other.userData!,
               lastSeen: chat.other.chatUser?.lastSeen,
-              showActive: chat.other.chatUser?.onlineStatus == ChatUserActivity.online,
+              showActive: chat.chatType != ChatType.group && userStatus == ChatUserActivity.online,
+              chat: chat,
               radius: 25,
             ),
 
