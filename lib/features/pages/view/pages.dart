@@ -39,6 +39,7 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
           WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
           WayaDp(
             radius: 15.r,
+            
           ),
           Gap(8)
         ],

@@ -1,17 +1,13 @@
-import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
-import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -28,17 +24,12 @@ import 'package:wayagram/features/donation/state/donation_state.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
-
 class DonationVm extends StateNotifier<DonationState> {
   final Ref ref;
   final DonationRepository _donationRepository;
-  final WayaSecureDataSource _secureDataSource;
   final UploadFileRepository _uploadFileRepository;
-  final SuccessfulSetUpState _setupState;
   final _logger = getLogger('DonationVm');
-  DonationVm(this._secureDataSource, this._donationRepository,
-      this.ref, this._uploadFileRepository, this._setupState)
-      : super(DonationState()){
+  DonationVm(this._donationRepository, this.ref, this._uploadFileRepository) : super(DonationState()) {
     state = state.copyWith(title: TextEditingController(text: ''));
     state = state.copyWith(description: TextEditingController(text: ''));
     state = state.copyWith(solution: TextEditingController(text: ''));
@@ -46,7 +37,6 @@ class DonationVm extends StateNotifier<DonationState> {
     state = state.copyWith(targetAmount: TextEditingController(text: ''));
     state = state.copyWith(minimumDonationAmount: TextEditingController(text: ''));
     state = state.copyWith(details: TextEditingController(text: ''));
-
   }
 
   void reset() {
@@ -77,14 +67,10 @@ class DonationVm extends StateNotifier<DonationState> {
     state = state.copyWith(category: value.value);
   }
 
-
-
   void addFile(File file) {
-    state = state.copyWith(donationImage: [
-      DocType(file: file, type: "donation-image", name: file.path.split('/').last)
-    ]);
+    state =
+        state.copyWith(donationImage: [DocType(file: file, type: "donation-image", name: file.path.split('/').last)]);
   }
-
 
   void removeFile() {
     List<DocType> e = List.from(state.donationImage);
@@ -145,17 +131,10 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: false);
       WayaNav.goBack();
       if (response.success && ctx.mounted) {
-        WayaUtils.showModalSheet(
-          ctx,
-          child: DonationGenerosityModal()
-        );
+        WayaUtils.showModalSheet(ctx, child: DonationGenerosityModal());
         _logger.i(response.data['data']);
-      }else if( response.data['error'] == 'Insufficient wallet balance'){
-
-        WayaUtils.showModalSheet(
-            ctx,
-            child: DonationUnSuccessfulModal()
-        );
+      } else if (response.data['error'] == 'Insufficient wallet balance') {
+        WayaUtils.showModalSheet(ctx, child: DonationUnSuccessfulModal());
 
         print('CHECKINGGGGG');
       }
@@ -166,13 +145,11 @@ class DonationVm extends StateNotifier<DonationState> {
     }
   }
 
-
   Future<PaginatedResult<AllDonationDocs>?> getAllDonation({required int page}) async {
-
-    try{
+    try {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.getAllCampaigns(page);
-      List<AllDonationDocs>? fetchAllDonations= [];
+      List<AllDonationDocs>? fetchAllDonations = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
@@ -184,10 +161,10 @@ class DonationVm extends StateNotifier<DonationState> {
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchAllDonations!);
-    }catch (e){
+      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchAllDonations!);
+    } catch (e) {
       _logger.e(e);
-    }finally {
+    } finally {
       state = state.copyWith(isLoading: false);
     }
     return null;
@@ -236,35 +213,29 @@ class DonationVm extends StateNotifier<DonationState> {
     } finally {}
   }
 
-
   Future<bool> verifyWalletPin(String pin, ctx) async {
-    final response = await _donationRepository
-        .confirmWalletPin(ConfirmWalletPin(userId: ConversationState.self.id ?? "", pin: pin));
+    final response =
+        await _donationRepository.confirmWalletPin(ConfirmWalletPin(userId: ConversationState.self.id, pin: pin));
     if (response.success) {
       return true;
-    } else if( response.data['error'] == 'User hasn\'t set wallet pin yet'){
-
+    } else if (response.data['error'] == 'User hasn\'t set wallet pin yet') {
       ScaffoldMessenger.of(ctx).showSnackBar(
-         SnackBar(
+        SnackBar(
           content: Text(
             'Kindly set your wallet pin',
-            style:
-            TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
           ),
           backgroundColor: WayaColors.primary,
           duration: Duration(seconds: 2),
         ),
       );
-    }
-    else {
+    } else {
       return false;
     }
     return false;
   }
 
-
-  Future<void> editCampaign(ctx, amount, campaignId ) async {
-
+  Future<void> editCampaign(ctx, amount, campaignId) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.updateDonation(amount, campaignId);
@@ -272,11 +243,10 @@ class DonationVm extends StateNotifier<DonationState> {
       //? If this is fine...
       if (response.success && ctx.mounted) {
         ScaffoldMessenger.of(ctx).showSnackBar(
-           SnackBar(
+          SnackBar(
             content: Text(
               'Minimum amount updated successfully!',
-              style:
-              TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
             ),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
@@ -297,8 +267,8 @@ class DonationVm extends StateNotifier<DonationState> {
     }
   }
 
-  Future<void> onSubmit(title, description, solution, impact, targetAmount, minimumAmount, privacy, expirationDate, image, startDate,
-      category,
+  Future<void> onSubmit(title, description, solution, impact, targetAmount, minimumAmount, privacy, expirationDate,
+      image, startDate, category,
       {required BuildContext context}) async {
     try {
       // validate image
@@ -330,25 +300,21 @@ class DonationVm extends StateNotifier<DonationState> {
       // }
 
       state = state.copyWith(isLoading: true);
-      final image =  state.donationImage[0].file == null
+      final image = state.donationImage[0].file == null
           ? state.donationImage[0].url
-          : await WayaUtils.uploadFile(
-          file: state.donationImage[0].file!, repository: _uploadFileRepository);
+          : await WayaUtils.uploadFile(file: state.donationImage[0].file!, repository: _uploadFileRepository);
 
-      final response = await _donationRepository.createCampaign(title, description,
-          solution, impact,
-          targetAmount, minimumAmount,
-          privacy, expirationDate, image!, startDate,
-          category
-      );
-
+      final response = await _donationRepository.createCampaign(title, description, solution, impact, targetAmount,
+          minimumAmount, privacy, expirationDate, image!, startDate, category);
 
       if (response.success) {
         if (context.mounted) {
           CreateDonationResponse createDonationResponse = CreateDonationResponse.fromJson(response.data);
           WayaUtils.showModalSheet(
             context,
-            child: DonationSuccessModal(url: '${createDonationResponse.data?.url}',),
+            child: DonationSuccessModal(
+              url: '${createDonationResponse.data?.url}',
+            ),
           );
         }
 
@@ -359,14 +325,13 @@ class DonationVm extends StateNotifier<DonationState> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
-
   }
 
   Future<void> getMyDonation() async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _donationRepository.getMyCampaigns( ConversationState.self.id);
+      final response = await _donationRepository.getMyCampaigns(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
       print('API Response: ${response.data}');
       print('Status Code: ${response.statusCode}');
@@ -448,9 +413,10 @@ class DonationVm extends StateNotifier<DonationState> {
       if (response.success) {
         KycModel responseModel = KycModel.fromJson(response.data);
         LoginResponse loginResponse = LoginResponse.fromJson(response.data);
-        state = state.copyWith(kycStatus: responseModel.data?.status,
-        accountType: loginResponse.data?.userdata?.business,
-        kycMessage: responseModel.message);
+        state = state.copyWith(
+            kycStatus: responseModel.data?.status,
+            accountType: loginResponse.data?.userdata?.business,
+            kycMessage: responseModel.message);
       } else {}
     } catch (e) {
       print(e);
@@ -522,13 +488,8 @@ class DonationVm extends StateNotifier<DonationState> {
   //     print(e);
   //   } finally {}
   // }
-
-
-
-
 }
 
-final donationVmProvider =
-StateNotifierProvider<DonationVm, DonationState>((ref) {
-  return DonationVm(WayaSecureDataSource(), DonationRepository(), ref, UploadFileRepository(), SuccessfulSetUpState());
+final donationVmProvider = StateNotifierProvider<DonationVm, DonationState>((ref) {
+  return DonationVm(DonationRepository(), ref, UploadFileRepository());
 });

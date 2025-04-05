@@ -58,34 +58,8 @@ class _WayaNotificationsState extends ConsumerState<WayaNotifications> with Tick
 
     // Build the current screen.
     return WayaScaffold(
-      isLoading: state.isLoading,
+      isLoading: false,
       isScrollable: false,
-      progressIndicator: Material(
-        color: WayaColors.cardBackgroundColor,
-        borderRadius: BorderRadius.circular(14),
-        child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Progress indicator first.
-              const CircularProgressIndicator(),
-
-              // Some space here.
-              const SizedBox(height: 10),
-
-              // Some space.
-              Text(
-                "Getting your notifications...",
-                style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                  color: wayaTheme.colorScheme.primary,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
       title: 'Notifications',
       appBarTrailing: Padding(
         padding: const EdgeInsets.only(right: 10),
