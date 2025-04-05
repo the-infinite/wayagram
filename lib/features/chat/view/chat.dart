@@ -186,7 +186,18 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                   ),
 
                                   //? For the message content...
-                                  if (chat.chatType != ChatType.group && lastSeenText != null)
+                                  if (chat.chatType == ChatType.group)
+                                    Text(
+                                      "${WayaValueHelper.formatNumber(chat.chatMembers.length)} members",
+                                      maxLines: 1,
+                                      style: WayaTextStyles.titleMedium.copyWith(
+                                        fontWeight: FontWeight.normal,
+                                        overflow: TextOverflow.ellipsis,
+                                        color: WayaColors.greyColor500,
+                                        fontSize: 13.sp,
+                                      ),
+                                    )
+                                  else if (lastSeenText != null)
                                     Text(
                                       userStatus == ChatUserActivity.online ? "Online" : lastSeenText,
                                       maxLines: 1,
@@ -316,6 +327,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                         index: index,
                         previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
                         data: state.messages[index],
+                        chat: chat,
                         controller: inputController,
                         isLast: index == state.messages.length - 1,
                       ),
