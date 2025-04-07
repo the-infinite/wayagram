@@ -113,7 +113,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
         ),
         bottomNavigationBar: Container(
           width: double.infinity,
-          padding: EdgeInsets.fromLTRB(10, 4, 10, 10),
+          padding: EdgeInsets.fromLTRB(10, 4, 10, 25),
           decoration: BoxDecoration(
             color: wayaTheme.colorScheme.white,
           ),

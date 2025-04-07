@@ -73,7 +73,7 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
             //? Next, the user's fullname.
             Align(
               child: Text(
-                user.fullname,
+                profile.displayName ?? '',
                 style: theme.textTheme.headlineMedium?.copyWith(
                   color: theme.colorScheme.customBlack,
                 ),

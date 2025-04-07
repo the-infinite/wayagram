@@ -25,6 +25,7 @@ class SetNotificationVm extends StateNotifier<States> {
     final notificationVm = ref.read(notificationProvider.notifier);
 
     try {
+      state = state.copyWith(isLoading: true);
       //? If this has not yet generated any device tokens, send them across.
       final result = await notificationVm.sendDeviceToken();
 
@@ -48,6 +49,8 @@ class SetNotificationVm extends StateNotifier<States> {
         WayaDebugEventModule.notifications,
         WayaDebugHelpers.getStackTrace(e),
       );
+    } finally {
+      state = state.copyWith(isLoading: false);
     }
   }
 }

@@ -15,8 +15,19 @@ import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 
 class SingleShopCard extends ConsumerStatefulWidget {
-  final ShopData shop;
-  const SingleShopCard({super.key, required this.shop});
+  final String shopId;
+  final String shopName;
+  final String shopLogo;
+  final ShopData? shop;
+  final bool isDeactivated;
+
+  const SingleShopCard(
+      {super.key,
+      required this.shopId,
+      required this.shopName,
+      required this.shopLogo,
+      this.isDeactivated = true,
+      this.shop});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SingleShopCardState();
@@ -27,12 +38,9 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    print(widget.shop.logo);
-    print("dvdvdv");
-
     return GestureDetector(
         onTap: () =>
-            WayaNav.toNamed(ManageShop.route, arguments: widget.shop.id),
+            WayaNav.toNamed(ManageShop.route, arguments: widget.shopId),
         child: Container(
           margin: EdgeInsets.only(bottom: 10.h),
           padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
@@ -47,7 +55,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
               Row(
                 children: [
                   WayaImage(
-                    imageUrl: widget.shop.logo ?? '',
+                    imageUrl: widget.shopLogo,
                     height: 40,
                     width: 40,
                     radius: BorderRadius.circular(40),
@@ -58,7 +66,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        widget.shop.name.capitalizeFirst!,
+                        widget.shopName.capitalizeFirst!,
                         style: TextStyle().wayaCopyWith(
                             color: wayaTheme.colorScheme.customBlack,
                             fontSize: 14.sp),
@@ -67,14 +75,14 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                       Container(
                         padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
                         decoration: BoxDecoration(
-                            color: widget.shop.deactivated
+                            color: widget.isDeactivated
                                 ? wayaTheme.colorScheme.error200
                                 : wayaTheme.colorScheme.success50,
                             borderRadius: BorderRadius.circular(6)),
                         child: Text(
-                          widget.shop.deactivated ? "Inactive" : "Active",
+                          widget.isDeactivated ? "Inactive" : "Active",
                           style: TextStyle().wayaCopyWith(
-                            color: widget.shop.deactivated
+                            color: widget.isDeactivated
                                 ? wayaTheme.colorScheme.error
                                 : wayaTheme.colorScheme.success,
                             fontWeight: FontWeight.w500,
@@ -99,7 +107,7 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                         onTap: () {
                           WayaNav.goBack();
                           WayaNav.toNamed(ManageShop.route,
-                              arguments: widget.shop.id);
+                              arguments: widget.shopId);
                         },
                         asset: SvgPicture.asset(WayaAssets.icons.bShop.path),
                         text: "Shop Dashboard",
@@ -114,27 +122,29 @@ class _SingleShopCardState extends ConsumerState<SingleShopCard> {
                         text: "Quotation Dashboard",
                       ),
                     ),
-                    PopupMenuItem<int>(
-                      value: 2,
-                      child: _buildActionNav(
-                        context: context,
-                        onTap: () {
-                          WayaNav.goBack();
-                          WayaNav.toNamed(
-                            CreateShop.route,
-                            arguments: UpdateShopArg(
-                                uniqueKey: "update-shop",
-                                singleShop: widget.shop),
-                          );
-                        },
-                        asset: Icon(
-                          Icons.edit_note_sharp,
-                          size: 22,
-                          color: wayaTheme.colorScheme.customBlack,
+                    if (widget.shop != null) ...[
+                      PopupMenuItem<int>(
+                        value: 2,
+                        child: _buildActionNav(
+                          context: context,
+                          onTap: () {
+                            WayaNav.goBack();
+                            WayaNav.toNamed(
+                              CreateShop.route,
+                              arguments: UpdateShopArg(
+                                  uniqueKey: "update-shop",
+                                  singleShop: widget.shop!),
+                            );
+                          },
+                          asset: Icon(
+                            Icons.edit_note_sharp,
+                            size: 22,
+                            color: wayaTheme.colorScheme.customBlack,
+                          ),
+                          text: "Edit Shop",
                         ),
-                        text: "Edit Shop",
-                      ),
-                    )
+                      )
+                    ]
                   ];
                 },
               )
