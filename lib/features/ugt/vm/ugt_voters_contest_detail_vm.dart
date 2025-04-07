@@ -322,6 +322,26 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     } finally {}
   }
 
+    Future<void> fetchAllContestUnApprovedPosts(String id, {hostApproved = true}) async {
+    try {
+      final response =
+          await _contestRepository.fetchAllContestGallery(id, hostApproved);
+      List<UgtAllPostContestModel> contestList = [];
+      if (response.success) {
+        UgtAllPostContestModelBase responseModel =
+            UgtAllPostContestModelBase.fromJson(response.data);
+        contestList = responseModel.data?.docs ?? [];
+
+      //  state = state.copyWith(myPostList: contestList);
+        
+          state = state.copyWith(pendingPostCount: contestList.length);
+        
+      }
+    } catch (e) {
+      //print(e);
+    } finally {}
+  }
+
   void approveDisapprovePost(String galleryId) async {
     // print("do like stuff");
     final response = await _contestRepository.approveDisapprovePost(galleryId);

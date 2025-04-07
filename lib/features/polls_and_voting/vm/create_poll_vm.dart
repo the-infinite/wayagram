@@ -74,8 +74,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     allChoices = List.from(state.choices);
 
     allChoices
-        .add(Choice(image: null, description: TextEditingController(text: ''),
-        text: TextEditingController(text: '')));
+        .add(Choice(image: null, description: TextEditingController(text: ''), text: TextEditingController(text: '')));
 
     state = state.copyWith(choices: allChoices);
   }
@@ -96,7 +95,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
       final response = await showDatePicker(
-          context: context, firstDate: DateTime(1950), lastDate: DateTime.now(), initialDate: DateTime.now());
+          context: context, firstDate: DateTime.now(), lastDate: DateTime.now(), initialDate: DateTime.now());
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
@@ -111,7 +110,11 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
   Future<void> showDatePickerDialogTwo(BuildContext context) async {
     try {
       final response = await showDatePicker(
-          context: context, firstDate: DateTime(1950), lastDate: DateTime(2026), initialDate: DateTime.now());
+        context: context,
+        firstDate: DateTime.now(),
+        lastDate: DateTime(2026),
+        initialDate: DateTime.now(),
+      );
 
       if (response != null) {
         final endDate = "${response.year}-${response.month}-${response.day}";
@@ -640,12 +643,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
   }
 
   Future<void> castYourVote(
-  String amountPaid, String qty, String choiceId,
-      String pollId, ctx, candidateName, votingLink) async {
+      String amountPaid, String qty, String choiceId, String pollId, ctx, candidateName, votingLink) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pollAndVotingRepository.castVote(amountPaid, qty,
-          choiceId, pollId);
+      final response = await _pollAndVotingRepository.castVote(amountPaid, qty, choiceId, pollId);
       state = state.copyWith(isLoading: false);
       if (response.success && ctx.mounted) {
         await getAllPolls(page: 1);
@@ -677,34 +678,27 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
   Future<bool> verifyWalletPin(String pin, ctx) async {
     final response = await _pollAndVotingRepository
-        .confirmWalletPin(ConfirmWalletPin(userId: ConversationState.self.id ?? "", pin: pin));
+        .confirmWalletPin(ConfirmWalletPin(userId: ConversationState.self.id, pin: pin));
     if (response.success) {
       return true;
-    } else if( response.data['error'] == 'User hasn\'t set wallet pin yet'){
-
+    } else if (response.data['error'] == 'User hasn\'t set wallet pin yet') {
       ScaffoldMessenger.of(ctx).showSnackBar(
         SnackBar(
           content: Text(
             'Kindly set your wallet pin',
-            style:
-            TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
           ),
           backgroundColor: WayaColors.primary,
           duration: Duration(seconds: 2),
         ),
       );
-    }
-    else {
+    } else {
       return false;
     }
     return false;
   }
 
-
-
-  Future<void> castFreeVote(
-       num qty, String choiceId,
-      String pollId, ctx, candidateName, votingLink) async {
+  Future<void> castFreeVote(num qty, String choiceId, String pollId, ctx, candidateName, votingLink) async {
     try {
       //state = state.copyWith(isLoading: true);
       final response = await _pollAndVotingRepository.castFreeVote(qty, choiceId, pollId);
@@ -712,7 +706,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       if (response.success && ctx.mounted) {
         //WayaNav.goBack();
         await getAllPolls(page: 1);
-      await  WayaUtils.showModalSheet(
+        await WayaUtils.showModalSheet(
           ctx,
           child: VoteSuccessModalTwo(
             candidateName: candidateName,
@@ -781,7 +775,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
           page: 1,
         );
         ScaffoldMessenger.of(ctx).showSnackBar(
-           SnackBar(
+          SnackBar(
             content: Text(
               'Poll deleted successfully!',
               style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
@@ -885,6 +879,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     } else {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<void> getSinglePollDashboard(pollId) async {

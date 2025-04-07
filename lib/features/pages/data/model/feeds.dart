@@ -1,6 +1,5 @@
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 
 class PostsResponse {
   final int currentPage;
@@ -59,26 +58,13 @@ class Post {
   factory Post.fromJson(Map<String, dynamic> json) => Post(
         id: json["_id"],
         content: json['content'] ?? '',
-        media: (json['media'] as List<dynamic>?)
-                ?.map((media) => media as String)
-                .toList() ??
-            [],
-        tags: (json['tags'] as List<dynamic>?)
-                ?.map((tag) => tag as String)
-                .toList() ??
-            [],
+        media: (json['media'] as List<dynamic>?)?.map((media) => media as String).toList() ?? [],
+        tags: (json['tags'] as List<dynamic>?)?.map((tag) => tag as String).toList() ?? [],
         commentCount: ((json['commentCount'] ?? 0)),
-        comments: List<Comment>.from((json['comments'] ?? []).map((comment) =>
-            comment is String?
-                ? Comment(
-                    content: [],
-                    commenter: Commenter(
-                        firstName: '', lastName: '', profilePicture: ''))
-                : Comment.fromJson(comment))),
-        reactions: {
-          for (var r in json['reactions'] ?? [])
-            getReactionUserId(r['userId']): Reaction.fromJson(r)
-        }.obs,
+        comments: List<Comment>.from((json['comments'] ?? []).map((comment) => comment is String?
+            ? Comment(content: [], commenter: Commenter(firstName: '', lastName: '', profilePicture: ''))
+            : Comment.fromJson(comment))),
+        reactions: {for (var r in json['reactions'] ?? []) getReactionUserId(r['userId']): Reaction.fromJson(r)}.obs,
         createdAt: DateTime.parse(json["createdAt"]),
         updatedAt: DateTime.tryParse(json["updatedAt"] ?? ''),
 //shareLink: json['shareLink'],
@@ -88,7 +74,6 @@ class Post {
       );
 
   Rx<bool?> getIsLiked() {
-    WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
     if (_isLiked.value == null) {
 //Get.find<ProfileController>().getProfile().value.data;
 // if (user != null) {
@@ -113,7 +98,7 @@ class Post {
     }
   }
 
-String? getReactionId(String userId) => reactions[userId]?.id;
+  String? getReactionId(String userId) => reactions[userId]?.id;
 }
 
 /*class Post {
@@ -315,18 +300,11 @@ class Reaction {
 
   factory Reaction.fromJson(Map<String, dynamic> json) => Reaction(
         userId: json["userId"] == null || json["userId"] is String
-            ? Author(
-                id: json["userId"] ?? '',
-                firstName: 'Name not set',
-                lastName: '')
+            ? Author(id: json["userId"] ?? '', firstName: 'Name not set', lastName: '')
             : Author.fromJson(json["userId"]),
         type: json["type"] ?? 'Like',
         id: json["_id"] ?? '',
-        createdAt: json["createdAt"] == null
-            ? DateTime.now()
-            : DateTime.parse(json["createdAt"]),
-        updatedAt: json["createdAt"] == null
-            ? DateTime.now()
-            : DateTime.parse(json["updatedAt"]),
+        createdAt: json["createdAt"] == null ? DateTime.now() : DateTime.parse(json["createdAt"]),
+        updatedAt: json["createdAt"] == null ? DateTime.now() : DateTime.parse(json["updatedAt"]),
       );
 }

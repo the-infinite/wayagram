@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -7,8 +6,6 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 
 import '../../../core/components/waya_buttons.dart';
 import '../../../core/utils/waya_navigation.dart';
-import '../../../core/utils/waya_utils.dart';
-import '../../wallet/view/components/wallet_cards.dart';
 
 class UgtModal extends StatefulWidget {
   const UgtModal({super.key});

@@ -14,7 +14,8 @@ class AddEvent extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _AddEventState();
 }
 
-class _AddEventState extends ConsumerState<AddEvent> with SingleTickerProviderStateMixin {
+class _AddEventState extends ConsumerState<AddEvent>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -25,7 +26,8 @@ class _AddEventState extends ConsumerState<AddEvent> with SingleTickerProviderSt
   }
 
   void _initializeArgs() {
-    final EventDoc? args = ModalRoute.of(context)?.settings.arguments as EventDoc?;
+    final EventDoc? args =
+        ModalRoute.of(context)?.settings.arguments as EventDoc?;
 
     if (args != null) {
       ref.read(addEventVmProvider.notifier).initializeForEdit(args);
@@ -37,7 +39,10 @@ class _AddEventState extends ConsumerState<AddEvent> with SingleTickerProviderSt
     return WayaScaffoldWithProgressBar(
       isLoading: false,
       isScrollable: true,
-      tabsView: [CreateEvent(gotoNextTab: _goToNextTab), PreviewAddedEvent(gotoPreviousTab: _goToPreviousTab)],
+      tabsView: [
+        CreateEvent(gotoNextTab: _goToNextTab),
+        PreviewAddedEvent(gotoPreviousTab: _goToPreviousTab)
+      ],
       tabController: _tabController,
     );
   }

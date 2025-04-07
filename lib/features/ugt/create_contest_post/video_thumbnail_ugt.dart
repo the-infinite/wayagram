@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoThumbnail extends StatefulWidget {
@@ -34,11 +33,14 @@ class _VideoThumbnailState extends State<VideoThumbnail> {
   Widget build(BuildContext context) {
     return SizedBox(
       height: widget.height,
-      width: widget.height,
+      width: widget.width,
       child: _controller.value.isInitialized
           ? Stack(
               children: [
-                VideoPlayer(_controller),
+                SizedBox(
+                    height: widget.height,
+                    width: widget.width,
+                    child: VideoPlayer(_controller)),
                 Center(
                   child: Container(
                     decoration: BoxDecoration(

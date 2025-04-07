@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/more/data/model/more_option_model.dart';
-import 'package:wayagram/features/promotion/views/promotion_dashboard.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/support/modal/default.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
@@ -62,7 +62,15 @@ class MoreVm {
         asset: WayaAssets.icons.mUgt.path,
         content: "A contest open for various school and other categories",
         title: "University Got Talent",
-        onTap: () => WayaNav.toNamed('/ugt-get-started'),
+        onTap: () {
+          final ugt = WayaLocalDataSource();
+          if (!ugt.getSeenUGT()) {
+            ugt.saveSeenUGT(true);
+            WayaNav.toNamed('/ugt-get-started');
+          } else {
+            WayaNav.toNamed("/ugt-home");
+          }
+        },
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mPoll.path,

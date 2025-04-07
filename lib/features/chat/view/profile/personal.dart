@@ -73,25 +73,28 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
             //? Next, the user's fullname.
             Align(
               child: Text(
-                user.fullname,
+                profile.displayName ?? '',
                 style: theme.textTheme.headlineMedium?.copyWith(
                   color: theme.colorScheme.customBlack,
                 ),
               ),
             ),
 
-            // Some space.
-            Gap(2.h),
-
             //? Next, this user's username.
-            Align(
-              child: Text(
-                "@${profile.username ?? user.id}",
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.greyColor400,
+            if (profile.username != null) ...[
+              // Some space.
+              Gap(2.h),
+
+              //? Next, this user's username.
+              Align(
+                child: Text(
+                  "@${profile.username}",
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.greyColor400,
+                  ),
                 ),
               ),
-            ),
+            ],
 
             // Some space.
             Gap(20.h),

@@ -56,7 +56,11 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
                 (args['image'] as File).path,
               );
               notifier.reset();
-              WayaNav.toNamed("/successGroup", arguments: {'type': args['type'], 'id': createdGroup?.id});
+              WayaNav.goBack();
+              await Future.delayed(const Duration(milliseconds: 350));
+              WayaNav.goBack();
+              await Future.delayed(const Duration(milliseconds: 350));
+              WayaNav.replaceNamed("/successGroup", arguments: {'type': args['type'], 'id': createdGroup?.id});
             },
             height: null,
             verticalPadding: 6.h,

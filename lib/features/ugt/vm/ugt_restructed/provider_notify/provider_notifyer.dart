@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../data/model/category_model.dart';
 import '../api_service/api_service.dart';
 
 final apiServiceProvider = Provider<ApiService>((ref) {

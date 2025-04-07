@@ -6,4 +6,3 @@ class WayaConstants {
   static const bool isProduction = true;
   static const String shopLogo = "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1742170216/m-shop_jcpp32.svg";
 }
-

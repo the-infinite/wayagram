@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/group_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/login_history_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_interaction_model.dart';
@@ -123,16 +124,16 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }
   }
 
-  Future<PaginatedResult<DonationDocs>?> getGroupLogs({required int page}) async {
+  Future<PaginatedResult<GroupDocs>?> getGroupLogs({required int page}) async {
 
     try{
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getGroupLogs(page);
-      List<DonationDocs>? fetchGroupDocs = [];
+      List<GroupDocs>? fetchGroupDocs = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        DonationActivityModel responseModel = DonationActivityModel.fromJson(response.data);
+        GroupActivityModel responseModel = GroupActivityModel.fromJson(response.data);
         fetchGroupDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(groupDocs: fetchGroupDocs);

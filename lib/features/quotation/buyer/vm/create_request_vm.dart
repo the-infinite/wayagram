@@ -84,7 +84,11 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
       final response = await showDatePicker(
-          context: context, firstDate: DateTime(1950), lastDate: DateTime.now(), initialDate: DateTime.now());
+        context: context,
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now(),
+        initialDate: DateTime.now(),
+      );
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
@@ -101,7 +105,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
       final moment = DateTime.now();
       final response = await showDatePicker(
         context: context,
-        firstDate: DateTime(1950),
+        firstDate: DateTime.now(),
         lastDate: DateTime(moment.year + 1),
         initialDate: moment,
       );

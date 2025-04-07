@@ -180,51 +180,51 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
         isAtEnd: !state.hasMorePosts,
         scrollNotice: 120,
         onReachEnd: () async => await notifier.getPagePosts(widget.id),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    //? This is fine.
-                    Container(
-                      width: double.infinity,
-                      height: 200, // Banner height
-                      decoration: BoxDecoration(
-                        color: WayaColors.primaryBrown50,
-                        borderRadius: BorderRadius.circular(0),
-                        image: page.coverImage != null
-                            ? DecorationImage(
-                                image: NetworkImage(
-                                  page.coverImage!,
+        child: ValueListenableBuilder(
+          valueListenable: myPageNotifier,
+          builder: (context, redraws, _) => Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      //? This is fine.
+                      Container(
+                        width: double.infinity,
+                        height: 200, // Banner height
+                        decoration: BoxDecoration(
+                          color: WayaColors.primaryBrown50,
+                          borderRadius: BorderRadius.circular(0),
+                          image: page.coverImage != null
+                              ? DecorationImage(
+                                  image: NetworkImage(
+                                    page.coverImage!,
+                                  ),
+                                  fit: BoxFit.cover,
+                                )
+                              : DecorationImage(
+                                  image: AssetImage(
+                                    WayaAssets.images.pages.imagePlaceholder.path,
+                                  ),
+                                  fit: BoxFit.cover,
                                 ),
-                                fit: BoxFit.cover,
-                              )
-                            : DecorationImage(
-                                image: AssetImage(
-                                  WayaAssets.images.pages.imagePlaceholder.path,
-                                ),
-                                fit: BoxFit.cover,
-                              ),
+                        ),
                       ),
-                    ),
 
-                    // Some there.
-                    Gap(15.h),
+                      // Some there.
+                      Gap(15.h),
 
-                    //? This is fine.
-                    Visibility(
-                      visible: page.isPublic || myPageNotifier.isMemberOf(widget.id),
-                      maintainState: true,
-                      maintainAnimation: true,
-                      maintainSize: true,
-                      child: ValueListenableBuilder(
-                        valueListenable: myPageNotifier,
-                        builder: (context, redraws, _) => GestureDetector(
+                      //? This is fine.
+                      Visibility(
+                        visible: page.isPublic || myPageNotifier.isMemberOf(widget.id),
+                        maintainState: true,
+                        maintainAnimation: true,
+                        maintainSize: true,
+                        child: GestureDetector(
                           onTap: _followPage,
                           child: Container(
                             margin: EdgeInsets.only(right: 20.w),
@@ -243,156 +243,156 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
                             ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
-                ),
-
-                //? This is fine.
-                Positioned(
-                  left: 16.w,
-                  top: 170.h,
-                  child: WayaDp(
-                    radius: 30.r,
-                    image: page.profileImage,
-                    isSelf: false,
-                    isEdit: false,
-                  ),
-                ),
-              ],
-            ),
-
-            //? This section.
-            Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  //? First the name.
-                  Text(
-                    page.name,
-                    style: wayaTheme.textTheme.bodyMedium,
-                  ),
-
-                  //? Second the description.
-                  Text(
-                    page.description,
-                    style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w400,
-                      color: wayaTheme.colorScheme.greyColor500,
-                    ),
-                  ),
-                  const Gap(10),
-                  Row(
-                    children: [
-                      //? This is fine too.
-                      actionType2(
-                        WayaValueHelper.formatNumber(page.followerCount),
-                        'Followers',
-                      ),
-
-                      //? Some space.
-                      const Gap(10),
-
-                      //? Now here we are.
-                      actionType2(
-                        WayaValueHelper.formatNumber(state.postCount ?? 0),
-                        'Posts',
-                      ),
+                      )
                     ],
                   ),
 
-                  // Some space.
-                  const Gap(10),
+                  //? This is fine.
+                  Positioned(
+                    left: 16.w,
+                    top: 170.h,
+                    child: WayaDp(
+                      radius: 30.r,
+                      image: page.profileImage,
+                      isSelf: false,
+                      isEdit: false,
+                    ),
+                  ),
                 ],
               ),
-            ),
 
-            //? If this page should be visible to the user...
-            if (myPageNotifier.isMemberOf(widget.id) || page.isPublic) ...[
+              //? This section.
               Padding(
-                padding: EdgeInsets.only(left: 15.w),
-                child: Text(
-                  'Latest post',
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: WayaColors.greyColor700,
-                    fontFamily: WayaConstants.fontFamily,
-                  ),
-                ),
-              ),
-
-              // Some space.
-              Gap(10.h),
-
-              //? This is fine.
-              if (state.getAllPost?.isEmpty ?? true)
-                PostEmptyState()
-              else
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 15.w),
-                  child: ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: state.getAllPost?.length ?? 0,
-                    itemBuilder: (_, index) => WayaPostWidget(
-                      data: state.getAllPost![index],
-                      index: index,
-                    ),
-                  ),
-                )
-            ]
-
-            //? Since the user has not joined and it is private
-            else ...[
-              Gap(100.h),
-
-              //? Then the other children.
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15.w),
+                padding: const EdgeInsets.only(left: 15, right: 15, bottom: 5),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    //? First, the lock icon.
-                    WayaAssets.icons.genSet.lock.svg(),
-
-                    // Some space.
-                    Gap(10.h),
-
-                    //? The private text.
-                    Text('This page is private', style: wayaTheme.textTheme.titleLarge),
-
-                    // Some space.
-                    Gap(10.h),
-
-                    //?
+                    //? First the name.
                     Text(
-                      'You must join to see posts and participate',
-                      style: wayaTheme.textTheme.titleSmall?.copyWith(
+                      page.name,
+                      style: wayaTheme.textTheme.bodyMedium,
+                    ),
+
+                    //? Second the description.
+                    Text(
+                      page.description,
+                      style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                        fontSize: 12,
                         fontWeight: FontWeight.w400,
-                        fontFamily: WayaConstants.fontFamily,
-                        fontSize: 16.sp,
+                        color: wayaTheme.colorScheme.greyColor500,
                       ),
                     ),
+                    const Gap(10),
+                    Row(
+                      children: [
+                        //? This is fine too.
+                        actionType2(
+                          WayaValueHelper.formatNumber(page.followerCount),
+                          'Followers',
+                        ),
+
+                        //? Some space.
+                        const Gap(10),
+
+                        //? Now here we are.
+                        actionType2(
+                          WayaValueHelper.formatNumber(state.postCount ?? 0),
+                          'Posts',
+                        ),
+                      ],
+                    ),
 
                     // Some space.
-                    Gap(30.h),
-
-                    //? Now, let this fly.
-                    WayaProgressiveButton(
-                      notifier: loadingController,
-                      callback: () async => myPageNotifier.followPage(widget.id),
-                      text: 'Join & Request Access',
-                    ),
+                    const Gap(10),
                   ],
                 ),
               ),
+
+              //? If this page should be visible to the user...
+              if (myPageNotifier.isMemberOf(widget.id) || page.isPublic) ...[
+                Padding(
+                  padding: EdgeInsets.only(left: 15.w),
+                  child: Text(
+                    'Latest post',
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: WayaColors.greyColor700,
+                      fontFamily: WayaConstants.fontFamily,
+                    ),
+                  ),
+                ),
+
+                // Some space.
+                Gap(10.h),
+
+                //? This is fine.
+                if (state.getAllPost?.isEmpty ?? true)
+                  PostEmptyState()
+                else
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 15.w),
+                    child: ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: state.getAllPost?.length ?? 0,
+                      itemBuilder: (_, index) => WayaPostWidget(
+                        data: state.getAllPost![index],
+                        index: index,
+                      ),
+                    ),
+                  )
+              ]
+
+              //? Since the user has not joined and it is private
+              else ...[
+                Gap(100.h),
+
+                //? Then the other children.
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      //? First, the lock icon.
+                      WayaAssets.icons.genSet.lock.svg(),
+
+                      // Some space.
+                      Gap(10.h),
+
+                      //? The private text.
+                      Text('This page is private', style: wayaTheme.textTheme.titleLarge),
+
+                      // Some space.
+                      Gap(10.h),
+
+                      //?
+                      Text(
+                        'You must join to see posts and participate',
+                        style: wayaTheme.textTheme.titleSmall?.copyWith(
+                          fontWeight: FontWeight.w400,
+                          fontFamily: WayaConstants.fontFamily,
+                          fontSize: 16.sp,
+                        ),
+                      ),
+
+                      // Some space.
+                      Gap(30.h),
+
+                      //? Now, let this fly.
+                      WayaProgressiveButton(
+                        notifier: loadingController,
+                        callback: () async => myPageNotifier.followPage(widget.id),
+                        text: 'Join & Request Access',
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

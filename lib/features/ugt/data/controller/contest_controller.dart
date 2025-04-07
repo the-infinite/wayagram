@@ -1,11 +1,8 @@
 import 'dart:core';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
-import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 
-import '../../../../core/service/snackbar_service.dart';
 import '../model/category_model.dart';
 
 class ContestController extends GetxController {

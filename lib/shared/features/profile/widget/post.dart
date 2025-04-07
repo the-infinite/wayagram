@@ -429,20 +429,20 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                     ),
 
                                     //? Now, that special thing on top that tells you it is playable.
-                                    GestureDetector(
-                                      onTap: () async {
-                                        final result = await WayaNav.to(
-                                          transition: Transition.circularReveal,
-                                          WayaVideoDetailScreen(
-                                            file: null,
-                                            videoUrl: resource,
-                                          ),
-                                        );
-
-                                        //? Do nothing.
-                                        if (result == null) return;
-                                      },
-                                      child: Positioned.fill(
+                                    Positioned.fill(
+                                      child: GestureDetector(
+                                        onTap: () async {
+                                          final result = await WayaNav.to(
+                                            transition: Transition.circularReveal,
+                                            WayaVideoDetailScreen(
+                                              file: null,
+                                              videoUrl: resource,
+                                            ),
+                                          );
+                                      
+                                          //? Do nothing.
+                                          if (result == null) return;
+                                        },
                                         child: Center(
                                           child: Container(
                                             decoration: BoxDecoration(

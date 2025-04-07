@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 
@@ -12,7 +11,7 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
   FollowedContestNotifier(this._contestRepository, this._localDataSource)
       : super([]);
 
-  int _page = 1; // Pagination tracking
+  final int _page = 1; // Pagination tracking
   bool isLoading = false;
 
   Future<void> fetchFollowedPosts() async {
@@ -25,9 +24,9 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
       List<Contest> contestList = [];
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);
-        contestList = responseModel.data?.docs??[];
-        state = [...state, ...contestList];
-         _page++;
+        contestList = responseModel.data?.docs ?? [];
+        state.addAll(contestList);
+        // _page++;
         isLoading = false;
       }
       // return contestList;
@@ -41,7 +40,7 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
   // Toggle Like
   void toggleLike(String postId) {
     // Contest? contestPost = null;
-     print("Contest followed post");
+    print("Contest followed post");
     state = state.map((post) {
       if (post.id == postId) {
         if (!post.hasLiked!) {
@@ -118,7 +117,7 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
       print("do like stuff Success");
     }
   }
-  
+
   void doFollow(String postId) async {
     // print("do like stuff");
     final response = await _contestRepository.followContest({

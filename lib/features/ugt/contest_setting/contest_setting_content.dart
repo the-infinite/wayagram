@@ -1,13 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/contest_signup_requirement.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/stage_contest_settings.dart';
-import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 
 import '../../../core/components/waya_scaffold.dart';
-import '../create_contest/steps/edit_stage_preference.dart';
 
 class ContestSettingContent extends ConsumerStatefulWidget {
   static const route = '/contest-setting-content';

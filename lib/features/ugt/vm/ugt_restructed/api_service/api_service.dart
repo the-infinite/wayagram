@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../data/model/category_model.dart';
 
 class ApiService {
   final String baseUrl = "https://services.staging.wayagram.ng/school-contest/api/v1";

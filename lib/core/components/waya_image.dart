@@ -41,11 +41,11 @@ class WayaDp extends ConsumerWidget {
           : onTap ??
               () async {
                 if (!canFocus) return;
-                if (image == null) return;
+                if (avatar?.isEmpty ?? true) return;
 
                 final result = await WayaNavigationHelper.toImageDetailsScreen(
                   null,
-                  [image!],
+                  [avatar!],
                 );
 
                 //? Do nothing.
@@ -57,7 +57,7 @@ class WayaDp extends ConsumerWidget {
             radius: radius,
             backgroundColor: wayaTheme.colorScheme.greyColor200,
             backgroundImage: avatar?.isNotEmpty == true ? NetworkImage(avatar!) : null,
-            child: avatar?.isNotEmpty != true
+            child: avatar?.isEmpty ?? true
                 ? Icon(
                     Icons.person,
                     color: wayaTheme.colorScheme.greyColor600,
@@ -112,12 +112,12 @@ class WayaImage2 extends ConsumerWidget {
             }
           : onTap ??
               () async {
-                if (imageUrl == null) return;
+                if (imageUrl == null && coverImage == null) return;
 
                 //? This is not null so we are good.
                 final result = await WayaNavigationHelper.toImageDetailsScreen(
                   null,
-                  [imageUrl!],
+                  [imageUrl ?? coverImage!],
                 );
 
                 //? Do nothing.
@@ -201,11 +201,11 @@ class WayaImage3 extends ConsumerWidget {
                   }
                 : onTap ??
                     () async {
-                      if (imageUrl == null) return;
+                      if (imageUrl == null && coverImage == null) return;
 
                       final result = await WayaNavigationHelper.toImageDetailsScreen(
                         null,
-                        [imageUrl!],
+                        [imageUrl ?? coverImage!],
                       );
 
                       //? Do nothing.

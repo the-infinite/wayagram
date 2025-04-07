@@ -222,9 +222,16 @@ class _BottomViewState extends ConsumerState<BottomView> {
             currentIndex: _selectedIndex,
             onTap: (index) {
               ref.watch(conversationProvider.notifier).dismissOverlay();
-              setState(() {
-                _selectedIndex = index;
-              });
+
+              //? If this is a need to do something special herein.
+              if (_selectedIndex == index) {
+                viewModel.barItems[index].onTap?.call(ref);
+              }
+
+              //? Then show a new screen.
+              else {
+                setState(() => _selectedIndex = index);
+              }
             },
             type: BottomNavigationBarType.fixed,
             selectedLabelStyle: TextStyle().wayaCopyWith(

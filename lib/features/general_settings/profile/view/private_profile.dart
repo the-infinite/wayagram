@@ -49,9 +49,9 @@ class MyProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<MyProfilePage> {
-  late final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>((ref) {
-    return PostNotifier(PostState.initial);
-  });
+  late final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>(
+    (ref) => PostNotifier(PostState.initial),
+  );
   late final postNotifier = ref.read(userPostsProvider.notifier);
   late final eventNotifier = ref.read(userEventsProvider.notifier);
   late final groupsNotifier = myGroupNotifier;
@@ -361,7 +361,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                             children: [
                               //? First, the name of the user in question.
                               Text(
-                                user.fullname,
+                                profile.displayName ?? '',
                                 style: wayaTheme.textTheme.bodyMedium?.copyWith(
                                   fontWeight: FontWeight.w600,
                                   color: wayaTheme.colorScheme.black,

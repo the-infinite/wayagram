@@ -158,7 +158,7 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
   sortList(s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.visitedPagesDocs = [];
-    print('ACTIVITY End ====> ${s}');
+    print('ACTIVITY End ====> $s');
     setState(() {
       if(s == 'all time'){
         viewModel.visitedPagesDocs = viewModel.visitedPagesDocs1;

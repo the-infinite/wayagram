@@ -70,7 +70,7 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
             verticalPadding: 6.h,
             horizontalPadding: 12.w,
             text: 'Create',
-            isDisabled: state.image == null || state.members.isEmpty,
+            isDisabled: state.members.isEmpty,
             textStyle: theme.textTheme.bodySmall?.copyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.w600,

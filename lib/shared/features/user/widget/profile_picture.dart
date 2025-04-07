@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 class ChatProfilePicture extends StatelessWidget {
   final UserDetailsModel user;
+  final ChatModel? chat;
   final double radius;
   final bool showActive;
   final DateTime? lastSeen;
@@ -19,10 +21,15 @@ class ChatProfilePicture extends StatelessWidget {
     this.showActive = true,
     this.canMove = false,
     this.lastSeen,
+    this.chat,
   });
 
   @override
   Widget build(BuildContext context) {
+    //? The theme.
+    final theme = Theme.of(context);
+
+    //? This is the component.
     return GestureDetector(
       onTap: canMove && user.profilePicture != null
           ? () async {
@@ -44,14 +51,30 @@ class ChatProfilePicture extends StatelessWidget {
               clipper: const ShapeBorderClipper(shape: CircleBorder()),
               child: CircleAvatar(
                 radius: radius,
-                backgroundColor: WayaColors.greyColor200,
-                backgroundImage: user.profilePicture != null ? NetworkImage(user.profilePicture!) : null,
-                child: user.profilePicture == null
-                    ? Icon(
-                        Icons.person,
-                        color: WayaColors.greyColor600,
+                backgroundColor: chat != null && chat?.groupImage == null
+                    ? theme.colorScheme.primary50
+                    : theme.colorScheme.greyColor200,
+                backgroundImage: chat?.chatType == ChatType.group
+                    ? chat?.groupImage != null
+                        ? NetworkImage(chat!.groupImage!)
+                        : null
+                    : user.profilePicture != null
+                        ? NetworkImage(user.profilePicture!)
+                        : null,
+                child: chat != null && chat?.groupImage == null && user.profilePicture == null
+                    ? Text(
+                        chat!.initials,
+                        style: theme.textTheme.headlineLarge?.copyWith(
+                          color: theme.colorScheme.customPrimary,
+                          fontSize: (radius * 0.75).sp,
+                        ),
                       )
-                    : null,
+                    : user.profilePicture == null
+                        ? Icon(
+                            Icons.person,
+                            color: theme.colorScheme.greyColor600,
+                          )
+                        : null,
               ),
             ),
 
@@ -64,9 +87,9 @@ class ChatProfilePicture extends StatelessWidget {
                   padding: const EdgeInsets.all(7),
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
-                    color: WayaColors.success,
+                    color: theme.colorScheme.success,
                     border: Border.all(
-                      color: WayaColors.white,
+                      color: theme.colorScheme.white,
                       width: 1,
                     ),
                   ),

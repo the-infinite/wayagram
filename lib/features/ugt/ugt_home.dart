@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
@@ -9,7 +7,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/ugt/for_you_contest.dart';
 import 'package:wayagram/features/ugt/my_contest_details/my_contest_details.dart';
-import 'package:wayagram/features/ugt/my_contests.dart';
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_followed_contest_vm.dart';
@@ -41,6 +38,7 @@ class _UgtHomeState extends ConsumerState<UgtHome> {
         ref.read(contestDetailProvider.notifier).fetchHostedContest();
         ref.read(followedContestProvider.notifier).fetchFollowedPosts();
         ref.read(postProvider.notifier).fetchContestForYou(true);
+        ref.read(contestNotifierProvider.notifier).allCategories();
       });
       return null;
     }, []);

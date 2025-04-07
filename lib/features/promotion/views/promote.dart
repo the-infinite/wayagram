@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/features/promotion/bottom_sheet/pay_for_promotion.dart';
 import 'package:wayagram/features/promotion/vm/promotion_vm.dart';
 import 'package:wayagram/features/shop/filter/widgets/filter_chip_item.dart';
 
-import '../../../core/utils/task.dart';
 
 class Promote extends ConsumerStatefulWidget {
   static const route = "/promote";

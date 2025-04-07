@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/modals/forward.dart';
+import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
@@ -444,6 +445,7 @@ class _YourBubbleWidget extends StatelessWidget {
 class ChatBubbleWidget extends ConsumerStatefulWidget {
   // The message we are looking at here.
   final MessageModel data;
+  final ChatModel? chat;
   final DateTime previousDate;
   final ChatInputController controller;
   final int index;
@@ -453,6 +455,7 @@ class ChatBubbleWidget extends ConsumerStatefulWidget {
   // This is fine.
   const ChatBubbleWidget({
     super.key,
+    required this.chat,
     required this.data,
     required this.controller,
     required this.index,
@@ -767,6 +770,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                               width: screenSize.width,
                               child: ChatBubbleWidget(
                                 data: widget.data,
+                                chat: widget.chat,
                                 previousDate: widget.previousDate,
                                 controller: widget.controller,
                                 index: widget.index,
@@ -805,6 +809,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                             width: screenSize.width,
                             child: ChatBubbleWidget(
                               data: widget.data,
+                              chat: widget.chat,
                               previousDate: widget.previousDate,
                               controller: widget.controller,
                               index: widget.index,

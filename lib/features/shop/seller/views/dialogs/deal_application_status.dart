@@ -8,7 +8,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 
 class DealApplicationStatus extends ConsumerStatefulWidget {
