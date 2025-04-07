@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:wayagram/features/activity_logs/data/model/account_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/group_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/login_history_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
@@ -39,8 +40,8 @@ class ActivityLogsState{
   List<PageDocs> socialDocs1;
   List<PageDocs> ugtDocs;
   List<PageDocs> ugtDocs1;
-  List<DonationDocs> groupDocs;
-  List<DonationDocs> groupDocs1;
+  List<GroupDocs> groupDocs;
+  List<GroupDocs> groupDocs1;
   List<SearchLogDocs> searchLogDocs1;
   List<UserActionsDocs> userActionsDocs;
   List<UserActionsDocs> userActionsDocs1;
@@ -118,8 +119,8 @@ class ActivityLogsState{
     List<DonationDocs>? donationDocs1,
     List<PageDocs>? pageDocs,
     List<PageDocs>? pageDocs1,
-    List<DonationDocs>? groupDocs,
-    List<DonationDocs>? groupDocs1,
+    List<GroupDocs>? groupDocs,
+    List<GroupDocs>? groupDocs1,
     List<AccountActivityDocs>? accountActivityDocs,
     List<AccountActivityDocs>? accountActivityDocs1,
     List<PaymentActivityDocs>? paymentActivityDocs,
@@ -150,6 +151,8 @@ class ActivityLogsState{
       walletDocs1: walletDocs1 ?? this.walletDocs1,
       socialDocs: socialDocs ?? this.socialDocs,
       socialDocs1: socialDocs1 ?? this.socialDocs1,
+      groupDocs: groupDocs ?? this.groupDocs,
+      groupDocs1: groupDocs1 ?? this.groupDocs1,
       eventDocs: eventDocs ?? this.eventDocs,
       eventDocs1: eventDocs1 ?? this.eventDocs1,
       ugtDocs: ugtDocs1 ?? this.ugtDocs,
