@@ -18,12 +18,14 @@ class AboutUgtWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title,
-            style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+            style: WayaTextStyles.bodySmall.wayaCopyWith(
                 color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
         const Gap(5),
         SizedBox(
           width: context.width * 0.2,
-          child: Text(content, style: wayaTheme.textTheme.bodyMedium),
+          child: Text(content,
+              style: wayaTheme.textTheme.bodySmall!
+                  .copyWith(fontWeight: FontWeight.w500)),
         ),
       ],
     );

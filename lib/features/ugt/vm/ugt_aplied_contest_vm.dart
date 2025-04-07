@@ -1,10 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/ugt/data/model/applied_contest_state.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart' as post;
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 
 class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
@@ -21,11 +18,11 @@ class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
   Future<void> fetchAppliedContest(bool isFirst) async {
     //? Added pagination to fetching applied contest
 
-    if (isFirst) {
+   /*  if (isFirst) {
       if (state.page != 1) {
         state = state.copyWith(page: 1);
       }
-    }
+    } */
     //? If last page dont go fetch again
 
     if (state.isLastPage && isFirst == false) {

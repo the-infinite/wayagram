@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
@@ -29,6 +26,7 @@ import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/delete_post_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 
 import '../../data/model/ugt_post_model.dart';
 import '../../ugt_buttomsheet_modal/contest_vote_modal.dart';
@@ -231,8 +229,13 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                 children: [
                   Row(
                     children: [
-                      GestureDetector(
-                        onTap: () {
+                      PostActionType(
+                        text: "${widget.post.likes} Likes",
+                        image: WayaAssets.images.pages.like2.path,
+                        color: widget.post.hasLiked != true
+                            ? wayaTheme.colorScheme.greyColor500
+                            : wayaTheme.colorScheme.primary,
+                        onPressed: () {
                           //? to delay like for 2 seconds
                           if (hasClickedLiked.value == false) {
                             hasClickedLiked.value = true;
@@ -244,37 +247,14 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                             hasClickedLiked.value = false;
                           });
                         },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: wayaTheme.colorScheme.greyColor200),
-                              width: 35,
-                              height: 35,
-                              child: Center(
-                                  child: Icon(
-                                widget.post.hasLiked == true
-                                    ? Icons.thumb_up_alt
-                                    : Icons.thumb_up_alt_outlined,
-                                color: widget.post.hasLiked == true
-                                    ? wayaTheme.colorScheme.primary
-                                    : wayaTheme.colorScheme.greyColor500,
-                              )),
-                            ),
-                            const Gap(3),
-                            Text(
-                              "${widget.post.likes} Likes",
-                              style: wayaTheme.textTheme.bodySmall,
-                            )
-                          ],
-                        ),
                       ),
+                    
                       const Gap(10),
-                      GestureDetector(
-                        onTap: () async {
+                      PostActionType(
+                        text: "${widget.post.shares} Shares",
+                        image: WayaAssets.images.pages.share2.path,
+                        color: wayaTheme.colorScheme.primary,
+                        onPressed: () async {
                           // if (hasClickedShared.value == false) {
                           final result = await Share.share(
                             WayaValueHelper.getShareableUrl(
@@ -288,28 +268,9 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                             notifier.toggleShare(widget.post.id!);
                           }
                         },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: wayaTheme.colorScheme.greyColor200),
-                              width: 35,
-                              height: 35,
-                              child: Center(
-                                  child: SvgPicture.asset(
-                                      "assets/icons/u-share.svg")),
-                            ),
-                            const Gap(3),
-                            Text(
-                              "${widget.post.shares} Shares",
-                              style: wayaTheme.textTheme.bodySmall,
-                            )
-                          ],
-                        ),
                       ),
+
+                    
                     ],
                   ),
                   WayaButton(

@@ -41,17 +41,17 @@ class PromotionVm extends StateNotifier<PromotionState> {
   }
 
   Future<void> selectState(Select value) async {
-    String _state = state.state;
+    String finalState = state.state;
     state = state.copyWith(state: value.label);
 
-    if (_state.isNotEmpty && value.label != _state) {
+    if (finalState.isNotEmpty && value.label != finalState) {
       state.copyWith(cities: []);
       state = state.copyWith(city: '');
       state.copyWith(lgas: []);
       state = state.copyWith(lga: '');
     }
     await getAllLGA(stateCode: value.value, countryCode: 'NG');
-    await getAllCiites(stateCode: value.value, countryCode: 'NG');
+    await getAllCities(stateCode: value.value, countryCode: 'NG');
   }
 
   void selectLGA(Select value) {
@@ -71,7 +71,7 @@ class PromotionVm extends StateNotifier<PromotionState> {
     }
   }
 
-  Future<void> getAllCiites(
+  Future<void> getAllCities(
       {required String stateCode, required String countryCode}) async {
     final response = await ref
         .read(upgradeToBusinessVmProvider.notifier)

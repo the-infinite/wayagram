@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/service/notification_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -46,7 +47,7 @@ class NotificationVm extends StateNotifier<NotificationState> {
       final token = await PushNotifications.requestDeviceToken();
 
       //? This is fine.
-      if(kDebugMode) {
+      if (kDebugMode) {
         debugPrint("Device Token: $token");
       }
 
@@ -75,7 +76,7 @@ class NotificationVm extends StateNotifier<NotificationState> {
     final result = <NotificationModel>[];
 
     //? First, notify this guy that we are loading.
-    state = state.copyWith(isLoading: true);
+    WayaPreloaderController.instance.show();
 
     //? Now, try to get the notifications and fall back when failed.
     try {
@@ -97,7 +98,6 @@ class NotificationVm extends StateNotifier<NotificationState> {
 
       //? Notify our listeners that the game has been switched up.
       state = state.copyWith(
-        isLoading: false,
         notifications: result,
       );
     } catch (e) {
@@ -108,8 +108,10 @@ class NotificationVm extends StateNotifier<NotificationState> {
         WayaDebugHelpers.getStackTrace(e),
       );
       _logger.log(Level.error, e);
-      state = state.copyWith(isLoading: false);
     }
+
+    //? Now hide the preloader.
+    WayaPreloaderController.instance.hide();
 
     // Return this.
     return result;

@@ -143,7 +143,7 @@ class CreatePollVotingState {
   }) {
     return CreatePollVotingState(
         isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ??
-            this.isPersonalNotUpgradedToBusiness,
+            isPersonalNotUpgradedToBusiness,
         pollTitle: pollTitle ?? this.pollTitle,
         pollDescription: pollDescription ?? this.pollDescription,
         pollCompanyDescription:

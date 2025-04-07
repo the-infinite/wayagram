@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Action;
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/role_access/data/model/role_member.dart';
 import 'package:wayagram/features/role_access/view/add_team_member_page.dart';
 import 'package:wayagram/features/role_access/vm/role_access_vm.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_contestant_card.dart';
@@ -55,11 +56,14 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
 
     useEffect(() {
       userManagementField.clear();
-      var list =
-          viewModel?.roles?.first.permissionsWithActions?.first.actions ?? [];
-      for (var model in list) {
-        userManagementField[model.actionName ?? ""] = true;
+      if (viewModel?.roles?.first.permissionsWithActions?.length != 0) {
+        List<Action>? list =
+            viewModel?.roles?.first.permissionsWithActions?[0].actions ?? [];
+        for (var model in list) {
+          userManagementField[model.actionName ?? ""] = true;
+        }
       }
+
       return null;
     }, []);
     return WayaScaffold(
@@ -78,7 +82,7 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
                 WayaNav.goBack();
               });
             },
-            color: wayaTheme.colorScheme.   primary50,
+            color: wayaTheme.colorScheme.primary50,
             text: "   Deactivate Role   ",
             isLoading: isLoading.value,
             leadingIcon: WayaAssets.icons.caution.svg(),
@@ -123,56 +127,9 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
                   .wayaCopyWith(color: wayaTheme.colorScheme.greyColor700)),
           // Gap(20),
 
-          _buildPermissionTile(
-              context, viewModel?.roles?.first.roleName ?? "", userManagement,
-              (val) {
-            /*  setState(() {
-              userManagement = val;
-              for (var key in userManagementField.keys) {
-                userManagementField[key] = userManagement;
-              }
-            }); */
-          }),
+          _buildPermissionTile(context, viewModel?.roles?.first.roleName ?? "",
+              userManagement, (val) {}),
           _buildPermissionOptions(context, userManagementField),
-          /* if (userManagement)
-            _buildPermissionOptions(context, userManagementField),
-
-          _buildPermissionTile(
-              context, "Product / Inventory Management", productInventory,
-              (val) {
-            setState(() {
-              productInventory = val;
-              for (var key in productInventoryManagementField.keys) {
-                productInventoryManagementField[key] = productInventory;
-              }
-            });
-          }),
-          if (productInventory)
-            _buildPermissionOptions(context, productInventoryManagementField),
-
-          _buildPermissionTile(context, "Bid / Quotation", bidQuotation, (val) {
-            setState(() {
-              bidQuotation = val;
-              for (var key in bidQuotationField.keys) {
-                bidQuotationField[key] = bidQuotation;
-              }
-            });
-          }),
-          if (bidQuotation) _buildPermissionOptions(context, bidQuotationField),
-
-          _buildPermissionTile(
-              context, "Wallet & Transactions", walletTransactions, (val) {
-            setState(() {
-              walletTransactions = val;
-              for (var key in walletTransactionField.keys) {
-                walletTransactionField[key] = walletTransactions;
-              }
-            });
-          }),
-          if (walletTransactions)
-            _buildPermissionOptions(context, walletTransactionField),
-          //  if (walletTransactions) _buildPermissionOptions(), */
-          //  Spacer(),
         ],
       ),
     );

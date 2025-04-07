@@ -885,6 +885,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     } else {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<void> getSinglePollDashboard(pollId) async {

@@ -35,7 +35,9 @@ class CandidatePostScreen extends StatelessWidget {
         title: "Contest Details",
         appBar: AppBar(
           backgroundColor: Colors.black,
-          title: Text("Contest details", style: WayaTextStyles.headlineMedium.copyWith(color: Colors.white)),
+          title: Text("Contest details",
+              style:
+                  WayaTextStyles.headlineMedium.copyWith(color: Colors.white)),
           leading: WayaBackButton(
             buttonBackgroundColor: Color(0xff121212),
             arrowColor: Colors.white,
@@ -51,18 +53,24 @@ class CandidatePostScreen extends StatelessWidget {
                 PopupMenuItem(
                     value: "download",
                     onTap: () async {
-                      bool hasSaved = await WayaFileHelper.saveNetworkImage(data["url"] ?? "");
+                      bool hasSaved = await WayaFileHelper.saveNetworkImage(
+                          data["url"] ?? "");
 
                       if (hasSaved) {
-                        WayaSnackBar.showToast("image saved", showSuccess: true);
+                        WayaSnackBar.showToast("image saved",
+                            showSuccess: true);
                       } else {
                         WayaSnackBar.showToast(
                           "Unable to save image!",
                         );
                       }
                     },
-                    child: Text("Download Media", style: WayaTextStyles.bodyMedium)),
-                PopupMenuItem(value: "share", child: Text("Share Post Link", style: WayaTextStyles.bodyMedium)),
+                    child: Text("Download Media",
+                        style: WayaTextStyles.bodyMedium)),
+                PopupMenuItem(
+                    value: "share",
+                    child: Text("Share Post Link",
+                        style: WayaTextStyles.bodyMedium)),
               ],
               onSelected: (value) {
                 // Handle selection
@@ -79,7 +87,7 @@ class CandidatePostScreen extends StatelessWidget {
                   ? PhotoView(
                       imageProvider: NetworkImage(data["url"] ?? ""),
                     )
-                  : FullPageVideoPlayer(
+                  : FullScreenVideoPlayer(
                       videoUrl: data["url"] ?? "",
                     ),
             ),
@@ -105,7 +113,8 @@ class CandidatePostScreen extends StatelessWidget {
                           ListTile(
                             contentPadding: EdgeInsets.zero,
                             leading: ClipRRect(
-                                borderRadius: BorderRadius.circular(45), // Adjust the radius as needed
+                                borderRadius: BorderRadius.circular(
+                                    45), // Adjust the radius as needed
                                 child: WayaImage(
                                   imageUrl: data["url"] ?? "",
                                   height: 45,
@@ -125,10 +134,14 @@ class CandidatePostScreen extends StatelessWidget {
                                 ),
                             title: Text(
                               data["title"],
-                              style: WayaTextStyles.bodyMedium.copyWith(color: Colors.white),
+                              style: WayaTextStyles.bodyMedium
+                                  .copyWith(color: Colors.white),
                             ),
-                            subtitle: Text(WayaHelpers.formatTimeAgo('${data["createdAt"]}'),
-                                style: WayaTextStyles.bodyMedium.copyWith(color: Colors.grey)),
+                            subtitle: Text(
+                                WayaHelpers.formatTimeAgo(
+                                    '${data["createdAt"]}'),
+                                style: WayaTextStyles.bodyMedium
+                                    .copyWith(color: Colors.grey)),
                           ),
 
                           /* 
@@ -141,7 +154,8 @@ class CandidatePostScreen extends StatelessWidget {
                             padding: EdgeInsets.symmetric(horizontal: 12.0),
                             child: Text(
                               data["discription"],
-                              style: WayaTextStyles.bodySmall.copyWith(color: Colors.white),
+                              style: WayaTextStyles.bodySmall
+                                  .copyWith(color: Colors.white),
                             ),
                           ),
 /* 
@@ -156,7 +170,8 @@ class CandidatePostScreen extends StatelessWidget {
 
                           // Reactions Row
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 12.0),
                             child: Row(
                               children: [
                                 // Likes
@@ -165,7 +180,9 @@ class CandidatePostScreen extends StatelessWidget {
                                     // const Icon(Icons.favorite, color: Colors.red),
                                     // const SizedBox(width: 4),
                                     Container(
-                                      decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xff121212)),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xff121212)),
                                       width: 35,
                                       height: 35,
                                       child: Center(
@@ -173,12 +190,14 @@ class CandidatePostScreen extends StatelessWidget {
                                         Icons.thumb_up_alt,
                                         color: data["isLike"] == true
                                             ? wayaTheme.colorScheme.primary
-                                            : wayaTheme.colorScheme.greyColor500,
+                                            : wayaTheme
+                                                .colorScheme.greyColor500,
                                       )),
                                     ),
                                     Gap(5),
                                     Text("${data["likeCount"]} Likes",
-                                        style: WayaTextStyles.bodyMedium.copyWith(color: Colors.white)),
+                                        style: WayaTextStyles.bodyMedium
+                                            .copyWith(color: Colors.white)),
                                   ],
                                 ),
                                 const Spacer(),
@@ -187,28 +206,35 @@ class CandidatePostScreen extends StatelessWidget {
                                 Row(
                                   children: [
                                     Container(
-                                      decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xff121212)),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xff121212)),
                                       width: 35,
                                       height: 35,
                                       child: Center(
-                                        child: SvgPicture.asset("assets/icons/u-share.svg"),
+                                        child: SvgPicture.asset(
+                                            "assets/icons/u-share.svg"),
                                       ),
                                     ),
                                     Gap(5),
                                     Text("${data["shareCount"]} Shares",
-                                        style: WayaTextStyles.bodyMedium.copyWith(color: Colors.white)),
+                                        style: WayaTextStyles.bodyMedium
+                                            .copyWith(color: Colors.white)),
                                   ],
                                 ),
                                 const Spacer(),
                                 Row(
                                   children: [
                                     Container(
-                                      decoration: BoxDecoration(shape: BoxShape.circle, color: Color(0xff121212)),
+                                      decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Color(0xff121212)),
                                       width: 35,
                                       height: 35,
                                       child: Center(
                                         child: Icon(Icons.bookmark_border_sharp,
-                                            color: wayaTheme.colorScheme.greyColor500),
+                                            color: wayaTheme
+                                                .colorScheme.greyColor500),
                                       ),
                                     ),
                                     Gap(5),

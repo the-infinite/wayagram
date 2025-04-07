@@ -1,4 +1,3 @@
-
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -15,7 +14,9 @@ import 'package:wayagram/features/pages/vm/pages_vm.dart';
 
 class CreatePage extends ConsumerStatefulWidget {
   static const route = '/createPage';
-  const CreatePage({super.key,});
+  const CreatePage({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CreatePageState();
@@ -24,8 +25,8 @@ class CreatePage extends ConsumerStatefulWidget {
 class _CreatePageState extends ConsumerState<CreatePage> {
   final _formKey = GlobalKey<FormState>();
 
-  bool sel =  false;
-  bool sel2 =  false;
+  bool sel = false;
+  bool sel2 = false;
 
   File? _selectedImage; // Holds the selected image
   File? _coverImage; // Holds the selected image
@@ -55,62 +56,57 @@ class _CreatePageState extends ConsumerState<CreatePage> {
 
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
-        title: "Create a Page",
-        isLoading: viewModel.isLoading,
-        isScrollable: true,
-        appBarTrailing: Padding(
-          padding: const EdgeInsets.only(right: 20),
-          child: WayaButton(
-            callback: !viewModel.isLoading
-                ? () async {
-              if (_formKey.currentState!.validate()) {
-                if(!sel && !sel2){
-                  ScaffoldMessenger.of(context).showSnackBar(
-                     SnackBar(
-                      content: Text('Select page type', style: TextStyle(
-                          fontFamily: WayaConstants.fontFamily,
-                          fontSize: 12.sp
-                      ),),
-                      backgroundColor: Colors.red,
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                }else if(_selectedImage == null && _coverImage == null){
-                  ScaffoldMessenger.of(context).showSnackBar(
-                     SnackBar(
-                      content: Text('Add Images', style: TextStyle(
-                          fontFamily: WayaConstants.fontFamily,
-                          fontSize: 12.sp
-                      ),),
-                      backgroundColor: Colors.red,
-                      duration: Duration(seconds: 2),
-                    ),
-                  );
-                }
-                else{
-                  WayaNav.toNamed("/confirmDetails",
-                      arguments:{
+      title: "Create a Page",
+      isLoading: viewModel.isLoading,
+      isScrollable: true,
+      appBarTrailing: Padding(
+        padding: const EdgeInsets.only(right: 20),
+        child: WayaButton(
+          callback: !viewModel.isLoading
+              ? () async {
+                  if (_formKey.currentState!.validate()) {
+                    if (!sel && !sel2) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Select page type',
+                            style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+                          ),
+                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    } else if (_selectedImage == null && _coverImage == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Add Images',
+                            style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+                          ),
+                          backgroundColor: Colors.red,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    } else {
+                      WayaNav.toNamed("/confirmDetails", arguments: {
                         'image': _selectedImage,
                         'coverImage': _coverImage,
-                        'type': sel?'Public Page': 'Private Page'
+                        'type': sel ? 'Public Page' : 'Private Page'
                       }
-                      //arguments: sel?'Public Page': 'Private Page'
-                  );
-
+                          //arguments: sel?'Public Page': 'Private Page'
+                          );
+                    }
+                  }
                 }
-              }
-            } : null,
-            height: 30,
-            isLoading: viewModel.isLoading,
-            text: 'Create',
-            horizontalPadding: 12,
-            textStyle: WayaTextStyles.bodySmall.copyWith(
-                fontSize: 12.sp,
-                fontWeight: FontWeight.w600,
-                color: Theme.of(context).colorScheme.white ),
-
-          ),
+              : null,
+          height: 30,
+          isLoading: viewModel.isLoading,
+          text: 'Create',
+          horizontalPadding: 12,
+          textStyle: WayaTextStyles.bodySmall
+              .copyWith(fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
         ),
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -120,7 +116,6 @@ class _CreatePageState extends ConsumerState<CreatePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-
                   Stack(
                     children: [
                       // Banner Container
@@ -132,13 +127,13 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                           borderRadius: BorderRadius.circular(0),
                           image: _selectedImage != null
                               ? DecorationImage(
-                            image: FileImage(_selectedImage!),
-                            fit: BoxFit.cover,
-                          )
+                                  image: FileImage(_selectedImage!),
+                                  fit: BoxFit.cover,
+                                )
                               : const DecorationImage(
-                            image: AssetImage("assets/placeholder.jpg"),
-                            fit: BoxFit.cover,
-                          ),
+                                  image: AssetImage("assets/placeholder.jpg"),
+                                  fit: BoxFit.cover,
+                                ),
                         ),
                       ),
 
@@ -148,7 +143,10 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                         right: 10,
                         child: IconButton(
                           onPressed: _pickImage,
-                          icon: Image.asset('assets/images/pages/cam.png', height: 14.h,),
+                          icon: Image.asset(
+                            'assets/images/pages/cam.png',
+                            height: 14.h,
+                          ),
                           padding: EdgeInsets.all(10),
                           constraints: BoxConstraints(),
                           color: WayaColors.greyColor600, // Background overlay
@@ -157,12 +155,8 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                     ],
                   ),
                   Gap(15),
-
                 ],
               ),
-
-
-
               Positioned(
                 left: 16.w,
                 bottom: -20.h,
@@ -173,26 +167,22 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                       CircleAvatar(
                         radius: 20,
                         backgroundColor: wayaTheme.colorScheme.greyColor200,
-                        backgroundImage: _coverImage != null
-                            ?  FileImage(_coverImage!)
-                            : null,
+                        backgroundImage: _coverImage != null ? FileImage(_coverImage!) : null,
                         child: _coverImage == null
                             ? Icon(
-                          Icons.person,
-                          color: wayaTheme.colorScheme.greyColor600,
-                        )
+                                Icons.person,
+                                color: wayaTheme.colorScheme.greyColor600,
+                              )
                             : null,
                       ),
                     ],
                   ),
                 ),
               ),
-
             ],
           ),
           const Gap(30),
-          Text(
-              'Change photo',
+          Text('Change photo',
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w400,
@@ -205,7 +195,8 @@ class _CreatePageState extends ConsumerState<CreatePage> {
               fontSize: 14.sp,
               fontWeight: FontWeight.w400,
               color: Color(0xff6B7280),
-            )),
+            ),
+          ),
           const Gap(30),
           Form(
               key: _formKey,
@@ -227,22 +218,17 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                           keyboardType: TextInputType.text,
                           controller: viewModel.pageName,
                           hintText: 'Enter page name here',
-                          borderColor: formState.hasError &&
-                              viewModel.pageName.text.isEmpty
+                          borderColor: formState.hasError && viewModel.pageName.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Page Name',
                         ),
-                        if (formState.hasError &&
-                            viewModel.pageName.text.isEmpty
-                        )
+                        if (formState.hasError && viewModel.pageName.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12.sp),
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                             ),
                           ),
                       ],
@@ -264,35 +250,26 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                           keyboardType: TextInputType.text,
                           controller: viewModel.pageDescription,
                           hintText: 'Describe what your page does',
-                          borderColor: formState.hasError &&
-                              viewModel.pageDescription.text.isEmpty
+                          borderColor: formState.hasError && viewModel.pageDescription.text.isEmpty
                               ? wayaTheme.colorScheme.error
                               : null,
                           label: 'Page Description',
                         ),
-                        if (formState.hasError &&
-                            viewModel.pageDescription.text.isEmpty
-                        )
+                        if (formState.hasError && viewModel.pageDescription.text.isEmpty)
                           Padding(
                             padding: const EdgeInsets.only(top: 5),
                             child: Text(
                               formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12.sp),
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                             ),
                           ),
                       ],
                     );
                   }),
                   const Gap(20),
-
-
                 ],
               )),
-
-          Text(
-              'Page Type',
+          Text('Page Type',
               style: TextStyle(
                 fontSize: 12.sp,
                 fontWeight: FontWeight.w500,
@@ -308,22 +285,28 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                 InkWell(
                   splashColor: Colors.transparent,
                   splashFactory: NoSplash.splashFactory,
-                  onTap: (){
+                  onTap: () {
                     setState(() {
                       sel = true;
                       sel2 = false;
                     });
-
                   },
-                  child: sel ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
+                  child: sel
+                      ? Image.asset(
+                          'assets/images/polls/check.png',
+                          height: 20.h,
+                        )
+                      : Image.asset(
+                          'assets/images/polls/uncheck.png',
+                          height: 20.h,
+                        ),
                 ),
                 const Gap(10),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Public Page",
-                        style: wayaTheme.textTheme.titleMedium),
+                    Text("Public Page", style: wayaTheme.textTheme.titleMedium),
                     const Gap(6),
                     FittedBox(
                       fit: BoxFit.contain,
@@ -337,7 +320,6 @@ class _CreatePageState extends ConsumerState<CreatePage> {
               ],
             ),
           ),
-
           const Gap(15),
           FittedBox(
             fit: BoxFit.fitWidth,
@@ -348,22 +330,28 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                 InkWell(
                   splashColor: Colors.transparent,
                   splashFactory: NoSplash.splashFactory,
-                  onTap: (){
+                  onTap: () {
                     setState(() {
                       sel = false;
                       sel2 = true;
                     });
-
                   },
-                  child: sel2 ? Image.asset('assets/images/polls/check.png', height: 20.h,): Image.asset('assets/images/polls/uncheck.png', height: 20.h,),
+                  child: sel2
+                      ? Image.asset(
+                          'assets/images/polls/check.png',
+                          height: 20.h,
+                        )
+                      : Image.asset(
+                          'assets/images/polls/uncheck.png',
+                          height: 20.h,
+                        ),
                 ),
                 const Gap(10),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Private Page",
-                        style: wayaTheme.textTheme.titleMedium),
+                    Text("Private Page", style: wayaTheme.textTheme.titleMedium),
                     const Gap(6),
                     Text(
                       "Not everyone can see activity on the group except invited\nmembers",
@@ -375,12 +363,8 @@ class _CreatePageState extends ConsumerState<CreatePage> {
             ),
           ),
           const Gap(15),
-
         ],
       ),
-       );
+    );
   }
-  
-
-
 }

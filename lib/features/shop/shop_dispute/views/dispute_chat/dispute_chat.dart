@@ -359,6 +359,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                         index: index,
                         previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
                         data: state.messages[index],
+                        chat: state.chat,
                         controller: inputController,
                         isLast: index == state.messages.length - 1,
                       ),

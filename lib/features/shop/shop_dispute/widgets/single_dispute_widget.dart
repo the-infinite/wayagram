@@ -10,7 +10,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/model/dispute_response_model.dart';
-import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute_detail.dart';
 import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
 
 class SingleDisputeWidget extends ConsumerWidget {

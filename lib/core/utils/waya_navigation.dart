@@ -186,7 +186,7 @@ class WayaNav<T> {
   }
 }
 
-  static bool canPop() => Navigator.canPop(Get.context!);
+  static bool canPop() => Navigator.canPop(context);
 
   static Map<String, String?> get search => Get.parameters;
 }

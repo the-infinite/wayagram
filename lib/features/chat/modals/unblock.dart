@@ -77,7 +77,7 @@ class _UnblockUserDialogState extends State<UnblockUserDialog> {
               Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Unblock ${profile.username ?? user.id}",
+                  "Unblock ${profile.username ?? user.firstName}",
                   style: theme.textTheme.headlineMedium?.copyWith(
                     color: theme.colorScheme.customBlack,
                   ),

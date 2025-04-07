@@ -88,6 +88,12 @@ class DonationRepository extends BaseRepository {
     return get("$serviceUrl/client/campaigns?organizerId=$organizerId&status=closed");
   }
 
+  Future<WayaRequestResponse> getDonationCategory(
+
+      ) {
+    return get("$serviceUrl/client/campaigns/categories?limit=10&page=1");
+  }
+
   Future<WayaRequestResponse> getDonatedDonations(int page,
       ) {
     return get("$serviceUrl/client/campaigns/donated?page=$page");
@@ -101,7 +107,7 @@ class DonationRepository extends BaseRepository {
     String userId,
   ) {
     return get(
-        "https://services.staging.wayagram.ng/wayagram-profile/api/v2/client/kyc/get-business-kyc-by-user-id?userId=$userId",
+        "wayagram-profile/api/v2/client/kyc/get-business-kyc-by-user-id?userId=$userId",
         useBase: false);
   }
 

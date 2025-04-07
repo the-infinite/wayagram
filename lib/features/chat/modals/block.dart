@@ -77,7 +77,7 @@ class _BlockUserDialogState extends State<BlockUserDialog> {
               Align(
                 alignment: Alignment.center,
                 child: Text(
-                  "Block ${profile.username ?? user.id}",
+                  "Block ${profile.username ?? user.firstName}",
                   style: theme.textTheme.headlineMedium?.copyWith(
                     color: theme.colorScheme.customBlack,
                   ),

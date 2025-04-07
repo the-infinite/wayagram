@@ -53,7 +53,9 @@ class PageVm extends StateNotifier<PageState> {
   }
 
   void reset() {
-    state = PageState();
+    state.pageName.clear();
+    state.pageDescription.clear();
+    state.content.clear();
   }
 
   final String _errorMessage = '';
