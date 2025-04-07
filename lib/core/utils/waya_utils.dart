@@ -142,18 +142,21 @@ class WayaUtils {
     }
   }
 
-  static Future<File?> pickAndCropImage() async {
+  static Future<File?> pickAndCropImage([double ratioX = 1, double ratioY = 1]) async {
     final image = await pickImageFromGallery();
     if (image != null) {
-      return cropImage(image);
+      return cropImage(image, ratioX, ratioY);
     }
     return image;
   }
 
-  static Future<File> cropImage(File pickedImage) async {
+  static Future<File> cropImage(File pickedImage, [double ratioX = 1, double ratioY = 1]) async {
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: pickedImage.path,
-      aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+      aspectRatio: CropAspectRatio(
+        ratioX: ratioX,
+        ratioY: ratioY,
+      ),
       uiSettings: [
         AndroidUiSettings(
           toolbarTitle: 'Crop Image',
@@ -168,9 +171,13 @@ class WayaUtils {
       ],
     );
 
+    //? Check if the user has cancelled the cropping
     if (croppedFile != null) {
       return File(croppedFile.path);
-    } else {
+    }
+
+    //? Return the original image if cropping is cancelled
+    else {
       return pickedImage;
     }
   }

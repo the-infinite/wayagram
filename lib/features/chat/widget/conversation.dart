@@ -288,7 +288,7 @@ class ConversationWidget extends StatelessWidget {
               children: [
                 // First, the time.
                 Text(
-                  WayaDateHelper.getTimestamp(chat.lastMessage?.updatedAt ?? chat.updatedAt),
+                  WayaDateHelper.getSocialTimeAgo(chat.lastMessage?.updatedAt ?? chat.updatedAt),
                   style: WayaTextStyles.titleMedium.copyWith(
                     fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
                     overflow: TextOverflow.ellipsis,

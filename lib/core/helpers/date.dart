@@ -83,6 +83,39 @@ class WayaDateHelper {
   static String convertDurationToCountdown(Duration duration, [bool longFormat = false]) =>
       longFormat ? _longFormatDuration(duration) : _shortFormatDuration(duration);
 
+  static String getSocialTimeAgo(DateTime timestamp) {
+    final now = DateTime.now();
+    final gap = now.difference(timestamp);
+
+    //? If this is less than a minute ago.
+    if (gap.inSeconds.abs() < 60) {
+      return "${gap.inSeconds.abs()}s ago";
+    }
+
+    //? If this is less than an hour ago...
+    if (gap.inMinutes < 60) {
+      return "${gap.inMinutes.abs()}m ago";
+    }
+
+    //? If this is less than a day ago....
+    if (gap.inHours < 24) {
+      return "${gap.inHours.abs()}h ago";
+    }
+
+    //? If this is today.
+    if (gap.inDays.abs() == 0) {
+      return getTimestamp(timestamp);
+    }
+
+    //? If this is yesterday...
+    if (gap.inDays.abs() < 2) {
+      return "Yesterday";
+    }
+
+    //? Then just return the timestamp.
+    return "${gap.inDays.abs()} days ago";
+  }
+
   static String getSocialTimestamp(DateTime timestamp, [bool extraPrecise = true]) {
     final now = DateTime.now();
     final gap = now.difference(timestamp);

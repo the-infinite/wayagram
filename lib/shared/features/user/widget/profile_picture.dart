@@ -51,25 +51,22 @@ class ChatProfilePicture extends StatelessWidget {
               clipper: const ShapeBorderClipper(shape: CircleBorder()),
               child: CircleAvatar(
                 radius: radius,
-                backgroundColor: theme.colorScheme.greyColor200,
-                backgroundImage: chat?.chatType == ChatType.group && chat?.groupImage != null
-                    ? NetworkImage(chat!.groupImage!)
+                backgroundColor: chat != null && chat?.groupImage == null
+                    ? theme.colorScheme.primary50
+                    : theme.colorScheme.greyColor200,
+                backgroundImage: chat?.chatType == ChatType.group
+                    ? chat?.groupImage != null
+                        ? NetworkImage(chat!.groupImage!)
+                        : null
                     : user.profilePicture != null
                         ? NetworkImage(user.profilePicture!)
                         : null,
-                child: chat != null
-                    ? Container(
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: theme.colorScheme.primary50,
-                        ),
-                        child: Text(
-                          chat!.initials,
-                          style: theme.textTheme.headlineLarge?.copyWith(
-                            color: theme.colorScheme.customPrimary,
-                            fontSize: (radius * 0.6).sp,
-                          ),
+                child: chat != null && chat?.groupImage == null && user.profilePicture == null
+                    ? Text(
+                        chat!.initials,
+                        style: theme.textTheme.headlineLarge?.copyWith(
+                          color: theme.colorScheme.customPrimary,
+                          fontSize: (radius * 0.75).sp,
                         ),
                       )
                     : user.profilePicture == null
