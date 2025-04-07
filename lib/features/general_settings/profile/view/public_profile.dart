@@ -493,7 +493,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                         children: [
                           //? First, the name of the user in question.
                           Text(
-                            user.fullname,
+                            profile.displayName ?? '',
                             style: wayaTheme.textTheme.bodyMedium?.copyWith(
                               fontWeight: FontWeight.w600,
                               color: wayaTheme.colorScheme.black,

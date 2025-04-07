@@ -95,6 +95,23 @@ class WayaLocalDataSource {
         .toList();
   }
 
+  Future<void> saveLastUpdateUserName(DateTime date) {
+    return wayaFastStorageService.write<DateTime>(
+        key: 'last-update-username', value: date);
+  }
+
+  Future<void> saveLastUpdateDisplayName(DateTime date) {
+    return wayaFastStorageService.write<DateTime>(
+        key: 'last-update-displayname', value: date);
+  }
+
+  DateTime? getLastUpdateUserName() {
+    return wayaFastStorageService.read<DateTime?>(key: 'last-update-username');
+  }
+
+  DateTime? getLastUpdateDisplayName() {
+    return wayaFastStorageService.read<DateTime?>(
+        key: 'last-update-displayname');
   Future<void> saveSeenUGT(bool hasSeen) {
     return wayaFastStorageService.write<bool>(key: 'seen-ugt', value: hasSeen);
   }

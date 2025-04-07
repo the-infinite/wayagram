@@ -10,7 +10,9 @@ class ChangePasswordVm extends StateNotifier<ChangePasswordState> {
   ChangePasswordVm(this._changePasswordRepo) : super(ChangePasswordState());
 
   Future<bool> changePassword(
-      {required String oldPassword, required String newPassword, required String confirmPassword}) async {
+      {required String oldPassword,
+      required String newPassword,
+      required String confirmPassword}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _changePasswordRepo.changePassword(
@@ -20,12 +22,17 @@ class ChangePasswordVm extends StateNotifier<ChangePasswordState> {
       );
       final refinedResponse = BaseResponseModele.fromJson(response.data);
 
-      state = state.copyWith(isLoading: false, message: refinedResponse.message);
+      state =
+          state.copyWith(isLoading: false, message: refinedResponse.message);
       if (refinedResponse.status == true) {
         WayaSnackBar.showToast('Password Changed Successfully');
         Future.delayed(Duration(seconds: 2), () {
           WayaNav.offNamed('/general-settings');
         });
+      } else {
+       
+        WayaSnackBar.showToast(
+            refinedResponse.message ?? 'Sth is wrong. Try again later');
       }
 
       return refinedResponse.status ?? false;
@@ -35,10 +42,18 @@ class ChangePasswordVm extends StateNotifier<ChangePasswordState> {
       );
       return false;
     }
+     finally  {
+    state = state.copyWith(
+        isLoading: false,
+      );
   }
+    
+  }
+ 
 }
 
-final changePasswordNotifierProvider = StateNotifierProvider<ChangePasswordVm, ChangePasswordState>((ref) {
+final changePasswordNotifierProvider =
+    StateNotifierProvider<ChangePasswordVm, ChangePasswordState>((ref) {
   return ChangePasswordVm(ChangePasswordRepo());
 });
 

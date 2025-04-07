@@ -11,6 +11,7 @@ import 'package:wayagram/features/auth/add_business_account/vm/add_business_acco
 import 'package:wayagram/features/event/data/model/add_event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
+import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/shared/components/radio_select.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
@@ -20,11 +21,13 @@ class AddEventVm extends StateNotifier<AddEventState> {
   final EventRepository _eventRepository;
   final UploadFileRepository _uploadFileRepository;
   final WayaSecureDataSource _secureDataSource;
-  AddEventVm(this._uploadFileRepository, this._secureDataSource, this._eventRepository, this.ref)
+  AddEventVm(this._uploadFileRepository, this._secureDataSource,
+      this._eventRepository, this.ref)
       : super(AddEventState());
 
   void reset() {
     state = AddEventState();
+    ref.read(radioSelectProvider('add-event').notifier).state = '';
   }
 
   List<Select> eventTypes = [
@@ -68,7 +71,9 @@ class AddEventVm extends StateNotifier<AddEventState> {
   }
 
   void addFile(File file) {
-    state = state.copyWith(eventImage: [DocType(file: file, type: "event-image", name: file.path.split('/').last)]);
+    state = state.copyWith(eventImage: [
+      DocType(file: file, type: "event-image", name: file.path.split('/').last)
+    ]);
   }
 
   void removeFile() {
@@ -127,10 +132,17 @@ class AddEventVm extends StateNotifier<AddEventState> {
         state = state.copyWith(eventFee: TextEditingController(text: '0'));
       }
 
+      if (state.privacyOption.isEmpty) {
+        WayaSnackBar.showToast("Choose a privacy option");
+        return false;
+      }
+
       state = state.copyWith(isLoading: true);
       final image = state.isEditingMode && state.eventImage[0].file == null
           ? state.eventImage[0].url
-          : await WayaUtils.uploadFile(file: state.eventImage[0].file!, repository: _uploadFileRepository);
+          : await WayaUtils.uploadFile(
+              file: state.eventImage[0].file!,
+              repository: _uploadFileRepository);
 
       state = state.copyWith(image: image);
       final userId = await _secureDataSource.getUserId();
@@ -146,13 +158,20 @@ class AddEventVm extends StateNotifier<AddEventState> {
             title: state.isEditingMode
                 ? "Your Event has been updated successfully"
                 : "Your Event has been created successfully",
-            message: "Your event is now live. Share it with your audience and start engaging with attendees today!",
-            onPress: () => WayaNav.goBack(),
+            message:
+                "Your event is now live. Share it with your audience and start engaging with attendees today!",
+            onPress: () {
+              WayaNav.goBack();
+              reset();
+            },
             buttonText: 'Go To Event Home Page',
             secondButtonText: 'Share Event Link',
             onCancel: () async {
-              await ref.read(eventVmProvider.notifier).shareEvent(context: context, shareUrl: "shareUrl");
+              await ref
+                  .read(eventVmProvider.notifier)
+                  .shareEvent(context: context, shareUrl: "shareUrl");
               WayaNav.goBack();
+              reset();
             },
             icon: Image.asset(
               "assets/images/create-event-success.png",
@@ -178,8 +197,14 @@ class AddEventVm extends StateNotifier<AddEventState> {
       organizer: TextEditingController(text: event.organizerName),
       description: TextEditingController(text: event.description ?? ''),
       location: event.location.capitalizeFirst,
-      address: TextEditingController(text: event.location.toLowerCase() == 'physical' ? event.locationAddress : ''),
-      link: TextEditingController(text: event.location.toLowerCase() == 'virtual' ? event.locationAddress : ''),
+      address: TextEditingController(
+          text: event.location.toLowerCase() == 'physical'
+              ? event.locationAddress
+              : ''),
+      link: TextEditingController(
+          text: event.location.toLowerCase() == 'virtual'
+              ? event.locationAddress
+              : ''),
       eventType: event.eventType.capitalizeFirst,
       eventFee: TextEditingController(text: event.fee.toString()),
       maxCapacity: TextEditingController(text: event.maxCapacity?.toString()),
@@ -189,12 +214,21 @@ class AddEventVm extends StateNotifier<AddEventState> {
       startTime: event.startTime,
       eventId: event.id,
       endTime: event.endTime,
-      eventImage: [DocType(file: null, type: "event-image", name: "uploaded image", url: event.image)],
+      eventImage: [
+        DocType(
+            file: null,
+            type: "event-image",
+            name: "uploaded image",
+            url: event.image)
+      ],
     );
-    ref.read(radioSelectProvider("add-event").notifier).state = event.privacyOption.capitalizeFirst;
+    ref.read(radioSelectProvider("add-event").notifier).state =
+        event.privacyOption.capitalizeFirst;
   }
 }
 
-final addEventVmProvider = StateNotifierProvider<AddEventVm, AddEventState>((ref) {
-  return AddEventVm(UploadFileRepository(), WayaSecureDataSource(), EventRepository(), ref);
+final addEventVmProvider =
+    StateNotifierProvider<AddEventVm, AddEventState>((ref) {
+  return AddEventVm(
+      UploadFileRepository(), WayaSecureDataSource(), EventRepository(), ref);
 });

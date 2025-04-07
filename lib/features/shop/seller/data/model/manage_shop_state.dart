@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/shared_shop_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 
 class ManageShopState {
@@ -8,6 +9,7 @@ class ManageShopState {
   final bool hasShop;
   final List<ShopData> shop;
   final ShopData? singleShop;
+  final List<SharedShop> sharedShop;
   final bool isPersonalNotUpgradedToBusiness;
   final List<SalesMetric> salesMetric;
   final int numberOfProducts;
@@ -32,6 +34,7 @@ class ManageShopState {
       this.numberOfProducts = 0,
       this.numberOfRequests = 0,
       this.isLoadingOrder = false,
+      this.sharedShop = const [],
       this.singleShop});
 
   factory ManageShopState.initial() => ManageShopState();
@@ -41,6 +44,7 @@ class ManageShopState {
       dynamic data,
       bool? hasShop,
       List<ShopData>? shop,
+      List<SharedShop>? sharedShop,
       List<SalesMetric>? salesMetric,
       ShopData? singleShop,
       int? numberOfRequests,
@@ -65,7 +69,9 @@ class ManageShopState {
         isLoadingOrder: isLoadingOrder ?? this.isLoadingOrder,
         orders: orders ?? this.orders,
         numberOfOrders: numberOfOrders ?? this.numberOfOrders,
-        numberOfWayaGramDeals: numberOfWayaGramDeals ?? this.numberOfWayaGramDeals,
+        sharedShop: sharedShop ?? this.sharedShop,
+        numberOfWayaGramDeals:
+            numberOfWayaGramDeals ?? this.numberOfWayaGramDeals,
         isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ??
             this.isPersonalNotUpgradedToBusiness);
   }
@@ -86,6 +92,7 @@ class ManageShopState {
         numberOfProducts: json['numberOfProducts'],
         numberOfOrders: json['numberOfOrders'],
         numberOfWayaGramDeals: json['numberOfWayaGramDeals'],
+        sharedShop: json['sharedShop'],
         shop: json['shop']);
   }
 
@@ -102,6 +109,7 @@ class ManageShopState {
         'numberOfOrders': numberOfOrders,
         "shop": shop,
         "singleShop": singleShop,
+        "sharedShop": sharedShop,
         "numberOfWayaGramDeals": numberOfWayaGramDeals,
         "isPersonalNotUpgradedToBusiness": isPersonalNotUpgradedToBusiness
       };

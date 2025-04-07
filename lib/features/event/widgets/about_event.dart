@@ -40,14 +40,15 @@ class AboutEvent extends StatelessWidget {
             child: Text(content,
                 style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                   color: wayaTheme.colorScheme.customPrimary,
-                  fontSize: context.width * 0.035,
+                  fontSize: context.width * 0.042,
                 )),
           ),
         ] else ...[
           Text(content,
               style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                 color: wayaTheme.colorScheme.customBlack,
-                fontSize: context.width * 0.035,
+                fontSize: context.width * 0.042,
+                fontWeight: FontWeight.w600
               )),
         ]
       ],
