@@ -25,7 +25,6 @@ class _SellerShopState extends ConsumerState<SellerShop> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       await notifier.getSellerShops();
-      await notifier.getManagedShops();
     });
     super.initState();
   }
@@ -91,28 +90,41 @@ class _SellerShopState extends ConsumerState<SellerShop> {
                 style: wayaTheme.textTheme.hintStyle,
               ),
               const Gap(30),
-              Text("My Shops", style: wayaTheme.textTheme.titleSmall),
+              Text("My Shops ", style: wayaTheme.textTheme.titleSmall),
               const Gap(10),
               ListView.builder(
                 itemCount: manageShop.shop.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
+                  final shop = manageShop.shop[index];
                   return SingleShopCard(
-                    shop: manageShop.shop[index],
+                    isDeactivated: shop.deactivated,
+                    shopId: shop.id,
+                    shopLogo: shop.logo ?? '',
+                    shopName: shop.name,
+                    shop: shop,
                   );
                 },
               ),
-              const Gap(20),
-              // Text("Shared Shop", style: wayaTheme.textTheme.titleSmall),
-              // const Gap(10),
-              // ListView.builder(
-              //     itemCount: 4,
-              //     shrinkWrap: true,
-              //     physics: const NeverScrollableScrollPhysics(),
-              //     itemBuilder: (context, index) {
-              //       return SingleShopCard();
-              //     })
+              Gap(15.h),
+              if (manageShop.sharedShop.isNotEmpty) ...[
+                Text("Shared Shop", style: wayaTheme.textTheme.titleSmall),
+                const Gap(10),
+                ListView.builder(
+                    itemCount: manageShop.sharedShop.length,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      final shared = manageShop.sharedShop[index];
+                      return SingleShopCard(
+                        shopId: shared.shopId,
+                        shopLogo: shared.shopLogo,
+                        shopName: shared.shopName,
+                        isDeactivated: false,
+                      );
+                    })
+              ]
             ],
           ),
         ));

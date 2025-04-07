@@ -48,7 +48,7 @@ class SocialUserWidget extends StatelessWidget {
                 children: [
                   //* For the user's name.
                   Text(
-                    user.fullname,
+                    profile?.displayName ?? '',
                     maxLines: 1,
                     style: WayaTextStyles.titleMedium.copyWith(
                       fontWeight: FontWeight.w600,
@@ -121,7 +121,7 @@ class SocialUserSelectionWidget extends StatelessWidget {
                 children: [
                   //* For the user's name.
                   Text(
-                    user.fullname,
+                    profile?.displayName ?? '',
                     maxLines: 1,
                     style: WayaTextStyles.titleMedium.copyWith(
                       fontWeight: FontWeight.w600,
