@@ -9,7 +9,7 @@ class UserProfileRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getPostsForUser(String userId, int page, int limit) async {
     return httpClient.getHttp(
-      "$serviceUri/posts/?userId=$userId&orderBy=likeCount&orderDirection=DESC&limit=$limit&page=$page",
+      "$serviceUri/posts/?userId=$userId&orderBy=createdAt&orderDirection=DESC&limit=$limit&page=$page",
     );
   }
 

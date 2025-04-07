@@ -56,7 +56,11 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
                 (args['image'] as File).path,
               );
               viewModel2.reset();
-              WayaNav.toNamed("/successPage");
+              WayaNav.goBack();
+              await Future.delayed(const Duration(milliseconds: 350));
+              WayaNav.goBack();
+              await Future.delayed(const Duration(milliseconds: 350));
+              WayaNav.replaceNamed("/successPage");
             },
             height: null,
             verticalPadding: 6.h,

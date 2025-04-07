@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_image.dart';
@@ -20,12 +21,13 @@ class MyMomentWidget extends ConsumerWidget {
   final List<MomentData> allMoments;
   final int index;
   final bool isMine;
-  const MyMomentWidget(
-      {super.key,
-      required this.moment,
-      required this.allMoments,
-      this.isMine = true,
-      required this.index});
+  const MyMomentWidget({
+    super.key,
+    required this.moment,
+    required this.allMoments,
+    this.isMine = true,
+    required this.index,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,11 +35,12 @@ class MyMomentWidget extends ConsumerWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        WayaNav.replaceNamed(ViewMoment.route, arguments: {
-          "moments": allMoments,
-          "isMine": isMine,
-          'index': index
-        });
+        WayaNav.goBack();
+        await WayaNav.to(
+          transition: Transition.downToUp,
+          duration: const Duration(milliseconds: 600),
+          ViewMoment(moments: allMoments, isMine: isMine, index: index),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,19 +58,15 @@ class MyMomentWidget extends ConsumerWidget {
                       width: 50,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                            begin: Alignment.bottomCenter,
-                            end: Alignment.center,
-                            colors: [
-                              Color(0xFFB43000),
-                              Color(0x99FFEF8C),
-                              Color(0xFFFF5D2E),
-                            ],
-                            stops: [
-                              0.0,
-                              0.5,
-                              1.0
-                            ]),
+                        gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.center, colors: [
+                          Color(0xFFB43000),
+                          Color(0x99FFEF8C),
+                          Color(0xFFFF5D2E),
+                        ], stops: [
+                          0.0,
+                          0.5,
+                          1.0
+                        ]),
                       ),
                       child: Padding(
                         padding: EdgeInsets.all(3),
@@ -153,8 +152,7 @@ class MyMomentWidget extends ConsumerWidget {
                       ),
                       Text(
                         "${moment.totalViews} ${moment.totalViews > 1 ? 'VIEWS' : 'VIEW'} ",
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.w500),
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
                       )
                     ],
                   ),
@@ -186,9 +184,7 @@ class MyMomentActions extends StatelessWidget {
 
     Future<void> showDelete() async {
       await WayaUtils.showModalSheet(context,
-          child: ConfirmDeleteWidget(
-              delete: () =>
-                  ref.read(momentVmProvider.notifier).deleteMoment(moment.id)));
+          child: ConfirmDeleteWidget(delete: () => ref.read(momentVmProvider.notifier).deleteMoment(moment.id)));
     }
 
     return PopupMenuButton(
@@ -262,9 +258,7 @@ class MyMomentActions extends StatelessWidget {
           const Gap(4),
           Text(text,
               style: TextStyle(
-                  color: textColor ?? wayaTheme.colorScheme.customBlack,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12))
+                  color: textColor ?? wayaTheme.colorScheme.customBlack, fontWeight: FontWeight.w500, fontSize: 12))
         ],
       ),
     );

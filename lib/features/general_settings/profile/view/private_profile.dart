@@ -49,9 +49,9 @@ class MyProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<MyProfilePage> {
-  late final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>((ref) {
-    return PostNotifier(PostState.initial);
-  });
+  late final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>(
+    (ref) => PostNotifier(PostState.initial),
+  );
   late final postNotifier = ref.read(userPostsProvider.notifier);
   late final eventNotifier = ref.read(userEventsProvider.notifier);
   late final groupsNotifier = myGroupNotifier;
