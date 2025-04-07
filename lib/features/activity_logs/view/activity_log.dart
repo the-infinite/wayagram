@@ -826,6 +826,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                         fontWeight: FontWeight.w600,
                                         color: Colors.black,
                                       )),
+
                                   Gap(10),
                                   ListView.builder(
                                     shrinkWrap: true,
