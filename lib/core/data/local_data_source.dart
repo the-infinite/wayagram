@@ -112,6 +112,12 @@ class WayaLocalDataSource {
   DateTime? getLastUpdateDisplayName() {
     return wayaFastStorageService.read<DateTime?>(
         key: 'last-update-displayname');
+  Future<void> saveSeenUGT(bool hasSeen) {
+    return wayaFastStorageService.write<bool>(key: 'seen-ugt', value: hasSeen);
+  }
+
+  bool getSeenUGT() {
+    return wayaFastStorageService.read<bool?>(key: 'seen-ugt')??false;
   }
 
   Future<void> viewMoment(String momentId) {

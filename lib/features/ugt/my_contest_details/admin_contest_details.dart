@@ -51,6 +51,9 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
           .read(votersContestNotifier.notifier)
           .getContestantProfileVoteDetails(contestId);
 
+      ref
+          .read(votersContestNotifier.notifier)
+          .fetchAllContestUnApprovedPosts(contestId, hostApproved: false);
       ref.read(votersContestNotifier.notifier).fetchAllContestPosts(contestId);
       ref
           .read(votersContestNotifier.notifier)

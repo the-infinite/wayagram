@@ -38,6 +38,7 @@ class _UgtHomeState extends ConsumerState<UgtHome> {
         ref.read(contestDetailProvider.notifier).fetchHostedContest();
         ref.read(followedContestProvider.notifier).fetchFollowedPosts();
         ref.read(postProvider.notifier).fetchContestForYou(true);
+        ref.read(contestNotifierProvider.notifier).allCategories();
       });
       return null;
     }, []);
