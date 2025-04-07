@@ -211,8 +211,8 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                       },
                       child: VideoThumbnail(
                         model?.introVideo ?? "",
+                        250.h,
                         context.width,
-                        context.height / 4,
                       ),
                     ),
                     const Gap(20),
@@ -246,7 +246,8 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                   ],
                 ),
                 Positioned(
-                  bottom: 10,
+                  //   bo: -10,
+                  bottom: -15,
                   left: 20,
                   child: Container(
                     padding: const EdgeInsets.all(0),
@@ -265,7 +266,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                 ),
               ],
             ),
-            //const Gap(10),
+            const Gap(15),
             GestureDetector(
               onTap: () {
                 print("Edit Profile");

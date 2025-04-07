@@ -147,7 +147,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (isScrollingUp && isAtTop)
+          if (isAtTop)
             Column(
               children: [
                 GroupedWidgetHeader(
