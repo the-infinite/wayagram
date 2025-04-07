@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
@@ -6,21 +5,17 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
-import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 
-import '../../../core/components/waya_scaffold.dart';
 import '../widgets/about_ugt_widget.dart';
-import '../widgets/status_ongoing.dart';
 
 class UpcomingContestDetails extends StatefulHookConsumerWidget {
   static const route = '/upcoming-contest-details';
@@ -39,13 +34,13 @@ class _UpcomingContestDetailsState
     var model = ref.watch(selectedContestProvider.notifier).state;
     var viewModel = ref.watch(votersContestNotifier.notifier);
     final hasProfile = useState(false);
+    print("my value ${model?.hasApplied}");
 
     useEffect(() {
       ref
           .read(postProvider.notifier)
           .fetchSingleContestantDetails(
-            ref,
-              model?.id ?? "", viewModel.getLoggedInUserId()??"")
+              ref, model?.id ?? "", viewModel.getLoggedInUserId() ?? "")
           .then((model) {
         if (model != null) {
           print("i am here");
@@ -56,6 +51,8 @@ class _UpcomingContestDetailsState
               print("i am here 3");
               hasProfile.value = true;
             }
+          } else {
+            hasProfile.value = false;
           }
         }
       });
@@ -70,8 +67,8 @@ class _UpcomingContestDetailsState
         children: [
           Image.asset("assets/images/Icon-left.png"),
           const Gap(20),
-          Image.asset("assets/images/vector.png"),
-          const Gap(30),
+          // Image.asset("assets/images/vector.png"),
+          //const Gap(30),
         ],
       ),
       body: Padding(
@@ -208,16 +205,19 @@ class _UpcomingContestDetailsState
                 child: WayaButton(
                   callback: () {
                     //? if user has a profile
-                    if (hasProfile.value) {
+                    if (hasProfile.value || model?.hasApplied == true) {
                       ref.read(selectedContestProvider.notifier).state = model;
                       WayaNav.toNamed('/upcoming-manage-contest-details');
                       return;
                     }
-                    ivalidateUGTVM(ref);
+                    //  ivalidateUGTVM(ref);
                     WayaNav.toNamed('/register-contest1');
                   },
-                  text: hasProfile.value
-                      ? "View Contest Details"
+                  text: model?.hasApplied == true
+                      ? /* hasProfile.value
+                          ? "View Contest Details"
+                          : */
+                      "View Contest Details"
                       : "Register For Contest",
                 ),
               ),
@@ -227,6 +227,7 @@ class _UpcomingContestDetailsState
       ),
     );
   }
+  
 
   Color getColor(bool isText, String text) {
     if (text == "active") {
@@ -281,8 +282,7 @@ class _UpcomingContestDetailsState
             AboutUgtWidget(
                 // isFromDetailsPage: true,
                 title: "Prize for Winner",
-                content:
-                    "₦${formatMoney(model.priceOfTheWinner.toString())}"),
+                content: "₦${formatMoney(model.priceOfTheWinner.toString())}"),
             const Gap(20),
           ],
         ),

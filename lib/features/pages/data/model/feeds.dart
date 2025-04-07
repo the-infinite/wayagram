@@ -88,7 +88,7 @@ class Post {
       );
 
   Rx<bool?> getIsLiked() {
-    WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
+    WayaLocalDataSource wayaLocalDataSource = WayaLocalDataSource();
     if (_isLiked.value == null) {
 //Get.find<ProfileController>().getProfile().value.data;
 // if (user != null) {

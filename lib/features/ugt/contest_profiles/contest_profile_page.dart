@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
 // import 'package:get_thumbnail_video/index.dart';
 // import 'package:get_thumbnail_video/video_thumbnail.dart';
@@ -22,18 +20,12 @@ import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_stages_section.dart';
 import 'package:wayagram/features/ugt/create_contest_post/video_thumbnail_ugt.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart' as post;
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
-import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_details_stage_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
-import 'package:wayagram/features/ugt/video_player.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
-import 'package:wayagram/features/ugt/widgets/contest_card.dart';
-import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
-import '../../../core/components/waya_scaffold.dart';
 
 class ContestProfilePage extends StatefulHookConsumerWidget {
   static const route = '/contest-profile-page';
@@ -81,10 +73,10 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
 
     useEffect(() {
       ref.read(postProvider.notifier).fetchSingleContestantDetails(
-          ref, model?.contestId ?? contestId, model?.profileId ?? id);
-      print("dedee ${model?.contestApplicant?.userId}");
+          ref, model?.contestId ?? contestId, model?.id ?? id);
+      /*   print("dedee ${model?.contestApplicant?.userId}");
       print("dedee ${model?.profileId}");
-      print("dedee ${viewModel.getLoggedInUserId()}");
+      print("dedee ${viewModel.getLoggedInUserId()}"); */
 
       if (viewModel.getLoggedInUserId() == model?.contestApplicant?.userId) {
         model?.stages?.forEach((element) {
@@ -144,7 +136,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
 
       ref
           .watch(ugtContestantProfileVm.notifier)
-          .fetchSingleContestantPosts(model?.profileId ?? id);
+          .fetchSingleContestantPosts(model?.id ?? id);
 
       /*  getImageUrl(model.introVideo ?? "").then((value) {
         imageUrl.value = value;
@@ -158,9 +150,9 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
       onRefresh: () {
         ref
             .watch(ugtContestantProfileVm.notifier)
-            .fetchSingleContestantPosts(model?.profileId ?? id);
+            .fetchSingleContestantPosts(model?.id ?? id);
         return ref.read(postProvider.notifier).fetchSingleContestantDetails(
-            ref, model?.contestId ?? contestId, model?.profileId ?? id);
+            ref, model?.contestId ?? contestId, model?.id ?? id);
       },
       title: "My Profile",
       appBarTrailing: Row(
@@ -170,7 +162,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                 await Share.share(
                   WayaValueHelper.getShareableUrl(
                       WayaAppRoutes.getContestantProfileRoute(
-                    model?.profileId ?? id,
+                    model?.id ?? id,
                     model?.contestId ?? contestId,
                   )),
                   subject: "Share Contestant Profile",
@@ -207,32 +199,10 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                           "type": MyFullMediaType.video
                         });
                       },
-                      
-                      child: Stack(
-                        children: [
-                          VideoThumbnail(
-                            model?.introVideo ?? "",
-                            context.width,
-                            context.height / 5,
-                          ),
-                          Positioned(
-                            top: context.width / 2,
-                            right: context.height / 5,
-                            // alignment: Alignment.center,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.white.withOpacity(0.7),
-                              ),
-                              padding: EdgeInsets.all(8),
-                              child: Icon(
-                                Icons.play_arrow,
-                                size: 30,
-                                color: Colors.black,
-                              ),
-                            ),
-                          ),
-                        ],
+                      child: VideoThumbnail(
+                        model?.introVideo ?? "",
+                        context.width,
+                        context.height / 4,
                       ),
                     ),
                     const Gap(20),

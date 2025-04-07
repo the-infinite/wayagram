@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/role_access/view/add_team_member_page.dart';
-import 'package:wayagram/features/role_access/view/member_details_page.dart';
 import 'package:wayagram/features/role_access/vm/role_access_vm.dart';
-import 'package:wayagram/features/role_access/widget/role_access_card.dart';
 import 'package:wayagram/features/role_access/widget/role_management_card.dart';
-import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
-import 'package:wayagram/shared/features/user/models/default.dart';
 
 class RoleManagementTab extends ConsumerStatefulWidget {
   const RoleManagementTab({super.key});
@@ -37,19 +28,9 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        WayaButton(
-          callback: () {
-            ref.read(editingRoleMemberProvider.notifier).state = false;
-            WayaNav.toNamed(AddTeamMemberPage.route);
-          },
-          color: wayaTheme.colorScheme.primary50,
-          text: "Add New Team Member",
-          textColor: wayaTheme.colorScheme.customPrimary,
-        ),
+       
         const Gap(10),
-        /*   if (posts.isEmpty) emptyWidget(),
-        if (postNotifier.isLoading) Center(child: CircularProgressIndicator()),
-        if (posts.isNotEmpty) */
+     
         if (viewModel.isLoading == true)
           Center(child: CircularProgressIndicator()),
         if (viewModel.listRoleManagement.isEmpty) emptyWidget(),

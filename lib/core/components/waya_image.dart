@@ -13,12 +13,14 @@ class WayaDp extends ConsumerWidget {
   final String? image;
   final bool isEdit;
   final bool isSelf;
+  final bool canFocus;
 
   const WayaDp({
     this.radius = 75,
     this.onTap,
     this.isEdit = false,
     this.isSelf = true,
+    this.canFocus = true,
     this.image = '',
     super.key,
   });
@@ -38,11 +40,12 @@ class WayaDp extends ConsumerWidget {
             }
           : onTap ??
               () async {
-                if (image == null) return;
+                if (!canFocus) return;
+                if (avatar?.isEmpty ?? true) return;
 
                 final result = await WayaNavigationHelper.toImageDetailsScreen(
                   null,
-                  [image!],
+                  [avatar!],
                 );
 
                 //? Do nothing.
@@ -54,7 +57,7 @@ class WayaDp extends ConsumerWidget {
             radius: radius,
             backgroundColor: wayaTheme.colorScheme.greyColor200,
             backgroundImage: avatar?.isNotEmpty == true ? NetworkImage(avatar!) : null,
-            child: avatar?.isNotEmpty != true
+            child: avatar?.isEmpty ?? true
                 ? Icon(
                     Icons.person,
                     color: wayaTheme.colorScheme.greyColor600,
@@ -109,12 +112,12 @@ class WayaImage2 extends ConsumerWidget {
             }
           : onTap ??
               () async {
-                if (imageUrl == null) return;
+                if (imageUrl == null && coverImage == null) return;
 
                 //? This is not null so we are good.
                 final result = await WayaNavigationHelper.toImageDetailsScreen(
                   null,
-                  [imageUrl!],
+                  [imageUrl ?? coverImage!],
                 );
 
                 //? Do nothing.
@@ -198,11 +201,11 @@ class WayaImage3 extends ConsumerWidget {
                   }
                 : onTap ??
                     () async {
-                      if (imageUrl == null) return;
+                      if (imageUrl == null && coverImage == null) return;
 
                       final result = await WayaNavigationHelper.toImageDetailsScreen(
                         null,
-                        [imageUrl!],
+                        [imageUrl ?? coverImage!],
                       );
 
                       //? Do nothing.

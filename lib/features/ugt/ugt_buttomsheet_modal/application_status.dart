@@ -1,20 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
-import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 
 import 'package:wayagram/features/ugt/vm/ugt_aplied_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';

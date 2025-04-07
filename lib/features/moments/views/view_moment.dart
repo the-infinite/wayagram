@@ -15,8 +15,17 @@ import 'package:wayagram/features/moments/widgets/my_moment_metrics.dart';
 import 'package:wayagram/features/moments/widgets/reply_moment_widget.dart';
 
 class ViewMoment extends ConsumerStatefulWidget {
-  static const route = "/view-moment";
-  const ViewMoment({super.key});
+  final List<MomentData> moments;
+  final bool isMine;
+  final int? index;
+
+  // Construct.
+  const ViewMoment({
+    super.key,
+    required this.moments,
+    required this.isMine,
+    this.index,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ViewMomentState();
@@ -25,31 +34,17 @@ class ViewMoment extends ConsumerStatefulWidget {
 class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProviderStateMixin {
   late PageController _pageController;
   late AnimationController _animationController;
+  late final isMine = widget.isMine;
+  late final moments = widget.moments;
   final textController = TextEditingController();
   final pauseController = ValueNotifier(false);
-  List<MomentData> moments = [];
-  int currentIndex = 0;
-  bool isMine = false;
+  late int currentIndex = widget.index ?? 0;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
     _animationController = AnimationController(vsync: this);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final dynamic args = ModalRoute.of(context)?.settings.arguments;
-      if (args != null && args['index'] != null) {
-        setState(() {
-          currentIndex = args['index'];
-        });
-      }
-      if (args != null && args['moments'] != null) {
-        setState(() {
-          isMine = args['isMine'];
-          moments = args['moments'];
-        });
-      }
-    });
   }
 
   void _startTimer() {
@@ -185,27 +180,26 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                     final moment = moments[currentIndex];
 
                     //? This is fine.
-                    return moment.contentType == 'text'
-                        ? _TextMoment(
-                            ref: ref,
-                            moment: moment,
-                            index: index,
-                            pause: () => pauseAnimation(false),
-                            resume: continueAnimating,
-                            setDuration: (duration) {
-                              _animationController.duration = duration;
-                            },
-                          )
-                        : _MediaMomentWidget(
-                            index: index,
-                            ref: ref,
-                            moment: moment,
-                            pause: () => pauseAnimation(false),
-                            resume: continueAnimating,
-                            setDuration: (duration) {
-                              _animationController.duration = duration;
-                            },
-                          );
+                    if (moment.contentType.trim().toLowerCase() == 'text') {
+                      return _TextMoment(
+                        ref: ref,
+                        moment: moment,
+                        index: index,
+                        pause: () => pauseAnimation(false),
+                        resume: continueAnimating,
+                        setDuration: (duration) => _animationController.duration = duration,
+                      );
+                    }
+
+                    //? Do it like this.
+                    return _MediaMomentWidget(
+                      index: index,
+                      ref: ref,
+                      moment: moment,
+                      pause: () => pauseAnimation(false),
+                      resume: continueAnimating,
+                      setDuration: (duration) => _animationController.duration = duration,
+                    );
                   },
                 ),
 
@@ -399,13 +393,18 @@ class __TextMomentState extends State<_TextMoment> {
 
   @override
   Widget build(BuildContext context) {
+    // Keep this safe.
     return Container(
       padding: const EdgeInsets.all(24.0),
       alignment: Alignment.center,
       child: Text(
         widget.moment.content,
-        style: widget.moment.fontType != null ? MomentHelper.textStyleFromJson(widget.moment.fontType!) : null,
         textAlign: TextAlign.center,
+        style: widget.moment.fontType == null
+            ? null
+            : MomentHelper.textStyleFromJson(
+                widget.moment.fontType!,
+              ),
       ),
     );
   }

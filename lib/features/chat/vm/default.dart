@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
@@ -6,6 +8,7 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/repo/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/features/file/repo/default.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 
 class ConversationVm extends StateNotifier<ConversationState> {
@@ -62,7 +65,10 @@ class ConversationVm extends StateNotifier<ConversationState> {
       final data = response.data['data'];
 
       //? Parse the conversations as they are in the response object...
-      final docs = (data['docs'] as List).map((doc) => ChatModel.fromJson(doc)).toList();
+      final docs = (data['docs'] as List)
+          .map((doc) => ChatModel.fromJson(doc))
+          .where((chat) => chat.latestMessageId != null)
+          .toList();
 
       //? First, we check each of the members in each conversation...
       for (var c = 0; c < docs.length; c++) {
@@ -118,9 +124,22 @@ class ConversationVm extends StateNotifier<ConversationState> {
   }
 
   /// Helper function used to start a chat with a list of users.
-  Future<ChatModel?> startChat(ChatType type, List<String> users) async {
+  Future<ChatModel?> startChat(
+    ChatType type,
+    List<String> users, [
+    String? name,
+    String? description,
+    File? image,
+  ]) async {
+    final imageUrl = image == null
+        ? null
+        : await WayaFileRepository.instance.uploadFile(
+            image,
+            "group-${WayaValueHelper.createUid()}.${WayaFileHelper.getFileExtension(image.path)}",
+          );
+
     //? This is fine.
-    final response = await repo.startConversation(type, users);
+    final response = await repo.startConversation(type, users, name, description, imageUrl);
 
     //? If this was fine...
     if (!response.success) {
@@ -317,7 +336,10 @@ class ConversationVm extends StateNotifier<ConversationState> {
       final data = response.data['data'];
 
       //? Parse the conversations as they are in the response object...
-      final docs = (data['docs'] as List).map((doc) => ChatModel.fromJson(doc)).toList();
+      final docs = (data['docs'] as List)
+          .map((doc) => ChatModel.fromJson(doc))
+          .where((chat) => chat.latestMessageId != null)
+          .toList();
 
       //? First, we check each of the members in each conversation...
       for (var c = 0; c < docs.length; c++) {

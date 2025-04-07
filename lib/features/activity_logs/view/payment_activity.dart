@@ -160,7 +160,7 @@ class _PaymentActivityState extends ConsumerState<PaymentActivity> {
   sortList(s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.paymentActivityDocs = [];
-    print('ACTIVITY End ====> ${s}');
+    print('ACTIVITY End ====> $s');
     setState(() {
       if(s == 'all time'){
         viewModel.paymentActivityDocs = viewModel.paymentActivityDocs1;

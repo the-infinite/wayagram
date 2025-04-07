@@ -16,6 +16,8 @@ enum ChatType {
 class ChatModel {
   final String id;
   final String? name;
+  final String? description;
+  final String? groupImage;
   final String createdBy;
   final String? latestMessageId;
   final MessageModel? lastMessage;
@@ -36,7 +38,24 @@ class ChatModel {
     required this.chatMembers,
     required this.lastMessage,
     required this.unreadCount,
+    required this.description,
+    required this.groupImage,
   });
+
+  String get initials {
+    if (chatType == ChatType.group) {
+      return (name?.split(" ") ?? ["Group", "Chat"]).take(2).map((word) => word[0].toUpperCase()).join();
+    }
+
+    if (name != null) {
+      return other.userData?.initials ?? (other.chatUser?.displayName.split(" ") ?? ["WayaGram", "User"])
+          .take(2)
+          .map((word) => word[0].toUpperCase())
+          .join();
+    }
+
+    return "WC";
+  }
 
   // This is fine.
   factory ChatModel.fromJson(Map<String, dynamic> json) => _$ChatModelFromJson(json);
@@ -79,6 +98,8 @@ class ChatModel {
     ChatType? chatType,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? description,
+    String? groupImage,
     List<ChatMember>? chatMembers,
   }) {
     return ChatModel(
@@ -89,6 +110,8 @@ class ChatModel {
       lastMessage: lastMessage ?? this.lastMessage,
       unreadCount: unreadCount ?? this.unreadCount,
       chatType: chatType ?? this.chatType,
+      description: description ?? this.description,
+      groupImage: groupImage ?? this.groupImage,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       chatMembers: chatMembers ?? this.chatMembers,

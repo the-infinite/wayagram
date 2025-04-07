@@ -43,10 +43,10 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
   }
 
   Future<void> selectState(Select value) async {
-    String _state = state.state;
+    String finalState = state.state;
     state = state.copyWith(state: value.label);
 
-    if (_state.isNotEmpty && value.label != _state) {
+    if (finalState.isNotEmpty && value.label != finalState) {
       state.copyWith(cities: []);
       state = state.copyWith(city: '');
       state.copyWith(lgas: []);
@@ -57,10 +57,10 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
   }
 
   Future<void> selectCountry(Select value) async {
-    String _country = state.country;
+    String country = state.country;
     state = state.copyWith(country: value.label);
 
-    if (_country.isNotEmpty && value.label != _country) {
+    if (country.isNotEmpty && value.label != country) {
       state.copyWith(states: []);
       state = state.copyWith(state: '');
       state.copyWith(cities: []);

@@ -345,7 +345,9 @@ class WayaFormField extends StatelessWidget {
               onTap: onTap,
               isReadOnly: isReadOnly,
             ),
-            if (formState.hasError && controller.text.isEmpty)
+
+            //? This is fine.
+            if (formState.hasError)
               Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: Text(

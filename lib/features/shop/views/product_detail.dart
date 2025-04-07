@@ -16,7 +16,6 @@ import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/shared/engagement/provider/product_engagement_monitor.dart';
 import 'package:wayagram/features/shop/cart/vm/cart_vm.dart';
-import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/vm/product_detail_vm.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/features/shop/widgets/product_description_widget.dart';
@@ -295,7 +294,7 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
           ],
         ),
         bottomNavigationBar: Container(
-          padding: EdgeInsets.fromLTRB(15, 0, 15, 10),
+          padding: EdgeInsets.fromLTRB(15, 6, 15, 6),
           child: viewModel.isProductOwner
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

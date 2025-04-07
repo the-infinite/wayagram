@@ -128,6 +128,7 @@ class Contest {
     required this.likeCount,
     required this.hasLiked,
     required this.isFollowing,
+    required this.hasApplied,
     required this.shareCount,
     required this.followCount,
     required this.applicantCount,
@@ -166,6 +167,7 @@ class Contest {
   final int? likeCount;
   final bool? hasLiked;
   final bool? isFollowing;
+  final bool? hasApplied;
   final int? shareCount;
   final int? followCount;
   final int? applicantCount;
@@ -204,6 +206,7 @@ class Contest {
     int? likeCount,
     bool? hasLiked,
     bool? isFollowing,
+    bool? hostApproved,
     int? shareCount,
     int? followCount,
     int? applicantCount,
@@ -243,6 +246,7 @@ class Contest {
       likeCount: likeCount ?? this.likeCount,
       hasLiked: hasLiked ?? this.hasLiked,
       isFollowing: isFollowing ?? this.isFollowing,
+      hasApplied: hasApplied ?? hasApplied,
       shareCount: shareCount ?? this.shareCount,
       followCount: followCount ?? this.followCount,
       applicantCount: applicantCount ?? this.applicantCount,

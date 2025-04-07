@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';

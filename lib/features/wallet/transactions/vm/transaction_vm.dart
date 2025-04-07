@@ -69,7 +69,7 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
       final response = await _transactionRepository.getSingleTransactions(transactionId);
       if (response.success) {
         final transaction = TransactionDetail.fromJson(response.data["data"]);
-        log("${transaction}");
+        log("$transaction");
         state = state.copyWith(isLoadingSingle: false, transaction: transaction);
       } else {
         state = state.copyWith(isLoadingSingle: false);

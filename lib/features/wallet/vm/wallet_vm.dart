@@ -13,7 +13,7 @@ class WalletVm extends StateNotifier<WalletState> {
 
   Future<void> getUserWallet() async {
     state = state.copyWith(isLoading: true);
-    final response = await _walletRepository!.getUserWallet();
+    final response = await _walletRepository.getUserWallet();
     if (response.success == true) {
       final walletData = response.data["data"]["wallet"];
       final walletAccountsData = response.data["data"]["walletAccounts"];
@@ -27,7 +27,7 @@ class WalletVm extends StateNotifier<WalletState> {
 
   Future<void> checkWalletPinStatus(String userId) async {
     state = state.copyWith(isLoading: true);
-    final response = await _walletRepository!.checkWalletPinStatus(userId);
+    final response = await _walletRepository.checkWalletPinStatus(userId);
     if (response.success == true) {
       final walletData = response.data["data"]["wallet"];
       state = state.copyWith(data: Wallet.fromJson(walletData), isLoading: false);

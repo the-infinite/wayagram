@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/features/shop/cart/data/repo/cart_repository.dart';
-import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/cart/data/model/cart_response_model.dart';
 import 'package:uuid/uuid.dart';
 

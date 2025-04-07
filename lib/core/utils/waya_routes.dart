@@ -129,7 +129,6 @@ import 'package:wayagram/features/ugt/ugt_home.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
 import 'package:wayagram/features/event/views/all_upcoming_events.dart';
-import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/explore/search/search.dart';
 import 'package:wayagram/shared/features/quotation/view/all_buy_request.dart';
 
@@ -300,7 +299,6 @@ class WayaAppRoutes {
     AllUpcomingEvents.route: () => AllUpcomingEvents(),
     MediaMoment.route: () => MediaMoment(),
     MyMoments.route: () => MyMoments(),
-    ViewMoment.route: () => ViewMoment(),
     CandidatePostScreen.route: () => CandidatePostScreen(),
     VideoTrimmerScreen.route: () => VideoTrimmerScreen(),
     ViewFullMedia.route: () => ViewFullMedia(),
@@ -449,7 +447,7 @@ class WayaAppRoutes {
       "${ProductDetail.route}?id=$id";
 
   /// Helper function used to generate the route that takes a user to the screen
-  /// for the details of a single product.
+  /// for the details of a account.
   static String getAccountCreationScreen(String referral) =>
       "${AccountCreation.route}?referral=$referral";
 

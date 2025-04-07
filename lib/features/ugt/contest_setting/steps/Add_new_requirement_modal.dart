@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';

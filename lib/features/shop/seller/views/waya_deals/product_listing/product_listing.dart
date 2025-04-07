@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/features/shop/seller/views/add_product/steps/add_product_images.dart';
-import 'package:wayagram/features/shop/seller/views/add_product/steps/preview_product.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/steps/add_product_for_listing.dart';
 
 

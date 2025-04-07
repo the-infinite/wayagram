@@ -7,10 +7,23 @@ import 'package:wayagram/features/chat/state/default.dart';
 class ChatRepository extends BaseRepository {
   static const serviceUrl = 'communication-service/api/v2';
 
-  Future<WayaRequestResponse> startConversation(ChatType type, List<String> members) {
+  Future<WayaRequestResponse> startConversation(
+    ChatType type,
+    List<String> members, [
+    String? name,
+    String? description,
+    String? image,
+  ]) {
     return post(
       "$serviceUrl/client/chat/init",
-      {"createdBy": ConversationState.self.id, "otherUsers": members, "chatType": type.name},
+      {
+        "createdBy": ConversationState.self.id,
+        "otherUsers": members,
+        "chatType": type.name,
+        if (name != null) "name": name,
+        if (description != null) "description": description,
+        if (image != null) "groupImage": image,
+      },
     );
   }
 
