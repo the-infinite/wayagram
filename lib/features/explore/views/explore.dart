@@ -9,6 +9,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/interests/vm/select_interest_vm.dart';
+import 'package:wayagram/features/bottom_view/bottom_view_vm.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
@@ -73,6 +74,7 @@ class _ExploreState extends ConsumerState<Explore> {
 
     return WayaScaffold(
       isLoading: false,
+      scrollController: BottomViewVm.exploreScrollController,
       backgroundColor: wayaTheme.colorScheme.scaffoldColor,
       appBar: AppBar(
         toolbarHeight: kToolbarHeight,

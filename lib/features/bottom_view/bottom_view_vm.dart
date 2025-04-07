@@ -23,6 +23,8 @@ class BottomBarItem {
 
 class BottomViewVm extends ChangeNotifier {
   final Ref ref;
+  static final exploreScrollController = ScrollController();
+
   BottomViewVm(this.ref);
 
   //? This is fine.
@@ -31,6 +33,7 @@ class BottomViewVm extends ChangeNotifier {
       icon: WayaAssets.icons.bExplore.path,
       label: 'Explore',
       onTap: (ref) {
+        exploreScrollController.animateTo(0, duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
         ref.read(successfulSetupVmProvider.notifier).getUserData();
         ref.read(selectInterestProvider.notifier).getUserInterest();
         ref.read(shopVmProvider.notifier).allCategories(1);
