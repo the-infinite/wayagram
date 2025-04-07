@@ -413,7 +413,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     try {
       final response = await showDatePicker(
           context: context,
-          firstDate: DateTime(1950),
+          firstDate: DateTime.now(),
           lastDate: DateTime(2050),
           initialDate: DateTime.now());
       if (response != null) {

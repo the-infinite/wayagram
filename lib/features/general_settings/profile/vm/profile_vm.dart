@@ -11,9 +11,15 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_state_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
+import 'package:wayagram/shared/cache/comment.dart';
+import 'package:wayagram/shared/cache/group.dart';
+import 'package:wayagram/shared/cache/page.dart';
+import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
+import 'package:wayagram/shared/features/group/notifier/default.dart';
 import 'package:wayagram/shared/features/moments/notifier/default.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 
 class ProfileVm extends StateNotifier<ProfileState> {
   final ProfileRepo _profileRepo;
@@ -153,10 +159,20 @@ class ProfileVm extends StateNotifier<ProfileState> {
     await _secureDataSource.saveToken("");
     await _secureDataSource.saveRefreshToken("");
     await _secureDataSource.saveBusinessId("");
-    myFollowProvider.reset();
-    otherUserMoments.reset();
     _localDataSource.saveUserId("");
     await _secureDataSource.saveUserId("");
+
+    //? Reset all notifiers, providers, and caches.
+    myFollowProvider.reset();
+    myGroupNotifier.reset();
+    myPageNotifier.reset();
+    otherUserMoments.reset();
+    wayaCommentCache.clear();
+    wayaPostCache.clear();
+    wayaGroupCache.clear();
+    wayaPageCache.clear();
+
+    //? Go all the wat to the last page.
     WayaNav.removeUntilNamed(LoginCoverPage.route);
   }
 
