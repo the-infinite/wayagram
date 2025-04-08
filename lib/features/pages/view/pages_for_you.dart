@@ -27,7 +27,8 @@ class PagesForYou extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _PagesForYouState();
 }
 
-class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProviderStateMixin {
+class _PagesForYouState extends ConsumerState<PagesForYou>
+    with SingleTickerProviderStateMixin {
   late final notifier = ref.watch(createPageProvider.notifier);
   final _wayaLocalDataSource = WayaLocalDataSource();
 
@@ -55,22 +56,24 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Based on pages you follow',
-            style: wayaTheme.textTheme.bodyMedium?.copyWith(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: WayaColors.greyColor700,
+          //@the-infinite -- I feel like if am not following any page,
+// i should not be seeing that empty state
+// it makes the UI look noisy
+          if (viewPage.pagePopularPostDocs?.isEmpty ?? true) ...[
+            SizedBox.shrink()
+          ] else ...[
+            Text(
+              'Based on pages you follow',
+              style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                color: WayaColors.greyColor700,
+              ),
             ),
-          ),
 
-          // Some space.
-          Gap(10.h),
+            // Some space.
+            Gap(10.h),
 
-          //? Then data.
-          if (viewPage.pagePopularPostDocs?.isEmpty ?? true)
-            ActivityLogsEmptyState(text: 'No post based on pages you follow')
-          else
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
@@ -80,9 +83,11 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
                 index: index,
               ),
             ),
-
-          // Some space.
+              // Some space.
           Gap(25.h),
+          ],
+
+        
 
           //? Suggestions.
           GroupedWidgetHeader(
@@ -111,7 +116,10 @@ class _PagesForYouState extends ConsumerState<PagesForYou> with SingleTickerProv
             ),
           Gap(20),
           if (viewPage.pagePopularPostDocs?.isEmpty ?? true)
-            PostEmptyState()
+          //  - @the-infinite, I removed this PostEmptyState(),
+          // because i think the UI looks better without it, 
+          // you can add it back if you think it will be better to have it
+            SizedBox.shrink() 
           else
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
@@ -145,7 +153,8 @@ class PostEmptyState extends StatelessWidget {
             buttontext: 'Create a Post',
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,
@@ -174,7 +183,8 @@ class PageEmptyState extends StatelessWidget {
             //buttontext: 'Create a Post',
             buttonTrailingIcon: SvgPicture.asset(
               WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.white, BlendMode.srcIn),
+              colorFilter: ColorFilter.mode(
+                  wayaTheme.colorScheme.white, BlendMode.srcIn),
             ),
             assetImage: Image.asset(
               WayaAssets.images.emptyEvent.path,
