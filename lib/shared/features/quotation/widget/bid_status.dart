@@ -49,3 +49,14 @@ class BidStatusCard extends StatelessWidget {
     );
   }
 }
+
+class OrderStatusCard extends StatelessWidget {
+  final BidOrderModel order;
+  
+  const OrderStatusCard({super.key, required this.order});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}

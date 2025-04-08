@@ -15,12 +15,18 @@ class ShopResource {
 
   /// Helper function used to get the list of shops for the currently logged in
   /// user.
-  static List<ShopModel> get userShops => _vendorsCache[ConversationState.self.id]!;
+  static List<ShopModel> get userShops => _vendorsCache[ConversationState.self.id] ?? [];
 
   /// Helper function used to get the value of the currently selected shop. Any
   /// sane early adopter should have just one shop so this should be safe and
   /// free from most of the issues I know you are thinking of right now.
   static ShopModel get currentShop => _current!;
+
+  /// Helper function used to check if the shops have been loaded from the back-end.
+  static bool get hasShops => userShops.isNotEmpty;
+
+  /// Helper function used to check if any shop has been selected.
+  static bool get hasSelectedShop => _current != null;
 
   // No construct.
   ShopResource._();

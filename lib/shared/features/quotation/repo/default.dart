@@ -122,4 +122,12 @@ class QuotationRepository extends BaseRepository {
     final payload = {"token": token};
     return patch('$serviceUrl/order/complete/$orderId', payload, showErrors: true);
   }
+
+  Future<WayaRequestResponse> getSellerOrders(String shopId, [int limit = 10, int page = 1]) {
+    return get("$serviceUrl/order/seller?limit=$limit&page=$page&shopId=$shopId");
+  }
+
+  Future<WayaRequestResponse> getBuyerOrders(String userId, [int limit = 10, int page = 1]) {
+    return get("$serviceUrl/order/buyer?limit=$limit&page=$page&userId=$userId");
+  }
 }
