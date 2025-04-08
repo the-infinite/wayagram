@@ -14,8 +14,8 @@ class PageRepository extends BaseRepository {
     return post("$serviceUrl/posts", payload);
   }
 
-  Future<WayaRequestResponse> createPagePost(String content, List<String> images, postType, postId) {
-    final payload = {"content": content, "postId": postId, "type": "generic", "media": images, "privacy": postType};
+  Future<WayaRequestResponse> createPagePost(String content, List<String> images, String postType, String pageId) {
+    final payload = {"content": content, "pageId": pageId, "type": "generic", "media": images, "privacy": postType};
 
     return post("$serviceUrl/posts", payload);
   }
@@ -25,7 +25,7 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> fetchSinglePagePost(String pageId, [int page = 1, int limit = 15]) {
-    return get("$serviceUrl/posts?pageId=$pageId&status=active&page=$page&limit=$limit");
+    return get("$serviceUrl/posts?pageId=$pageId&status=active&page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
   }
 
   Future<WayaRequestResponse> putImage(url, image) {
