@@ -14,7 +14,7 @@ import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 
 class GroupNotifier extends ValueNotifier<int> {
-  final int limit = 1000;
+  final int limit = 3000;
   final repo = GroupRepository();
   int createdGroupPage = 1;
   int joinedGroupPage = 1;

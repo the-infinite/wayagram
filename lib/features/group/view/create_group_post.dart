@@ -138,7 +138,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
                                       widget.id,
                                     );
                                     notifier.reset();
-                                    WayaNav.replaceNamed("/groups");
+                                    WayaNav.goBack(closeOverlays: true);
                                   }
                                 }
                               : null,

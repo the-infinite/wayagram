@@ -47,14 +47,12 @@ class ChatModel {
       return (name?.split(" ") ?? ["Group", "Chat"]).take(2).map((word) => word[0].toUpperCase()).join();
     }
 
-    if (name != null) {
-      return other.userData?.initials ?? (other.chatUser?.displayName.split(" ") ?? ["WayaGram", "User"])
-          .take(2)
-          .map((word) => word[0].toUpperCase())
-          .join();
-    }
-
-    return "WC";
+    //? This is our alternative
+    return other.userData?.initials ??
+        (other.chatUser?.displayName.split(" ") ?? ["WayaGram", "User"])
+            .take(2)
+            .map((word) => word[0].toUpperCase())
+            .join();
   }
 
   // This is fine.

@@ -11,6 +11,7 @@ import 'package:wayagram/core/utils/utils.dart';
 
 class WayaScaffold extends ConsumerWidget {
   final Widget body;
+  final ScrollController? scrollController;
   final Color? backgroundColor;
   final bool removeAppBar;
   final bool automaticallyImplyLeading;
@@ -46,6 +47,7 @@ class WayaScaffold extends ConsumerWidget {
     this.bottomNavigationBar,
     this.progressIndicator,
     this.onTapBackButton,
+    this.scrollController,
   });
 
   @override
@@ -88,6 +90,7 @@ class WayaScaffold extends ConsumerWidget {
                       child: SingleChildScrollView(
                         physics: const AlwaysScrollableScrollPhysics(),
                         padding: paddedBody,
+                        controller: scrollController,
                         child: body,
                       ),
                     ),
@@ -98,6 +101,7 @@ class WayaScaffold extends ConsumerWidget {
                     width: size.width,
                     child: SingleChildScrollView(
                       padding: paddedBody,
+                      controller: scrollController,
                       child: body,
                     ),
                   )

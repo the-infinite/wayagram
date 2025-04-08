@@ -103,4 +103,18 @@ abstract class WayaCacheUtility<T> extends ValueNotifier<int> {
     //? Notify dependents.
     return result;
   }
+
+  /// Remove all items from the cache. This would naturally notify
+  /// all dependents.
+  void clear() {
+    _data.clear();
+
+    //? If this is debug mode.
+    if (kDebugMode) {
+      debugPrint("$runtimeType.Engine: Cleared all cached values with notify.");
+    }
+
+    //? Refresh this notifier.
+    refresh();
+  }
 }

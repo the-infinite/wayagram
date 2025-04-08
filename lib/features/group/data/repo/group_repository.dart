@@ -37,7 +37,7 @@ class GroupRepository extends BaseRepository {
     );
   }
 
-  Future<WayaRequestResponse> createGroupPost(String content, List<String> images, postType, String groupId) {
+  Future<WayaRequestResponse> createGroupPost(String content, List<String> images, String postType, String groupId) {
     final payload = {"content": content, "groupId": groupId, "type": "generic", "media": images, "privacy": postType};
 
     return post("$serviceUrl/posts", payload, showErrors: true);
@@ -84,7 +84,7 @@ class GroupRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> fetchSingleGroupPost(String groupId, [int page = 1, int limit = 15]) {
-    return get("$serviceUrl/groups/popular-post?groupId=$groupId&page=$page&limit=$limit");
+    return get("$serviceUrl/posts?groupId=$groupId&page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
   }
 
   Future<WayaRequestResponse> getMyGroups([int page = 1, int limit = 15]) {
