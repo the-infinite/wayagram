@@ -25,7 +25,7 @@ class FollowedContestNotifier extends StateNotifier<List<Contest>> {
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);
         contestList = responseModel.data?.docs ?? [];
-        state.addAll(contestList);
+        state = [...contestList];
         // _page++;
         isLoading = false;
       }
