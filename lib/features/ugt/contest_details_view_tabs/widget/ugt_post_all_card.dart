@@ -117,6 +117,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                         ),
                         //  post.isFollowing!
                         //  Image.asset("assets/images/vector.png"),
+
                         PopupMenuButton(
                           onSelected: (value) {},
                           position: PopupMenuPosition.under,
@@ -135,29 +136,31 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                               /*   if (viewModel.getLoggedInUserId() ==
                                   widget.post.contestantProfileId) */
                               // https://services.staging.wayagram.ng/school-contest/api/v1/gallery/f3c0f686-85fd-4125-8e3f-5a83e7910f32/gallery
-                              PopupMenuItem<int>(
-                                value: 1,
-                                child: _buildActionNav(
-                                    context: context,
-                                    onTap: () {
-                                      WayaNav.goBack();
-                                      WayaUtils.showModalSheet(
-                                        context,
-                                        child: DeletePostModal(
-                                          postId: widget.post.id ?? "",
-                                          contestantId: "",
-                                          contestId:
-                                              widget.post.contestId ?? "",
-                                        ),
-                                      );
-                                    },
-                                    asset: Icon(
-                                      Icons.delete_outline_outlined,
-                                      size: 24,
-                                    ),
-                                    text: "Delete Post",
-                                    color: wayaTheme.colorScheme.customBlack),
-                              )
+                              if (viewModel.getLoggedInUserId() ==
+                                  widget.model.profileId)
+                                PopupMenuItem<int>(
+                                  value: 1,
+                                  child: _buildActionNav(
+                                      context: context,
+                                      onTap: () {
+                                        WayaNav.goBack();
+                                        WayaUtils.showModalSheet(
+                                          context,
+                                          child: DeletePostModal(
+                                            postId: widget.post.id ?? "",
+                                            contestantId: "",
+                                            contestId:
+                                                widget.post.contestId ?? "",
+                                          ),
+                                        );
+                                      },
+                                      asset: Icon(
+                                        Icons.delete_outline_outlined,
+                                        size: 24,
+                                      ),
+                                      text: "Delete Post",
+                                      color: wayaTheme.colorScheme.customBlack),
+                                )
                             ];
                           },
                           child: Container(

@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/my_contest_details/voters_list_page.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 class UgtLeaderboardCard extends ConsumerWidget {
@@ -73,22 +78,44 @@ class UgtLeaderboardCard extends ConsumerWidget {
                   ), */
                     ),
                 Gap(10),
-                Text(
-                  contestantData.contestApplicant?.fullName ?? "",
-                  overflow: TextOverflow.ellipsis,
-                  style: wayaTheme.textTheme.bodyMedium!.copyWith(
-                      color: isUserLoggedIn
-                          ? Colors.white
-                          : wayaTheme.colorScheme.black),
+                SizedBox(
+                  width: context.width * 0.40,
+                  child: Text(
+                    contestantData.contestApplicant?.fullName ?? "",
+                    overflow: TextOverflow.ellipsis,
+                    style: wayaTheme.textTheme.bodyMedium!.copyWith(
+                        color: isUserLoggedIn
+                            ? Colors.white
+                            : wayaTheme.colorScheme.black),
+                  ),
                 ),
               ],
             ),
-            trailing: Text(
-              '${contestantData.votes} Votes',
-              style: wayaTheme.textTheme.hintStyle.copyWith(
-                  color: isUserLoggedIn
-                      ? Colors.white
-                      : wayaTheme.colorScheme.greyColor400),
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  '${contestantData.votes} Votes',
+                  style: wayaTheme.textTheme.hintStyle.copyWith(
+                      color: isUserLoggedIn
+                          ? Colors.white
+                          : wayaTheme.colorScheme.greyColor400),
+                ),
+                Gap(10),
+                WayaButton(
+                  callback: () {
+                    ref.read(selectedContestantProfile.notifier).state =
+                        contestantData;
+                    WayaNav.toNamed(VotersListPage.route);
+                  },
+                  height: 30,
+                  text: 'View',
+                  textStyle: WayaTextStyles.bodySmall.copyWith(
+                      fontSize: 12.sp,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.white),
+                )
+              ],
             ),
           ),
           // const Gap(10)

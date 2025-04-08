@@ -117,6 +117,7 @@ import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.d
 import 'package:wayagram/features/ugt/my_contest_details/edit_contestant_profile.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
+import 'package:wayagram/features/ugt/my_contest_details/voters_list_page.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/view/verify_transaction.dart';
@@ -237,6 +238,7 @@ class WayaAppRoutes {
     UpcomingContestDetails.route: () => UpcomingContestDetails(),
     CreateProfile.route: () => CreateProfile(),
     RegisterContest.route: () => RegisterContest(),
+    VotersListPage.route: () => VotersListPage(),
     AdminContestDetails.route: () => AdminContestDetails(
           id: WayaNav.search['id'].toString(),
         ),
