@@ -95,10 +95,12 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
                   //? Second, the name of the group.
                   Text(
                     page.name,
+                    overflow: TextOverflow.ellipsis,
                     style: wayaTheme.textTheme.bodyMedium!.copyWith(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                       color: wayaTheme.colorScheme.black,
+                      
                     ),
                   ),
 
@@ -181,14 +183,18 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
                   ),
                   title: Row(
                     children: [
-                      Text(
+                      SizedBox(
+                        width: 100.sp,
+                        child: Text(
                         page.name,
+                        overflow: TextOverflow.ellipsis,
                         style: wayaTheme.textTheme.bodyMedium?.copyWith(
                           fontSize: 14.sp,
                           fontWeight: FontWeight.w600,
                           color: wayaTheme.colorScheme.black,
                         ),
                       ),
+                      )
                     ],
                   ),
                   subtitle: Text(
