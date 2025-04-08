@@ -480,6 +480,7 @@ class PageVm extends StateNotifier<PageState> {
         final page = await myPageNotifier.getSinglePage(pageId);
         final post = PostModel.fromJson(response.data['data']).copyWith(page: page);
         final previous = state.getAllPost;
+        wayaPostCache.cache(post.id, post);
 
         //? Then update the list of posts with the one that has just been made.
         state = state.copyWith(
