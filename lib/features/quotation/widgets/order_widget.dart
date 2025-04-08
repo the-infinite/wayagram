@@ -62,7 +62,7 @@ class QuotationOrderWidget extends ConsumerWidget {
                       children: [
                         //? The ID of this buy request.
                         Text(
-                          "Quote #${order.requestId}",
+                          "#${order.requestId}",
                           maxLines: 1,
                           style: wayaTheme.textTheme.bodyMedium?.copyWith(
                             color: wayaTheme.colorScheme.customBlack,

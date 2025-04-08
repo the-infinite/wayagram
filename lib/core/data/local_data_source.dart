@@ -164,10 +164,11 @@ class WayaLocalDataSource {
     final jsonData =
         wayaFastStorageService.read<String?>(key: 'engagementData');
 
-    if (jsonData == null)
+    if (jsonData == null) {
       return {
         for (var service in ServiceType.values) service: EngagementData()
       };
+    }
 
     final Map<String, dynamic> decodedData = jsonDecode(jsonData);
     return decodedData.map(

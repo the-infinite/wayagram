@@ -132,6 +132,7 @@ class GroupVm extends StateNotifier<GroupState> {
         final group = await myGroupNotifier.getSingleGroup(groupId);
         final post = PostModel.fromJson(response.data['data']).copyWith(group: group);
         final previous = state.getAllPost;
+        wayaPostCache.cache(post.id, post);
 
         //? Then update the list of posts with the one that has just been made.
         state = state.copyWith(

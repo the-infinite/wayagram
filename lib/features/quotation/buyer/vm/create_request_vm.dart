@@ -8,6 +8,7 @@ import 'package:wayagram/features/quotation/data/model/model.dart';
 import 'package:wayagram/features/quotation/data/model/quotation_model.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/repo/default.dart';
+import 'package:wayagram/shared/features/shop/resource/default.dart';
 
 class CreateRequestVm extends StateNotifier<CreateRequestState> {
   final _quotationRepository = QuotationRepository.instance;
@@ -48,8 +49,8 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
   }
 
   List<Select> restructuredCategory() {
-    return categories.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.category);
+    return ShopResource.categories.asMap().entries.map((entries) {
+      return Select(value: entries.value.name, label: entries.value.name);
     }).toList();
   }
 

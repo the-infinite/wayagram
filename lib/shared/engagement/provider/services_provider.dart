@@ -281,7 +281,8 @@ class ServicesProvider extends StateNotifier<States> {
         };
 
         // Sort posts by highest score first
-        List<PostModel> sortedPosts = postScores.keys.toList()..sort((a, b) => postScores[b]!.compareTo(postScores[a]!));
+        List<PostModel> sortedPosts = postScores.keys.toList()
+          ..sort((a, b) => postScores[b]!.compareTo(postScores[a]!));
 
         List<PostModel> finalPosts = [];
         Set<String> seenPostIds = {}; // Ensure uniqueness
@@ -430,6 +431,7 @@ class ServicesProvider extends StateNotifier<States> {
 
         if (response.success) {
           final postResponse = PostResponseModel.fromJson(response.data);
+          wayaPostCache.cacheAll(postResponse.data.docs);
 
           if (postResponse.data.docs.isNotEmpty) {
             categorizedPosts.add(
@@ -474,6 +476,7 @@ class ServicesProvider extends StateNotifier<States> {
 
       if (response.success) {
         final postResponse = PostResponseModel.fromJson(response.data);
+        wayaPostCache.cacheAll(postResponse.data.docs);
 
         if (postResponse.data.docs.isNotEmpty) {
           state = state.copyWith(
