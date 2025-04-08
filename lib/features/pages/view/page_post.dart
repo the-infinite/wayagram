@@ -28,15 +28,20 @@ class _PagePostState extends ConsumerState<PagePost> with SingleTickerProviderSt
 
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notifier.getPagePosts(widget.pageId);
+    });
+
+    // That's fine.
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel2 = ref.watch(pageProvider);
+    final state = ref.watch(pageProvider);
 
     //? Since this is empty...
-    if (viewModel2.getAllPost?.isEmpty ?? true) {
+    if (state.getAllPost?.isEmpty ?? true) {
       return PostEmptyState();
     }
 
@@ -63,19 +68,16 @@ class _PagePostState extends ConsumerState<PagePost> with SingleTickerProviderSt
           Gap(10.h),
 
           //? This is fine.
-          if (viewModel2.getAllPost?.isEmpty ?? true)
-            PostEmptyState()
-          else
-            ListView.builder(
-              padding: EdgeInsets.symmetric(horizontal: 15.w),
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: viewModel2.getAllPost?.length ?? 0,
-              itemBuilder: (_, index) => WayaPostWidget(
-                data: viewModel2.getAllPost![index],
-                index: index,
-              ),
+          ListView.builder(
+            padding: EdgeInsets.symmetric(horizontal: 15.w),
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: state.getAllPost?.length ?? 0,
+            itemBuilder: (_, index) => WayaPostWidget(
+              data: state.getAllPost![index],
+              index: index,
             ),
+          ),
           const Gap(25),
         ],
       );

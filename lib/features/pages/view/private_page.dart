@@ -44,7 +44,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
       isLoading: viewModel.isLoading,
       isScrollable: true,
       appBarTrailing: Row(
-        spacing: 12,
+        spacing: 12.w,
         children: [
           WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
           InkWell(

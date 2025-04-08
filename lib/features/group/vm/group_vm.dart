@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
@@ -22,6 +23,7 @@ import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/cache/post.dart';
 
 import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/group/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
@@ -76,7 +78,9 @@ class GroupVm extends StateNotifier<GroupState> {
   }
 
   void reset() {
-    state = GroupState();
+    state.groupName.clear();
+    state.groupDescription.clear();
+    state.username.clear();
   }
 
   void updateOpenToEveryone(bool value) {
@@ -87,7 +91,7 @@ class GroupVm extends StateNotifier<GroupState> {
     state = state.copyWith(requireApproval: value);
   }
 
-  Future<void> createGroupPost(ctx, content, postType, List<XFile> images, postId) async {
+  Future<void> createGroupPost(ctx, String content, String postType, List<XFile> images, String groupId) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
     // get url
@@ -120,17 +124,22 @@ class GroupVm extends StateNotifier<GroupState> {
 
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _groupRepository.createGroupPost(content, publicUrl, postType, postId);
-      state = state.copyWith(isLoading: false);
+      final response = await _groupRepository.createGroupPost(content, publicUrl, postType, groupId);
+      state = state.copyWith(isLoading: false, allPostData: null);
+
       //? If this is fine...
       if (response.success && ctx.mounted) {
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Post created successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
+        final group = await myGroupNotifier.getSingleGroup(groupId);
+        final post = PostModel.fromJson(response.data['data']).copyWith(group: group);
+        final previous = state.getAllPost;
+
+        //? Then update the list of posts with the one that has just been made.
+        state = state.copyWith(
+          getAllPost: [post, ...(previous ?? [])],
         );
+
+        //? This is fine.
+        WayaSnackBar.showToast('Post created successfully!');
       }
 
       //? If it failed...

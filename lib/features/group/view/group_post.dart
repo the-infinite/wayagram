@@ -29,8 +29,6 @@ class GroupPost extends ConsumerStatefulWidget {
 }
 
 class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProviderStateMixin {
-  int like = 0;
-
   @override
   void initState() {
     super.initState();
@@ -73,6 +71,8 @@ class _GroupPostState extends ConsumerState<GroupPost> with SingleTickerProvider
               index: index,
             ),
           ),
+
+        // Some space.
         const Gap(25),
       ],
     );
