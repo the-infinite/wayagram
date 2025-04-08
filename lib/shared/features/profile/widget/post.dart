@@ -410,7 +410,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                     Container()
                   else
                     SizedBox(
-                      height: 200.h, // Adjust based on your image size
+                      height: 400.h, // Adjust based on your image size
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal, // Enables horizontal scrolling
                         itemCount: postData.media.length,
@@ -503,7 +503,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                   imageUrl: resource,
                                   fit: BoxFit.cover,
                                   width: screenSize.width - (widget.padded ? 15.w : 0),
-                                  height: 200.h,
+                                  height: 400.h,
                                 ),
                               ),
                             ),

@@ -44,14 +44,13 @@ class VerifyAccountState {
 }
 
 class VerifyAccountVm extends Notifier<VerifyAccountState> {
-  final WayaLocalDataSource _localDataSource;
   final AuthRepository _authRepository;
   final WayaSecureDataSource _secureDataSource = WayaSecureDataSource();
   final _logger = getLogger("VerifyAccountVm");
   Timer? _timer;
   final SnackbarService _snackbarService = SnackbarService();
 
-  VerifyAccountVm(this._localDataSource, this._authRepository);
+  VerifyAccountVm(this._authRepository);
 
   @override
   VerifyAccountState build() {
@@ -62,7 +61,6 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
   void _startCountdown() {
     _timer?.cancel();
-    state = state.copyWith(countdown: 40);
     _timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) {
@@ -192,5 +190,5 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
 final verifyAccountProvider =
     NotifierProvider<VerifyAccountVm, VerifyAccountState>(() {
-  return VerifyAccountVm(WayaLocalDataSource(), AuthRepository());
+  return VerifyAccountVm(AuthRepository());
 });

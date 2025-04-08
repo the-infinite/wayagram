@@ -64,14 +64,16 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
 
         //? Return these ones.
         return Padding(
-          padding: widget.index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 20.h),
+          padding:
+              widget.index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 20.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               //? First, the commenter
               GestureDetector(
-                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(comment.userId, 'comment')),
+                onTap: () => WayaNav.toNamed(
+                    WayaAppRoutes.getProfileRoute(comment.userId, 'comment')),
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -92,7 +94,8 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         title1: comment.user!.fullname,
-                        title2: '  •  ${WayaDateHelper.getSocialTimestamp(comment.createdAt)}',
+                        title2:
+                            '  •  ${WayaDateHelper.getSocialTimestamp(comment.createdAt)}',
                         style1: wayaTheme.textTheme.bodyBold.copyWith(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w500,
@@ -133,11 +136,13 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                               //   ),
 
                               //? Controls that only show if this is the creator of the comment.
-                              if (comment.userId == ConversationState.self.id) ...[
+                              if (comment.userId ==
+                                  ConversationState.self.id) ...[
                                 //? Second, the button to delete a post
                                 PopupMenuItem<int>(
                                   value: 1,
-                                  onTap: () => notifier.deleteComment(comment.id),
+                                  onTap: () =>
+                                      notifier.deleteComment(comment.id),
                                   child: WayaActionNav(
                                     context: context,
                                     asset: WayaAssets.images.pages.delete.svg(
@@ -152,7 +157,8 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                                 //? Third, the button to edit a comment.
                                 PopupMenuItem<int>(
                                   value: 2,
-                                  onTap: () => widget.controller.setReplyTo(comment, true),
+                                  onTap: () => widget.controller
+                                      .setReplyTo(comment, true),
                                   child: WayaActionNav(
                                     context: context,
                                     asset: WayaAssets.icons.mEdit.svg(
@@ -214,7 +220,8 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                   GestureDetector(
                     onTap: () async {
                       if (comment.isLiked ?? false) {
-                        await notifier.unlikeComment(widget.post.id, comment.id);
+                        await notifier.unlikeComment(
+                            widget.post.id, comment.id);
                       }
 
                       //? Since this is not yet liked.

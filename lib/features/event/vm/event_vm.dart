@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -20,7 +21,8 @@ class EventVm extends StateNotifier<EventState> {
   final WayaSecureDataSource _secureDataSource;
   final EventRepository _eventRepository;
 
-  EventVm(this._secureDataSource, this._eventRepository, this.ref) : super(EventState());
+  EventVm(this._secureDataSource, this._eventRepository, this.ref)
+      : super(EventState());
 
   Future<void> getEvents() async {
     try {
@@ -58,10 +60,12 @@ class EventVm extends StateNotifier<EventState> {
     }
   }
 
-  Future<PaginatedResult<EventDoc>?> getEventWithStatus({required int page}) async {
+  Future<PaginatedResult<EventDoc>?> getEventWithStatus(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoadingEventWithStatus: true);
-      final response = await _eventRepository.getEventWithStatus(status: "upcoming", page: page);
+      final response = await _eventRepository.getEventWithStatus(
+          status: "upcoming", page: page);
 
       List<EventDoc> upcoming = [];
       bool hasNextPage = false;
@@ -70,7 +74,9 @@ class EventVm extends StateNotifier<EventState> {
         EventResponse eventResponse = EventResponse.fromJson(response.data);
         upcoming = eventResponse.data.docs
             .where((event) =>
-                event.privacyOption == 'public' && event.eventStatus != 'paused' && !event.endDate.isBefore(now))
+                event.privacyOption == 'public' &&
+                event.eventStatus != 'paused' &&
+                !event.endDate.isBefore(now))
             .toList();
         hasNextPage = eventResponse.data.hasNextPage;
         state = state.copyWith(upcomingEvents: upcoming);
@@ -94,7 +100,8 @@ class EventVm extends StateNotifier<EventState> {
     final event = await fetchSingleEvent(id);
 
     //? If this is fine.
-    state = state.copyWith(isUserEvent: event?.userId == ConversationState.self.id);
+    state =
+        state.copyWith(isUserEvent: event?.userId == ConversationState.self.id);
 
     //? Return this.
     return event;
@@ -109,13 +116,17 @@ class EventVm extends StateNotifier<EventState> {
       state = state.copyWith(isLoadingUserEvents: true);
 
       final userId = await _secureDataSource.getUserId();
-      final response = await _eventRepository.getUserEvents(userId: userId!, page: page);
+      final response =
+          await _eventRepository.getUserEvents(userId: userId!, page: page);
       List<EventDoc> myEvents = [];
       bool hasNextPage = false;
       final now = DateTime.now();
       if (response.success) {
         EventResponse eventResponse = EventResponse.fromJson(response.data);
-        myEvents = [...eventResponse.data.docs.where((event) => !event.endDate.isBefore(now))];
+        myEvents = [
+          ...eventResponse.data.docs
+              .where((event) => !event.endDate.isBefore(now))
+        ];
         hasNextPage = eventResponse.data.hasNextPage;
         state = state.copyWith(myEvents: myEvents);
       }
@@ -134,17 +145,21 @@ class EventVm extends StateNotifier<EventState> {
     }
   }
 
-  Future<void> joinEvent({required String eventId, required BuildContext context, required EventDoc event}) async {
+  Future<void> joinEvent(
+      {required String eventId,
+      required BuildContext context,
+      required EventDoc event}) async {
     try {
       state = state.copyWith(isJoiningEvent: true);
       final userId = await _secureDataSource.getUserId();
-      final response = await _eventRepository.joinEvent(userId: userId!, eventId: eventId);
+      final response =
+          await _eventRepository.joinEvent(userId: userId!, eventId: eventId);
 
       final provider = ref.read(eventEngagementProvider.notifier);
 
-      provider.addLocation(event.location, EventPoint.joinEvent.value);
-      provider.addEventType(event.eventType, EventPoint.joinEvent.value);
       if (response.success && context.mounted) {
+        provider.addLocation(event.location, EventPoint.joinEvent.value);
+        provider.addEventType(event.eventType, EventPoint.joinEvent.value);
         WayaNav.goBack();
 
         if (context.mounted) {
@@ -158,10 +173,16 @@ class EventVm extends StateNotifier<EventState> {
             onPress: () => WayaNav.goBack(),
             buttonText: 'View Event Details',
             title: "You've successfully joined the event",
-            message: 'Your spot is confirmed. Stay tuned for updates and get ready for an amazing experience',
+            message:
+                'Your spot is confirmed. Stay tuned for updates and get ready for an amazing experience',
             onCancel: () => WayaNav.toNamed(EventView.route),
           );
         }
+      } else {
+         WayaNav.goBack();
+        String? message = response.data['message'];
+        WayaSnackBar.showToast(message ?? 'Sth is wrong. Try again later');
+       
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -176,11 +197,15 @@ class EventVm extends StateNotifier<EventState> {
   }
 
   Future<void> reportEvent(
-      {required String eventId, required String reason, String? comment, required BuildContext context}) async {
+      {required String eventId,
+      required String reason,
+      String? comment,
+      required BuildContext context}) async {
     try {
       state = state.copyWith(isReportingEvent: true);
       final userId = await _secureDataSource.getUserId();
-      final response = await _eventRepository.reportEvent(userId: userId!, eventId: eventId, reason: reason);
+      final response = await _eventRepository.reportEvent(
+          userId: userId!, eventId: eventId, reason: reason);
 
       if (response.success && context.mounted) {
         // show success modal
@@ -193,7 +218,8 @@ class EventVm extends StateNotifier<EventState> {
               title: "Thank you for reporting",
               onPress: () => WayaNav.replaceNamed(EventView.route),
               icon: Image.asset(WayaAssets.images.eCheckEvent.path, scale: 1.5),
-              message: 'Your report has been submitted. Our team will review the issue and take appropriate action.',
+              message:
+                  'Your report has been submitted. Our team will review the issue and take appropriate action.',
               buttonText: 'Go to Event Page');
         }
         debugPrint(response.data);
@@ -215,13 +241,15 @@ class EventVm extends StateNotifier<EventState> {
       state = state.copyWith(isLoadingAttendees: true);
       final userId = await _secureDataSource.getUserId();
       state = state.copyWith(userId: userId);
-      final response = await _eventRepository.joinedUsers(id: state.singleEvent!.id, page: page);
+      final response = await _eventRepository.joinedUsers(
+          id: state.singleEvent!.id, page: page);
       List<Doc> attendees = [];
       bool hasNextPage = false;
 
       //? This is fine.
       if (response.success) {
-        AttendeeResponse attendeeResponse = AttendeeResponse.fromJson(response.data);
+        AttendeeResponse attendeeResponse =
+            AttendeeResponse.fromJson(response.data);
         attendees = attendeeResponse.data.docs;
         hasNextPage = attendeeResponse.data.hasNextPage;
       }
@@ -250,7 +278,8 @@ class EventVm extends StateNotifier<EventState> {
       final response = await _eventRepository.getSingleEvent(id);
 
       if (response.success) {
-        SingleEventResponse eventResponse = SingleEventResponse.fromJson(response.data);
+        SingleEventResponse eventResponse =
+            SingleEventResponse.fromJson(response.data);
         state = state.copyWith(singleEvent: eventResponse.data);
         return eventResponse.data;
       }
@@ -268,9 +297,11 @@ class EventVm extends StateNotifier<EventState> {
     return null;
   }
 
-  Future<void> shareEvent({required BuildContext context, required String shareUrl}) async {
+  Future<void> shareEvent(
+      {required BuildContext context, required String shareUrl}) async {
     if (context.mounted) {
-      await WayaUtils.showModalSheet(context, child: ShareSheet(shareUrl: shareUrl));
+      await WayaUtils.showModalSheet(context,
+          child: ShareSheet(shareUrl: shareUrl));
     }
   }
 }
