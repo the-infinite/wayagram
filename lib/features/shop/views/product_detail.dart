@@ -13,6 +13,8 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
+import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
@@ -93,12 +95,37 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: context.width * 0.7,
+                  width: context.width * 0.6,
                   child: Text(
                     viewModel.product!.name.capitalizeFirst!,
                     style: wayaTheme.textTheme.bodyMedium,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                if (viewModel.isProductOwner)
+                InkWell(
+                  onTap: () {
+                    HapticFeedback.lightImpact();
+                    WayaNav.toNamed(Promote.route, arguments: {
+                      "contentId": viewModel.product?.id,
+                      "contentType": PromotionServiceType.product.name
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.secondaryColor2,
+                      shape: BoxShape.circle,
+                    ),
+                    padding: EdgeInsets.all(7),
+                    child: SvgPicture.asset(
+                      WayaAssets.icons.mFire.path,
+                      fit: BoxFit.none,
+                      width: 24,
+                      height: 24,
+                      
+                      color: wayaTheme.colorScheme.customPrimary,
+                    ),
                   ),
                 ),
                 InkWell(

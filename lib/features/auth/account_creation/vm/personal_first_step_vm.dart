@@ -202,8 +202,8 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
       final response = await showDatePicker(
           context: context,
           firstDate: DateTime(1950),
-          lastDate: DateTime.now(),
-          initialDate: DateTime.now());
+          lastDate: DateTime.now().subtract(const Duration(days: 365 * 18)),
+          initialDate: DateTime.now().subtract(const Duration(days: 365 * 18)));
 
       if (response != null) {
         final dateOfBirth =
