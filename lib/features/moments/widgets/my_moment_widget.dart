@@ -14,6 +14,7 @@ import 'package:wayagram/features/moments/data/model/moment_response_model.dart'
 import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
+import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
 
 class MyMomentWidget extends ConsumerWidget {
@@ -58,15 +59,19 @@ class MyMomentWidget extends ConsumerWidget {
                       width: 50,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        gradient: LinearGradient(begin: Alignment.bottomCenter, end: Alignment.center, colors: [
-                          Color(0xFFB43000),
-                          Color(0x99FFEF8C),
-                          Color(0xFFFF5D2E),
-                        ], stops: [
-                          0.0,
-                          0.5,
-                          1.0
-                        ]),
+                        gradient: LinearGradient(
+                            begin: Alignment.bottomCenter,
+                            end: Alignment.center,
+                            colors: [
+                              Color(0xFFB43000),
+                              Color(0x99FFEF8C),
+                              Color(0xFFFF5D2E),
+                            ],
+                            stops: [
+                              0.0,
+                              0.5,
+                              1.0
+                            ]),
                       ),
                       child: Padding(
                         padding: EdgeInsets.all(3),
@@ -152,7 +157,8 @@ class MyMomentWidget extends ConsumerWidget {
                       ),
                       Text(
                         "${moment.totalViews} ${moment.totalViews > 1 ? 'VIEWS' : 'VIEW'} ",
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.w500),
                       )
                     ],
                   ),
@@ -184,7 +190,9 @@ class MyMomentActions extends StatelessWidget {
 
     Future<void> showDelete() async {
       await WayaUtils.showModalSheet(context,
-          child: ConfirmDeleteWidget(delete: () => ref.read(momentVmProvider.notifier).deleteMoment(moment.id)));
+          child: ConfirmDeleteWidget(
+              delete: () =>
+                  ref.read(momentVmProvider.notifier).deleteMoment(moment.id)));
     }
 
     return PopupMenuButton(
@@ -215,7 +223,10 @@ class MyMomentActions extends StatelessWidget {
                   context: context,
                   onTap: () async {
                     WayaNav.goBack();
-                    WayaNav.toNamed(Promote.route);
+                    WayaNav.toNamed(Promote.route, arguments: {
+                      "contentId": moment.id,
+                      "contentType": PromotionServiceType.moment.name
+                    });
                   },
                   asset: SvgPicture.asset(WayaAssets.icons.mFire.path),
                   text: "Promote"),
@@ -258,7 +269,9 @@ class MyMomentActions extends StatelessWidget {
           const Gap(4),
           Text(text,
               style: TextStyle(
-                  color: textColor ?? wayaTheme.colorScheme.customBlack, fontWeight: FontWeight.w500, fontSize: 12))
+                  color: textColor ?? wayaTheme.colorScheme.customBlack,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12))
         ],
       ),
     );

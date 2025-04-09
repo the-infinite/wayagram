@@ -9,15 +9,16 @@ class PromotionVm extends StateNotifier<PromotionState> {
 
   PromotionVm(this.ref, this._repository) : super(PromotionState());
 
-  Future<List<PromotionPlan>?> getPlans() async {
+  Future<List<PromotionPlanDoc>?> getPlans({required String serviceType}) async {
     try {
-      final response = await _repository.getPromotionPlans();
+      final response = await _repository.getPromotionPlans(serviceType: serviceType);
 
-      List<PromotionPlan> promoPlans = [];
+      List<PromotionPlanDoc> promoPlans = [];
       if (response.success) {
-        PromotionPlansResponse plansResponse =
-            PromotionPlansResponse.fromJson(response.data);
-        promoPlans = plansResponse.data.plans;
+        print(response.data);
+        PromotionPlanResponse plansResponse =
+            PromotionPlanResponse.fromJson(response.data);
+        promoPlans = plansResponse.data.docs;
         state = state.copyWith(plans: promoPlans);
       }
       return promoPlans;

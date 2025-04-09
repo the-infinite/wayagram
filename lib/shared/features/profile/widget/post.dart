@@ -14,6 +14,8 @@ import 'package:wayagram/features/group/view/report_group_post.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/post/view/comment.dart';
+import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
+import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/engagement/provider/post_engagement_monitor.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
@@ -41,7 +43,8 @@ class WayaPostWidget extends StatefulWidget {
 }
 
 class _WayaPostWidgetState extends State<WayaPostWidget> {
-  late final videoControllers = widget.data.media.map((_) => WayaVideoController()).toList();
+  late final videoControllers =
+      widget.data.media.map((_) => WayaVideoController()).toList();
 
   @override
   void dispose() {
@@ -101,11 +104,13 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
     return ValueListenableBuilder(
         valueListenable: wayaPostCache,
         builder: (context, redraws, _) {
-          final postData = wayaPostCache.getCachedData(widget.data.id) ?? widget.data;
+          final postData =
+              wayaPostCache.getCachedData(widget.data.id) ?? widget.data;
           return Consumer(
             builder: (context, ref, _) {
               //? Obtain any references to a component we need here.
-              final engagementMonitor = ref.watch(postEngagementProvider.notifier);
+              final engagementMonitor =
+                  ref.watch(postEngagementProvider.notifier);
               final serviceNotifier = ref.watch(servicesProvider.notifier);
               final pageNotifier = ref.watch(createPageProvider.notifier);
 
@@ -115,7 +120,9 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: widget.padded ? EdgeInsets.fromLTRB(15.0.w, 25.h, 15.w, 15.h) : EdgeInsets.zero,
+                    padding: widget.padded
+                        ? EdgeInsets.fromLTRB(15.0.w, 25.h, 15.w, 15.h)
+                        : EdgeInsets.zero,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -128,14 +135,17 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
-                                  WayaNav.toNamed(WayaAppRoutes.getGroupDetailsPage(postData.groupId!));
+                                  WayaNav.toNamed(
+                                      WayaAppRoutes.getGroupDetailsPage(
+                                          postData.groupId!));
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     //? The user's image.
                                     WayaDp(
-                                      image: postData.group?.profileImage ?? postData.group?.coverImage,
+                                      image: postData.group?.profileImage ??
+                                          postData.group?.coverImage,
                                       isSelf: false,
                                       radius: 20,
                                     ),
@@ -146,24 +156,29 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                     //? The user's name and configuration information.
                                     Column(
                                       // mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       spacing: 3,
                                       children: [
                                         //* The user's name.
                                         Text(
                                           postData.group!.name,
-                                          style: wayaTheme.textTheme.bodyBold.copyWith(
+                                          style: wayaTheme.textTheme.bodyBold
+                                              .copyWith(
                                             fontSize: 16.sp,
                                           ),
                                         ),
 
                                         //* When the user joined
                                         Text(
-                                          formatTimeAgo('${postData.createdAt}'),
-                                          style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                          formatTimeAgo(
+                                              '${postData.createdAt}'),
+                                          style: wayaTheme.textTheme.bodyMedium
+                                              ?.copyWith(
                                             fontSize: 14.sp,
                                             fontWeight: FontWeight.w400,
-                                            color: wayaTheme.colorScheme.greyColor500,
+                                            color: wayaTheme
+                                                .colorScheme.greyColor500,
                                           ),
                                         ),
                                       ],
@@ -175,14 +190,17 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () {
-                                  WayaNav.toNamed(WayaAppRoutes.getPageDetailsPage(postData.pageId!));
+                                  WayaNav.toNamed(
+                                      WayaAppRoutes.getPageDetailsPage(
+                                          postData.pageId!));
                                 },
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     //? The user's image.
                                     WayaDp(
-                                      image: postData.page?.profileImage ?? postData.page?.coverImage,
+                                      image: postData.page?.profileImage ??
+                                          postData.page?.coverImage,
                                       isSelf: false,
                                       radius: 20,
                                     ),
@@ -193,24 +211,29 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                     //? The user's name and configuration information.
                                     Column(
                                       // mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       spacing: 3,
                                       children: [
                                         //* The user's name.
                                         Text(
                                           postData.page!.name,
-                                          style: wayaTheme.textTheme.bodyBold.copyWith(
+                                          style: wayaTheme.textTheme.bodyBold
+                                              .copyWith(
                                             fontSize: 16.sp,
                                           ),
                                         ),
 
                                         //* When the user joined
                                         Text(
-                                          formatTimeAgo('${postData.createdAt}'),
-                                          style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                          formatTimeAgo(
+                                              '${postData.createdAt}'),
+                                          style: wayaTheme.textTheme.bodyMedium
+                                              ?.copyWith(
                                             fontSize: 14.sp,
                                             fontWeight: FontWeight.w400,
-                                            color: wayaTheme.colorScheme.greyColor500,
+                                            color: wayaTheme
+                                                .colorScheme.greyColor500,
                                           ),
                                         ),
                                       ],
@@ -221,7 +244,9 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                             else
                               GestureDetector(
                                 behavior: HitTestBehavior.opaque,
-                                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(postData.userId)),
+                                onTap: () => WayaNav.toNamed(
+                                    WayaAppRoutes.getProfileRoute(
+                                        postData.userId)),
                                 child: Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -238,24 +263,29 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                     //? The user's name and configuration information.
                                     Column(
                                       // mainAxisAlignment: MainAxisAlignment.start,
-                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       spacing: 3,
                                       children: [
                                         //* The user's name.
                                         Text(
                                           postData.user!.fullname,
-                                          style: wayaTheme.textTheme.bodyBold.copyWith(
+                                          style: wayaTheme.textTheme.bodyBold
+                                              .copyWith(
                                             fontSize: 16.sp,
                                           ),
                                         ),
 
                                         //* When the user joined
                                         Text(
-                                          formatTimeAgo('${postData.createdAt}'),
-                                          style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                          formatTimeAgo(
+                                              '${postData.createdAt}'),
+                                          style: wayaTheme.textTheme.bodyMedium
+                                              ?.copyWith(
                                             fontSize: 14.sp,
                                             fontWeight: FontWeight.w400,
-                                            color: wayaTheme.colorScheme.greyColor500,
+                                            color: wayaTheme
+                                                .colorScheme.greyColor500,
                                           ),
                                         ),
                                       ],
@@ -276,7 +306,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                   //? First, the button to share a post.
                                   PopupMenuItem<int>(
                                     value: 2,
-                                    onTap: () => _sharePost(engagementMonitor, pageNotifier, serviceNotifier),
+                                    onTap: () => _sharePost(engagementMonitor,
+                                        pageNotifier, serviceNotifier),
                                     child: WayaActionNav(
                                       context: context,
                                       asset: WayaAssets.icons.share.svg(
@@ -288,7 +319,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                   ),
 
                                   //? Controls that only show if this is the creator of the post.
-                                  if (postData.userId == ConversationState.self.id) ...[
+                                  if (postData.userId ==
+                                      ConversationState.self.id) ...[
                                     //? Second, the button to delete a post
                                     PopupMenuItem<int>(
                                       value: 1,
@@ -299,12 +331,34 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                       ),
                                       child: WayaActionNav(
                                         context: context,
-                                        asset: WayaAssets.images.pages.delete.svg(
+                                        asset:
+                                            WayaAssets.images.pages.delete.svg(
                                           color: wayaTheme.colorScheme.error500,
                                           height: 20,
                                         ),
                                         text: "Delete Post",
                                         color: wayaTheme.colorScheme.error500,
+                                      ),
+                                    ),
+
+                                    PopupMenuItem<int>(
+                                      value: 3,
+                                      onTap: () async {
+                                        WayaNav.toNamed(Promote.route,
+                                            arguments: {
+                                              "contentId": postData.id,
+                                              "contentType":
+                                                  PromotionServiceType.post.name
+                                            });
+                                      },
+                                      child: WayaActionNav(
+                                        context: context,
+                                        asset: WayaAssets.icons.mFire.svg(
+                                          height: 20,
+                                        ),
+                                        text: "Promote Post",
+                                        color:
+                                            wayaTheme.colorScheme.customBlack,
                                       ),
                                     ),
                                   ]
@@ -327,9 +381,11 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                       },
                                       child: WayaActionNav(
                                         context: context,
-                                        asset: WayaAssets.images.pages.flag.svg(),
+                                        asset:
+                                            WayaAssets.images.pages.flag.svg(),
                                         text: "Report",
-                                        color: wayaTheme.colorScheme.customBlack,
+                                        color:
+                                            wayaTheme.colorScheme.customBlack,
                                       ),
                                     )
                                   ],
@@ -397,7 +453,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                     SizedBox(
                       height: 400.h, // Adjust based on your image size
                       child: ListView.builder(
-                        scrollDirection: Axis.horizontal, // Enables horizontal scrolling
+                        scrollDirection:
+                            Axis.horizontal, // Enables horizontal scrolling
                         itemCount: postData.media.length,
                         itemBuilder: (context, index) {
                           //? Stop when we are getting ahead of ourselves.
@@ -407,7 +464,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                           final resource = postData.media[index];
 
                           //? This is fine.
-                          if (WayaFileExtensions.videos.contains(WayaFileHelper.getFileExtension(resource))) {
+                          if (WayaFileExtensions.videos.contains(
+                              WayaFileHelper.getFileExtension(resource))) {
                             final controller = videoControllers[index];
                             return Container(
                               height: 200.h,
@@ -433,13 +491,14 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                       child: GestureDetector(
                                         onTap: () async {
                                           final result = await WayaNav.to(
-                                            transition: Transition.circularReveal,
+                                            transition:
+                                                Transition.circularReveal,
                                             WayaVideoDetailScreen(
                                               file: null,
                                               videoUrl: resource,
                                             ),
                                           );
-                                      
+
                                           //? Do nothing.
                                           if (result == null) return;
                                         },
@@ -447,7 +506,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                           child: Container(
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
-                                              color: Colors.white.withOpacity(0.7),
+                                              color:
+                                                  Colors.white.withOpacity(0.7),
                                             ),
                                             padding: EdgeInsets.all(8),
                                             child: Icon(
@@ -468,7 +528,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                           //? Return this one.
                           return GestureDetector(
                             onTap: () async {
-                              final result = await WayaNavigationHelper.toImageDetailsScreen(
+                              final result = await WayaNavigationHelper
+                                  .toImageDetailsScreen(
                                 null,
                                 [resource],
                               );
@@ -487,7 +548,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                 child: WayaImage(
                                   imageUrl: resource,
                                   fit: BoxFit.cover,
-                                  width: screenSize.width - (widget.padded ? 15.w : 0),
+                                  width: screenSize.width -
+                                      (widget.padded ? 15.w : 0),
                                   height: 400.h,
                                 ),
                               ),
@@ -510,14 +572,18 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                           text:
                               '${WayaValueHelper.formatNumber(postData.likeCount)} ${postData.likeCount <= 1 ? 'Like' : 'Likes'}',
                           image: WayaAssets.images.pages.like2.path,
-                          color: postData.isLiked ? wayaTheme.colorScheme.primary : wayaTheme.colorScheme.greyColor500,
+                          color: postData.isLiked
+                              ? wayaTheme.colorScheme.primary
+                              : wayaTheme.colorScheme.greyColor500,
                           onPressed: postData.isLiked
                               ? () {
                                   //? Perform the action on the post.
-                                  pageNotifier.unlikePost(context, postId: postData.id);
+                                  pageNotifier.unlikePost(context,
+                                      postId: postData.id);
 
                                   //? Persist this engagement action.
-                                  postEngagement(engagementMonitor, widget.data, -PostPoints.likedPoint.value);
+                                  postEngagement(engagementMonitor, widget.data,
+                                      -PostPoints.likedPoint.value);
 
                                   // Notify all
                                   invalidate(serviceNotifier);
@@ -525,10 +591,12 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               : () {
                                   //? Perform the action on the post.
                                   pageNotifier.likePost(context,
-                                      postId: postData.id, userId: ConversationState.self.id);
+                                      postId: postData.id,
+                                      userId: ConversationState.self.id);
 
                                   //? Persist this engagement action.
-                                  postEngagement(engagementMonitor, widget.data, PostPoints.likedPoint.value);
+                                  postEngagement(engagementMonitor, widget.data,
+                                      PostPoints.likedPoint.value);
 
                                   // Notify all
                                   invalidate(serviceNotifier);
@@ -537,7 +605,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
                         //? The action button for comments.
                         PostActionType(
-                          text: '${WayaValueHelper.formatNumber(postData.commentCount)} Comments',
+                          text:
+                              '${WayaValueHelper.formatNumber(postData.commentCount)} Comments',
                           image: WayaAssets.images.pages.comment2.path,
                           color: postData.commentCount == 0
                               ? wayaTheme.colorScheme.greyColor500
@@ -546,7 +615,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                             showComments(context);
 
                             // comment
-                            postEngagement(engagementMonitor, widget.data, PostPoints.commentPoint.value);
+                            postEngagement(engagementMonitor, widget.data,
+                                PostPoints.commentPoint.value);
 
                             // Notify all
                             invalidate(serviceNotifier);
@@ -555,22 +625,26 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
                         //? For sharing a post.
                         PostActionType(
-                          text: '${WayaValueHelper.formatNumber(postData.shareCount)} Shares',
+                          text:
+                              '${WayaValueHelper.formatNumber(postData.shareCount)} Shares',
                           image: WayaAssets.images.pages.share2.path,
                           color: postData.shareCount == 0
                               ? wayaTheme.colorScheme.greyColor500
                               : wayaTheme.colorScheme.primary,
-                          onPressed: () => _sharePost(engagementMonitor, pageNotifier, serviceNotifier),
+                          onPressed: () => _sharePost(
+                              engagementMonitor, pageNotifier, serviceNotifier),
                         ),
 
                         //? For saving a post to booked posts.
                         InkWell(
                           onTap: () {
                             //? Bookmark this post.
-                            pageNotifier.bookmarkPost(context, postId: postData.id);
+                            pageNotifier.bookmarkPost(context,
+                                postId: postData.id);
 
                             // Record this user's choice to book this post.
-                            postEngagement(engagementMonitor, widget.data, PostPoints.bookedPoint.value);
+                            postEngagement(engagementMonitor, widget.data,
+                                PostPoints.bookedPoint.value);
 
                             //? Notify all.
                             invalidate(serviceNotifier);

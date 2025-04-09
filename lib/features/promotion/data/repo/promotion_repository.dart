@@ -5,15 +5,15 @@ import 'package:wayagram/features/promotion/data/models/create_promotion_model.d
 class PromotionRepository extends BaseRepository {
   static const serviceUrl = "wayagram-products/api/v1";
 
-  Future<WayaRequestResponse> getPromotionPlans() {
+  Future<WayaRequestResponse> getPromotionPlans({required String serviceType}) {
     return get(
-        "$serviceUrl/client/promotions/plans");
+        "$serviceUrl/client/promotions/plans?serviceType=$serviceType&limit=1000");
   }
 
   Future<WayaRequestResponse> createPromotion(CreatePromotionModel payload) {
     return post(
       "$serviceUrl/client/promotions",
-      {payload.toJson()},
+      payload.toJson(),
     );
   }
 }
