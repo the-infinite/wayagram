@@ -115,7 +115,9 @@ import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.da
 import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
 import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/edit_contestant_profile.dart';
+import 'package:wayagram/features/ugt/my_contest_details/ended_contest_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
+import 'package:wayagram/features/ugt/my_contest_details/full_video_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/voters_list_page.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
@@ -304,6 +306,10 @@ class WayaAppRoutes {
     CandidatePostScreen.route: () => CandidatePostScreen(),
     VideoTrimmerScreen.route: () => VideoTrimmerScreen(),
     ViewFullMedia.route: () => ViewFullMedia(),
+    FullVideoView.route: () => FullVideoView(),
+    EndedContestPage.route: () => EndedContestPage(
+          id: WayaNav.search['id'].toString(),
+        ),
     EditPost.route: () => EditPost(
           initialContent: '',
           initialImageUrl: '',

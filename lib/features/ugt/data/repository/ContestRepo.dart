@@ -1,4 +1,3 @@
-
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 
@@ -97,8 +96,9 @@ class ContestRepo extends BaseRepository {
     return get('$serviceUrl2/application/applicants/$contestId');
   }
 
-    Future<WayaRequestResponse> fetchVoterList(String contestantId) {
-    return get('$serviceUrl2/vote/manage-vote?contestantId=$contestantId');
+  Future<WayaRequestResponse> fetchVoterList(String contestantId, int page) {
+    return get(
+        '$serviceUrl2/vote/contestants-voters/?contestantId=$contestantId&status=SUCCESS&page=$page');
   }
 
   Future<WayaRequestResponse> acceptRejectContestants(

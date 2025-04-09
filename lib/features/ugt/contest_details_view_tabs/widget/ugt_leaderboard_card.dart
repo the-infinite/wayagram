@@ -101,20 +101,21 @@ class UgtLeaderboardCard extends ConsumerWidget {
                           ? Colors.white
                           : wayaTheme.colorScheme.greyColor400),
                 ),
-                Gap(10),
-                WayaButton(
-                  callback: () {
-                    ref.read(selectedContestantProfile.notifier).state =
-                        contestantData;
-                    WayaNav.toNamed(VotersListPage.route);
-                  },
-                  height: 30,
-                  text: 'View',
-                  textStyle: WayaTextStyles.bodySmall.copyWith(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w600,
-                      color: Theme.of(context).colorScheme.white),
-                )
+               if (contestantData.votes != 0)  Gap(10),
+                if (contestantData.votes != 0)
+                  WayaButton(
+                    callback: () {
+                      ref.read(selectedContestantProfile.notifier).state =
+                          contestantData;
+                      WayaNav.toNamed(VotersListPage.route);
+                    },
+                    height: 30,
+                    text: 'View',
+                    textStyle: WayaTextStyles.bodySmall.copyWith(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.white),
+                  )
               ],
             ),
           ),
