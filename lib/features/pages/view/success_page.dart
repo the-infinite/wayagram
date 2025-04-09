@@ -25,6 +25,7 @@ class _SuccessPageState extends ConsumerState<SuccessPage> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPageProvider);
     final wayaTheme = Theme.of(context);
+    final args = ModalRoute.of(context)?.settings.arguments as dynamic;
     return WayaScaffold(
       removeAppBar: false,
       isLoading: viewModel.isLoading,
@@ -62,7 +63,9 @@ class _SuccessPageState extends ConsumerState<SuccessPage> {
           WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-                    WayaNav.toNamed("/pages");
+                    WayaNav.toNamed("/pages", arguments: {
+                      'index': 2
+                    });
                   }
                 : null,
             centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Manage Page'),
