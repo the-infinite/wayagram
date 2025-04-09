@@ -728,8 +728,6 @@ class ExtendBidTime extends StatelessWidget {
 }
 
 class UpdateOrderStatusModal extends StatelessWidget {
-  final BuyRequestModel request;
-  final QuotationBidModel bid;
   final QuotationsNotifier notifier;
   final ValueNotifier<QuotationOrderStatus?> controller;
   final ValueNotifier<bool> isLoading;
@@ -738,8 +736,6 @@ class UpdateOrderStatusModal extends StatelessWidget {
   // Construct.
   const UpdateOrderStatusModal({
     super.key,
-    required this.request,
-    required this.bid,
     required this.controller,
     required this.notifier,
     required this.isLoading,
@@ -869,8 +865,6 @@ class UpdateOrderStatusModal extends StatelessWidget {
 }
 
 class UpdateDeliveryStatusModal extends StatelessWidget {
-  final BuyRequestModel request;
-  final QuotationBidModel bid;
   final QuotationsNotifier notifier;
   final String orderId;
   final ValueNotifier<QuotationDeliveryStatus?> controller;
@@ -879,8 +873,6 @@ class UpdateDeliveryStatusModal extends StatelessWidget {
   // Construct.
   const UpdateDeliveryStatusModal({
     super.key,
-    required this.request,
-    required this.bid,
     required this.notifier,
     required this.controller,
     required this.isLoading,
@@ -1038,8 +1030,6 @@ class UpdateDeliveryStatusModal extends StatelessWidget {
 }
 
 class UpdatePickupStatusModal extends StatelessWidget {
-  final BuyRequestModel request;
-  final QuotationBidModel bid;
   final QuotationsNotifier notifier;
   final String orderId;
   final ValueNotifier<QuotationPickupStatus?> controller;
@@ -1047,8 +1037,6 @@ class UpdatePickupStatusModal extends StatelessWidget {
 
   const UpdatePickupStatusModal({
     super.key,
-    required this.request,
-    required this.bid,
     required this.notifier,
     required this.orderId,
     required this.controller,
