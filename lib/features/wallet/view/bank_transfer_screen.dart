@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
 class BankTransferScreen extends StatelessWidget {
@@ -93,6 +96,8 @@ class BankTransferScreen extends StatelessWidget {
   Widget _buildAccountSection(String numberLabel, String number,
       String nameLabel, String name, BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final args =
+    ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -131,7 +136,19 @@ class BankTransferScreen extends StatelessWidget {
           children: [
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: '${args?["accountNumber"]}\n${args?["accountName"]}\n${args?["provider"]}'));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Link copied to clipboard',
+                        style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+                      ),
+                      backgroundColor: WayaColors.primary,
+                      duration: Duration(seconds: 2),
+                    ),
+                  );
+                },
                 icon: const Icon(Icons.copy, size: 18),
                 label: const Text('Copy Details'),
                 style: ElevatedButton.styleFrom(
@@ -143,7 +160,12 @@ class BankTransferScreen extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Share.share(
+                    WayaValueHelper.getShareableUrl(WayaAppRoutes.getPollDetailsPage('${args?["accountNumber"]}')),
+                    subject: 'Share Poll',
+                  );
+                },
                 icon: const Icon(Icons.share, size: 18),
                 label: const Text('Share Details'),
                 style: OutlinedButton.styleFrom(

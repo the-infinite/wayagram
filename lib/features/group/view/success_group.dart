@@ -65,7 +65,8 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
           WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-                    WayaNav.toNamed("/groups");
+                    WayaNav.toNamed("/groups",
+                        arguments: {'index': 2});
                   }
                 : null,
             centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Manage Group'),

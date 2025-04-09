@@ -465,6 +465,11 @@ class WayaAppRoutes {
   static String getBidDetailsScreen(String id, String requestId) =>
       "${SellerBidDetails.route}?id=$id&requestId=$requestId";
 
+  /// Helper function used to generate the route that is supposed to take you a
+  /// single donation by its ID.
+  static String getWalletDetailsPage(String id) =>
+      "${Donations.route}?id=$id";
+
   /// This is fine.
   static List<GetPage> get getPages {
     return routes.entries.map(
