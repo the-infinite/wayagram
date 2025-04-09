@@ -79,7 +79,7 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
             //? First, the total number of settlements.
             InventoryWidget(
               title: "Total Settlement",
-              metrics: WayaValueHelper.formatNumber(105060, true),
+              metrics: WayaValueHelper.formatNumber(0, true),
               color: Color(0xFFFEF6E7),
             ),
 
