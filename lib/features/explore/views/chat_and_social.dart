@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -19,12 +20,21 @@ class ChatAndSocial extends ConsumerStatefulWidget {
 }
 
 class _ChatAndSocialState extends ConsumerState<ChatAndSocial> {
+  final scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
+      scrollController: scrollController,
       title: "Chat & Socials",
       backgroundColor: wayaTheme.colorScheme.scaffoldColor,
       appBarTrailing: Container(
@@ -38,27 +48,53 @@ class _ChatAndSocialState extends ConsumerState<ChatAndSocial> {
             ),
             const Gap(6),
             WayaDp(
-              onTap: () {
-                WayaNav.toNamed('/general-settings');
-              },
+              onTap: () => WayaNav.toNamed('/general-settings'),
               radius: 18,
             ),
           ],
         ),
       ),
       body: TabbedFeedWidget(),
-      floatingActionButton: SizedBox(
-        height: 50,
-        width: 50,
-        child: WayaButton(
-          callback: () => WayaUtils.showModalSheet(context, child: CreateSheet()),
-          height: 50,
-          centerWidget: Center(
-            child: Icon(
-              Icons.add,
-              color: wayaTheme.colorScheme.white,
-              size: 40,
-            ),
+      floatingActionButton: IntrinsicHeight(
+        child: ListenableBuilder(
+          listenable: scrollController,
+          builder: (context, _) => Column(
+            mainAxisSize: MainAxisSize.min,
+            spacing: 15.h,
+            children: [
+              //? First, the scroll up button.
+              if (scrollController.offset >= 200)
+                GestureDetector(
+                  onTap: () {
+                    //? Animate to the position in question.
+                    scrollController.animateTo(0, duration: const Duration(milliseconds: 650), curve: Curves.easeIn);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: wayaTheme.colorScheme.customBlack,
+                    ),
+                    child: Icon(
+                      Icons.arrow_upward,
+                      color: wayaTheme.colorScheme.white,
+                      size: 40,
+                    ),
+                  ),
+                ),
+
+              //? This is fine.
+              WayaButton(
+                callback: () => WayaUtils.showModalSheet(context, child: CreateSheet()),
+                height: 50,
+                centerWidget: Center(
+                  child: Icon(
+                    Icons.add,
+                    color: wayaTheme.colorScheme.white,
+                    size: 40,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
