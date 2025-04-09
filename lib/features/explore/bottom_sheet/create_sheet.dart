@@ -72,7 +72,7 @@ class _CreateActionButton extends StatelessWidget {
               maxLines: 2,
               textAlign: TextAlign.center,
               style: WayaTextStyles.descriptionStyle.copyWith(
-                fontSize: 13.sp,
+                fontSize: 11.sp,
               ),
             )
           ],

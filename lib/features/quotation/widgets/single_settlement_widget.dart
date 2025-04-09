@@ -14,7 +14,6 @@ class SingleSettlementWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.watch(singleSettlementWidgetViewModelProvider);
 
     //? This is fine.
     return GestureDetector(

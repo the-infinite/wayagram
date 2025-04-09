@@ -233,7 +233,7 @@ class QuotationBidModel {
   final DateTime createdAt;
   final String? counterAmount;
 
-  double get amount => double.tryParse(bidAmount) ?? 0.0;
+  double get amount => double.tryParse(bidAmount.replaceAll(",", "")) ?? 0.0;
 
   QuotationBidModel({
     required this.id,
@@ -330,6 +330,8 @@ class BidOrderModel {
     required this.createdAt,
     required this.updatedAt,
   });
+
+  double get amount => double.tryParse(totalAmount.replaceAll(",", "")) ?? 0.0;
 
   factory BidOrderModel.fromJson(Map<String, dynamic> json) => _$BidOrderModelFromJson(json);
   Map<String, dynamic> toJson() => _$BidOrderModelToJson(this);

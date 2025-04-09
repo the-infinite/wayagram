@@ -113,7 +113,7 @@ class WayaDateHelper {
     }
 
     //? Then just return the timestamp.
-    return "${gap.inDays.abs()} days ago";
+    return "${gap.inDays.abs()}d ago";
   }
 
   static String getSocialTimestamp(DateTime timestamp, [bool extraPrecise = true]) {

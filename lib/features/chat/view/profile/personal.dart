@@ -31,6 +31,7 @@ class PersonalChatProfilePage extends StatefulWidget {
 }
 
 class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
+  late final notifier = widget.ref.read(conversationProvider.notifier);
   final mediaTypeController = ValueNotifier(0);
 
   @override
@@ -64,6 +65,7 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
                 user: user,
                 radius: 40.r,
                 showActive: false,
+                chat: widget.chat,
               ),
             ),
 
@@ -108,18 +110,14 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
               children: [
                 //* Go to this user's profile.
                 ProfileActionButton(
-                  onTap: () {
-                    WayaNav.toNamed(WayaAppRoutes.getProfileRoute(user.id));
-                  },
+                  onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(user.id)),
                   icon: WayaAssets.icons.cProfileUser.path,
                   text: "Profile",
                 ),
 
                 //* Mute/Unmute this user.
                 ProfileActionButton(
-                  onTap: () {
-                    widget.ref.read(conversationProvider.notifier).muteOrUnmuteUser(widget.chat.other.userId);
-                  },
+                  onTap: () => notifier.muteOrUnmuteUser(widget.chat.other.userId),
                   icon: WayaAssets.icons.cProfileMute.path,
                   isBad: true,
                   text: "Mute",
@@ -127,9 +125,7 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
 
                 //* Next, report a user.
                 ProfileActionButton(
-                  onTap: () {
-                    widget.ref.read(conversationProvider.notifier).reportUser(widget.chat.other.userId);
-                  },
+                  onTap: () => notifier.reportUser(widget.chat.other.userId),
                   icon: WayaAssets.icons.cProfileReport.path,
                   text: "Report",
                 ),

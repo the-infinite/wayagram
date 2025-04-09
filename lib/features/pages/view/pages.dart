@@ -25,6 +25,20 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
   int _selectedIndex = 0;
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final args = ModalRoute.of(context)?.settings.arguments as dynamic;
+      if(args != null){
+        setState(() {
+        _selectedIndex = args['index'];
+        });
+      }
+    });
+  }
+
+
+  @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createPageProvider);

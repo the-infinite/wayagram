@@ -33,9 +33,10 @@ import '../data/model/category_model.dart';
 
 String _convertToISO(String dateString) {
   DateTime dateTime = DateFormat("yyyy-M-d").parse(dateString);
+  DateTime futureDate = dateTime.add(Duration(days: 1));
 
   // Convert to UTC ISO 8601 format
-  return "${dateTime.toUtc().toIso8601String().split('.')[0]}Z";
+  return "${futureDate.toUtc().toIso8601String().split('.')[0]}Z";
 }
 
 class CreateContestNotifier extends StateNotifier<ContestState> {
@@ -121,6 +122,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "textDescription": "Participant's full name",
         "required": true
      */
+    print("eeeeee ${state.startDate}");
     var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
     isLoading.value = true;
     state = state.copyWith(isLoading: true);
@@ -222,7 +224,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "endDate": _convertToISO(state.contestTimelineEndDate),
 
         "entryType": state.entrySelectType.toUpperCase(),
-        //  "entryType": state.contestFreePaid.toUpperCase(),
+
         "contestSettings": {
           "stages": mapStageList,
           "formRequirements": mapRequireList
@@ -267,19 +269,16 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
                 WayaNav.removeAllUntil(UgtHome(), '/ugt-home');
               }),
         );
-      
       } else {
         WayaSnackBar.showToast(
             "Please try again later, unable to create contest");
       }
     } catch (e) {
       _logger.e(e.toString());
-     
     } finally {
       isLoading.value = false;
       state = state.copyWith(isLoading: false);
     }
-   
   }
 
   void createContestProfile(

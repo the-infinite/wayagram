@@ -8,9 +8,8 @@ import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/promotion/bottom_sheet/pay_for_promotion.dart';
-import 'package:wayagram/features/promotion/vm/promotion_vm.dart';
+import 'package:wayagram/features/promotion/vm/create_promotion_vm.dart';
 import 'package:wayagram/features/shop/filter/widgets/filter_chip_item.dart';
-
 
 class Promote extends ConsumerStatefulWidget {
   static const route = "/promote";
@@ -26,8 +25,17 @@ class _PromoteState extends ConsumerState<Promote> {
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(promotionVmProvider.notifier).getAllStates();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final dynamic arg = ModalRoute.of(context)?.settings.arguments;
+
+      if (arg != null) {
+        String contentId = arg['contentId'];
+        String contentType = arg['contentType'];
+
+        ref.read(promotionVmProvider.notifier).fetchAndSetInitialState(
+            contentType: contentType, contentId: contentId);
+      }
+      ref.read(promotionVmProvider.notifier).getAllStates();
     });
     super.initState();
   }
@@ -50,108 +58,108 @@ class _PromoteState extends ConsumerState<Promote> {
             children: [
               Row(
                 children: [
-                  Expanded(
-                      child: FormField<String>(validator: (value) {
-                    if (state.state.isEmpty) {
-                      return 'State is required';
-                    }
+                  // Expanded(
+                  //     child: FormField<String>(validator: (value) {
+                  //   if (state.state.isEmpty) {
+                  //     return 'State is required';
+                  //   }
 
-                    return null;
-                  }, builder: (formState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        WayaSelectField<String>(
-                            height: 0.2,
-                            uniqueKey: 'state',
-                            label: "State",
-                            value: state.state,
-                            hintText: 'Select State',
-                            items: state.states,
-                            onSelected: (value) =>
-                                notifier.selectState(value.first)),
-                        if (formState.hasError && state.state.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              formState.errorText!,
-                              style: TextStyle(
-                                  color: wayaTheme.colorScheme.error,
-                                  fontSize: 12.sp),
-                            ),
-                          ),
-                      ],
-                    );
-                  })),
-                  const Gap(10),
-                  Expanded(
-                    child: FormField<String>(validator: (value) {
-                      if (state.lga.isEmpty) {
-                        return 'LGA is required';
-                      }
+                  //   return null;
+                  // }, builder: (formState) {
+                  //   return Column(
+                  //     crossAxisAlignment: CrossAxisAlignment.start,
+                  //     children: [
+                  //       WayaSelectField<String>(
+                  //           height: 0.2,
+                  //           uniqueKey: 'state',
+                  //           label: "State",
+                  //           value: state.state,
+                  //           hintText: 'Select State',
+                  //           items: state.states,
+                  //           onSelected: (value) =>
+                  //               notifier.selectState(value.first)),
+                  //       if (formState.hasError && state.state.isEmpty)
+                  //         Padding(
+                  //           padding: const EdgeInsets.only(top: 5),
+                  //           child: Text(
+                  //             formState.errorText!,
+                  //             style: TextStyle(
+                  //                 color: wayaTheme.colorScheme.error,
+                  //                 fontSize: 12.sp),
+                  //           ),
+                  //         ),
+                  //     ],
+                  //   );
+                  // })),
+                  // const Gap(10),
+                  // Expanded(
+                  //   child: FormField<String>(validator: (value) {
+                  //     if (state.lga.isEmpty) {
+                  //       return 'LGA is required';
+                  //     }
 
-                      return null;
-                    }, builder: (formState) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          WayaSelectField<String>(
-                              height: 0.2,
-                              uniqueKey: 'lga',
-                              label: "LGA",
-                              hintText: 'Select LGA',
-                              value: state.lga,
-                              items: state.lgas,
-                              onSelected: (value) =>
-                                  notifier.selectLGA(value.first)),
-                          if (formState.hasError && state.lga.isEmpty)
-                            Padding(
-                              padding: const EdgeInsets.only(top: 5),
-                              child: Text(
-                                formState.errorText!,
-                                style: TextStyle(
-                                    color: wayaTheme.colorScheme.error,
-                                    fontSize: 12.sp),
-                              ),
-                            ),
-                        ],
-                      );
-                    }),
-                  ),
+                  //     return null;
+                  //   }, builder: (formState) {
+                  //     return Column(
+                  //       crossAxisAlignment: CrossAxisAlignment.start,
+                  //       children: [
+                  //         WayaSelectField<String>(
+                  //             height: 0.2,
+                  //             uniqueKey: 'lga',
+                  //             label: "LGA",
+                  //             hintText: 'Select LGA',
+                  //             value: state.lga,
+                  //             items: state.lgas,
+                  //             onSelected: (value) =>
+                  //                 notifier.selectLGA(value.first)),
+                  //         if (formState.hasError && state.lga.isEmpty)
+                  //           Padding(
+                  //             padding: const EdgeInsets.only(top: 5),
+                  //             child: Text(
+                  //               formState.errorText!,
+                  //               style: TextStyle(
+                  //                   color: wayaTheme.colorScheme.error,
+                  //                   fontSize: 12.sp),
+                  //             ),
+                  //           ),
+                  //       ],
+                  //     );
+                  //   }),
+                  // ),
                 ],
               ),
               const Gap(10),
-              FormField<String>(validator: (value) {
-                if (state.city.isEmpty) {
-                  return null;
-                }
+              // FormField<String>(validator: (value) {
+              //   if (state.city.isEmpty) {
+              //     return null;
+              //   }
 
-                return null;
-              }, builder: (formState) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    WayaSelectField<String>(
-                        uniqueKey: 'city',
-                        label: "City",
-                        value: state.city,
-                        hintText: 'Select City',
-                        items: state.cities,
-                        onSelected: (value) =>
-                            notifier.selectCity(value.first)),
-                    if (formState.hasError && state.city.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: Text(
-                          formState.errorText!,
-                          style: TextStyle(
-                              color: wayaTheme.colorScheme.error,
-                              fontSize: 12.sp),
-                        ),
-                      ),
-                  ],
-                );
-              }),
+              //   return null;
+              // }, builder: (formState) {
+              //   return Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       WayaSelectField<String>(
+              //           uniqueKey: 'city',
+              //           label: "City",
+              //           value: state.city,
+              //           hintText: 'Select City',
+              //           items: state.cities,
+              //           onSelected: (value) =>
+              //               notifier.selectCity(value.first)),
+              //       if (formState.hasError && state.city.isEmpty)
+              //         Padding(
+              //           padding: const EdgeInsets.only(top: 5),
+              //           child: Text(
+              //             formState.errorText!,
+              //             style: TextStyle(
+              //                 color: wayaTheme.colorScheme.error,
+              //                 fontSize: 12.sp),
+              //           ),
+              //         ),
+              //     ],
+              //   );
+              // }),
               const Gap(10),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 4),
@@ -203,176 +211,177 @@ class _PromoteState extends ConsumerState<Promote> {
                 spacing: 10,
                 children: [
                   //? Minimum distance.
-                  Expanded(
-                    child: FormField<String>(
-                      validator: (value) {
-                        if (state.minAge.text.isEmpty) {
-                          return 'Min Age is required';
-                        }
-                        return null;
-                      },
-                      builder: (formState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            WayaTextFormField(
-                              keyboardType: TextInputType.number,
-                              controller: state.minAge,
-                              hintText: 'Min Age',
-                              borderColor: formState.hasError &&
-                                      state.minAge.text.isEmpty
-                                  ? wayaTheme.colorScheme.error
-                                  : null,
-                              label: '',
-                              onChanged: (value) {
-                                debounce(
-                                  () {
-                                    notifier.setRangeStart(double.tryParse(
-                                            value.trim().replaceAll(',', '')) ??
-                                        0.1);
-                                  },
-                                  key: 'age-range-start',
-                                  delay: const Duration(milliseconds: 800),
-                                );
-                              },
-                            ),
+                  // Expanded(
+                  //   child: FormField<String>(
+                  //     validator: (value) {
+                  //       if (state.minAge.text.isEmpty) {
+                  //         return 'Min Age is required';
+                  //       }
+                  //       return null;
+                  //     },
+                  //     builder: (formState) {
+                  //       return Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           WayaTextFormField(
+                  //             keyboardType: TextInputType.number,
+                  //             controller: state.minAge,
+                  //             hintText: 'Min Age',
+                  //             borderColor: formState.hasError &&
+                  //                     state.minAge.text.isEmpty
+                  //                 ? wayaTheme.colorScheme.error
+                  //                 : null,
+                  //             label: '',
+                  //             onChanged: (value) {
+                  //               debounce(
+                  //                 () {
+                  //                   notifier.setRangeStart(double.tryParse(
+                  //                           value.trim().replaceAll(',', '')) ??
+                  //                       0.1);
+                  //                 },
+                  //                 key: 'age-range-start',
+                  //                 delay: const Duration(milliseconds: 800),
+                  //               );
+                  //             },
+                  //           ),
 
-                            // Error.
-                            if (formState.hasError && state.minAge.text.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12.sp),
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
+                  //           // Error.
+                  //           if (formState.hasError && state.minAge.text.isEmpty)
+                  //             Padding(
+                  //               padding: const EdgeInsets.only(top: 5),
+                  //               child: Text(
+                  //                 formState.errorText!,
+                  //                 style: TextStyle(
+                  //                     color: wayaTheme.colorScheme.error,
+                  //                     fontSize: 12.sp),
+                  //               ),
+                  //             ),
+                  //         ],
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
 
-                  //? Maximum distance.
-                  Expanded(
-                    child: FormField<String>(
-                      validator: (value) {
-                        if (state.maxAge.text.isEmpty) {
-                          return 'Max Distance is required';
-                        }
-                        return null;
-                      },
-                      builder: (formState) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            WayaTextFormField(
-                              keyboardType: TextInputType.number,
-                              controller: state.maxAge,
-                              hintText: 'Max Age',
-                              borderColor: formState.hasError &&
-                                      state.maxAge.text.isEmpty
-                                  ? wayaTheme.colorScheme.error
-                                  : null,
-                              label: '',
-                              onChanged: (value) {
-                                debounce(
-                                  () {
-                                    notifier.setRangeEnd(double.tryParse(
-                                            value.trim().replaceAll(',', '')) ??
-                                        0.5);
-                                  },
-                                  key: 'age-range-ends',
-                                  delay: const Duration(milliseconds: 800),
-                                );
-                              },
-                            ),
+                  // //? Maximum distance.
+                  // Expanded(
+                  //   child: FormField<String>(
+                  //     validator: (value) {
+                  //       if (state.maxAge.text.isEmpty) {
+                  //         return 'Max Distance is required';
+                  //       }
+                  //       return null;
+                  //     },
+                  //     builder: (formState) {
+                  //       return Column(
+                  //         crossAxisAlignment: CrossAxisAlignment.start,
+                  //         children: [
+                  //           WayaTextFormField(
+                  //             keyboardType: TextInputType.number,
+                  //             controller: state.maxAge,
+                  //             hintText: 'Max Age',
+                  //             borderColor: formState.hasError &&
+                  //                     state.maxAge.text.isEmpty
+                  //                 ? wayaTheme.colorScheme.error
+                  //                 : null,
+                  //             label: '',
+                  //             onChanged: (value) {
+                  //               debounce(
+                  //                 () {
+                  //                   notifier.setRangeEnd(double.tryParse(
+                  //                           value.trim().replaceAll(',', '')) ??
+                  //                       0.5);
+                  //                 },
+                  //                 key: 'age-range-ends',
+                  //                 delay: const Duration(milliseconds: 800),
+                  //               );
+                  //             },
+                  //           ),
 
-                            // Error.
-                            if (formState.hasError && state.maxAge.text.isEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 5),
-                                child: Text(
-                                  formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12.sp),
-                                ),
-                              ),
-                          ],
-                        );
-                      },
-                    ),
-                  ),
+                  //           // Error.
+                  //           if (formState.hasError && state.maxAge.text.isEmpty)
+                  //             Padding(
+                  //               padding: const EdgeInsets.only(top: 5),
+                  //               child: Text(
+                  //                 formState.errorText!,
+                  //                 style: TextStyle(
+                  //                     color: wayaTheme.colorScheme.error,
+                  //                     fontSize: 12.sp),
+                  //               ),
+                  //             ),
+                  //         ],
+                  //       );
+                  //     },
+                  //   ),
+                  // ),
                 ],
               ),
               const Gap(10),
-              FormField<String>(validator: (value) {
-                if (state.budget.text.isEmpty) {
-                  return 'Price is required';
-                }
+              // FormField<String>(validator: (value) {
+              //   if (state.budget.text.isEmpty) {
+              //     return 'Price is required';
+              //   }
 
-                return null;
-              }, builder: (formState) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    WayaTextFormField(
-                        keyboardType: TextInputType.number,
-                        controller: state.budget,
-                        hintText: 'Enter Price',
-                        borderColor:
-                            formState.hasError && state.budget.text.isEmpty
-                                ? wayaTheme.colorScheme.error
-                                : null,
-                        label: 'Budget',
-                        suffixIcon: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 15),
-                          child: Text("Per day",
-                              style: wayaTheme.textTheme.hintStyle),
-                        )),
-                    if (formState.hasError && state.budget.text.isEmpty)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: Text(
-                          formState.errorText!,
-                          style: TextStyle(
-                              color: wayaTheme.colorScheme.error,
-                              fontSize: 12.sp),
-                        ),
-                      ),
-                  ],
-                );
-              }),
+              //   return null;
+              // }, builder: (formState) {
+              //   return Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       WayaTextFormField(
+              //           keyboardType: TextInputType.number,
+              //           controller: state.budget,
+              //           hintText: 'Enter Price',
+              //           borderColor:
+              //               formState.hasError && state.budget.text.isEmpty
+              //                   ? wayaTheme.colorScheme.error
+              //                   : null,
+              //           label: 'Budget',
+              //           suffixIcon: Padding(
+              //             padding: EdgeInsets.symmetric(vertical: 15),
+              //             child: Text("Per day",
+              //                 style: wayaTheme.textTheme.hintStyle),
+              //           )),
+              //       if (formState.hasError && state.budget.text.isEmpty)
+              //         Padding(
+              //           padding: const EdgeInsets.only(top: 5),
+              //           child: Text(
+              //             formState.errorText!,
+              //             style: TextStyle(
+              //                 color: wayaTheme.colorScheme.error,
+              //                 fontSize: 12.sp),
+              //           ),
+              //         ),
+              //     ],
+              //   );
+              // }),
               const Gap(10),
-              FormField<String>(validator: (value) {
-                return null;
-              }, builder: (formState) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    WayaSelectField<String>(
-                        height: 0.3,
-                        uniqueKey: 'promotion-duration',
-                        label: "Duration",
-                        value: state.duration,
-                        hintText: 'Select Duration',
-                        items: notifier.durationOption,
-                        onSelected: (value) {}),
-                    if (formState.hasError)
-                      Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: Text(
-                          formState.errorText!,
-                          style: TextStyle(
-                              color: wayaTheme.colorScheme.error,
-                              fontSize: 12.sp),
-                        ),
-                      ),
-                  ],
-                );
-              }),
+              // FormField<String>(validator: (value) {
+              //   return null;
+              // }, builder: (formState) {
+              //   return Column(
+              //     crossAxisAlignment: CrossAxisAlignment.start,
+              //     children: [
+              //       WayaSelectField<String>(
+              //           height: 0.3,
+              //           uniqueKey: 'promotion-duration',
+              //           label: "Duration",
+              //           value: state.duration,
+              //           hintText: 'Select Duration',
+              //           items: notifier.durationOption,
+              //           onSelected: (value) {}),
+              //       if (formState.hasError)
+              //         Padding(
+              //           padding: const EdgeInsets.only(top: 5),
+              //           child: Text(
+              //             formState.errorText!,
+              //             style: TextStyle(
+              //                 color: wayaTheme.colorScheme.error,
+              //                 fontSize: 12.sp),
+              //           ),
+              //         ),
+              //     ],
+              //   );
+              // }
+              // ),
             ],
           )),
       bottomNavigationBar: Container(
@@ -402,8 +411,7 @@ class _PromoteState extends ConsumerState<Promote> {
                         child: Row(
                           children: [
                             Text(
-                              WayaHelpers.formatPrice(
-                                  int.parse('0')),
+                              WayaHelpers.formatPrice(int.parse('0')),
                               style: wayaTheme.textTheme.descriptionStyle
                                   .copyWith(
                                       color: wayaTheme.colorScheme.customBlack,

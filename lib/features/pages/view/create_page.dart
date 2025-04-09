@@ -167,10 +167,13 @@ class _CreatePageState extends ConsumerState<CreatePage> {
                         backgroundColor: wayaTheme.colorScheme.greyColor200,
                         backgroundImage: _coverImage != null ? FileImage(_coverImage!) : null,
                         child: _coverImage == null
-                            ? Icon(
-                                Icons.person,
-                                color: wayaTheme.colorScheme.greyColor600,
-                              )
+                            ? GestureDetector(
+                          onTap: _pickCoverImage,
+                              child: Icon(
+                                  Icons.person,
+                                  color: wayaTheme.colorScheme.greyColor600,
+                                ),
+                            )
                             : null,
                       ),
                     ],

@@ -92,6 +92,8 @@ class ProductCard extends ConsumerWidget {
               )),
           SizedBox(height: 3),
           Text(product.name.capitalizeFirst!,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
               style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
               visible: !isExplore,
@@ -260,6 +262,8 @@ class SellerProductCard extends ConsumerWidget {
               )),
           SizedBox(height: 3),
           Text(product.name.capitalizeFirst!,
+             maxLines: 1,
+          overflow: TextOverflow.ellipsis,
               style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
               visible: !isExplore,

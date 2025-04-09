@@ -112,69 +112,72 @@ class WayaLocalDataSource {
   DateTime? getLastUpdateDisplayName() {
     return wayaFastStorageService.read<DateTime?>(
         key: 'last-update-displayname');
-  }
 
-  Future<void> saveSeenUGT(bool hasSeen) {
-    return wayaFastStorageService.write<bool>(key: 'seen-ugt', value: hasSeen);
   }
-
-  bool getSeenUGT() {
-    return wayaFastStorageService.read<bool?>(key: 'seen-ugt')??false;
-  }
-
-  Future<void> viewMoment(String momentId) {
-    final moments = getViewedMoments() ?? <String>[];
-    if (!moments.contains(momentId)) {
-      moments.add(momentId);
+    Future<void> saveSeenUGT(bool hasSeen) {
+      return wayaFastStorageService.write<bool>(
+          key: 'seen-ugt', value: hasSeen);
     }
-    return saveViewedMoments(moments);
-  }
 
-  Future<void> removeViewedMoments(int index) {
-    final moments = getSearchHistory() ?? <String>[];
-    if (index < moments.length && index >= 0) {
-      moments.removeAt(index);
+    bool getSeenUGT() {
+      return wayaFastStorageService.read<bool?>(key: 'seen-ugt') ?? false;
     }
-    return saveViewedMoments(moments);
-  }
 
-  Future<void> addSearchToHistory(String search) {
-    if (search.length < 3) return Future.value(null);
-    final history = getSearchHistory() ?? <String>[];
-    history.add(search);
-    return saveSearchHistory(history);
-  }
-
-  Future<void> removeFromSearchHistory(int index) {
-    final history = getSearchHistory() ?? <String>[];
-    if (index < history.length && index >= 0) {
-      history.removeAt(index);
+    Future<void> viewMoment(String momentId) {
+      final moments = getViewedMoments() ?? <String>[];
+      if (!moments.contains(momentId)) {
+        moments.add(momentId);
+      }
+      return saveViewedMoments(moments);
     }
-    return saveSearchHistory(history);
+
+    Future<void> removeViewedMoments(int index) {
+      final moments = getSearchHistory() ?? <String>[];
+      if (index < moments.length && index >= 0) {
+        moments.removeAt(index);
+      }
+      return saveViewedMoments(moments);
+    }
+
+    Future<void> addSearchToHistory(String search) {
+      if (search.length < 3) return Future.value(null);
+      final history = getSearchHistory() ?? <String>[];
+      history.add(search);
+      return saveSearchHistory(history);
+    }
+
+    Future<void> removeFromSearchHistory(int index) {
+      final history = getSearchHistory() ?? <String>[];
+      if (index < history.length && index >= 0) {
+        history.removeAt(index);
+      }
+      return saveSearchHistory(history);
+    }
+
+    Future<void> saveEngagementData(
+        Map<ServiceType, EngagementData> data) async {
+      final jsonData = jsonEncode(
+          data.map((key, value) => MapEntry(key.name, value.toJson())));
+      await wayaFastStorageService.write<String>(
+          key: 'engagementData', value: jsonData);
+    }
+
+    Future<Map<ServiceType, EngagementData>> getEngagementData() async {
+      final jsonData =
+          wayaFastStorageService.read<String?>(key: 'engagementData');
+
+      if (jsonData == null) {
+        return {
+          for (var service in ServiceType.values) service: EngagementData()
+        };
+      }
+
+      final Map<String, dynamic> decodedData = jsonDecode(jsonData);
+      return decodedData.map(
+        (key, value) => MapEntry(
+          ServiceType.values.firstWhere((e) => e.name == key),
+          EngagementData.fromJson(value),
+        ),
+      );
+    }
   }
-
-  Future<void> saveEngagementData(Map<ServiceType, EngagementData> data) async {
-    final jsonData = jsonEncode(
-        data.map((key, value) => MapEntry(key.name, value.toJson())));
-    await wayaFastStorageService.write<String>(
-        key: 'engagementData', value: jsonData);
-  }
-
-  Future<Map<ServiceType, EngagementData>> getEngagementData() async {
-    final jsonData =
-        wayaFastStorageService.read<String?>(key: 'engagementData');
-
-    if (jsonData == null)
-      return {
-        for (var service in ServiceType.values) service: EngagementData()
-      };
-
-    final Map<String, dynamic> decodedData = jsonDecode(jsonData);
-    return decodedData.map(
-      (key, value) => MapEntry(
-        ServiceType.values.firstWhere((e) => e.name == key),
-        EngagementData.fromJson(value),
-      ),
-    );
-  }
-}

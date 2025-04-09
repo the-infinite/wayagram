@@ -176,6 +176,17 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     }
   }
 
+  bool isDateBefore(String dateString) {
+    DateTime givenDate = DateTime.parse(dateString).toUtc(); // Convert to UTC
+
+    DateTime now = DateTime.now().toUtc();
+    print("Given Date: $givenDate");
+    print("Now: $now");
+    print("Now: ${givenDate.isBefore(now)}");
+
+    return givenDate.isBefore(now);
+  }
+
   bool isStartDateAfterEndDate(String startDate, String endDate) {
     DateTime start = DateTime.parse(startDate);
     DateTime end = DateTime.parse(endDate);
@@ -546,6 +557,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     };
 
     try {
+
       // validate date
       if (isStartDateAfterEndDate(state.startDate, state.endDate)) {
         WayaSnackBar.showToast("Start date must be before the end date");
