@@ -80,9 +80,12 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
           // Some space.
           Gap(10.h),
 
-          //? The quotation bid counter.
-          QuotationBidTimer(
-            request: request,
+          //? Show the bid timer
+          Align(
+            alignment: Alignment.center,
+            child: QuotationBidTimer(
+              request: request,
+            ),
           ),
 
           // Some space.
