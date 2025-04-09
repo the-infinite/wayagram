@@ -56,45 +56,52 @@ class _ChatAndSocialState extends ConsumerState<ChatAndSocial> {
       ),
       body: TabbedFeedWidget(),
       floatingActionButton: IntrinsicHeight(
-        child: ListenableBuilder(
-          listenable: scrollController,
-          builder: (context, _) => Column(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 15.h,
-            children: [
-              //? First, the scroll up button.
-              if (scrollController.offset >= 200)
-                GestureDetector(
-                  onTap: () {
-                    //? Animate to the position in question.
-                    scrollController.animateTo(0, duration: const Duration(milliseconds: 650), curve: Curves.easeIn);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: wayaTheme.colorScheme.customBlack,
+        child: SizedBox(
+          width: 50,
+          child: ListenableBuilder(
+            listenable: scrollController,
+            builder: (context, _) => Column(
+              mainAxisSize: MainAxisSize.min,
+              spacing: 10.h,
+              children: [
+                //? First, the scroll up button.
+                if (scrollController.offset >= 200)
+                  GestureDetector(
+                    onTap: () {
+                      //? Animate to the position in question.
+                      scrollController.animateTo(0, duration: const Duration(milliseconds: 650), curve: Curves.easeIn);
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: wayaTheme.colorScheme.customPrimary,
+                        ),
+                        shape: BoxShape.circle,
+                        color: wayaTheme.colorScheme.primary50,
+                      ),
+                      child: Icon(
+                        Icons.arrow_upward,
+                        color: wayaTheme.colorScheme.customPrimary,
+                        size: 20,
+                      ),
                     ),
+                  ),
+
+                //? This is fine.
+                WayaButton(
+                  callback: () => WayaUtils.showModalSheet(context, child: CreateSheet()),
+                  height: 50,
+                  centerWidget: Center(
                     child: Icon(
-                      Icons.arrow_upward,
+                      Icons.add,
                       color: wayaTheme.colorScheme.white,
                       size: 40,
                     ),
                   ),
                 ),
-
-              //? This is fine.
-              WayaButton(
-                callback: () => WayaUtils.showModalSheet(context, child: CreateSheet()),
-                height: 50,
-                centerWidget: Center(
-                  child: Icon(
-                    Icons.add,
-                    color: wayaTheme.colorScheme.white,
-                    size: 40,
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
