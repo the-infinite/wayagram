@@ -29,7 +29,8 @@ class PostCommentsWidget extends ConsumerStatefulWidget {
 }
 
 class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
-  late final notifier = ref.read(createCommentProvider.notifier);
+  late final objectProvider = createCommentProvider(widget.post.id);
+  late final notifier = ref.read(objectProvider.notifier);
   final inputController = CommentInputController.instance;
   final loadingController = ValueNotifier(false);
   final handler = WayaObservableScrollController();
@@ -41,7 +42,7 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
         inputController.setNotifier(notifier);
-        _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+        _timer ??= Timer.periodic(const Duration(seconds: 5), (timer) {
           //? Fetch and update the comments every 5 seconds.
           notifier.getCommentsStream(widget.id).then(
             (result) {
@@ -78,7 +79,7 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
   @override
   Widget build(BuildContext context) {
     //? First, the wayaTheme.
-    final state = ref.watch(createCommentProvider);
+    final state = ref.watch(objectProvider);
 
     //? Now, return the screen.
     return PopScope(
@@ -95,7 +96,7 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            //
+            //? If this is still loading.
             if (state.isLoading && !state.hasLoaded)
               Expanded(
                 child: Center(child: CircularProgressIndicator()),

@@ -102,11 +102,18 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
     //? that is spawned using this listening for state changes by itself. Might
     //? present scaling issues in the future but that is left to be seen.
     return ValueListenableBuilder(
-        valueListenable: wayaPostCache,
-        builder: (context, redraws, _) {
-          final postData =
-              wayaPostCache.getCachedData(widget.data.id) ?? widget.data;
-          return Consumer(
+      valueListenable: wayaPostCache,
+      builder: (context, redraws, _) {
+        final postData = wayaPostCache.getCachedData(widget.data.id);
+
+        //? Hide this away when it is deleted.
+        if (postData == null) {
+          return const SizedBox();
+        }
+
+        //? If there is anything to show...
+        return Center(
+          child: Consumer(
             builder: (context, ref, _) {
               //? Obtain any references to a component we need here.
               final engagementMonitor =
@@ -119,6 +126,13 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  //? First, some space here for good measure.
+                  if (widget.index != 0)
+                    SizedBox(
+                      height: 15.h,
+                    ),
+
+                  //? The post itself.
                   Padding(
                     padding: widget.padded
                         ? EdgeInsets.fromLTRB(15.0.w, 25.h, 15.w, 15.h)
@@ -656,15 +670,12 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                       ],
                     ),
                   ),
-
-                  // Finally, some space here for good measure.
-                  SizedBox(
-                    height: 12.h,
-                  )
                 ],
               );
             },
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }

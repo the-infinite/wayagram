@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/seller/views/bid_dashboard/widgets/inventory_widget.dart';
 import 'package:wayagram/features/quotation/widgets/single_bid_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
@@ -155,58 +152,6 @@ class _AllSellerBidsState extends ConsumerState<AllSellerBids> {
               ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget bidIcon(ctx) {
-    final wayaTheme = Theme.of(ctx);
-    return GestureDetector(
-      onTap: () {
-        //? Show the coming soon modal.
-        if (WayaConstants.isProduction) {
-          WayaNavigationHelper.showComingSoonModal(true);
-          return;
-        }
-
-        //? Now, continue as needed in staging.
-        WayaNav.toNamed("/map");
-      },
-      child: Row(
-        children: [
-          Container(
-            height: 35,
-            padding: EdgeInsets.fromLTRB(14, 0, 14, 0),
-            decoration:
-                BoxDecoration(color: wayaTheme.colorScheme.customPrimary, borderRadius: BorderRadius.circular(10)),
-            child: Center(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/icons/bid.svg',
-                    color: wayaTheme.colorScheme.white,
-                    height: 20,
-                  ),
-
-                  // Some space.
-                  const Gap(5),
-
-                  //? This is fine.
-                  Text(
-                    "See Bids",
-                    style: TextStyle()
-                        .wayaCopyWith(color: wayaTheme.colorScheme.white, fontWeight: FontWeight.w600, fontSize: 14.sp),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // Some space.
-          const Gap(15)
-        ],
       ),
     );
   }

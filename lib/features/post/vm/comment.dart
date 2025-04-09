@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
@@ -70,7 +69,8 @@ class CommentNotifier extends StateNotifier<CommentState> {
         final comment = CommentModel.fromJson(response.data["data"]);
         resetComments();
         await getCommentsStream(postId);
-        if (parentId != null) {
+        if (parentId != null && parentId == state.replies.firstOrNull?.parentCommentId) {
+          await getSingleComment(postId, parentId);
           await getReplies(postId, parentId);
         }
         await myPageNotifier.refreshPost(postId);
@@ -213,7 +213,6 @@ class CommentNotifier extends StateNotifier<CommentState> {
       final response = await _pageRepository.likeComment(commentId);
 
       if (response.success) {
-        debugPrint("Comments Logs: liked $commentId");
         await getSingleComment(postId, commentId);
       }
 
@@ -235,7 +234,6 @@ class CommentNotifier extends StateNotifier<CommentState> {
       final response = await _pageRepository.unlikeComment(commentId);
 
       if (response.success) {
-        debugPrint("Comments Logs: unliked $commentId");
         await getSingleComment(postId, commentId);
       }
 
@@ -314,6 +312,6 @@ final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
   return WayaLocalDataSource();
 });
 
-final createCommentProvider = StateNotifierProvider<CommentNotifier, CommentState>((ref) {
+final createCommentProvider = StateNotifierProvider.family<CommentNotifier, CommentState, String>((ref, id) {
   return CommentNotifier(CommentState.initial, PageRepository());
 });

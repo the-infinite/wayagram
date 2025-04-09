@@ -97,6 +97,10 @@ class ContestRepo extends BaseRepository {
     return get('$serviceUrl2/application/applicants/$contestId');
   }
 
+    Future<WayaRequestResponse> fetchVoterList(String contestantId) {
+    return get('$serviceUrl2/vote/manage-vote?contestantId=$contestantId');
+  }
+
   Future<WayaRequestResponse> acceptRejectContestants(
       String contestId, Map<String, dynamic> payLoad) {
     return patch('$serviceUrl2/application/$contestId/status', payLoad,

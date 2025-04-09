@@ -22,13 +22,10 @@ class CreatePost extends ConsumerStatefulWidget {
 }
 
 class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProviderStateMixin {
-  PageController pageController = PageController(
-    initialPage: 0,
-  );
-
+  late final notifier = ref.read(createPageProvider.notifier);
+  final pageController = PageController(initialPage: 0);
   final _formKey = GlobalKey<FormState>();
-
-  final ImagePicker _pickers = ImagePicker();
+  final _pickers = ImagePicker();
   List<XFile> _selectedImages = [];
   List<WayaVideoController> videoControllers = [];
 
@@ -122,13 +119,13 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                         callback: !viewModel.isLoading
                             ? () async {
                                 if (_formKey.currentState!.validate()) {
-                                  await ref.watch(createPageProvider.notifier).createPost(
-                                        context,
-                                        viewModel.content.text,
-                                        sel ? "public" : "private",
-                                        _selectedImages,
-                                      );
-                                  ref.watch(createPageProvider.notifier).reset();
+                                  await notifier.createPost(
+                                    context,
+                                    viewModel.content.text,
+                                    sel ? "public" : "private",
+                                    _selectedImages,
+                                  );
+                                  notifier.reset();
                                   WayaNav.goBack();
                                 }
                               }
@@ -137,7 +134,10 @@ class _CreatePostState extends ConsumerState<CreatePost> with SingleTickerProvid
                         text: 'Post',
                         isLoading: viewModel.isLoading,
                         textStyle: WayaTextStyles.bodySmall.copyWith(
-                            fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Theme.of(context).colorScheme.white,
+                        ),
                       ),
               ),
             ),

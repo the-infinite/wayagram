@@ -203,7 +203,7 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
                   Row(
                     children: [
                       Text(
-                        WayaValueHelper.formatPrice(request?.maxBidAmount ?? request?.bidStartingAmount ?? 0),
+                        WayaValueHelper.formatPrice(request?.bidStartingAmount ?? 0),
                         style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.customBlack,
                           fontSize: 20.sp,
