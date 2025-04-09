@@ -35,11 +35,7 @@ class _MutualPageState extends ConsumerState<MutualPage> with SingleTickerProvid
   late final notifier = ref.read(userFollowProvider.notifier);
   final followersHandler = WayaObservableScrollController();
   final followingHandler = WayaObservableScrollController();
-  late int _selectedIndex = widget.initialTab == 'mutual'
-      ? 0
-      : widget.initialTab == 'followers'
-          ? 2
-          : 1;
+  late int _selectedIndex = widget.initialTab == 'followers' ? 2 : 1;
 
   @override
   void initState() {

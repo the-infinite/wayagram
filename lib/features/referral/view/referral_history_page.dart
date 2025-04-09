@@ -84,7 +84,7 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _infoCard("Total Friends Referred",
-                        viewModel.count?.toString() ?? ""),
+                        viewModel.referralList.length.toString()),
                     _infoCard("Total Rewards Earned",
                         "₦${formatMoney(viewModel.earned?.toString() ?? "")}"),
                   ],

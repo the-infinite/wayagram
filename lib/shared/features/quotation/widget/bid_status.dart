@@ -49,3 +49,43 @@ class BidStatusCard extends StatelessWidget {
     );
   }
 }
+
+class OrderStatusCard extends StatelessWidget {
+  final BidOrderModel order;
+
+  const OrderStatusCard({super.key, required this.order});
+
+  @override
+  Widget build(BuildContext context) {
+    final wayaTheme = Theme.of(context);
+
+    //? Return the status card.
+    return Container(
+      padding: EdgeInsets.fromLTRB(4, 1, 4, 1),
+      decoration: BoxDecoration(
+        color: switch (order.orderStatus) {
+          QuotationOrderStatus.inProgress => wayaTheme.colorScheme.info50,
+          QuotationOrderStatus.completed => wayaTheme.colorScheme.success50,
+          QuotationOrderStatus.failed => wayaTheme.colorScheme.error50,
+        },
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        switch (order.orderStatus) {
+          QuotationOrderStatus.inProgress => "Ongoing",
+          QuotationOrderStatus.completed => "Completed",
+          QuotationOrderStatus.failed => "Cancelled",
+        },
+        style: wayaTheme.textTheme.bodyMedium?.copyWith(
+          color: switch (order.orderStatus) {
+            QuotationOrderStatus.inProgress => wayaTheme.colorScheme.info,
+            QuotationOrderStatus.completed => wayaTheme.colorScheme.success,
+            QuotationOrderStatus.failed => wayaTheme.colorScheme.error,
+          },
+          fontWeight: FontWeight.w500,
+          fontSize: 11.sp,
+        ),
+      ),
+    );
+  }
+}

@@ -376,6 +376,23 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     } finally {}
   }
 
+    Future<void> fetchVotersList(String contestantId) async {
+    try {
+      final response = await _contestRepository.fetchVoterList(contestantId);
+      List<ApplicantContestModel> contestList = [];
+      if (response.success) {
+        ApplicantContestModelBase responseModel =
+            ApplicantContestModelBase.fromJson(response.data);
+        contestList = responseModel.data ?? [];
+       
+
+       
+      }
+    } catch (e) {
+      //print(e);
+    } finally {}
+  }
+
   void searchList(String value) {
     if (value.trim().isEmpty) {
       print("i am here $value");

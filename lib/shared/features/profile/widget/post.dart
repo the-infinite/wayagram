@@ -99,10 +99,18 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
     //? that is spawned using this listening for state changes by itself. Might
     //? present scaling issues in the future but that is left to be seen.
     return ValueListenableBuilder(
-        valueListenable: wayaPostCache,
-        builder: (context, redraws, _) {
-          final postData = wayaPostCache.getCachedData(widget.data.id) ?? widget.data;
-          return Consumer(
+      valueListenable: wayaPostCache,
+      builder: (context, redraws, _) {
+        final postData = wayaPostCache.getCachedData(widget.data.id);
+
+        //? Hide this away when it is deleted.
+        if (postData == null) {
+          return const SizedBox();
+        }
+
+        //? If there is anything to show...
+        return Center(
+          child: Consumer(
             builder: (context, ref, _) {
               //? Obtain any references to a component we need here.
               final engagementMonitor = ref.watch(postEngagementProvider.notifier);
@@ -114,6 +122,13 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
+                  //? First, some space here for good measure.
+                  if (widget.index != 0)
+                    SizedBox(
+                      height: 15.h,
+                    ),
+
+                  //? The post itself.
                   Padding(
                     padding: widget.padded ? EdgeInsets.fromLTRB(15.0.w, 25.h, 15.w, 15.h) : EdgeInsets.zero,
                     child: Column(
@@ -395,7 +410,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                     Container()
                   else
                     SizedBox(
-                      height: 200.h, // Adjust based on your image size
+                      height: 400.h, // Adjust based on your image size
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal, // Enables horizontal scrolling
                         itemCount: postData.media.length,
@@ -439,7 +454,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                               videoUrl: resource,
                                             ),
                                           );
-                                      
+
                                           //? Do nothing.
                                           if (result == null) return;
                                         },
@@ -488,7 +503,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                   imageUrl: resource,
                                   fit: BoxFit.cover,
                                   width: screenSize.width - (widget.padded ? 15.w : 0),
-                                  height: 200.h,
+                                  height: 400.h,
                                 ),
                               ),
                             ),
@@ -582,15 +597,12 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                       ],
                     ),
                   ),
-
-                  // Finally, some space here for good measure.
-                  SizedBox(
-                    height: 12.h,
-                  )
                 ],
               );
             },
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 }

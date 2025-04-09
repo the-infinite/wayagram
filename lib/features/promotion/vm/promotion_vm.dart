@@ -1,119 +1,34 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
-import 'package:wayagram/core/data/model/model.dart';
-import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/upgrade_to_business/vm/upgrade_to_business_vm.dart';
+import 'package:wayagram/features/promotion/data/models/promotion_plan_response_model.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_state.dart';
+import 'package:wayagram/features/promotion/data/repo/promotion_repository.dart';
 
 class PromotionVm extends StateNotifier<PromotionState> {
   final Ref ref;
-  PromotionVm(this.ref) : super(PromotionState());
+  final PromotionRepository _repository;
 
-  final List<Select> genderOptions = [
-    Select(label: "All", value: "All"),
-    Select(label: "Male", value: "Male"),
-    Select(label: "Female", value: "Female")
-  ];
+  PromotionVm(this.ref, this._repository) : super(PromotionState());
 
-  final List<Select> durationOption = [
-    Select(label: "Daily", value: "Daily"),
-    Select(label: "Weekly", value: "Weekly"),
-    Select(label: "Monthly", value: "Monthly")
-  ];
-
-  void setRangeStart(double value) {
-    state = state.copyWith(rangeStart: value);
-  }
-
-  void setRangeEnd(double value) {
-    state = state.copyWith(rangeEnds: value);
-  }
-
-  void selectGender(String type) {
-    List<String> c = List.from(state.gender);
-    if (c.contains(type)) {
-      c.remove(type);
-    } else {
-      c.add(type);
-    }
-    state = state.copyWith(gender: c);
-  }
-
-  Future<void> selectState(Select value) async {
-    String finalState = state.state;
-    state = state.copyWith(state: value.label);
-
-    if (finalState.isNotEmpty && value.label != finalState) {
-      state.copyWith(cities: []);
-      state = state.copyWith(city: '');
-      state.copyWith(lgas: []);
-      state = state.copyWith(lga: '');
-    }
-    await getAllLGA(stateCode: value.value, countryCode: 'NG');
-    await getAllCities(stateCode: value.value, countryCode: 'NG');
-  }
-
-  void selectLGA(Select value) {
-    state = state.copyWith(lga: value.value);
-  }
-
-  Future<void> selectCity(Select value) async {
-    state = state.copyWith(city: value.label);
-  }
-
-  Future<void> getAllStates() async {
-    final response =
-        await ref.read(upgradeToBusinessVmProvider.notifier).fetchStates();
-
-    if (response != null) {
-      state = state.copyWith(states: response);
-    }
-  }
-
-  Future<void> getAllCities(
-      {required String stateCode, required String countryCode}) async {
-    final response = await ref
-        .read(upgradeToBusinessVmProvider.notifier)
-        .fetchCities(stateCode, countryCode);
-
-    if (response != null) {
-      state = state.copyWith(cities: response);
-    }
-  }
-
-  Future<void> getAllLGA(
-      {required String stateCode, required String countryCode}) async {
-    final response = await ref
-        .read(upgradeToBusinessVmProvider.notifier)
-        .fetchLGA(stateCode, countryCode);
-
-    if (response != null) {
-      state = state.copyWith(lgas: response);
-    }
-  }
-
-  Future<void> payForPromotion({required BuildContext context}) async {
+  Future<List<PromotionPlan>?> getPlans() async {
     try {
-      if (context.mounted) {
-        return WayaUtils.showNotice(
-            context: context,
-            title: "Your Promotion is Live!",
-            buttonText: "View Promotion Analytics",
-            onPress: () {
-              // view analytics
-            },
-            message:
-                "Your moment is now being promoted to your selected audience. Track its performance in the analytics section.",
-            icon: Image.asset(WayaAssets.images.successPromote.path));
+      final response = await _repository.getPromotionPlans();
+
+      List<PromotionPlan> promoPlans = [];
+      if (response.success) {
+        PromotionPlansResponse plansResponse =
+            PromotionPlansResponse.fromJson(response.data);
+        promoPlans = plansResponse.data.plans;
+        state = state.copyWith(plans: promoPlans);
       }
+      return promoPlans;
     } catch (error) {
       print(error);
+      return null;
     }
   }
 }
 
-final promotionVmProvider =
+final promoteVmProvider =
     StateNotifierProvider<PromotionVm, PromotionState>((ref) {
-  return PromotionVm(ref);
+  return PromotionVm(ref, PromotionRepository());
 });
