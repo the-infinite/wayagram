@@ -92,16 +92,7 @@ class _WayaSellerQuotationState extends ConsumerState<WayaSellerQuotation> with 
                 ),
               ],
             ),
-            callback: () {
-              //? Show the coming soon modal.
-              if (WayaConstants.isProduction) {
-                WayaNavigationHelper.showComingSoonModal(true);
-                return;
-              }
-
-              //? Now, continue as needed in staging.
-              WayaNav.toNamed(CreateRequest.route);
-            },
+            callback: () => WayaNav.toNamed(CreateRequest.route),
             color: wayaTheme.colorScheme.primary50,
           ),
           const Gap(25),
