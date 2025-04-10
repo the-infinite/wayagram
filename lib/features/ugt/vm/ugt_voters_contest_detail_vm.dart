@@ -11,6 +11,7 @@ import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart
 import 'package:wayagram/features/ugt/data/model/ugt_contest_aplicant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart' as model;
 import 'package:wayagram/features/ugt/data/model/voter_contest_state.dart';
+import 'package:wayagram/features/ugt/data/model/voter_user_list_model.dart';
 
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -19,6 +20,7 @@ import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
 
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
+import 'package:wayagram/shared/features/user/resource/default.dart';
 import '../../../core/data/local_data_source.dart';
 
 import '../../../core/service/logger_service.dart';
@@ -43,6 +45,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       print(map);
       return await voteContestant(isLoading, map);
     } else {
+      WayaSnackBar.showToast(
+        response.data["message"],
+      );
       isLoading.value = false;
       return false;
     }
@@ -322,7 +327,8 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     } finally {}
   }
 
-    Future<void> fetchAllContestUnApprovedPosts(String id, {hostApproved = true}) async {
+  Future<void> fetchAllContestUnApprovedPosts(String id,
+      {hostApproved = true}) async {
     try {
       final response =
           await _contestRepository.fetchAllContestGallery(id, hostApproved);
@@ -332,10 +338,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
             UgtAllPostContestModelBase.fromJson(response.data);
         contestList = responseModel.data?.docs ?? [];
 
-      //  state = state.copyWith(myPostList: contestList);
-        
-          state = state.copyWith(pendingPostCount: contestList.length);
-        
+        //  state = state.copyWith(myPostList: contestList);
+
+        state = state.copyWith(pendingPostCount: contestList.length);
       }
     } catch (e) {
       //print(e);
@@ -376,19 +381,50 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     } finally {}
   }
 
-    Future<void> fetchVotersList(String contestantId) async {
-    try {
-      final response = await _contestRepository.fetchVoterList(contestantId);
-      List<ApplicantContestModel> contestList = [];
-      if (response.success) {
-        ApplicantContestModelBase responseModel =
-            ApplicantContestModelBase.fromJson(response.data);
-        contestList = responseModel.data ?? [];
-       
+  Future<void> fetchVotersList(String contestantId, bool isFirst) async {
+    if (state.isLastPage && isFirst == false) {
+      return;
+    }
+    if (state.isLoading == true) {
+      return;
+    }
 
-       
+    try {
+      try {
+        state = state.copyWith(isLoading: true);
+      } catch (e) {
+        print(e);
       }
+      final response = await _contestRepository.fetchVoterList(
+          contestantId, isFirst ? 1 : state.page);
+      // List<VoterListBaseModel> contestList = [];
+      if (response.success) {
+        VoterListBaseModel responseModel =
+            VoterListBaseModel.fromJson(response.data);
+        state = state.copyWith(
+            isLastPage: responseModel.data?.hasNextPage == true ? false : true);
+        List<VoterListModel> votersList = [];
+        for (VoterListModel model in responseModel.data?.docs ?? []) {
+          var data = await UserResource.getUserDetails(model.profileId ?? "");
+          var userModel = data?.$1;
+          model.name = userModel?.fullname ?? "";
+          model.profileImageUrl = userModel?.profilePicture ?? "";
+          votersList.add(model);
+        }
+
+        if (isFirst) {
+          state = state.copyWith(userVotersList: votersList, page: 1);
+        } else {
+          state = state.copyWith(
+              userVotersList: [...state.userVotersList ?? [], ...votersList]);
+        }
+
+        // state = state.copyWith(userVotersList: responseModel.data?.docs ?? []);
+        // contestList = responseModel.data.docs ?? [];
+      }
+      state = state.copyWith(isLoading: false);
     } catch (e) {
+      state = state.copyWith(isLoading: false);
       //print(e);
     } finally {}
   }
