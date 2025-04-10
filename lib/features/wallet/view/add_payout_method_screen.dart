@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
-import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/wallet/view/payout_history_screen.dart';
-import 'package:wayagram/features/wallet/view/payout_method_screen.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class AddPayoutMethodScreen extends ConsumerStatefulWidget {
   static const route = '/addPayoutMethodScreen';
@@ -21,16 +21,24 @@ class AddPayoutMethodScreen extends ConsumerStatefulWidget {
 }
 
 class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
+  final _formKey = GlobalKey<FormState>();
 
-  int _selectedIndex = 0;
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(walletVmProvider.notifier).fetchBank();
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(createGroupProvider);
+    final viewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
+      resizeToAvoidBottomInset: false,
       removeAppBar: false,
-      isLoading: viewModel.isLoading,
+      isLoading: viewModel.isLoading!,
       isScrollable: false,
       title: 'Add Payout Method',
       body: Column(
@@ -38,24 +46,120 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Gap(10),
-          Row(
-            children: [
-              WayaTabButton(
-                isSelected: _selectedIndex == 0,
-                text: 'Payout Method',
-                onTap: () => setState(() => _selectedIndex = 0),
-              ),
-              WayaTabButton(
-                isSelected: _selectedIndex == 1,
-                text: 'Payout History',
-                onTap: () => setState(() => _selectedIndex = 1),
-              ),
+          Text('Add Payout Method',
+              style: wayaTheme.textTheme.bodyLarge?.copyWith(
+                  fontWeight: FontWeight.w700,
+                  fontFamily: WayaConstants.fontFamily,
+                  fontSize: 24.sp,
+                  color: Colors.black
+              )),
+          const Gap(10),
+          Text('Enter the information of the account you want to receive your payouts in',
+              style: wayaTheme.textTheme.hintStyle.copyWith(
+                  fontWeight: FontWeight.w400,
+                  fontFamily: WayaConstants.fontFamily,
+                  fontSize: 16.sp,
+                  color: wayaTheme.colorScheme.greyColor500
+              )),
+          Form(
+              key: _formKey,
+              child: Column(
+                spacing: 10,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
 
-            ],
-          ),
-          const Gap(25),
-          _selectedIndex == 0 ? PayoutMethodScreen() : PayoutHistoryScreen()
-          //MyPolls(),
+                  Gap(10),
+                  FormField<String>(validator: (value) {
+                    if (viewModel.acctNumber.text.isEmpty) {
+                      return 'Account Number is required';
+                    }
+
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          keyboardType: TextInputType.number,
+                          controller: viewModel.acctNumber,
+                          hintText: 'Enter Bank Account Number',
+                          maxLength: 10,
+                          borderColor:
+                          formState.hasError && viewModel.acctNumber.text.isEmpty ? wayaTheme.colorScheme.error : null,
+                          label: 'Account Number',
+                        ),
+                        if (formState.hasError && viewModel.acctNumber.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
+                  //const Gap(20),
+                  FormField<String>(validator: (value) {
+                    if (viewModel.bank.isEmpty) {
+                      return 'Bank is required';
+                    }
+
+                    return null;
+                  }, builder: (formState) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaSelectField<String>(
+                            height: 0.2,
+                            uniqueKey: 'bank-type',
+                            label: "Bank",
+                            hintText: 'Select Bank',
+                            value: viewModel.bank.capitalizeFirst,
+                            items: viewModel.banks,
+                            onSelected: (value) =>
+                                ref.read(walletVmProvider.notifier).selectCategory(value.first)),
+                        if (formState.hasError && viewModel.bank.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12),
+                            ),
+                          ),
+                      ],
+                    );
+                  }),
+                  const Gap(200),
+                   WayaButton(
+                    callback: viewModel.isLoading!
+                        ? () async {
+                      if (_formKey.currentState!.validate()) {}
+                    }
+                        : null,
+                    //height: 30,
+                    text: 'Add Payout',
+                    isLoading: viewModel.isLoading!,
+                    textStyle: WayaTextStyles.bodySmall.copyWith(
+                        fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+                  ),
+
+                  const Gap(10),
+                  WayaButton(
+                    text: 'Go Back',
+                    color: wayaTheme.colorScheme.transparent,
+                    textColor: wayaTheme.colorScheme.customBlack,
+                    border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+                    callback: () {
+                      WayaNav.goBack();
+                      // widget.gotoPreviousTab();
+                    },
+                  )
+
+
+                ],
+              )),
 
         ],
       ) ,
