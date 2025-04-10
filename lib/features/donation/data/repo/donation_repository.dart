@@ -67,13 +67,13 @@ class DonationRepository extends BaseRepository {
   Future<WayaRequestResponse> getMyCampaigns(
     String organizerId,
   ) {
-    return get("$serviceUrl/client/campaigns?organizerId=$organizerId&status=live");
+    return get("$serviceUrl/client/campaigns?organizerId=$organizerId");
   }
 
   Future<WayaRequestResponse> getHostedDonation(
     String organizerId,
   ) {
-    return get("$serviceUrl/client/campaigns?organizerId=$organizerId");
+    return get("$serviceUrl/client/campaigns?organizerId=$organizerId&status=approved");
   }
 
   Future<WayaRequestResponse> getAppliedDonation(
@@ -85,7 +85,7 @@ class DonationRepository extends BaseRepository {
   Future<WayaRequestResponse> getRejectedDonation(
       String organizerId,
       ) {
-    return get("$serviceUrl/client/campaigns?organizerId=$organizerId&status=rejected");
+    return get("$serviceUrl/client/campaigns?organizerId=$organizerId&status=closed");
   }
 
   Future<WayaRequestResponse> getDonationCategory(

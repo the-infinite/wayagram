@@ -4,7 +4,7 @@ class WayaColors {
   //! This class is not constructable.
   WayaColors._();
   
-
+  //
   static const primary200 = Color(0xffFF9873);
   static const primary300 = Color(0xffFF8458);
   static const primary500 = Color(0xffE85C2A);
@@ -44,7 +44,6 @@ static const Color info = Color(0xff0288D1);
   //
   static const pendingColor = Color(0xfffef6e7);
   static const pendingColor2 = Color(0xff865503);
-  static const pendingColor3 = Color(0xffF3A218);
   static const testColor = Color(0xFF0000FF);
   //
   static const tertiary = Color(0xff000000);

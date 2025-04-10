@@ -67,12 +67,13 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(donationVmProvider);
     List<MyDonationDocs>? myDonations = widget.isExpanded
-        ? state.approvedDonations
-        : state.approvedDonations!.sublist(0, min(state.approvedDonations!.length, 1));
+        ? state.myDonationDocs
+        : state.myDonationDocs!.sublist(0, min(state.myDonationDocs!.length, 1));
 
     return SizedBox(
       height: 560,
       child: ListView(
+       // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           WayaButton(
             centerWidget: Row(
@@ -207,6 +208,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
             height: Platform.isAndroid ? 300 : 460,
             //height: Platform.isAndroid ? 560 : 460,
             child: ListView.builder(
+              //physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: myDonations.length,
                 //filteredMyDonations.length,
