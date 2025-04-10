@@ -21,6 +21,7 @@ import 'package:wayagram/features/ugt/contest_profiles/contest_profile_stages_se
 import 'package:wayagram/features/ugt/create_contest_post/video_thumbnail_ugt.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
+import 'package:wayagram/features/ugt/my_contest_details/full_video_view.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_details_stage_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
@@ -68,15 +69,13 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     final String contestId = Get.parameters['contest'] ?? 'Unknown';
     var model = ref.watch(selectedContestantProfile);
     var viewModel = ref.watch(votersContestNotifier.notifier);
-    //  print("profile id ${model?.id}");
+
     final imageUrl = useState(model?.profilePhoto ?? "");
 
     useEffect(() {
       ref.read(postProvider.notifier).fetchSingleContestantDetails(
           ref, model?.contestId ?? contestId, model?.id ?? id);
-      /*   print("dedee ${model?.contestApplicant?.userId}");
-      print("dedee ${model?.profileId}");
-      print("dedee ${viewModel.getLoggedInUserId()}"); */
+     
 
       if (viewModel.getLoggedInUserId() == model?.contestApplicant?.userId) {
         model?.stages?.forEach((element) {
@@ -189,7 +188,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        WayaNav.toNamed("/view-media-full-page", arguments: {
+                        WayaNav.toNamed(FullVideoView.route, arguments: {
                           "url": model?.introVideo ?? "",
                           "title": "",
                           "createdAt": "",
@@ -198,7 +197,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                           "showDescription": false,
                           "discription": "",
                           "shareCount": "",
-                          "type": MyFullMediaType.video
+                          
                         });
                       },
                       child: VideoThumbnail(

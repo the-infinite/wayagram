@@ -150,23 +150,25 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                     color: wayaTheme.colorScheme.customBlack,
                   ),
                 ),
-                PopupMenuItem<int>(
-                  value: 3,
-                  onTap: () async {
-                    if (await myGroupNotifier.leaveGroup(widget.id)) {
-                      WayaNav.goBack();
-                    }
-                  },
-                  child: WayaActionNav(
-                    context: context,
-                    asset: WayaAssets.images.pages.doorOpen.svg(
+
+                if (myGroupNotifier.isMemberOf(widget.id))
+                  PopupMenuItem<int>(
+                    value: 3,
+                    onTap: () async {
+                      if (await myGroupNotifier.leaveGroup(widget.id)) {
+                        WayaNav.goBack();
+                      }
+                    },
+                    child: WayaActionNav(
+                      context: context,
+                      asset: WayaAssets.images.pages.doorOpen.svg(
+                        color: wayaTheme.colorScheme.error500,
+                        height: 20,
+                      ),
+                      text: "  Leave Group",
                       color: wayaTheme.colorScheme.error500,
-                      height: 20,
                     ),
-                    text: "  Leave Group",
-                    color: wayaTheme.colorScheme.error500,
-                  ),
-                )
+                  )
               ];
             },
             child: WayaAssets.icons.genSet.moreHorz.svg(
@@ -218,12 +220,12 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
 
                         //? The button to click when you want to see the profiles
                         //? of group members.
-                        Visibility(
-                          visible: myGroupNotifier.isMemberOf(widget.id) || !group.isPrivate,
-                          maintainState: true,
-                          maintainAnimation: true,
-                          maintainSize: true,
-                          child: GestureDetector(
+                        AnimatedCrossFade(
+                          duration: const Duration(milliseconds: 350),
+                          crossFadeState: myGroupNotifier.isMemberOf(widget.id)
+                              ? CrossFadeState.showFirst
+                              : CrossFadeState.showSecond,
+                          firstChild: GestureDetector(
                             onTap: () => WayaNav.toNamed(WayaAppRoutes.getGroupMembersPage(group.id)),
                             child: Container(
                               margin: EdgeInsets.only(right: 20.w),
@@ -235,6 +237,25 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
                               ),
                               child: Text(
                                 'Member',
+                                style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                  color: wayaTheme.colorScheme.primary600,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                          secondChild: GestureDetector(
+                            onTap: () => myGroupNotifier.joinGroup(widget.id),
+                            child: Container(
+                              margin: EdgeInsets.only(right: 20.w),
+                              padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
+                                color: wayaTheme.colorScheme.white,
+                                borderRadius: BorderRadius.circular(7.r),
+                              ),
+                              child: Text(
+                                'Join',
                                 style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                                   color: wayaTheme.colorScheme.primary600,
                                   fontWeight: FontWeight.w600,

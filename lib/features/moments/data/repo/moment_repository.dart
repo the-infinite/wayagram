@@ -18,7 +18,13 @@ class MomentRepository extends BaseRepository {
       String? caption,
       String? color,
       required String contentType}) {
-    final payload = {"userId": userId, 'name': name, 'image': image, 'content': content, 'contentType': contentType};
+    final payload = {
+      "userId": userId,
+      'name': name,
+      'image': image,
+      'content': content,
+      'contentType': contentType
+    };
     if (caption != null) payload['caption'] = caption;
     if (color != null) payload['color'] = color;
     if (fontType != null) payload['fontType'] = fontType;
@@ -26,8 +32,10 @@ class MomentRepository extends BaseRepository {
     return post("$serviceUrl/moments/create", payload);
   }
 
-  Future<WayaRequestResponse> getUserMoments({required String userId, required int page, int? limit = 100}) {
-    return get("$serviceUrl/moments/get?userId=$userId&limit=$limit&page=$page");
+  Future<WayaRequestResponse> getUserMoments(
+      {required String userId, required int page, int? limit = 100}) {
+    return get(
+        "$serviceUrl/moments/get?userId=$userId&limit=$limit&page=$page");
   }
 
   Future<WayaRequestResponse> viewMoments({
@@ -65,7 +73,13 @@ class MomentRepository extends BaseRepository {
       String? color,
       String? fontType,
       required String contentType}) {
-    final payload = {"userId": userId, 'name': name, 'image': image, 'content': content, 'contentType': contentType};
+    final payload = {
+      "userId": userId,
+      'name': name,
+      'image': image,
+      'content': content,
+      'contentType': contentType
+    };
     if (caption != null) payload['caption'] = caption;
     if (color != null) payload['color'] = color;
     if (fontType != null) payload['fontType'] = fontType;
@@ -75,17 +89,30 @@ class MomentRepository extends BaseRepository {
     );
   }
 
+  ///moments/get
+   Future<WayaRequestResponse> getSingleMoment(
+      {required String id}) {
+    return get(
+        "$serviceUrl/moments/get?id=$id");
+  }
+  
+
   ///moments/:momentId
   ///
   ///
   Future<WayaRequestResponse> reportMoment(
-      {required String userId, required String momentId, required String reason, String? comment}) {
+      {required String userId,
+      required String momentId,
+      required String reason,
+      String? comment}) {
     final payload = {"userId": userId, "momentId": momentId, "reason": reason};
     if (comment != null) payload['comment'] = comment;
     return post("$serviceUrl/report-moments", payload);
   }
 
-  Future<WayaRequestResponse> momentViewers({int? limit = 10, required String momentId, required int page}) async {
-    return get("$serviceUrl/view-moments/viewers?momentId=$momentId&limit=$limit&page=$page");
+  Future<WayaRequestResponse> momentViewers(
+      {int? limit = 10, required String momentId, required int page}) async {
+    return get(
+        "$serviceUrl/view-moments/viewers?momentId=$momentId&limit=$limit&page=$page");
   }
 }

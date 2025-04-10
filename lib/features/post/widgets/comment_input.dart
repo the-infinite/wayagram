@@ -86,7 +86,7 @@ class CommentInputField extends ConsumerWidget {
                           //? A text field for the comment's actual content.
                           WayaTextFormField(
                             showBorder: true,
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.multiline,
                             controller: controller.content,
                             hintText: 'Write comment here',
                             borderColor: formState.hasError ? wayaTheme.colorScheme.error : null,

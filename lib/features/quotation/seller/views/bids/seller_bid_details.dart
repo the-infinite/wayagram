@@ -7,8 +7,10 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
 import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
+import 'package:wayagram/shared/features/quotation/modal/choose_shop.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/quotation/widget/bid_status.dart';
@@ -32,12 +34,57 @@ class SellerBidDetails extends ConsumerStatefulWidget {
 }
 
 class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
-  //? Final attempt.
+  late final notifier = ref.read(userQuotationsProvider.notifier);
+  final loadingController = ValueNotifier(false);
+
+  Future<void> _placeBid(BuyRequestModel request) async {
+    final amount = await WayaUtils.showModalSheet<double>(
+      context,
+      child: EditOfferModal(
+        title: 'Edit your Offer',
+        hint: 'Update your base price for this request',
+        delta: request.bidStartingAmount >= 3000000
+            ? 25000
+            : request.bidStartingAmount >= 200000
+                ? 5000
+                : 1000,
+      ),
+    );
+
+    //! If this was dismissed before an amount was even calculated...
+    if (amount == null) return;
+
+    //? Which shop is the user sending the bid as?
+    final shopId = await WayaUtils.showModalSheet(context, child: ChooseShopModal());
+
+    //! If the shop was not selected.
+    if (shopId == null) return;
+
+    //? Now, send the bid.
+    final result = await notifier.sendBid(request.id, amount, shopId);
+
+    //! Since bidding failed, you can leave.
+    if (result == null) return;
+
+    //* Okay, since bidding was fine, we throw a pizza party.
+    _viewSellerBid(result);
+  }
+
+  Future<void> _viewSellerBid(QuotationBidModel result) async {
+    if (!WayaConstants.isProduction) {
+      WayaNav.toNamed(WayaAppRoutes.getSellerBidsRoute(result.id, result.requestId));
+    }
+  }
+
+  @override
+  void dispose() {
+    loadingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final notifier = ref.read(userQuotationsProvider.notifier);
     final bid = notifier.getBid(widget.id)!;
     final request = notifier.getBidQuote(widget.requestId)!;
 
@@ -85,6 +132,9 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
             alignment: Alignment.center,
             child: QuotationBidTimer(
               request: request,
+              isExpanded: true,
+              fontSize: 18.sp,
+              fontWeight: FontWeight.w500,
             ),
           ),
 
@@ -240,20 +290,20 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
           if (request.deliveryType == BuyRequestDeliveryType.delivery) ...[
             OrderInfoWidget(
               title: "Delivery Address",
-              description: request.deliveryAddress ?? "No delivery address provided",
+              description: request.deliveryAddress ?? "N/A",
             ),
 
             // Some space.
             Gap(8.h),
-          ] else ...[
-            // //
-            // OrderInfoWidget(
-            //   title: "Pickup Address",
-            //   description: bid.pickupAddress ?? "No pickup address provided",
-            // ),
+            //   ] else ...[
+            //     //
+            //     OrderInfoWidget(
+            //       title: "Pickup Address",
+            //       description: bid.pickupAddress ?? "No pickup address provided",
+            //     ),
 
-            // // Some space.
-            // Gap(8.h),
+            //     // Some space.
+            //     Gap(8.h),
           ],
 
           //? The bid's amount.
@@ -272,33 +322,6 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
           ),
 
           // Some space.
-          Gap(8.h),
-
-          //? The delivery price of a bid.
-          OrderInfoWidget(
-            title: "Delivery Price",
-            description: WayaValueHelper.formatPrice(99999),
-          ),
-
-          // Some space.
-          Gap(8.h),
-
-          //? The delivery date.
-          OrderInfoWidget(
-            title: "Delivery Date",
-            description: WayaDateHelper.getDailyTimestamp(bid.updatedAt),
-          ),
-
-          // Some space.
-          Gap(8.h),
-
-          //? Comment on the order.
-          OrderInfoWidget(
-            title: "Comment",
-            description: '-',
-          ),
-
-          // Some space.
           Gap(30.h),
 
           //? The button to change the order status.
@@ -313,6 +336,20 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
                 colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
                 width: 20,
               ),
+            )
+          else if (bid.status == BidActionType.reject)
+            WayaProgressiveButton(
+              callback: () => _placeBid(request),
+              text: 'Bid Again',
+              height: 48,
+              notifier: loadingController,
+            )
+          else
+            WayaProgressiveButton(
+              callback: () => _viewSellerBid(bid),
+              text: 'View bid',
+              height: 48,
+              notifier: loadingController,
             ),
         ],
       ),

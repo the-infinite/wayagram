@@ -102,7 +102,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
         DiscountsResponse responseModel =
             DiscountsResponse.fromJson(response.data);
         final filtered =
-            responseModel.discounts.where((v) => v.active).toList();
+            responseModel.discounts.where((v) => v.active && !v.deal).toList();
         allDiscounts = filtered.map((val) {
           return Select(label: "${val.type} ${val.percentage}%", value: val.id);
         }).toList();
@@ -226,6 +226,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
             message:
                 "Your product has been submitted. We'll notify you \n once it's reviewed.",
             onPress: () {
+              WayaNav.goBack();
               WayaNav.replaceNamed(WayaGramDeals.route);
               // reset();
             },
@@ -233,6 +234,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
             buttonText: 'View Application Status',
             secondButtonText: 'Go to Dashboard',
             onCancel: () {
+               WayaNav.goBack();
               WayaNav.replaceNamed(ManageShop.route, arguments: state.shopId);
               // reset();
             },
@@ -248,6 +250,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
                 ? "Your product has been updated and changes are now live."
                 : "Your product is now live in your shop and ready for customers to discover.",
             onPress: () {
+               WayaNav.goBack();
               WayaNav.replaceNamed(ManageShop.route, arguments: state.shopId);
               //reset();
             },
@@ -255,6 +258,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
             buttonText: 'Add Another Product',
             secondButtonText: 'Go to Shop',
             onCancel: () {
+               WayaNav.goBack();
               WayaNav.removeUntilNamed(BottomView.route, arguments: 1);
               //reset();
             });

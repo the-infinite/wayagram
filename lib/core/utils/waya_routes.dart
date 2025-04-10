@@ -117,18 +117,25 @@ import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.da
 import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
 import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/edit_contestant_profile.dart';
+import 'package:wayagram/features/ugt/my_contest_details/ended_contest_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
+import 'package:wayagram/features/ugt/my_contest_details/full_video_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/voters_list_page.dart';
 import 'package:wayagram/features/wallet/transactions/view/all_transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/view/verify_transaction.dart';
+import 'package:wayagram/features/wallet/view/add_payout_method_screen.dart';
 import 'package:wayagram/features/wallet/view/bank_transfer_screen.dart';
+import 'package:wayagram/features/wallet/view/enter_request_amount_screen.dart';
 import 'package:wayagram/features/wallet/view/fund_account_screen.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:wayagram/features/ugt/create_contest/create_contest.dart';
 import 'package:wayagram/features/ugt/ugt_get_started.dart';
 import 'package:wayagram/features/ugt/ugt_home.dart';
+import 'package:wayagram/features/wallet/view/payout_details.dart';
+import 'package:wayagram/features/wallet/view/payout_success_screen.dart';
+import 'package:wayagram/features/wallet/view/request_payout.dart';
 import 'package:wayagram/features/wallet/view/wallet_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/register_contest.dart';
 import 'package:wayagram/features/event/views/all_upcoming_events.dart';
@@ -172,7 +179,10 @@ class WayaAppRoutes {
           requestId: WayaNav.search['requestId'].toString(),
         ),
     SellerSettlement.route: () => SellerSettlement(),
-    SeeSellerBids.route: () => SeeSellerBids(id: WayaNav.search['id'].toString()),
+    SeeSellerBids.route: () => SeeSellerBids(
+          id: WayaNav.search['id'].toString(),
+          requestId: WayaNav.search['requestId'].toString(),
+        ),
     SeeBuyerBids.route: () => SeeBuyerBids(id: WayaNav.search['id'].toString()),
     Checkout.route: () => Checkout(),
     BuyerCheckout.route: () => BuyerCheckout(),
@@ -295,6 +305,10 @@ class WayaAppRoutes {
     CandidatePostScreen.route: () => CandidatePostScreen(),
     VideoTrimmerScreen.route: () => VideoTrimmerScreen(),
     ViewFullMedia.route: () => ViewFullMedia(),
+    FullVideoView.route: () => FullVideoView(),
+    EndedContestPage.route: () => EndedContestPage(
+          id: WayaNav.search['id'].toString(),
+        ),
     EditPost.route: () => EditPost(
           initialContent: '',
           initialImageUrl: '',
@@ -340,6 +354,11 @@ class WayaAppRoutes {
     VerifyEmail.route: () => VerifyEmail(),
     ReferralPage.route: () => ReferralPage(),
     ReferralHistoryPage.route: () => ReferralHistoryPage(),
+    RequestPayout.route: () => RequestPayout(),
+    AddPayoutMethodScreen.route: () => AddPayoutMethodScreen(),
+    PayoutDetails.route: () => PayoutDetails(),
+    PayoutSuccessScreen.route: () => PayoutSuccessScreen(),
+    EnterRequestAmountScreen.route: () => EnterRequestAmountScreen(),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -364,7 +383,7 @@ class WayaAppRoutes {
 
   /// Helper function that is used to navigate to the route that contains all
   /// the bids of sellers
-  static String getSellerBidsRoute(String id) => "${SeeSellerBids.route}?id=$id";
+  static String getSellerBidsRoute(String id, String requestId) => "${SeeSellerBids.route}?id=$id&requestId=$requestId";
 
   /// Helper function used to generate the route that is supposed to navigate to
   /// all the followers, followings, and mutuals that one user has with another
@@ -440,8 +459,7 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single donation by its ID.
-  static String getWalletDetailsPage(String id) =>
-      "${Donations.route}?id=$id";
+  static String getWalletDetailsPage(String id) => "${Donations.route}?id=$id";
 
   /// Helper function used to generate the route tha tis supposed to take you to
   /// a single order's details screen.

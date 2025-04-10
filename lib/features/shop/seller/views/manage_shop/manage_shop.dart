@@ -75,8 +75,8 @@ class _ManageShopState extends ConsumerState<ManageShop> {
 
       // waya deals
       totalWayaDealProducts =
-          shopState.sellerMetrics!.productMetrics.wayagramDealApprove +
-              shopState.sellerMetrics!.productMetrics.wayagramDealNotApproved;
+          (shopState.sellerMetrics!.productMetrics.wayagramDealApprove  ?? 0)+
+              (shopState.sellerMetrics!.productMetrics.wayagramDealNotApproved ?? 0);
 
       int totalProducts = // products
           shopState.sellerMetrics!.productMetrics.totalProducts;

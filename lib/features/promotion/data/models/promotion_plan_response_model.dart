@@ -1,11 +1,11 @@
-class PromotionPlansResponse {
+class PromotionPlanResponse {
   final String message;
   final bool status;
   final int statusCode;
   final int responseCode;
-  final PlansData data;
+  final PromotionPlanData data;
 
-  PromotionPlansResponse({
+  PromotionPlanResponse({
     required this.message,
     required this.status,
     required this.statusCode,
@@ -13,87 +13,128 @@ class PromotionPlansResponse {
     required this.data,
   });
 
-  factory PromotionPlansResponse.fromJson(Map<String, dynamic> json) {
-    return PromotionPlansResponse(
-      message: json['message'] ?? '',
-      status: json['status'] ?? false,
-      statusCode: json['statusCode'] ?? 0,
-      responseCode: json['responseCode'] ?? 0,
-      data: PlansData.fromJson(json['data'] ?? {}),
+  factory PromotionPlanResponse.fromJson(Map<String, dynamic> json) {
+    return PromotionPlanResponse(
+      message: json['message'],
+      status: json['status'],
+      statusCode: json['statusCode'],
+      responseCode: json['responseCode'],
+      data: PromotionPlanData.fromJson(json['data']),
     );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'message': message,
-      'status': status,
-      'statusCode': statusCode,
-      'responseCode': responseCode,
-      'data': data.toJson(),
-    };
   }
 }
 
-class PlansData {
-  final List<PromotionPlan> plans;
+class PromotionPlanData {
+  final List<PromotionPlanDoc> docs;
+  final int totalDocs;
+  final int limit;
+  final int page;
+  final int totalPages;
+  final bool hasNextPage;
+  final int? nextPage;
+  final bool hasPrevPage;
+  final int? prevPage;
+  final int pagingCounter;
+  final PromotionMetadata metadata;
 
-  PlansData({required this.plans});
-
-  factory PlansData.fromJson(Map<String, dynamic> json) {
-    return PlansData(
-      plans: (json['plans'] as List<dynamic>?)
-              ?.map((e) => PromotionPlan.fromJson(e))
-              .toList() ??
-          [],
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'plans': plans.map((plan) => plan.toJson()).toList(),
-    };
-  }
-}
-
-class PromotionPlan {
-  final String id;
-  final String name;
-  final String description;
-  final List<String> features;
-  final int price;
-  final int duration;
-
-  PromotionPlan({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.features,
-    required this.price,
-    required this.duration,
+  PromotionPlanData({
+    required this.docs,
+    required this.totalDocs,
+    required this.limit,
+    required this.page,
+    required this.totalPages,
+    required this.hasNextPage,
+    this.nextPage,
+    required this.hasPrevPage,
+    this.prevPage,
+    required this.pagingCounter,
+    required this.metadata,
   });
 
-  factory PromotionPlan.fromJson(Map<String, dynamic> json) {
-    return PromotionPlan(
-      id: json['id'] ?? '',
-      name: json['name'] ?? '',
-      description: json['description'] ?? '',
-      features: (json['features'] as List<dynamic>?)
-              ?.map((e) => e.toString())
-              .toList() ??
-          [],
-      price: json['price'] ?? 0,
-      duration: json['duration'] ?? 0,
+  factory PromotionPlanData.fromJson(Map<String, dynamic> json) {
+    return PromotionPlanData(
+      docs: List<PromotionPlanDoc>.from(
+          json['docs'].map((doc) => PromotionPlanDoc.fromJson(doc))),
+      totalDocs: json['totalDocs'],
+      limit: json['limit'],
+      page: json['page'],
+      totalPages: json['totalPages'],
+      hasNextPage: json['hasNextPage'],
+      nextPage: json['nextPage'],
+      hasPrevPage: json['hasPrevPage'],
+      prevPage: json['prevPage'],
+      pagingCounter: json['pagingCounter'],
+      metadata: PromotionMetadata.fromJson(json['metadata']),
     );
   }
+}
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'features': features,
-      'price': price,
-      'duration': duration,
-    };
+class PromotionPlanDoc {
+  final String id;
+  final String basePrice;
+  final String description;
+  final int? durationDays;
+  final String name;
+  final String serviceType;
+  final bool isActive;
+  final dynamic features;
+  final dynamic targetingOptions;
+  final dynamic deletedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  PromotionPlanDoc({
+    required this.id,
+    required this.basePrice,
+    required this.description,
+    this.durationDays,
+    required this.name,
+    required this.serviceType,
+    required this.isActive,
+    this.features,
+    this.targetingOptions,
+    this.deletedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory PromotionPlanDoc.fromJson(Map<String, dynamic> json) {
+    return PromotionPlanDoc(
+      id: json['id'],
+      basePrice: json['basePrice'],
+      description: json['description'],
+      durationDays: json['durationDays'],
+      name: json['name'],
+      serviceType: json['serviceType'],
+      isActive: json['isActive'],
+      features: json['features'],
+      targetingOptions: json['targetingOptions'],
+      deletedAt: json['deletedAt'],
+      createdAt: DateTime.parse(json['createdAt']),
+      updatedAt: DateTime.parse(json['updatedAt']),
+    );
+  }
+}
+
+class PromotionMetadata {
+  final int offset;
+  final bool searchApplied;
+  final List<dynamic> searchFields;
+  final Map<String, dynamic> appliedFilters;
+
+  PromotionMetadata({
+    required this.offset,
+    required this.searchApplied,
+    required this.searchFields,
+    required this.appliedFilters,
+  });
+
+  factory PromotionMetadata.fromJson(Map<String, dynamic> json) {
+    return PromotionMetadata(
+      offset: json['offset'],
+      searchApplied: json['searchApplied'],
+      searchFields: json['searchFields'],
+      appliedFilters: json['appliedFilters'],
+    );
   }
 }

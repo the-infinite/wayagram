@@ -449,6 +449,7 @@ class ChatBubbleWidget extends ConsumerStatefulWidget {
   final DateTime previousDate;
   final ChatInputController controller;
   final int index;
+  final FocusNode inputFocus;
   final bool interactive;
   final bool isLast;
 
@@ -460,6 +461,7 @@ class ChatBubbleWidget extends ConsumerStatefulWidget {
     required this.controller,
     required this.index,
     required this.previousDate,
+    required this.inputFocus,
     this.interactive = true,
     this.isLast = false,
   });
@@ -770,6 +772,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                               width: screenSize.width,
                               child: ChatBubbleWidget(
                                 data: widget.data,
+                                inputFocus: widget.inputFocus,
                                 chat: widget.chat,
                                 previousDate: widget.previousDate,
                                 controller: widget.controller,
@@ -810,6 +813,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                             child: ChatBubbleWidget(
                               data: widget.data,
                               chat: widget.chat,
+                              inputFocus: widget.inputFocus,
                               previousDate: widget.previousDate,
                               controller: widget.controller,
                               index: widget.index,
@@ -976,6 +980,11 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                     ),
                   ],
                 ),
+                onVerticalSwipe: widget.interactive
+                    ? () {
+                        widget.inputFocus.unfocus();
+                      }
+                    : null,
                 onRightSwipe: widget.interactive ? (details) => _replyTo() : null,
                 child: widget.data.senderId == user.id
                     ? _MyBubbleWidget(
