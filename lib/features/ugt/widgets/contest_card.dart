@@ -275,8 +275,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
 
               WayaButton(
                 callback: () {
-                  //  print("Start Date: ${widget.post.startDate}");
-                  //print("End Date: ${widget.post.endDate}");
                   if (widget.post.status == "CLOSED") {
                     WayaNav.toNamed(EndedContestPage.route, arguments: {
                       'id': widget.post.id,
@@ -290,7 +288,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     WayaNav.toNamed('/upcoming-manage-contest-details');
                     return;
                   }
-                  if (isDateInFuture(widget.post.startDate ?? "")) {
+                  if (isDateBefore(widget.post.startDate ?? "")) {
                     ref.read(registerFormProvider.notifier).addDefault(
                         widget.post.contestSettings?.formRequirements ?? [],
                         widget.post);
