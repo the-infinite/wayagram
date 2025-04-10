@@ -12,6 +12,7 @@ class CreatePromotionState {
   final String contentId;
   final String contentType;
   final String planId;
+  final String plan;
   final List<Select> promotionPlans;
   final String startDate;
   final String endDate;
@@ -20,6 +21,10 @@ class CreatePromotionState {
   final TextEditingController name;
   final List<Select> interests;
   final String selectedInterest;
+  final bool initialFetching;
+  final Select? selectedPlan;
+  final String startDateIso;
+  final String endDateIso;
 
   CreatePromotionState(
       {TextEditingController? name,
@@ -37,7 +42,12 @@ class CreatePromotionState {
       this.endDate = '',
       this.budget = 0,
       this.promotionPlans = const [],
+      this.initialFetching = false,
       this.interests = const [],
+      this.selectedPlan,
+      this.plan = '',
+      this.startDateIso = '',
+      this.endDateIso = '',
       this.selectedInterest = ''})
       : name = name ?? TextEditingController();
 
@@ -46,6 +56,7 @@ class CreatePromotionState {
       List<String>? gender,
       String? state,
       List<Select>? states,
+      Select? selectedPlan,
       bool? isLoading,
       String? userId,
       String? contentId,
@@ -53,17 +64,24 @@ class CreatePromotionState {
       String? planId,
       String? startDate,
       String? endDate,
+      String? startDateIso,
+      String? endDateIso,
       List<Select>? ageRangeList,
       List<Select>? promotionPlans,
       String? selectedAgeRanges,
       TextEditingController? name,
+      bool? initialFetching,
       List<Select>? interests,
+      String? plan,
       String? selectedInterest}) {
     return CreatePromotionState(
         budget: budget ?? this.budget,
         gender: gender ?? this.gender,
         state: state ?? this.state,
+        startDateIso: startDateIso ?? this.startDateIso,
+        endDateIso: endDateIso ?? this.endDateIso,
         states: states ?? this.states,
+        selectedPlan: selectedPlan ?? this.selectedPlan,
         isLoading: isLoading ?? this.isLoading,
         userId: userId ?? this.userId,
         contentId: contentId ?? this.contentId,
@@ -76,6 +94,8 @@ class CreatePromotionState {
         name: name ?? this.name,
         promotionPlans: promotionPlans ?? this.promotionPlans,
         interests: interests ?? this.interests,
+        initialFetching: initialFetching ?? this.initialFetching,
+        plan: plan ?? this.plan,
         selectedInterest: selectedInterest ?? this.selectedInterest);
   }
 
@@ -84,7 +104,7 @@ class CreatePromotionState {
         interests: [selectedInterest],
         locations: [state],
         ageRanges: [selectedAgeRanges],
-        gender: gender.isNotEmpty ? gender.toString() : null);
+        gender: gender.isNotEmpty ? gender.first : null);
   }
 
   CreatePromotionModel get createPromotionModel {
@@ -94,8 +114,8 @@ class CreatePromotionState {
         userId: userId,
         planId: planId,
         contentType: contentType,
-        startDate: startDate,
-        endDate: endDate,
+        startDate: startDateIso,
+        endDate: endDateIso,
         contentId: contentId,
         promotionTarget: promoTarget);
   }

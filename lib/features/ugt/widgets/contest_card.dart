@@ -15,6 +15,7 @@ import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/my_contest_details/ended_contest_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
@@ -274,8 +275,12 @@ class _ContestCardState extends ConsumerState<ContestCard> {
 
               WayaButton(
                 callback: () {
-                  //  print("Start Date: ${widget.post.startDate}");
-                  //print("End Date: ${widget.post.endDate}");
+                  if (widget.post.status == "CLOSED") {
+                    WayaNav.toNamed(EndedContestPage.route, arguments: {
+                      'id': widget.post.id,
+                    });
+                    return;
+                  }
                   if (widget.post.profileId ==
                       voteNotifier.getLoggedInUserId()) {
                     ref.read(selectedContestProvider.notifier).state =
@@ -283,7 +288,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     WayaNav.toNamed('/upcoming-manage-contest-details');
                     return;
                   }
-                  if (isDateInFuture(widget.post.startDate ?? "")) {
+                  if (isDateBefore(widget.post.startDate ?? "")) {
                     ref.read(registerFormProvider.notifier).addDefault(
                         widget.post.contestSettings?.formRequirements ?? [],
                         widget.post);
@@ -297,7 +302,9 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     WayaNav.toNamed('/upcoming-manage-contest-details');
                   }
                 },
-                text: "View Details",
+                text: widget.post.status == "CLOSED"
+                    ? "View Result"
+                    : "View Details",
               ),
               const Gap(20),
               Row(

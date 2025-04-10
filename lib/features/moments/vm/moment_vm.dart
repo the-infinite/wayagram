@@ -129,7 +129,8 @@ class MomentVm extends StateNotifier<MomentState> {
     ];
 
     final currentFont = state.textStyle.fontFamily;
-    final currentIndex = fonts.indexWhere((font) => font.fontFamily == currentFont);
+    final currentIndex =
+        fonts.indexWhere((font) => font.fontFamily == currentFont);
     final nextIndex = (currentIndex + 1) % fonts.length;
 
     updateTextStyle(fonts[nextIndex].copyWith(
@@ -169,7 +170,8 @@ class MomentVm extends StateNotifier<MomentState> {
             final videoDuration = await _getVideoDuration(videoFile);
 
             if (videoDuration > 30) {
-              final trimmedFile = await WayaNav.to(VideoTrimmerScreen(videoFile: videoFile));
+              final trimmedFile =
+                  await WayaNav.to(VideoTrimmerScreen(videoFile: videoFile));
 
               if (trimmedFile != null) {
                 state = state.copyWith(
@@ -199,7 +201,9 @@ class MomentVm extends StateNotifier<MomentState> {
 
         //? This is fine.
         else {
-          WayaUtils.showModalSheet(context, child: WayaErrorDialog(title: 'Unsupported file type: ${file.extension}'));
+          WayaUtils.showModalSheet(context,
+              child: WayaErrorDialog(
+                  title: 'Unsupported file type: ${file.extension}'));
         }
       } else {
         state = state.copyWith(
@@ -226,7 +230,8 @@ class MomentVm extends StateNotifier<MomentState> {
   }
 
   Future<void> cropImage(BuildContext context, WidgetRef ref) async {
-    if (state.selectedFile == null || state.mediaType != MediaType.image) return;
+    if (state.selectedFile == null || state.mediaType != MediaType.image)
+      return;
 
     final file = state.selectedFile;
     if (file == null) return;
@@ -312,7 +317,8 @@ class MomentVm extends StateNotifier<MomentState> {
       } else if (state.mediaUrl != null) {
         content = state.mediaUrl!;
       }
-    } else if (state.type == StatusType.media && state.mediaType == MediaType.video) {
+    } else if (state.type == StatusType.media &&
+        state.mediaType == MediaType.video) {
       contentType = 'video';
       if (state.selectedFile != null) {
         final publicUrl = await WayaFileRepository.instance.uploadFile(
@@ -335,12 +341,14 @@ class MomentVm extends StateNotifier<MomentState> {
     try {
       final userId = await _secureDataSource.getUserId();
 
-      final userProfile = ref.watch(profileVmProvider).userAccountModel?.data?.userdata?.user;
+      final userProfile =
+          ref.watch(profileVmProvider).userAccountModel?.data?.userdata?.user;
 
       final response = state.isEditingMode
           ? await _momentRepository.editMoment(
               userId: userId!,
-              name: "${userProfile?.firstName.capitalizeFirst ?? ''} ${userProfile?.lastName.capitalizeFirst ?? ''}",
+              name:
+                  "${userProfile?.firstName.capitalizeFirst ?? ''} ${userProfile?.lastName.capitalizeFirst ?? ''}",
               image: userProfile?.profilePicture ?? '',
               content: content,
               caption: caption,
@@ -350,7 +358,8 @@ class MomentVm extends StateNotifier<MomentState> {
               contentType: contentType)
           : await _momentRepository.createMoment(
               userId: userId!,
-              name: "${userProfile?.firstName.capitalizeFirst ?? ''} ${userProfile?.lastName.capitalizeFirst ?? ''}",
+              name:
+                  "${userProfile?.firstName.capitalizeFirst ?? ''} ${userProfile?.lastName.capitalizeFirst ?? ''}",
               image: userProfile?.profilePicture ?? '',
               content: content,
               caption: caption,
@@ -361,7 +370,8 @@ class MomentVm extends StateNotifier<MomentState> {
         reset();
         final momentData = MomentData.fromJson(response.data['data']);
         if (content.trim().isNotEmpty && selectedAsset != null) {
-          final target = await WayaFileHelper.getMomentDirectory(momentData, "/x/x/$content");
+          final target = await WayaFileHelper.getMomentDirectory(
+              momentData, "/x/x/$content");
           try {
             await selectedAsset.copy(target.path);
           } catch (e) {
@@ -394,11 +404,13 @@ class MomentVm extends StateNotifier<MomentState> {
     try {
       state = state.copyWith(isLoadingUserMoments: true);
       final userId = await _secureDataSource.getUserId();
-      final response = await _momentRepository.getUserMoments(userId: userId!, page: page);
+      final response =
+          await _momentRepository.getUserMoments(userId: userId!, page: page);
       List<MomentData> moments = [];
       bool hasNextPage = false;
       if (response.success) {
-        MomentResponseModel responseModel = MomentResponseModel.fromJson(response.data);
+        MomentResponseModel responseModel =
+            MomentResponseModel.fromJson(response.data);
 
         moments = responseModel.data.docs;
         moments = moments.reversed.where((m) => m.active).toList();
@@ -424,15 +436,18 @@ class MomentVm extends StateNotifier<MomentState> {
     state = state.copyWith(momentId: mId);
   }
 
-  Future<PaginatedResult<MomentViewer>?> momentViewers({required int page}) async {
+  Future<PaginatedResult<MomentViewer>?> momentViewers(
+      {required int page}) async {
     try {
       state = state.copyWith(isLoadingUserMoments: true);
 
-      final response = await _momentRepository.momentViewers(momentId: state.momentId, page: page);
+      final response = await _momentRepository.momentViewers(
+          momentId: state.momentId, page: page);
       List<MomentViewer> momentViewers = [];
       bool hasNextPage = false;
       if (response.success) {
-        MomentViewerResponseModel responseModel = MomentViewerResponseModel.fromJson(response.data);
+        MomentViewerResponseModel responseModel =
+            MomentViewerResponseModel.fromJson(response.data);
         List<MomentViewer> viewers = responseModel.data.docs;
         hasNextPage = responseModel.data.hasNextPage;
         for (MomentViewer viewer in viewers) {
@@ -441,7 +456,8 @@ class MomentVm extends StateNotifier<MomentState> {
           final user = detail.$1;
           final profile = detail.$2;
           viewer = viewer.copyWith(
-            name: "${user.firstName.capitalizeFirst} ${user.lastName.capitalizeFirst}",
+            name:
+                "${user.firstName.capitalizeFirst} ${user.lastName.capitalizeFirst}",
             username: "${profile.username}",
             image: user.profilePicture,
           );
@@ -474,7 +490,8 @@ class MomentVm extends StateNotifier<MomentState> {
         List<MomentData> moments = List.from(state.myMoments);
         moments.where((m) => m.id != momentId).toList();
 
-        state = state.copyWith(myMoments: moments.where((m) => m.id != momentId).toList());
+        state = state.copyWith(
+            myMoments: moments.where((m) => m.id != momentId).toList());
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -486,12 +503,34 @@ class MomentVm extends StateNotifier<MomentState> {
     }
   }
 
+  Future<MomentData?> getSingleMoment(String id) async {
+    try {
+      final response = await _momentRepository.getSingleMoment(id: id);
+      List<MomentData>? moments;
+      if (response.success) {
+        MomentResponseModel responseModel =
+            MomentResponseModel.fromJson(response.data);
+
+        moments = responseModel.data.docs;
+      }
+
+      return moments?[0];
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
   Future<void> reportMoment(
-      {required String momentId, required String reason, String? comment, required BuildContext context}) async {
+      {required String momentId,
+      required String reason,
+      String? comment,
+      required BuildContext context}) async {
     try {
       state = state.copyWith(isReportingMoment: true);
       final userId = await _secureDataSource.getUserId();
-      final response = await _momentRepository.reportMoment(userId: userId!, momentId: momentId, reason: reason);
+      final response = await _momentRepository.reportMoment(
+          userId: userId!, momentId: momentId, reason: reason);
       if (response.success && context.mounted) {
         // show success modal
         WayaNav.goBack();
@@ -543,13 +582,16 @@ class MomentVm extends StateNotifier<MomentState> {
     state = state.copyWith(
         isEditingMode: true,
         caption: moment.caption,
-        showCaption: moment.caption != null && moment.caption!.isNotEmpty ? true : false,
+        showCaption:
+            moment.caption != null && moment.caption!.isNotEmpty ? true : false,
         momentId: moment.id,
         selectedFile: null,
         type: moment.contentType == 'text' ? StatusType.text : StatusType.media,
-        mediaType: moment.content == 'video' ? MediaType.video : MediaType.image,
-        backgroundColor:
-            moment.color != null && moment.color!.isNotEmpty ? MomentHelper.hexToColor(moment.color!) : null,
+        mediaType:
+            moment.content == 'video' ? MediaType.video : MediaType.image,
+        backgroundColor: moment.color != null && moment.color!.isNotEmpty
+            ? MomentHelper.hexToColor(moment.color!)
+            : null,
         text: moment.contentType == 'text' ? moment.content : '',
         textStyle: moment.fontType != null && moment.fontType!.isNotEmpty
             ? MomentHelper.textStyleFromJson(moment.fontType!)
@@ -566,7 +608,8 @@ class MomentVm extends StateNotifier<MomentState> {
   }
 
   bool hasViewedMoment(String id) {
-    return WayaLocalDataSource.instance.getViewedMoments()?.contains(id) ?? false;
+    return WayaLocalDataSource.instance.getViewedMoments()?.contains(id) ??
+        false;
   }
 }
 

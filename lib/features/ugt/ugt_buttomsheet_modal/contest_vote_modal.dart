@@ -136,11 +136,11 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
           .verifyWalletPin(isLoading, _pin, {
         "contestId": widget.model.contestId ?? "",
         "contestantId": widget.model.contestantId ?? "",
-        "hostUserId": widget.model.hostUserId ?? "",
-        "amount": widget.amount,
+        // "hostUserId": widget.model.hostUserId ?? "",
+        // "amount": widget.amount,
         "numberOfVotes": widget.numOfVote,
-        "profileId": widget.model.profileId ?? "",
-        "type": widget.isFree ? "FREE" : "PAID"
+        //  "profileId": widget.model.profileId ?? "",
+        //"type": widget.isFree ? "FREE" : "PAID"
       });
 
       if (isPass) {
@@ -176,7 +176,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-           Text(
+          Text(
             'Enter your PIN',
             style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
           ),
@@ -204,7 +204,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
               child: Center(
                 child: index < _pin.length
                     ? Text("*",
-                        style:  TextStyle(
+                        style: TextStyle(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
                         ))
@@ -256,8 +256,8 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                   );
                 } else {
                   return _buildKeypadButton(
-                    child: Text('${index + 1}',
-                        style:  TextStyle(fontSize: 24.sp)),
+                    child:
+                        Text('${index + 1}', style: TextStyle(fontSize: 24.sp)),
                     onPressed: () => _addDigit('${index + 1}'),
                   );
                 }
@@ -614,11 +614,11 @@ class _ConfirmVoteOptionModalState
                             .voteContestant(isLoading, {
                           "contestId": widget.model.contestId ?? "",
                           "contestantId": widget.model.contestantId ?? "",
-                          "hostUserId": widget.model.hostUserId ?? "",
-                          "amount": "0",
+                          // "hostUserId": widget.model.hostUserId ?? "",
+                          // "amount": "0",
                           "numberOfVotes": "1",
-                          "profileId": widget.model.profileId ?? "",
-                          "type": "FREE"
+                          // "profileId": widget.model.profileId ?? "",
+                          //"type": "FREE"
                         });
 
                         if (isPass) {
@@ -987,8 +987,8 @@ class _VoteSuccessModalState extends ConsumerState<VoteSuccessModal> {
               callback: () async {
                 WayaNav.goBack();
 
-                WayaNav.removeAllUntil(
-                    AdminContestDetails(id:""), "/upcoming-manage-contest-details");
+                WayaNav.removeAllUntil(AdminContestDetails(id: ""),
+                    "/upcoming-manage-contest-details");
               },
               text: "Return to Contest Page",
             ),

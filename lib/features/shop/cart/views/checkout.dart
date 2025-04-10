@@ -465,11 +465,12 @@ class _CheckoutState extends ConsumerState<Checkout> {
                               cartId: arg.cartId,
                               shopId: arg.cartItem.shopId,
                               amount: subTotal + deliveryCharge,
-                              pickupAddress: pickUpindex != -1 &&
-                                      selectedOption == 'Pickup'
-                                  ? arg.cartItem.products[pickUpindex]
-                                      .pickUpAddress
-                                  : null);
+                              pickupAddress:
+                                  arg.cartItem.deliveryAddress == null
+                                      ? arg.cartItem.products[pickUpindex]
+                                          .pickUpAddress
+                                      : null
+                                      );
                         }
                       },
                 text: 'CheckOut',

@@ -168,19 +168,55 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           children: [
                             if (poll.choices != null)
                               ...poll.choices!.map(
-                                  (e)=> WayaInformativeProgressBar(
-                                    title: '${e.text?.capitalizeFirst}',
-                                    text: '${e.text?.capitalizeFirst}',
-                                    subtitle: '',
-                                    progress: double.parse(((e.voteCount!) / viewModel.fetchAllPols[index].voteCount!).toStringAsFixed(2)),
-                                    height: 60.0,
-                                    filledRegion: wayaTheme.colorScheme.customPrimary,
-                                    unfilledRegion: wayaTheme.colorScheme.greyColor200,
-                                    count: e.voteCount!,
-                                    fontSize: 12,
-                                    activeTextColor:  wayaTheme.colorScheme.white,
-                                    inactiveTextColor:  wayaTheme.colorScheme.primary500,
-                                    imageUrl: e.imageUrl,
+                                  (e)=> InkWell(
+                                  onTap:(){
+                                   if (currentDate.isAfter(expirationDate)) {
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            'The poll has ended.',
+                                            style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12),
+                                          ),
+                                          backgroundColor: WayaColors.primary,
+                                          duration: Duration(seconds: 2),
+                                        ),
+                                      );
+                                    }else if(poll.pollType == 'free'){
+                                      ref.read(createPollVotingProvider.notifier).castFreeVote(
+                                         1,
+                                          '${e.id}',
+                                          '${poll.id}',
+                                          context,
+                                          '${e.text}',
+                                          '${poll.url}');
+                                    }
+                                    else {
+                                      WayaUtils.showModalSheet(
+                                        context,
+                                        child: VoteOptionModal(
+                                          voteFee: '${poll.feePerVote}',
+                                          choiceId: '${e.id}',
+                                          pollId: '${poll.id}',
+                                          candidateName: '${e.text}',
+                                          votingLink: '${poll.url}',
+                                        ),
+                                      );
+                                    }},
+                                    child: WayaInformativeProgressBar(
+                                      title: '${e.text?.capitalizeFirst}',
+                                      text: '${e.text?.capitalizeFirst}',
+                                      subtitle: '',
+                                      //progress: 0,
+                                      progress: double.parse(((e.voteCount!) / viewModel.fetchAllPols[index].voteCount!).toStringAsFixed(2)),
+                                      height: 60.0,
+                                      filledRegion: wayaTheme.colorScheme.customPrimary,
+                                      unfilledRegion: wayaTheme.colorScheme.greyColor200,
+                                      count: e.voteCount!,
+                                      fontSize: 12,
+                                      activeTextColor:  wayaTheme.colorScheme.white,
+                                      inactiveTextColor:  wayaTheme.colorScheme.primary500,
+                                      imageUrl: e.imageUrl,
+                                    ),
                                   ),
                                /* (e) =>
                                     choiceStatisticsSecond(

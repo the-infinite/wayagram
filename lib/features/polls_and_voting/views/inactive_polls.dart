@@ -188,12 +188,12 @@ class _InActivePollsState extends ConsumerState<InActivePolls> {
                                     );
                                   }
                                   else{
-                                    WayaUtils.showModalSheet(
-                                      context,
-                                      child: VoteOptionModal(voteFee:  '${poll.feePerVote}',choiceId: '${e.id}',
-                                        pollId: '${poll.id}',candidateName: '${e.text}',
-                                        votingLink: '${poll.url}',),
-                                    );
+                                    // WayaUtils.showModalSheet(
+                                    //   context,
+                                    //   child: VoteOptionModal(voteFee:  '${poll.feePerVote}',choiceId: '${e.id}',
+                                    //     pollId: '${poll.id}',candidateName: '${e.text}',
+                                    //     votingLink: '${poll.url}',),
+                                    // );
                                   }
                                 }))
                     ],

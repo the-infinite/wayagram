@@ -101,7 +101,9 @@ class CartVm extends StateNotifier<CartState> {
       state = state.copyWith(cart: newCart);
       // Post cart item
       getTotalProductQuantity();
-      await postCartItem(id: productId, shopId: shopId);
+      final success = await postCartItem(id: productId, shopId: shopId);
+
+      if (!success) return;
       return;
     }
 
@@ -139,7 +141,9 @@ class CartVm extends StateNotifier<CartState> {
           );
           productAdded = true;
           print("add item for a shop ");
-          await postCartItem(id: productId, shopId: shopId);
+       final success =   await postCartItem(id: productId, shopId: shopId);
+
+          if (!success) return;
         }
 
         updatedItems[i] = updatedItems[i].copyWith(products: updatedProducts);
@@ -180,7 +184,9 @@ class CartVm extends StateNotifier<CartState> {
         ),
       );
 
-      await postCartItem(id: productId, shopId: shopId);
+   final success =   await postCartItem(id: productId, shopId: shopId);
+
+      if (!success) return;
     }
 
     // final total = updatedItems.fold<double>(
@@ -201,12 +207,21 @@ class CartVm extends StateNotifier<CartState> {
     getTotalProductQuantity();
     // Update cart
     //
+    print("fveveve");
+    print(state.cart?.toJson());
+    print("fveveve");
   }
 
   void removeFromCart(
-      {required String productId, required String shopId}) async {
+      {required String productId,
+      required String shopId,
+      bool isNotWayaDeal = true}) async {
     final existingCart = state.cart;
     if (existingCart == null) return;
+
+    print(productId);
+
+    print(existingCart.toJson());
 
     final updatedItems = existingCart.items
         .map((item) {
@@ -253,10 +268,11 @@ class CartVm extends StateNotifier<CartState> {
     );
     getTotalProductQuantity();
     // Decrease cart item
+    if (!isNotWayaDeal) return;
     await decreaseCartItem(shopId: shopId, id: productId);
   }
 
-  Future<void> postCartItem(
+  Future<bool> postCartItem(
       {required String id, required String shopId}) async {
     try {
       final userId = await _secureDataSource.getUserId();
@@ -267,16 +283,21 @@ class CartVm extends StateNotifier<CartState> {
         userId: userId!,
         shopId: shopId,
       );
-
+      bool isSuccess = false;
       if (response.success) {
+        isSuccess = true;
         print(response.data);
       } else if (response.data['responseCode'] == 703) {
-        removeFromCart(productId: id, shopId: shopId);
+        isSuccess = false;
+        removeFromCart(productId: id, shopId: shopId, isNotWayaDeal: false);
         WayaSnackBar.showToast(
             "You are not yet eligible to purchase another wayagram deal");
       }
+
+      return isSuccess;
     } catch (e) {
       print(e);
+      return false;
     }
   }
 
