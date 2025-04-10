@@ -205,7 +205,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                           WayaTextFormField(
                                             line: 6,
                                             showBorder: false,
-                                            keyboardType: TextInputType.text,
+                                            keyboardType: TextInputType.multiline,
                                             controller: viewModel.content,
                                             hintText: 'what is on your mind?',
                                             borderColor: formState.hasError && viewModel.content.text.isEmpty

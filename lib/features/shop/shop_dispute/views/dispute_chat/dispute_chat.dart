@@ -117,14 +117,12 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
       }
 
       if (disputeState.dispute != null) {
-        final order = Order.fromJson(
-            disputeState.dispute!.ticketBody.metadata.orderedItem);
+        final order = Order.fromJson(disputeState.dispute!.ticketBody.metadata.orderedItem);
 
         String completedAt = order.deliveryStatusHistory.isNotEmpty
             ? order.deliveryStatusHistory.last.updatedAt
             : order.pickupStatusHistory.last.updatedAt;
-        int daysLeft =
-            14 - DateTime.now().difference(DateTime.parse(completedAt)).inDays;
+        int daysLeft = 14 - DateTime.now().difference(DateTime.parse(completedAt)).inDays;
 
         isButtonDisabled = daysLeft <= 0;
         noOfDaysLeft = daysLeft;
@@ -149,7 +147,6 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
             surfaceTintColor: Colors.transparent,
             leading: Container(
               height: double.infinity,
-             
               alignment: Alignment.centerLeft,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -226,42 +223,29 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
 
                   //* Fourth, the audio call button.
                   Padding(
-                    padding: const EdgeInsets.only(
-                      right: 15,
-                      top: 6
-                    ),
+                    padding: const EdgeInsets.only(right: 15, top: 6),
                     child: IntrinsicHeight(
                         child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         WayaButton(
-                          callback:
-                              (disputeState.dispute?.escalatedBy != null ||
-                                      isButtonDisabled)
-                                  ? null
-                                  : () {
-                                      final order = Order.fromJson(disputeState
-                                          .dispute!
-                                          .ticketBody
-                                          .metadata
-                                          .orderedItem);
-                                      final id = disputeState.dispute?.id;
-                                      final bool isBuyer =
-                                          disputeState.dispute?.sellerId !=
-                                              ConversationState.self.id;
-                                      escalateToMediator(
-                                          context: context,
-                                          order: order,
-                                          tobeEscalatedBy:
-                                              isBuyer ? "buyer" : "seller",
-                                          disputeId: id!);
-                                    },
+                          callback: (disputeState.dispute?.escalatedBy != null || isButtonDisabled)
+                              ? null
+                              : () {
+                                  final order = Order.fromJson(disputeState.dispute!.ticketBody.metadata.orderedItem);
+                                  final id = disputeState.dispute?.id;
+                                  final bool isBuyer = disputeState.dispute?.sellerId != ConversationState.self.id;
+                                  escalateToMediator(
+                                      context: context,
+                                      order: order,
+                                      tobeEscalatedBy: isBuyer ? "buyer" : "seller",
+                                      disputeId: id!);
+                                },
                           height: null,
-                          textStyle: theme.textTheme.descriptionStyle.copyWith(
-                              fontSize: 13.sp, fontWeight: FontWeight.w500),
+                          textStyle:
+                              theme.textTheme.descriptionStyle.copyWith(fontSize: 13.sp, fontWeight: FontWeight.w500),
                           text: "Escalate to mediator",
                           horizontalPadding: 8,
-
                           verticalPadding: 5,
                         ),
                         const Gap(1),
@@ -276,13 +260,11 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                             Text(
                               "$noOfDaysLeft days left",
                               style: theme.textTheme.hintStyle.copyWith(
-                                  color: theme.colorScheme.customPrimary,
-                                  fontSize: 12.sp,
-                                  fontWeight: FontWeight.w500),
+                                  color: theme.colorScheme.customPrimary, fontSize: 12.sp, fontWeight: FontWeight.w500),
                             ),
                           ],
                         ),
-                       // const Gap(2),
+                        // const Gap(2),
                       ],
                     )),
                   ),
@@ -357,6 +339,7 @@ class _DisputeChatState extends ConsumerState<DisputeChat> {
                       },
                       builder: (context, index) => ChatBubbleWidget(
                         index: index,
+                        inputFocus: focusNode,
                         previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
                         data: state.messages[index],
                         chat: state.chat,

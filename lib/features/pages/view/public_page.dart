@@ -239,7 +239,7 @@ class _PublicPageState extends ConsumerState<PublicPage>
                           onTap: _followPage,
                           child: Container(
                             margin: EdgeInsets.only(right: 20.w),
-                            padding: EdgeInsets.all(5.0),
+                            padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
                             decoration: BoxDecoration(
                               border: Border.all(
                                   color: wayaTheme.colorScheme.primary600,

@@ -179,7 +179,10 @@ class WayaAppRoutes {
           requestId: WayaNav.search['requestId'].toString(),
         ),
     SellerSettlement.route: () => SellerSettlement(),
-    SeeSellerBids.route: () => SeeSellerBids(id: WayaNav.search['id'].toString()),
+    SeeSellerBids.route: () => SeeSellerBids(
+          id: WayaNav.search['id'].toString(),
+          requestId: WayaNav.search['requestId'].toString(),
+        ),
     SeeBuyerBids.route: () => SeeBuyerBids(id: WayaNav.search['id'].toString()),
     Checkout.route: () => Checkout(),
     BuyerCheckout.route: () => BuyerCheckout(),
@@ -380,7 +383,7 @@ class WayaAppRoutes {
 
   /// Helper function that is used to navigate to the route that contains all
   /// the bids of sellers
-  static String getSellerBidsRoute(String id) => "${SeeSellerBids.route}?id=$id";
+  static String getSellerBidsRoute(String id, String requestId) => "${SeeSellerBids.route}?id=$id&requestId=$requestId";
 
   /// Helper function used to generate the route that is supposed to navigate to
   /// all the followers, followings, and mutuals that one user has with another
@@ -456,8 +459,7 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single donation by its ID.
-  static String getWalletDetailsPage(String id) =>
-      "${Donations.route}?id=$id";
+  static String getWalletDetailsPage(String id) => "${Donations.route}?id=$id";
 
   /// Helper function used to generate the route tha tis supposed to take you to
   /// a single order's details screen.
