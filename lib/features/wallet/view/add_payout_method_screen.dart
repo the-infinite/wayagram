@@ -61,6 +61,7 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                   fontSize: 16.sp,
                   color: wayaTheme.colorScheme.greyColor500
               )),
+
           Form(
               key: _formKey,
               child: Column(
