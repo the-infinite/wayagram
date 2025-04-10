@@ -12,8 +12,13 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/view/components/modal_content.dart';
+import 'package:wayagram/features/wallet/view/enter_request_amount_screen.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
+import 'package:wayagram/features/wallet/view/request_payout.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
+
+import '../payout_details.dart';
+import '../payout_success_screen.dart';
 
 class InstructionContainer extends StatelessWidget {
   const InstructionContainer({
@@ -112,30 +117,33 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
           ),
           const Gap(10),
           Row(
-            mainAxisSize: MainAxisSize.min,
+            //mainAxisSize: MainAxisSize.min,
             children: [
-              WayaButton(
-                text: 'Fund Wallet',
-                horizontalPadding: 22,
-                color: wayaTheme.colorScheme.onPrimary,
-                textColor: wayaTheme.colorScheme.customPrimary,
-                height: 36.h,
-                textStyle: wayaTheme.textTheme.descriptionStyle
-                    .wayaCopyWith(color: wayaTheme.colorScheme.customPrimary, fontSize: 12),
-                callback: () => WayaNav.toNamed(FundWalletOptionsScreen.route),
-              ),
-              SizedBox(width: 10.w),
               WayaButton(
                   horizontalPadding: 22,
                   height: 36.h,
+                  radius: 30.0,
                   color: wayaTheme.colorScheme.onPrimary.withOpacity(0.4),
-                  text: 'Learn More',
+                  text: 'Fund Wallet',
                   textStyle: wayaTheme.textTheme.labelSmall
                       ?.wayaCopyWith(color: wayaTheme.colorScheme.onPrimary),
-                  callback: () => WayaUtils.showModalSheet(
-                        context,
-                        child: LearnMoreInstructionsContent(),
-                      )),
+                   callback: () => WayaNav.toNamed(FundWalletOptionsScreen.route),),
+              SizedBox(width: 10.w),
+              WayaButton(
+                horizontalPadding: 22,
+                height: 36.h,
+                radius: 30.0,
+                color: wayaTheme.colorScheme.onPrimary.withOpacity(0.4),
+                text: 'Request Payout',
+                textStyle: wayaTheme.textTheme.labelSmall
+                    ?.wayaCopyWith(color: wayaTheme.colorScheme.onPrimary),
+                callback: (){
+                  print('Request ==>> Wallet');
+                  WayaNav.toNamed(RequestPayout.route);
+                }),
+             SizedBox(width: 10,),
+             Image.asset('assets/images/wallet/q.png', height: 24,)
+
             ],
           ),
         ],
