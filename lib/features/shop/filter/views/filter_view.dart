@@ -53,12 +53,12 @@ class _FilterViewState extends ConsumerState<FilterView> {
                 filterState.discountType.contains(product.discountTypeId)) &&
             (filterState.condition.isEmpty ||
                 filterState.condition.contains(product.condition)) &&
-            (product.height >= filterState.minHeight &&
-                product.height <= filterState.maxHeight) &&
-            (product.width >= filterState.minWidth &&
-                product.width <= filterState.maxWidth) &&
-            (product.depth >= filterState.minDepth &&
-                product.depth <= filterState.maxDepth) &&
+            ((product.height ?? 0) >= filterState.minHeight &&
+                (product.height ?? 0) <= filterState.maxHeight) &&
+            ((product.width ?? 0) >= filterState.minWidth &&
+               ( product.width ?? 0) <= filterState.maxWidth) &&
+            ((product.depth ?? 0) >= filterState.minDepth &&
+                (product.depth ?? 0) <= filterState.maxDepth) &&
             (filterState.colors.isEmpty ||
                 (product.color != null &&
                     filterState.colors.contains(product.color))) &&

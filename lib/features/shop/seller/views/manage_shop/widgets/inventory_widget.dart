@@ -23,7 +23,7 @@ class InventoryWidget extends StatelessWidget {
     final wayaTheme = Theme.of(context);
     final screenWidth = context.width;
 
-    final titlefontSize = screenWidth * 0.028;
+    final titlefontSize = screenWidth * 0.031;
 
     double baseMetricFontSize = screenWidth * 0.050;
 

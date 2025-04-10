@@ -32,28 +32,23 @@ class _PromotionDetail extends ConsumerState<PromotionDetail> {
           children: [
             PromotedWidget(isDetail: true),
             const Gap(15),
-            GridView(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 0,
-                  childAspectRatio: 1.2,
-                  crossAxisSpacing: 8),
+          Row(
+              
+             spacing: 6,
               children: [
-                InventoryWidget(
+                Expanded(child: InventoryWidget(
                   metrics: "N240,000",
                   color: wayaTheme.colorScheme.transparent,
                   title: "Promotion Cost",
                   border: Border.all(
                       width: 1, color: wayaTheme.colorScheme.greyColor300),
-                ),
-                InventoryWidget(
+                ),),
+                Expanded(child: InventoryWidget(
                     metrics: "2,343",
                     color: wayaTheme.colorScheme.transparent,
                     title: "Impression",
                     border: Border.all(
-                        width: 1, color: wayaTheme.colorScheme.greyColor300)),
+                        width: 1, color: wayaTheme.colorScheme.greyColor300)),)
               ],
             ),
             const Gap(10),
