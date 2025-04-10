@@ -10,6 +10,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/promotion/bottom_sheet/pay_for_promotion.dart';
 import 'package:wayagram/features/promotion/data/models/create_promotion_state.dart';
 import 'package:wayagram/features/promotion/data/repo/promotion_repository.dart';
+import 'package:wayagram/features/promotion/views/promotion_dashboard.dart';
 import 'package:wayagram/features/promotion/vm/promotion_vm.dart';
 
 class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
@@ -142,7 +143,7 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
       state = state.copyWith(budget: budget);
       state = state.copyWith(selectedAgeRanges: "18-25");
 
-       print(state.createPromotionModel.toJson());
+      print(state.createPromotionModel.toJson());
 
       // return;
 
@@ -164,6 +165,7 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
           await _repository.createPromotion(state.createPromotionModel);
 
       if (response.success) {
+        WayaNav.goBack();
         if (context.mounted) {
           return WayaUtils.showNotice(
               context: context,
@@ -171,6 +173,8 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
               buttonText: "View Promotion Analytics",
               onPress: () {
                 // view analytics
+                WayaNav.goBack();
+                WayaNav.replaceNamed(PromotionDashboard.route);
               },
               message:
                   "Your moment is now being promoted to your selected audience. Track its performance in the analytics section.",

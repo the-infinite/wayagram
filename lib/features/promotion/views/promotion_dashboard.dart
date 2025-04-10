@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/features/promotion/vm/promotion_vm.dart';
 import 'package:wayagram/features/promotion/widgets/promoted_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 
@@ -17,12 +18,22 @@ class PromotionDashboard extends ConsumerStatefulWidget {
 }
 
 class _PromotionDashboard extends ConsumerState<PromotionDashboard> {
+  late final notifier = ref.read(promoteVmProvider.notifier);
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await notifier.getPromos();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(promoteVmProvider);
     final wayaTheme = Theme.of(context);
     // TODO: implement build
     return WayaScaffold(
-        isLoading: false,
+        isLoading: state.loadingPromos,
         isScrollable: true,
         title: "Promotions",
         body: Column(
@@ -51,43 +62,68 @@ class _PromotionDashboard extends ConsumerState<PromotionDashboard> {
               ],
             ),
             const Gap(15),
-            GridView(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 0,
-                  childAspectRatio: 1.2,
-                  crossAxisSpacing: 8),
+            Row(
+              spacing: 6,
               children: [
-                InventoryWidget(
-                  metrics: "N240,000",
-                  color: wayaTheme.colorScheme.transparent,
-                  title: "Promotion Cost",
-                  border: Border.all(
-                      width: 1, color: wayaTheme.colorScheme.greyColor300),
-                ),
-                InventoryWidget(
-                    metrics: "2,343",
+                Expanded(
+                  child: InventoryWidget(
+                    metrics: "N240,000",
                     color: wayaTheme.colorScheme.transparent,
-                    title: "Impression",
+                    title: "Promotion Cost",
                     border: Border.all(
-                        width: 1, color: wayaTheme.colorScheme.greyColor300)),
+                        width: 1, color: wayaTheme.colorScheme.greyColor300),
+                  ),
+                ),
+                Expanded(
+                  child: InventoryWidget(
+                      metrics: "2,343",
+                      color: wayaTheme.colorScheme.transparent,
+                      title: "Impression",
+                      border: Border.all(
+                          width: 1, color: wayaTheme.colorScheme.greyColor300)),
+                )
               ],
             ),
-            const Gap(10),
-              InventoryWidget(
-                    metrics: "500",
-                    color: wayaTheme.colorScheme.transparent,
-                    title: "New Followers",
-                    border: Border.all(
-                        width: 1, color: wayaTheme.colorScheme.greyColor300)),
-            const Gap(15),
-
-            PromotedWidget()
-
-
+            Gap(6.h),
+            SizedBox(
+              width: double.infinity,
+              child: InventoryWidget(
+                  metrics: "500",
+                  color: wayaTheme.colorScheme.transparent,
+                  title: "New Followers",
+                  border: Border.all(
+                      width: 1, color: wayaTheme.colorScheme.greyColor300)),
+            ),
+            Gap(15.h),
+            ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: state.allPromotions.length,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  final promo = state.allPromotions[index];
+                  return _buildWidget(
+                      contentType: promo.contentType, context: context);
+                })
           ],
         ));
+  }
+
+  Widget _buildWidget(
+      {required BuildContext context, required String contentType}) {
+    return switch (contentType) {
+      'event' => const SizedBox(),
+      'moment' => const SizedBox(),
+      'product' => const SizedBox(),
+      'page' => const SizedBox(),
+      'donation' => const SizedBox(),
+      'poll & vote' => const SizedBox(),
+      'post' => const SizedBox(),
+      'group' => const SizedBox(),
+
+      'contest' => const SizedBox(),
+
+      // fallback widget
+      _ => const SizedBox.shrink(), 
+    };
   }
 }

@@ -16,4 +16,14 @@ class PromotionRepository extends BaseRepository {
       payload.toJson(),
     );
   }
+
+  ///client/promotions
+  Future<WayaRequestResponse> getPromotions() {
+    return get("$serviceUrl/client/promotions?limit=10000");
+  }
+
+  ///client/promotions/id
+  Future<WayaRequestResponse> getSinglePromotion({required String promoId}) {
+    return get("$serviceUrl/client/promotions/$promoId");
+  }
 }

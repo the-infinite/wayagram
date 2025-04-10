@@ -39,7 +39,7 @@ class _PromotedWidgetState extends ConsumerState<PromotedWidget> {
             decoration: BoxDecoration(
               color: widget.isDetail
                   ? theme.colorScheme.white
-                  : theme.colorScheme.greyColor100,
+                  : theme.colorScheme.scaffoldColor,
               borderRadius: BorderRadius.circular(12.r),
             ),
             child: Column(
