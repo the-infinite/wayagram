@@ -91,7 +91,6 @@ dependencies:
   flutter_native_splash: ^2.4.5
   #for pdf generation
   pdf: ^3.11.3
-  avatar_glow: ^3.0.1
   
 
 
