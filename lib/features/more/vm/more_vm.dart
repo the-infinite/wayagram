@@ -4,6 +4,7 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/more/data/model/more_option_model.dart';
+import 'package:wayagram/features/promotion/views/promotion_dashboard.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/support/modal/default.dart';
 import 'package:wayagram/features/wallet/view/request_payout.dart';
@@ -90,7 +91,7 @@ class MoreVm {
         content:
             "Promote your goods and services so it can be seen by more people.",
         title: "Promotion",
-        onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+        onTap: () => WayaNav.toNamed(PromotionDashboard.route),
       ),
       MoreOptionModel(
         asset: WayaAssets.icons.mFollow.path,

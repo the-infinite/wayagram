@@ -201,10 +201,29 @@ class _UpcomingContestDetailsState
               SizedBox(height: 8),
               _buildStagesContestFinal(),
               SizedBox(height: 16), */
+
+              if (model?.hasApplied != true)
+                Center(
+                  child: WayaButton(
+                    callback: () {
+                      //? if user has a profile
+
+                      // if (hasProfile.value || model?.hasApplied == true) {
+                      ref.read(selectedContestProvider.notifier).state = model;
+                      WayaNav.toNamed('/upcoming-manage-contest-details');
+                    },
+                    text: "View Contest Details",
+                  ),
+                ),
+              Gap(20),
               Center(
                 child: WayaButton(
+                  color: Colors.white,
+                  border: Border.all(color: WayaColors.primary),
+                  textColor: WayaColors.black,
                   callback: () {
                     //? if user has a profile
+
                     if (hasProfile.value || model?.hasApplied == true) {
                       ref.read(selectedContestProvider.notifier).state = model;
                       WayaNav.toNamed('/upcoming-manage-contest-details');
@@ -227,7 +246,6 @@ class _UpcomingContestDetailsState
       ),
     );
   }
-  
 
   Color getColor(bool isText, String text) {
     if (text == "active") {

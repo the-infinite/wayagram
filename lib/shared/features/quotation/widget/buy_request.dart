@@ -111,7 +111,7 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
     if (result == null) return;
 
     //* Okay, since bidding was fine, we throw a pizza party.
-    WayaNav.toNamed(SeeSellerBids.route);
+    // WayaNav.toNamed(SeeSellerBids.route);
   }
 
   Future<void> _viewBids() async {

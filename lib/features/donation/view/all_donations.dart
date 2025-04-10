@@ -185,7 +185,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                           'privacy':'${donation.privacy}',
                           'id': '${donation.id}',
                           'donationCount': '${donation.donationCount}',
-                          'ratioLeft': ratioLeft
+                          'ratioLeft': ratioLeft,
+                          'organizerId': donation.organizerId
                         });
                   },
                   buttonWidth: 60.0,
@@ -241,7 +242,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                           'privacy':'${donation?.privacy}',
                           'donationCount': '${donation?.donationCount}',
                           'id': '${donation?.id}',
-                          'ratioLeft': ratioLeft
+                          'ratioLeft': ratioLeft,
+                          'organizerId': donation?.organizerId
 
                         });
                   },

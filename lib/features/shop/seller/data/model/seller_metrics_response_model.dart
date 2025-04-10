@@ -144,13 +144,13 @@ class OrderMetrics {
 
 class ProductMetrics {
   final int totalProducts;
-  final int wayagramDealApprove;
-  final int wayagramDealNotApproved;
+  final int? wayagramDealApprove;
+  final int? wayagramDealNotApproved;
 
   ProductMetrics({
     required this.totalProducts,
-    required this.wayagramDealApprove,
-    required this.wayagramDealNotApproved,
+     this.wayagramDealApprove,
+     this.wayagramDealNotApproved,
   });
 
   factory ProductMetrics.fromJson(Map<String, dynamic> json) {

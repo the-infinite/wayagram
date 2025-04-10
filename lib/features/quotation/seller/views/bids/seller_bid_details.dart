@@ -7,7 +7,6 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
 import 'package:wayagram/features/shop/order/widgets/order_info_widget.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
@@ -81,9 +80,12 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
           // Some space.
           Gap(10.h),
 
-          //? The quotation bid counter.
-          QuotationBidTimer(
-            request: request,
+          //? Show the bid timer
+          Align(
+            alignment: Alignment.center,
+            child: QuotationBidTimer(
+              request: request,
+            ),
           ),
 
           // Some space.
@@ -299,113 +301,19 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
           // Some space.
           Gap(30.h),
 
-          //? The button to change the status of the delivery.
-          if (request.deliveryType == BuyRequestDeliveryType.delivery)
-            WayaButton(
-              color: wayaTheme.colorScheme.transparent,
-              textColor: wayaTheme.colorScheme.greyColor900,
-              border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-              callback: () async {
-                final controller = ValueNotifier<QuotationDeliveryStatus?>(null);
-                final isLoading = ValueNotifier(false);
-
-                //? Show the modal sheet.
-                await WayaUtils.showModalSheet(
-                  context,
-                  child: UpdateDeliveryStatusModal(
-                    request: request,
-                    notifier: notifier,
-                    controller: controller,
-                    isLoading: isLoading,
-                    bid: bid,
-                    orderId: request.id,
-                  ),
-                );
-
-                //? Dispose these ones.
-                try {
-                  controller.dispose();
-                  isLoading.dispose();
-                } catch (_) {}
-              },
-              text: "Change Delivery Status",
-              leadingIcon: WayaAssets.icons.vanIcon.svg(
-                colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
-                width: 20,
-              ),
-            )
-          else
-            WayaButton(
-              color: wayaTheme.colorScheme.transparent,
-              textColor: wayaTheme.colorScheme.greyColor900,
-              border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-              callback: () async {
-                final controller = ValueNotifier<QuotationPickupStatus?>(null);
-                final isLoading = ValueNotifier(false);
-
-                //? Show the modal sheet.
-                await WayaUtils.showModalSheet(
-                  context,
-                  child: UpdatePickupStatusModal(
-                    request: request,
-                    notifier: notifier,
-                    controller: controller,
-                    isLoading: isLoading,
-                    bid: bid,
-                    orderId: request.id,
-                  ),
-                );
-
-                //? Dispose these ones.
-                try {
-                  controller.dispose();
-                  isLoading.dispose();
-                } catch (_) {}
-              },
-              text: "Change Pickup Status",
-              leadingIcon: WayaAssets.icons.vanIcon.svg(
-                colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
-                width: 20,
-              ),
-            ),
-
-          // Some space.
-          Gap(10.h),
-
           //? The button to change the order status.
-          WayaButton(
-            color: wayaTheme.colorScheme.transparent,
-            textColor: wayaTheme.colorScheme.greyColor900,
-            border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-            callback: () async {
-              final controller = ValueNotifier<QuotationOrderStatus?>(null);
-              final isLoading = ValueNotifier(false);
-
-              //? Show the modal sheet.
-              await WayaUtils.showModalSheet(
-                context,
-                child: UpdateOrderStatusModal(
-                  request: request,
-                  notifier: notifier,
-                  controller: controller,
-                  isLoading: isLoading,
-                  bid: bid,
-                  orderId: request.id,
-                ),
-              );
-
-              //? Dispose these ones.
-              try {
-                controller.dispose();
-                isLoading.dispose();
-              } catch (_) {}
-            },
-            text: "Change Order Status",
-            leadingIcon: WayaAssets.icons.buttonIcon.svg(
-              colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
-              width: 20,
+          if (bid.status == BidActionType.accept)
+            WayaButton(
+              color: wayaTheme.colorScheme.transparent,
+              textColor: wayaTheme.colorScheme.greyColor900,
+              border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+              callback: () => WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId)),
+              text: "Proceed to order fulfillment",
+              leadingIcon: WayaAssets.icons.orders.svg(
+                colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                width: 20,
+              ),
             ),
-          ),
         ],
       ),
     );

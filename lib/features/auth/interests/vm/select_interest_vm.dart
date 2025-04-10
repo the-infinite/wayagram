@@ -54,19 +54,22 @@ class SelectInterestVm extends StateNotifier<States> {
   SelectInterestVm(this._repository, this.ref) : super(States());
   final Ref ref;
 
-  Future<void> getInterest() async {
+  Future<Map<String, Map<String, int>>?> getInterest() async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _repository.getInterestsCategories();
 
+      Map<String, Map<String, int>>? allInterests;
       if (response.success) {
         InterestsResponseModel responseModel =
             InterestsResponseModel.fromJson(response.data);
         state = state.copyWith(interests: responseModel.data);
-        print(response.data);
+        allInterests = responseModel.data;
       }
+      return allInterests;
     } catch (error) {
       print(error);
+      return null;
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -100,7 +103,7 @@ class SelectInterestVm extends StateNotifier<States> {
       state = state.copyWith(isPostingInterest: true);
       final response = await _repository.selectInterest(data);
       if (response.success) {
-         final accountState = ref.read(selectAccountProvider);
+        final accountState = ref.read(selectAccountProvider);
 
         if (accountState.selectedType!.type == 'BUSINESS') {
           WayaNav.toNamed('/add-business-account');
