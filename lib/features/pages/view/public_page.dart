@@ -228,7 +228,7 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
                           onTap: _followPage,
                           child: Container(
                             margin: EdgeInsets.only(right: 20.w),
-                            padding: EdgeInsets.all(5.0),
+                            padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
                             decoration: BoxDecoration(
                               border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
                               color: wayaTheme.colorScheme.white,

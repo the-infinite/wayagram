@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -42,6 +43,7 @@ class WayaPostWidget extends StatefulWidget {
 
 class _WayaPostWidgetState extends State<WayaPostWidget> {
   late final videoControllers = widget.data.media.map((_) => WayaVideoController()).toList();
+  final pageController = PageController(initialPage: 0);
 
   @override
   void dispose() {
@@ -49,6 +51,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
     for (final controller in videoControllers) {
       controller.dispose();
     }
+    pageController.dispose();
     super.dispose();
   }
 
@@ -410,105 +413,133 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                     Container()
                   else
                     SizedBox(
-                      height: 400.h, // Adjust based on your image size
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal, // Enables horizontal scrolling
-                        itemCount: postData.media.length,
-                        itemBuilder: (context, index) {
-                          //? Stop when we are getting ahead of ourselves.
-                          if (index >= postData.media.length) return null;
+                      height: 300.h, // Adjust based on your image size
+                      child: Stack(
+                        children: [
+                          //? First the actual content that is being show.
+                          PageView(
+                            controller: pageController,
+                            children: List.generate(
+                              postData.media.length,
+                              (index) {
+                                //? Stop when we are getting ahead of ourselves.
+                                if (index >= postData.media.length) return const SizedBox();
 
-                          //? Just leave this as is.
-                          final resource = postData.media[index];
+                                //? Just leave this as is.
+                                final resource = postData.media[index];
 
-                          //? This is fine.
-                          if (WayaFileExtensions.videos.contains(WayaFileHelper.getFileExtension(resource))) {
-                            final controller = videoControllers[index];
-                            return Container(
-                              height: 200.h,
-                              width: screenSize.width * 0.90,
-                              padding: widget.padded
-                                  ? EdgeInsets.symmetric(horizontal: 8.w)
-                                  : index == 0
-                                      ? EdgeInsets.zero
-                                      : EdgeInsets.only(left: 8.w),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10.r),
-                                child: Stack(
-                                  children: [
-                                    //? First, the video itself.
-                                    WayaVideoWidget.networkUrl(
-                                      Uri.parse(resource),
-                                      controller: controller,
-                                      controls: WayaVideoControls.none,
-                                    ),
+                                //? This is fine.
+                                if (WayaFileExtensions.videos.contains(WayaFileHelper.getFileExtension(resource))) {
+                                  final controller = videoControllers[index];
+                                  return Container(
+                                    height: 300.h,
+                                    width: screenSize.width * 0.90,
+                                    padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      child: Stack(
+                                        children: [
+                                          //? First, the video itself.
+                                          WayaVideoWidget.networkUrl(
+                                            Uri.parse(resource),
+                                            controller: controller,
+                                            controls: WayaVideoControls.none,
+                                          ),
 
-                                    //? Now, that special thing on top that tells you it is playable.
-                                    Positioned.fill(
-                                      child: GestureDetector(
-                                        onTap: () async {
-                                          final result = await WayaNav.to(
-                                            transition: Transition.circularReveal,
-                                            WayaVideoDetailScreen(
-                                              file: null,
-                                              videoUrl: resource,
-                                            ),
-                                          );
+                                          //? Now, that special thing on top that tells you it is playable.
+                                          Positioned.fill(
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                final result = await WayaNav.to(
+                                                  transition: Transition.circularReveal,
+                                                  WayaVideoDetailScreen(
+                                                    file: null,
+                                                    videoUrl: resource,
+                                                  ),
+                                                );
 
-                                          //? Do nothing.
-                                          if (result == null) return;
-                                        },
-                                        child: Center(
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              shape: BoxShape.circle,
-                                              color: Colors.white.withOpacity(0.7),
-                                            ),
-                                            padding: EdgeInsets.all(8),
-                                            child: Icon(
-                                              Icons.play_arrow,
-                                              size: 30.dg,
-                                              color: Colors.black,
+                                                //? Do nothing.
+                                                if (result == null) return;
+                                              },
+                                              child: Center(
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: Colors.white.withOpacity(0.7),
+                                                  ),
+                                                  padding: EdgeInsets.all(8),
+                                                  child: Icon(
+                                                    Icons.play_arrow,
+                                                    size: 30.dg,
+                                                    color: Colors.black,
+                                                  ),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
                                     ),
-                                  ],
+                                  );
+                                }
+
+                                //? Return this one.
+                                return GestureDetector(
+                                  onTap: () async {
+                                    final result = await WayaNavigationHelper.toImageDetailsScreen(
+                                      null,
+                                      [resource],
+                                    );
+
+                                    //? Do nothing.
+                                    if (result == null) return;
+                                  },
+                                  child: Padding(
+                                    padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(10.r),
+                                      child: WayaImage(
+                                        imageUrl: resource,
+                                        fit: BoxFit.cover,
+                                        width: screenSize.width - (widget.padded ? 15.w : 0),
+                                        height: 300.h,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+
+                          //? Second, the buttons that can be used to go between
+                          //? screens.
+                          if (postData.media.length > 1)
+                            Positioned(
+                              left: 0,
+                              right: 0,
+                              bottom: 0,
+                              child: Container(
+                                alignment: Alignment.center,
+                                margin: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withAlpha(60),
+                                  borderRadius: BorderRadius.circular(6000.r),
                                 ),
-                              ),
-                            );
-                          }
-
-                          //? Return this one.
-                          return GestureDetector(
-                            onTap: () async {
-                              final result = await WayaNavigationHelper.toImageDetailsScreen(
-                                null,
-                                [resource],
-                              );
-
-                              //? Do nothing.
-                              if (result == null) return;
-                            },
-                            child: Padding(
-                              padding: widget.padded
-                                  ? EdgeInsets.symmetric(horizontal: 8.w)
-                                  : index == 0
-                                      ? EdgeInsets.zero
-                                      : EdgeInsets.only(left: 8.w),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10.r),
-                                child: WayaImage(
-                                  imageUrl: resource,
-                                  fit: BoxFit.cover,
-                                  width: screenSize.width - (widget.padded ? 15.w : 0),
-                                  height: 400.h,
+                                child: SmoothPageIndicator(
+                                  effect: ExpandingDotsEffect(
+                                    dotWidth: 16,
+                                    dotHeight: 6,
+                                    spacing: 4,
+                                    dotColor: wayaTheme.colorScheme.greyColor200,
+                                    activeDotColor: wayaTheme.colorScheme.primary,
+                                  ),
+                                  controller: pageController,
+                                  count: postData.media.length,
                                 ),
                               ),
                             ),
-                          );
-                        },
+                        ],
                       ),
                     ),
 

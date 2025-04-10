@@ -59,6 +59,10 @@ class WayaPaginatedListView<T> extends StatefulWidget {
   /// from the
   final Future<void> Function(int page, List<T> items)? onFetch;
 
+  /// A function that is called each time the user scrolls to some new position
+  /// inside of this component.
+  final FutureOr<void> Function(ScrollController)? onScroll;
+
   /// The kind of scroll physics to use on this one.
   final ScrollPhysics physics;
 
@@ -87,6 +91,7 @@ class WayaPaginatedListView<T> extends StatefulWidget {
     this.primary = false,
     this.controller,
     this.onFetch,
+    this.onScroll,
     this.whenEmpty,
     this.child,
   });
@@ -110,12 +115,15 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
 
           //? Add this listener to this one.
           _scrollController.addListener(
-            () {
+            () async {
               final target = _scrollController.position.maxScrollExtent - widget.scrollNotice;
               final current = _scrollController.offset;
 
               //? Stop if this is at the end.
               if (widget.isAtEnd || !widget.shouldFetch || widget.handler.hasScrolled) return;
+
+              //? Call this function.
+              await widget.onScroll?.call(_scrollController);
 
               //? If we should scroll.
               if (current >= target) {

@@ -1,3 +1,4 @@
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/model/event_attendee_response_model.dart';
 
@@ -37,6 +38,11 @@ class EventState {
     this.userId = '',
     this.isLoadingUserEvents = false,
   });
+
+  bool isAttending(String eventId) {
+    return attendees
+        .any((attendance) => attendance.userId == ConversationState.self.id && attendance.eventId == eventId);
+  }
 
   EventState copyWith(
       {bool? isLoading,

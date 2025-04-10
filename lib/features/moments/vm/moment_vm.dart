@@ -146,16 +146,23 @@ class MomentVm extends StateNotifier<MomentState> {
         allowMultiple: false,
       );
 
+      //? This i sfor the case as it might be.
       if (result != null && result.files.isNotEmpty) {
         PlatformFile file = result.files.first;
 
         MediaType? mediaType;
-        if (file.extension == 'mp4' || file.extension == 'mov') {
+
+        //? This is for videos.
+        if (WayaFileExtensions.videos.contains(file.extension)) {
           mediaType = MediaType.video;
-        } else if (file.extension == 'jpg' || file.extension == 'jpeg' || file.extension == 'png') {
+        }
+
+        //? This is for images.
+        else if (WayaFileExtensions.images.contains(file.extension)) {
           mediaType = MediaType.image;
         }
 
+        //? If this is set...
         if (mediaType != null) {
           if (mediaType == MediaType.video) {
             final videoFile = File(file.path!);
@@ -287,6 +294,7 @@ class MomentVm extends StateNotifier<MomentState> {
       fontType = MomentHelper.textStyleToJson(textStyle);
       color = MomentHelper.colorToHex(backgroundColor);
     } else if (state.type == StatusType.media && state.mediaType == MediaType.image) {
+      contentType = 'image';
       // image
       if (state.selectedFile != null) {
         final publicUrl = await WayaFileRepository.instance.uploadFile(
