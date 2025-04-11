@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/value.dart';
@@ -14,6 +15,8 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
+import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
+import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
@@ -132,7 +135,29 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   ),
 
                   //  post.isFollowing!
-                  if (widget.post.profileId != voteNotifier.getLoggedInUserId())
+                  if (widget.post.profileId ==
+                      voteNotifier.getLoggedInUserId()) ...[
+                    Expanded(
+                        flex: 1,
+                        child: WayaButton(
+                          fontSize: 12.sp,
+                          callback: () {
+                            WayaNav.toNamed(Promote.route, arguments: {
+                              "contentId": widget.post.id,
+                              "contentType": PromotionServiceType.contest.name
+                            });
+                          },
+                          height: 40,
+                          leadingIcon: SvgPicture.asset(
+                            WayaAssets.icons.mFire.path,
+                            fit: BoxFit.none,
+                            width: 20,
+                            height: 20,
+                            color: wayaTheme.colorScheme.white,
+                          ),
+                          text: "Promote",
+                        )),
+                  ] else ...[
                     Expanded(
                         flex: 1,
                         child: widget.post.isFollowing == true
@@ -156,6 +181,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                                 height: 40,
                                 text: "   Follow  ",
                               )),
+                  ]
                 ],
               ),
               const Gap(20),
