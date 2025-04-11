@@ -173,11 +173,11 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Inlcude Delivery Charges",
+                          Text("Include Delivery Charges",
                               style: wayaTheme.textTheme.titleMedium),
                           const Gap(6),
                           Text(
-                            "This means a certain amount will be \n charged for delivery of this product",
+                            "This means a certain amount will be \n charged for the delivery of this product",
                             style: wayaTheme.textTheme.hintStyle,
                           )
                         ],
@@ -231,7 +231,7 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                             style: wayaTheme.textTheme.titleMedium),
                         const Gap(6),
                         Text(
-                          "This means a certain amount will \n be charged for delivery of this product.",
+                          "This means a certain amount will \n be charged for the delivery of this product.",
                           style: wayaTheme.textTheme.hintStyle,
                         )
                       ],
