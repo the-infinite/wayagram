@@ -12,13 +12,17 @@ class PaymentMethodWidget extends StatelessWidget {
   final String accountName;
   final String bankName;
   final ThemeData wayaTheme;
+  final VoidCallback? onTap;
+  final VoidCallback? onClick;
   const PaymentMethodWidget({
     super.key,
     required this.initial,
     required this.accountNumber,
     required this.accountName,
     required this.bankName,
-    required this.wayaTheme
+    required this.wayaTheme,
+    required this.onTap,
+    required this.onClick
   });
 
 
@@ -34,6 +38,7 @@ class PaymentMethodWidget extends StatelessWidget {
       ),
       height: 65.h,
       child: ListTile(
+        onTap: onClick,
         leading: Container(
           height: 40.h,
           width: 40.w,
@@ -58,7 +63,9 @@ class PaymentMethodWidget extends StatelessWidget {
         subtitle: Text('$bankName - $accountNumber',
             style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                 color: wayaTheme.colorScheme.greyColor600)),
-        trailing: Image.asset('assets/images/wallet/del.png', height: 24.h,),
+        trailing: InkWell(
+            onTap: onTap,
+            child: Image.asset('assets/images/wallet/del.png', height: 24.h,)),
       ),
     );
   }

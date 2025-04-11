@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/features/wallet/view/payout_history_screen.dart';
 import 'package:wayagram/features/wallet/view/payout_method_screen.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class RequestPayout extends ConsumerStatefulWidget {
   static const route = '/requestPayout';
@@ -25,11 +26,11 @@ class _RequestPayoutState extends ConsumerState<RequestPayout> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(createGroupProvider);
+    final viewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       //removeAppBar: false,
-      isLoading: viewModel.isLoading,
+      isLoading: viewModel.isLoading!,
       backgroundColor: WayaColors.greyColor50,
       isScrollable: false,
       title: 'Request Payout',

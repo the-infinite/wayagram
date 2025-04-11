@@ -189,6 +189,7 @@ class AccountDetailsCard extends StatelessWidget {
                                   accountNumber: externalAccount.accountNumber))
                               .toList(),
                         ),
+
                     ],
                   )
                 ],

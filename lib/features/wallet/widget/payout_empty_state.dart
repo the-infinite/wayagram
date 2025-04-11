@@ -14,11 +14,13 @@ import '../../../assetsgen/assets.gen.dart';
 class PayoutEmptyState extends StatelessWidget {
   final VoidCallback? onTap;
   final String title;
+  final String image;
   final String subTitle;
   final bool hasButton;
   const PayoutEmptyState({super.key,
     required this.onTap,
     required this.title,
+    required this.image,
     required this.subTitle,
     required this.hasButton
   });
@@ -31,7 +33,7 @@ class PayoutEmptyState extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Gap(40),
-        Image.asset('assets/images/wallet/payout.png',height: 201.h,),
+        Image.asset('assets/images/wallet/$image.png',height: 201.h,),
         const Gap(20),
         Text(
           title,
