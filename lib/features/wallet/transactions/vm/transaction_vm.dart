@@ -19,6 +19,7 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
 
 
   Future<void> getTransaction({int? page = 1, int? limit = 10, bool? hasNextPage, String? filters}) async {
+
     try {
       // API call
       state = state.copyWith(isLoading: true);

@@ -172,8 +172,15 @@ class _ActivePollsState extends ConsumerState<ActivePolls> {
                                             duration: Duration(seconds: 2),
                                           ),
                                         );
-                                      }
-                                      else{
+                                      }else if(poll.pollType == 'free'){
+                                        ref.read(createPollVotingProvider.notifier).castFreeVote(
+                                            1,
+                                            '${e.id}',
+                                            '${poll.id}',
+                                            context,
+                                            '${e.text}',
+                                            '${poll.url}');
+                                      } else{
                                         WayaUtils.showModalSheet(
                                           context,
                                           child: VoteOptionModal(voteFee:  '${poll.feePerVote}',choiceId: '${e.id}',

@@ -24,11 +24,9 @@ class DisplayFeed extends ConsumerStatefulWidget {
 class _DisplayFeedState extends ConsumerState<DisplayFeed> {
   final handler = WayaObservableScrollController();
   late final notifier = ref.read(exploreVmProvider.notifier);
+
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timestamp) {
-      notifier.getUserFeeds();
-    });
     super.initState();
   }
 

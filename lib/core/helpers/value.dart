@@ -117,4 +117,25 @@ class WayaValueHelper {
         true => "https://wayagram.ng$route",
         false => "https://staging.wayagram.ng$route",
       };
+
+  /// Checks if a given string contains only emoji characters.
+  ///
+  /// Takes a [String] input and determines if it consists solely of emoji characters.
+  /// Returns true if the input is a single emoji or a sequence of emojis,
+  /// false otherwise.
+  ///
+  /// Example:
+  /// ```dart
+  /// print(isEmoji('😀')); // true
+  /// print(isEmoji('Hello')); // false
+  /// print(isEmoji('😀😊')); // true
+  /// ```
+  static bool isEmoji(String text) {
+    if (text.isEmpty) return false;
+    final emojiRegex = RegExp(
+      r'(\u00a9|\u00ae|[\u2000-\u3300]|\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])',
+    );
+    final matches = emojiRegex.allMatches(text);
+    return matches.length == text.runes.length;
+  }
 }

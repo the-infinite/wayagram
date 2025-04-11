@@ -14,8 +14,8 @@ class WayaNavigationHelper {
       transition: Transition.circularReveal,
       duration: const Duration(milliseconds: 500),
       WayaImageDetailScreen(
-        file: media?[0],
-        imageUrl: urls?[0],
+        file: media,
+        imageUrl: urls,
       ),
     );
   }

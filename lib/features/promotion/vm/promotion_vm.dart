@@ -6,7 +6,6 @@ import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_plan_response_model.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_response_model.dart';
-import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_state.dart';
 import 'package:wayagram/features/promotion/data/repo/promotion_repository.dart';
 import 'package:wayagram/features/shop/vm/product_detail_vm.dart';

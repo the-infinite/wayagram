@@ -4,13 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/ugt/data/model/voter_user_list_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
-import '../../../core/components/waya_scaffold.dart';
 
 class VotersListPage extends StatefulHookConsumerWidget {
   static const route = '/voters-list-Page';
@@ -21,22 +20,40 @@ class VotersListPage extends StatefulHookConsumerWidget {
 }
 
 class _ManageStateContestState extends ConsumerState<VotersListPage> {
+  final ScrollController _scrollController = ScrollController();
+  double _previousScrollOffset = 0.0;
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final viewModel = ref.read(votersContestNotifier);
+    final viewModel = ref.watch(votersContestNotifier);
     var model = ref.watch(selectedContestantProfile);
 
     final notifier = ref.read(votersContestNotifier.notifier);
 
     useEffect(() {
-      notifier.fetchVotersList(model?.contestApplicant?.id ?? "");
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollController.addListener(() {
+          double currentOffset = _scrollController.position.pixels;
+
+          // ✅ Fetch data only when scrolling **downward** and near the bottom
+          if (currentOffset > _previousScrollOffset &&
+              _scrollController.position.pixels >=
+                  _scrollController.position.maxScrollExtent - 100) {
+            notifier.fetchVotersList(model?.id ?? "", false);
+          }
+          _previousScrollOffset = currentOffset;
+        });
+      //  notifier.fetchVotersList(model?.id ?? "", true);
+      });
       return null;
-    });
+    }, []);
 
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
+      onRefresh: () {
+        return notifier.fetchVotersList(model?.id ?? "", true);
+      },
       title: "Voters List",
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
@@ -64,30 +81,20 @@ class _ManageStateContestState extends ConsumerState<VotersListPage> {
               padding: EdgeInsets.all(10),
               child: Column(
                 children: [
+                  if (viewModel.isLoading == true)
+                    Center(child: CircularProgressIndicator()),
                   ListView.builder(
-                    // controller: _scrollController,
+                    controller: _scrollController,
                     shrinkWrap: true,
-                    itemCount:
-                        viewModel.myFilteredContestApplicantList.length > 6
-                            ? 6
-                            : viewModel.myFilteredContestApplicantList.length,
+                    itemCount: viewModel.userVotersList?.length,
                     itemBuilder: (context, index) {
-                      if (viewModel.isLoading!) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-
-                      final post =
-                          viewModel.myFilteredContestApplicantList[index];
+                      final post = viewModel.userVotersList?[index];
                       return GestureDetector(
-                        onTap: () {
-                          ref.read(selectedApplicantProfile.notifier).state =
-                              post;
-
-                          WayaNav.toNamed('/view-contestant-single-data');
-                        },
-                        child: _buildStateItem(
-                            context, post.fullName ?? "", "View application"),
-                      );
+                          onTap: () {},
+                          child: _buildStateItem(
+                            context,
+                            post,
+                          ));
                     },
                   ),
                   /* GestureDetector(
@@ -112,74 +119,40 @@ class _ManageStateContestState extends ConsumerState<VotersListPage> {
     );
   }
 
-  Widget _buildStatCard(
-      BuildContext context, String title, String value, Widget widget) {
-    final wayaTheme = Theme.of(context);
-    return Expanded(
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 4),
-        padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Colors.orange[50],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+  Widget _buildStateItem(BuildContext context, VoterListModel? post) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title,
-                    textAlign: TextAlign.start,
-                    style: TextStyle(fontSize: 12.sp, color: Colors.grey[700])),
-                Container(
-                    width: 50.w, // Must be equal to height for a perfect circle
-                    height: 50.w,
-                    decoration: BoxDecoration(
-                      color:
-                          wayaTheme.colorScheme.primary500, // Background color
-                      shape: BoxShape.circle, // Makes the container circular
-                      border: Border.all(
-                        color: Colors.white, // Optional: Border color
-                        width: 3.0, // Optional: Border width
-                      ),
-                    ),
-                    child: widget)
+                WayaImage(
+                  imageUrl: post?.profileImageUrl ?? "",
+                  height: 45,
+                  width: 45,
+                  fit: BoxFit.cover,
+                  radius: BorderRadius.circular(45),
+                ),
+                Gap(10),
+                Text(post?.name ?? "", style: WayaTextStyles.bodyBold),
               ],
             ),
-            Gap(10),
-            Text(value,
-                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold)),
+            Row(
+              children: [
+                Text(
+                    post?.type == 'PAID'
+                        ? post?.numberOfVotes.toString() ?? "0"
+                        : "Voted",
+                    style: WayaTextStyles.hintStyleBold),
+                Gap(10),
+                //   Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
+                Gap(10)
+              ],
+            ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildStateItem(
-      BuildContext context, String state, String contestants) {
-    final wayaTheme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(state,
-            style: TextStyle(
-                fontWeight: FontWeight.w500,
-                color: Colors.black,
-                fontSize: 16.sp)),
-        Row(
-          children: [
-            Text(contestants,
-                style: TextStyle(
-                    color: wayaTheme.colorScheme.greyColor700,
-                    fontSize: 14.sp)),
-            Gap(10),
-            Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
-            Gap(10)
-          ],
-        ),
+        Gap(10)
       ],
     );
   }

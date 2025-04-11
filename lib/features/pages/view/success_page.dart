@@ -25,7 +25,6 @@ class _SuccessPageState extends ConsumerState<SuccessPage> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPageProvider);
     final wayaTheme = Theme.of(context);
-    final args = ModalRoute.of(context)?.settings.arguments as dynamic;
     return WayaScaffold(
       removeAppBar: false,
       isLoading: viewModel.isLoading,

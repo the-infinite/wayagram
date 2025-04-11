@@ -20,7 +20,6 @@ import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/admin_card.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 
-
 class AdminContestDetails extends StatefulHookConsumerWidget {
   static const route = '/upcoming-manage-contest-details';
   final String id;
@@ -121,29 +120,30 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                   children: [
                     Text(model?.title ?? "Title",
                         style: wayaTheme.textTheme.titleLarge),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Color(0xffE7F6EC), // Background color
-                        borderRadius:
-                            BorderRadius.circular(20), // Rounded corners
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 1),
-                        child: Center(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 4, horizontal: 8),
-                            child: Text(
-                              "Live",
-                              style: TextStyle(
-                                  color: Color(0xff036B26), fontSize: 12.sp),
-                              textAlign: TextAlign.center,
+                    if (model?.status == "ACTIVE")
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Color(0xffE7F6EC), // Background color
+                          borderRadius:
+                              BorderRadius.circular(20), // Rounded corners
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 1),
+                          child: Center(
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4, horizontal: 8),
+                              child: Text(
+                                "Live",
+                                style: TextStyle(
+                                    color: Color(0xff036B26), fontSize: 12.sp),
+                                textAlign: TextAlign.center,
+                              ),
                             ),
                           ),
                         ),
                       ),
-                    ),
                   ],
                 ),
                 const Gap(15),

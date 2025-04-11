@@ -49,6 +49,9 @@ class WayaSwiper extends StatefulWidget {
   /// long time.
   final FutureOr<void> Function()? onLongPress;
 
+  /// Callback that is made when the gesture detector swipes vertically.
+  final FutureOr<void> Function()? onVerticalSwipe;
+
   /// Callback that is made when the gesture detector has been tapped once.
   final FutureOr<void> Function()? onTap;
 
@@ -67,6 +70,7 @@ class WayaSwiper extends StatefulWidget {
     required this.child,
     this.onRightSwipe,
     this.onLeftSwipe,
+    this.onVerticalSwipe,
     this.iconOnRightSwipe = Icons.reply,
     this.rightSwipeWidget,
     this.onLongPress,
@@ -178,9 +182,10 @@ class _WayaSwiperState extends State<WayaSwiper> with SingleTickerProviderStateM
       onPanUpdate: (details) {
         if (details.delta.dx > widget.swipeSensitivity && widget.onRightSwipe != null) {
           _runAnimation(onRight: true, details: details);
-        }
-        if (details.delta.dx < -(widget.swipeSensitivity) && widget.onLeftSwipe != null) {
+        } else if (details.delta.dx < -(widget.swipeSensitivity) && widget.onLeftSwipe != null) {
           _runAnimation(onRight: false, details: details);
+        } else if (details.delta.dy > widget.swipeSensitivity) {
+          widget.onVerticalSwipe?.call();
         }
       },
       onDoubleTap: widget.onDoubleTap,

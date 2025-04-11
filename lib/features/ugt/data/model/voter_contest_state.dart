@@ -4,6 +4,7 @@ import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart'
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_contest_aplicant_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
+import 'package:wayagram/features/ugt/data/model/voter_user_list_model.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
 
@@ -11,6 +12,9 @@ class VoterDetailState {
   final bool? isLoading;
   final bool? isActive;
   final bool? ismakePaymentLoading;
+  final int page;
+  final bool isLastPage;
+
   final String createPostId;
   final int? pendingPostCount;
   final String? contestId;
@@ -23,9 +27,12 @@ class VoterDetailState {
   final List<MyFilterModel> filterList;
   final List<UgtAllPostContestModel> myPostList;
   final List<UgtAllPostContestModel> myApprovePostList;
+  final List<VoterListModel>? userVotersList;
   final List<ExternalWalletModel>? externalWallets;
   VoterDetailState({
+    this.page = 1,
     this.isLoading = false,
+    this.isLastPage = false,
     this.isActive = true,
     this.ismakePaymentLoading = false,
     this.data,
@@ -37,6 +44,7 @@ class VoterDetailState {
     this.myContestApplicantList = const [],
     this.myFilteredContestApplicantList = const [],
     this.stageList = const [],
+    this.userVotersList = const [],
     this.filterList = const[
      
 
@@ -47,6 +55,8 @@ class VoterDetailState {
   });
 
   VoterDetailState copyWith({
+    int? page,
+    bool? isLastPage,
     bool? isLoading,
     bool? isActive,
     Wallet? data,
@@ -60,16 +70,20 @@ class VoterDetailState {
     List<ApplicantContestModel>? myContestApplicantList,
     List<ApplicantContestModel>? myFilteredContestApplicantList,
     List<ExternalWalletModel>? externalWallets,
+    List<VoterListModel>? userVotersList,
     List<contestant.MyContestContestantModel>? myContestList,
     List<contestant.MyContestContestantModel>? myContestListCopy,
   }) =>
       VoterDetailState(
         isLoading: isLoading ?? this.isLoading,
+        page: page ?? this.page,
+        isLastPage: isLastPage ?? this.isLastPage,
         isActive: isActive ?? this.isActive,
         data: data ?? this.data,
         myPostList: myPostList ?? this.myPostList,
         myApprovePostList: myApprovePostList ?? this.myApprovePostList,
         stageList: stageList ?? this.stageList,
+        userVotersList: userVotersList ?? this.userVotersList,
         filterList: filterList ?? this.filterList,
         myContestApplicantList:
             myContestApplicantList ?? this.myContestApplicantList,
