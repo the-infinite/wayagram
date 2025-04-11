@@ -111,7 +111,7 @@ class PromotionVm extends StateNotifier<PromotionState> {
               .read(productDetailVmProvider.notifier)
               .getCurrentProduct(id: contentId);
 
-              // Product
+          // Product
           break;
 
         // pages
@@ -134,7 +134,7 @@ class PromotionVm extends StateNotifier<PromotionState> {
               .read(postProvider.notifier)
               .fetchSingleContest(contestId: contentId);
 
-              // Contest
+          // Contest
           break;
 
         // donation
@@ -143,7 +143,7 @@ class PromotionVm extends StateNotifier<PromotionState> {
               .read(donationVmProvider.notifier)
               .getSingleCampaign(contentId);
 
-              // MyDonationDocs
+          // MyDonationDocs
           break;
 
         // poll & vote
@@ -152,7 +152,7 @@ class PromotionVm extends StateNotifier<PromotionState> {
               .read(createPollVotingProvider.notifier)
               .getPollById(contentId);
 
-              //Docs
+          //Docs
           break;
 
         // post
