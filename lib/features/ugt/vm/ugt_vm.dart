@@ -772,3 +772,26 @@ bool isDateBefore(String dateString) {
 
   return givenDate.isBefore(now);
 }
+
+bool isInPast(String dateString) {
+  // Convert the string to a DateTime object
+  DateTime inputDate = DateTime.parse(dateString.split("T").first);
+
+  // Get the current date (without time for accurate date-only comparison)
+  DateTime now = DateTime.now();
+  DateTime today = DateTime(now.year, now.month, now.day);
+  DateTime oldDate = DateTime(inputDate.year, inputDate.month, inputDate.day);
+
+  // Compare the dates
+  print("Input Date: $inputDate");
+  print("Input Date: $today");
+  print("Input Date: ${oldDate.isBefore(today)}");
+  if (oldDate.isBefore(today)) {
+    return true;
+  }
+  return false; /* else if (inputDate.isAtSameMomentAs(today)) {
+    print("The date is today.");
+  } else {
+    print("The date is in the future.");
+  } */
+}

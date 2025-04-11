@@ -101,7 +101,7 @@ class Order extends BaseModel<Order> {
   final dynamic deliveryFee;
   final DateTime? deliveryDate;
   final String? deliveryToken;
-  final String version;
+  final String? version;
   final DateTime createdAt;
   final DateTime updatedAt;
   final String shopName;
@@ -148,12 +148,12 @@ class Order extends BaseModel<Order> {
       deliveryDate: json['deliveryDate'] != null
           ? DateTime.parse(json['deliveryDate'])
           : null,
-      deliveryToken: json['deliveryToken'],
+      deliveryToken: json['deliveryToken']?? '',
       version: json['_v'],
       createdAt: DateTime.parse(json['createdAt']),
       updatedAt: DateTime.parse(json['updatedAt']),
-      shopName: json['shopName'],
-      shopPhone: json['shopPhone'],
+      shopName: json['shopName'] ?? '',
+      shopPhone: json['shopPhone'] ?? '',
       deliveryType: json['deliveryType'],
       deliveryStatusHistory: (json['deliveryStatusHistory'] as List)
           .map((e) => CartOrderStatus.fromJson(e))
@@ -255,7 +255,7 @@ class OrderItem {
   factory OrderItem.fromJson(Map<String, dynamic> json) {
     return OrderItem(
       productName: json['productName'] ?? '',
-      price: json['price'],
+      price: json['price']?? '0.00',
       quantity: json['quantity'],
       productId: json['productId'],
       productImage: json['productImage'],

@@ -5,7 +5,6 @@ import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/features/wallet/widget/payment_method_widget.dart';
 import 'package:wayagram/features/wallet/widget/payout_empty_state.dart';
 
-
 class PayoutMethodScreen extends ConsumerStatefulWidget {
   const PayoutMethodScreen({
     super.key,
@@ -43,6 +42,7 @@ class _PayoutMethodScreenState extends ConsumerState<PayoutMethodScreen> {
         WayaNav.toNamed('/addPayoutMethodScreen');
       },
       title: 'No Payout Method Added',
+      image: 'payout',
       subTitle: 'Looks like you haven’t added any payout\nmethod yet',
       hasButton: true,
 
@@ -59,6 +59,13 @@ class _PayoutMethodScreenState extends ConsumerState<PayoutMethodScreen> {
               accountNumber: '${viewModel.payoutMethod[index].accountNumber}',
               bankName: '${viewModel.payoutMethod[index].bankName}',
               wayaTheme: wayaTheme,
+              onTap: ()=> ref.watch(walletVmProvider.notifier).deletePayoutMethod(context, id: '${viewModel.payoutMethod[index].id}'),
+              onClick: ()=> WayaNav.toNamed('/enterRequestAmountScreen',
+              arguments: {
+                'id':'${viewModel.payoutMethod[index].id}',
+                'bankName':viewModel.payoutMethod[index].bankName,
+                'acctNumber':viewModel.payoutAccountNumber
+              }),
 
             );
           }),

@@ -11,7 +11,6 @@ import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leade
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
-
 class EndedContestPage extends StatefulHookConsumerWidget {
   static const route = '/ended-contest-Page';
   final String id;
@@ -37,7 +36,7 @@ class _ManageStateContestState extends ConsumerState<EndedContestPage> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref
             .read(postProvider.notifier)
-            .fetchSingleContest(ref, data["id"] ?? "");
+            .fetchSingleContest(contestId: data["id"] ?? "", ref: ref);
         ref
             .read(votersContestNotifier.notifier)
             .getContestantProfileVoteDetails(data["id"] ?? "");

@@ -34,7 +34,6 @@ class _WalletPageState extends ConsumerState<WalletPage> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(walletVmProvider);
-    //final viewModel = ref.watch(walletVmProvider);
     return WayaScaffold(
       color: wayaTheme.colorScheme.scaffoldColor2,
       title: 'Wallet',

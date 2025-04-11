@@ -8,7 +8,10 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
+
+import '../widget/payout_modal.dart';
 
 class AddPayoutMethodScreen extends ConsumerStatefulWidget {
   static const route = '/addPayoutMethodScreen';
@@ -134,19 +137,40 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                   }),
                   const Gap(200),
                    WayaButton(
-                    callback: viewModel.isLoading!
-                        ? () async {
-                      if (_formKey.currentState!.validate()) {}
-                    }
-                        : null,
-                    //height: 30,
+                     callback: (){
+                       WayaUtils.showModalSheet(
+                         context,
+                         child: PayoutModal(name: ConversationState.self.fullname,),
+                       );
+                      // WayaNav.toNamed('/enterRequestAmountScreen');
+                     },
+                    // callback: viewModel.isLoading!
+                    //     ? () async {
+                    //   //if (_formKey.currentState!.validate()) {
+                    //     WayaNav.toNamed('/enterRequestAmountScreen');
+                    //   //}
+                    // } : null,
                     text: 'Add Payout',
                     isLoading: viewModel.isLoading!,
-                    textStyle: WayaTextStyles.bodySmall.copyWith(
-                        fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+                    // textStyle: WayaTextStyles.bodySmall.copyWith(
+                    //     fontSize: 16.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
                   ),
 
                   const Gap(10),
+                  // WayaConfirmationView(
+                  //   debounceTimer: const Duration(milliseconds: 20),
+                  //   getResult: ref.read(walletVmProvider.notifier).fetchBank(),
+                  //   getText: (user) => user?.fullname ?? "User not found",
+                  //   onResult: (user) {
+                  //     notifier.setAddedUser(user?.id);
+                  //   },
+                  //   backgroundColor: wayaTheme.colorScheme.primary50,
+                  //   searchController: viewModel.acctNumber,
+                  //   buttonTextStyle: wayaTheme.textTheme.bodyBold.copyWith(
+                  //     color: wayaTheme.colorScheme.primary,
+                  //   ),
+                  // ),
+
                   WayaButton(
                     text: 'Go Back',
                     color: wayaTheme.colorScheme.transparent,
@@ -154,11 +178,8 @@ class _AddPayoutMethodScreenState extends ConsumerState<AddPayoutMethodScreen> {
                     border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
                     callback: () {
                       WayaNav.goBack();
-                      // widget.gotoPreviousTab();
                     },
                   )
-
-
                 ],
               )),
 

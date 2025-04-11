@@ -53,6 +53,10 @@ class WalletRepository extends BaseRepository {
     return get('$serviceUrl/client/payout/methods/$id');
   }
 
+  Future<WayaRequestResponse> getSingleRequest(String id) {
+    return get('$serviceUrl/client/payout/requests/$id');
+  }
+
   Future<WayaRequestResponse> getBanks() {
     return get('$serviceUrl/client/payout/supported-banks');
   }
@@ -65,4 +69,21 @@ class WalletRepository extends BaseRepository {
     final payload = {"userId": ConversationState.self.id, "amount": amount, "payoutMethodId": ""};
     return post('$serviceUrl/client/payout/requests', payload);
   }
+
+  Future<WayaRequestResponse> createPayoutMethod(String acctNum, String acctName,
+      String bankName, String bankCode) {
+
+    final payload = {
+      "accountNumber": acctNum,
+      "accountName": acctName,
+      "bankName": bankName,
+      "bankCode": bankCode
+    };
+    return post('$serviceUrl/client/payout/methods', payload);
+  }
+
+  Future<WayaRequestResponse> deletePayoutMethod(id) {
+    return delete("$serviceUrl/client/payout/methods/$id", showErrors: true);
+  }
+
 }

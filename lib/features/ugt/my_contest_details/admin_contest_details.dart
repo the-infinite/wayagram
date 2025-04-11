@@ -45,7 +45,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
       });
 
       print("COntest DI  2 $contestId");
-      ref.read(postProvider.notifier).fetchSingleContest(ref, contestId);
+      ref.read(postProvider.notifier).fetchSingleContest(contestId:contestId, ref: ref);
       ref
           .read(votersContestNotifier.notifier)
           .getContestantProfileVoteDetails(contestId);
@@ -79,7 +79,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
         onRefresh: () {
           ref
               .read(postProvider.notifier)
-              .fetchSingleContest(ref, myContestId.value);
+              .fetchSingleContest(contestId: myContestId.value  ,  ref: ref,);
           ref
               .read(votersContestNotifier.notifier)
               .getContestantProfileVoteDetails(myContestId.value);

@@ -141,7 +141,7 @@ class CartVm extends StateNotifier<CartState> {
           );
           productAdded = true;
           print("add item for a shop ");
-       final success =   await postCartItem(id: productId, shopId: shopId);
+          final success = await postCartItem(id: productId, shopId: shopId);
 
           if (!success) return;
         }
@@ -184,7 +184,7 @@ class CartVm extends StateNotifier<CartState> {
         ),
       );
 
-   final success =   await postCartItem(id: productId, shopId: shopId);
+      final success = await postCartItem(id: productId, shopId: shopId);
 
       if (!success) return;
     }
@@ -350,6 +350,8 @@ class CartVm extends StateNotifier<CartState> {
             (productSum, product) => productSum + product.quantity,
           ),
     );
+    print(totalQuantity);
+    print(existingCart.toJson());
     state = state.copyWith(totalItem: totalQuantity);
   }
 

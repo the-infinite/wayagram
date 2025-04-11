@@ -24,7 +24,10 @@ import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/follow/view/follow_page.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
+import 'package:wayagram/features/general_settings/chat_call_pref/view/chat_call_pref_page.dart';
+import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
+import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
@@ -357,11 +360,15 @@ class WayaAppRoutes {
     VerifyEmail.route: () => VerifyEmail(),
     ReferralPage.route: () => ReferralPage(),
     ReferralHistoryPage.route: () => ReferralHistoryPage(),
+    PrivacySettingsPage.route: () => PrivacySettingsPage(),
+    ChatCallPrefPage.route: () => ChatCallPrefPage(),
+    FriendFollowerPage.route: () => FriendFollowerPage(),
     RequestPayout.route: () => RequestPayout(),
     AddPayoutMethodScreen.route: () => AddPayoutMethodScreen(),
     PayoutDetails.route: () => PayoutDetails(),
     PayoutSuccessScreen.route: () => PayoutSuccessScreen(),
     EnterRequestAmountScreen.route: () => EnterRequestAmountScreen(),
+
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and

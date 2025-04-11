@@ -6,10 +6,12 @@ class PollAndVotingRepository extends BaseRepository {
   static const serviceUrl = "wayagram-products/api/v1";
 
   Future<WayaRequestResponse> createPoll(dynamic data) {
-    return post('$serviceUrl/client/polls', data, formdata: true, showErrors: true);
+    return post('$serviceUrl/client/polls', data,
+        formdata: true, showErrors: true);
   }
 
-  Future<WayaRequestResponse> castVote(dynamic amountPaid, String qty, String choiceId, String pollId) {
+  Future<WayaRequestResponse> castVote(
+      dynamic amountPaid, String qty, String choiceId, String pollId) {
     final payload = {
       "choiceSelections": [
         {"choiceId": choiceId, "quantity": qty}
@@ -18,10 +20,12 @@ class PollAndVotingRepository extends BaseRepository {
       "amountPaid": amountPaid
     };
 
-    return post("$serviceUrl/client/polls/$pollId/votes", payload, showErrors: true);
+    return post("$serviceUrl/client/polls/$pollId/votes", payload,
+        showErrors: true);
   }
 
-  Future<WayaRequestResponse> castFreeVote( num qty, String choiceId, String pollId) {
+  Future<WayaRequestResponse> castFreeVote(
+      num qty, String choiceId, String pollId) {
     final payload = {
       "choiceSelections": [
         {"choiceId": choiceId, "quantity": qty}
@@ -30,37 +34,42 @@ class PollAndVotingRepository extends BaseRepository {
       //"amountPaid": amountPaid
     };
 
-    return post("$serviceUrl/client/polls/$pollId/votes", payload, showErrors: true);
+    return post("$serviceUrl/client/polls/$pollId/votes", payload,
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> deletePoll(pollId) {
     return delete("$serviceUrl/client/polls/$pollId", showErrors: true);
   }
 
-  Future<WayaRequestResponse> getAllPolls(int page, [int limit = 15, String? creatorId]) {
+  Future<WayaRequestResponse> getAllPolls(int page,
+      [int limit = 15, String? creatorId]) {
     return get(
-        "$serviceUrl/client/polls?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC&status=active${creatorId != null ? '&creatorId=$creatorId' : ''}");
+        "$serviceUrl/client/polls?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC&status=active&pollStatus=ongoing");
   }
 
   Future<WayaRequestResponse> getMyPolls(String creatorId, int page) {
-    return get("$serviceUrl/client/polls?page=$page&creatorId=$creatorId&orderBy=createdAt&orderDirection=DESC&status=active");
+    return get(
+        "$serviceUrl/client/polls?page=$page&creatorId=$creatorId&orderBy=createdAt&orderDirection=DESC&status=active");
   }
 
   Future<WayaRequestResponse> getActivePolls(String creatorId, int page) {
-    return get("$serviceUrl/client/polls?page=$page&creatorId=$creatorId&orderBy=createdAt&orderDirection=DESC&status=active&pollStatus=ongoing");
+    return get(
+        "$serviceUrl/client/polls?page=$page&creatorId=$creatorId&orderBy=createdAt&orderDirection=DESC&status=active&pollStatus=ongoing");
   }
 
   Future<WayaRequestResponse> getInActivePolls(String creatorId, int page) {
-    return get("$serviceUrl/client/polls?page=$page&creatorId=$creatorId&orderBy=createdAt&orderDirection=DESC&status=active&pollStatus=closed");
+    return get(
+        "$serviceUrl/client/polls?page=$page&creatorId=$creatorId&orderBy=createdAt&orderDirection=DESC&status=active&pollStatus=closed");
   }
-
 
   Future<WayaRequestResponse> getDashboardPolls(String pollId) {
     return get("$serviceUrl/client/polls/$pollId/votes");
   }
 
   Future<WayaRequestResponse> getDashboard(String pollId) {
-    return get("$serviceUrl/client/polls?orderBy=createdAt&orderDirection=DESC&id=$pollId");
+    return get(
+        "$serviceUrl/client/polls?orderBy=createdAt&orderDirection=DESC&id=$pollId");
   }
 
   Future<WayaRequestResponse> getAllPollsById(String id) {
@@ -68,7 +77,8 @@ class PollAndVotingRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> confirmWalletPin(ConfirmWalletPin payload) {
-    return post('wayagram-wallet/api/v2/client/wallet-pin/confirm-pin', payload.toJson());
+    return post('wayagram-wallet/api/v2/client/wallet-pin/confirm-pin',
+        payload.toJson());
   }
 
   Future<WayaRequestResponse> getAPollsByUrl(String url) {
@@ -76,6 +86,13 @@ class PollAndVotingRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getAllFeedPolls() {
-    return get("$serviceUrl/client/polls?limit=10&page=1&orderBy=createdAt&orderDirection=DESC");
+    return get(
+        "$serviceUrl/client/polls?limit=10&page=1&orderBy=createdAt&orderDirection=DESC");
+  }
+
+  //
+  ///
+  Future<WayaRequestResponse> getSinglePollById({required String id}) {
+    return get("$serviceUrl/client/polls/$id");
   }
 }
