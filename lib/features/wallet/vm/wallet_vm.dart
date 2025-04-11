@@ -1,7 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
-import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
@@ -38,12 +36,12 @@ class WalletVm extends StateNotifier<WalletState> {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _walletRepository?.getPayoutMethod();
+      final response = await _walletRepository.getPayoutMethod();
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response?.data}');
-      print('Status Code: ${response?.statusCode}');
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
 
-      if (response!.success) {
+      if (response.success) {
         PayoutMethodModel responseModel = PayoutMethodModel.fromJson(response.data);
         state = state.copyWith(payoutMethod: responseModel.data);
       } else {}
@@ -52,9 +50,8 @@ class WalletVm extends StateNotifier<WalletState> {
     } finally {}
   }
 
-   Future<PaginatedResult<PayoutMethodData>?> getPayoutMethodTwo() async {
-
-    try{
+  Future<PaginatedResult<PayoutMethodData>?> getPayoutMethodTwo() async {
+    try {
       state = state.copyWith(isLoading: true);
       final response = await _walletRepository.getPayoutMethod();
       List<PayoutMethodData>? fetchPageDocs = [];
@@ -69,10 +66,10 @@ class WalletVm extends StateNotifier<WalletState> {
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage, items:  fetchPageDocs!);
-    }catch (e){
-     // _logger.e(e);
-    }finally {
+      return PaginatedResult(hasNextPage: hasNextPage, items: fetchPageDocs!);
+    } catch (e) {
+      // _logger.e(e);
+    } finally {
       state = state.copyWith(isLoading: false);
     }
     return null;
@@ -91,11 +88,9 @@ class WalletVm extends StateNotifier<WalletState> {
         state = state.copyWith(banks: categories);
       }
     } catch (e) {
-     // _logger.e(e);
+      // _logger.e(e);
     }
   }
-
-
 
   Future<void> checkWalletPinStatus(String userId) async {
     state = state.copyWith(isLoading: true);
@@ -115,10 +110,8 @@ final walletVmProvider = StateNotifierProvider<WalletVm, WalletState>((ref) {
 
 class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
   final WalletRepository? _walletRepository;
-  final WayaLocalDataSource _localDataSource;
   final SuccessfulSetUpState _setupState;
-  WalletFundingOptionsVm(this._walletRepository, this._localDataSource, this._setupState)
-      : super(WalletFundingOptionState());
+  WalletFundingOptionsVm(this._walletRepository, this._setupState) : super(WalletFundingOptionState());
 
   Future<void> getWalletFundingOptions() async {
     state = state.copyWith(isLoading: true);
@@ -138,14 +131,14 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
     final user = _setupState.user?.user;
 
     final response = await _walletRepository!.fundWallet(FundWallet(
-        userId: user!.id ?? "",
+        userId: user!.id,
         amount: amount,
         description: decription ?? "Wallet funding",
         email: user.email ?? "",
         fundOptionCode: fundOptionCode,
         callbackUrl: "https://v2.staging.wayagram.ng"
         //callbackUrl: WayaConstants.baseUrl
-    ));
+        ));
 
     if (response.success) {
       final resData = response.data["data"];
@@ -157,16 +150,13 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
 
   Future<bool> verifyWalletPin(String pin) async {
     final user = _setupState.user?.user;
-    final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(userId: user!.id ?? "", pin: pin));
+    final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(userId: user!.id, pin: pin));
     if (response.success) {
       return true;
     } else {
       return false;
     }
   }
-
-
-
 
   Future<void> payForService(
       {required double amount,
@@ -177,7 +167,7 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
       Map<String, dynamic>? metadata}) async {
     final user = _setupState.user?.user;
     final response = await _walletRepository!.payForService(PayForService(
-      userId: user!.id ?? "",
+      userId: user!.id,
       amount: amount,
       description: description,
       purpose: purpose,
@@ -193,5 +183,5 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
 
 final walletFundingOptionsVmProvider = StateNotifierProvider<WalletFundingOptionsVm, WalletFundingOptionState>((ref) {
   final successfulSetupVm = ref.watch(successfulSetupVmProvider);
-  return WalletFundingOptionsVm(WalletRepository.instance, WayaLocalDataSource(), successfulSetupVm);
+  return WalletFundingOptionsVm(WalletRepository.instance, successfulSetupVm);
 });

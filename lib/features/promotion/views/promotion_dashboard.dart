@@ -6,7 +6,6 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/features/promotion/vm/promotion_vm.dart';
-import 'package:wayagram/features/promotion/widgets/promoted_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 
 class PromotionDashboard extends ConsumerStatefulWidget {
