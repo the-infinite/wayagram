@@ -66,6 +66,7 @@ class _PayoutMethodScreenState extends ConsumerState<PayoutMethodScreen> {
                 'bankName':viewModel.payoutMethod[index].bankName,
                 'acctNumber':viewModel.payoutAccountNumber
               }),
+
             );
           }),
     );
