@@ -23,7 +23,8 @@ class EventDateWidget extends ConsumerStatefulWidget {
       required this.selectDate});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _EventDateWidgetState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _EventDateWidgetState();
 }
 
 class _EventDateWidgetState extends ConsumerState<EventDateWidget> {
@@ -60,15 +61,22 @@ class _EventDateWidgetState extends ConsumerState<EventDateWidget> {
               color: wayaTheme.colorScheme.transparent,
               centerWidget: Focus(
                   onFocusChange: (hasFocus) {
-                    ref.read(eventDateWidgetVmProvider(widget.uniqueKey).notifier).focusChanged(hasFocus);
+                    ref
+                        .read(eventDateWidgetVmProvider(widget.uniqueKey)
+                            .notifier)
+                        .focusChanged(hasFocus);
                   },
                   child: Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(widget.date.isEmpty ? widget.hintText : widget.date,
-                            style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
+                        Text(
+                            widget.date.isEmpty ? widget.hintText : widget.date,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.wayaCopyWith(
                                   fontSize: 14.sp,
                                   color: widget.date.isEmpty
                                       ? wayaTheme.colorScheme.greyColor300
@@ -83,15 +91,17 @@ class _EventDateWidgetState extends ConsumerState<EventDateWidget> {
                   )),
               border: Border.all(
                   width: 1,
-                  color:
-                      viewModel.isFocused ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.greyColor300),
+                  color: viewModel.isFocused
+                      ? wayaTheme.colorScheme.customPrimary
+                      : wayaTheme.colorScheme.greyColor300),
             ),
             if (formState.hasError && widget.date.isEmpty)
               Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: Text(
                   formState.errorText!,
-                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                  style: TextStyle(
+                      color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                 ),
               ),
           ],
@@ -121,8 +131,8 @@ class EventDateWidgetVm extends StateNotifier<EventDateWidgetState> {
     state = state.copyWith(isFocused: hasFocus);
   }
 
-  Future<void> showDatePickerDialog(
-      BuildContext context, Function({required String date, required String iso}) selectDate) async {
+  Future<void> showDatePickerDialog(BuildContext context,
+      Function({required String date, required String iso}) selectDate) async {
     try {
       final currentYear = DateTime.now().year;
       final nextYear = currentYear + 1;
@@ -148,7 +158,7 @@ class EventDateWidgetVm extends StateNotifier<EventDateWidgetState> {
   }
 }
 
-final eventDateWidgetVmProvider =
-    StateNotifierProvider.family<EventDateWidgetVm, EventDateWidgetState, String>((ref, uniqueKey) {
+final eventDateWidgetVmProvider = StateNotifierProvider.family<
+    EventDateWidgetVm, EventDateWidgetState, String>((ref, uniqueKey) {
   return EventDateWidgetVm(ref);
 });

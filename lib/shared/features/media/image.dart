@@ -5,8 +5,9 @@ import 'package:photo_view/photo_view.dart';
 import 'package:wayagram/core/components/components.dart';
 
 class WayaImageDetailScreen extends StatefulWidget {
-  final File? file;
-  final String? imageUrl;
+  final List<File>? file;
+  final List<String>? imageUrl;
+
   const WayaImageDetailScreen({
     super.key,
     required this.imageUrl,
@@ -18,6 +19,14 @@ class WayaImageDetailScreen extends StatefulWidget {
 }
 
 class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
+  final pageController = PageController(initialPage: 0);
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     //? The both parameters cannot be null.
@@ -39,15 +48,27 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
         child: SafeArea(
           child: Center(
             child: widget.file != null
-                ? PhotoView(
-                    imageProvider: FileImage(widget.file!),
-                    minScale: PhotoViewComputedScale.contained * 1,
-                    maxScale: PhotoViewComputedScale.covered * 5,
+                ? PageView(
+                    controller: pageController,
+                    children: List.generate(
+                      widget.file!.length,
+                      (index) => PhotoView(
+                        imageProvider: FileImage(widget.file![index]),
+                        minScale: PhotoViewComputedScale.contained * 1,
+                        maxScale: PhotoViewComputedScale.covered * 5,
+                      ),
+                    ),
                   )
-                : PhotoView(
-                    imageProvider: NetworkImage(widget.imageUrl!),
-                    minScale: PhotoViewComputedScale.contained * 1,
-                    maxScale: PhotoViewComputedScale.covered * 5,
+                : PageView(
+                    controller: pageController,
+                    children: List.generate(
+                      widget.imageUrl!.length,
+                      (index) => PhotoView(
+                        imageProvider: NetworkImage(widget.imageUrl![index]),
+                        minScale: PhotoViewComputedScale.contained * 1,
+                        maxScale: PhotoViewComputedScale.covered * 5,
+                      ),
+                    ),
                   ),
           ),
         ),

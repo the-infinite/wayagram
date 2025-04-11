@@ -267,9 +267,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
 
         //? For the bid timing.
         EditHeader(
-          onTap: () {
-            widget.goBack(1);
-          },
+          onTap: () => widget.goBack(1),
           title: 'Bid Timing',
         ),
 
@@ -356,10 +354,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
             disposeControllers();
 
             //? Go to the get quotations bids page.
-            WayaNav.removeUntilNamed(
-              WayaAppRoutes.getBuyerBidsRoute(request.id),
-              predicate: (_) => WayaNav.currentRoute == BottomView.route,
-            );
+            WayaNav.replaceNamed(WayaAppRoutes.getBuyerBidsRoute(request.id));
           },
           text: "Find offers",
           notifier: loadingController,
@@ -374,9 +369,7 @@ class _PreviewRequestState extends ConsumerState<PreviewRequest> {
           color: wayaTheme.colorScheme.transparent,
           textColor: wayaTheme.colorScheme.customBlack,
           border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
-          callback: () {
-            widget.gotoPreviousTab();
-          },
+          callback: () => widget.gotoPreviousTab(),
         )
       ],
     );

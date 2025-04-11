@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -8,7 +9,6 @@ import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
-import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/auth/transaction_pin/views/transaction_pin_view.dart';
 
 class VerifyAccount extends ConsumerWidget {
@@ -25,7 +25,7 @@ class VerifyAccount extends ConsumerWidget {
     final viewModelState = ref.watch(verifyAccountProvider);
     final viewModel = ref.watch(verifyAccountProvider.notifier);
     final wayaTheme = Theme.of(context);
-    final credentialProvider = ref.watch(credentialInputProvider);
+    //final credentialProvider = ref.watch(credentialInputProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -104,7 +104,7 @@ class VerifyAccount extends ConsumerWidget {
                   ),
                 )
               : Container(
-                  width: 200,
+                  width: 220.sp,
                   alignment: Alignment.center,
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(

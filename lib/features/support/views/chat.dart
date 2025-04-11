@@ -158,6 +158,7 @@ class _SupportChatScreenState extends ConsumerState<SupportChatScreen> {
                     },
                     builder: (context, index) => ChatBubbleWidget(
                       index: index,
+                      inputFocus: focusNode,
                       chat: state.chat,
                       previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
                       data: state.messages[index],

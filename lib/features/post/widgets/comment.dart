@@ -42,7 +42,8 @@ class WayaCommentWidget extends StatefulWidget {
 
 class _WayaCommentWidgetState extends State<WayaCommentWidget> {
   //? Configure the one you are replying to.
-  late final notifier = widget.ref.read(createCommentProvider.notifier);
+  late final objectProvider = createCommentProvider(widget.post.id);
+  late final notifier = widget.ref.read(objectProvider.notifier);
 
   @override
   Widget build(BuildContext context) {
@@ -53,9 +54,13 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
     return ValueListenableBuilder(
       valueListenable: wayaCommentCache,
       builder: (context, redraws, _) {
-        final comment =
-            notifier.retrieveCachedComment(widget.comment.id) ?? widget.comment;
-        final commentCount = comment.commentCount;
+        final comment = notifier.retrieveCachedComment(widget.comment.id);
+        final commentCount = comment?.commentCount ?? 0;
+
+        //? How annoying.5
+        if (comment == null) {
+          return const SizedBox();
+        }
 
         //? Return these ones.
         return Padding(
@@ -319,8 +324,7 @@ class _WayaCommentWidgetState extends State<WayaCommentWidget> {
                     }
                   },
                   child: Text(
-                    //"View $commentCount replies",
-                    "View reply",
+                    commentCount == 1 ? "View reply" : "View $commentCount replies",
                     style: wayaTheme.textTheme.bodyBold.copyWith(
                       color: wayaTheme.colorScheme.primary,
                       fontSize: 14.sp,

@@ -87,7 +87,8 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
                       'privacy':'${donation?.privacy}',
                       'id': '${donation?.id}',
                       'donationCount': '${donation?.donationCount}',
-                      'ratioLeft': ratioLeft
+                      'ratioLeft': ratioLeft,
+                      'organizerId': donation?.organizerId
 
                     });
               },

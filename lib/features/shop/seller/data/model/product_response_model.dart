@@ -65,11 +65,11 @@ class Product extends BaseModel<Product> {
   final dynamic price;
   final int stockQuantity;
   final List<String> images;
-  final int height;
-  final int width;
+  final int? height;
+  final int? width;
   final String? color;
   final String materialType;
-  final int depth;
+  final int? depth;
   final String condition;
   final dynamic wayagramDeal;
   final dynamic dealStatus;

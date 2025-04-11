@@ -11,9 +11,9 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/seller/views/bid_dashboard/widgets/inventory_widget.dart';
 import 'package:wayagram/features/quotation/seller/views/bids/all_seller_bids.dart';
+import 'package:wayagram/features/quotation/seller/views/orders.dart';
 import 'package:wayagram/features/quotation/widgets/single_bid_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
-import 'package:wayagram/features/shop/seller/views/orders/all_seller_orders.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
@@ -79,7 +79,7 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
             //? First, the total number of settlements.
             InventoryWidget(
               title: "Total Settlement",
-              metrics: WayaValueHelper.formatNumber(105060, true),
+              metrics: WayaValueHelper.formatNumber(0, true),
               color: Color(0xFFFEF6E7),
             ),
 
@@ -136,7 +136,7 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
                   ),
                   color: Color(0xffE7F6EC),
                   onTap: () => WayaNav.toNamed(AllSellerBids.route),
-                  metric: 4,
+                  metric: state.totalBids,
                   isStacked: true,
                 ),
 
@@ -146,12 +146,14 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
                 //? Button to go to all orders.
                 QuickActionWidget(
                   title: "Orders",
+                  metric: state.totalOrders,
+                  isStacked: true,
                   icon: WayaAssets.icons.orders.svg(
                     width: 28,
                     height: 28,
                   ),
                   color: Color(0xffFFF0EB),
-                  onTap: () => WayaNav.toNamed(AllSellerOrders.route),
+                  onTap: () => WayaNav.toNamed(QuotationSellerOrders.route),
                 ),
 
                 // Some space.

@@ -12,7 +12,6 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
-import 'package:wayagram/features/quotation/seller/views/bids/see_seller_bids.dart';
 import 'package:wayagram/shared/features/quotation/modal/choose_shop.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
@@ -111,7 +110,13 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
     if (result == null) return;
 
     //* Okay, since bidding was fine, we throw a pizza party.
-    WayaNav.toNamed(SeeSellerBids.route);
+    _viewSellerBid(result);
+  }
+
+  Future<void> _viewSellerBid(QuotationBidModel result) async {
+    if (!WayaConstants.isProduction) {
+      WayaNav.toNamed(WayaAppRoutes.getSellerBidsRoute(result.id, result.requestId));
+    }
   }
 
   Future<void> _viewBids() async {
@@ -121,6 +126,9 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final vendoredBid = widget.data.bids
+        ?.where((bid) => bid.vendorId == ConversationState.self.id && bid.status != BidActionType.reject)
+        .firstOrNull;
 
     //? The component itself.
     return Column(
@@ -279,13 +287,21 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
               const Gap(20),
 
               //? The button that we use to place a bid.
-              WayaProgressiveButton(
-                callback: widget.data.buyerId == ConversationState.self.id ? _viewBids : _placeBid,
-                text: widget.data.buyerId == ConversationState.self.id ? 'View Bids' : 'Place Bid',
-                height: 48,
-                isDisabled: widget.data.status != BuyRequestStatus.active,
-                notifier: loadingController,
-              ),
+              if (vendoredBid != null)
+                WayaProgressiveButton(
+                  callback: () => _viewSellerBid(vendoredBid),
+                  text: 'View bid',
+                  height: 48,
+                  notifier: loadingController,
+                )
+              else
+                WayaProgressiveButton(
+                  callback: widget.data.buyerId == ConversationState.self.id ? _viewBids : _placeBid,
+                  text: widget.data.buyerId == ConversationState.self.id ? 'View Bids' : 'Place Bid',
+                  height: 48,
+                  isDisabled: widget.data.status != BuyRequestStatus.active,
+                  notifier: loadingController,
+                ),
             ],
           ),
         ),

@@ -281,6 +281,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                 SizedBox(
                   width: double.infinity,
                   child: Row(
+                    spacing: 6,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -294,7 +295,7 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                               selectDate: ref
                                   .read(addEventVmProvider.notifier)
                                   .selectStartDate)),
-                      const Gap(6),
+            
                       Expanded(
                           child: EventDateWidget(
                               uniqueKey: 'end-date',

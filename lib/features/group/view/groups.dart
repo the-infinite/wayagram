@@ -35,6 +35,19 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final args = ModalRoute.of(context)?.settings.arguments as dynamic;
+      if(args != null){
+        setState(() {
+          _selectedIndex = args['index'];
+        });
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createGroupProvider);
     final wayaTheme = Theme.of(context);

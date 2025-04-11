@@ -54,6 +54,7 @@ class SplashScreenVm extends StateNotifier<void> {
         // Now, in a contained region, load up this person's stores.
         try {
           await ShopResource.configureShop(ConversationState.self.id);
+          await ShopResource.getShopCategories();
         } catch (e) {
           WayaDebugConsoleController.instance.addException(
             WayaDebugHelpers.getMessage(e),
@@ -93,8 +94,8 @@ class SplashScreenVm extends StateNotifier<void> {
 
         WayaNav.toNamed(BottomView.route);
       }
-      
-      //? Go 
+
+      //? Go
       else {
         WayaNav.toNamed(LoginCoverPage.route);
       }

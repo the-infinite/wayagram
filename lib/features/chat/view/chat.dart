@@ -259,97 +259,101 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
             ),
           ),
           body: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                //? First, the divider.
-                Divider(color: WayaColors.greyColor200, height: 1),
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onPanUpdate: (details) => focusNode.unfocus(),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  //? First, the divider.
+                  Divider(color: WayaColors.greyColor200, height: 1),
 
-                //? Second, the chat messages.
-                if (state.messages.isEmpty && state.hasLoaded)
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        //* First, the image.
-                        WayaAssets.images.cSayHello.image(
-                          height: 70,
-                          width: 70,
-                          fit: BoxFit.cover,
-                        ),
-
-                        // Some space.
-                        const Gap(20),
-
-                        //* Some text
-                        Text(
-                          "Send the first message",
-                          style: WayaTextStyles.titleLarge.copyWith(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 24.sp,
+                  //? Second, the chat messages.
+                  if (state.messages.isEmpty && state.hasLoaded)
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          //* First, the image.
+                          WayaAssets.images.cSayHello.image(
+                            height: 70,
+                            width: 70,
+                            fit: BoxFit.cover,
                           ),
-                        ),
 
-                        // Some space.
-                        const Gap(10),
+                          // Some space.
+                          const Gap(20),
 
-                        //* Some text
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 40),
-                          child: Text(
-                            "Start a conversation with ${chat.other.chatUser?.displayName} by sending the first message",
-                            maxLines: 3,
-                            textAlign: TextAlign.center,
-                            style: WayaTextStyles.hintStyle,
+                          //* Some text
+                          Text(
+                            "Send the first message",
+                            style: WayaTextStyles.titleLarge.copyWith(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 24.sp,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  )
-                else
-                  Expanded(
-                    child: WayaPaginatedListView<MessageModel>(
-                      handler: handler,
-                      nextPage: state.page,
-                      itemCount: state.messages.length,
-                      isAtEnd: !state.hasNextPage,
-                      shouldFetch: !state.isLoading,
-                      direction: Axis.vertical,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      reverse: true,
-                      getPage: (page) async {
-                        return notifier.getMessages();
-                      },
-                      builder: (context, index) => ChatBubbleWidget(
-                        index: index,
-                        previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
-                        data: state.messages[index],
-                        chat: chat,
-                        controller: inputController,
-                        isLast: index == state.messages.length - 1,
+
+                          // Some space.
+                          const Gap(10),
+
+                          //* Some text
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 40),
+                            child: Text(
+                              "Start a conversation with ${chat.other.chatUser?.displayName} by sending the first message",
+                              maxLines: 3,
+                              textAlign: TextAlign.center,
+                              style: WayaTextStyles.hintStyle,
+                            ),
+                          ),
+                        ],
                       ),
-                      child: state.typing
-                          ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                PersonalTypingIndicator(),
-                              ],
-                            )
-                          : null,
+                    )
+                  else
+                    Expanded(
+                      child: WayaPaginatedListView<MessageModel>(
+                        handler: handler,
+                        nextPage: state.page,
+                        itemCount: state.messages.length,
+                        isAtEnd: !state.hasNextPage,
+                        shouldFetch: !state.isLoading,
+                        direction: Axis.vertical,
+                        onScroll: (controller) => focusNode.unfocus(),
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        reverse: true,
+                        getPage: (page) async => notifier.getMessages(),
+                        builder: (context, index) => ChatBubbleWidget(
+                          index: index,
+                          inputFocus: focusNode,
+                          previousDate: index == 0 ? DateTime(1970) : state.messages[index - 1].createdAt,
+                          data: state.messages[index],
+                          chat: chat,
+                          controller: inputController,
+                          isLast: index == state.messages.length - 1,
+                        ),
+                        child: state.typing
+                            ? Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  PersonalTypingIndicator(),
+                                ],
+                              )
+                            : null,
+                      ),
                     ),
-                  ),
 
-                //? Third, the chat input widget.
-                ChatInputWidget(
-                  controller: inputController,
-                  notifier: notifier,
-                  createChat: _startConversation,
-                  focusNode: focusNode,
-                ),
-              ],
+                  //? Third, the chat input widget.
+                  ChatInputWidget(
+                    controller: inputController,
+                    notifier: notifier,
+                    createChat: _startConversation,
+                    focusNode: focusNode,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

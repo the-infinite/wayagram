@@ -3,6 +3,7 @@ import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
+import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
 import 'package:wayagram/shared/features/shop/model/default.dart';
 
 class ShopResource {
@@ -11,6 +12,7 @@ class ShopResource {
   static final _vendorsCache = <String, List<ShopModel>>{};
   static final _cachedTimestamps = <String, DateTime>{};
   static final _logger = Logger();
+  static final _categories = <CategoryData>[];
   static ShopModel? _current;
 
   /// Helper function used to get the list of shops for the currently logged in
@@ -27,6 +29,10 @@ class ShopResource {
 
   /// Helper function used to check if any shop has been selected.
   static bool get hasSelectedShop => _current != null;
+
+  /// Helper function used to get the categories currently available and selected
+  /// for shops in the app.
+  static List<CategoryData> get categories => _categories;
 
   // No construct.
   ShopResource._();
@@ -86,6 +92,29 @@ class ShopResource {
       setShop(shops.first);
       await _logger.init;
       _logger.i("User shops initialized", time: DateTime.now());
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.shops,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+  }
+
+  /// Helper function used to get ALL the shopping categories available inside
+  /// of the app. Useful when we need to use it in the app.
+  static Future<void> getShopCategories() async {
+    try {
+      final response = await _repo.getAllCategories(1, 5000);
+
+      //? If this is fine.
+      if (response.success) {
+        final responseModel = CategoryResponseModel.fromJson(response.data);
+        _categories.clear();
+        _categories.addAll(responseModel.data.categories);
+        _categories.sort((a, b) => a.name.compareTo(b.name));
+      }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),

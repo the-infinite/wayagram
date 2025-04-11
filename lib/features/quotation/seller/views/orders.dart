@@ -4,31 +4,34 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_observable_scroll.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/quotation/widgets/order_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
 import 'package:wayagram/shared/features/shop/resource/default.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
-class AllSellerOrders extends ConsumerStatefulWidget {
+class QuotationSellerOrders extends ConsumerStatefulWidget {
   static const route = '/quotation/seller/orders';
 
-  const AllSellerOrders({super.key});
+  const QuotationSellerOrders({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _AllSellerOrdersState();
 }
 
-class _AllSellerOrdersState extends ConsumerState<AllSellerOrders> {
+class _AllSellerOrdersState extends ConsumerState<QuotationSellerOrders> {
   late final notifier = ref.read(userQuotationsProvider.notifier);
   final handler = WayaObservableScrollController();
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      notifier.getBidsOverview(ShopResource.currentShop.id);
+      notifier.getOrders(ConversationState.self.accountType == UserAccountType.business && ShopResource.hasSelectedShop
+          ? ShopResource.currentShop.id
+          : ConversationState.self.id);
     });
     super.initState();
   }
@@ -42,7 +45,7 @@ class _AllSellerOrdersState extends ConsumerState<AllSellerOrders> {
     return WayaScaffold(
       isLoading: false,
       isScrollable: false,
-      title: 'Bids',
+      title: 'Orders',
       body: WayaObservableScrollView(
         handler: handler,
         shouldFetch: !state.isLoadingBids,
@@ -62,7 +65,7 @@ class _AllSellerOrdersState extends ConsumerState<AllSellerOrders> {
 
             //? This is okay.
             Text(
-              'View and Manage your bids',
+              'View and Manage your orders',
               style: wayaTheme.textTheme.hintStyle,
             ),
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -101,7 +102,11 @@ class EventVm extends StateNotifier<EventState> {
   }
 
   void clearSingle() {
-    state = state.copyWith(singleEvent: null, isUserEvent: null);
+    state = state.copyWith(
+      singleEvent: null,
+      isUserEvent: null,
+      attendees: [],
+    );
   }
 
   Future<PaginatedResult<EventDoc>?> getUserEvents({required int page}) async {
@@ -142,9 +147,10 @@ class EventVm extends StateNotifier<EventState> {
 
       final provider = ref.read(eventEngagementProvider.notifier);
 
-      provider.addLocation(event.location, EventPoint.joinEvent.value);
-      provider.addEventType(event.eventType, EventPoint.joinEvent.value);
       if (response.success && context.mounted) {
+        provider.addLocation(event.location, EventPoint.joinEvent.value);
+        provider.addEventType(event.eventType, EventPoint.joinEvent.value);
+        await getAttendees(page: 1);
         WayaNav.goBack();
 
         if (context.mounted) {
@@ -162,6 +168,10 @@ class EventVm extends StateNotifier<EventState> {
             onCancel: () => WayaNav.toNamed(EventView.route),
           );
         }
+      } else {
+        WayaNav.goBack();
+        String? message = response.data['message'];
+        WayaSnackBar.showToast(message ?? 'Sth is wrong. Try again later');
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -210,12 +220,12 @@ class EventVm extends StateNotifier<EventState> {
     }
   }
 
-  Future<PaginatedResult<Doc>?> getAttendees({required int page}) async {
+  Future<PaginatedResult<Doc>?> getAttendees({required int page, String? id}) async {
     try {
       state = state.copyWith(isLoadingAttendees: true);
       final userId = await _secureDataSource.getUserId();
       state = state.copyWith(userId: userId);
-      final response = await _eventRepository.joinedUsers(id: state.singleEvent!.id, page: page);
+      final response = await _eventRepository.joinedUsers(id: id ?? state.singleEvent!.id, page: page);
       List<Doc> attendees = [];
       bool hasNextPage = false;
 
@@ -224,6 +234,7 @@ class EventVm extends StateNotifier<EventState> {
         AttendeeResponse attendeeResponse = AttendeeResponse.fromJson(response.data);
         attendees = attendeeResponse.data.docs;
         hasNextPage = attendeeResponse.data.hasNextPage;
+        state = state.copyWith(attendees: attendees, isLoadingAttendees: false);
       }
 
       //? This is fine.

@@ -12,6 +12,8 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
+import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
+import 'package:wayagram/features/promotion/views/promote.dart';
 import 'private_page.dart';
 import 'report_page.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
@@ -36,7 +38,8 @@ class PublicPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _PublicPageState();
 }
 
-class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProviderStateMixin {
+class _PublicPageState extends ConsumerState<PublicPage>
+    with SingleTickerProviderStateMixin {
   late final pageProvider = singlePageProvider("page-${widget.id}");
   late final notifier = ref.read(pageProvider.notifier);
   final handler = WayaObservableScrollController();
@@ -103,7 +106,8 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
           WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
           InkWell(
             onTap: () => Share.share(
-              WayaValueHelper.getShareableUrl(WayaAppRoutes.getPageDetailsPage(widget.id)),
+              WayaValueHelper.getShareableUrl(
+                  WayaAppRoutes.getPageDetailsPage(widget.id)),
               subject: 'Share ${page.name}',
             ),
             child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
@@ -114,26 +118,31 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
             position: PopupMenuPosition.under,
             itemBuilder: (context) {
               return [
-                // PopupMenuItem<int>(
-                //   value: 0,
-                //   onTap: () {
-                //     WayaNav.goBack();
-                //     //WayaNav.toNamed('/groupSetting');
-                //   },
-                //   child: WayaActionNav(
-                //     context: context,
-                //     asset: SvgPicture.asset(
-                //       'assets/images/pages/mute.svg',
-                //       height: 20,
-                //     ),
-                //     text: "  Mute Page",
-                //     color: wayaTheme.colorScheme.customBlack,
-                //   ),
-                // ),
+                if (page.ownerId == ConversationState.self.id)
+                  PopupMenuItem<int>(
+                    value: 0,
+                    onTap: () {
+                      WayaNav.goBack();
+                      WayaNav.toNamed(Promote.route, arguments: {
+                        "contentId": page.id,
+                        "contentType": PromotionServiceType.page.name
+                      });
+                    },
+                    child: WayaActionNav(
+                      context: context,
+                      asset: SvgPicture.asset(
+                        WayaAssets.icons.mFire.path,
+                        height: 20,
+                      ),
+                      text: "Promote Page",
+                      color: wayaTheme.colorScheme.customBlack,
+                    ),
+                  ),
                 PopupMenuItem<int>(
                   value: 1,
                   onTap: () => Share.share(
-                    WayaValueHelper.getShareableUrl(WayaAppRoutes.getPageDetailsPage(widget.id)),
+                    WayaValueHelper.getShareableUrl(
+                        WayaAppRoutes.getPageDetailsPage(widget.id)),
                     subject: 'Share ${page.name}',
                   ),
                   child: WayaActionNav(
@@ -208,7 +217,8 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
                                 )
                               : DecorationImage(
                                   image: AssetImage(
-                                    WayaAssets.images.pages.imagePlaceholder.path,
+                                    WayaAssets
+                                        .images.pages.imagePlaceholder.path,
                                   ),
                                   fit: BoxFit.cover,
                                 ),
@@ -220,7 +230,8 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
 
                       //? This is fine.
                       Visibility(
-                        visible: page.isPublic || myPageNotifier.isMemberOf(widget.id),
+                        visible: page.isPublic ||
+                            myPageNotifier.isMemberOf(widget.id),
                         maintainState: true,
                         maintainAnimation: true,
                         maintainSize: true,
@@ -228,15 +239,20 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
                           onTap: _followPage,
                           child: Container(
                             margin: EdgeInsets.only(right: 20.w),
-                            padding: EdgeInsets.all(5.0),
+                            padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 8.w),
                             decoration: BoxDecoration(
-                              border: Border.all(color: wayaTheme.colorScheme.primary600, width: 1.5),
+                              border: Border.all(
+                                  color: wayaTheme.colorScheme.primary600,
+                                  width: 1.5),
                               color: wayaTheme.colorScheme.white,
                               borderRadius: BorderRadius.circular(7.r),
                             ),
                             child: Text(
-                              myPageNotifier.isMemberOf(widget.id) ? "Following" : "Follow",
-                              style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                              myPageNotifier.isMemberOf(widget.id)
+                                  ? "Following"
+                                  : "Follow",
+                              style:
+                                  wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                                 color: wayaTheme.colorScheme.primary600,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -363,7 +379,8 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
                       Gap(10.h),
 
                       //? The private text.
-                      Text('This page is private', style: wayaTheme.textTheme.titleLarge),
+                      Text('This page is private',
+                          style: wayaTheme.textTheme.titleLarge),
 
                       // Some space.
                       Gap(10.h),
@@ -384,7 +401,8 @@ class _PublicPageState extends ConsumerState<PublicPage> with SingleTickerProvid
                       //? Now, let this fly.
                       WayaProgressiveButton(
                         notifier: loadingController,
-                        callback: () async => myPageNotifier.followPage(widget.id),
+                        callback: () async =>
+                            myPageNotifier.followPage(widget.id),
                         text: 'Join & Request Access',
                       ),
                     ],
