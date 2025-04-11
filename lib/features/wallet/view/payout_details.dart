@@ -9,10 +9,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
-import 'package:wayagram/features/wallet/view/payout_history_screen.dart';
-import 'package:wayagram/features/wallet/view/payout_method_screen.dart';
 
 class PayoutDetails extends ConsumerStatefulWidget {
   static const route = '/payoutDetails';

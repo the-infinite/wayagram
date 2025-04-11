@@ -2,7 +2,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'business_account_model.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(createFactory: false)
 class BusinessAccountData {
   final String? id;
   final bool isActive;

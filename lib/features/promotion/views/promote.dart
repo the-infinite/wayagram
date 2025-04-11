@@ -8,7 +8,6 @@ import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/widgets/event_date_widget.dart';
-import 'package:wayagram/features/promotion/bottom_sheet/pay_for_promotion.dart';
 import 'package:wayagram/features/promotion/vm/create_promotion_vm.dart';
 import 'package:wayagram/features/shop/filter/widgets/filter_chip_item.dart';
 

@@ -4,15 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/ugt/data/model/voter_user_list_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
-import '../../../core/components/waya_scaffold.dart';
 
 class VotersListPage extends StatefulHookConsumerWidget {
   static const route = '/voters-list-Page';
@@ -123,7 +120,6 @@ class _ManageStateContestState extends ConsumerState<VotersListPage> {
   }
 
   Widget _buildStateItem(BuildContext context, VoterListModel? post) {
-    final wayaTheme = Theme.of(context);
     return Column(
       children: [
         Row(
