@@ -21,12 +21,14 @@ import 'package:wayagram/shared/features/shop/resource/default.dart';
 class QuotationModal extends StatelessWidget {
   final QuotationBidModel bid;
   final BuyRequestModel request;
+  final BidActionAuthor user;
 
   // Construct.
   const QuotationModal({
     super.key,
     required this.bid,
     required this.request,
+    required this.user,
   });
 
   @override
@@ -46,7 +48,7 @@ class QuotationModal extends StatelessWidget {
             Text("Offer Accepted", style: wayaTheme.textTheme.bodyMedium),
             SizedBox(height: 3.h),
             Text(
-              "Congratulations! Your offer was accepted by\nthis vendor",
+              "Congratulations! Your offer was accepted by\n${user == BidActionAuthor.buyer ? "this vendor" : "the buyer"}",
               style: wayaTheme.textTheme.hintStyle,
               textAlign: TextAlign.center,
             ),
@@ -200,10 +202,16 @@ class QuotationModal extends StatelessWidget {
             ),
 
             //? The
-            WayaButton(
-              callback: () async => WayaNav.toNamed(WayaAppRoutes.getQuotationCheckoutScreen(bid.id, bid.requestId)),
-              text: "Proceed to Payment",
-            ),
+            if (user == BidActionAuthor.vendor)
+              WayaButton(
+                callback: () async => WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId)),
+                text: "Proceed to Order Fulfillment",
+              )
+            else
+              WayaButton(
+                callback: () async => WayaNav.toNamed(WayaAppRoutes.getQuotationCheckoutScreen(bid.id, bid.requestId)),
+                text: "Proceed to Payment",
+              ),
           ],
         ),
       ),

@@ -1,12 +1,13 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -22,11 +23,13 @@ class SingleNegotiationBidWidget extends ConsumerStatefulWidget {
   final BuyRequestModel request;
   final QuotationBidModel bid;
   final BidActionAuthor negotiator;
+  final Timer? timer;
 
   const SingleNegotiationBidWidget({
     super.key,
     required this.request,
     required this.bid,
+    required this.timer,
     this.negotiator = BidActionAuthor.buyer,
   });
 
@@ -104,6 +107,10 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
     //! Since bidding failed, you can leave.
     if (!(result ?? false)) return;
 
+    //? Prevent some confusing visuals.
+    locked = true;
+    widget.timer?.cancel();
+
     //? Since this was done well.
     await WayaUtils.showModalSheet<double>(
       context,
@@ -177,12 +184,17 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
       WidgetsBinding.instance.addPostFrameCallback(
         (_) {
           if (!locked) {
+            //? Prevent this from possibly repeating again.
             locked = true;
+            widget.timer?.cancel();
+
+            //? Now, show the modal in question.
             WayaUtils.showModalSheet<double>(
               context,
               child: QuotationModal(
                 request: widget.request,
                 bid: widget.bid,
+                user: widget.negotiator,
               ),
             );
           }

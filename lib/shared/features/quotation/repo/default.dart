@@ -29,6 +29,14 @@ class QuotationRepository extends BaseRepository {
     return get("$serviceUrl/buyer/request/retrieve/$id");
   }
 
+  Future<WayaRequestResponse> retrieveBid(String id) {
+    return get("$serviceUrl/vendor/bid/$id");
+  }
+
+  Future<WayaRequestResponse> verifyPaymentStatus(String id, bool value) {
+    return patch("$serviceUrl/orders/payment-status/$id", {"status": value}, showErrors: true);
+  }
+
   Future<WayaRequestResponse> updateRequestAmount({
     required String id,
     String? amount,

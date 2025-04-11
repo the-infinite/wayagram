@@ -15,6 +15,7 @@ class WayaNoticeModal extends StatelessWidget {
   final ValueNotifier<bool> actionNotifier;
   final Color? buttonColor;
   final String? buttonText;
+  final Widget? leadingIcon;
   final String? secondButtonText;
   final Widget? buttonCenterWidget;
   final Widget? secondButtonCenterWidget;
@@ -33,6 +34,7 @@ class WayaNoticeModal extends StatelessWidget {
     this.buttonCenterWidget,
     this.secondButtonCenterWidget,
     this.buttonColor,
+    this.leadingIcon,
   });
 
   @override
@@ -75,6 +77,7 @@ class WayaNoticeModal extends StatelessWidget {
             centerWidget: buttonCenterWidget,
             color: buttonColor,
             callback: () async => await onPress(),
+            leadingIcon: leadingIcon,
             text: buttonCenterWidget == null ? buttonText ?? '' : '',
           ),
           const Gap(10),

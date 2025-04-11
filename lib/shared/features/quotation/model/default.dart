@@ -153,6 +153,10 @@ class BuyRequestModel {
     this.bids,
   });
 
+  QuotationBidModel? get acceptedBid => bids?.where((bid) => bid.status == BidActionType.accept).firstOrNull;
+
+  bool get hasAcceptedBid => acceptedBid != null;
+
   String get fullname => '${brand?.isNotEmpty ?? false ? '${brand!.capitalize} ' : ''}${productName.capitalize}';
 
   factory BuyRequestModel.fromJson(Map<String, dynamic> json) => _$BuyRequestModelFromJson(json);

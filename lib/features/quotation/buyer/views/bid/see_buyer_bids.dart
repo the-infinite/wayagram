@@ -102,232 +102,247 @@ class _SeeBuyerBidsState extends ConsumerState<SeeBuyerBids> {
       isScrollable: false,
       padding: EdgeInsets.zero,
       backgroundColor: WayaColors.greyColor200,
-      body: ValueListenableBuilder(
-        valueListenable: requestState,
-        builder: (context, request, _) => Column(
-          mainAxisAlignment: request?.bids?.isEmpty ?? true ? MainAxisAlignment.end : MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            //? If nobody has bid yet...
-            if (request?.bids?.isEmpty ?? true) ...[
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 20.w),
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
-                decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.scaffoldColor,
-                  borderRadius: BorderRadius.circular(16.r),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    //? The bid icon.
-                    WayaAssets.images.bid.shop.image(
-                      height: 110.h,
-                      width: 110.w,
-                    ),
-
-                    // Some space.
-                    SizedBox(height: 20.h),
-
-                    //? Tell the user we are awaiting vendors.
-                    Text(
-                      "Finding Vendors....",
-                      style: wayaTheme.textTheme.headlineLarge,
-                    ),
-
-                    // Some space.
-                    SizedBox(height: 3.h),
-
-                    //? The description.
-                    Text(
-                      "We're sending notifications to vendors around you to start bidding...",
-                      textAlign: TextAlign.center,
-                      style: wayaTheme.textTheme.hintStyle,
-                    ),
-                  ],
-                ),
-              ),
-
-              // Some space.
-              SizedBox(height: 17.h),
-
-              //? When this request exists...
-              if (request != null) ...[
-                //? Next, the timer.
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: QuotationBidTimer(
-                    request: request,
+      body: SafeArea(
+        child: ValueListenableBuilder(
+          valueListenable: requestState,
+          builder: (context, request, _) => Column(
+            mainAxisAlignment: request?.bids?.isEmpty ?? true ? MainAxisAlignment.end : MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              //? If nobody has bid yet...
+              if (request?.bids?.isEmpty ?? true) ...[
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 20.w),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 30.h),
+                  decoration: BoxDecoration(
+                    color: wayaTheme.colorScheme.scaffoldColor,
+                    borderRadius: BorderRadius.circular(16.r),
                   ),
-                ),
-
-                // More space.
-                SizedBox(height: 17.h),
-              ]
-            ] else
-              //? This is fine.
-              Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-                  itemCount: request?.bids?.length ?? 0,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    final bid = request!.bids![index];
-
-                    //? Return this one.
-                    return SingleNegotiationBidWidget(
-                      negotiator: BidActionAuthor.buyer,
-                      request: request,
-                      bid: bid,
-                    );
-                  },
-                ),
-              ),
-
-            //? This is fine.
-            Container(
-              padding: EdgeInsets.only(left: 20.w, right: 10.w, top: 20.h),
-              height: 200.h,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  topRight: Radius.circular(16),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //? First,
-                  Row(
-                    children: [
-                      Text(
-                        WayaValueHelper.formatPrice(request?.bidStartingAmount ?? 0),
-                        style: TextStyle().wayaCopyWith(
-                          color: wayaTheme.colorScheme.customBlack,
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-
-                      //? Boundless space.
-                      Spacer(),
-
-                      //? So, let us see how well we are doing.
-                      InkWell(
-                        onTap: () async {
-                          //? Show the edit offer modal.
-                          final amount = await WayaUtils.showModalSheet<double>(
-                            context,
-                            child: EditOfferModal(
-                              delta: 100,
-                              maxAmount: request?.maxBidAmount ?? 5000000,
-                              title: 'Edit your Offer',
-                              hint: 'Update your base price for this request',
-                            ),
-                          );
-
-                          //? If this is null, leave.
-                          if (amount == null) return;
-
-                          //? Since this was fine...
-                          final result = await notifier.updateRequestAmount(widget.id, amount);
-
-                          //? If this did not go well, leave.
-                          if (!result) return;
-
-                          //? Since it went well...
-                          requestState.value = requestState.value!.copyWith(bidStartingAmount: amount);
-
-                          //? Now, tell the user that it went well.
-                          WayaUtils.showNotice(
-                            context: context,
-                            title: "Offer Updated",
-                            message: "Your offer has been updated successfully",
-                            icon: WayaAssets.images.bid.accept.image(
-                              height: 116.h,
-                              width: 116.h,
-                            ),
-                            buttonText: 'Okay',
-                            isDismissible: true,
-                            onPress: () => WayaNav.goBack(),
-                          );
-                        },
-                        child: WayaAssets.images.bid.edit.image(
-                          height: 26.h,
-                        ),
-                      )
-                    ],
-                  ),
-
-                  // Some space.
-                  const Gap(20),
-
-                  //? The title offer.
-                  Text(
-                    "Your Offer",
-                    style: TextStyle().wayaCopyWith(
-                      color: wayaTheme.colorScheme.greyColor500,
-                      fontWeight: FontWeight.normal,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-
-                  // Some space.
-                  const Gap(20),
-
-                  //? The buttons in the
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      //? The button to close a bid.
-                      Expanded(
-                        child: WayaProgressiveButton(
-                          callback: () async {
-                            //? After this is done..
-                            await WayaUtils.showNotice(
-                              context: context,
-                              title: 'Cancel Buy Request',
-                              message: 'Are you sure you want to cancel this request?',
-                              icon: WayaAssets.images.bid.cancel.image(
-                                height: 116.h,
-                                width: 116.h,
-                              ),
-                              buttonText: 'Yes, Cancel Request',
-                              secondButtonText: 'No, Keep Request',
-                              isDismissible: true,
-                              onCancel: () => WayaNav.goBack(),
-                              onPress: _cancelAndFinish,
-                            );
+                      //? The bid icon.
+                      WayaAssets.images.bid.shop.image(
+                        height: 110.h,
+                        width: 110.w,
+                      ),
 
-                            //? Leave.
-                            WayaNav.goBack();
-                          },
-                          text: 'Cancel Buy Request',
-                          color: WayaColors.error500,
-                          notifier: cancelNotifier,
+                      // Some space.
+                      SizedBox(height: 20.h),
+
+                      //? Tell the user we are awaiting vendors.
+                      Text(
+                        "Finding Vendors....",
+                        style: wayaTheme.textTheme.headlineLarge,
+                      ),
+
+                      // Some space.
+                      SizedBox(height: 3.h),
+
+                      //? The description.
+                      Text(
+                        "We're sending notifications to vendors around you to start bidding...",
+                        textAlign: TextAlign.center,
+                        style: wayaTheme.textTheme.hintStyle,
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Some space.
+                SizedBox(height: 17.h),
+
+                //? When this request exists...
+                if (request != null) ...[
+                  //? Next, the timer.
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: QuotationBidTimer(
+                      request: request,
+                    ),
+                  ),
+
+                  // More space.
+                  SizedBox(height: 17.h),
+                ]
+              ] else
+                //? This is fine.
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                    itemCount: request?.bids?.length ?? 0,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      final bid = request!.bids![index];
+
+                      //? Return this one.
+                      return SingleNegotiationBidWidget(
+                        negotiator: BidActionAuthor.buyer,
+                        request: request,
+                        timer: _timer,
+                        bid: bid,
+                      );
+                    },
+                  ),
+                ),
+
+              //? This is fine.
+              if (request?.hasAcceptedBid ?? false)
+                //? The button for proceeding to payment for a quote.
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  child: WayaButton(
+                    callback: () async => WayaNav.toNamed(
+                      WayaAppRoutes.getQuotationCheckoutScreen(request!.acceptedBid!.id, request.id),
+                    ),
+                    text: "Proceed to Payment",
+                  ),
+                )
+              else
+                Container(
+                  padding: EdgeInsets.only(left: 20.w, right: 10.w, top: 20.h),
+                  height: 200.h,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //? First,
+                      Row(
+                        children: [
+                          Text(
+                            WayaValueHelper.formatPrice(request?.bidStartingAmount ?? 0),
+                            style: TextStyle().wayaCopyWith(
+                              color: wayaTheme.colorScheme.customBlack,
+                              fontSize: 20.sp,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+
+                          //? Boundless space.
+                          Spacer(),
+
+                          //? So, let us see how well we are doing.
+                          InkWell(
+                            onTap: () async {
+                              //? Show the edit offer modal.
+                              final amount = await WayaUtils.showModalSheet<double>(
+                                context,
+                                child: EditOfferModal(
+                                  delta: 100,
+                                  maxAmount: request?.maxBidAmount ?? 5000000,
+                                  title: 'Edit your Offer',
+                                  hint: 'Update your base price for this request',
+                                ),
+                              );
+
+                              //? If this is null, leave.
+                              if (amount == null) return;
+
+                              //? Since this was fine...
+                              final result = await notifier.updateRequestAmount(widget.id, amount);
+
+                              //? If this did not go well, leave.
+                              if (!result) return;
+
+                              //? Since it went well...
+                              requestState.value = requestState.value!.copyWith(bidStartingAmount: amount);
+
+                              //? Now, tell the user that it went well.
+                              WayaUtils.showNotice(
+                                context: context,
+                                title: "Offer Updated",
+                                message: "Your offer has been updated successfully",
+                                icon: WayaAssets.images.bid.accept.image(
+                                  height: 116.h,
+                                  width: 116.h,
+                                ),
+                                buttonText: 'Okay',
+                                isDismissible: true,
+                                onPress: () => WayaNav.goBack(),
+                              );
+                            },
+                            child: WayaAssets.images.bid.edit.image(
+                              height: 26.h,
+                            ),
+                          )
+                        ],
+                      ),
+
+                      // Some space.
+                      const Gap(20),
+
+                      //? The title offer.
+                      Text(
+                        "Your Offer",
+                        style: TextStyle().wayaCopyWith(
+                          color: wayaTheme.colorScheme.greyColor500,
+                          fontWeight: FontWeight.normal,
+                          fontSize: 14.sp,
                         ),
                       ),
 
                       // Some space.
-                      const Gap(5),
+                      const Gap(20),
 
-                      //? The button to extend a bid's time.
-                      Expanded(
-                        child: WayaProgressiveButton(
-                          callback: () async => await _extendBidTime(request!),
-                          text: 'Extend Bid Time',
-                          notifier: extendNotifier,
-                        ),
+                      //? The buttons in the
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          //? The button to close a bid.
+                          Expanded(
+                            child: WayaProgressiveButton(
+                              callback: () async {
+                                //? After this is done..
+                                await WayaUtils.showNotice(
+                                  context: context,
+                                  title: 'Cancel Buy Request',
+                                  message: 'Are you sure you want to cancel this request?',
+                                  icon: WayaAssets.images.bid.cancel.image(
+                                    height: 116.h,
+                                    width: 116.h,
+                                  ),
+                                  buttonText: 'Yes, Cancel Request',
+                                  secondButtonText: 'No, Keep Request',
+                                  isDismissible: true,
+                                  onCancel: () => WayaNav.goBack(),
+                                  onPress: _cancelAndFinish,
+                                );
+
+                                //? Leave.
+                                WayaNav.goBack();
+                              },
+                              text: 'Cancel Buy Request',
+                              color: WayaColors.error500,
+                              notifier: cancelNotifier,
+                            ),
+                          ),
+
+                          // Some space.
+                          const Gap(5),
+
+                          //? The button to extend a bid's time.
+                          Expanded(
+                            child: WayaProgressiveButton(
+                              callback: () async => await _extendBidTime(request!),
+                              text: 'Extend Bid Time',
+                              notifier: extendNotifier,
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-          ],
+                ),
+            ],
+          ),
         ),
       ),
     );

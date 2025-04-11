@@ -130,15 +130,17 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
       {String? decription, required double amount, required String fundOptionCode}) async {
     final user = _setupState.user?.user;
 
-    final response = await _walletRepository!.fundWallet(FundWallet(
-        userId: user!.id,
-        amount: amount,
-        description: decription ?? "Wallet funding",
-        email: user.email ?? "",
-        fundOptionCode: fundOptionCode,
-        callbackUrl: "https://v2.staging.wayagram.ng"
-        //callbackUrl: WayaConstants.baseUrl
-        ));
+    final response = await _walletRepository!.fundWallet(
+      FundWallet(
+          userId: user!.id,
+          amount: amount,
+          description: decription ?? "Wallet funding",
+          email: user.email ?? "",
+          fundOptionCode: fundOptionCode,
+          callbackUrl: "https://v2.staging.wayagram.ng"
+          //callbackUrl: WayaConstants.baseUrl
+          ),
+    );
 
     if (response.success) {
       final resData = response.data["data"];
@@ -155,28 +157,6 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
       return true;
     } else {
       return false;
-    }
-  }
-
-  Future<void> payForService(
-      {required double amount,
-      required String description,
-      required String purpose,
-      required String recipientId,
-      required String referenceId,
-      Map<String, dynamic>? metadata}) async {
-    final user = _setupState.user?.user;
-    final response = await _walletRepository!.payForService(PayForService(
-      userId: user!.id,
-      amount: amount,
-      description: description,
-      purpose: purpose,
-      recipientId: recipientId,
-      referenceId: recipientId,
-      metadata: metadata,
-    ));
-    if (response.success) {
-      return;
     }
   }
 }
