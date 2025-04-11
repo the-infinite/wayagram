@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
@@ -128,6 +129,9 @@ class PromotionVm extends StateNotifier<PromotionState> {
 
         // donation
         case 'donation':
+          metadata = await ref
+              .read(donationVmProvider.notifier)
+              .getSingleCampaign(contentId);
           break;
 
         // poll & vote
