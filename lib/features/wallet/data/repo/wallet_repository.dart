@@ -65,8 +65,8 @@ class WalletRepository extends BaseRepository {
     return get('$serviceUrl/client/payout/requests?page=$page&limit=10');
   }
 
-  Future<WayaRequestResponse> createPayoutRequest(num amount) {
-    final payload = {"userId": ConversationState.self.id, "amount": amount, "payoutMethodId": ""};
+  Future<WayaRequestResponse> createPayoutRequest(String amount, String paymentMethodId) {
+    final payload = {"userId": ConversationState.self.id, "amount": amount, "payoutMethodId": paymentMethodId};
     return post('$serviceUrl/client/payout/requests', payload);
   }
 

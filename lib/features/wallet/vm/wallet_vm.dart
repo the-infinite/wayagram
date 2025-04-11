@@ -18,7 +18,6 @@ import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_state_model.dart';
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 
-
 class WalletVm extends StateNotifier<WalletState> {
   final _walletRepository = WalletRepository.instance;
   WalletVm() : super(WalletState());
@@ -41,12 +40,10 @@ class WalletVm extends StateNotifier<WalletState> {
     }
   }
 
-  Future<void> createPayoutMethod(String acctNum, String acctName,
-  String bankName, String bankCode, ctx) async {
+  Future<void> createPayoutMethod(String acctNum, String acctName, String bankName, String bankCode, ctx) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _walletRepository.createPayoutMethod( acctNum, acctName,
-          bankName,bankCode);
+      final response = await _walletRepository.createPayoutMethod(acctNum, acctName, bankName, bankCode);
       state = state.copyWith(isLoading: false);
       WayaNav.goBack();
       if (response.success && ctx.mounted) {
@@ -60,11 +57,9 @@ class WalletVm extends StateNotifier<WalletState> {
             duration: Duration(seconds: 2),
           ),
         );
-      } else {
-
-      }
+      } else {}
     } catch (e) {
-     // _logger.e(e);
+      // _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -73,9 +68,7 @@ class WalletVm extends StateNotifier<WalletState> {
   Future<void> createPayoutRequest(String amount, String payoutMethodId, ctx) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _walletRepository.createPayoutRequest(
-       amount, payoutMethodId
-          );
+      final response = await _walletRepository.createPayoutRequest(amount, payoutMethodId);
       state = state.copyWith(isLoading: false);
       WayaNav.goBack();
       if (response.success && ctx.mounted) {
@@ -89,9 +82,7 @@ class WalletVm extends StateNotifier<WalletState> {
             duration: Duration(seconds: 2),
           ),
         );
-      } else {
-
-      }
+      } else {}
     } catch (e) {
       // _logger.e(e);
     } finally {
@@ -117,7 +108,10 @@ class WalletVm extends StateNotifier<WalletState> {
     } finally {}
   }
 
-  Future<void> deletePayoutMethod(ctx, {required String id,}) async {
+  Future<void> deletePayoutMethod(
+    ctx, {
+    required String id,
+  }) async {
     try {
       final response = await _walletRepository.deletePayoutMethod(id);
       if (response.success && ctx.mounted) {
@@ -142,7 +136,6 @@ class WalletVm extends StateNotifier<WalletState> {
     }
   }
 
-
   Future<void> getSingleRequest({required String id}) async {
     try {
       // API call
@@ -156,13 +149,12 @@ class WalletVm extends StateNotifier<WalletState> {
         SingleRequestModel responseModel = SingleRequestModel.fromJson(response.data);
         state = state.copyWith(
             amount: responseModel.data?.amount,
-          status: responseModel.data?.status,
-          refNumber: responseModel.data?.referenceId,
-          bankName: responseModel.data?.payoutMethod?.bankName,
-          accountName: responseModel.data?.payoutMethod?.accountName,
-          payoutAccountNumber: responseModel.data?.payoutMethod?.accountNumber,
-          time: responseModel.data?.createdAt
-        );
+            status: responseModel.data?.status,
+            refNumber: responseModel.data?.referenceId,
+            bankName: responseModel.data?.payoutMethod?.bankName,
+            accountName: responseModel.data?.payoutMethod?.accountName,
+            payoutAccountNumber: responseModel.data?.payoutMethod?.accountNumber,
+            time: responseModel.data?.createdAt);
       } else {}
     } catch (e) {
       print(e);
@@ -181,8 +173,8 @@ class WalletVm extends StateNotifier<WalletState> {
       if (response.success) {
         SinglePayoutMethodModel responseModel = SinglePayoutMethodModel.fromJson(response.data);
         state = state.copyWith(
-            bankName: responseModel.data?.bankName,
-            payoutAccountNumber: responseModel.data?.accountName,
+          bankName: responseModel.data?.bankName,
+          payoutAccountNumber: responseModel.data?.accountName,
         );
       } else {}
     } catch (e) {
@@ -190,9 +182,8 @@ class WalletVm extends StateNotifier<WalletState> {
     } finally {}
   }
 
-   Future<PaginatedResult<PayoutMethodData>?> getPayoutMethodTwo({required int page}) async {
-
-    try{
+  Future<PaginatedResult<PayoutMethodData>?> getPayoutMethodTwo({required int page}) async {
+    try {
       state = state.copyWith(isLoading: true);
       final response = await _walletRepository.getPayoutMethod();
       List<PayoutMethodData>? fetchPageDocs = [];
@@ -207,18 +198,17 @@ class WalletVm extends StateNotifier<WalletState> {
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage, items:  fetchPageDocs!);
-    }catch (e){
-     // _logger.e(e);
-    }finally {
+      return PaginatedResult(hasNextPage: hasNextPage, items: fetchPageDocs!);
+    } catch (e) {
+      // _logger.e(e);
+    } finally {
       state = state.copyWith(isLoading: false);
     }
     return null;
   }
 
   Future<PaginatedResult<RequestDocs>?> getRequest({required int page}) async {
-
-    try{
+    try {
       state = state.copyWith(isLoading: true);
       final response = await _walletRepository.getRequestPayout(page);
       List<RequestDocs>? fetchRequestDocs = [];
@@ -233,10 +223,10 @@ class WalletVm extends StateNotifier<WalletState> {
       } else {
         state = state.copyWith(isLoading: false);
       }
-      return PaginatedResult(hasNextPage: hasNextPage!, items:  fetchRequestDocs!);
-    }catch (e){
+      return PaginatedResult(hasNextPage: hasNextPage!, items: fetchRequestDocs!);
+    } catch (e) {
       // _logger.e(e);
-    }finally {
+    } finally {
       state = state.copyWith(isLoading: false);
     }
     return null;
@@ -255,11 +245,9 @@ class WalletVm extends StateNotifier<WalletState> {
         state = state.copyWith(banks: banksList);
       }
     } catch (e) {
-     // _logger.e(e);
+      // _logger.e(e);
     }
   }
-
-
 
   Future<void> checkWalletPinStatus(String userId) async {
     state = state.copyWith(isLoading: true);
