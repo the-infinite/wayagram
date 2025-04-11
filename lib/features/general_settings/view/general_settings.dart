@@ -3,8 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/chat_call_pref/view/chat_call_pref_page.dart';
+import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/modals/logout.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
+import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings_page.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/referral/view/referral_page.dart';
 import 'package:wayagram/features/role_access/view/role_access_page.dart';
@@ -102,7 +105,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Privacy Settings',
                 iconPath: 'shield_plus',
-                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+                onTap: () => WayaNav.toNamed(PrivacySettingsPage.route),
               ),
               GeneralSettingsOptionModel(
                 title: 'Profile Visibility',
@@ -130,7 +133,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Chat & Call Preferences',
                 iconPath: 'chat2',
-                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+                onTap: () => WayaNav.toNamed(ChatCallPrefPage.route),
               ),
               GeneralSettingsOptionModel(
                 title: 'Notification Settings',
@@ -144,7 +147,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Friends & Followers',
                 iconPath: 'users_group',
-                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+                onTap: () => WayaNav.toNamed(FriendFollowerPage.route),
               ),
             ],
           ),
