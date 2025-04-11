@@ -136,7 +136,7 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
                   ),
                   color: Color(0xffE7F6EC),
                   onTap: () => WayaNav.toNamed(AllSellerBids.route),
-                  metric: 4,
+                  metric: state.totalBids,
                   isStacked: true,
                 ),
 
@@ -146,6 +146,8 @@ class _BidDashboardState extends ConsumerState<BidDashboard> {
                 //? Button to go to all orders.
                 QuickActionWidget(
                   title: "Orders",
+                  metric: state.totalOrders,
+                  isStacked: true,
                   icon: WayaAssets.icons.orders.svg(
                     width: 28,
                     height: 28,

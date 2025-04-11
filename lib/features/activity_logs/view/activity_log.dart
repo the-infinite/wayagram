@@ -1193,7 +1193,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
   }
 
   sortList(s, log1, log2) {
-    final viewModel = ref.watch(activityLogsVmProvider);
+    //final viewModel = ref.watch(activityLogsVmProvider);
     log1 = [];
     setState(() {
       if(s == 'all time'){

@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -44,14 +45,17 @@ class ChatModel {
 
   String get initials {
     if (chatType == ChatType.group) {
-      return (name?.split(" ") ?? ["Group", "Chat"]).take(2).map((word) => word[0].toUpperCase()).join();
+      return (name?.split(" ") ?? ["Group", "Chat"])
+          .take(2)
+          .map((word) => WayaValueHelper.isEmoji(word) ? String.fromCharCodes([word.codeUnitAt(0), word.codeUnitAt(1)]) : word[0].toUpperCase())
+          .join();
     }
 
     //? This is our alternative
     return other.userData?.initials ??
         (other.chatUser?.displayName.split(" ") ?? ["WayaGram", "User"])
             .take(2)
-            .map((word) => word[0].toUpperCase())
+            .map((word) => WayaValueHelper.isEmoji(word) ? word : word[0].toUpperCase())
             .join();
   }
 
