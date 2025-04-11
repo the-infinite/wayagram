@@ -56,7 +56,6 @@ class _PricingAndDeliveryState extends ConsumerState<PricingAndDelivery> {
                   if (viewModel.pricePerUnit.text.isEmpty) {
                     return 'Price is required';
                   }
-
                   return null;
                 }, builder: (formState) {
                   return Column(
