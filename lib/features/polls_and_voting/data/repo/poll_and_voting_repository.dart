@@ -39,7 +39,7 @@ class PollAndVotingRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getAllPolls(int page, [int limit = 15, String? creatorId]) {
     return get(
-        "$serviceUrl/client/polls?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC&status=active${creatorId != null ? '&creatorId=$creatorId' : ''}");
+        "$serviceUrl/client/polls?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC&status=active&pollStatus=ongoing");
   }
 
   Future<WayaRequestResponse> getMyPolls(String creatorId, int page) {
