@@ -331,7 +331,7 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
               textColor: wayaTheme.colorScheme.greyColor900,
               border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
               callback: () => WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId)),
-              text: "Proceed to order fulfillment",
+              text: "View Order",
               leadingIcon: WayaAssets.icons.orders.svg(
                 colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
                 width: 20,
@@ -343,11 +343,15 @@ class _SellerBidDetailsState extends ConsumerState<SellerBidDetails> {
               text: 'Bid Again',
               height: 48,
               notifier: loadingController,
+              leadingIcon: WayaAssets.icons.bid.svg(
+                colorFilter: ColorFilter.mode(wayaTheme.colorScheme.greyColor900, BlendMode.srcIn),
+                width: 20,
+              ),
             )
           else
             WayaProgressiveButton(
               callback: () => _viewSellerBid(bid),
-              text: 'View bid',
+              text: 'View Bid',
               height: 48,
               notifier: loadingController,
             ),

@@ -98,7 +98,7 @@ class QuotationRepository extends BaseRepository {
     return get("$serviceUrl/order/track-delivery/$requestId");
   }
 
-  Future<WayaRequestResponse> updateOrderStatus(String status, String orderId) {
+  Future<WayaRequestResponse> updateOrderStatus(String orderId, String status) {
     final payload = {"status": status};
     return patch('$serviceUrl/order/status/$orderId', payload, showErrors: true);
   }

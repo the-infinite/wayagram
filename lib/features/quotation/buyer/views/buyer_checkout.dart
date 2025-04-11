@@ -11,16 +11,27 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/quotation/buyer/vm/buyer_checkout_vm.dart';
 import 'package:wayagram/features/shop/widgets/about_product.dart';
+import 'package:wayagram/shared/features/quotation/vm/default.dart';
 
 class BuyerCheckout extends ConsumerStatefulWidget {
-  static const route = '/buyer-checkout';
-  const BuyerCheckout({super.key});
+  static const route = '/quotation/buyer/checkout';
+  final String id;
+  final String requestId;
+
+  // Construct.
+  const BuyerCheckout({
+    super.key,
+    required this.id,
+    required this.requestId,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _BuyerCheckoutState();
 }
 
 class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
+  late final notifier = ref.read(userQuotationsProvider.notifier);
+
   bool payWithWallet = false;
   bool payWithWayaQuick = false;
 
@@ -28,6 +39,10 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(buyerCheckoutVmProvider);
+    final request = notifier.getBidQuote(widget.requestId)!;
+    final bid = notifier.getBid(widget.id)!;
+
+    //?
     return WayaScaffold(
       title: "Checkout",
       isLoading: false,
@@ -38,10 +53,14 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
         children: [
           const Gap(10),
           Container(
-            padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+            padding: EdgeInsets.all(8.dg),
             decoration: BoxDecoration(
-                border: Border.all(color: wayaTheme.colorScheme.greyColor300, width: 1),
-                borderRadius: BorderRadius.circular(8)),
+              border: Border.all(
+                color: wayaTheme.colorScheme.greyColor300,
+                width: 1,
+              ),
+              borderRadius: BorderRadius.circular(8),
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -61,7 +80,7 @@ class _BuyerCheckoutState extends ConsumerState<BuyerCheckout> {
                     FittedBox(
                       fit: BoxFit.fitWidth,
                       child: Text(
-                        "62, Lekki - Epe Express way, off Ita opo building,\nLagos State",
+                        request.deliveryAddress ?? "N/A",
                         style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor500,
                           fontSize: 13.sp,

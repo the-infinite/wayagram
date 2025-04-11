@@ -15,9 +15,19 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/components/multi_select.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
+import 'package:wayagram/shared/features/quotation/widget/bid_timer.dart';
+import 'package:wayagram/shared/features/shop/resource/default.dart';
 
 class QuotationModal extends StatelessWidget {
-  const QuotationModal({super.key});
+  final QuotationBidModel bid;
+  final BuyRequestModel request;
+
+  // Construct.
+  const QuotationModal({
+    super.key,
+    required this.bid,
+    required this.request,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -52,110 +62,122 @@ class QuotationModal extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Image.asset(
-                            'assets/images/bid/store.png',
-                            height: 48,
-                          ),
-                          const Gap(10),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
+                      WayaFutureSubscriber(
+                        future: ShopResource.getShopById(bid.shopId),
+                        suspense: (context) => const SizedBox(),
+                        builder: (context, data) {
+                          if (data == null) {
+                            return const SizedBox();
+                          }
+
+                          //? This is fine.
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              WayaDp(
+                                image: data.shop.coverImage,
+                                radius: 24.r,
+                                isSelf: false,
+                              ),
+                              const Gap(10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Container(
-                                      padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
-                                      decoration: BoxDecoration(
-                                        color: wayaTheme.colorScheme.success,
-                                        borderRadius: BorderRadius.circular(6),
-                                      ),
-                                      child: Row(
-                                        children: [
-                                          Image.asset(
-                                            'assets/images/bid/check.png',
-                                            height: 9.h,
-                                            width: 9.w,
-                                          ),
-                                          const Gap(5),
-                                          Text(
-                                            "Accepted",
-                                            style: TextStyle().wayaCopyWith(
-                                              color: wayaTheme.colorScheme.white,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 11.sp,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                // Some space.
-                                const Gap(8),
-
-                                //? The name of the store.
-                                Text(
-                                  "SURAJ STORES",
-                                  style: TextStyle().wayaCopyWith(
-                                    color: wayaTheme.colorScheme.customBlack,
-                                    fontSize: 14.sp,
-                                  ),
-                                ),
-
-                                // Some more space.
-                                const Gap(8),
-                                Row(
-                                  children: [
-                                    RichText(
-                                      text: TextSpan(
-                                        children: [
-                                          TextSpan(
-                                            text: '15min ',
-                                            style: TextStyle().wayaCopyWith(
-                                              color: wayaTheme.colorScheme.black,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                          TextSpan(
-                                            text: '2km ',
-                                            style: TextStyle().wayaCopyWith(
-                                              color: WayaColors.greyColor400,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w400,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
                                     Row(
                                       children: [
-                                        Image.asset(
-                                          'assets/images/bid/star.png',
-                                          height: 16.h,
-                                          width: 16.w,
-                                        ),
-                                        Text(
-                                          " 4.5 (250 reviews)",
-                                          style: TextStyle().wayaCopyWith(
-                                            color: WayaColors.greyColor400,
-                                            //color: wayaTheme.colorScheme.,
-                                            fontSize: 12.sp,
+                                        Container(
+                                          padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
+                                          decoration: BoxDecoration(
+                                            color: wayaTheme.colorScheme.success,
+                                            borderRadius: BorderRadius.circular(6),
+                                          ),
+                                          child: Row(
+                                            children: [
+                                              Image.asset(
+                                                'assets/images/bid/check.png',
+                                                height: 9.h,
+                                                width: 9.w,
+                                              ),
+                                              const Gap(5),
+                                              Text(
+                                                "Accepted",
+                                                style: TextStyle().wayaCopyWith(
+                                                  color: wayaTheme.colorScheme.white,
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 11.sp,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
                                       ],
-                                    )
+                                    ),
+
+                                    // Some space.
+                                    const Gap(8),
+
+                                    //? The name of the store.
+                                    Text(
+                                      data.shop.name,
+                                      style: TextStyle().wayaCopyWith(
+                                        color: wayaTheme.colorScheme.customBlack,
+                                        fontSize: 14.sp,
+                                      ),
+                                    ),
+
+                                    // Some more space.
+                                    const Gap(8),
+                                    Row(
+                                      children: [
+                                        // RichText(
+                                        //   text: TextSpan(
+                                        //     children: [
+                                        //       TextSpan(
+                                        //         text: '15min ',
+                                        //         style: TextStyle().wayaCopyWith(
+                                        //           color: wayaTheme.colorScheme.black,
+                                        //           fontSize: 12.sp,
+                                        //           fontWeight: FontWeight.w400,
+                                        //         ),
+                                        //       ),
+                                        //       TextSpan(
+                                        //         text: '2km ',
+                                        //         style: TextStyle().wayaCopyWith(
+                                        //           color: WayaColors.greyColor400,
+                                        //           fontSize: 12.sp,
+                                        //           fontWeight: FontWeight.w400,
+                                        //         ),
+                                        //       ),
+                                        //     ],
+                                        //   ),
+                                        // ),
+                                        Row(
+                                          children: [
+                                            Image.asset(
+                                              'assets/images/bid/star.png',
+                                              height: 16.h,
+                                              width: 16.w,
+                                            ),
+                                            Text(
+                                              " ${data.averageRating} (${data.ratings.length} reviews)",
+                                              style: TextStyle().wayaCopyWith(
+                                                color: WayaColors.greyColor400,
+                                                //color: wayaTheme.colorScheme.,
+                                                fontSize: 12.sp,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    const Gap(10),
                                   ],
                                 ),
-                                const Gap(10),
-                              ],
-                            ),
-                          ),
-                        ],
+                              ),
+                            ],
+                          );
+                        },
                       ),
                       const Divider(
                         thickness: 1,
@@ -163,7 +185,7 @@ class QuotationModal extends StatelessWidget {
                       ),
                       const Gap(10),
                       Text(
-                        "₦ 19,000.00",
+                        WayaValueHelper.formatPrice(bid.usedAmount),
                         style: TextStyle().wayaCopyWith(
                           color: wayaTheme.colorScheme.customBlack,
                           fontSize: 20.sp,
@@ -176,10 +198,10 @@ class QuotationModal extends StatelessWidget {
                 const Gap(10),
               ],
             ),
+
+            //? The
             WayaButton(
-              callback: () async {
-                WayaNav.toNamed("/buyer-checkout");
-              },
+              callback: () async => WayaNav.toNamed(WayaAppRoutes.getQuotationCheckoutScreen(bid.id, bid.requestId)),
               text: "Proceed to Payment",
             ),
           ],
@@ -190,7 +212,17 @@ class QuotationModal extends StatelessWidget {
 }
 
 class BidWonModal extends StatelessWidget {
-  const BidWonModal({super.key});
+  final QuotationBidModel bid;
+  final BuyRequestModel request;
+  final BidActionAuthor user;
+
+  // Construct.
+  const BidWonModal({
+    super.key,
+    required this.bid,
+    required this.request,
+    required this.user,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -205,8 +237,13 @@ class BidWonModal extends StatelessWidget {
               'assets/images/bid/accept.png',
               height: 100.h,
             ),
+
+            // Some space.
             SizedBox(height: 20.h),
-            Text("Bid Won", style: wayaTheme.textTheme.bodyMedium),
+            Text(
+              "Bid Won",
+              style: wayaTheme.textTheme.headlineLarge,
+            ),
             SizedBox(height: 3.h),
             Text(
               "Congratulations! You've successfully secured\nthe winning bid!",
@@ -235,34 +272,29 @@ class BidWonModal extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Samsung S24 Ultra",
-                                  style: TextStyle().wayaCopyWith(
+                                  request.fullname,
+                                  style: wayaTheme.textTheme.bodyBold.copyWith(
                                     color: wayaTheme.colorScheme.customBlack,
-                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16.sp,
                                   ),
                                 ),
                                 //const Gap(8),
                                 Row(
                                   children: [
-                                    RichText(
-                                        text: TextSpan(children: [
-                                      TextSpan(
-                                          text: 'Time Remaining | ',
-                                          style: TextStyle().wayaCopyWith(
-                                              color: WayaColors.greyColor400,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w400)),
-                                      TextSpan(
-                                          text: '11h: 20m: 30s',
-                                          style: TextStyle().wayaCopyWith(
-                                              color: wayaTheme.colorScheme.customPrimary,
-                                              fontSize: 12.sp,
-                                              fontWeight: FontWeight.w400)),
-                                    ])),
-                                    Spacer(),
-                                    Image.asset(
-                                      'assets/images/bid/coin_in_hand.png',
-                                      height: 30.h,
+                                    Text(
+                                      'Time Remaining | ',
+                                      style: wayaTheme.textTheme.hintStyle.copyWith(
+                                        fontSize: 13.sp,
+                                      ),
+                                    ),
+
+                                    //? Finally the timer.
+                                    QuotationBidTimer(
+                                      request: request,
+                                      isShortTime: true,
+                                      fontSize: 13.sp,
+                                      isStandalone: false,
                                     ),
                                   ],
                                 ),
@@ -270,15 +302,14 @@ class BidWonModal extends StatelessWidget {
                                 Row(
                                   children: [
                                     Text(
-                                      " Fairly Used  ",
+                                      request.condition == "new" ? " Brand New " : " Fairly Used ",
                                       style: TextStyle().wayaCopyWith(
                                         color: WayaColors.greyColor400,
-                                        //color: wayaTheme.colorScheme.,
                                         fontSize: 12.sp,
                                       ),
                                     ),
                                     Text(
-                                      " Lagos State",
+                                      " ${request.stateOfPurchase}",
                                       style: TextStyle().wayaCopyWith(
                                         color: WayaColors.greyColor400,
                                         fontSize: 12.sp,
@@ -290,6 +321,10 @@ class BidWonModal extends StatelessWidget {
                               ],
                             ),
                           ),
+                          Image.asset(
+                            'assets/images/bid/coin_in_hand.png',
+                            height: 45.h,
+                          ),
                         ],
                       ),
                       const Divider(
@@ -298,9 +333,10 @@ class BidWonModal extends StatelessWidget {
                       ),
                       const Gap(10),
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
-                            "₦ 350,500.00",
+                            WayaValueHelper.formatPrice(bid.usedAmount),
                             style: TextStyle().wayaCopyWith(
                               color: wayaTheme.colorScheme.customBlack,
                               fontSize: 20.sp,
@@ -309,9 +345,11 @@ class BidWonModal extends StatelessWidget {
                           ),
                           const Spacer(),
                           WayaButton(
+                            horizontalPadding: 15.w,
+                            verticalPadding: 5.h,
                             callback: () {},
                             text: 'Won Bid',
-                            height: 36,
+                            height: null,
                           )
                         ],
                       ),
@@ -323,7 +361,15 @@ class BidWonModal extends StatelessWidget {
             ),
             WayaButton(
               callback: () async {
-                WayaNav.toNamed("/buyer-checkout");
+                //? For a buyer.
+                if (user == BidActionAuthor.buyer) {
+                  WayaNav.toNamed(WayaAppRoutes.getQuotationCheckoutScreen(bid.id, bid.requestId));
+                }
+
+                //? For the seller.
+                else {
+                  WayaNav.toNamed(WayaAppRoutes.getQuotationOrderDetailsScreen(bid.requestId));
+                }
               },
               text: "Proceed to Order Fulfillment",
             ),
@@ -841,6 +887,7 @@ class UpdateOrderStatusModal extends StatelessWidget {
                   //? Now, go back.
                   await notifier.updateOrderStatus(orderId, controller.value!);
                   WayaNav.goBack();
+                  WayaSnackBar.showToast("Order status updated successfully");
                 },
                 text: "Confirm",
               ),
@@ -1006,6 +1053,7 @@ class UpdateDeliveryStatusModal extends StatelessWidget {
                   //? Now, go back.
                   await notifier.updateDeliveryStatus(orderId, controller.value!);
                   WayaNav.goBack();
+                  WayaSnackBar.showToast("Delivery status updated successfully");
                 },
                 text: "Confirm",
               ),
@@ -1152,6 +1200,7 @@ class UpdatePickupStatusModal extends StatelessWidget {
                   //? Now, go back.
                   await notifier.updatePickupStatus(orderId, controller.value!);
                   WayaNav.goBack();
+                  WayaSnackBar.showToast("Pickup status updated successfully");
                 },
                 text: "Confirm",
               ),

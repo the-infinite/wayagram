@@ -20,21 +20,23 @@ import '../components/components.dart';
 class WayaUtils {
   WayaUtils._();
 
-  static Future<void> showNotice({
+  static Future<T?> showNotice<T>({
     required BuildContext context,
     required String title,
     required String message,
     VoidCallback? onPress,
     required Widget icon,
+    ValueNotifier<bool>? actionNotifier,
     String? buttonText,
+    Color? buttonColor,
     String? secondButtonText,
     Widget? buttonCenterWidget,
     Widget? secondButtonCenterWidget,
     bool isDismissible = true,
     VoidCallback? onCancel,
   }) {
-    print(onCancel != null);
-    return showModalSheet(
+    final notifier = actionNotifier ?? ValueNotifier(false);
+    return showModalSheet<T>(
       context,
       isDismissible: isDismissible,
       child: WayaNoticeModal(
@@ -42,13 +44,22 @@ class WayaUtils {
         onPress: onPress ?? () => {},
         message: message,
         icon: icon,
+        actionNotifier: notifier,
         buttonText: buttonText,
+        buttonColor: buttonColor,
         secondButtonCenterWidget: secondButtonCenterWidget,
         buttonCenterWidget: buttonCenterWidget,
         secondButtonText: secondButtonText,
         onCancel: onCancel,
       ),
-    );
+    ).then((result) {
+      //? Don't forget to dispose your popups.
+      if (actionNotifier == null) {
+        notifier.dispose();
+      }
+
+      return result;
+    });
   }
 
   static Future<List<Select>> showSelectModal({
