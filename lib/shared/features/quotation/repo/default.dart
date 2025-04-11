@@ -29,6 +29,14 @@ class QuotationRepository extends BaseRepository {
     return get("$serviceUrl/buyer/request/retrieve/$id");
   }
 
+  Future<WayaRequestResponse> retrieveBid(String id) {
+    return get("$serviceUrl/vendor/bid/$id");
+  }
+
+  Future<WayaRequestResponse> verifyPaymentStatus(String id, bool value) {
+    return patch("$serviceUrl/orders/payment-status/$id", {"status": value}, showErrors: true);
+  }
+
   Future<WayaRequestResponse> updateRequestAmount({
     required String id,
     String? amount,
@@ -98,7 +106,7 @@ class QuotationRepository extends BaseRepository {
     return get("$serviceUrl/order/track-delivery/$requestId");
   }
 
-  Future<WayaRequestResponse> updateOrderStatus(String status, String orderId) {
+  Future<WayaRequestResponse> updateOrderStatus(String orderId, String status) {
     final payload = {"status": status};
     return patch('$serviceUrl/order/status/$orderId', payload, showErrors: true);
   }

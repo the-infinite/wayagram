@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -100,57 +101,83 @@ class _WayaPreloaderOverlayState extends State<WayaPreloaderOverlay> {
     final size = MediaQuery.sizeOf(context);
 
     // This is fine.
-    return Container(
+    return SizedBox(
       height: size.height,
       width: size.width,
-      alignment: Alignment.center,
-      color: Colors.black54,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      child: Stack(
         children: [
-          //? The first preloader icon.
-          WayaAssets.icons.preloader1.svg(
-            height: 50,
-          ),
-
-          //? The second preloader icon.
-          Transform.translate(
-            offset: Offset(-5.w, 0),
-            child: ValueListenableBuilder(
-              valueListenable: showTwo,
-              builder: (context, state, _) {
-                return AnimatedCrossFade(
-                  firstChild: const SizedBox(height: 50),
-                  secondChild: WayaAssets.icons.preloader2.svg(
-                    height: 50,
-                  ),
-                  crossFadeState: state,
-                  duration: const Duration(
-                    milliseconds: 200,
-                  ),
-                );
-              },
+          //? Our background.
+          BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 2,
+              sigmaY: 2,
+            ),
+            child: Opacity(
+              opacity: 0.6,
+              child: SizedBox(
+                child: ModalBarrier(
+                  dismissible: false,
+                  color: Colors.black,
+                ),
+              ),
             ),
           ),
 
-          //? The third preloader icon.
-          Transform.translate(
-            offset: Offset(-10.w, 0),
-            child: ValueListenableBuilder(
-              valueListenable: showThree,
-              builder: (context, state, _) {
-                return AnimatedCrossFade(
-                  firstChild: const SizedBox(height: 50),
-                  secondChild: WayaAssets.icons.preloader3.svg(
-                    height: 50,
+          //? Now the actual component.
+          Positioned(
+            top: 0,
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                //? The first preloader icon.
+                WayaAssets.icons.preloader1.svg(
+                  height: 50,
+                ),
+
+                //? The second preloader icon.
+                Transform.translate(
+                  offset: Offset(-5.w, 0),
+                  child: ValueListenableBuilder(
+                    valueListenable: showTwo,
+                    builder: (context, state, _) {
+                      return AnimatedCrossFade(
+                        firstChild: const SizedBox(height: 50),
+                        secondChild: WayaAssets.icons.preloader2.svg(
+                          height: 50,
+                        ),
+                        crossFadeState: state,
+                        duration: const Duration(
+                          milliseconds: 200,
+                        ),
+                      );
+                    },
                   ),
-                  crossFadeState: state,
-                  duration: const Duration(
-                    milliseconds: 200,
+                ),
+
+                //? The third preloader icon.
+                Transform.translate(
+                  offset: Offset(-10.w, 0),
+                  child: ValueListenableBuilder(
+                    valueListenable: showThree,
+                    builder: (context, state, _) {
+                      return AnimatedCrossFade(
+                        firstChild: const SizedBox(height: 50),
+                        secondChild: WayaAssets.icons.preloader3.svg(
+                          height: 50,
+                        ),
+                        crossFadeState: state,
+                        duration: const Duration(
+                          milliseconds: 200,
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             ),
           ),
         ],

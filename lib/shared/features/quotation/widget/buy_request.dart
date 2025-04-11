@@ -299,7 +299,9 @@ class _QuotationBuyRequestWidgetState extends State<QuotationBuyRequestWidget> {
                   callback: widget.data.buyerId == ConversationState.self.id ? _viewBids : _placeBid,
                   text: widget.data.buyerId == ConversationState.self.id ? 'View Bids' : 'Place Bid',
                   height: 48,
-                  isDisabled: widget.data.status != BuyRequestStatus.active,
+                  isDisabled: widget.data.buyerId == ConversationState.self.id
+                      ? false
+                      : widget.data.status != BuyRequestStatus.active,
                   notifier: loadingController,
                 ),
             ],

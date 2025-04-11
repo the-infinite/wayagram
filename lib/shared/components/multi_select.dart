@@ -27,7 +27,7 @@ class WayaMultipleSelectionButton<T> extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 7.h, horizontal: 15.w),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8.r),
-              color: selectedValue == value ? null : WayaColors.greyColor100,
+              color: selectedValue == value ? WayaColors.greyColor100 : null,
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -47,6 +47,17 @@ class WayaMultipleSelectionButton<T> extends StatelessWidget {
                   WayaAssets.icons.notifFilterSelected.svg(
                     height: 20,
                     width: 20,
+                  )
+                else
+                  Container(
+                    height: 20,
+                    width: 20,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: WayaColors.greyColor300,
+                      ),
+                    ),
                   ),
               ],
             ),
