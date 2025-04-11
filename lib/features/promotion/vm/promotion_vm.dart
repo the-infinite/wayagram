@@ -3,6 +3,7 @@ import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_plan_response_model.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_response_model.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
@@ -92,7 +93,7 @@ class PromotionVm extends StateNotifier<PromotionState> {
           metadata = await ref
               .read(eventVmProvider.notifier)
               .getSingleEvent(contentId);
-
+          // EventDoc
           break;
 
         // moment
@@ -101,6 +102,7 @@ class PromotionVm extends StateNotifier<PromotionState> {
               .read(momentVmProvider.notifier)
               .getSingleMoment(contentId);
 
+          // MomentData
           break;
 
         // product
@@ -108,16 +110,22 @@ class PromotionVm extends StateNotifier<PromotionState> {
           metadata = await ref
               .read(productDetailVmProvider.notifier)
               .getCurrentProduct(id: contentId);
+
+              // Product
           break;
 
         // pages
         case 'page':
           metadata = await myPageNotifier.getSinglePage(contentId);
+
+          // PageModel
           break;
 
         // groups
         case 'group':
           metadata = await myGroupNotifier.getSingleGroup(contentId);
+
+          // GroupModel
           break;
 
         // contest
@@ -125,6 +133,8 @@ class PromotionVm extends StateNotifier<PromotionState> {
           metadata = await ref
               .read(postProvider.notifier)
               .fetchSingleContest(contestId: contentId);
+
+              // Contest
           break;
 
         // donation
@@ -132,10 +142,17 @@ class PromotionVm extends StateNotifier<PromotionState> {
           metadata = await ref
               .read(donationVmProvider.notifier)
               .getSingleCampaign(contentId);
+
+              // MyDonationDocs
           break;
 
         // poll & vote
         case 'poll & vote':
+          metadata = await ref
+              .read(createPollVotingProvider.notifier)
+              .getPollById(contentId);
+
+              //Docs
           break;
 
         // post
