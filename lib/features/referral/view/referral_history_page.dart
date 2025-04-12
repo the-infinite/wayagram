@@ -53,7 +53,7 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(referralVm);
 
     return WayaScaffold(

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -11,8 +13,10 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/group/vm/group_vm.dart';
+import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/wallet/view/payout_history_screen.dart';
 import 'package:wayagram/features/wallet/view/payout_method_screen.dart';
+import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class PayoutDetails extends ConsumerStatefulWidget {
   static const route = '/payoutDetails';
@@ -25,15 +29,22 @@ class PayoutDetails extends ConsumerStatefulWidget {
 }
 
 class _PayoutDetailsState extends ConsumerState<PayoutDetails> {
-
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+      ref.read(walletVmProvider.notifier).getSingleRequest(id: args['id']);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(createGroupProvider);
+    final viewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       removeAppBar: false,
-      isLoading: viewModel.isLoading,
+      isLoading: viewModel.isLoading!,
       backgroundColor: WayaColors.greyColor50,
       isScrollable: false,
       title: 'Payout Details',
@@ -44,7 +55,6 @@ class _PayoutDetailsState extends ConsumerState<PayoutDetails> {
         children: [
           const Gap(10),
           Container(
-           // margin: EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: WayaColors.white,
                 borderRadius: BorderRadius.circular(12)
@@ -63,23 +73,25 @@ class _PayoutDetailsState extends ConsumerState<PayoutDetails> {
                         color: wayaTheme.colorScheme.greyColor500
                     )),
                 Gap(10),
-                Text('+₦15,600.00',
+                Text('+₦${ref.watch(createPollVotingProvider.notifier).formatAm(viewModel.amount)}',
                     style: wayaTheme.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w700,
                         fontFamily: WayaConstants.fontFamily,
                         fontSize: 24.sp,
-                        color: WayaColors.pendingColor3
+                        color: viewModel.status == 'PENDING' || viewModel.status =='PROCESSING'?
+                        WayaColors.pendingColor4:viewModel.status == 'COMPLETED' || viewModel.status == 'APPROVED'?
+                        wayaTheme.colorScheme.success : wayaTheme.colorScheme.error,
                     )),
               ],
             ),
           ),
           const Gap(10),
-          _detailCard('Transaction Number','#123456789016276382937', wayaTheme.colorScheme.greyColor700),
-          _detailCard('Transaction Category','Payout', wayaTheme.colorScheme.error),
-          _detailCard('Transaction Type','Credit', wayaTheme.colorScheme.success),
-          _detailCard('Date Requested ','Jan 30th, 2024 17:22:15', wayaTheme.colorScheme.greyColor700),
-          _detailCard('Reference Number','#123456789016276', wayaTheme.colorScheme.greyColor700),
-          _detailCard('Payout Status','Pending', WayaColors.pendingColor2),
+          _detailCard('Account Name',viewModel.accountName, wayaTheme.colorScheme.greyColor700),
+          _detailCard('Account Number',viewModel.payoutAccountNumber, wayaTheme.colorScheme.greyColor700),
+          _detailCard('Bank Name',viewModel.bankName, wayaTheme.colorScheme.greyColor700),
+          _detailCard('Date Requested ','${ref.watch(createPollVotingProvider.notifier).formatDt1(viewModel.time)} ', wayaTheme.colorScheme.greyColor700),
+          _detailCard('Reference Number',viewModel.refNumber, wayaTheme.colorScheme.greyColor700),
+          _detailCard('Payout Status', viewModel.status.capitalizeFirst, WayaColors.pendingColor2),
           const Gap(10),
       Container(
         decoration: BoxDecoration(

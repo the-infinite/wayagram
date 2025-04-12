@@ -2,20 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
-import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
-import 'package:wayagram/features/ugt/data/model/voter_user_list_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
-
-import '../../../core/components/waya_scaffold.dart';
 
 class EndedContestPage extends StatefulHookConsumerWidget {
   static const route = '/ended-contest-Page';
@@ -42,7 +36,7 @@ class _ManageStateContestState extends ConsumerState<EndedContestPage> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref
             .read(postProvider.notifier)
-            .fetchSingleContest(ref, data["id"] ?? "");
+            .fetchSingleContest(contestId: data["id"] ?? "", ref: ref);
         ref
             .read(votersContestNotifier.notifier)
             .getContestantProfileVoteDetails(data["id"] ?? "");
@@ -122,42 +116,42 @@ class _ManageStateContestState extends ConsumerState<EndedContestPage> {
     );
   }
 
-  Widget _buildStateItem(BuildContext context, MyContestContestantModel? post) {
-    final wayaTheme = Theme.of(context);
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                WayaImage(
-                  imageUrl: post?.profilePhoto ?? "",
-                  height: 45,
-                  width: 45,
-                  fit: BoxFit.cover,
-                  radius: BorderRadius.circular(45),
-                ),
-                Gap(10),
-                Text(post?.contestApplicant?.fullName ?? "",
-                    style: WayaTextStyles.bodyBold),
-              ],
-            ),
-            Row(
-              children: [
-                Text(post?.votes.toString() ?? "0",
-                    style: WayaTextStyles.hintStyleBold),
-                Gap(10),
-                //   Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
-                Gap(10)
-              ],
-            ),
-          ],
-        ),
-        Gap(10)
-      ],
-    );
-  }
+//   Widget _buildStateItem(BuildContext context, MyContestContestantModel? post) {
+//     final wayaTheme = Theme.of(context);
+//     return Column(
+//       children: [
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: [
+//             Row(
+//               children: [
+//                 WayaImage(
+//                   imageUrl: post?.profilePhoto ?? "",
+//                   height: 45,
+//                   width: 45,
+//                   fit: BoxFit.cover,
+//                   radius: BorderRadius.circular(45),
+//                 ),
+//                 Gap(10),
+//                 Text(post?.contestApplicant?.fullName ?? "",
+//                     style: WayaTextStyles.bodyBold),
+//               ],
+//             ),
+//             Row(
+//               children: [
+//                 Text(post?.votes.toString() ?? "0",
+//                     style: WayaTextStyles.hintStyleBold),
+//                 Gap(10),
+//                 //   Icon(Icons.arrow_forward_ios, size: 18, color: Colors.black),
+//                 Gap(10)
+//               ],
+//             ),
+//           ],
+//         ),
+//         Gap(10)
+//       ],
+//     );
+//   }
 }
 
 Color getColor(bool isText, String text) {

@@ -9,7 +9,6 @@ import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
-import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/auth/transaction_pin/views/transaction_pin_view.dart';
 
 class VerifyAccount extends ConsumerWidget {
@@ -26,7 +25,7 @@ class VerifyAccount extends ConsumerWidget {
     final viewModelState = ref.watch(verifyAccountProvider);
     final viewModel = ref.watch(verifyAccountProvider.notifier);
     final wayaTheme = Theme.of(context);
-    final credentialProvider = ref.watch(credentialInputProvider);
+    //final credentialProvider = ref.watch(credentialInputProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,

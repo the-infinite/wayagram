@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:wayagram/shared/features/wallet/model/dto.dart';
 
 part 'wallet_model.g.dart';
 
@@ -80,28 +81,4 @@ class VerifyTransaction {
   }
 }
 
-@JsonSerializable()
-class PayForService {
-  final String recipientId;
-  final String userId;
-  final double amount;
-  final String purpose;
-  final String referenceId;
-  final String description;
-  final Map<String, dynamic>? metadata;
-
-  PayForService({
-    required this.recipientId,
-    required this.userId,
-    required this.amount,
-    required this.purpose,
-    required this.referenceId,
-    required this.description,
-    this.metadata,
-  });
-
-  factory PayForService.fromJson(Map<String, dynamic> json) =>
-      _$PayForServiceFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PayForServiceToJson(this);
-}
+typedef PayForService = WalletPaymentData;

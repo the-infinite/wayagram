@@ -171,7 +171,7 @@ class EventVm extends StateNotifier<EventState> {
       } else {
         WayaNav.goBack();
         String? message = response.data['message'];
-        WayaSnackBar.showToast(message ?? 'Sth is wrong. Try again later');
+        WayaSnackBar.showToast(message ?? 'Something is wrong. Try again later');
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(

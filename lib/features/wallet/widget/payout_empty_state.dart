@@ -2,23 +2,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
-import '../../../assetsgen/assets.gen.dart';
 
 class PayoutEmptyState extends StatelessWidget {
   final VoidCallback? onTap;
   final String title;
+  final String image;
   final String subTitle;
   final bool hasButton;
   const PayoutEmptyState({super.key,
     required this.onTap,
     required this.title,
+    required this.image,
     required this.subTitle,
     required this.hasButton
   });
@@ -31,7 +30,7 @@ class PayoutEmptyState extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Gap(40),
-        Image.asset('assets/images/wallet/payout.png',height: 201.h,),
+        Image.asset('assets/images/wallet/$image.png',height: 201.h,),
         const Gap(20),
         Text(
           title,

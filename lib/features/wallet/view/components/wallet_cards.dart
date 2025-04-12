@@ -11,14 +11,10 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
-import 'package:wayagram/features/wallet/view/components/modal_content.dart';
-import 'package:wayagram/features/wallet/view/enter_request_amount_screen.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:wayagram/features/wallet/view/request_payout.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
-import '../payout_details.dart';
-import '../payout_success_screen.dart';
 
 class InstructionContainer extends StatelessWidget {
   const InstructionContainer({
@@ -189,6 +185,7 @@ class AccountDetailsCard extends StatelessWidget {
                                   accountNumber: externalAccount.accountNumber))
                               .toList(),
                         ),
+
                     ],
                   )
                 ],

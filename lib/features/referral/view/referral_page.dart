@@ -25,11 +25,10 @@ class ReferralPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(referralVm);
-    final notifier = ref.watch(referralVm.notifier);
+    //final notifier = ref.watch(referralVm.notifier);
     final shareService = ref.watch(shareProvider);
     final wayaTheme = Theme.of(context);
-    String url = WayaAppRoutes.getAccountCreationScreen(
-        ConversationState.profile.referenceCode ?? "");
+    String url = WayaAppRoutes.getAccountCreationScreen(ConversationState.profile.referenceCode ?? "");
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -48,15 +47,12 @@ class ReferralPage extends ConsumerWidget {
             // Stats Section
             Card(
               child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 10),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _infoCard("Total Friends Referred",
-                        viewModel.referralList.length.toString()),
-                    _infoCard("Total Rewards Earned",
-                        "₦${formatMoney(viewModel.earned?.toString() ?? "")}"),
+                    _infoCard("Total Friends Referred", viewModel.referralList.length.toString()),
+                    _infoCard("Total Rewards Earned", "₦${formatMoney(viewModel.earned?.toString() ?? "")}"),
                   ],
                 ),
               ),
@@ -97,16 +93,14 @@ class ReferralPage extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "Referral Code:  ${ConversationState.profile.referenceCode}" ??
-                            "",
+                        "Referral Code:  ${ConversationState.profile.referenceCode}",
                         overflow: TextOverflow.ellipsis,
                         style: WayaTextStyles.bodyMedium,
                       ),
                     ),
                     GestureDetector(
                         onTap: () {
-                          shareService.copyLink(
-                              ConversationState.profile.referenceCode ?? "");
+                          shareService.copyLink(ConversationState.profile.referenceCode ?? "");
                           WayaSnackBar.showToast("Copied");
                         },
                         child: Icon(Icons.copy, color: wayaTheme.primaryColor)),
@@ -135,12 +129,10 @@ class ReferralPage extends ConsumerWidget {
                         subject: 'Share link',
                       );
                     },
-                    child:
-                        _actionButton(context, Icons.share_outlined, "Share")),
+                    child: _actionButton(context, Icons.share_outlined, "Share")),
                 GestureDetector(
                     onTap: () {
-                      shareService.copyLink(
-                          ConversationState.profile.referenceCode ?? "");
+                      shareService.copyLink(ConversationState.profile.referenceCode ?? "");
                       WayaSnackBar.showToast("Copied");
                     },
                     child: _actionButton(context, Icons.copy, "Copy Link")),
@@ -198,9 +190,7 @@ class ReferralPage extends ConsumerWidget {
         children: [
           Icon(icon, color: wayaTheme.colorScheme.primary500),
           Gap(4),
-          Text(label,
-              style: WayaTextStyles.bodyMedium
-                  .copyWith(color: wayaTheme.colorScheme.primary500)),
+          Text(label, style: WayaTextStyles.bodyMedium.copyWith(color: wayaTheme.colorScheme.primary500)),
         ],
       ),
     );

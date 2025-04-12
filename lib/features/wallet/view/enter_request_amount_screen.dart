@@ -8,6 +8,8 @@ import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
+import 'package:wayagram/features/wallet/widget/payout_modal.dart';
 import 'package:wayagram/shared/components/loading_dialog.dart';
 import 'package:wayagram/features/wallet/view/bank_transfer_screen.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
@@ -69,15 +71,18 @@ class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScr
         errorMessage = "Please enter a valid amount";
       });
       return;
-    }
-
-    if (numericAmount > maxAmount) {
+    } else if (numericAmount > maxAmount) {
       setState(() {
         errorMessage = "Amount cannot exceed 50,000,000 NGN";
       });
       return;
+    }else{
+      WayaUtils.showModalSheet(
+        context,
+        child: PayoutPinEntryBottomSheet(amount: amount,),
+      );
     }
-    final args =
+  /*  final args =
     ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final fundOptionCode = args!["code"];
     final name = args["name"];
@@ -122,7 +127,16 @@ class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScr
       default:
         log("Not Implemented Yet");
         break;
-    }
+    }*/
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+      ref.read(walletVmProvider.notifier).getSinglePayoutMethod(id: args['id']);
+    });
   }
 
   @override
@@ -131,6 +145,7 @@ class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScr
     final args =
     ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final name = args?["name"];
+    final viewModel = ref.watch(walletVmProvider);
     return WayaScaffold(
       backgroundColor: wayaTheme.colorScheme.greyColor50,
       appBar: AppBar(
@@ -154,7 +169,8 @@ class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScr
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            height: 32.h,
+            margin: const EdgeInsets.symmetric(horizontal: 30, vertical: 0),
             decoration: BoxDecoration(
               color: WayaColors.primary50,
               borderRadius: BorderRadius.circular(8),
@@ -163,7 +179,7 @@ class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScr
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Payout Eligible - ₦ 30,000.00',
+                  'Payout Eligible - ₦0.00',
                   style: TextStyle(
                     color: WayaColors.primary,
                     fontSize: 14.sp,
@@ -180,10 +196,9 @@ class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScr
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  'Funding option: ${name ?? ""}',
+                Text('${viewModel.bankName} - ${viewModel.payoutAccountNumber}',
                   style: TextStyle(
                     color: Colors.black87,
                     fontSize: 14.sp,

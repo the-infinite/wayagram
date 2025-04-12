@@ -230,8 +230,9 @@ class MomentVm extends StateNotifier<MomentState> {
   }
 
   Future<void> cropImage(BuildContext context, WidgetRef ref) async {
-    if (state.selectedFile == null || state.mediaType != MediaType.image)
+    if (state.selectedFile == null || state.mediaType != MediaType.image) {
       return;
+    }
 
     final file = state.selectedFile;
     if (file == null) return;

@@ -153,6 +153,10 @@ class BuyRequestModel {
     this.bids,
   });
 
+  QuotationBidModel? get acceptedBid => bids?.where((bid) => bid.status == BidActionType.accept).firstOrNull;
+
+  bool get hasAcceptedBid => acceptedBid != null;
+
   String get fullname => '${brand?.isNotEmpty ?? false ? '${brand!.capitalize} ' : ''}${productName.capitalize}';
 
   factory BuyRequestModel.fromJson(Map<String, dynamic> json) => _$BuyRequestModelFromJson(json);
@@ -235,6 +239,10 @@ class QuotationBidModel {
 
   double get amount => double.tryParse(bidAmount.replaceAll(",", "")) ?? 0.0;
 
+  double? get counterValue => double.tryParse(counterAmount.toString().replaceAll(",", ""));
+
+  double get usedAmount => counterValue ?? amount;
+
   QuotationBidModel({
     required this.id,
     required this.isFinal,
@@ -261,33 +269,53 @@ class BidActionModel {
   final String bidId;
   final String? counterAmount;
 
-  /// Helper constructor used to create the bid action model for requests that
-  /// are supposed to be used to accept a bid.
-  const BidActionModel.accept({
+  const BidActionModel._({
     required this.bidId,
     required this.lastCounterSentBy,
-    this.action = BidActionType.accept,
-    this.counterAmount,
+    required this.action,
+    required this.counterAmount,
   });
+
+  /// Helper constructor used to create the bid action model for requests that
+  /// are supposed to be used to accept a bid.
+  factory BidActionModel.accept({
+    required String bidId,
+    required BidActionAuthor lastCounterSentBy,
+  }) =>
+      BidActionModel._(
+        bidId: bidId,
+        lastCounterSentBy: lastCounterSentBy,
+        action: BidActionType.accept,
+        counterAmount: null,
+      );
 
   /// Helper constructor used to create the bid action model for rejecting bids
   /// by the buyer.
-  const BidActionModel.reject({
-    required this.bidId,
-    required this.lastCounterSentBy,
-    this.action = BidActionType.reject,
-    this.counterAmount,
-  });
+  factory BidActionModel.reject({
+    required String bidId,
+    required BidActionAuthor lastCounterSentBy,
+  }) =>
+      BidActionModel._(
+        bidId: bidId,
+        lastCounterSentBy: lastCounterSentBy,
+        action: BidActionType.reject,
+        counterAmount: null,
+      );
 
   /// Helper constructor used to create the bid action that is used for initiating
   /// a negotiation. It can be done by either the buyer or the seller. All is fair
   /// in purchase and bargaining.
-  const BidActionModel.negotiate({
-    required this.bidId,
-    required this.lastCounterSentBy,
-    required this.counterAmount,
-    this.action = BidActionType.negotiate,
-  });
+  factory BidActionModel.negotiate({
+    required String bidId,
+    required BidActionAuthor lastCounterSentBy,
+    required String counterAmount,
+  }) =>
+      BidActionModel._(
+        bidId: bidId,
+        lastCounterSentBy: lastCounterSentBy,
+        action: BidActionType.negotiate,
+        counterAmount: counterAmount,
+      );
 
   Map<String, dynamic> toJson() {
     final result = _$BidActionModelToJson(this);

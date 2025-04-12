@@ -232,7 +232,7 @@ class LoginVm extends StateNotifier<LoginState> {
         }
 
         // This is good too.
-        WayaNav.toNamed("/explore");
+        WayaNav.replaceNamed("/explore");
       } else {
         if (response.data['responseCode'] == 625) {
           await ref

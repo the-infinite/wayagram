@@ -6,8 +6,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
-import 'package:avatar_glow/avatar_glow.dart';
-import 'package:wayagram/features/wallet/view/request_payout.dart';
+import 'package:wayagram/features/wallet/view/wallet_page.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class PayoutSuccessScreen extends ConsumerStatefulWidget {
@@ -26,6 +25,8 @@ class _PayoutSuccessScreenState extends ConsumerState<PayoutSuccessScreen> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(walletVmProvider);
     final wayaTheme = Theme.of(context);
+
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
     return WayaScaffold(
       automaticallyImplyLeading: false,
       removeAppBar: false,
@@ -48,7 +49,7 @@ class _PayoutSuccessScreenState extends ConsumerState<PayoutSuccessScreen> {
           ),
           const Gap(10),
           Text(
-            '₦15,000.00',
+            '₦${args['amount']}',
             style: wayaTheme.textTheme.bodyMedium?.copyWith(
               fontSize: 20.sp,
               fontWeight: FontWeight.w700,
@@ -69,12 +70,11 @@ class _PayoutSuccessScreenState extends ConsumerState<PayoutSuccessScreen> {
           WayaButton(
             callback: !viewModel.isLoading!
                 ? () async {
-             // WayaNav.removeAllUntil(RequestPayout(), targetRoute)
-              //WayaNav.toNamed("/requestPayout",);
-
+              WayaNav.removeAllUntil(WalletPage(), '/wallet');
             }
                 : null,
-            centerWidget: LoadingState(loading: viewModel.isLoading!, text: 'Done'),
+            centerWidget: LoadingState(loading: viewModel.isLoading!,
+                text: 'Done'),
             height: 50.h,
           ),
           const Gap(10),

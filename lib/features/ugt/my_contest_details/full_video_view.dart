@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gap/gap.dart';
 import 'package:get/route_manager.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -22,67 +18,59 @@ class FullVideoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
     final data = Get.arguments;
 
     return WayaScaffold(
-        color: Colors.black,
-        backgroundColor: Colors.black,
-        isLoading: false,
-        isScrollable: true,
-        // removeAppBar: true,
+      color: Colors.black,
+      backgroundColor: Colors.black,
+      isLoading: false,
+      isScrollable: true,
+      // removeAppBar: true,
 
-        title: "View Video",
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: Text("View Video",
-              style:
-                  WayaTextStyles.headlineMedium.copyWith(color: Colors.white)),
-          leading: WayaBackButton(
-            buttonBackgroundColor: Color(0xff121212),
-            arrowColor: Colors.white,
-            onTap: () {
-              WayaNav.goBack();
+      title: "View Video",
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: Text("View Video", style: WayaTextStyles.headlineMedium.copyWith(color: Colors.white)),
+        leading: WayaBackButton(
+          buttonBackgroundColor: Color(0xff121212),
+          arrowColor: Colors.white,
+          onTap: () {
+            WayaNav.goBack();
+          },
+        ),
+        actions: [
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.more_vert, color: Colors.white),
+            color: Colors.white,
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                  value: "download",
+                  onTap: () async {
+                    bool hasSaved = await WayaFileHelper.saveNetworkImage(data["url"] ?? "");
+
+                    if (hasSaved) {
+                      WayaSnackBar.showToast("image saved", showSuccess: true);
+                    } else {
+                      WayaSnackBar.showToast(
+                        "Unable to save image!",
+                      );
+                    }
+                  },
+                  child: Text("Download Media", style: WayaTextStyles.bodyMedium)),
+              PopupMenuItem(value: "share", child: Text("Share Post Link", style: WayaTextStyles.bodyMedium)),
+            ],
+            onSelected: (value) {
+              // Handle selection
             },
           ),
-          actions: [
-            PopupMenuButton<String>(
-              icon: const Icon(Icons.more_vert, color: Colors.white),
-              color: Colors.white,
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                    value: "download",
-                    onTap: () async {
-                      bool hasSaved = await WayaFileHelper.saveNetworkImage(
-                          data["url"] ?? "");
-
-                      if (hasSaved) {
-                        WayaSnackBar.showToast("image saved",
-                            showSuccess: true);
-                      } else {
-                        WayaSnackBar.showToast(
-                          "Unable to save image!",
-                        );
-                      }
-                    },
-                    child: Text("Download Media",
-                        style: WayaTextStyles.bodyMedium)),
-                PopupMenuItem(
-                    value: "share",
-                    child: Text("Share Post Link",
-                        style: WayaTextStyles.bodyMedium)),
-              ],
-              onSelected: (value) {
-                // Handle selection
-              },
-            ),
-          ],
+        ],
+      ),
+      body: SizedBox(
+        height: context.height,
+        child: FullScreenVideoPlayer(
+          videoUrl: data["url"] ?? "",
         ),
-        body: SizedBox(
-          height: context.height,
-          child: FullScreenVideoPlayer(
-            videoUrl: data["url"] ?? "",
-          ),
-        ));
+      ),
+    );
   }
 }

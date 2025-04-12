@@ -40,8 +40,8 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
         state = state.copyWith(
             isLastPage: responseModel.data?.hasNextPage == true ? false : true);
         if (isFirst) {
-          state =
-              state.copyWith(listContestForYou: responseModel.data?.docs ?? [], page:1);
+          state = state.copyWith(
+              listContestForYou: responseModel.data?.docs ?? [], page: 1);
         } else {
           state = state.copyWith(listContestForYou: [
             ...state.listContestForYou,
@@ -59,17 +59,23 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
     } finally {}
   }
 
-  Future<void> fetchSingleContest(WidgetRef ref, String contestId) async {
+  Future<Contest?> fetchSingleContest(
+      {required String contestId, WidgetRef? ref}) async {
     try {
       final response = await _contestRepository.fetchSingleContest(contestId);
       Contest? contest;
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);
         contest = responseModel.data?.docs?.first;
-        ref.read(selectedContestProvider.notifier).state = contest;
+        if (ref != null) {
+          ref.read(selectedContestProvider.notifier).state = contest;
+        }
+        
       }
-      // return contestList;
-    } finally {}
+      return contest;
+    } catch (error) {
+      return null;
+    }
   }
 
   Future<SingleContestProfileBase?> fetchSingleContestantDetails(
