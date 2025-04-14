@@ -51,7 +51,8 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
       isScrollable: true,
       appBarTrailing: DonationAction(
           donationId: args['id'],
-          isUser: ConversationState.self.id == args['organizerId']),
+          isUser: ConversationState.self.id == args['organizerId'],
+          donation: args['donation']),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -295,13 +296,14 @@ class _DonationDetailsState extends ConsumerState<DonationDetails>
 class DonationAction extends StatelessWidget {
   final String donationId;
   final bool isUser;
+  final dynamic donation;
 
   // Construct.
-  const DonationAction({
-    super.key,
-    required this.donationId,
-    required this.isUser,
-  });
+  const DonationAction(
+      {super.key,
+      required this.donationId,
+      required this.isUser,
+      required this.donation});
 
   @override
   Widget build(BuildContext context) {
@@ -318,7 +320,8 @@ class DonationAction extends StatelessWidget {
               onTap: () async {
                 WayaNav.toNamed(Promote.route, arguments: {
                   "contentId": donationId,
-                  "contentType": PromotionServiceType.donation.name
+                  "contentType": PromotionServiceType.donation.name,
+                  "data": donation
                 });
               },
               child: WayaActionNav(

@@ -364,7 +364,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                             arguments: {
                                               "contentId": postData.id,
                                               "contentType":
-                                                  PromotionServiceType.post.name
+                                                  PromotionServiceType.post.name,
+                                              "data": postData    
                                             });
                                       },
                                       child: WayaActionNav(

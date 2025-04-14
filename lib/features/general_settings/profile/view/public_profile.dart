@@ -58,7 +58,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
       userId: widget.data.$1.id,
     )),
   );
-  late final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>((ref) {
+  late final userPostsProvider =
+      StateNotifierProvider<PostNotifier, PostState>((ref) {
     return PostNotifier(PostState.initial);
   });
   late final postNotifier = ref.watch(userPostsProvider.notifier);
@@ -167,7 +168,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
 
   void _shareProfile() async {
     final result = await Share.share(
-      WayaValueHelper.getShareableUrl(WayaAppRoutes.getProfileRoute(widget.data.$1.id)),
+      WayaValueHelper.getShareableUrl(
+          WayaAppRoutes.getProfileRoute(widget.data.$1.id)),
       subject: 'Share Profile',
     );
 
@@ -241,7 +243,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
 
                           //? Then pop.
                           if (result) {
-                            WayaSnackBar.showToast("This user has been unblocked successfully");
+                            WayaSnackBar.showToast(
+                                "This user has been unblocked successfully");
                           }
                         }
                       : () async {
@@ -259,7 +262,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
 
                           //? Then pop.
                           if (result) {
-                            WayaSnackBar.showToast("This user has been blocked successfully");
+                            WayaSnackBar.showToast(
+                                "This user has been blocked successfully");
                           }
                         },
                   child: WayaActionNav(
@@ -270,7 +274,9 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                           ? wayaTheme.colorScheme.customBlack
                           : wayaTheme.colorScheme.error,
                     ),
-                    text: conversationState.isBlocked(widget.data.$1.id) ? "Unblock account" : "Block account",
+                    text: conversationState.isBlocked(widget.data.$1.id)
+                        ? "Unblock account"
+                        : "Block account",
                     color: conversationState.isBlocked(widget.data.$1.id)
                         ? wayaTheme.colorScheme.customBlack
                         : wayaTheme.colorScheme.error,
@@ -353,7 +359,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
               final isEmpty = switch (selectedPage) {
                 0 => postState.posts.isEmpty && postState.hasLoaded,
                 2 => pollsState.polls.isEmpty && pollsState.hasLoaded,
-                3 => donationsState.donations.isEmpty && donationsState.hasLoaded,
+                3 =>
+                  donationsState.donations.isEmpty && donationsState.hasLoaded,
                 4 => groupsState.groups.isEmpty && groupsState.hasLoaded,
                 5 => pagesState.pages.isEmpty && pagesState.hasLoaded,
                 6 => eventState.events.isEmpty && eventState.hasLoaded,
@@ -420,12 +427,14 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                                   : () async {
                                       //? If this user is following this one.
                                       if (_followStatus!.isUserFollowing) {
-                                        await myFollowProvider.unfollowUser(widget.data.$1.id);
+                                        await myFollowProvider
+                                            .unfollowUser(widget.data.$1.id);
                                       }
 
                                       //? Since I am not yet following this user...
                                       else {
-                                        await myFollowProvider.followUser(widget.data.$1.id);
+                                        await myFollowProvider
+                                            .followUser(widget.data.$1.id);
                                       }
 
                                       //? Update the following state on screen.
@@ -433,7 +442,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                                     },
                               child: Container(
                                 margin: EdgeInsets.only(right: 20.w),
-                                padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
+                                padding: REdgeInsets.symmetric(
+                                    vertical: 5.dg, horizontal: 10.dg),
                                 decoration: BoxDecoration(
                                   border: _followStatus?.isUserFollowing == true
                                       ? Border.all(
@@ -454,7 +464,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                                       : _followStatus!.isUserFollowing
                                           ? "Following"
                                           : "Follow",
-                                  style: wayaTheme.textTheme.labelSmall?.copyWith(
+                                  style:
+                                      wayaTheme.textTheme.labelSmall?.copyWith(
                                     color: _followStatus == null
                                         ? wayaTheme.colorScheme.greyColor500
                                         : _followStatus!.isUserFollowing
@@ -487,7 +498,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
 
                     //? Second, the picture set.
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -507,7 +519,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                           if (profile.username != null) ...[
                             Text(
                               '@${profile.username}',
-                              style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                              style:
+                                  wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                                 color: wayaTheme.colorScheme.greyColor500,
                                 fontSize: 13.sp,
                               ),
@@ -521,7 +534,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                           if (profile.bio != null) ...[
                             Text(
                               profile.bio!,
-                              style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                              style:
+                                  wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                                 color: wayaTheme.colorScheme.greyColor700,
                               ),
                             ),
@@ -533,61 +547,80 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                           //? Fourth the profile overview.
                           InkWell(
                             customBorder: const StadiumBorder(),
-                            onTap: () =>
-                                WayaNav.toNamed(WayaAppRoutes.getFollowersPage(widget.data.$1.id, 'mutual', 'profile')),
+                            onTap: () => WayaNav.toNamed(
+                                WayaAppRoutes.getFollowersPage(
+                                    widget.data.$1.id, 'mutual', 'profile')),
                             borderRadius: BorderRadius.circular(12.r),
-                            splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
-                            focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
-                            highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
+                            splashColor:
+                                wayaTheme.colorScheme.primary.withAlpha(30),
+                            focusColor: const Color.fromARGB(255, 179, 173, 170)
+                                .withAlpha(30),
+                            highlightColor:
+                                wayaTheme.colorScheme.primary.withAlpha(30),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               spacing: 10.w,
                               children: [
                                 //? Users following.
                                 WayaRichText(
-                                  title1: WayaValueHelper.formatNumber(followState.followingTotalSize),
+                                  title1: WayaValueHelper.formatNumber(
+                                      followState.followingTotalSize),
                                   title2: ' Following',
-                                  style1: wayaTheme.textTheme.bodySmall?.copyWith(
+                                  style1:
+                                      wayaTheme.textTheme.bodySmall?.copyWith(
                                     color: wayaTheme.colorScheme.black,
                                     fontSize: 12.sp,
                                   ),
-                                  style2: wayaTheme.textTheme.bodySmall?.copyWith(
+                                  style2:
+                                      wayaTheme.textTheme.bodySmall?.copyWith(
                                     color: wayaTheme.colorScheme.greyColor500,
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12.sp,
                                   ),
                                   onTap2: () => WayaNav.toNamed(
-                                    WayaAppRoutes.getFollowersPage(widget.data.$1.id, 'following', 'profile'),
+                                    WayaAppRoutes.getFollowersPage(
+                                        widget.data.$1.id,
+                                        'following',
+                                        'profile'),
                                   ),
                                 ),
 
                                 //? Followers.
                                 WayaRichText(
-                                  title1: WayaValueHelper.formatNumber(followState.followersTotalSize),
+                                  title1: WayaValueHelper.formatNumber(
+                                      followState.followersTotalSize),
                                   title2: ' Followers',
-                                  style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  style1: wayaTheme.textTheme.bodySmall
+                                      ?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.black,
                                     fontSize: 12.sp,
                                   ),
-                                  style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  style2: wayaTheme.textTheme.bodySmall
+                                      ?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.greyColor500,
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12.sp,
                                   ),
                                   onTap2: () => WayaNav.toNamed(
-                                    WayaAppRoutes.getFollowersPage(widget.data.$1.id, 'followers', 'profile'),
+                                    WayaAppRoutes.getFollowersPage(
+                                        widget.data.$1.id,
+                                        'followers',
+                                        'profile'),
                                   ),
                                 ),
 
                                 //? Posts.
                                 WayaRichText(
-                                  title1: WayaValueHelper.formatNumber(postState.totalSize),
+                                  title1: WayaValueHelper.formatNumber(
+                                      postState.totalSize),
                                   title2: ' Posts',
-                                  style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  style1: wayaTheme.textTheme.bodySmall
+                                      ?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.black,
                                     fontSize: 12.sp,
                                   ),
-                                  style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                  style2: wayaTheme.textTheme.bodySmall
+                                      ?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.greyColor500,
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12.sp,
@@ -604,7 +637,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                           //if (isSelf)
                           WayaRichText(
                             title1: 'Joined: ',
-                            title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
+                            title2: WayaDateHelper.getMonthlyTimestamp(
+                                user.createdAt ?? DateTime.now()),
                             style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                               color: wayaTheme.colorScheme.black,
                               fontSize: 12.sp,
@@ -773,19 +807,23 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                         donationsState.donations.length,
                         (index) {
                           final donation = donationsState.donations[index];
-                          int daysLeft = donation.expirationDate.difference(donation.startDate).inDays;
-                          int amountRaised = double.parse(donation.amountRaised!).toInt();
-                          int targetedAmount = double.parse(donation.targetAmount!).toInt();
+                          int daysLeft = donation.expirationDate
+                              .difference(donation.startDate)
+                              .inDays;
+                          int amountRaised =
+                              double.parse(donation.amountRaised!).toInt();
+                          int targetedAmount =
+                              double.parse(donation.targetAmount!).toInt();
                           double ratioLeft = amountRaised / targetedAmount;
 
                           return Padding(
                             padding: EdgeInsets.symmetric(horizontal: 5.w),
                             child: ManageDonationWidget(
                               text: "Donate",
-                              amountRaised:
-                                  WayaHelpers.formatPrice(int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
-                              targetAmount:
-                                  WayaHelpers.formatPrice(int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
+                              amountRaised: WayaHelpers.formatPrice(int.parse(
+                                  '${donation.amountRaised?.replaceAll('.00', '')}')),
+                              targetAmount: WayaHelpers.formatPrice(int.parse(
+                                  '${donation.targetAmount?.replaceAll('.00', '')}')),
                               title: donation.title.capitalizeFirst,
                               image: donation.imageURL,
                               dayLeft: daysLeft < 0 ? '0' : '$daysLeft',
@@ -795,17 +833,21 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                                 WayaNav.toNamed('/donationDetails', arguments: {
                                   'title': '${donation.title.capitalizeFirst}',
                                   'image': '${donation.imageURL}',
-                                  'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
-                                  'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
+                                  'amountRaised':
+                                      '${donation.amountRaised?.replaceAll('.00', '')}',
+                                  'targetAmount':
+                                      '${donation.targetAmount?.replaceAll('.00', '')}',
                                   'desc': donation.description,
                                   'solution': donation.solution,
                                   'impact': donation.impact,
                                   'url': '${donation.url}',
-                                  'minimumDonationAmount': '${donation.minimumDonationAmount}',
+                                  'minimumDonationAmount':
+                                      '${donation.minimumDonationAmount}',
                                   'daysLeft': '$daysLeft',
                                   'privacy': '${donation.privacy}',
                                   'id': donation.id,
-                                  'donationCount': '${donation.donationCount}'
+                                  'donationCount': '${donation.donationCount}',
+                                  "donation": donation
                                 });
                               },
                               buttonWidth: 60.0,

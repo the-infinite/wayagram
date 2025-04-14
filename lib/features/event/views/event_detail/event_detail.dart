@@ -12,6 +12,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/bottom_sheets/join_event.dart';
 import 'package:wayagram/features/event/data/model/add_event_state.dart';
 import 'package:wayagram/features/event/bottom_sheets/report_event.dart';
+import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/views/event_detail/event_attendees.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail_widget.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
@@ -85,7 +86,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
         isScrollable: false,
         title: "Event",
         appBarTrailing: EventDetailAction(
-          eventId: event.id,
+          event: event,
           isUser: viewModel.isUserEvent,
           notifier: notifier,
         ),
@@ -225,14 +226,14 @@ class _EventDetailState extends ConsumerState<EventDetail> {
 }
 
 class EventDetailAction extends StatelessWidget {
-  final String eventId;
+  final EventDoc event;
   final bool isUser;
   final EventVm notifier;
 
   // Construct.
   const EventDetailAction({
     super.key,
-    required this.eventId,
+    required this.event,
     required this.isUser,
     required this.notifier,
   });
@@ -250,7 +251,7 @@ class EventDetailAction extends StatelessWidget {
             value: 0,
             onTap: () => Share.share(
               subject: "Share event",
-              WayaValueHelper.getShareableUrl(WayaAppRoutes.getEventDetailsScreen(eventId)),
+              WayaValueHelper.getShareableUrl(WayaAppRoutes.getEventDetailsScreen(event.id)),
             ),
             child: WayaActionNav(
                 context: context,
@@ -303,7 +304,7 @@ class EventDetailAction extends StatelessWidget {
                   child: ReportEvent(
                     statuses: eventReport,
                     currentStatus: "",
-                    eventId: eventId,
+                    eventId: event.id,
                   ),
                 ),
                 child: WayaActionNav(
@@ -322,8 +323,9 @@ class EventDetailAction extends StatelessWidget {
               value: 2,
               onTap: () async {
                 WayaNav.toNamed(Promote.route, arguments: {
-                  "contentId": eventId,
-                  "contentType": PromotionServiceType.event.name
+                  "contentId": event.id,
+                  "contentType": PromotionServiceType.event.name,
+                  "data": event
                 });
               },
               child: WayaActionNav(
