@@ -213,7 +213,6 @@ class AddProductVm extends StateNotifier<AddProductState> {
         }
       }
       state = state.copyWith(images: addedimages);
-
       final response = state.isEditMode
           ? await _shopRepository.editProductRequest(
               payload: state.addProductModel, productId: state.productId)
@@ -235,7 +234,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
             buttonText: 'View Application Status',
             secondButtonText: 'Go to Dashboard',
             onCancel: () {
-               WayaNav.goBack();
+              WayaNav.goBack();
               WayaNav.replaceNamed(ManageShop.route, arguments: state.shopId);
               // reset();
             },
@@ -251,7 +250,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
                 ? "Your product has been updated and changes are now live."
                 : "Your product is now live in your shop and ready for customers to discover.",
             onPress: () {
-               WayaNav.goBack();
+              WayaNav.goBack();
               WayaNav.replaceNamed(ManageShop.route, arguments: state.shopId);
               //reset();
             },
@@ -259,11 +258,17 @@ class AddProductVm extends StateNotifier<AddProductState> {
             buttonText: 'Add Another Product',
             secondButtonText: 'Go to Shop',
             onCancel: () {
-               WayaNav.goBack();
+              WayaNav.goBack();
               WayaNav.removeUntilNamed(BottomView.route, arguments: 1);
               //reset();
             });
       } else {
+        if (response.data['responseCode'] == 704) {
+          WayaSnackBar.showToast("Access not granted by the shop owner");
+
+          return;
+        }
+
         WayaSnackBar.showToast("${response.data["data"]}");
         //print(response.data);
       }
@@ -320,9 +325,9 @@ class AddProductVm extends StateNotifier<AddProductState> {
       final response = await _shopRepository.deleteProductRequest(
           shopId: shopId, productId: productId);
       if (response.success) {
-           await ref
-                  .read(shopVmProvider.notifier)
-                  .getAllProducts(page: 1, limit: 20);
+        await ref
+            .read(shopVmProvider.notifier)
+            .getAllProducts(page: 1, limit: 20);
         WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
       }
     } catch (e) {
@@ -366,9 +371,12 @@ class AddProductVm extends StateNotifier<AddProductState> {
         isWayagramDeal: product.wayagramDeal == null ? false : true,
         includeMeasurement:
             product.height != 0 || product.width != 0 || product.depth != 0,
-        productHeight: TextEditingController(text: product.height?.toString() ?? ''),
-        productWidth: TextEditingController(text: product.width?.toString() ?? ''),
-        productDepth: TextEditingController(text: product.depth?.toString() ?? ''),
+        productHeight:
+            TextEditingController(text: product.height?.toString() ?? ''),
+        productWidth:
+            TextEditingController(text: product.width?.toString() ?? ''),
+        productDepth:
+            TextEditingController(text: product.depth?.toString() ?? ''),
         discountPercentage: TextEditingController(
             text: product.discountPercentage.toInt().toString()),
         discountType: product.discountTypeId,

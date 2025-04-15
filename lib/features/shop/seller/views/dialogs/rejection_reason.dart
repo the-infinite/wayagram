@@ -89,7 +89,7 @@ class RejectionReason extends ConsumerWidget {
 
                         ref.read(orderVmProvider.notifier).declineOrder(
                             orderId: orderId,
-                           
+                            shopId: shopId,
                             reason: controller.text,
                             context: context);
                       }

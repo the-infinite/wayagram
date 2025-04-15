@@ -21,11 +21,15 @@ class SellerOrderDetailVm extends ChangeNotifier {
     notifyListeners();
     try {
       final response = await _orderRepository.pickupStatusUpdate(
-          orderId: orderId, status: status);
+          orderId: orderId, status: status, shopId: shopId);
 
       if (response.success) {
         WayaSnackBar.showToast("Pickup status updated");
         WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
+      } else {
+        if (response.data['responseCode'] == 704) {
+          WayaSnackBar.showToast("Access not granted by the shop owner");
+        }
       }
     } catch (e) {
       print(e);
@@ -38,11 +42,16 @@ class SellerOrderDetailVm extends ChangeNotifier {
     notifyListeners();
     try {
       final response = await _orderRepository.deliveryStatusUpdate(
-          orderId: orderId, status: status);
+          orderId: orderId, status: status, shopId: shopId);
 
       if (response.success) {
         WayaSnackBar.showToast("Delivery status updated");
         WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
+      }
+      else {
+        if (response.data['responseCode'] == 704) {
+          WayaSnackBar.showToast("Access not granted by the shop owner");
+        }
       }
     } catch (e) {
       print(e);
@@ -85,7 +94,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
 
   Future<void> updateOrderStatus(
       {required String shopId,
-       String? current,
+      String? current,
       required BuildContext context,
       required String orderId}) async {
     orderStatus = current ?? 'pending';
@@ -107,10 +116,9 @@ class SellerOrderDetailVm extends ChangeNotifier {
   }
 
   Future<void> updateDeliveryStatus(
-      {
-      required String shopId,
-     String? current,
-     required BuildContext context,
+      {required String shopId,
+      String? current,
+      required BuildContext context,
       required String orderId}) async {
     print("wefvewfew");
 
