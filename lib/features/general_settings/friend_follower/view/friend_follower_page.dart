@@ -9,6 +9,8 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 
 import 'package:wayagram/features/general_settings/privacy_settings/widget/privacy_widget.dart';
+import 'package:wayagram/shared/features/follow/model/default.dart';
+import 'package:wayagram/shared/features/follow/notifier/self.dart';
 
 class FriendFollowerPage extends StatefulHookConsumerWidget {
   static const route = '/friend-follower-page';
@@ -23,26 +25,33 @@ class _UgtHomeState extends ConsumerState<FriendFollowerPage> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final restrictRequest = useState(false);
-    final showPeopleFollowing = useState(true);
+    final showPeopleFollowing = useState(false);
     final showPeopleFollowMe = useState(false);
 
     useEffect(() {
+      myFollowProvider.getUserSettings().then((value) {
+        if (value != null) {
+          restrictRequest.value = value.restrictRequestToPeopleFollow ?? false;
+          showPeopleFollowing.value = value.showPeopleFollowing ?? false;
+          showPeopleFollowMe.value = value.showPeopleFollowMe ?? false;
+        }
+      });
       return null;
     }, []);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
-      title: "Privacy Settings",
+      title: "Friends & Followers",
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("Privacy Settings"),
+        title: Text("Friends & Followers"),
         leading: WayaBackButton(
             //onTap: onTapBackButton,
             ),
       ),
       body: Padding(
-         padding: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -56,6 +65,12 @@ class _UgtHomeState extends ConsumerState<FriendFollowerPage> {
                 value:
                     "Limit who can send you friend requests to those you already follow",
                 showSwitch: true,
+                onSwitchChanged: (value) {
+                  myFollowProvider.updateUserSettings(UserSettingsDto(
+                      restrictRequestToPeopleFollow: value,
+                      showPeopleFollowing: showPeopleFollowing.value,
+                      showPeopleFollowMe: showPeopleFollowMe.value));
+                },
                 switchValue: restrictRequest),
             Gap(10),
             PrivacyWidget(
@@ -63,6 +78,12 @@ class _UgtHomeState extends ConsumerState<FriendFollowerPage> {
                 value:
                     "Decide whether your following list is visible to others on your profile",
                 showSwitch: true,
+                onSwitchChanged: (value) {
+                  myFollowProvider.updateUserSettings(UserSettingsDto(
+                      restrictRequestToPeopleFollow: restrictRequest.value,
+                      showPeopleFollowing: value,
+                      showPeopleFollowMe: showPeopleFollowMe.value));
+                },
                 switchValue: showPeopleFollowing),
             Gap(10),
             PrivacyWidget(
@@ -70,6 +91,12 @@ class _UgtHomeState extends ConsumerState<FriendFollowerPage> {
                 value:
                     "Control the visibility of your followers list and manage your privacy",
                 showSwitch: true,
+                onSwitchChanged: (value) {
+                  myFollowProvider.updateUserSettings(UserSettingsDto(
+                      restrictRequestToPeopleFollow: restrictRequest.value,
+                      showPeopleFollowing: showPeopleFollowing.value,
+                      showPeopleFollowMe: value));
+                },
                 switchValue: showPeopleFollowMe),
           ],
         ),

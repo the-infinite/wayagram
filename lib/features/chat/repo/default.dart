@@ -39,6 +39,10 @@ class ChatRepository extends BaseRepository {
     return patch("$serviceUrl/client/chat-user/settings", dto.toJson());
   }
 
+    Future<WayaRequestResponse> getChatSettings(String userId) {
+    return get("$serviceUrl/client/chat-user/user/$userId");
+  }
+
   Future<WayaRequestResponse> getAllConversations([int limit = 100, int page = 1]) {
     return get("$serviceUrl/client/chat/user/all?limit=$limit&page=$page");
   }
@@ -62,4 +66,6 @@ class ChatRepository extends BaseRepository {
   Future<WayaRequestResponse> getArchivedChats([int limit = 100, int page = 1, bool archived = true]) {
     return get("$serviceUrl/client/chat/user/all?limit=$limit&page=$page&archived=$archived");
   }
+
+  
 }

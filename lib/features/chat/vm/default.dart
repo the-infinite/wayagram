@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/dto/default.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/repo/default.dart';
@@ -13,6 +15,7 @@ import 'package:wayagram/shared/features/user/resource/default.dart';
 
 class ConversationVm extends StateNotifier<ConversationState> {
   final repo = ChatRepository();
+  final localData = WayaLocalDataSource();
   OverlayEntry? _entry;
   ConversationVm(super.state);
 
@@ -139,7 +142,8 @@ class ConversationVm extends StateNotifier<ConversationState> {
           );
 
     //? This is fine.
-    final response = await repo.startConversation(type, users, name, description, imageUrl);
+    final response =
+        await repo.startConversation(type, users, name, description, imageUrl);
 
     //? If this was fine...
     if (!response.success) {
@@ -259,6 +263,28 @@ class ConversationVm extends StateNotifier<ConversationState> {
     return response.success;
   }
 
+  /// Helper function used to update user chat settings
+  Future<bool> updateChatSettings(PrivacySettingsDto dto) async {
+    final response = await repo.updateChatSettings(dto);
+
+    //? Return whether or not this is true.
+    return response.success;
+  }
+
+  /// Helper function used to retrieve all of the details of just one conversation.
+  Future<PrivacySettingsDto?> getChatSettings() async {
+    //? This is fine.- getting from server with userId
+    final response = await repo.getChatSettings(localData.getUserId());
+
+    //? This is fine.
+    if (response.success) {
+      return PrivacySettingsDto.fromJson(response.data['data']);
+    }
+
+    //? Return null if empty
+    return null;
+  }
+
   /// Helper function used to archive or unarchive a chat as the case may be.
   Future<bool> archiveOrUnarchiveChat(String id) async {
     //? This is fine.
@@ -323,7 +349,8 @@ class ConversationVm extends StateNotifier<ConversationState> {
     state = state.copyWith(isLoading: true);
 
     //? This is fine.
-    final response = await repo.getArchivedChats(state.limit, state.archivedPage);
+    final response =
+        await repo.getArchivedChats(state.limit, state.archivedPage);
 
     //? This is fine.
     if (response.success) {
@@ -396,6 +423,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
 }
 
 /// The state provider for conversations.
-final conversationProvider = StateNotifierProvider<ConversationVm, ConversationState>((ref) {
+final conversationProvider =
+    StateNotifierProvider<ConversationVm, ConversationState>((ref) {
   return ConversationVm(ConversationState.initial);
 });

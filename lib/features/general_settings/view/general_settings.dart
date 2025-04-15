@@ -7,7 +7,7 @@ import 'package:wayagram/features/general_settings/chat_call_pref/view/chat_call
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/modals/logout.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
-import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings_page.dart';
+
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/referral/view/referral_page.dart';
 import 'package:wayagram/features/role_access/view/role_access_page.dart';
@@ -93,20 +93,20 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               ),
 
               //
-              GeneralSettingsOptionModel(
-                title: 'Change Transaction PIN',
-                iconPath: 'password',
-                onTap: () => WayaNav.toNamed('/change-pin-page'),
-              ),
             ],
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(
+                title: 'Change Transaction PIN',
+                iconPath: 'password',
+                onTap: () => WayaNav.toNamed('/change-pin-page'),
+              ),
+              /*   GeneralSettingsOptionModel(
                 title: 'Privacy Settings',
                 iconPath: 'shield_plus',
                 onTap: () => WayaNav.toNamed(PrivacySettingsPage.route),
-              ),
+              ), */
               GeneralSettingsOptionModel(
                 title: 'Profile Visibility',
                 iconPath: 'user_settings',

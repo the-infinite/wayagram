@@ -16,7 +16,8 @@ class CreateConversationDto {
   });
 
   // From JSON constructor
-  factory CreateConversationDto.fromJson(Map<String, dynamic> json) => _$CreateConversationDtoFromJson(json);
+  factory CreateConversationDto.fromJson(Map<String, dynamic> json) =>
+      _$CreateConversationDtoFromJson(json);
 
   // To JSON method
   Map<String, dynamic> toJson() => _$CreateConversationDtoToJson(this);
@@ -24,12 +25,13 @@ class CreateConversationDto {
 
 @JsonSerializable()
 class PrivacySettingsDto {
-  final bool canSeeOnlineStatus;
-  final bool canSeeLastSeen;
+  final bool? canSeeOnlineStatus;
+  final bool? canSeeLastSeen;
   @JsonKey(name: 'canSeeReadReeceipt')
-  final bool canSeeReadReceipt;
-  final bool canSeeProfilePicture;
-  final bool canSeeProfileDescription;
+  final bool? canSeeReadReceipt;
+  final bool? canSeeProfilePicture;
+  final bool? canSeeProfileDescription;
+  final bool? everyoneCanContactMe;
 
   PrivacySettingsDto({
     required this.canSeeOnlineStatus,
@@ -37,10 +39,12 @@ class PrivacySettingsDto {
     required this.canSeeReadReceipt,
     required this.canSeeProfilePicture,
     required this.canSeeProfileDescription,
+    required this.everyoneCanContactMe,
   });
 
   // From JSON constructor
-  factory PrivacySettingsDto.fromJson(Map<String, dynamic> json) => _$PrivacySettingsDtoFromJson(json);
+  factory PrivacySettingsDto.fromJson(Map<String, dynamic> json) =>
+      _$PrivacySettingsDtoFromJson(json);
 
   // To JSON method
   Map<String, dynamic> toJson() => _$PrivacySettingsDtoToJson(this);
