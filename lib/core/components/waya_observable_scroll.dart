@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+
+import 'waya_preloader.dart';
 
 class WayaObservableScrollController {
   bool hasScrolled = false;
@@ -153,6 +156,8 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
               left: 0,
               right: 0,
               child: Container(
+                height: 60.w,
+                width: 60.w,
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -171,8 +176,9 @@ class _WayaObservableScrollViewState extends State<WayaObservableScrollView> {
                   ],
                 ),
                 child: Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3,
+                  child: WayaPreloaderProgressBar(
+                    height: 20.h,
+                    width: double.infinity,
                   ),
                 ),
               ),
