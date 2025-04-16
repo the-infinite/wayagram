@@ -70,13 +70,11 @@ class UserResource {
     if (((details?.synced_at?.difference(now).abs().inDays ?? 100) > 14) ||
         ((profile?.synced_at?.difference(now).abs().inDays ?? 100) > 14)) {
       await logger.init;
-      logger.i("Profile is ${profile?.resourceId}", time: now);
-      logger.i("Details is ${details?.resourceId}", time: now);
       return _getFromNetwork(id);
     }
 
     //? Cache this here.
-    userCache[id] = (UserDetailsModel.fromJson(details!.toMap()), SocialProfileModel.fromJson(profile!.toMap()));
+    userCache[id] = (UserDetailsModel.fromJson(details!.toMap(forJson: true)), SocialProfileModel.fromJson(profile!.toMap(forJson: true)));
 
     //? Return what we just cached.
     return userCache[id];
