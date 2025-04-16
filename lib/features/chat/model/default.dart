@@ -43,8 +43,8 @@ class ChatModel {
     required this.groupImage,
   });
 
-  String get initials {
-    if (chatType == ChatType.group) {
+  String initials([bool useGroup = true]) {
+    if (useGroup && chatType == ChatType.group) {
       return (name?.split(" ") ?? ["Group", "Chat"])
           .take(2)
           .map((word) => WayaValueHelper.isEmoji(word) ? String.fromCharCodes([word.codeUnitAt(0), word.codeUnitAt(1)]) : word[0].toUpperCase())

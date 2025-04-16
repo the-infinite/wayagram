@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/shop/order/views/all_orders.dart';
 import 'package:wayagram/features/shop/buyer/views/all_products.dart';
 import 'package:wayagram/features/shop/seller/data/model/create_shop_state.dart';
@@ -21,8 +21,7 @@ class WayaShop extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _WayaShopState();
 }
 
-class _WayaShopState extends ConsumerState<WayaShop>
-    with SingleTickerProviderStateMixin {
+class _WayaShopState extends ConsumerState<WayaShop> with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
   @override
@@ -40,8 +39,7 @@ class _WayaShopState extends ConsumerState<WayaShop>
       isLoading: ref.watch(createShopVmProvider).isLoading,
       isScrollable: false,
       progressIndicator: loadingState(context: context),
-      onTapBackButton: () =>
-          WayaNav.toNamed( BottomView.route, arguments: 0, preventDuplicates: false),
+      onTapBackButton: () => WayaNav.toNamed(BottomView.route, arguments: 0, preventDuplicates: false),
       title: 'Shop',
       appBarTrailing: WayaCartIcon(),
       body: Column(
@@ -73,17 +71,12 @@ class _WayaShopState extends ConsumerState<WayaShop>
         ],
       ),
       floatingActionButton: Visibility(
-        visible: ref.read(successfulSetupVmProvider).user!.user!.role !=
-                'PERSONAL' &&
-            _selectedIndex == 2,
+        visible: ConversationState.self.role != 'PERSONAL' && _selectedIndex == 2,
         child: SizedBox(
           height: 50,
           width: 50,
           child: WayaButton(
-            callback: () {
-              WayaNav.toNamed(CreateShop.route,
-                  arguments: CreateShopArg(uniqueKey: 'create-shop'));
-            },
+            callback: () => WayaNav.toNamed(CreateShop.route, arguments: CreateShopArg(uniqueKey: 'create-shop')),
             height: 50,
             centerWidget: Center(
               child: Icon(
@@ -108,8 +101,9 @@ class _WayaShopState extends ConsumerState<WayaShop>
         Text(
           "Creating your shop",
           style: wayaTheme.textTheme.bodyMedium?.copyWith(
-              color: wayaTheme.colorScheme.customPrimary,
-              fontWeight: FontWeight.w600),
+            color: wayaTheme.colorScheme.customPrimary,
+            fontWeight: FontWeight.w600,
+          ),
         ),
       ],
     );
