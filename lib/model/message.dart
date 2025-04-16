@@ -7,11 +7,35 @@ import 'package:wayagram/core/data/database.dart';
 
 part 'message.g.dart';
 
+const messageTable = SqfEntityTable(
+  tableName: 'messages',
+  useSoftDeleting: false,
+  primaryKeyName: 'id',
+  primaryKeyType: PrimaryKeyType.text,
+  objectType: ObjectType.table,
+  fields: [
+    SqfEntityField('chatId', DbType.text),
+    SqfEntityField('senderId', DbType.text),
+    SqfEntityField('content', DbType.text, isNotNull: false),
+    SqfEntityField('mediaUrl', DbType.text, isNotNull: false),
+    SqfEntityField('messageType', DbType.text, isNotNull: true),
+    SqfEntityField('edited', DbType.bool),
+    SqfEntityField('originalMessageId', DbType.text, isNotNull: false),
+    SqfEntityField('forwardedFrom', DbType.text, isNotNull: false),
+    SqfEntityField('isReply', DbType.bool),
+    SqfEntityField('createdAt', DbType.datetime),
+    SqfEntityField('updatedAt', DbType.datetime),
+    SqfEntityField('momentId', DbType.text, isNotNull: false),
+    SqfEntityField('isDeleted', DbType.bool, isNotNull: false),
+    SqfEntityField('isDeletedBySender', DbType.bool, isNotNull: false),
+  ],
+);
+
 const messageMediaTable = SqfEntityTable(
   tableName: 'messageMedia',
   useSoftDeleting: false,
-  primaryKeyName: 'resourceId',
-  primaryKeyType: PrimaryKeyType.integer_auto_incremental,
+  primaryKeyName: 'id',
+  primaryKeyType: PrimaryKeyType.text,
   objectType: ObjectType.table,
   fields: [
     SqfEntityField('messageId', DbType.text),
@@ -25,8 +49,8 @@ const messageMediaTable = SqfEntityTable(
 const messageReactionTable = SqfEntityTable(
   tableName: 'messageReaction',
   useSoftDeleting: false,
-  primaryKeyName: 'resourceId',
-  primaryKeyType: PrimaryKeyType.integer_auto_incremental,
+  primaryKeyName: 'id',
+  primaryKeyType: PrimaryKeyType.text,
   objectType: ObjectType.table,
   fields: [
     SqfEntityField("messageId", DbType.text),
@@ -38,8 +62,8 @@ const messageReactionTable = SqfEntityTable(
 const messageStatusTable = SqfEntityTable(
   tableName: 'messageStatuses',
   useSoftDeleting: false,
-  primaryKeyName: 'resourceId',
-  primaryKeyType: PrimaryKeyType.integer_auto_incremental,
+  primaryKeyName: 'id',
+  primaryKeyType: PrimaryKeyType.text,
   objectType: ObjectType.table,
   fields: [
     SqfEntityField("messageId", DbType.text),
@@ -49,28 +73,13 @@ const messageStatusTable = SqfEntityTable(
   ],
 );
 
-const messageTable = SqfEntityTable(
-  tableName: 'messages',
+const messageChats = SqfEntityTable(
+  tableName: 'chatSync',
   useSoftDeleting: false,
-  primaryKeyName: 'resourceId',
-  primaryKeyType: PrimaryKeyType.integer_auto_incremental,
+  primaryKeyName: 'id',
+  primaryKeyType: PrimaryKeyType.text,
   objectType: ObjectType.table,
-  fields: [
-    SqfEntityField('chatId', DbType.text),
-    SqfEntityField('senderId', DbType.text),
-    SqfEntityField('content', DbType.text, isNotNull: false),
-    SqfEntityField('mediaUrl', DbType.text, isNotNull: false),
-    SqfEntityField('messageType', DbType.integer),
-    SqfEntityField('edited', DbType.bool),
-    SqfEntityField('originalMessageId', DbType.text, isNotNull: false),
-    SqfEntityField('forwardedFrom', DbType.text, isNotNull: false),
-    SqfEntityField('isReply', DbType.bool),
-    SqfEntityField('createdAt', DbType.datetime),
-    SqfEntityField('updatedAt', DbType.datetime),
-    SqfEntityField('momentId', DbType.text, isNotNull: false),
-    SqfEntityField('isDeleted', DbType.bool, isNotNull: false),
-    SqfEntityField('isDeletedBySender', DbType.bool, isNotNull: false),
-  ],
+  fields: [],
 );
 
 @SqfEntityBuilder(messageDbModel)
@@ -82,21 +91,9 @@ const messageDbModel = SqfEntityModel(
     messageReactionTable,
     messageStatusTable,
     messageTable,
+    messageChats,
   ],
   defaultColumns: [
-    SqfEntityField(
-      'id',
-      DbType.text,
-      isIndex: true,
-      isUnique: true,
-      isNotNull: true,
-    ),
-    SqfEntityField(
-      '_v',
-      DbType.text,
-      isNotNull: false,
-      defaultValue: "1",
-    ),
     SqfEntityField(
       'synced_at',
       DbType.datetime,
