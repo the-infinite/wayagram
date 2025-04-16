@@ -55,9 +55,9 @@ const shopDbModel = SqfEntityModel(
     ),
     SqfEntityField(
       '_v',
-      DbType.integer,
+      DbType.text,
       isNotNull: false,
-      defaultValue: 1,
+      defaultValue: "1",
     ),
     SqfEntityField(
       'synced_at',
