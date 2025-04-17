@@ -18,6 +18,7 @@ import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 import '../../chat/state/default.dart';
+import '../../shop/widgets/categories_filter_widget.dart';
 import '../widget/manage_donation_widget.dart';
 
 class AllDonations extends ConsumerStatefulWidget {
@@ -204,6 +205,13 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                 fontWeight: FontWeight.w400,
                 color: Theme.of(context).colorScheme.greyColor500 ),),
           const Gap(30),
+         /* const Gap(10),
+          CategoriesFilterWidget(setCategory: (value) {
+            ref.read(shopVmProvider.notifier).setCategory(value);
+            for (String categoryId in value) {
+              ref.read(productEngagementProvider.notifier).addCategory(categoryId, ProductPoint.searchPoint.value);
+            }
+          }),*/
           filteredAllDonations.isEmpty ?DonationEmptyState() :
           ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
