@@ -32,20 +32,20 @@ class OrderRepository extends BaseRepository {
   //
 
   Future<WayaRequestResponse> deliveryStatusUpdate(
-      {required String orderId, required String status}) async {
-    return put("$serviceUrl/orders/deliveryStatus/$orderId",
+      {required String orderId, required String status, required String shopId}) async {
+    return put("$serviceUrl/orders/deliveryStatus/$orderId?shopId=$shopId",
         {"deliveryStatus": status});
   }
 
   Future<WayaRequestResponse> pickupStatusUpdate(
-      {required String orderId, required String status}) async {
+      {required String orderId, required String status, required String shopId}) async {
     return put(
-        "$serviceUrl/orders/pickupStatus/$orderId", {"pickupStatus": status});
+        "$serviceUrl/orders/pickupStatus/$orderId?shopId=$shopId", {"pickupStatus": status});
   }
 
   Future<WayaRequestResponse> declineOrder(
-      {required String orderId, required String reason}) {
-    return post("$serviceUrl/orders/decline-order",
+      {required String orderId, required String reason, required String shopId}) {
+    return post("$serviceUrl/orders/decline-order?shopId=$shopId",
         {"orderId": orderId, "reason": reason});
   }
 }

@@ -109,7 +109,8 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                     HapticFeedback.lightImpact();
                     WayaNav.toNamed(Promote.route, arguments: {
                       "contentId": viewModel.product?.id,
-                      "contentType": PromotionServiceType.product.name
+                      "contentType": PromotionServiceType.product.name,
+                      "data": viewModel.product
                     });
                   },
                   child: Container(

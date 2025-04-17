@@ -279,7 +279,7 @@ class WayaAppRoutes {
     GroupSuggestion.route: () => GroupSuggestion(),
     Promote.route: () => Promote(),
     PromotionDashboard.route: () => PromotionDashboard(),
-    PromotionDetail.route: () => PromotionDetail(),
+    PromotionDetail.route: () => PromotionDetail(id: WayaNav.search['id'].toString()),
     PublicPage.route: () => PublicPage(
           id: WayaNav.search['id'].toString(),
         ),
@@ -479,6 +479,11 @@ class WayaAppRoutes {
   /// Helper function used to generate the route tha tis supposed to take you to
   /// a single order's details screen.
   static String getQuotationOrderDetailsScreen(String id) => "${QuotationOrderDetails.route}?id=$id&requestId=$id";
+
+  /// Helper function used to generate the route that takes a user to the screen
+  /// for the details of a single product.
+  static String getPromotionDetailScreen(String id) => "${PromotionDetail.route}?id=$id";
+
 
   /// This is fine.
   static List<GetPage> get getPages {

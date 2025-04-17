@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/features/promotion/views/promotion_card.dart';
 import 'package:wayagram/features/promotion/vm/promotion_vm.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 
@@ -100,29 +101,16 @@ class _PromotionDashboard extends ConsumerState<PromotionDashboard> {
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   final promo = state.allPromotions[index];
-                  return _buildWidget(
-                      contentType: promo.contentType, context: context);
+                  return PromotionCard(
+                      contentType: promo.contentType,
+                      data: promo.metadata,
+                      showTimeLeft: true,
+                      timeLeft: promo.endDate.toIso8601String(),
+                      id: promo.id
+                      
+                      );
                 })
           ],
         ));
-  }
-
-  Widget _buildWidget(
-      {required BuildContext context, required String contentType}) {
-    return switch (contentType) {
-      'event' => const SizedBox(),
-      'moment' => const SizedBox(),
-      'product' => const SizedBox(),
-      'page' => const SizedBox(),
-      'donation' => const SizedBox(),
-      'poll & vote' => const SizedBox(),
-      'post' => const SizedBox(),
-      'group' => const SizedBox(),
-
-      'contest' => const SizedBox(),
-
-      // fallback widget
-      _ => const SizedBox.shrink(), 
-    };
   }
 }

@@ -29,7 +29,7 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(donationVmProvider.notifier).getDonatedDonation;
       ref.read(donationVmProvider.notifier).getMyKYC();
-      ref.read(donationVmProvider.notifier).getHostedDonation();
+      ref.read(donationVmProvider.notifier).getApprovedDonation();
       ref.read(donationVmProvider.notifier).getAppliedDonation();
     });
     searchController = TextEditingController();
