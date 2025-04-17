@@ -5,10 +5,13 @@ part 'default.g.dart';
 
 enum UserAccountType {
   @JsonValue("PERSONAL")
-  personal,
+  personal._("PERSONAL"),
 
   @JsonValue("BUSINESS")
-  business,
+  business._("BUSINESS");
+
+  final String raw;
+  const UserAccountType._(this.raw);
 }
 
 @JsonSerializable()

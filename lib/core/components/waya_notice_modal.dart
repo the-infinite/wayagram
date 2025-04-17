@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -8,25 +10,32 @@ import 'package:wayagram/core/theme/theme.dart';
 class WayaNoticeModal extends StatelessWidget {
   final String title;
   final String message;
-  final VoidCallback onPress;
+  final FutureOr<void> Function() onPress;
   final VoidCallback? onCancel;
+  final ValueNotifier<bool> actionNotifier;
+  final Color? buttonColor;
   final String? buttonText;
+  final Widget? leadingIcon;
   final String? secondButtonText;
   final Widget? buttonCenterWidget;
   final Widget? secondButtonCenterWidget;
   final Widget icon;
 
-  const WayaNoticeModal(
-      {super.key,
-      required this.title,
-      required this.message,
-      this.buttonText,
-      required this.icon,
-      this.secondButtonText = "",
-      this.buttonCenterWidget,
-      this.secondButtonCenterWidget,
-      required this.onCancel,
-      required this.onPress});
+  const WayaNoticeModal({
+    super.key,
+    required this.title,
+    required this.message,
+    required this.icon,
+    required this.actionNotifier,
+    required this.onCancel,
+    required this.onPress,
+    this.secondButtonText = "",
+    this.buttonText,
+    this.buttonCenterWidget,
+    this.secondButtonCenterWidget,
+    this.buttonColor,
+    this.leadingIcon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -63,11 +72,12 @@ class WayaNoticeModal extends StatelessWidget {
             style: WayaTextStyles.descriptionStyle,
           ),
           const Gap(24),
-          WayaButton(
+          WayaProgressiveButton(
+            notifier: actionNotifier,
             centerWidget: buttonCenterWidget,
-            callback: () {
-              onPress();
-            },
+            color: buttonColor,
+            callback: () async => await onPress(),
+            leadingIcon: leadingIcon,
             text: buttonCenterWidget == null ? buttonText ?? '' : '',
           ),
           const Gap(10),

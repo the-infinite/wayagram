@@ -37,14 +37,15 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
     final hasProfile = useState(false);
     final hasPaid = useState(false);
     useEffect(() {
-      ref
-          .read(postProvider.notifier)
-          .fetchSingleContest(ref, widget.post?.contestId ?? "");
+      ref.read(postProvider.notifier).fetchSingleContest(
+            contestId: widget.post?.contestId ?? "",
+            ref: ref,
+          );
       if (widget.post?.status?.toLowerCase() == "approved") {
         ref
             .read(postProvider.notifier)
-            .fetchSingleContestantDetails(ref,widget.post?.contestId ?? "",
-                widget.post?.userId ?? "")
+            .fetchSingleContestantDetails(
+                ref, widget.post?.contestId ?? "", widget.post?.userId ?? "")
             .then((model) {
           if (model != null) {
             if (model.data?.totalDocs == 1) {

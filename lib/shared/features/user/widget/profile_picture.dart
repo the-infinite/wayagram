@@ -12,6 +12,7 @@ class ChatProfilePicture extends StatelessWidget {
   final bool showActive;
   final DateTime? lastSeen;
   final bool canMove;
+  final bool useGroup;
 
   // This is fine.
   const ChatProfilePicture({
@@ -20,6 +21,7 @@ class ChatProfilePicture extends StatelessWidget {
     required this.radius,
     this.showActive = true,
     this.canMove = false,
+    this.useGroup = true,
     this.lastSeen,
     this.chat,
   });
@@ -28,6 +30,7 @@ class ChatProfilePicture extends StatelessWidget {
   Widget build(BuildContext context) {
     //? The theme.
     final theme = Theme.of(context);
+    final isGroup = useGroup && chat?.chatType == ChatType.group;
 
     //? This is the component.
     return GestureDetector(
@@ -54,16 +57,16 @@ class ChatProfilePicture extends StatelessWidget {
                 backgroundColor: chat != null && chat?.groupImage == null
                     ? theme.colorScheme.primary50
                     : theme.colorScheme.greyColor200,
-                backgroundImage: chat?.chatType == ChatType.group
+                backgroundImage: isGroup
                     ? chat?.groupImage != null
                         ? NetworkImage(chat!.groupImage!)
                         : null
                     : user.profilePicture != null
                         ? NetworkImage(user.profilePicture!)
                         : null,
-                child: chat != null && chat?.groupImage == null && user.profilePicture == null
+                child: chat != null && ((isGroup && chat?.groupImage == null) || user.profilePicture == null)
                     ? Text(
-                        chat!.initials,
+                        chat!.initials(useGroup),
                         style: theme.textTheme.headlineLarge?.copyWith(
                           color: theme.colorScheme.customPrimary,
                           fontSize: (radius * 0.75).sp,

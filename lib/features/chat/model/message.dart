@@ -6,18 +6,20 @@ part 'message.g.dart';
 
 // This is fine.
 enum MessageType {
-  text,
-  voiceNote,
-  sticker,
-  image,
-  video,
-  file,
-  location,
-  contact,
-  call,
+  text._("text"),
+  voiceNote._("voiceNote"),
+  sticker._("sticker"),
+  image._("image"),
+  video._("video"),
+  file._("file"),
+  location._("location"),
+  contact._("contact"),
+  call._("call"),
 
   @JsonValue("missed_call")
-  missedCall,
+  missedCall._("missed_call");
+  final String value;
+  const MessageType._(this.value);
 }
 
 // The status of messages.
@@ -41,7 +43,7 @@ enum MessageDeleteAction {
 }
 
 @JsonSerializable()
-class MessageMedia {
+class MessageMediaModel {
   final String id;
   final String messageId;
   final MessageType mediaType;
@@ -49,7 +51,7 @@ class MessageMedia {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  const MessageMedia({
+  const MessageMediaModel({
     required this.id,
     required this.messageId,
     required this.mediaType,
@@ -58,33 +60,33 @@ class MessageMedia {
     required this.updatedAt,
   });
 
-  factory MessageMedia.fromJson(Map<String, dynamic> json) => _$MessageMediaFromJson(json);
+  factory MessageMediaModel.fromJson(Map<String, dynamic> json) => _$MessageMediaModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MessageMediaToJson(this);
+  Map<String, dynamic> toJson() => _$MessageMediaModelToJson(this);
 }
 
 @JsonSerializable()
-class MessageReaction {
+class MessageReactionModel {
   final String id;
   final String messageId;
   final String userId;
   final String reaction;
 
   // Construct.
-  const MessageReaction({
+  const MessageReactionModel({
     required this.id,
     required this.messageId,
     required this.userId,
     required this.reaction,
   });
 
-  factory MessageReaction.fromJson(Map<String, dynamic> json) => _$MessageReactionFromJson(json);
+  factory MessageReactionModel.fromJson(Map<String, dynamic> json) => _$MessageReactionModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MessageReactionToJson(this);
+  Map<String, dynamic> toJson() => _$MessageReactionModelToJson(this);
 }
 
 @JsonSerializable()
-class MessageStatus {
+class MessageStatusModel {
   final String id;
   final String messageId;
   final String userId;
@@ -92,7 +94,7 @@ class MessageStatus {
   final DateTime createdAt;
 
   // Construct.
-  MessageStatus({
+  MessageStatusModel({
     required this.id,
     required this.messageId,
     required this.userId,
@@ -100,9 +102,9 @@ class MessageStatus {
     required this.createdAt,
   });
 
-  factory MessageStatus.fromJson(Map<String, dynamic> json) => _$MessageStatusFromJson(json);
+  factory MessageStatusModel.fromJson(Map<String, dynamic> json) => _$MessageStatusModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MessageStatusToJson(this);
+  Map<String, dynamic> toJson() => _$MessageStatusModelToJson(this);
 }
 
 @JsonSerializable()
@@ -121,9 +123,9 @@ class MessageModel {
   final DateTime createdAt;
   final DateTime updatedAt;
   final String? momentId;
-  final List<MessageStatus>? status;
-  final List<MessageMedia>? media;
-  final List<MessageReaction>? messageReaction;
+  final List<MessageStatusModel>? status;
+  final List<MessageMediaModel>? media;
+  final List<MessageReactionModel>? messageReaction;
   final bool? isDeletedBySender;
   final bool? isDeleted;
 
@@ -173,11 +175,11 @@ class MessageModel {
     };
   }
 
-  MessageStatus? get otherStatus {
+  MessageStatusModel? get otherStatus {
     return status?.where((receipt) => receipt.userId != ConversationState.self.id).firstOrNull;
   }
 
-  MessageStatus? get myStatus {
+  MessageStatusModel? get myStatus {
     return status?.where((receipt) => receipt.userId == ConversationState.self.id).firstOrNull;
   }
 
@@ -193,7 +195,7 @@ class MessageModel {
     final result = <String, int>{};
 
     //? Now we iterate on each pair.
-    for (final reaction in messageReaction ?? <MessageReaction>[]) {
+    for (final reaction in messageReaction ?? <MessageReactionModel>[]) {
       final count = result[reaction.reaction] ?? 0;
       result[reaction.reaction] = count + 1;
     }

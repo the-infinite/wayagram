@@ -188,7 +188,10 @@ class WayaAppRoutes {
         ),
     SeeBuyerBids.route: () => SeeBuyerBids(id: WayaNav.search['id'].toString()),
     Checkout.route: () => Checkout(),
-    BuyerCheckout.route: () => BuyerCheckout(),
+    BuyerCheckout.route: () => BuyerCheckout(
+          id: WayaNav.search['id'].toString(),
+          requestId: WayaNav.search['requestId'].toString(),
+        ),
     FilterView.route: () => FilterView(),
     GeneralSettingsPage.route: () => GeneralSettingsPage(),
     ChangePasswordGenSettings.route: () => ChangePasswordGenSettings(),
@@ -463,6 +466,11 @@ class WayaAppRoutes {
   /// single bid's details screen.
   static String getBidDetailsScreen(String id, String requestId) =>
       "${SellerBidDetails.route}?id=$id&requestId=$requestId";
+
+  /// Helper function used to generate the route that leads to the quotation
+  /// checkout screen for a buyer.
+  static String getQuotationCheckoutScreen(String id, String requestId) =>
+      "${BuyerCheckout.route}?id=$id&requestId=$requestId";
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single donation by its ID.

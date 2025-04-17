@@ -16,6 +16,7 @@ import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 final addProductProvider =
@@ -319,6 +320,9 @@ class AddProductVm extends StateNotifier<AddProductState> {
       final response = await _shopRepository.deleteProductRequest(
           shopId: shopId, productId: productId);
       if (response.success) {
+           await ref
+                  .read(shopVmProvider.notifier)
+                  .getAllProducts(page: 1, limit: 20);
         WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
       }
     } catch (e) {
@@ -362,9 +366,9 @@ class AddProductVm extends StateNotifier<AddProductState> {
         isWayagramDeal: product.wayagramDeal == null ? false : true,
         includeMeasurement:
             product.height != 0 || product.width != 0 || product.depth != 0,
-        productHeight: TextEditingController(text: product.height.toString()),
-        productWidth: TextEditingController(text: product.height.toString()),
-        productDepth: TextEditingController(text: product.height.toString()),
+        productHeight: TextEditingController(text: product.height?.toString() ?? ''),
+        productWidth: TextEditingController(text: product.width?.toString() ?? ''),
+        productDepth: TextEditingController(text: product.depth?.toString() ?? ''),
         discountPercentage: TextEditingController(
             text: product.discountPercentage.toInt().toString()),
         discountType: product.discountTypeId,
