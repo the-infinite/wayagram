@@ -445,6 +445,8 @@ class DonationVm extends StateNotifier<DonationState> {
     } finally {}
   }
 
+
+
   Future<void> getSingleDonation(String campaignId) async {
     print('Fetching saved posts...');
 
@@ -464,6 +466,22 @@ class DonationVm extends StateNotifier<DonationState> {
       print(e);
     } finally {}
   }
+
+  Future<MyDonationDocs?> getSingleCampaign(String id) async {
+    try {
+      final response = await _donationRepository.getSingleCampaign(id);
+      MyDonationDocs? donation;
+      if (response.success) {
+        donation = MyDonationDocs.fromJson(response.data['data']);
+      }
+
+      return donation;
+    } catch (error) {
+      print(error);
+      return null;
+    }
+  }
+
 
 /* Future<PaginatedResult<MyDonationDocs>?> getMyDonation(int page) async {
 
