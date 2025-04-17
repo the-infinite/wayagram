@@ -67,6 +67,10 @@ class DonationVm extends StateNotifier<DonationState> {
     state = state.copyWith(category: value.value);
   }
 
+  void setCategory(List<String>? categoryIds) {
+    state = state.copyWith(selectedCategoryId: categoryIds);
+  }
+
   void addFile(File file) {
     state =
         state.copyWith(donationImage: [DocType(file: file, type: "donation-image", name: file.path.split('/').last)]);
@@ -345,11 +349,11 @@ class DonationVm extends StateNotifier<DonationState> {
     } finally {}
   }
 
-  Future<void> getHostedDonation() async {
+  Future<void> getApprovedDonation() async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _donationRepository.getHostedDonation(ConversationState.self.id);
+      final response = await _donationRepository.getApprovedDonation(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
       print('API Response: ${response.data}');
       print('Status Code: ${response.statusCode}');
