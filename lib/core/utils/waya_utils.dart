@@ -268,4 +268,25 @@ class WayaUtils {
 
     return filteredData.isNotEmpty ? filteredData : [];
   }
+
+  static String timeLeftUntil(String isoDate) {
+  final targetDate = DateTime.parse(isoDate).toUtc();
+  final now = DateTime.now().toUtc();
+  final difference = targetDate.difference(now);
+
+  if (difference.isNegative) {
+    return 'Expired';
+  }
+
+  if (difference.inDays > 0) {
+    return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} left';
+  } else if (difference.inHours > 0) {
+    return '${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} left';
+  } else if (difference.inMinutes > 0) {
+    return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} left';
+  } else {
+    return '${difference.inSeconds} second${difference.inSeconds == 1 ? '' : 's'} left';
+  }
+}
+
 }

@@ -8,6 +8,7 @@ import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/widgets/event_date_widget.dart';
+import 'package:wayagram/features/promotion/views/promotion_card.dart';
 import 'package:wayagram/features/promotion/vm/create_promotion_vm.dart';
 import 'package:wayagram/features/shop/filter/widgets/filter_chip_item.dart';
 
@@ -31,6 +32,7 @@ class _PromoteState extends ConsumerState<Promote> {
       if (arg != null) {
         String contentId = arg['contentId'];
         String contentType = arg['contentType'];
+        
 
         ref.read(promotionVmProvider.notifier).fetchAndSetInitialState(
             contentType: contentType, contentId: contentId);
@@ -43,9 +45,9 @@ class _PromoteState extends ConsumerState<Promote> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(promotionVmProvider);
-
     final notifier = ref.read(promotionVmProvider.notifier);
-    // TODO: implement build
+
+   final dynamic arg = ModalRoute.of(context)?.settings.arguments;
     return PopScope(
         onPopInvokedWithResult: (didPop, result) {
           if (!didPop) return;
@@ -61,6 +63,11 @@ class _PromoteState extends ConsumerState<Promote> {
                 spacing: 10,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+
+                    PromotionCard(contentType: arg['contentType'], data: arg['data']),
+
+            
+
                   FormField<String>(validator: (value) {
                     if (state.name.text.isEmpty) {
                       return 'Title is required';

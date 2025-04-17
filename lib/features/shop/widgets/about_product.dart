@@ -36,9 +36,9 @@ class AboutProduct extends StatelessWidget {
         Text(
           content,
           style: wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
-            color: wayaTheme.colorScheme.customBlack,
-            fontSize: context.width * 0.035,
-          ),
+              color: wayaTheme.colorScheme.customBlack,
+              fontSize: context.width * 0.040,
+              fontWeight: FontWeight.w500),
         ),
       ],
     );

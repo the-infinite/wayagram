@@ -186,7 +186,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                           'id': '${donation.id}',
                           'donationCount': '${donation.donationCount}',
                           'ratioLeft': ratioLeft,
-                          'organizerId': donation.organizerId
+                          'organizerId': donation.organizerId,
+                          "donation": donation
                         });
                   },
                   buttonWidth: 60.0,
@@ -243,7 +244,8 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                           'donationCount': '${donation?.donationCount}',
                           'id': '${donation?.id}',
                           'ratioLeft': ratioLeft,
-                          'organizerId': donation?.organizerId
+                          'organizerId': donation?.organizerId,
+                           "donation": donation
 
                         });
                   },

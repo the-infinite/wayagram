@@ -145,7 +145,8 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                           callback: () {
                             WayaNav.toNamed(Promote.route, arguments: {
                               "contentId": widget.post.id,
-                              "contentType": PromotionServiceType.contest.name
+                              "contentType": PromotionServiceType.contest.name,
+                              "data": widget.post
                             });
                           },
                           height: 40,
