@@ -2,6 +2,7 @@ import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/features/wallet/model/dto.dart';
 
 class WalletRepository extends BaseRepository {
   static const serviceUrl = 'wayagram-wallet/api/v2';
@@ -37,11 +38,11 @@ class WalletRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getExternalWallet(String accountNumber) {
-    return get('$serviceUrl/client/wallet/get-external-wallet?accountNumber=9000000075');
+    return get('$serviceUrl/client/wallet/get-external-wallet?accountNumber=$accountNumber');
   }
 
-  Future<WayaRequestResponse> payForService(PayForService payload) {
-    return post('$serviceUrl/client/payment/pay-for-service', payload.toJson());
+  Future<WayaRequestResponse> payForService(WalletPaymentData data) {
+    return post('$serviceUrl/client/payment/pay-for-service', data.toJson(), showErrors: true);
   }
 
   Future<WayaRequestResponse> getPayoutMethod() {
@@ -64,13 +65,8 @@ class WalletRepository extends BaseRepository {
     return get('$serviceUrl/client/payout/requests?page=$page&limit=10');
   }
 
-  Future<WayaRequestResponse> createPayoutRequest(String amount, String payoutMethodId) {
-
-    final payload = {
-      "userId": ConversationState.self.id,
-      "amount": amount,
-      "payoutMethodId": payoutMethodId
-    };
+  Future<WayaRequestResponse> createPayoutRequest(String amount, String paymentMethodId) {
+    final payload = {"userId": ConversationState.self.id, "amount": amount, "payoutMethodId": paymentMethodId};
     return post('$serviceUrl/client/payout/requests', payload);
   }
 

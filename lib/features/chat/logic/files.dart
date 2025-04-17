@@ -19,7 +19,7 @@ Future<List<File>> getMessageFileAttachments(MessageModel message) async {
   final result = <File>[];
 
   //? Let's see what the file extension ends with.
-  for (final file in (message.media ?? <MessageMedia>[])) {
+  for (final file in (message.media ?? <MessageMediaModel>[])) {
     result.add(await WayaFileHelper.getFileDirectory(message, file));
   }
 

@@ -28,8 +28,9 @@ class Wallet {
     required this.updatedAt,
   });
 
-  factory Wallet.fromJson(Map<String, dynamic> json) => _$WalletFromJson(json);
+  double get balanceNumber => double.tryParse(balance.replaceAll(",", "")) ?? 0;
 
+  factory Wallet.fromJson(Map<String, dynamic> json) => _$WalletFromJson(json);
   Map<String, dynamic> toJson() => _$WalletToJson(this);
 }
 
@@ -45,9 +46,7 @@ class WalletFundingOptionModel {
     required this.description,
   });
 
-  factory WalletFundingOptionModel.fromJson(Map<String, dynamic> json) =>
-      _$WalletFundingOptionModelFromJson(json);
+  factory WalletFundingOptionModel.fromJson(Map<String, dynamic> json) => _$WalletFundingOptionModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$WalletFundingOptionModelToJson(this);
 }
-

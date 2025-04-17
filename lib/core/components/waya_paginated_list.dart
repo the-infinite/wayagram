@@ -1,9 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'waya_observable_scroll.dart' show WayaObservableScrollController;
+
+import 'waya_observable_scroll.dart';
+import 'waya_preloader.dart';
 
 class WayaPaginatedListView<T> extends StatefulWidget {
   /// The first page that you plan to start this scrollview from. It can change
@@ -243,6 +246,8 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
               left: 0,
               right: 0,
               child: Container(
+                height: 60.w,
+                width: 60.w,
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -258,8 +263,9 @@ class _WayaPaginatedListViewState<T> extends State<WayaPaginatedListView<T>> {
                   ],
                 ),
                 child: Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 3,
+                  child: WayaPreloaderProgressBar(
+                    height: 20.h,
+                    width: double.infinity,
                   ),
                 ),
               ),

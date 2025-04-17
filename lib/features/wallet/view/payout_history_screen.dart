@@ -1,23 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
-import 'package:intl/intl.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/wallet/data/model/get_request_model.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/features/wallet/widget/payout_empty_state.dart';
 import 'package:wayagram/features/wallet/widget/payout_history_widget.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
-import '../../../assetsgen/assets.gen.dart';
-import '../../../core/theme/waya_colors.dart';
-import '../../../core/utils/waya_constants.dart';
-import '../../polls_and_voting/views/my_polls.dart';
-import '../transactions/model/transaction_model.dart';
 
 class PayoutHistoryScreen extends ConsumerStatefulWidget {
   const PayoutHistoryScreen({

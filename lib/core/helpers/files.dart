@@ -452,7 +452,7 @@ class WayaFileHelper {
 
   /// A helper function used to calculate the directory of the file for a given
   /// message.
-  static Future<File> getFileDirectory(MessageModel message, MessageMedia file) async {
+  static Future<File> getFileDirectory(MessageModel message, MessageMediaModel file) async {
     final uri = Uri.parse(file.mediaUrl);
     final filename = uri.pathSegments.last;
     final extensionIndex = filename.lastIndexOf(".");

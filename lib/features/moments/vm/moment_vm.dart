@@ -48,7 +48,6 @@ class MomentVm extends StateNotifier<MomentState> {
 
   void initializeUser() async {
     final userid = await _secureDataSource.getUserId();
-    print("wewefw $userid");
     state = state.copyWith(userId: userid!);
   }
 
