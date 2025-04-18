@@ -15,6 +15,7 @@ class ConversationState {
   final List<ChatModel> conversations;
   final List<ChatModel> archived;
   final List<ChatUser> blocked;
+
   final bool inArchived;
 
   //? For chats.
@@ -33,7 +34,8 @@ class ConversationState {
   final bool archivedHasNextPage;
 
   /// Utility function used to get the total number of all unread messages inside of the app.
-  int get totalUnreadCount => conversations.fold(0, (value, chat) => value + chat.unreadCount);
+  int get totalUnreadCount =>
+      conversations.fold(0, (value, chat) => value + chat.unreadCount);
 
   // This is fine.
   const ConversationState({
@@ -57,9 +59,11 @@ class ConversationState {
   });
 
   // This is fine.
-  static void setSelf(UserDetailsModel? self, SocialProfileModel? profile, [BusinessDetailsModel? business]) async {
+  static void setSelf(UserDetailsModel? self, SocialProfileModel? profile,
+      [BusinessDetailsModel? business]) async {
     if (self != null) {
-      ConversationState._self = self.copyWith(accountType: _self?.id == self.id ? _self?.accountType : null);
+      ConversationState._self = self.copyWith(
+          accountType: _self?.id == self.id ? _self?.accountType : null);
     }
     if (profile != null) ConversationState._profile = profile;
     if (business != null) ConversationState._business = business;
@@ -68,14 +72,18 @@ class ConversationState {
     if (self != null && !kDebugMode) {
       //? First for crashlytics.
       await FirebaseCrashlytics.instance.setUserIdentifier(self.id);
-      await FirebaseCrashlytics.instance.setCustomKey("fullname", self.fullname);
-      await FirebaseCrashlytics.instance.setCustomKey("environment", WayaConstants.isProduction ? 'live' : 'test');
+      await FirebaseCrashlytics.instance
+          .setCustomKey("fullname", self.fullname);
+      await FirebaseCrashlytics.instance.setCustomKey(
+          "environment", WayaConstants.isProduction ? 'live' : 'test');
 
       //? Next for analytics.
       await FirebaseAnalytics.instance.setUserId(id: self.id);
-      await FirebaseAnalytics.instance.setUserProperty(name: "fullname", value: self.fullname);
       await FirebaseAnalytics.instance
-          .setUserProperty(name: "environment", value: WayaConstants.isProduction ? 'live' : 'test');
+          .setUserProperty(name: "fullname", value: self.fullname);
+      await FirebaseAnalytics.instance.setUserProperty(
+          name: "environment",
+          value: WayaConstants.isProduction ? 'live' : 'test');
     }
   }
 
@@ -110,10 +118,12 @@ class ConversationState {
   );
 
   /// Utility used to retrieve the list of pinned chats from this one.
-  List<ChatModel> get pinned => conversations.where((chat) => chat.self.isPined).toList();
+  List<ChatModel> get pinned =>
+      conversations.where((chat) => chat.self.isPined).toList();
 
   /// Utility used to retrieve the list of chats that are not pinned.
-  List<ChatModel> get unpinned => conversations.where((chat) => !chat.self.isPined).toList();
+  List<ChatModel> get unpinned =>
+      conversations.where((chat) => !chat.self.isPined).toList();
 
   /// The results displayed whenever you are looking at a list of conversations
   /// arranged in no particular order.
@@ -129,10 +139,14 @@ class ConversationState {
     //? This is fine.
     return conversations
         .where((chat) =>
-            (chat.chatType == ChatType.group && (chat.name ?? '').toLowerCase().contains(filter)) ||
-            (chat.other.userData?.fullname.toLowerCase().contains(filter) ?? false) ||
-            (chat.other.profileData?.username?.toLowerCase().contains(filter) ?? false) ||
-            (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ?? false))
+            (chat.chatType == ChatType.group &&
+                (chat.name ?? '').toLowerCase().contains(filter)) ||
+            (chat.other.userData?.fullname.toLowerCase().contains(filter) ??
+                false) ||
+            (chat.other.profileData?.username?.toLowerCase().contains(filter) ??
+                false) ||
+            (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ??
+                false))
         .toList();
   }
 
@@ -150,16 +164,45 @@ class ConversationState {
     //? This is fine.
     return archived
         .where((chat) =>
-            (chat.chatType == ChatType.group && (chat.name ?? '').toLowerCase().contains(filter)) ||
-            (chat.other.userData?.fullname.toLowerCase().contains(filter) ?? false) ||
-            (chat.other.profileData?.username?.toLowerCase().contains(filter) ?? false) ||
-            (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ?? false))
+            (chat.chatType == ChatType.group &&
+                (chat.name ?? '').toLowerCase().contains(filter)) ||
+            (chat.other.userData?.fullname.toLowerCase().contains(filter) ??
+                false) ||
+            (chat.other.profileData?.username?.toLowerCase().contains(filter) ??
+                false) ||
+            (chat.other.chatUser?.displayName.toLowerCase().contains(filter) ??
+                false))
         .toList();
   }
 
   /// A helper function used to check if a user is blocked by using the current
   /// list of blocked users.
   bool isBlocked(String userId) => blocked.any((user) => user.userId == userId);
+  bool isMuted(String id) => conversations.any((chat) {
+        //? looping to get the right chat member first
+        for (var model in chat.chatMembers) {
+          //? checking if it same chat id, found out the position changes
+          if (model.chatId == id) {
+            //? checking if the user id is the same as the current user
+            if (model.userId == ConversationState.self.id) {
+              //?if null means it could be muted, i had to check if the date is past or not
+              if (model.mutedUntil != null) {
+                //? format the date
+                DateTime targetTime = DateTime.parse(model.mutedUntil!);
+
+                //? Current time (in UTC)
+                DateTime now = DateTime.now().toUtc();
+
+                //? Check if target time  is after the current time
+
+                return targetTime.isAfter(now);
+              }
+            }
+          }
+        }
+
+        return false;
+      });
 
   /// Clone this conversation but change a little bit of details about it.
   ConversationState copyWith({

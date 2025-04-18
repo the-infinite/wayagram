@@ -71,6 +71,7 @@ class ChatMember {
   final String id;
   final String chatId;
   final String userId;
+  final String? mutedUntil;
   final bool isDeletedChat;
   final bool isArchived;
   final bool isPined;
@@ -85,6 +86,7 @@ class ChatMember {
     required this.id,
     required this.chatId,
     required this.userId,
+    required this.mutedUntil,
     required this.isDeletedChat,
     required this.isArchived,
     required this.isPined,
@@ -105,6 +107,7 @@ class ChatMember {
       id: id,
       chatId: chatId,
       userId: userId,
+      mutedUntil: mutedUntil,
       isDeletedChat: isDeletedChat,
       isArchived: isArchived,
       isPined: isPined,

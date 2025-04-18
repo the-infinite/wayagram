@@ -82,3 +82,26 @@ class FollowStatusModel {
 
   bool get isUserFollowing => isFollowing || (isFollowedBy && isMutual);
 }
+
+@JsonSerializable()
+class UserSettingsDto {
+  final bool? showPeopleFollowMe;
+  final bool? showPeopleFollowing;
+
+  final bool? restrictRequestToPeopleFollow;
+  
+
+  UserSettingsDto({
+    required this.showPeopleFollowMe,
+    required this.showPeopleFollowing,
+    required this.restrictRequestToPeopleFollow,
+   
+  });
+
+  // From JSON constructor
+  factory UserSettingsDto.fromJson(Map<String, dynamic> json) =>
+      _$UserSettingsDtoFromJson(json);
+
+  // To JSON method
+  Map<String, dynamic> toJson() => _$UserSettingsDtoToJson(this);
+}

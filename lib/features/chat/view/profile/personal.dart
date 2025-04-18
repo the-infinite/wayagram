@@ -7,6 +7,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/modals/block.dart';
+import 'package:wayagram/features/chat/modals/report.dart';
 import 'package:wayagram/features/chat/modals/unblock.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
@@ -27,7 +28,8 @@ class PersonalChatProfilePage extends StatefulWidget {
   });
 
   @override
-  State<PersonalChatProfilePage> createState() => _PersonalChatProfilePageState();
+  State<PersonalChatProfilePage> createState() =>
+      _PersonalChatProfilePageState();
 }
 
 class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
@@ -110,22 +112,44 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
               children: [
                 //* Go to this user's profile.
                 ProfileActionButton(
-                  onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(user.id)),
+                  onTap: () =>
+                      WayaNav.toNamed(WayaAppRoutes.getProfileRoute(user.id)),
                   icon: WayaAssets.icons.cProfileUser.path,
                   text: "Profile",
                 ),
 
                 //* Mute/Unmute this user.
                 ProfileActionButton(
-                  onTap: () => notifier.muteOrUnmuteUser(widget.chat.other.userId),
+                  onTap: () => notifier.muteOrUnmuteUser(
+                      context, widget.ref, widget.chat.self.chatId),
                   icon: WayaAssets.icons.cProfileMute.path,
-                  isBad: true,
-                  text: "Mute",
+                  isBad: !state.isMuted(widget.chat.self.chatId),
+                  text: state.isMuted(widget.chat.self.chatId)
+                      ? "UnMute"
+                      : "Mute",
                 ),
 
                 //* Next, report a user.
                 ProfileActionButton(
-                  onTap: () => notifier.reportUser(widget.chat.other.userId),
+                  onTap: () async {
+                    final result = await WayaUtils.showModalSheet<bool?>(
+                      context,
+                      child: ReportDialog(
+                        user: widget.chat.other.userData!,
+                        profile: widget.chat.other.profileData!,
+                        ref: widget.ref,
+                      ),
+                    );
+
+                    // If this is defined...
+                    if (result == null) return;
+
+                    //? Then pop.
+                    if (result) {
+                      WayaSnackBar.showToast("This user has been Reported");
+                    }
+                  },
+                  //onTap: () => notifier.reportUser(widget.chat.other.userId),
                   icon: WayaAssets.icons.cProfileReport.path,
                   text: "Report",
                 ),
@@ -148,7 +172,8 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
 
                           //? Then pop.
                           if (result) {
-                            WayaSnackBar.showToast("This user has been unblocked successfully");
+                            WayaSnackBar.showToast(
+                                "This user has been unblocked successfully");
                           }
                         }
                       : () async {
@@ -166,12 +191,15 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
 
                           //? Then pop.
                           if (result) {
-                            WayaSnackBar.showToast("This user has been blocked successfully");
+                            WayaSnackBar.showToast(
+                                "This user has been blocked successfully");
                           }
                         },
                   icon: WayaAssets.icons.cProfileBlock.path,
                   isBad: !state.isBlocked(widget.chat.other.userId),
-                  text: state.isBlocked(widget.chat.other.userId) ? "Unblock" : "Block",
+                  text: state.isBlocked(widget.chat.other.userId)
+                      ? "Unblock"
+                      : "Block",
                 )
               ],
             ),
@@ -236,7 +264,8 @@ class _PersonalChatProfilePageState extends State<PersonalChatProfilePage> {
 
               //? Now for the media themselves.
               EmptyConversationsWidget(
-                title: "No ${groupValue == 0 ? "media" : groupValue == 1 ? "videos" : "images"} yet",
+                title:
+                    "No ${groupValue == 0 ? "media" : groupValue == 1 ? "videos" : "images"} yet",
                 text: "Send the first one today",
               ),
 

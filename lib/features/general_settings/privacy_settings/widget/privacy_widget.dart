@@ -9,11 +9,17 @@ class PrivacyWidget extends StatelessWidget {
   final String title;
   final String value;
   final bool showSwitch;
+
   final ValueNotifier<bool>? switchValue;
+  final ValueNotifier<String>? whoCanContactMe;
+  final Function(bool)? onSwitchChanged;
   const PrivacyWidget(
       {required this.title,
       required this.value,
       required this.showSwitch,
+      this.whoCanContactMe,
+     
+      this.onSwitchChanged,
       required this.switchValue,
       super.key});
 
@@ -53,8 +59,10 @@ class PrivacyWidget extends StatelessWidget {
                   flex: 1,
                   child: !showSwitch
                       ? Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text("everyone",
+                            Text(whoCanContactMe?.value ?? "",
                                 style: WayaTextStyles.hintStyleBold
                                     .wayaCopyWith(
                                         color: wayaTheme
@@ -67,6 +75,7 @@ class PrivacyWidget extends StatelessWidget {
                           value: switchValue!.value,
                           onChanged: (vale) {
                             switchValue?.value = vale;
+                            onSwitchChanged?.call(vale);
                           },
                           activeColor: wayaTheme.colorScheme.primary),
                 ),
