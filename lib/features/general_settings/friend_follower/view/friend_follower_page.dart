@@ -24,10 +24,12 @@ class _UgtHomeState extends ConsumerState<FriendFollowerPage> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    //? store state of the switch
     final restrictRequest = useState(false);
     final showPeopleFollowing = useState(false);
     final showPeopleFollowMe = useState(false);
 
+//? get user settings to update the UI Once
     useEffect(() {
       myFollowProvider.getUserSettings().then((value) {
         if (value != null) {
@@ -60,6 +62,7 @@ class _UgtHomeState extends ConsumerState<FriendFollowerPage> {
                 style: WayaTextStyles.hintStyleBold
                     .wayaCopyWith(color: wayaTheme.colorScheme.greyColor400)),
             Gap(20),
+            //? card for each of the switch
             PrivacyWidget(
                 title: "Restrict Requests to People I Follow",
                 value:

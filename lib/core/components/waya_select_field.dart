@@ -94,11 +94,13 @@ class WayaSelectFieldViewModel extends ChangeNotifier {
   WayaSelectFieldViewModel(this.ref);
 
   Future<void> selectValue(
-      BuildContext context, String title, List<Select> items, Function(List<Select>) onSelected, bool multi) async {
+      BuildContext context, String title, List<Select> items, Function(List<Select>) onSelected, bool multi, {String? subTitle, double? contextHeight}) async {
     final result = await WayaUtils.showSelectModal(
       context: context,
       title: title,
       items: items,
+      subTitle: subTitle,
+      contextHeight:contextHeight,
       selectedItems: selectedItems,
       multi: multi,
     );

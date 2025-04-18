@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/general_settings/chat_call_pref/view/chat_call_pref_page.dart';
+import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/modals/logout.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
@@ -131,9 +131,11 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(
-                title: 'Chat & Call Preferences',
-                iconPath: 'chat2',
-                onTap: () => WayaNav.toNamed(ChatCallPrefPage.route),
+                //title: 'Chat & Call Preferences',
+                title: 'Privacy Settings',
+                // iconPath: 'chat2',
+                iconPath: 'shield_plus',
+                onTap: () => WayaNav.toNamed(PrivacySettingsPage.route),
               ),
               GeneralSettingsOptionModel(
                 title: 'Notification Settings',

@@ -15,14 +15,11 @@ class BlockDialog extends StatefulHookConsumerWidget {
   final String title;
   final String userId;
 
-
-  final Function(BuildContext, WidgetRef) onTap;
-
   const BlockDialog(
       {required this.title,
       required this.userId,
-      required this.onTap,
-    
+      // required this.onTap,
+
       super.key});
 
   @override
@@ -32,8 +29,11 @@ class BlockDialog extends StatefulHookConsumerWidget {
 class _SuccessfulModalState extends ConsumerState<BlockDialog> {
   @override
   Widget build(BuildContext context) {
+    //?get the theme
     final wayaTheme = Theme.of(context);
+    //? get the provider needed
     final viewModelNotifier = ref.read(conversationProvider.notifier);
+    //? added this to control the loading state of the button
     final isLoading = useState(false);
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 30.h),
@@ -48,15 +48,18 @@ class _SuccessfulModalState extends ConsumerState<BlockDialog> {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 17.h),
+            //? button to confirm unblocking
             WayaButton(
               isLoading: isLoading.value,
-              centerWidget:
-                  LoadingState(loading: isLoading.value, text: 'Yes'),
+              centerWidget: LoadingState(loading: isLoading.value, text: 'Yes'),
               callback: () async {
+                //?start loading
                 isLoading.value = true;
+                //? call the block or unblock user method
                 final status =
                     await viewModelNotifier.blockOrUnblockUser(widget.userId);
                 WayaNav.goBack();
+                //? status control
                 if (status == true) {
                   WayaSnackBar.showToast("User unblocked successfully",
                       showSuccess: true);
@@ -72,6 +75,7 @@ class _SuccessfulModalState extends ConsumerState<BlockDialog> {
               //  text: "Yes",
             ),
             const Gap(10),
+            //? button to cancel unblocking
             WayaButton(
                 text: 'Cancel',
                 color: wayaTheme.colorScheme.transparent,

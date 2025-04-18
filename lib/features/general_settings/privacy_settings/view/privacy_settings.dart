@@ -11,19 +11,19 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/chat/dto/default.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
-import 'package:wayagram/features/general_settings/chat_call_pref/view/blocked_user_page.dart';
+import 'package:wayagram/features/general_settings/privacy_settings/view/blocked_user_page.dart';
 
 import 'package:wayagram/features/general_settings/privacy_settings/widget/privacy_widget.dart';
 
-class ChatCallPrefPage extends StatefulHookConsumerWidget {
+class PrivacySettingsPage extends StatefulHookConsumerWidget {
   static const route = '/chat-call-page';
 
-  const ChatCallPrefPage({super.key});
+  const PrivacySettingsPage({super.key});
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _UgtHomeState();
 }
 
-class _UgtHomeState extends ConsumerState<ChatCallPrefPage> {
+class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
   bool userManagement = true;
   bool productInventory = true;
   bool bidQuotation = true;
@@ -61,11 +61,11 @@ class _UgtHomeState extends ConsumerState<ChatCallPrefPage> {
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
-      title: "Chat & Call Preferences",
+      title: "Privacy Settings",
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("Chat & Call Preferences"),
+        title: Text("Privacy Settings"),
         leading: WayaBackButton(
             //onTap: onTapBackButton,
             ),
@@ -77,11 +77,13 @@ class _UgtHomeState extends ConsumerState<ChatCallPrefPage> {
           children: [
             GestureDetector(
               onTap: () {
-                viewModel.selectValue(context, "", [
+                viewModel.selectValue(context, "Who Can Contact Me", [
                   Select(label: "Everyone", value: "1"),
                   Select(label: "Friends", value: "2"),
                 ], (value) {
+                  //? set the state
                   whoCanContactme.value = value.first.label;
+                  //? updating the state
                   viewModelNotifier.updateChatSettings(
                     PrivacySettingsDto(
                         canSeeOnlineStatus: showOnline.value,
@@ -106,6 +108,7 @@ class _UgtHomeState extends ConsumerState<ChatCallPrefPage> {
                 title: "Read Receipts",
                 value: "Allow others to see when you've read their messages.",
                 onSwitchChanged: (value) {
+                  //? update the state
                   viewModelNotifier.updateChatSettings(
                     PrivacySettingsDto(
                         canSeeOnlineStatus: showOnline.value,
@@ -125,6 +128,7 @@ class _UgtHomeState extends ConsumerState<ChatCallPrefPage> {
                 value: "Control who can view your last active status.",
                 showSwitch: true,
                 onSwitchChanged: (value) {
+                  //? updating the state
                   viewModelNotifier.updateChatSettings(
                     PrivacySettingsDto(
                         canSeeOnlineStatus: showOnline.value,
@@ -140,6 +144,7 @@ class _UgtHomeState extends ConsumerState<ChatCallPrefPage> {
             Gap(10),
             GestureDetector(
               onTap: () {
+                //? go to blocked user page
                 WayaNav.toNamed(BlockedUserPage.route);
               },
               child: PrivacyWidget(
@@ -148,27 +153,6 @@ class _UgtHomeState extends ConsumerState<ChatCallPrefPage> {
                   showSwitch: false,
                   switchValue: showOnline),
             ),
-
-            /*   Gap(10),
-            PrivacyWidget(
-                title: "Allow Everyone to Chat/Call",
-                value:
-                    "Permit anyone to reach you via chat or calls, even if they’re not on your friends list.",
-                showSwitch: true,
-                switchValue: allowChatCall),
-            Gap(10),
-            PrivacyWidget(
-                title: "Only Friends Can Contact Me",
-                value:
-                    "Restrict chat and call access to people on your friends list only.",
-                showSwitch: true,
-                switchValue: onlyFriendContact),
-            Gap(10), */
-            /*   PrivacyWidget(
-                title: "Video Call Permissions",
-                value: "Manage who can initiate video calls with you",
-                showSwitch: true,
-                switchValue: videoCallPermission), */
           ],
         ),
       ),

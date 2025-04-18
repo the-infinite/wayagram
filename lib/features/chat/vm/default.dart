@@ -2,8 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:uuid/uuid.dart';
+import 'package:wayagram/core/components/waya_select_field.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
+import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/dto/default.dart';
 import 'package:wayagram/features/chat/model/default.dart';
@@ -263,6 +268,26 @@ class ConversationVm extends StateNotifier<ConversationState> {
     return response.success;
   }
 
+  /// Helper function used to mute or unmute a user as the case may be.
+  Future<bool> muteOrUnmuteUserEndpoint(
+      String chatId, bool mute, String? mutedUntil) async {
+    final response = await repo.muteOrUnMuteUser(chatId, mute, mutedUntil);
+
+    //? This is fine.
+    if (response.success) await getChats();
+
+    //? Return whether or not this is true.
+    return response.success;
+  }
+
+  /// Helper function used to mute or unmute a user as the case may be.
+  Future<bool> reportUser(String id, String reason) async {
+    final response = await repo.reportUser(id, reason);
+
+    //? Return whether or not this is true.
+    return response.success;
+  }
+
   /// Helper function used to update user chat settings
   Future<bool> updateChatSettings(PrivacySettingsDto dto) async {
     final response = await repo.updateChatSettings(dto);
@@ -329,15 +354,84 @@ class ConversationVm extends StateNotifier<ConversationState> {
   }
 
   /// Helper function used to report a user.
-  Future<bool> reportUser(String id) async {
+  /*  Future<bool> reportUser(String id) async {
     await WayaNavigationHelper.showComingSoonModal(true);
+
+    return false;
+  } */
+
+  /// Helper function used to mute/unmute a user.
+  Future<bool> muteOrUnmuteUser(
+      BuildContext context, WidgetRef ref, String id) async {
+    //  await WayaNavigationHelper.showComingSoonModal(true);
+    //? the provider
+    final viewModel = ref.watch(wayaSelectFieldViewModelProvider(Uuid().v4()));
+    //  await WayaNavigationHelper.showComingSoonModal(true);
+
+   //? a drop down to mute or unmute a user
+    viewModel.selectValue(
+        context,
+        "Mute User",
+        subTitle:
+            "You won’t receive notifications from this user based on the time you set",
+        contextHeight: context.height * 0.45,
+        [
+          Select(label: "Unmute", value: "0"),
+          Select(label: "1 hour", value: "1"),
+          Select(label: "8 hours", value: "2"),
+          Select(label: "24 hours", value: "3"),
+          Select(label: "1 week", value: "4"),
+          Select(label: "Always", value: "5"),
+        ], (value) {
+      if (value.first.label == "Unmute") {
+        //? This is fine.
+        return muteOrUnmuteUserEndpoint(id, false, null);
+      }
+      return muteOrUnmuteUserEndpoint(
+          id, true, dateConvertion(value.first.label));
+    }, false);
     return false;
   }
 
-  /// Helper function used to mute/unmute a user.
-  Future<bool> muteOrUnmuteUser(String id) async {
-    await WayaNavigationHelper.showComingSoonModal(true);
-    return false;
+  String dateConvertion(String pickedDuration) {
+    DateTime baseTime = DateTime.now().toUtc();
+
+    // Add durations
+
+    switch (pickedDuration) {
+      case "1 hour":
+        DateTime plus1Hour = baseTime.add(Duration(hours: 1));
+        return plus1Hour.toIso8601String();
+
+      case "8 hours":
+        DateTime plus8Hours = baseTime.add(Duration(hours: 8));
+        return plus8Hours.toIso8601String();
+
+      case "24 hours":
+        DateTime plus24Hours = baseTime.add(Duration(hours: 24));
+        return plus24Hours.toIso8601String();
+
+      case "1 week":
+        DateTime plus1Week = baseTime.add(Duration(days: 7));
+        return plus1Week.toIso8601String();
+
+      case "Always":
+        // Add 5 years manually
+        DateTime plus10Years = DateTime(
+          baseTime.year + 10,
+          baseTime.month,
+          baseTime.day,
+          baseTime.hour,
+          baseTime.minute,
+          baseTime.second,
+          baseTime.millisecond,
+          baseTime.microsecond,
+        ).toUtc(); // keep everything in UTC
+        return plus10Years.toIso8601String();
+
+      default:
+        return "";
+    }
   }
 
   /// Helper function used to get the list of all chats that have been archived
