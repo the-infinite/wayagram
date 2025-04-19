@@ -48,8 +48,7 @@ class ChatRepository extends BaseRepository {
     return get("$serviceUrl/client/chat-user/user/$userId");
   }
 
-  Future<WayaRequestResponse> getAllConversations(
-      [int limit = 100, int page = 1]) {
+  Future<WayaRequestResponse> getAllConversations([int limit = 100, int page = 1]) {
     return get("$serviceUrl/client/chat/user/all?limit=$limit&page=$page");
   }
 
@@ -57,24 +56,14 @@ class ChatRepository extends BaseRepository {
     return post("$serviceUrl/client/chat/block-unblock", {"blockedId": id});
   }
 
-  Future<WayaRequestResponse> muteOrUnMuteUser(
-      String chatId, bool mute, String? mutedUntil) {
-    if (mutedUntil != null) {
-      return post("$serviceUrl/client/chat/group/mute", {
-        "chatId": chatId,
-        "mute": mute,
-        "mutedUntil": mutedUntil,
-      });
-    }
-    return post("$serviceUrl/client/chat/group/mute", {
-      "chatId": chatId,
-      "mute": mute,
+  Future<WayaRequestResponse> muteOrUnmuteUser(String id) {
+    return post("$serviceUrlGraph/client/chat/group/mute", {
+      "targetUserId": id,
     });
   }
 
   Future<WayaRequestResponse> reportUser(String targetUserId, String reason) {
-    return post("$serviceUrlGraph/moderation",
-        {"targetUserId": targetUserId, "reason": reason});
+    return post("$serviceUrlGraph/moderation", {"targetUserId": targetUserId, "reason": reason});
   }
 
   Future<WayaRequestResponse> archiveOrUnarchiveChat(String id) {
@@ -89,9 +78,66 @@ class ChatRepository extends BaseRepository {
     return delete("$serviceUrl/client/chat/delete/$id");
   }
 
-  Future<WayaRequestResponse> getArchivedChats(
-      [int limit = 100, int page = 1, bool archived = true]) {
-    return get(
-        "$serviceUrl/client/chat/user/all?limit=$limit&page=$page&archived=$archived");
+  Future<WayaRequestResponse> getArchivedChats([int limit = 100, int page = 1, bool archived = true]) {
+    return get("$serviceUrl/client/chat/user/all?limit=$limit&page=$page&archived=$archived");
+  }
+
+  // THE APIs for group chats.
+  Future<WayaRequestResponse> updateGroupImage(String id, String image) {
+    return put(
+      "$serviceUrl/client/chat/group/photo",
+      {"chatId": id, "groupImage": image},
+      showErrors: true,
+    );
+  }
+
+  Future<WayaRequestResponse> reportChatGroup(String id, String reason) {
+    return post(
+      "$serviceUrl/client/chat/group/report",
+      {"chatId": id, "reason": reason},
+      showErrors: true,
+    );
+  }
+
+  Future<WayaRequestResponse> leaveGroup(String id) {
+    return post(
+      "$serviceUrl/client/chat/group/leave",
+      {"chatId": id},
+      showErrors: true,
+    );
+  }
+
+  Future<WayaRequestResponse> removeUserFromGroup(String id, String userId) {
+    return post(
+      "$serviceUrl/client/chat/group/remove-user",
+      {"chatId": id, "userId": userId},
+      showErrors: true,
+    );
+  }
+
+  Future<WayaRequestResponse> addUserToGroup(String id, String userId) {
+    return post(
+      "$serviceUrl/client/chat/group/add-user",
+      {"chatId": id, "userId": userId},
+      showErrors: true,
+    );
+  }
+
+  Future<WayaRequestResponse> muteOrUnmuteGroup(String chatId, DateTime? mutedUntil) {
+    //? If this is not available.
+    if (mutedUntil != null) {
+      return post(
+        "$serviceUrl/client/chat/group/mute",
+        {"chatId": chatId, "mute": true, "mutedUntil": mutedUntil.toIso8601String()},
+        showErrors: true,
+      );
+    }
+
+    //? This is fine.
+    return post(
+      "$serviceUrl/client/chat/group/mute",
+      {"chatId": chatId, "mute": false},
+      showErrors: true,
+    );
   }
 }

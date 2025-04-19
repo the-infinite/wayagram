@@ -5,9 +5,9 @@ import 'package:wayagram/core/utils/utils.dart';
 
 class SectionCountButton extends StatelessWidget {
   final String title;
-  final int count;
   final int value;
   final ValueNotifier<int> controller;
+  final int? count;
 
   // Construct.
   const SectionCountButton({
@@ -49,24 +49,25 @@ class SectionCountButton extends StatelessWidget {
             ),
 
             //? Finally, the other thing.
-            ClipPath(
-              clipper: ShapeBorderClipper(
-                shape: StadiumBorder(),
-              ),
-              child: ColoredBox(
-                color: isSelected ? theme.colorScheme.primary : theme.colorScheme.scaffoldColor,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 8.w),
-                  child: Text(
-                    WayaValueHelper.formatNumber(count),
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: isSelected ? theme.colorScheme.white : theme.colorScheme.greyColor500,
-                      fontSize: 12.sp,
+            if (count != null)
+              ClipPath(
+                clipper: ShapeBorderClipper(
+                  shape: StadiumBorder(),
+                ),
+                child: ColoredBox(
+                  color: isSelected ? theme.colorScheme.primary : theme.colorScheme.scaffoldColor,
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8.w),
+                    child: Text(
+                      WayaValueHelper.formatNumber(count!),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: isSelected ? theme.colorScheme.white : theme.colorScheme.greyColor500,
+                        fontSize: 12.sp,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
           ],
         ),
       ),
