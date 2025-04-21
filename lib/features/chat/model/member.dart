@@ -11,6 +11,12 @@ enum ChatUserActivity {
   offline;
 }
 
+enum ChatMemberRole {
+    member,
+    admin,
+    owner,
+}
+
 @JsonSerializable()
 class ChatUser {
   final String id;
@@ -71,7 +77,6 @@ class ChatMember {
   final String id;
   final String chatId;
   final String userId;
-  final String? mutedUntil;
   final bool isDeletedChat;
   final bool isArchived;
   final bool isPined;
@@ -79,6 +84,9 @@ class ChatMember {
   final DateTime createdAt;
   final DateTime updatedAt;
   final ChatUser? chatUser;
+  final DateTime? mutedUntil;
+  final ChatMemberRole role;
+  final bool notificationsEnabled;
   final UserDetailsModel? userData;
   final SocialProfileModel? profileData;
 
@@ -94,6 +102,8 @@ class ChatMember {
     required this.createdAt,
     required this.updatedAt,
     required this.chatUser,
+    required this.role,
+    required this.notificationsEnabled,
     this.profileData,
     this.userData,
   });
@@ -115,6 +125,8 @@ class ChatMember {
       createdAt: createdAt,
       updatedAt: updatedAt,
       chatUser: chatUser,
+      notificationsEnabled: notificationsEnabled,
+      role: role,
       userData: user,
       profileData: profile,
     );

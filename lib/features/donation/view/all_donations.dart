@@ -18,7 +18,6 @@ import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
 import '../../chat/state/default.dart';
-import '../../shop/widgets/categories_filter_widget.dart';
 import '../widget/manage_donation_widget.dart';
 
 class AllDonations extends ConsumerStatefulWidget {

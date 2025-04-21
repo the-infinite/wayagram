@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
+import 'package:wayagram/features/chat/vm/default.dart';
 
 import 'profile/dispute.dart';
 import 'profile/group.dart';
@@ -24,6 +25,7 @@ class ChatProfilePage extends ConsumerStatefulWidget {
 class _ChatProfilePageState extends ConsumerState<ChatProfilePage> {
   @override
   Widget build(BuildContext context) {
+    final _ = ref.watch(conversationProvider);
     final state = ref.watch(chatProvider);
 
     //? If this is after the state of this has been reset.
