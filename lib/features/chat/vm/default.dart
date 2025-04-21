@@ -676,7 +676,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
     return false;
   }
 
-/// Helper function used to remove a user from the group.
+  /// Helper function used to remove a user from the group.
   Future<bool> addUserToGroup(String id, String userId) async {
     try {
       //? Now, use it.
@@ -707,6 +707,36 @@ class ConversationVm extends StateNotifier<ConversationState> {
       //? Now, use it.
       final response = await repo.leaveGroup(id);
 
+      //? If this was successful.
+      if (response.success) {
+        await getChatDetails(id);
+      }
+
+      //? Return whether this was true or not.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.chats,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+    return false;
+  }
+
+  /// Helper function used to edit the name (and probably description) of a group
+  /// conversation.
+  Future<bool> updateGroupInfo(String id, String name, [String? description]) async {
+    try {
+      //? Now, use it.
+      final response = await repo.updateGroupInfo(id, name, description);
+
+      //? If this was successful.
+      if (response.success) {
+        await getChatDetails(id);
+      }
+
       //? Return whether this was true or not.
       return response.success;
     } catch (e) {
@@ -723,6 +753,12 @@ class ConversationVm extends StateNotifier<ConversationState> {
   /// Helper function used to generate the filename of a group chat.
   String _getGroupProfilePhoto(File file) {
     return "group-${WayaValueHelper.createUid()}.${WayaFileHelper.getFileExtension(file.path)}";
+  }
+
+  /// Helper function used to get a single chat from our lists of chats.
+  ChatModel? getChat(String id) {
+    return state.conversations.where((chat) => chat.id == id).firstOrNull ??
+        state.archived.where((chat) => chat.id == id).firstOrNull;
   }
 }
 

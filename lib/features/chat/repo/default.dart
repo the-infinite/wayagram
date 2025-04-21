@@ -123,6 +123,14 @@ class ChatRepository extends BaseRepository {
     );
   }
 
+  Future<WayaRequestResponse> updateGroupInfo(String id, String name, [String? description]) {
+    return put(
+      "$serviceUrl/client/chat/group/name",
+      {"chatId": id, "name": name, if (description != null) "description": description},
+      showErrors: true,
+    );
+  }
+
   Future<WayaRequestResponse> muteOrUnmuteGroup(String chatId, DateTime? mutedUntil) {
     //? If this is not available.
     if (mutedUntil != null) {
