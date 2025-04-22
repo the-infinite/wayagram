@@ -269,6 +269,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                       WayaButton(
                         callback: () {
 
+
                           ref.read(donationVmProvider.notifier)
                               .updateSelectedCategory(donation);
                           ref.read(donationVmProvider.notifier).fetchDonationBasedOnCategory(donation.label);
