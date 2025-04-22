@@ -126,9 +126,9 @@ class WayaValueHelper {
   ///
   /// Example:
   /// ```dart
-  /// print(isEmoji('😀')); // true
-  /// print(isEmoji('Hello')); // false
-  /// print(isEmoji('😀😊')); // true
+  /// debugPrint(isEmoji('😀')); // true
+  /// debugPrint(isEmoji('Hello')); // false
+  /// debugPrint(isEmoji('😀😊')); // true
   /// ```
   static bool isEmoji(String text) {
     if (text.isEmpty) return false;

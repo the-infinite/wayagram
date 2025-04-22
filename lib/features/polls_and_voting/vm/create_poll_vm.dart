@@ -116,7 +116,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
             state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -135,7 +135,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         state = state.copyWith(endDate: endDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -195,9 +195,9 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     DateTime givenDate = DateTime.parse(dateString).toUtc(); // Convert to UTC
 
     DateTime now = DateTime.now().toUtc();
-    print("Given Date: $givenDate");
-    print("Now: $now");
-    print("Now: ${givenDate.isBefore(now)}");
+    debugPrint("Given Date: $givenDate");
+    debugPrint("Now: $now");
+    debugPrint("Now: ${givenDate.isBefore(now)}");
 
     return givenDate.isBefore(now);
   }
@@ -789,15 +789,15 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       final response = await _pollAndVotingRepository.getActivePolls(
           ConversationState.self.id, page);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
         state = state.copyWith(fetchAllPols: responseModel.data?.docs);
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -808,15 +808,15 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       final response = await _pollAndVotingRepository.getInActivePolls(
           ConversationState.self.id, page);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
         state = state.copyWith(fetchAllPols: responseModel.data?.docs);
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -840,7 +840,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         );
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -1027,7 +1027,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
 
       return poll;
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
       return null;
     }
   }

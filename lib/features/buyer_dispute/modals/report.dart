@@ -72,7 +72,7 @@ class _ReportDisputeModalState extends ConsumerState<ReportDisputeModal> {
         reference: widget.order.id,
         sellerId: widget.order.vendorId,
         disputeId: widget.disputeId,
-        tobeEscalatedBy: widget.tobeEscalatedBy,
+        toBeEscalatedBy: widget.tobeEscalatedBy,
         mediaDoc: mediaDoc.isNotEmpty ? mediaDoc[0] : null,
         details: details);
 

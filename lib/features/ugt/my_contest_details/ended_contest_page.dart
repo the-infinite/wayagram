@@ -32,7 +32,7 @@ class _ManageStateContestState extends ConsumerState<EndedContestPage> {
     final data = Get.arguments;
 
     useEffect(() {
-      print("id card ${widget.id}");
+      debugPrint("id card ${widget.id}");
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref
             .read(postProvider.notifier)

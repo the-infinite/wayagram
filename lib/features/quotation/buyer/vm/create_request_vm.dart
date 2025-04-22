@@ -97,7 +97,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
         state = state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -117,7 +117,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
         state = state.copyWith(endDate: endDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -175,7 +175,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
       BuyerRequestModel responseModel = BuyerRequestModel.fromJson(response.data);
 
       state = state.copyWith(buyerRequest: responseModel.data?.buyerRequests);
-      //print(state.productDescription);
+      //debugPrint(state.productDescription);
     } else {
       state = state.copyWith(isLoading: false);
     }

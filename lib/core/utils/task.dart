@@ -59,7 +59,7 @@ class Task<T> {
   final FutureOr<T> Function() computation;
 
   /// A callback that is made when we encounter an error here.
-  final T Function(dynamic error, [StackTrace? stackTrace]) onError;
+  final T Function(dynamic error, [StackTrace? stackTrace])? onError;
 
   /// A callback that is executed to completion with the results of the task's
   /// computation. This is used to obtain final results relevant to the task as
@@ -81,10 +81,13 @@ class Task<T> {
 
   /// When the result of any operation is generated after it is finished, it
   /// would be stored here so that we can use it.
-  final ReceivePort _resultPort = ReceivePort();
+  final _resultPort = ReceivePort();
 
   /// A result port used to receive the post processing result.
-  final ReceivePort _processPort = ReceivePort();
+  final _processPort = ReceivePort();
+
+  /// The port where the error that is raised during the execution would go.
+  final _errorPort = ReceivePort();
 
   /// A callback function used to process the result of a task.
   PostProcessCallback? get postProcessor => _onProcess;
@@ -92,7 +95,7 @@ class Task<T> {
   /// Create a task with its own computation.
   Task({
     required this.computation,
-    required this.onError,
+    this.onError,
     this.processFn,
   });
 
@@ -102,6 +105,7 @@ class Task<T> {
     data["computation"] = computation;
     data["error"] = onError;
     data["sender"] = _resultPort.sendPort;
+    data["ofError"] = _errorPort.sendPort;
     data["processing"] = processFn;
     data["processed"] = _processPort.sendPort;
     return data;
@@ -200,8 +204,9 @@ class TaskExecutor {
     // This is fine.
     await for (final task in tasks) {
       final computation = task["computation"];
-      final dynamic Function(dynamic, StackTrace?) error = task["error"];
+      final dynamic Function(dynamic, StackTrace?)? error = task["error"];
       final SendPort taskPort = task["sender"];
+      final SendPort errorPort = task["ofError"];
       final processor = task["processing"];
       final SendPort processed = task["processed"];
 
@@ -224,13 +229,20 @@ class TaskExecutor {
         // in an edge-case scenario at this point.
         taskPort.send(result);
       } catch (e) {
-        // This is fair enough.
-        taskPort.send(
-          error(
-            e,
-            e is Error ? e.stackTrace : null,
-          ),
-        );
+        //? If there is an error handler configured into this guy..
+        if (error != null) {
+          taskPort.send(
+            error(
+              e,
+              e is Error ? e.stackTrace : null,
+            ),
+          );
+        }
+
+        //? Then, use the error port.
+        else {
+          errorPort.send(e);
+        }
       }
     }
   }
@@ -246,13 +258,20 @@ class TaskExecutor {
       // This is fair enough.
       communicatorSendPort.send(task._toSerializable());
     } catch (e) {
-      // Complete with an error.
-      task._resultPort.sendPort.send(
-        task.onError(
-          e,
-          e is Error ? e.stackTrace : null,
-        ),
-      );
+      //? If there is an error handler configured into this guy..
+      if (task.onError != null) {
+        task._resultPort.sendPort.send(
+          task.onError!(
+            e,
+            e is Error ? e.stackTrace : null,
+          ),
+        );
+      }
+
+      //? Then, use the error port.
+      else {
+        task._errorPort.sendPort.send(e);
+      }
     }
   }
 
@@ -387,6 +406,17 @@ class TaskScheduler {
 
         // Call the onProcess callback with this result. Provided it exists.
         task._onProcess?.call(message);
+      },
+    );
+
+    //? Now, we listen on the error port so that we are able to complete this
+    //? with an error.
+    task._errorPort.listen(
+      (message) {
+        task._errorPort.close();
+
+        //? Now, dismiss this.
+        completer.completeError(message);
       },
     );
 

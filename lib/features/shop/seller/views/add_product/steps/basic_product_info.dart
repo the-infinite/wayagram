@@ -28,7 +28,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(addProductProvider(widget.uniqueKey));
     final wayaTheme = Theme.of(context);
-    print(viewModel.includeMeasurement);
+    debugPrint(viewModel.includeMeasurement.toString());
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -232,7 +232,7 @@ class _BasicProductInfoState extends ConsumerState<BasicProductInfo> {
                       WayaSelectField<String>(
                           height: 0.3,
                           uniqueKey: 'product-condition',
-                          label: "Product Conditon",
+                          label: "Product Condition",
                           value: viewModel.productCondition,
                           hintText: 'Select Product Condition',
                           items: ref

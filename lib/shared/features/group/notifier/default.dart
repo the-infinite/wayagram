@@ -233,7 +233,7 @@ class GroupNotifier extends ValueNotifier<int> {
   /// ```dart
   /// final group = await createGroup(name: 'My Group', description: 'A new group');
   /// if (group != null) {
-  ///   print('Group created successfully');
+  ///   debugPrint('Group created successfully');
   /// }
   /// ```
   Future<GroupModel?> createGroup(

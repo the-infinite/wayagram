@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
@@ -20,18 +21,13 @@ class CartState {
       this.isAddingDeliveryFee = false});
 
   CartState copyWith(
-      {CartData? cart,
-      bool? isLoading,
-      bool? isRequestingDelivery,
-      int? totalItem,
-      bool? isAddingDeliveryFee}) {
+      {CartData? cart, bool? isLoading, bool? isRequestingDelivery, int? totalItem, bool? isAddingDeliveryFee}) {
     return CartState(
         cart: cart ?? this.cart,
         isLoading: isLoading ?? this.isLoading,
         isAddingDeliveryFee: isAddingDeliveryFee ?? this.isAddingDeliveryFee,
         totalItem: totalItem ?? this.totalItem,
-        isRequestingDelivery:
-            isRequestingDelivery ?? this.isRequestingDelivery);
+        isRequestingDelivery: isRequestingDelivery ?? this.isRequestingDelivery);
   }
 }
 
@@ -41,8 +37,7 @@ class CartVm extends StateNotifier<CartState> {
   final WayaSecureDataSource _secureDataSource;
   final CartRepository _cartRepository;
 
-  CartVm(this.ref, this._cartRepository, this._secureDataSource)
-      : super(CartState());
+  CartVm(this.ref, this._cartRepository, this._secureDataSource) : super(CartState());
 
   Future<void> loadCart() async {
     try {
@@ -56,7 +51,7 @@ class CartVm extends StateNotifier<CartState> {
         getTotalProductQuantity();
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -121,7 +116,7 @@ class CartVm extends StateNotifier<CartState> {
               quantity: updatedProducts[j].quantity + count,
             );
             productAdded = true;
-            print("updating");
+            debugPrint("updating");
             await updateCartItem(id: productId, shopId: shopId);
             break;
           }
@@ -140,7 +135,7 @@ class CartVm extends StateNotifier<CartState> {
                 deliveryOptions: ''),
           );
           productAdded = true;
-          print("add item for a shop ");
+          debugPrint("add item for a shop ");
           final success = await postCartItem(id: productId, shopId: shopId);
 
           if (!success) return;
@@ -150,9 +145,7 @@ class CartVm extends StateNotifier<CartState> {
 
         final totalFee = updatedItems[i].products.fold<int>(
               0,
-              (sum, product) =>
-                  sum +
-                  (double.parse(product.unitPrice).toInt() * product.quantity),
+              (sum, product) => sum + (double.parse(product.unitPrice).toInt() * product.quantity),
             );
         updatedItems[i] = updatedItems[i].copyWith(totalFee: totalFee);
 
@@ -207,31 +200,21 @@ class CartVm extends StateNotifier<CartState> {
     getTotalProductQuantity();
     // Update cart
     //
-    print("fveveve");
-    print(state.cart?.toJson());
-    print("fveveve");
+    debugPrint(state.cart?.toJson().toString());
   }
 
-  void removeFromCart(
-      {required String productId,
-      required String shopId,
-      bool isNotWayaDeal = true}) async {
+  void removeFromCart({required String productId, required String shopId, bool isNotWayaDeal = true}) async {
     final existingCart = state.cart;
     if (existingCart == null) return;
-
-    print(productId);
-
-    print(existingCart.toJson());
-
+    debugPrint(productId);
+    debugPrint(existingCart.toJson().toString());
     final updatedItems = existingCart.items
         .map((item) {
           final updatedProducts = item.products
               .map((product) {
                 if (product.productId == productId) {
                   final newQuantity = product.quantity - 1;
-                  return newQuantity > 0
-                      ? product.copyWith(quantity: newQuantity)
-                      : null;
+                  return newQuantity > 0 ? product.copyWith(quantity: newQuantity) : null;
                 }
                 return product;
               })
@@ -240,9 +223,7 @@ class CartVm extends StateNotifier<CartState> {
 
           final totalFee = updatedProducts.fold<int>(
             0,
-            (sum, product) =>
-                sum +
-                (double.parse(product.unitPrice).toInt() * product.quantity),
+            (sum, product) => sum + (double.parse(product.unitPrice).toInt() * product.quantity),
           );
 
           return item.copyWith(products: updatedProducts, totalFee: totalFee);
@@ -272,8 +253,7 @@ class CartVm extends StateNotifier<CartState> {
     await decreaseCartItem(shopId: shopId, id: productId);
   }
 
-  Future<bool> postCartItem(
-      {required String id, required String shopId}) async {
+  Future<bool> postCartItem({required String id, required String shopId}) async {
     try {
       final userId = await _secureDataSource.getUserId();
 
@@ -286,23 +266,21 @@ class CartVm extends StateNotifier<CartState> {
       bool isSuccess = false;
       if (response.success) {
         isSuccess = true;
-        print(response.data);
+        debugPrint(response.data.toString());
       } else if (response.data['responseCode'] == 703) {
         isSuccess = false;
         removeFromCart(productId: id, shopId: shopId, isNotWayaDeal: false);
-        WayaSnackBar.showToast(
-            "You are not yet eligible to purchase another wayagram deal");
+        WayaSnackBar.showToast("You are not yet eligible to purchase another wayagram deal");
       }
 
       return isSuccess;
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return false;
     }
   }
 
-  Future<void> updateCartItem(
-      {required String id, required String shopId}) async {
+  Future<void> updateCartItem({required String id, required String shopId}) async {
     try {
       final userId = await _secureDataSource.getUserId();
 
@@ -312,15 +290,14 @@ class CartVm extends StateNotifier<CartState> {
         shopId: shopId,
       );
       if (response.success) {
-        print(response.data);
+        debugPrint(response.data.toString());
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
-  Future<void> decreaseCartItem(
-      {required String id, required String shopId}) async {
+  Future<void> decreaseCartItem({required String id, required String shopId}) async {
     try {
       final userId = await _secureDataSource.getUserId();
 
@@ -330,10 +307,10 @@ class CartVm extends StateNotifier<CartState> {
         shopId: shopId,
       );
       if (response.success) {
-        print(response.data);
+        debugPrint(response.data.toString());
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -350,13 +327,12 @@ class CartVm extends StateNotifier<CartState> {
             (productSum, product) => productSum + product.quantity,
           ),
     );
-    print(totalQuantity);
-    print(existingCart.toJson());
+    debugPrint(totalQuantity.toString());
+    debugPrint(existingCart.toJson().toString());
     state = state.copyWith(totalItem: totalQuantity);
   }
 
-  Future<void> deliveryRequest(
-      {required String shopId, required String address}) async {
+  Future<void> deliveryRequest({required String shopId, required String address}) async {
     try {
       state = state.copyWith(isRequestingDelivery: true);
       final userId = await _secureDataSource.getUserId();
@@ -367,12 +343,11 @@ class CartVm extends StateNotifier<CartState> {
         shopId: shopId,
       );
       if (response.success) {
-        WayaSnackBar.showToast(
-            "You have successfully requested for the delivery price");
-        print(response.data);
+        WayaSnackBar.showToast("You have successfully requested for the delivery price");
+        debugPrint(response.data.toString());
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isRequestingDelivery: false);
     }
@@ -394,10 +369,10 @@ class CartVm extends StateNotifier<CartState> {
   //         deliveryDate: deliveryDate,
   //         deliveryFee: deliveryFee);
   //     if (response.success) {
-  //       print(response.data);
+  //       debugPrint(response.data.toString());
   //     }
   //   } catch (e) {
-  //     print(e);
+  //     debugPrint(e.toString());
   //   } finally {
   //     state = state.copyWith(isAddingDeliveryFee: false);
   //   }

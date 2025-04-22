@@ -52,7 +52,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
       if (businessProfile.success) {
         businessData =
             BusinessAccountData.fromJson(businessProfile.data['data']);
-        print(businessProfile.data);
+        debugPrint(businessProfile.data);
         state = state.copyWith(isPersonalNotUpgradedToBusiness: false);
       } else {
         if (shopMemberShops != null && shopMemberShops.isNotEmpty) {
@@ -102,12 +102,12 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
         sharedShop = sharedShopResponse.data;
         state = state.copyWith(sharedShop: sharedShopResponse.data);
 
-        //print(response.data);
+        //debugPrint(response.data.toString());
       }
 
       return sharedShop;
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
       return null;
     }
   }
@@ -127,7 +127,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
       fetchData(shopId: shop);
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -173,7 +173,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
 
       return shop;
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
       return null;
     }
   }
@@ -190,7 +190,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
       }
       return PaginatedResult<Order>(hasNextPage: hasNextPage, items: orders);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     } finally {}
   }
@@ -213,7 +213,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
       }
       return PaginatedResult(hasNextPage: hasNextPage, items: sellerProducts);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     } finally {
       state = state.copyWith(isLoading: false);
@@ -238,7 +238,7 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
       }
       return PaginatedResult(hasNextPage: hasNextPage, items: sellerProducts);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     } finally {
       state = state.copyWith(isLoading: false);

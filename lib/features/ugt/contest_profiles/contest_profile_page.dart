@@ -74,11 +74,11 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
 
       if (viewModel.getLoggedInUserId() == model?.contestApplicant?.userId) {
         model?.stages?.forEach((element) {
-          //  print("i am looping");
+          //  debugPrint("i am looping");
           if (element.entryType?.toLowerCase() != "free" &&
               element.isActive == true &&
               element.hasPaid != true) {
-            //  print("looping and have picked one");
+            //  debugPrint("looping and have picked one");
 
             selectedStage = element;
             Future.delayed(Duration(seconds: 2), () {
@@ -217,7 +217,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                         ),
                         child: GestureDetector(
                           onTap: () {
-                            print("Edit Profile");
+                            debugPrint("Edit Profile");
                             WayaNav.toNamed('/edit-profile-contest');
                           },
                           child: Text(
@@ -255,7 +255,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
             const Gap(15),
             GestureDetector(
               onTap: () {
-                print("Edit Profile");
+                debugPrint("Edit Profile");
                 WayaNav.toNamed('/edit-profile-contest');
               },
               child: Text(model?.contestApplicant?.fullName ?? "",

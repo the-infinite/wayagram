@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
@@ -27,7 +28,7 @@ class PromotionVm extends StateNotifier<PromotionState> {
 
       List<PromotionPlanDoc> promoPlans = [];
       if (response.success) {
-        print(response.data);
+        debugPrint(response.data.toString());
         PromotionPlanResponse plansResponse =
             PromotionPlanResponse.fromJson(response.data);
         promoPlans = plansResponse.data.docs;
@@ -35,7 +36,7 @@ class PromotionVm extends StateNotifier<PromotionState> {
       }
       return promoPlans;
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
       return null;
     }
   }
@@ -63,7 +64,7 @@ class PromotionVm extends StateNotifier<PromotionState> {
         }
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     } finally {
       state = state.copyWith(loadingPromos: false);
     }
@@ -74,10 +75,10 @@ class PromotionVm extends StateNotifier<PromotionState> {
       final response = await _repository.getSinglePromotion(promoId: id);
 
       if (response.success) {
-        print(response.data);
+        debugPrint(response.data.toString());
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -169,7 +170,7 @@ class PromotionVm extends StateNotifier<PromotionState> {
 
       return metadata;
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
       return null;
     }
   }

@@ -283,13 +283,13 @@ class MomentVm extends StateNotifier<MomentState> {
     String color = '';
     String fontType = '';
 
-    print('Submitting moment:');
-    print('Text: $text');
-    print('Background Color: $backgroundColor');
-    print('Text Style: $textStyle');
-    print('Media Type: $mediaType');
-    print('Has Media: ${selectedAsset != null}');
-    print('Caption: $caption');
+    debugPrint('Submitting moment:');
+    debugPrint('Text: $text');
+    debugPrint('Background Color: $backgroundColor');
+    debugPrint('Text Style: $textStyle');
+    debugPrint('Media Type: $mediaType');
+    debugPrint('Has Media: ${selectedAsset != null}');
+    debugPrint('Caption: $caption');
 
     state = state.copyWith(isCreatingMoment: true);
     if (state.type == StatusType.text) {
@@ -516,7 +516,7 @@ class MomentVm extends StateNotifier<MomentState> {
 
       return moments?[0];
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
       return null;
     }
   }
@@ -546,7 +546,7 @@ class MomentVm extends StateNotifier<MomentState> {
             ),
             message: 'Thank you for reporting. We take your feedback seriously',
             buttonText: 'Dismiss');
-        print(response.data);
+        debugPrint(response.data.toString());
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -571,10 +571,10 @@ class MomentVm extends StateNotifier<MomentState> {
   //         comment: state.isComment);
 
   //     if (response.success) {
-  //       print(response.data);
+  //       debugPrint(response.data.toString());
   //     }
   //   } catch (error) {
-  //     print(error);
+  //     debugPrint(error.toString());
   //   }
   // }
 

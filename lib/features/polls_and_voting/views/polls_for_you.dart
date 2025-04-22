@@ -401,7 +401,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
               splashFactory: NoSplash.splashFactory,
               onTap: onTap,
               //     (){
-              //   print('DIALA CHECKING DATE $dateCheck');
+              //   debugPrint('DIALA CHECKING DATE $dateCheck');
               //   WayaUtils.showModalSheet(
               //     ctx,
               //     child: VoteOptionModal(voteFee:  voteFee,choiceId: choiceId,

@@ -195,6 +195,39 @@ class ChatInputController {
     return null;
   }
 
+  /// A helper function that can be used to close the recording and then delete
+  /// the file if it has already been made.
+  Future<bool> cancelRecording() async {
+    try {
+      //? First, obtain the URI we need.
+      final result = await _soundRecorder!.stop();
+
+      //? If this is null, just stop at this point with a null.
+      if (result == null) return false;
+
+      //? Now, we obtain the file in that location.
+      final recordedFile = File(result);
+
+      //? After obtaining this...
+      if (!await recordedFile.exists()) {
+        return true;
+      }
+
+      //? After moving forward.
+      _recorderState.value = _soundRecorder!.recorderState;
+      _currentType.value = MessageType.text;
+
+      //? Then we move forward.
+      await recordedFile.delete();
+
+      //? Now, return the recorded file.
+      return !await recordedFile.exists();
+    } catch (_) {}
+
+    //? Return this issue.
+    return false;
+  }
+
   /// A helper function used to set the message that this input widget is
   /// supposed to be replying to.
   void quoteMessage(MessageModel? message, [bool isEditing = false, String? momentId]) {
@@ -561,11 +594,9 @@ class ChatInputWidget extends StatelessWidget {
                           ? const SizedBox()
                           : ValueListenableBuilder(
                               valueListenable: controller._recorderState,
-                              builder: (context, _, __) {
-                                return ChatVoiceMessageInput(
-                                  controller: controller,
-                                );
-                              },
+                              builder: (context, _, __) => ChatVoiceMessageInput(
+                                controller: controller,
+                              ),
                             ),
                       secondChild: TextField(
                         maxLines: 5,

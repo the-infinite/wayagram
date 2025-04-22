@@ -57,7 +57,7 @@ class SellerOrdersVm extends StateNotifier<SellerOrdersState> {
       }
       return PaginatedResult<Order>(hasNextPage: hasNextPage, items: orders);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     } finally {}
   }

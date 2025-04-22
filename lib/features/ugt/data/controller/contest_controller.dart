@@ -153,10 +153,10 @@ class ContestController extends GetxController {
       var result = await contestRepo.getCategory();
 
       loadingAllCategory(false);
-      print("allCategoryFred ${result.toString()}");
+      debugPrint("allCategoryFred ${result.toString()}");
 
       loadedGetAllCategory.value = allCategoryDetailModelFromJson(result.toString());
-      print("allCategoryFred ${loadedGetAllCategory.value.data![0].name}");
+      debugPrint("allCategoryFred ${loadedGetAllCategory.value.data![0].name}");
     } catch (e) {
       loadingAllCategory(false);
     }
@@ -200,11 +200,11 @@ class ContestController extends GetxController {
           formRequirements: formRequirements);
          creating(false);
 
-      print("successFred");
+      debugPrint("successFred");
 
     } catch (e) {
       creating(false);
-      print("failed ${e.toString()}");
+      debugPrint("failed ${e.toString()}");
     }
   }*/
 }

@@ -161,7 +161,7 @@ class AddEventState {
 
   // add the creation model
   AddEventRequestModel get addEvent {
-    print("wfefer");
+    debugPrint("wfefer");
     return AddEventRequestModel(
         title: title.text,
         organizerName: organizer.text,
@@ -186,7 +186,7 @@ class AddEventState {
 
   //>
   UpdateEventRequestModel get updateEvent {
-    print("wfefer");
+    debugPrint("wfefer");
     return UpdateEventRequestModel(
       title: title.text,
       location: location.toLowerCase(),

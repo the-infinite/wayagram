@@ -31,7 +31,7 @@ class OrderVm extends StateNotifier<OrderState> {
 
       return PaginatedResult<Order>(hasNextPage: hasNextPage, items: orders);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     } finally {
       state = state.copyWith(isLoading: false);
@@ -59,7 +59,7 @@ class OrderVm extends StateNotifier<OrderState> {
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }

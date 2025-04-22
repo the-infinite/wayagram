@@ -338,7 +338,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                     fontSize: 12.sp,
                     height: 40,
                     callback: () {
-                      //  print(widget.model.endDate ?? "");
+                      //  debugPrint(widget.model.endDate ?? "");
                       if (isPresentIsPast(widget.model.endDate ?? "")) {
                         WayaSnackBar.showToast("Contest has ended");
                         return;

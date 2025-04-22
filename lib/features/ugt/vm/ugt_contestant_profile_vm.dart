@@ -1,41 +1,37 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_single_contestant_profile_model.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 
-class UgtContestantProfileVm
-    extends StateNotifier<List<SingleContestantPosts>> {
+class UgtContestantProfileVm extends StateNotifier<List<SingleContestantPosts>> {
   final ContestRepo _contestRepository;
   final WayaLocalDataSource _localDataSource;
 
-  UgtContestantProfileVm(this._contestRepository, this._localDataSource)
-      : super([]);
+  UgtContestantProfileVm(this._contestRepository, this._localDataSource) : super([]);
 
-  int _page = 1; // Pagination tracking
+  int page = 1; // Pagination tracking
   bool isLoading = false;
 
   // Simulate fetching paginated posts
   Future<void> fetchSingleContestantPosts(String id) async {
-    
     if (isLoading) return;
     isLoading = true;
 
     try {
-      final response =
-          await _contestRepository.fetchSingleContestantGallery(id);
+      final response = await _contestRepository.fetchSingleContestantGallery(id);
       List<SingleContestantPosts> contestList = [];
       if (response.success) {
-        SingleContestantPostsBase responseModel =
-            SingleContestantPostsBase.fromJson(response.data);
+        SingleContestantPostsBase responseModel = SingleContestantPostsBase.fromJson(response.data);
         contestList = responseModel.data?.docs ?? [];
         //  state = [...state, ...contestList];
         state = [...contestList];
-        _page++;
+        page++;
         isLoading = false;
       }
       // return contestList;
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       isLoading = false;
     }
@@ -43,12 +39,12 @@ class UgtContestantProfileVm
 
   void toggleLike(String postId, String galleryId) {
     // Contest? contestPost = null;
-    print("Contest for you");
+    debugPrint("Contest for you");
     //state.copyWith(myPostList: contestList)
     state = state.map((post) {
-      print("i dey here 11");
+      debugPrint("i dey here 11");
       if (post.id == galleryId) {
-        print("i dey here 2");
+        debugPrint("i dey here 2");
         bool isMyLiked = post.hasLiked ?? false;
         // if (isMyLiked) {
         doOnLikeLike(postId, galleryId);
@@ -64,19 +60,16 @@ class UgtContestantProfileVm
   }
 
   void doOnLikeLike(String postId, String galleryId) async {
-    // print("do like stuff");
-    final response = await _contestRepository.likeContest({
-      "profileId": _localDataSource.getUserId().toString(),
-      "contestId": postId,
-      "galleryId": galleryId
-    });
+    // debugPrint("do like stuff");
+    final response = await _contestRepository.likeContest(
+        {"profileId": _localDataSource.getUserId().toString(), "contestId": postId, "galleryId": galleryId});
 
     if (!response.success) {
-      //  print("do like stuff Fail");
+      //  debugPrint("do like stuff Fail");
       state = state.map((post) {
-        print("i dey here 3");
+        debugPrint("i dey here 3");
         if (post.id == postId) {
-          print("i dey here 3");
+          debugPrint("i dey here 3");
           bool isMyLiked = post.hasLiked ?? false;
           return post.copyWith(
             hasLiked: !isMyLiked,
@@ -89,7 +82,7 @@ class UgtContestantProfileVm
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
       // WayaSnackBar.showToast("Contest already liked");
-      print("Contest already liked");
+      debugPrint("Contest already liked");
     }
   }
 
@@ -97,9 +90,9 @@ class UgtContestantProfileVm
     // Contest? contestPost = null;
 
     state = state.map((post) {
-      print("i dey here wwww");
+      debugPrint("i dey here wwww");
       if (post.id == postId) {
-        print("i dey here pppppp");
+        debugPrint("i dey here pppppp");
         return post.copyWith(
           // isLiked: true,
           shares: post.shares! + 1,
@@ -107,20 +100,20 @@ class UgtContestantProfileVm
       }
       return post;
     }).toList();
-    print("i dey here pppppp");
+    debugPrint("i dey here pppppp");
     //  state = state.copyWith(myPostList: [...list]);
-    doshare(postId);
+    doShare(postId);
   }
 
-  void doshare(String postId) async {
-    // print("do like stuff");
+  void doShare(String postId) async {
+    // debugPrint("do like stuff");
     final response = await _contestRepository.shareContest({
       "profileId": _localDataSource.getUserId().toString(),
-      "contestId": postId
+      "contestId": postId,
     });
 
     if (!response.success) {
-      //  print("do like stuff Fail");
+      //  debugPrint("do like stuff Fail");
 
       state = state.map((post) {
         if (post.id == postId) {
@@ -133,7 +126,7 @@ class UgtContestantProfileVm
       //  state = state.copyWith(myPostList: [...list]);
       //  WayaSnackBar.showToast("Unable to like, Please try again");
     } else {
-      print("do like stuff Success");
+      debugPrint("do like stuff Success");
     }
   }
 }
@@ -142,8 +135,6 @@ class UgtContestantProfileVm
   return null;
 }); */
 // Provider
-final ugtContestantProfileVm =
-    StateNotifierProvider<UgtContestantProfileVm, List<SingleContestantPosts>>(
-        (ref) {
+final ugtContestantProfileVm = StateNotifierProvider<UgtContestantProfileVm, List<SingleContestantPosts>>((ref) {
   return UgtContestantProfileVm(ContestRepo(), WayaLocalDataSource());
 });

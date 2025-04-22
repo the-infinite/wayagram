@@ -38,7 +38,7 @@ void main() async {
   //? First, set up all Firebase services so we can report all crashes to firebase,
   //? have analytics, crashlytics, and push notifications set up.
   //? needed the widget reference
-  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
 
   //? splash screen preserving the state until after initialization
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);

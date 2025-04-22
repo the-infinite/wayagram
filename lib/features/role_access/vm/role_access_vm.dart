@@ -24,8 +24,7 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
   late TextEditingController confirmPassword;
   // final _logger = getLogger('ContestRepo');
 
-  RoleAccessVm(this._roleAccessRepository, this._localDataSource)
-      : super(RoleAccessState()) {
+  RoleAccessVm(this._roleAccessRepository, this._localDataSource) : super(RoleAccessState()) {
     getRoles();
     firstName = TextEditingController();
     lastName = TextEditingController();
@@ -48,14 +47,12 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
   }
 
   Future<void> getShops() async {
-    final response = await _roleAccessRepository
-        .getShopByUserId(_localDataSource.getUserId().toString());
+    final response = await _roleAccessRepository.getShopByUserId(_localDataSource.getUserId().toString());
     if (response.success == true) {
       ShopModelBase responseModel = ShopModelBase.fromJson(response.data);
 
       state = state.copyWith(
-          originalListShop: responseModel.data?.shops ?? [],
-          listShop: getShopsSelect(responseModel.data?.shops ?? []));
+          originalListShop: responseModel.data?.shops ?? [], listShop: getShopsSelect(responseModel.data?.shops ?? []));
 
       // contestList = responseModel.data?.docs ?? [];
     } else {
@@ -74,13 +71,11 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
   ) async {
     isLoading.value = true;
     var map = {
-      // "userId": _localDataSource.getUserId().toString(),
       "email": email.text,
       "shopId": shopId,
-      // "username": "ChimuOs",
       "roles": [roleId]
     };
-    print(map);
+    debugPrint(map.toString());
     WayaRequestResponse response;
     if (isEditing) {
       response = await _roleAccessRepository.editMember(memberId, map);
@@ -110,21 +105,16 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
     }
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _roleAccessRepository.getMemberList(
-          _localDataSource.getUserId().toString(), isFirst ? 1 : state.page);
+      final response =
+          await _roleAccessRepository.getMemberList(_localDataSource.getUserId().toString(), isFirst ? 1 : state.page);
       state = state.copyWith(isLoading: false);
       if (response.success == true) {
         ShopMemberBase responseModel = ShopMemberBase.fromJson(response.data);
-        state = state.copyWith(
-            isLastPage: responseModel.data?.hasNextPage == true ? false : true);
+        state = state.copyWith(isLastPage: responseModel.data?.hasNextPage == true ? false : true);
         if (isFirst) {
-          state = state.copyWith(
-              listMember: responseModel.data?.docs ?? [], page: 1);
+          state = state.copyWith(listMember: responseModel.data?.docs ?? [], page: 1);
         } else {
-          state = state.copyWith(listMember: [
-            ...state.listMember,
-            ...responseModel.data?.docs ?? []
-          ]);
+          state = state.copyWith(listMember: [...state.listMember, ...responseModel.data?.docs ?? []]);
         }
         state = state.copyWith(page: state.page + 1);
         // contestList = responseModel.data?.docs ?? [];
@@ -133,21 +123,18 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
       }
     } catch (e) {
       state = state.copyWith(isLoading: false);
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
   Future<void> getRoleManagementMemberList() async {
     state = state.copyWith(isLoading: true);
-    final response = await _roleAccessRepository
-        .getRoleManagementMemberList(_localDataSource.getUserId().toString());
+    final response = await _roleAccessRepository.getRoleManagementMemberList(_localDataSource.getUserId().toString());
     state = state.copyWith(isLoading: false);
     if (response.success == true) {
-      RoleManagementModelBase responseModel =
-          RoleManagementModelBase.fromJson(response.data);
+      RoleManagementModelBase responseModel = RoleManagementModelBase.fromJson(response.data);
 
-      state =
-          state.copyWith(listRoleManagement: responseModel.data?.roles ?? []);
+      state = state.copyWith(listRoleManagement: responseModel.data?.roles ?? []);
 
       // contestList = responseModel.data?.docs ?? [];
     } else {
@@ -157,24 +144,19 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
 
   List<Select> getRolesSelect() {
     return state.listRoleModel.asMap().entries.map((entries) {
-      return Select(
-          value: entries.value.roleId.toString(),
-          label: entries.value.name ?? "id");
+      return Select(value: entries.value.roleId.toString(), label: entries.value.name ?? "id");
     }).toList();
   }
 
   List<Select> getShopsSelect(List<ShopModel> list) {
     return list.asMap().entries.map((entries) {
-      return Select(
-          value: entries.value.id.toString(),
-          label: entries.value.name ?? "id");
+      return Select(value: entries.value.id.toString(), label: entries.value.name ?? "id");
     }).toList();
   }
 
-  Future<bool> activateDeactivateShopMember(ValueNotifier<bool> isLoading,
-      String shopMemberId, bool isActive, VoidCallback onTap) async {
-    final response = await _roleAccessRepository
-        .activateDeactivateShopMember(shopMemberId, {"isActive": !isActive});
+  Future<bool> activateDeactivateShopMember(
+      ValueNotifier<bool> isLoading, String shopMemberId, bool isActive, VoidCallback onTap) async {
+    final response = await _roleAccessRepository.activateDeactivateShopMember(shopMemberId, {"isActive": !isActive});
     isLoading.value = false;
     getAllMembers(true);
     if (response.success) {
