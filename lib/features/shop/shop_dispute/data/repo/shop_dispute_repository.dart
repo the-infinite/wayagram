@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
@@ -32,13 +33,12 @@ class ShopDisputeRepository extends BaseRepository {
     if (media != null) payload['media'] = media;
     if (metadata.isNotEmpty) payload['metadata'] = metadata;
 
-    print(payload);
+    debugPrint(payload.toString());
 
     return post("$serviceUrl/client/dispute", payload);
   }
 
-  Future<WayaRequestResponse> getUserDisputes(
-      { int? page = 1, int? limit = 10}) async {
+  Future<WayaRequestResponse> getUserDisputes({int? page = 1, int? limit = 10}) async {
     return get("$serviceUrl/client/dispute?limit=1000&page=$page");
   }
 
@@ -76,14 +76,12 @@ class ShopDisputeRepository extends BaseRepository {
     if (media != null) payload['media'] = media;
     if (metadata.isNotEmpty) payload['metadata'] = metadata;
 
-    print(payload);
+    debugPrint(payload.toString());
 
     return patch("$serviceUrl/client/dispute/$disputeId", payload);
   }
 
-  Future<WayaRequestResponse> escalate(
-      {required String id, required String escalatedBy}) async {
-    return post("$serviceUrl/client/dispute/escalate-to-mediator/$id",
-        {"escalatedBy": escalatedBy});
+  Future<WayaRequestResponse> escalate({required String id, required String escalatedBy}) async {
+    return post("$serviceUrl/client/dispute/escalate-to-mediator/$id", {"escalatedBy": escalatedBy});
   }
 }

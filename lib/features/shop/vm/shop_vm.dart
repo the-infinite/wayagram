@@ -39,7 +39,7 @@ class ShopVm extends StateNotifier<ShopState> {
       return SelectTypePaginatedResult(
           items: selectCategories, totalPages: state.totalNoOfCategoryPages);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     }
   }
@@ -60,7 +60,7 @@ class ShopVm extends StateNotifier<ShopState> {
       required String review,
       required BuildContext context}) async {
     try {
-      print(productId);
+      debugPrint(productId);
 
       state = state.copyWith(isReviewing: true);
       final response = await _repository.createRating(
@@ -72,7 +72,7 @@ class ShopVm extends StateNotifier<ShopState> {
 
       bool isSuccess = false;
       if (response.success) {
-        print(response.data);
+        debugPrint(response.data.toString());
         isSuccess = true;
       } else {
         isSuccess = false;
@@ -80,7 +80,7 @@ class ShopVm extends StateNotifier<ShopState> {
 
       return isSuccess;
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
       return null;
     } finally {
       state = state.copyWith(isReviewing: false);
@@ -95,10 +95,10 @@ class ShopVm extends StateNotifier<ShopState> {
         ReviewRepsonseModel responseModel =
             ReviewRepsonseModel.fromJson(response.data);
         state = state.copyWith(reviews: responseModel.data);
-        print(response.data);
+        debugPrint(response.data.toString());
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -118,7 +118,7 @@ class ShopVm extends StateNotifier<ShopState> {
       }
       return PaginatedResult(hasNextPage: hasNextPage, items: allProducts);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     } finally {
       state = state.copyWith(isLoading: false);
@@ -142,7 +142,7 @@ class ShopVm extends StateNotifier<ShopState> {
       }
       return PaginatedResult(hasNextPage: hasNextPage, items: allProducts);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     } finally {
       state = state.copyWith(isLoading: false);
@@ -157,10 +157,10 @@ class ShopVm extends StateNotifier<ShopState> {
         ShopMetricsResponse shopMetricResponse =
             ShopMetricsResponse.fromJson(response.data);
         state = state.copyWith(sellerMetrics: shopMetricResponse.data);
-        print(response.data);
+        debugPrint(response.data.toString());
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 

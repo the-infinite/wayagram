@@ -87,9 +87,7 @@ class DonationVm extends StateNotifier<DonationState> {
     List<DocType> e = List.from(state.donationImage);
     e = e.where((i) => i.type != 'donation-image').toList();
     state = state.copyWith(donationImage: e);
-
-    print("efwefw");
-    print(state);
+    debugPrint(state.toString());
   }
 
   void selectDonationCategory(String value) {
@@ -144,15 +142,15 @@ class DonationVm extends StateNotifier<DonationState> {
       final response = await _donationRepository.getDonationBasedOnCategory(
           categoryName);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
         state = state.copyWith(myDonationDocs: responseModel.data?.docs);
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -168,7 +166,7 @@ class DonationVm extends StateNotifier<DonationState> {
 
       state = state.copyWith(selected: selectedList);
     }
-    print(cat.value);
+    debugPrint(cat.value);
 
     return state.selected;
   }
@@ -186,7 +184,7 @@ class DonationVm extends StateNotifier<DonationState> {
       } else if (response.data['error'] == 'Insufficient wallet balance') {
         WayaUtils.showModalSheet(ctx, child: DonationUnSuccessfulModal());
 
-        print('CHECKINGGGGG');
+        debugPrint('CHECKINGGGGG');
       }
     } catch (e) {
       _logger.e(e);
@@ -251,15 +249,15 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.getDonatedDonations(page);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         AppliedDonationModel responseModel = AppliedDonationModel.fromJson(response.data);
         state = state.copyWith(appliedDonationDocs: responseModel.data?.docs);
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -307,7 +305,7 @@ class DonationVm extends StateNotifier<DonationState> {
       //? If it failed...
       else {
         _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        print('Edit campaign');
+        debugPrint('Edit campaign');
         _logger.i(response.data['data']);
       }
     } catch (e) {
@@ -371,7 +369,7 @@ class DonationVm extends StateNotifier<DonationState> {
         //reset();
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -383,15 +381,15 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.getMyCampaigns(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
         state = state.copyWith(myDonationDocs: responseModel.data?.docs);
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -401,8 +399,8 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.getApprovedDonation(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
@@ -410,7 +408,7 @@ class DonationVm extends StateNotifier<DonationState> {
         state = state.copyWith(approvedDonations: responseModel.data?.docs);
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -420,15 +418,15 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.getAppliedDonation(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
         state = state.copyWith(myDonationDocs: responseModel.data?.docs);
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -438,15 +436,15 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.getAppliedDonation(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
         state = state.copyWith(myDonationDocs: responseModel.data?.docs);
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -456,8 +454,8 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.getRejectedDonation(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
@@ -465,7 +463,7 @@ class DonationVm extends StateNotifier<DonationState> {
         state = state.copyWith(rejectedDonations: responseModel.data?.docs);
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -475,8 +473,8 @@ class DonationVm extends StateNotifier<DonationState> {
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.getMyKYC(ConversationState.self.id);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         KycModel responseModel = KycModel.fromJson(response.data);
@@ -487,29 +485,29 @@ class DonationVm extends StateNotifier<DonationState> {
             kycMessage: responseModel.message);
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
 
 
   Future<void> getSingleDonation(String campaignId) async {
-    print('Fetching saved posts...');
+    debugPrint('Fetching saved posts...');
 
     try {
       // API call
       state = state.copyWith(isLoading: true);
       final response = await _donationRepository.getMyCampaigns(campaignId);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
         state = state.copyWith(myDonationDocs: responseModel.data?.docs);
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -523,7 +521,7 @@ class DonationVm extends StateNotifier<DonationState> {
 
       return donation;
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
       return null;
     }
   }
@@ -556,22 +554,22 @@ class DonationVm extends StateNotifier<DonationState> {
 */
 
 // Future<void> getAllDonation() async {
-  //   print('Fetching saved posts...');
+  //   debugPrint('Fetching saved posts...');
   //
   //   try {
   //     // API call
   //     state = state.copyWith(isLoading: true);
   //     final response = await _donationRepository.getAllCampaigns();
   //     state = state.copyWith(isLoading: false);
-  //     print('API Response: ${response.data}');
-  //     print('Status Code: ${response.statusCode}');
+  //     debugPrint('API Response: ${response.data}');
+  //     debugPrint('Status Code: ${response.statusCode}');
   //
   //     if (response.success) {
   //       AllDonationModel responseModel = AllDonationModel.fromJson(response.data);
   //       state = state.copyWith(allDonationDocs: responseModel.data?.docs);
   //     } else {}
   //   } catch (e) {
-  //     print(e);
+  //     debugPrint(e.toString());
   //   } finally {}
   // }
 }

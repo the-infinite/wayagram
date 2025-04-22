@@ -55,7 +55,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
    final  viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
-   print('DONATION ARGS $args');
+   debugPrint('DONATION ARGS $args');
 
    // Filter the allDonations
    final filteredAllDonations = WayaUtils.search<AllDonationDocs>(
@@ -90,7 +90,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
             callback: () async{
 
               await ref.read(donationVmProvider.notifier).getMyKYC();
-              print('KYc STATUS ==> ${viewModel.kycStatus}');
+              debugPrint('KYc STATUS ==> ${viewModel.kycStatus}');
               if (ConversationState.self.accountType == UserAccountType.personal) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   WayaUtils.showNotice(
@@ -167,7 +167,7 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                   donationCount: donation.donationCount,
                   rangeRatio: ratioLeft,
                   onTap: (){
-                    print('MY RATIO $ratioLeft');
+                    debugPrint('MY RATIO $ratioLeft');
                     WayaNav.toNamed('/donationDetails',
                         arguments: {
                           'title':'${donation.title?.capitalizeFirst}',

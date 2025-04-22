@@ -183,7 +183,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                       ? () async {
 
                           if (_formKey.currentState!.validate()) {
-                            print('TEST BUTTOn');
+                            debugPrint('TEST BUTTOn');
                             ref
                                 .read(loginVmProvider.notifier)
                                 .onSubmit(ref, isBusinessLogin: false);

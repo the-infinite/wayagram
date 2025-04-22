@@ -65,7 +65,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                       );
                     }else if (!_formKey.currentState!.validate()) {
                       WayaNav.toNamed("/poll-summary");
-                      print('CREATE POLL');
+                      debugPrint('CREATE POLL');
                     } else {
                       WayaNav.toNamed("/poll-summary");
                     }

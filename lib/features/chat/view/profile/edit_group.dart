@@ -73,7 +73,7 @@ class _EditGroupScreenState extends ConsumerState<EditChatGroupScreen> {
               final result = await notifier.updateGroupInfo(
                 widget.chatId,
                 nameController.text,
-                descriptionController.text,
+                //descriptionController.text,
               );
 
               //? This is fine.
@@ -114,17 +114,6 @@ class _EditGroupScreenState extends ConsumerState<EditChatGroupScreen> {
             // Some space.
             SizedBox(height: 20.h),
 
-            //? Section title.
-            Text(
-              'Group Information',
-              style: theme.textTheme.titleSmall?.copyWith(
-                fontSize: 14.sp,
-                color: theme.colorScheme.greyColor400,
-              ),
-            ),
-
-            // More space
-            SizedBox(height: 10.h),
 
             //? The name of the group.
             WayaFormField(

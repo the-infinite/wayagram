@@ -305,7 +305,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
 
               WayaButton(
                 callback: () {
-                  print("date date ID: ${widget.post.startDate ?? ""}");
+                  debugPrint("date date ID: ${widget.post.startDate ?? ""}");
                   if (widget.post.status == "CLOSED") {
                     WayaNav.toNamed(EndedContestPage.route, arguments: {
                       'id': widget.post.id,
@@ -506,7 +506,7 @@ bool isCurrentDateBetween(
 
     return currentDate.isAfter(startDate) && currentDate.isBefore(endDate);
   } catch (e) {
-    print("Invalid date format: $e");
+    debugPrint("Invalid date format: $e");
     return false;
   }
 }

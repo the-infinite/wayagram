@@ -153,7 +153,7 @@ class EventDateWidgetVm extends StateNotifier<EventDateWidgetState> {
         );
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 }

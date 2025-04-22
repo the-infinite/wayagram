@@ -17,7 +17,7 @@ class AddDocumentWidgetVm extends ChangeNotifier {
         File file = File(pickedFile.path);
         addFile(file);
       } else {
-        print('No image selected.');
+        debugPrint('No image selected.');
       }
       notifyListeners();
     } else {
@@ -28,7 +28,7 @@ class AddDocumentWidgetVm extends ChangeNotifier {
         addFile(file);
       } else {
         // User canceled the picker
-        print('No image selected.');
+        debugPrint('No image selected.');
       }
       notifyListeners();
     }
