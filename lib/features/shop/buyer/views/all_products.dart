@@ -60,8 +60,8 @@ class _AllProductsState extends ConsumerState<AllProducts> {
         ],
         searchController.text);
 
-     final searchFilteredWayaProducts = WayaUtils.search<Product>(
-      allWayaDealProducts,
+    final searchFilteredWayaProducts = WayaUtils.search<Product>(
+        allWayaDealProducts,
         [
           'id',
           'deliveryAddress',
@@ -71,7 +71,7 @@ class _AllProductsState extends ConsumerState<AllProducts> {
           'materialType',
           'description'
         ],
-        searchController.text);   
+        searchController.text);
 
     // category filter
     final categoriesFilteredProducts = searchFilteredProducts.where((prod) {
@@ -82,7 +82,8 @@ class _AllProductsState extends ConsumerState<AllProducts> {
       return true;
     }).toList();
 
-      final categoriesFilteredWayaProducts = searchFilteredWayaProducts.where((prod) {
+    final categoriesFilteredWayaProducts =
+        searchFilteredWayaProducts.where((prod) {
       if (categories.isNotEmpty && !categories.contains(prod.categoryId)) {
         return false;
       }

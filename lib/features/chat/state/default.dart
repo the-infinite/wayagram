@@ -15,6 +15,7 @@ class ConversationState {
   final List<ChatModel> conversations;
   final List<ChatModel> archived;
   final List<ChatUser> blocked;
+
   final bool inArchived;
 
   //? For chats.
@@ -160,6 +161,31 @@ class ConversationState {
   /// A helper function used to check if a user is blocked by using the current
   /// list of blocked users.
   bool isBlocked(String userId) => blocked.any((user) => user.userId == userId);
+  bool isMuted(String id) => conversations.any((chat) {
+        //? looping to get the right chat member first
+        for (var model in chat.chatMembers) {
+          //? checking if it same chat id, found out the position changes
+          if (model.chatId == id) {
+            //? checking if the user id is the same as the current user
+            if (model.userId == ConversationState.self.id) {
+              //?if null means it could be muted, i had to check if the date is past or not
+              if (model.mutedUntil != null) {
+                //? format the date
+                DateTime targetTime = model.mutedUntil!;
+
+                //? Current time (in UTC)
+                DateTime now = DateTime.now().toUtc();
+
+                //? Check if target time  is after the current time
+
+                return targetTime.isAfter(now);
+              }
+            }
+          }
+        }
+
+        return false;
+      });
 
   /// Clone this conversation but change a little bit of details about it.
   ConversationState copyWith({

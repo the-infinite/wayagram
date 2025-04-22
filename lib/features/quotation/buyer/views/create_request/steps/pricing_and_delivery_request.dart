@@ -41,7 +41,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
     final viewModel = ref.watch(createRequestProvider);
     final regionsData = ref.watch(regionsProvider);
 
-    print(viewModel.maxDistance.text);
+    debugPrint(viewModel.maxDistance.text);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,

@@ -79,9 +79,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
     List<DocType> e = List.from(state.eventImage);
     e = e.where((i) => i.type != 'event-image').toList();
     state = state.copyWith(eventImage: e);
-
-    print("efwefw");
-    print(state);
+    debugPrint(state.toString());
   }
 
   bool isStartDateAfterEndDate(String startDate, String endDate) {
@@ -181,7 +179,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
         return response.success;
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }

@@ -57,12 +57,8 @@ class DonationRepository extends BaseRepository {
   // }
 
   Future<WayaRequestResponse> getAllCampaigns(int page, [int limit = 15, String? organizerId]) {
-    return get("$serviceUrl/client/campaigns?limit=$limit&page=$page&status=live&status=live&${organizerId != null ? '&organizerId=$organizerId' : ''}");
+    return get("$serviceUrl/client/campaigns?limit=$limit&page=$page&status=live&${organizerId != null ? '&organizerId=$organizerId' : ''}");
   }
-
-  // Future<WayaRequestResponse> getMyCampaigns(String organizerId, int page) {
-  //   return get("$serviceUrl/client/campaigns?page=$page&organizerId=$organizerId");
-  // }
 
   Future<WayaRequestResponse> getMyCampaigns(
     String organizerId,
@@ -70,10 +66,10 @@ class DonationRepository extends BaseRepository {
     return get("$serviceUrl/client/campaigns?organizerId=$organizerId&status=live");
   }
 
-  Future<WayaRequestResponse> getHostedDonation(
+  Future<WayaRequestResponse> getApprovedDonation(
     String organizerId,
   ) {
-    return get("$serviceUrl/client/campaigns?organizerId=$organizerId");
+    return get("$serviceUrl/client/campaigns?organizerId=$organizerId&status=approved");
   }
 
   Future<WayaRequestResponse> getAppliedDonation(
@@ -92,6 +88,11 @@ class DonationRepository extends BaseRepository {
 
       ) {
     return get("$serviceUrl/client/campaigns/categories?limit=10&page=1");
+  }
+
+
+  Future<WayaRequestResponse> getDonationBasedOnCategory(String categoryName) {
+    return get("$serviceUrl/client/campaigns?category=$categoryName");
   }
 
   Future<WayaRequestResponse> getDonatedDonations(int page,

@@ -25,17 +25,11 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
   ];
 
   void selectGender(String type) {
-    List<String> c = List.from(state.gender);
-    if (c.contains(type)) {
-      c.remove(type);
-    } else {
-      c.add(type);
-    }
-    state = state.copyWith(gender: c);
+    state = state.copyWith(gender: [type]);
   }
 
   Future<void> selectState(Select value) async {
-    String finalState = state.state;
+    //String finalState = state.state;
     state = state.copyWith(state: value.label);
   }
 
@@ -65,21 +59,15 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
     }
   }
 
-  Future<void> fetchAndSetInitialState(
-      {required String contentType, required String contentId}) async {
+  Future<void> fetchAndSetInitialState({required String contentType, required String contentId}) async {
     try {
       state = state.copyWith(initialFetching: true);
       //> 1
-      final promoPlans = await ref
-          .read(promoteVmProvider.notifier)
-          .getPlans(serviceType: contentType);
+      final promoPlans = await ref.read(promoteVmProvider.notifier).getPlans(serviceType: contentType);
 
       if (promoPlans != null) {
         final selPlans = promoPlans.map((c) {
-          return Select(
-              label: c.name,
-              value: c.id,
-              price: double.parse(c.basePrice).toInt());
+          return Select(label: c.name, value: c.id, price: double.parse(c.basePrice).toInt());
         }).toList();
 
         state = state.copyWith(promotionPlans: selPlans);
@@ -92,26 +80,22 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
       state = state.copyWith(userId: ConversationState.self.id);
 
 //> 3
-      final allInterests =
-          await ref.read(selectInterestProvider.notifier).getInterest();
+      final allInterests = await ref.read(selectInterestProvider.notifier).getInterest();
 
       if (allInterests != null) {
-        final selInterests = allInterests.keys
-            .map((key) => Select(value: key, label: key))
-            .toList();
+        final selInterests = allInterests.keys.map((key) => Select(value: key, label: key)).toList();
 
         state = state.copyWith(interests: selInterests);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     } finally {
       state = state.copyWith(initialFetching: false);
     }
   }
 
   Future<void> getAllStates() async {
-    final response =
-        await ref.read(upgradeToBusinessVmProvider.notifier).fetchStates();
+    final response = await ref.read(upgradeToBusinessVmProvider.notifier).fetchStates();
 
     if (response != null) {
       state = state.copyWith(states: response);
@@ -120,8 +104,7 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
 
   Future<void> onSubmit({required BuildContext context}) async {
     try {
-      Select selectedPlan =
-          state.promotionPlans.firstWhere((c) => c.value == state.planId);
+      Select selectedPlan = state.promotionPlans.firstWhere((c) => c.value == state.planId);
       // set the budget price   planPrice x number of days
 
       // start date
@@ -134,23 +117,21 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
       int numberOfDays = end.difference(start).inDays;
 
       if (numberOfDays < 1) {
-        return WayaSnackBar.showToast(
-            "Start date must be greater than end date");
+        return WayaSnackBar.showToast("Start date must be greater than end date");
       }
 
       int budget = numberOfDays * selectedPlan.price;
-      print(budget);
+      debugPrint(budget.toString());
       state = state.copyWith(budget: budget);
       state = state.copyWith(selectedAgeRanges: "18-25");
 
-      print(state.createPromotionModel.toJson());
+      debugPrint(state.createPromotionModel.toJson().toString());
 
       // return;
 
-      await WayaUtils.showModalSheet(context,
-          child: PayForPromotion(title: state.contentType, budget: budget));
+      await WayaUtils.showModalSheet(context, child: PayForPromotion(title: state.contentType, budget: budget));
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -161,8 +142,7 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
   Future<void> payForPromotion({required BuildContext context}) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response =
-          await _repository.createPromotion(state.createPromotionModel);
+      final response = await _repository.createPromotion(state.createPromotionModel);
 
       if (response.success) {
         WayaNav.goBack();
@@ -182,14 +162,13 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
         }
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }
   }
 }
 
-final promotionVmProvider =
-    StateNotifierProvider<CreatePromotionVm, CreatePromotionState>((ref) {
+final promotionVmProvider = StateNotifierProvider<CreatePromotionVm, CreatePromotionState>((ref) {
   return CreatePromotionVm(ref, PromotionRepository());
 });

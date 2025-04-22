@@ -217,7 +217,7 @@ class ContestRepo extends BaseRepository {
       },
       "formRequirements":formRequirements,
     });
-    print("newSingle ${response}");
+    debugPrint("newSingle ${response}");
     return response;
   }*/
 }

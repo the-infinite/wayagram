@@ -114,7 +114,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       List<NewRequirementModel> newRequirementList,
       List<StagePrefModel> stageList,
       bool isEditing) async {
-    //  print(' sss ${_localDataSource.getUserId().toString()}');
+    //  debugPrint(' sss ${_localDataSource.getUserId().toString()}');
     //final userTypeProvider = ref.watch(localDataSourceProvider);
     /* 
       "requirementType": "TEXT",
@@ -122,7 +122,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "textDescription": "Participant's full name",
         "required": true
      */
-    print("eeeeee ${state.startDate}");
+    debugPrint("eeeeee ${state.startDate}");
     var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
     isLoading.value = true;
     state = state.copyWith(isLoading: true);
@@ -178,7 +178,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
     //NGN8.00
     try {
-      //  print("wwwww ${amountPerVote.text}");
+      //  debugPrint("wwwww ${amountPerVote.text}");
 
       var map = {
         "title": title.text,
@@ -232,7 +232,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
           "formRequirements": mapRequireList
         }
       };
-      print(map.toString());
+      debugPrint(map.toString());
       WayaRequestResponse? response;
       if (isEditing) {
         response = await _contestRepository.editContest(
@@ -354,7 +354,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       "profilePhoto": imageUrl
     };
 
-    //print("My Map $map");
+    //debugPrint("My Map $map");
     final response = await _contestRepository.editProfile(id, map);
 
     isLoading.value = false;
@@ -384,7 +384,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -401,7 +401,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         return response;
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
     return null;
   }
@@ -424,7 +424,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             state.copyWith(endDate: endDate, endDateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -476,12 +476,12 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   }
 
   void update(Select value, String name) {
-    print('were ${value.toJson()}');
+    debugPrint('were ${value.toJson()}');
     state = state.copyWith(categorys: value.label);
     state = state.copyWith(categoryId: value.value);
     state = state.copyWith(
         selectedCategory: Select(label: value.label, value: value.value));
-    print('were ${state.categoryId}');
+    debugPrint('were ${state.categoryId}');
   }
 
   updateEdit(String value) {
@@ -574,14 +574,14 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             ContestCategory2.fromJson(response.data);
 
         final List<Select> allCategory = responseModel.data.map((val) {
-          print('Error: ${val.id}');
+          debugPrint('Error: ${val.id}');
           return Select(
               label: val.name ?? "", value: val.id ?? "", image: val.id ?? "");
         }).toList();
         state = state.copyWith(category: allCategory);
       }
     } catch (e) {
-      print('Error: $e');
+      debugPrint('Error: $e');
     }
   }
 
@@ -646,7 +646,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             contestTimelineStartDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -665,7 +665,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             contestTimelineEndDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -681,7 +681,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         return startDate;
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
     return null;
   }
@@ -766,9 +766,9 @@ bool isDateBefore(String dateString) {
   DateTime givenDate = DateTime.parse(dateString).toUtc(); // Convert to UTC
 
   DateTime now = DateTime.now().toUtc();
-  print("Given Date: $givenDate");
-  print("Now: $now");
-  print("Now: ${givenDate.isBefore(now)}");
+  debugPrint("Given Date: $givenDate");
+  debugPrint("Now: $now");
+  debugPrint("Now: ${givenDate.isBefore(now)}");
 
   return givenDate.isBefore(now);
 }
@@ -783,15 +783,15 @@ bool isInPast(String dateString) {
   DateTime oldDate = DateTime(inputDate.year, inputDate.month, inputDate.day);
 
   // Compare the dates
-  print("Input Date: $inputDate");
-  print("Input Date: $today");
-  print("Input Date: ${oldDate.isBefore(today)}");
+  debugPrint("Input Date: $inputDate");
+  debugPrint("Input Date: $today");
+  debugPrint("Input Date: ${oldDate.isBefore(today)}");
   if (oldDate.isBefore(today)) {
     return true;
   }
   return false; /* else if (inputDate.isAtSameMomentAs(today)) {
-    print("The date is today.");
+    debugPrint("The date is today.");
   } else {
-    print("The date is in the future.");
+    debugPrint("The date is in the future.");
   } */
 }

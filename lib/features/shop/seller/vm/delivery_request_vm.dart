@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/shop/cart/data/repo/cart_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/delivery_request_state.dart';
@@ -8,8 +9,7 @@ class DeliveryRequestVm extends StateNotifier<DeliveryRequestState> {
   final Ref ref;
   final CartRepository _cartRepository;
 
-  DeliveryRequestVm(this._cartRepository, this.ref)
-      : super(DeliveryRequestState());
+  DeliveryRequestVm(this._cartRepository, this.ref) : super(DeliveryRequestState());
 
   Future<List<DeliveryRequestData>?> getRequests() async {
     try {
@@ -19,15 +19,14 @@ class DeliveryRequestVm extends StateNotifier<DeliveryRequestState> {
 
       List<DeliveryRequestData> requests = [];
       if (response.success) {
-        DeliveryRequestResponseModel responseModel =
-            DeliveryRequestResponseModel.fromJson(response.data);
+        DeliveryRequestResponseModel responseModel = DeliveryRequestResponseModel.fromJson(response.data);
         requests = responseModel.data;
         state = state.copyWith(deliveryRequest: requests);
-        print(response.data);
+        debugPrint(response.data.toString());
       }
       return requests;
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     }
   }
@@ -46,7 +45,6 @@ class DeliveryRequestVm extends StateNotifier<DeliveryRequestState> {
   }
 }
 
-final deliveryRequestVmProvider =
-    StateNotifierProvider<DeliveryRequestVm, DeliveryRequestState>((ref) {
+final deliveryRequestVmProvider = StateNotifierProvider<DeliveryRequestVm, DeliveryRequestState>((ref) {
   return DeliveryRequestVm(CartRepository(), ref);
 });

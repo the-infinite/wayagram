@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 
 class WayaBottomSheetContent extends StatefulWidget {
   final double? contextHeight;
   final String title;
+  final String? subTitle;
   final List<Select> items;
   final bool multi;
   final List<Select>? selectedItems;
@@ -17,6 +19,7 @@ class WayaBottomSheetContent extends StatefulWidget {
     this.contextHeight = 0.3,
     required this.items,
     required this.title,
+    this.subTitle,
     this.selectedItems,
     this.multi = false,
   });
@@ -48,7 +51,8 @@ class _WayaBottomSheetContentState extends State<WayaBottomSheetContent> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return Container(
-      height: context.height * widget.contextHeight!,
+      height: widget.contextHeight ??
+          context.height * (widget.contextHeight ?? 0.3),
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
       decoration: BoxDecoration(
@@ -64,7 +68,20 @@ class _WayaBottomSheetContentState extends State<WayaBottomSheetContent> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(widget.title, style: wayaTheme.textTheme.titleLarge),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(widget.title, style: wayaTheme.textTheme.titleLarge),
+                  if (widget.subTitle != null)
+                    SizedBox(
+                      width: context.width - 50,
+                      child: Text(widget.subTitle ?? "",
+                          style: wayaTheme.textTheme.hintStyleBold),
+                    ),
+                ],
+              ),
               if (widget.multi)
                 IconButton(
                   onPressed: () => WayaNav.goBack(result: _selectedItems),
@@ -90,7 +107,10 @@ class _WayaBottomSheetContentState extends State<WayaBottomSheetContent> {
                       _toggleSelection(item);
                     } else {
                       final isSelected = _selectedItems.contains(item);
-                      WayaNav.goBack(result: isSelected ? [Select(label: '', value: '')] : [item]);
+                      WayaNav.goBack(
+                          result: isSelected
+                              ? [Select(label: '', value: '')]
+                              : [item]);
                     }
                   },
                   child: Padding(
@@ -98,8 +118,12 @@ class _WayaBottomSheetContentState extends State<WayaBottomSheetContent> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(item.label, style: wayaTheme.textTheme.labelMedium),
-                        if (isSelected) Icon(Icons.check, color: wayaTheme.colorScheme.customBlack, size: 18),
+                        Text(item.label,
+                            style: wayaTheme.textTheme.labelMedium),
+                        if (isSelected)
+                          Icon(Icons.check,
+                              color: wayaTheme.colorScheme.customBlack,
+                              size: 18),
                       ],
                     ),
                   ),

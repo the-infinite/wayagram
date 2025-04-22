@@ -67,6 +67,8 @@ class WayaUtils {
   static Future<List<Select>> showSelectModal({
     required BuildContext context,
     required String title,
+    String? subTitle,
+    double? contextHeight,
     required List<Select> items,
     List<Select>? selectedItems,
     bool multi = false,
@@ -77,6 +79,8 @@ class WayaUtils {
       child: WayaBottomSheetContent(
         title: title,
         items: items,
+        contextHeight: contextHeight,
+        subTitle: subTitle,
         selectedItems: selectedItems,
         multi: multi,
       ),
@@ -90,7 +94,8 @@ class WayaUtils {
     WayaSnackBar.showToast('Copied');
   }
 
-  static Future<T?> showModalSheet<T>(BuildContext context, {required Widget child, bool isDismissible = true}) {
+  static Future<T?> showModalSheet<T>(BuildContext context,
+      {required Widget child, bool isDismissible = true}) {
     // Get the theme.
     final theme = Theme.of(context);
 
@@ -104,7 +109,8 @@ class WayaUtils {
       isScrollControlled: true,
       isDismissible: isDismissible,
       useRootNavigator: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
     );
   }
 
@@ -121,11 +127,13 @@ class WayaUtils {
       backgroundColor: theme.colorScheme.scaffoldColor2,
       isScrollControlled: true,
       useRootNavigator: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
     );
   }
 
-  static showModalSheetQuotation(BuildContext context, {required Widget child}) {
+  static showModalSheetQuotation(BuildContext context,
+      {required Widget child}) {
     // Get the theme.
     final theme = Theme.of(context);
 
@@ -138,7 +146,8 @@ class WayaUtils {
       backgroundColor: theme.colorScheme.scaffoldColor2,
       isScrollControlled: true,
       useRootNavigator: true,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16.r))),
     );
   }
 
@@ -155,7 +164,8 @@ class WayaUtils {
     }
   }
 
-  static Future<File?> pickAndCropImage([double ratioX = 1, double ratioY = 1]) async {
+  static Future<File?> pickAndCropImage(
+      [double ratioX = 1, double ratioY = 1]) async {
     final image = await pickImageFromGallery();
     if (image != null) {
       return cropImage(image, ratioX, ratioY);
@@ -163,7 +173,8 @@ class WayaUtils {
     return image;
   }
 
-  static Future<File> cropImage(File pickedImage, [double ratioX = 1, double ratioY = 1]) async {
+  static Future<File> cropImage(File pickedImage,
+      [double ratioX = 1, double ratioY = 1]) async {
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: pickedImage.path,
       aspectRatio: CropAspectRatio(
@@ -212,7 +223,8 @@ class WayaUtils {
         if (value is String) {
           return value.toLowerCase().contains(searchTerm.toLowerCase());
         } else if (value is List<String>) {
-          return value.any((element) => element.toLowerCase().contains(searchTerm.toLowerCase()));
+          return value.any((element) =>
+              element.toLowerCase().contains(searchTerm.toLowerCase()));
         }
 
         return false;
@@ -220,20 +232,24 @@ class WayaUtils {
     }).toList();
   }
 
-  static Future<String?> uploadFile({required UploadFileRepository repository, required File file}) async {
+  static Future<String?> uploadFile(
+      {required UploadFileRepository repository, required File file}) async {
     String publicUrl = '';
     try {
       // filename and content-type
       String fileName = WayaHelpers.extractFileName(file);
       String? contentType = WayaHelpers.getContentType(file);
 
-      final uploadUrlResponse = await repository.getUploadUrl(fileName: fileName);
+      final uploadUrlResponse =
+          await repository.getUploadUrl(fileName: fileName);
       if (uploadUrlResponse.success) {
-        MediaUploadModel uploadModel = MediaUploadModel.fromJson(uploadUrlResponse.data);
+        MediaUploadModel uploadModel =
+            MediaUploadModel.fromJson(uploadUrlResponse.data);
 
         final String url = uploadModel.data!.url!;
         publicUrl = uploadModel.data!.publicUrl!;
-        await repository.putFile(url: url, file: file, contentType: contentType!);
+        await repository.putFile(
+            url: url, file: file, contentType: contentType!);
       }
 
       return publicUrl;
@@ -259,7 +275,8 @@ class WayaUtils {
         if (value is String) {
           return value.toLowerCase().contains(searchTerm.toLowerCase());
         } else if (value is List<String>) {
-          return value.any((element) => element.toLowerCase().contains(searchTerm.toLowerCase()));
+          return value.any((element) =>
+              element.toLowerCase().contains(searchTerm.toLowerCase()));
         }
 
         return false;
@@ -268,4 +285,25 @@ class WayaUtils {
 
     return filteredData.isNotEmpty ? filteredData : [];
   }
+
+  static String timeLeftUntil(String isoDate) {
+  final targetDate = DateTime.parse(isoDate).toUtc();
+  final now = DateTime.now().toUtc();
+  final difference = targetDate.difference(now);
+
+  if (difference.isNegative) {
+    return 'Expired';
+  }
+
+  if (difference.inDays > 0) {
+    return '${difference.inDays} day${difference.inDays == 1 ? '' : 's'} left';
+  } else if (difference.inHours > 0) {
+    return '${difference.inHours} hour${difference.inHours == 1 ? '' : 's'} left';
+  } else if (difference.inMinutes > 0) {
+    return '${difference.inMinutes} minute${difference.inMinutes == 1 ? '' : 's'} left';
+  } else {
+    return '${difference.inSeconds} second${difference.inSeconds == 1 ? '' : 's'} left';
+  }
+}
+
 }
