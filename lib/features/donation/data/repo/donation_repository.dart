@@ -90,6 +90,11 @@ class DonationRepository extends BaseRepository {
     return get("$serviceUrl/client/campaigns/categories?limit=10&page=1");
   }
 
+
+  Future<WayaRequestResponse> getDonationBasedOnCategory(String categoryName) {
+    return get("$serviceUrl/client/campaigns?category=$categoryName");
+  }
+
   Future<WayaRequestResponse> getDonatedDonations(int page,
       ) {
     return get("$serviceUrl/client/campaigns/donated?page=$page");
