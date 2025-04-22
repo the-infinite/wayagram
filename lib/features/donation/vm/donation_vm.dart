@@ -29,13 +29,16 @@ class DonationVm extends StateNotifier<DonationState> {
   final DonationRepository _donationRepository;
   final UploadFileRepository _uploadFileRepository;
   final _logger = getLogger('DonationVm');
-  DonationVm(this._donationRepository, this.ref, this._uploadFileRepository) : super(DonationState()) {
+
+  DonationVm(this._donationRepository, this.ref, this._uploadFileRepository)
+      : super(DonationState()) {
     state = state.copyWith(title: TextEditingController(text: ''));
     state = state.copyWith(description: TextEditingController(text: ''));
     state = state.copyWith(solution: TextEditingController(text: ''));
     state = state.copyWith(statement: TextEditingController(text: ''));
     state = state.copyWith(targetAmount: TextEditingController(text: ''));
-    state = state.copyWith(minimumDonationAmount: TextEditingController(text: ''));
+    state =
+        state.copyWith(minimumDonationAmount: TextEditingController(text: ''));
     state = state.copyWith(details: TextEditingController(text: ''));
   }
 
@@ -73,7 +76,11 @@ class DonationVm extends StateNotifier<DonationState> {
 
   void addFile(File file) {
     state =
-        state.copyWith(donationImage: [DocType(file: file, type: "donation-image", name: file.path.split('/').last)]);
+        state.copyWith(donationImage: [
+          DocType(file: file, type: "donation-image", name: file.path
+              .split('/')
+              .last)
+        ]);
   }
 
   void removeFile() {
@@ -116,10 +123,12 @@ class DonationVm extends StateNotifier<DonationState> {
       final response = await _donationRepository.getDonationCategory();
 
       if (response.success) {
-        DonationCategoryModel responseModel = DonationCategoryModel.fromJson(response.data);
+        DonationCategoryModel responseModel = DonationCategoryModel.fromJson(
+            response.data);
 
         final List<Select>? categories = responseModel.data?.docs?.map((val) {
-          return Select(label: '${val.title?.capitalizeFirst}', value: '${val.id}');
+          return Select(
+              label: '${val.title?.capitalizeFirst}', value: '${val.id}');
         }).toList();
         state = state.copyWith(categories: categories);
       }
@@ -127,6 +136,43 @@ class DonationVm extends StateNotifier<DonationState> {
       _logger.e(e);
     }
   }
+
+  Future<void> fetchDonationBasedOnCategory(String categoryName) async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _donationRepository.getDonationBasedOnCategory(
+          categoryName);
+      state = state.copyWith(isLoading: false);
+      print('API Response: ${response.data}');
+      print('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
+        state = state.copyWith(myDonationDocs: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      print(e);
+    } finally {}
+  }
+
+  List<String> updateSelectedCategory(Select cat) {
+    if (state.selected.any((i) => i == cat.value)) {
+      List<String> selectedList = List.from(state.selected);
+      final filtered = selectedList.where((c) => c != cat.value).toList();
+
+      state = state.copyWith(selected: filtered);
+    } else {
+      List<String> selectedList = List.from(state.selected);
+      selectedList.add(cat.value);
+
+      state = state.copyWith(selected: selectedList);
+    }
+    print(cat.value);
+
+    return state.selected;
+  }
+
 
   Future<void> makeDonation(String campaignId, int amount, String message, ctx) async {
     try {
