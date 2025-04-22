@@ -138,7 +138,8 @@ class DioHttpClient implements WayaHttpClientInterface {
         //? Finished this.
         final fullRoute = '$baseURL$route';
         _logger.i('fullRoute: $fullRoute');
-        _logger.f('headers: ${dio.options.headers}');
+        _logger.i('headers: ${dio.options.headers}');
+        _logger.i('body: $body');
 
         params?.removeWhere((key, value) => value == null);
 

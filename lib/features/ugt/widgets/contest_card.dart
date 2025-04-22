@@ -114,7 +114,10 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             SizedBox(
-                              width: context.width * 0.45,
+                              width: widget.post.profileId ==
+                                      voteNotifier.getLoggedInUserId()
+                                  ? context.width * 0.38
+                                  : context.width * 0.45,
                               child: Text(
                                 //"you are going to print the form help me now qwerty",
                                 widget.post.title ?? "Title",
@@ -139,13 +142,14 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   if (widget.post.profileId ==
                       voteNotifier.getLoggedInUserId()) ...[
                     Expanded(
-                        flex: 1,
+                        flex: 2,
                         child: WayaButton(
                           fontSize: 12.sp,
                           callback: () {
                             WayaNav.toNamed(Promote.route, arguments: {
                               "contentId": widget.post.id,
-                              "contentType": PromotionServiceType.contest.name
+                              "contentType": PromotionServiceType.contest.name,
+                              "data": widget.post
                             });
                           },
                           height: 40,

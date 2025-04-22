@@ -125,7 +125,8 @@ class _PublicPageState extends ConsumerState<PublicPage>
                       WayaNav.goBack();
                       WayaNav.toNamed(Promote.route, arguments: {
                         "contentId": page.id,
-                        "contentType": PromotionServiceType.page.name
+                        "contentType": PromotionServiceType.page.name,
+                        "data": page
                       });
                     },
                     child: WayaActionNav(

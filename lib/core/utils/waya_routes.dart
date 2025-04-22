@@ -8,6 +8,7 @@ import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/buyer_dispute/views/detail.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
 import 'package:wayagram/features/chat/view/profile.dart';
+import 'package:wayagram/features/chat/view/profile/edit_group.dart';
 import 'package:wayagram/features/donation/view/create_donation.dart';
 import 'package:wayagram/features/donation/view/donation_details.dart';
 import 'package:wayagram/features/donation/view/donation_management.dart';
@@ -24,10 +25,10 @@ import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/follow/view/follow_page.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
-import 'package:wayagram/features/general_settings/chat_call_pref/view/chat_call_pref_page.dart';
+import 'package:wayagram/features/general_settings/privacy_settings/view/blocked_user_page.dart';
+import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
-import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
@@ -279,7 +280,7 @@ class WayaAppRoutes {
     GroupSuggestion.route: () => GroupSuggestion(),
     Promote.route: () => Promote(),
     PromotionDashboard.route: () => PromotionDashboard(),
-    PromotionDetail.route: () => PromotionDetail(),
+    PromotionDetail.route: () => PromotionDetail(id: WayaNav.search['id'].toString()),
     PublicPage.route: () => PublicPage(
           id: WayaNav.search['id'].toString(),
         ),
@@ -361,14 +362,17 @@ class WayaAppRoutes {
     ReferralPage.route: () => ReferralPage(),
     ReferralHistoryPage.route: () => ReferralHistoryPage(),
     PrivacySettingsPage.route: () => PrivacySettingsPage(),
-    ChatCallPrefPage.route: () => ChatCallPrefPage(),
     FriendFollowerPage.route: () => FriendFollowerPage(),
     RequestPayout.route: () => RequestPayout(),
     AddPayoutMethodScreen.route: () => AddPayoutMethodScreen(),
     PayoutDetails.route: () => PayoutDetails(),
     PayoutSuccessScreen.route: () => PayoutSuccessScreen(),
     EnterRequestAmountScreen.route: () => EnterRequestAmountScreen(),
-
+    BlockedUserPage.route: () => BlockedUserPage(),
+    EditChatGroupScreen.route: () => EditChatGroupScreen(
+          groupId: WayaNav.search['id'].toString(),
+          chatId: WayaNav.search['chatId'].toString(),
+        ),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -479,6 +483,15 @@ class WayaAppRoutes {
   /// Helper function used to generate the route tha tis supposed to take you to
   /// a single order's details screen.
   static String getQuotationOrderDetailsScreen(String id) => "${QuotationOrderDetails.route}?id=$id&requestId=$id";
+
+  /// Helper function used to generate the route that takes a user to the screen
+  /// for the details of a single product.
+  static String getPromotionDetailScreen(String id) => "${PromotionDetail.route}?id=$id";
+
+  /// Helper function used to generate the route that takes a user to the screen
+  /// to edit the profile of a single chat group.
+  static String getEditChatGroupProfileScreen(String id, String chatId) =>
+      "${EditChatGroupScreen.route}?id=$id&chatId=$chatId";
 
   /// This is fine.
   static List<GetPage> get getPages {

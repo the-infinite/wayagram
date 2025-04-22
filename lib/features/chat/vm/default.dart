@@ -2,8 +2,13 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:uuid/uuid.dart';
+import 'package:wayagram/core/components/waya_select_field.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/dto/default.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/repo/default.dart';
@@ -72,7 +77,20 @@ class ConversationVm extends StateNotifier<ConversationState> {
 
       //? First, we check each of the members in each conversation...
       for (var c = 0; c < docs.length; c++) {
-        final conversation = docs[c];
+        //? Now, it is time to sort the chat members in the order that they should show up on the front-end.
+        final members = <ChatMember>[];
+
+        //? First one, is the one where the user is me.
+        members.add(docs[c].self);
+
+        //? Second, add all group admins.
+        members.addAll(docs[c].allOthers.where((member) => member.role != ChatMemberRole.member));
+
+        //? Third, add all regular users.
+        members.addAll(docs[c].allOthers.where((member) => member.role == ChatMemberRole.member));
+
+        //? Finally, replace the conversation with what we have here.
+        final conversation = docs[c].copyWith(chatMembers: members);
 
         //? Do the needful.
         for (var i = 0; i < conversation.chatMembers.length; i++) {
@@ -131,12 +149,8 @@ class ConversationVm extends StateNotifier<ConversationState> {
     String? description,
     File? image,
   ]) async {
-    final imageUrl = image == null
-        ? null
-        : await WayaFileRepository.instance.uploadFile(
-            image,
-            "group-${WayaValueHelper.createUid()}.${WayaFileHelper.getFileExtension(image.path)}",
-          );
+    final imageUrl =
+        image == null ? null : await WayaFileRepository.instance.uploadFile(image, _getGroupProfilePhoto(image));
 
     //? This is fine.
     final response = await repo.startConversation(type, users, name, description, imageUrl);
@@ -160,8 +174,27 @@ class ConversationVm extends StateNotifier<ConversationState> {
 
     //? This is fine.
     if (response.success) {
-      final result = ChatModel.fromJson(response.data['data']);
+      //? Fetch this.
+      var result = ChatModel.fromJson(response.data['data']);
+
+      //? Now, it is time to sort the chat members in the order that they should show up on the front-end.
+      final members = <ChatMember>[];
+
+      //? First one, is the one where the user is me.
+      members.add(result.self);
+
+      //? Second, add all group admins.
+      members.addAll(result.allOthers.where((member) => member.role != ChatMemberRole.member));
+
+      //? Third, add all regular users.
+      members.addAll(result.allOthers.where((member) => member.role == ChatMemberRole.member));
+
+      //? Finally, replace the conversation with what we have here.
+      result = result.copyWith(chatMembers: members);
+
+      //? Look for this in our lists.
       final pos = state.conversations.indexWhere((chat) => chat.id == id);
+      final archivedPos = state.archived.indexWhere((chat) => chat.id == id);
 
       //? First, clean up the chat members details.
       for (var i = 0; i < result.chatMembers.length; i++) {
@@ -199,6 +232,23 @@ class ConversationVm extends StateNotifier<ConversationState> {
 
         //? Then update this.
         state = state.copyWith(conversations: chats);
+      }
+
+      //? If this is to replace the chat inside of the list of chats and it is
+      //? possible to
+      if (replace && archivedPos != -1) {
+        final chats = state.archived;
+        final previous = chats[archivedPos];
+
+        //? Fix the bug where the latest message is not always guaranteed to be
+        //? showing up here.
+        chats[archivedPos] = result.copyWith(
+          lastMessage: result.lastMessage ?? previous.lastMessage,
+          latestMessageId: result.latestMessageId ?? previous.latestMessageId,
+        );
+
+        //? Then update this.
+        state = state.copyWith(archived: chats);
       }
 
       //* Return this as the case may be.
@@ -259,6 +309,59 @@ class ConversationVm extends StateNotifier<ConversationState> {
     return response.success;
   }
 
+  /// Helper function used to retrieve the list of muted users.
+  Future<bool> getMutedUsers() async {
+    final response = await repo.getMutedUsers();
+
+    if (response.success) {}
+
+    return response.success;
+  }
+
+  /// Helper function used to mute or unmute a user as the case may be.
+  Future<bool> muteOrUnmuteUserEndpoint(String id, String? time) async {
+    final response = await repo.muteOrUnmuteUser(id);
+
+    //? This is fine.
+    if (response.success) {
+      await getChats();
+      await getMutedUsers();
+    }
+
+    //? Return whether or not this is true.
+    return response.success;
+  }
+
+  /// Helper function used to mute or unmute a user as the case may be.
+  Future<bool> reportUser(String id, String reason) async {
+    final response = await repo.reportUser(id, reason);
+
+    //? Return whether or not this is true.
+    return response.success;
+  }
+
+  /// Helper function used to update user chat settings
+  Future<bool> updateChatSettings(PrivacySettingsDto dto) async {
+    final response = await repo.updateChatSettings(dto);
+
+    //? Return whether or not this is true.
+    return response.success;
+  }
+
+  /// Helper function used to retrieve all of the details of just one conversation.
+  Future<PrivacySettingsDto?> getChatSettings() async {
+    //? This is fine.- getting from server with userId
+    final response = await repo.getChatSettings(ConversationState.self.id);
+
+    //? This is fine.
+    if (response.success) {
+      return PrivacySettingsDto.fromJson(response.data['data']);
+    }
+
+    //? Return null if empty
+    return null;
+  }
+
   /// Helper function used to archive or unarchive a chat as the case may be.
   Future<bool> archiveOrUnarchiveChat(String id) async {
     //? This is fine.
@@ -302,16 +405,74 @@ class ConversationVm extends StateNotifier<ConversationState> {
     return response.success;
   }
 
-  /// Helper function used to report a user.
-  Future<bool> reportUser(String id) async {
-    await WayaNavigationHelper.showComingSoonModal(true);
+  /// Helper function used to mute/unmute a user.
+  Future<bool> muteOrUnmuteUser(BuildContext context, WidgetRef ref, String id) async {
+    //? the provider
+    final viewModel = ref.watch(wayaSelectFieldViewModelProvider(Uuid().v4()));
+
+    //? a drop down to mute or unmute a user
+    viewModel.selectValue(
+        context,
+        "Mute User",
+        subTitle: "You won't receive notifications from this user based on the time you set",
+        contextHeight: context.height * 0.45,
+        [
+          Select(label: "Unmute", value: "0"),
+          Select(label: "1 hour", value: "1"),
+          Select(label: "8 hours", value: "2"),
+          Select(label: "24 hours", value: "3"),
+          Select(label: "1 week", value: "4"),
+          Select(label: "Always", value: "5"),
+        ], (value) {
+      if (value.first.label == "Unmute") {
+        //? This is fine.
+        return muteOrUnmuteUserEndpoint(id, null);
+      }
+      return muteOrUnmuteUserEndpoint(id, dateConversion(value.first.label));
+    }, false);
     return false;
   }
 
-  /// Helper function used to mute/unmute a user.
-  Future<bool> muteOrUnmuteUser(String id) async {
-    await WayaNavigationHelper.showComingSoonModal(true);
-    return false;
+  /// Helper function used to select what date corresponds with a give.
+  String dateConversion(String pickedDuration) {
+    DateTime baseTime = DateTime.now().toUtc();
+
+    // Add durations
+
+    switch (pickedDuration) {
+      case "1 hour":
+        DateTime plus1Hour = baseTime.add(Duration(hours: 1));
+        return plus1Hour.toIso8601String();
+
+      case "8 hours":
+        DateTime plus8Hours = baseTime.add(Duration(hours: 8));
+        return plus8Hours.toIso8601String();
+
+      case "24 hours":
+        DateTime plus24Hours = baseTime.add(Duration(hours: 24));
+        return plus24Hours.toIso8601String();
+
+      case "1 week":
+        DateTime plus1Week = baseTime.add(Duration(days: 7));
+        return plus1Week.toIso8601String();
+
+      case "Always":
+        // Add 5 years manually
+        DateTime plus10Years = DateTime(
+          baseTime.year + 10,
+          baseTime.month,
+          baseTime.day,
+          baseTime.hour,
+          baseTime.minute,
+          baseTime.second,
+          baseTime.millisecond,
+          baseTime.microsecond,
+        ).toUtc(); // keep everything in UTC
+        return plus10Years.toIso8601String();
+
+      default:
+        return "";
+    }
   }
 
   /// Helper function used to get the list of all chats that have been archived
@@ -343,7 +504,20 @@ class ConversationVm extends StateNotifier<ConversationState> {
 
       //? First, we check each of the members in each conversation...
       for (var c = 0; c < docs.length; c++) {
-        final conversation = docs[c];
+        //? Now, it is time to sort the chat members in the order that they should show up on the front-end.
+        final members = <ChatMember>[];
+
+        //? First one, is the one where the user is me.
+        members.add(docs[c].self);
+
+        //? Second, add all group admins.
+        members.addAll(docs[c].allOthers.where((member) => member.role != ChatMemberRole.member));
+
+        //? Third, add all regular users.
+        members.addAll(docs[c].allOthers.where((member) => member.role == ChatMemberRole.member));
+
+        //? Finally, replace the conversation with what we have here.
+        final conversation = docs[c].copyWith(chatMembers: members);
 
         //? Do the needful.
         for (var i = 0; i < conversation.chatMembers.length; i++) {
@@ -392,6 +566,199 @@ class ConversationVm extends StateNotifier<ConversationState> {
 
     //? Return this collated result.
     return result;
+  }
+
+  //*********************** The section for groups *****************************
+
+  /// Helper function used to change the profile picture of a group chat.
+  Future<bool> changeGroupProfilePicture(String id, File file) async {
+    try {
+      //? First, upload the new profile image.
+      final imageUrl = await WayaFileRepository.instance.uploadFile(file, _getGroupProfilePhoto(file));
+
+      //? If this was not fine... stop.
+      if (imageUrl == null) {
+        return false;
+      }
+
+      //? Now, use it.
+      final response = await repo.updateGroupImage(id, imageUrl);
+
+      //? If this was true.
+      if (response.success) {
+        await getChatDetails(id);
+      }
+
+      //? Return whether this was true or not.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.chats,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+    return false;
+  }
+
+  /// Helper function used to mute or unmute a group chat so that we no longer
+  /// wish to receive any notifications from.
+  Future<bool> muteOrUnmuteGroup(String id, DateTime? mutedUntil) async {
+    try {
+      //? Now, use it.
+      final response = await repo.muteOrUnmuteGroup(id, mutedUntil);
+
+      //? If this was true.
+      if (response.success) {
+        await getChatDetails(id);
+      }
+
+      //? Return whether this was true or not.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.chats,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+    return false;
+  }
+
+  /// Helper function used to make a report about a group chat that is annoying
+  /// you.
+  Future<bool> reportGroup(String id, String reason) async {
+    try {
+      //? Now, use it.
+      final response = await repo.reportChatGroup(id, reason);
+
+      //? If this was true.
+      if (response.success) {
+        await getChatDetails(id);
+      }
+
+      //? Return whether this was true or not.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.chats,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+    return false;
+  }
+
+  /// Helper function used to remove a user from the group.
+  Future<bool> removeUserFromGroup(String id, String userId) async {
+    try {
+      //? Now, use it.
+      final response = await repo.removeUserFromGroup(id, userId);
+
+      //? If this was true.
+      if (response.success) {
+        await getChatDetails(id);
+      }
+
+      //? Return whether this was true or not.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.chats,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+    return false;
+  }
+
+  /// Helper function used to remove a user from the group.
+  Future<bool> addUserToGroup(String id, String userId) async {
+    try {
+      //? Now, use it.
+      final response = await repo.addUserToGroup(id, userId);
+
+      //? If this was true.
+      if (response.success) {
+        await getChatDetails(id);
+      }
+
+      //? Return whether this was true or not.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.chats,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+    return false;
+  }
+
+  /// Helper function used to leave a group chat when you don tire to dey the
+  /// group.
+  Future<bool> leaveGroup(String id) async {
+    try {
+      //? Now, use it.
+      final response = await repo.leaveGroup(id);
+
+      //? If this was successful.
+      if (response.success) {
+        await getChatDetails(id);
+      }
+
+      //? Return whether this was true or not.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.chats,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+    return false;
+  }
+
+  /// Helper function used to edit the name (and probably description) of a group
+  /// conversation.
+  Future<bool> updateGroupInfo(String id, String name, [String? description]) async {
+    try {
+      //? Now, use it.
+      final response = await repo.updateGroupInfo(id, name, description);
+
+      //? If this was successful.
+      if (response.success) {
+        await getChatDetails(id);
+      }
+
+      //? Return whether this was true or not.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.chats,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+    return false;
+  }
+
+  /// Helper function used to generate the filename of a group chat.
+  String _getGroupProfilePhoto(File file) {
+    return "group-${WayaValueHelper.createUid()}.${WayaFileHelper.getFileExtension(file.path)}";
+  }
+
+  /// Helper function used to get a single chat from our lists of chats.
+  ChatModel? getChat(String id) {
+    return state.conversations.where((chat) => chat.id == id).firstOrNull ??
+        state.archived.where((chat) => chat.id == id).firstOrNull;
   }
 }
 

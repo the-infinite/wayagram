@@ -239,7 +239,7 @@ class _StartConversationGroupModalState extends State<StartConversationGroupModa
 
                                 //? This is fine.
                                 chatNotifier.setChat(result);
-                                WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(result.id));
+                                WayaNav.replaceNamed(WayaAppRoutes.getSingleChatRoute(result.id));
                               },
                               text: "Add ${choices.length} members",
                             ),

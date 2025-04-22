@@ -25,13 +25,8 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
   ];
 
   void selectGender(String type) {
-    List<String> c = List.from(state.gender);
-    if (c.contains(type)) {
-      c.remove(type);
-    } else {
-      c.add(type);
-    }
-    state = state.copyWith(gender: c);
+  
+    state = state.copyWith(gender: [type]);
   }
 
   Future<void> selectState(Select value) async {
