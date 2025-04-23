@@ -38,7 +38,7 @@ class UgtAdminDashboardVm extends StateNotifier<UgtDashboardState> {
             state.copyWith(revenueGenerated: responseModel.data?.totalSum ?? 0, transactionList: responseModel.data?.transactions??[]);
       }
     } catch (e) {
-      //print(e);
+      //debugPrint(e.toString());
     } finally {}
   }
 
@@ -55,7 +55,7 @@ class UgtAdminDashboardVm extends StateNotifier<UgtDashboardState> {
             totalContestants: responseModel.data?.totalContestants ?? 0);
       }
     } catch (e) {
-      //print(e);
+      //debugPrint(e.toString());
     } finally {}
   }
 
@@ -69,7 +69,7 @@ class UgtAdminDashboardVm extends StateNotifier<UgtDashboardState> {
         //  contestList = responseModel.data;
       }
     } catch (e) {
-      //print(e);
+      //debugPrint(e.toString());
     } finally {}
   }
 }

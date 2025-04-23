@@ -21,14 +21,18 @@ class SellerOrderDetailVm extends ChangeNotifier {
     notifyListeners();
     try {
       final response = await _orderRepository.pickupStatusUpdate(
-          orderId: orderId, status: status);
+          orderId: orderId, status: status, shopId: shopId);
 
       if (response.success) {
         WayaSnackBar.showToast("Pickup status updated");
         WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
+      } else {
+        if (response.data['responseCode'] == 704) {
+          WayaSnackBar.showToast("Access not granted by the shop owner");
+        }
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -38,14 +42,19 @@ class SellerOrderDetailVm extends ChangeNotifier {
     notifyListeners();
     try {
       final response = await _orderRepository.deliveryStatusUpdate(
-          orderId: orderId, status: status);
+          orderId: orderId, status: status, shopId: shopId);
 
       if (response.success) {
         WayaSnackBar.showToast("Delivery status updated");
         WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
       }
+      else {
+        if (response.data['responseCode'] == 704) {
+          WayaSnackBar.showToast("Access not granted by the shop owner");
+        }
+      }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -85,11 +94,11 @@ class SellerOrderDetailVm extends ChangeNotifier {
 
   Future<void> updateOrderStatus(
       {required String shopId,
-       String? current,
+      String? current,
       required BuildContext context,
       required String orderId}) async {
     orderStatus = current ?? 'pending';
-    //print(current);
+    //debugPrint(current);
     notifyListeners();
     final response = await WayaUtils.showModalSheet(context,
         child: UpdateStatus(
@@ -103,16 +112,15 @@ class SellerOrderDetailVm extends ChangeNotifier {
   }
 
   void wdfew() {
-    print("wefwef");
+    debugPrint("wefwef");
   }
 
   Future<void> updateDeliveryStatus(
-      {
-      required String shopId,
-     String? current,
-     required BuildContext context,
+      {required String shopId,
+      String? current,
+      required BuildContext context,
       required String orderId}) async {
-    print("wefvewfew");
+    debugPrint("wefvewfew");
 
     delivery = current ?? 'pending';
     notifyListeners();

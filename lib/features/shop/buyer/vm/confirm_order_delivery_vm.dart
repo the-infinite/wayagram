@@ -75,7 +75,7 @@ class ConfirmOrderDeliveryVm extends StateNotifier<States> {
             ));
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
       clearPins();
     } finally {
       state = state.copyWith(isLoading: false);

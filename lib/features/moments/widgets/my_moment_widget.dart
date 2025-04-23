@@ -225,7 +225,8 @@ class MyMomentActions extends StatelessWidget {
                     WayaNav.goBack();
                     WayaNav.toNamed(Promote.route, arguments: {
                       "contentId": moment.id,
-                      "contentType": PromotionServiceType.moment.name
+                      "contentType": PromotionServiceType.moment.name,
+                      "data": moment
                     });
                   },
                   asset: SvgPicture.asset(WayaAssets.icons.mFire.path),

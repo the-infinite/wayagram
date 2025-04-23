@@ -248,7 +248,7 @@ class GroupVm extends StateNotifier<GroupState> {
       //? If it failed...
       else {
         _logger.i('LOGGER  ==>>> ${response.data['error']}');
-        print('Edit group');
+        debugPrint('Edit group');
         _logger.i(response.data['data']);
       }
     } catch (e) {
@@ -553,7 +553,7 @@ class GroupVm extends StateNotifier<GroupState> {
         JoinRequestModel responseModel = JoinRequestModel.fromJson(response.data);
         state = state.copyWith(docs: responseModel.data?.docs);
       } else {
-        print('Error: Status code ${response.statusCode}');
+        debugPrint('Error: Status code ${response.statusCode}');
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(

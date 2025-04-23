@@ -1,5 +1,5 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_products_state.dart';
@@ -7,9 +7,8 @@ import 'package:wayagram/features/shop/seller/data/model/seller_products_state.d
 class SellerProductsVm extends StateNotifier<SellerProductState> {
   final Ref ref;
   final ShopRepository _shopRepository;
-  final WayaSecureDataSource _secureDataSource;
 
-  SellerProductsVm(this._shopRepository, this._secureDataSource, this.ref)
+  SellerProductsVm(this._shopRepository, this.ref)
       : super(SellerProductState());
 
   Future<List<SellerProduct>?> sellerProducts({required String shopId}) async {
@@ -27,7 +26,7 @@ class SellerProductsVm extends StateNotifier<SellerProductState> {
       }
       return sellerProducts;
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     } finally {
       state = state.copyWith(isLoading: false);
@@ -67,5 +66,5 @@ class SellerProductsVm extends StateNotifier<SellerProductState> {
 
 final sellerProductsVmProvider =
     StateNotifierProvider<SellerProductsVm, SellerProductState>((ref) {
-  return SellerProductsVm(ShopRepository.instance, WayaSecureDataSource(), ref);
+  return SellerProductsVm(ShopRepository.instance, ref);
 });

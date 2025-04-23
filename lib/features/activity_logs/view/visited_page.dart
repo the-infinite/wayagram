@@ -158,7 +158,7 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
   sortList(s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.visitedPagesDocs = [];
-    print('ACTIVITY End ====> $s');
+    debugPrint('ACTIVITY End ====> $s');
     setState(() {
       if(s == 'all time'){
         viewModel.visitedPagesDocs = viewModel.visitedPagesDocs1;
@@ -173,24 +173,24 @@ class _VisitedPageState extends ConsumerState<VisitedPage> {
           String a = DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2,'0'));
-          print('AAAA $b');
+          debugPrint('AAAA $b');
         }
 
         for (int i = 0; i < y; i++) {
           String a = DateTime.now().subtract(Duration(days: i +1)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2,'0'));
-          print('AAAABBBBB $b');
+          debugPrint('AAAABBBBB $b');
         }
 
-        print('WeekDAY $w');
+        debugPrint('WeekDAY $w');
         for (int i = 0; i < viewModel.visitedPagesDocs1.length; i++) {
           String week = viewModel.visitedPagesDocs1[i].createdAt.toString().split('T')[0];
           if (allWeekDays.contains(week.split('-')[2]) ) {
             viewModel.visitedPagesDocs.add(viewModel.visitedPagesDocs1[i]);
           }
         }
-        print('ACTIVIVBVB ${viewModel.visitedPagesDocs.length}');
+        debugPrint('ACTIVIVBVB ${viewModel.visitedPagesDocs.length}');
       } else if(s =='this month'){
         String m =  DateTime.now().month.toString().padLeft(2,'0');
         for (int i = 0; i < viewModel.visitedPagesDocs1.length; i++) {

@@ -1,0 +1,6 @@
+targets:
+  $default:
+    builders:
+      sqfentity_gen|property_sqfentity:
+        generate_for:
+          - lib/model/*.dart

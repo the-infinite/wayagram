@@ -164,9 +164,7 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
               padding: EdgeInsets.all(15),
               onChanged: (value) => debounce(
                 key: "save-name",
-                () {
-                  notifier.saveData(nameController.text.trim(), descriptionController.text.trim());
-                },
+                () => notifier.saveData(nameController.text.trim(), descriptionController.text.trim()),
               ),
               validator: (value) {
                 if (descriptionController.text.trim().isEmpty) {
@@ -178,7 +176,7 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
               },
             ),
 
-            //? This is fine.
+            // This is fine.
             SizedBox(height: 20.h),
 
             //? Section title.
@@ -190,7 +188,7 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
               ),
             ),
 
-            //? This is fine.
+            // This is fine.
             SizedBox(height: 10.h),
 
             //? Group members.

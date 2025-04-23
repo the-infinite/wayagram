@@ -88,7 +88,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -138,7 +138,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
         );
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }

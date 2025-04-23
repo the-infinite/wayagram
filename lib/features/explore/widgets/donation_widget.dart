@@ -18,7 +18,9 @@ class DonationWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    int daysLeft = DateTime.parse(donation.expirationDate!).difference(DateTime.now()).inDays;
+    int daysLeft = DateTime.parse(donation.expirationDate!)
+        .difference(DateTime.now())
+        .inDays;
 
     if (daysLeft < 0) {
       daysLeft = 0;
@@ -35,7 +37,8 @@ class DonationWidget extends ConsumerWidget {
         Container(
             decoration: BoxDecoration(
               color: wayaTheme.colorScheme.white,
-              border: Border.all(color: wayaTheme.colorScheme.greyColor200, width: 1),
+              border: Border.all(
+                  color: wayaTheme.colorScheme.greyColor200, width: 1),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),
@@ -86,26 +89,31 @@ class DonationWidget extends ConsumerWidget {
                             width: 65,
                             child: WayaButton(
                               callback: () {
-                                WayaNav.toNamed('/donationDetails',
-                                    arguments: {
-                                        'title':'${donation.title?.capitalizeFirst}',
-                              'image':'${donation.imageURL}',
-                              'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
-                              'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
-                              'desc': '${donation.description}',
-                              'solution': '${donation.solution}',
-                              'impact': '${donation.impact}',
-                              'url': '${donation.url}',
-                              'minimumDonationAmount':'${donation.minimumDonationAmount}',
-                              'daysLeft':'$daysLeft',
-                              'privacy':'${donation.privacy}',
-                              'id': '${donation.id}'
-                                    });
+                                WayaNav.toNamed('/donationDetails', arguments: {
+                                  'title': '${donation.title?.capitalizeFirst}',
+                                  'image': '${donation.imageURL}',
+                                  'amountRaised':
+                                      '${donation.amountRaised?.replaceAll('.00', '')}',
+                                  'targetAmount':
+                                      '${donation.targetAmount?.replaceAll('.00', '')}',
+                                  'desc': '${donation.description}',
+                                  'solution': '${donation.solution}',
+                                  'impact': '${donation.impact}',
+                                  'url': '${donation.url}',
+                                  'minimumDonationAmount':
+                                      '${donation.minimumDonationAmount}',
+                                  'daysLeft': '$daysLeft',
+                                  'privacy': '${donation.privacy}',
+                                  'id': '${donation.id}',
+                                  "donation": donation
+                                });
                               },
                               text: "Donate",
                               height: 30,
                               color: wayaTheme.colorScheme.primary50,
-                              textStyle: TextStyle(fontSize: 12.sp, color:  wayaTheme.colorScheme.customPrimary),
+                              textStyle: TextStyle(
+                                  fontSize: 12.sp,
+                                  color: wayaTheme.colorScheme.customPrimary),
                               textColor: wayaTheme.colorScheme.customPrimary,
                               radius: 5,
                             ),
@@ -117,7 +125,8 @@ class DonationWidget extends ConsumerWidget {
                       ),
                       EngagementRange(
                           bottomLeft: "${donation.donationCount} Donation",
-                          bottomRight: "$daysLeft ${daysLeft > 0 ? "Days" : "Day"} left",
+                          bottomRight:
+                              "$daysLeft ${daysLeft > 0 ? "Days" : "Day"} left",
                           range: ratioLeft)
                     ],
                   ),

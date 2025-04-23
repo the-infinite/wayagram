@@ -29,7 +29,7 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(donationVmProvider.notifier).getDonatedDonation;
       ref.read(donationVmProvider.notifier).getMyKYC();
-      ref.read(donationVmProvider.notifier).getHostedDonation();
+      ref.read(donationVmProvider.notifier).getApprovedDonation();
       ref.read(donationVmProvider.notifier).getAppliedDonation();
     });
     searchController = TextEditingController();
@@ -92,32 +92,4 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
   }
 }
 
-class DonationEmptyState extends StatelessWidget {
-  const DonationEmptyState({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
-    return Center(
-      child: Container(
-        padding: EdgeInsets.all(30),
-        child: EmptyState(
-            hasButton: false,
-            onTap: () {
-              //WayaNav.toNamed(CreatePost.route);
-            },
-            buttonTrailingIcon: SvgPicture.asset(
-              WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(
-                  wayaTheme.colorScheme.white, BlendMode.srcIn),
-            ),
-            assetImage: Image.asset(
-              WayaAssets.images.emptyEvent.path,
-              scale: 1.5,
-            ),
-            message: "You haven't added any donations yet"),
-      ),
-    );
-  }
-}
 

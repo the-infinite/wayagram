@@ -86,7 +86,7 @@ class _WayaCollapsibleTextState extends State<WayaCollapsibleText> {
       trimMode: TrimMode.Line,
       trimCollapsedText: "read more",
       trimExpandedText: "show less",
-      moreStyle: wayaTheme.textTheme.bodyMedium?.copyWith(
+      moreStyle: widget.style.copyWith(
         color: widget.buttonColor ?? wayaTheme.colorScheme.primary500,
         fontSize: widget.fontSize,
         fontWeight: FontWeight.w500,

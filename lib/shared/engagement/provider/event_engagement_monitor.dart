@@ -2,6 +2,7 @@
 // -- location type
 // -- event type
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/shared/engagement/model/default.dart';
@@ -30,8 +31,7 @@ class EventEngagementMonitor extends StateNotifier<void> {
 
   void addLocation(String loc, int points) {
     _engagementNotifier.monitorEventLocation(ServiceType.events, loc, points);
-
-    print(getAllEventLocation());
+    debugPrint(getAllEventLocation().toString());
   }
 
   Map<String, int> getAllEventLocation() {
@@ -43,7 +43,7 @@ class EventEngagementMonitor extends StateNotifier<void> {
   }
 
   Map<String, int> getAllEventType() {
-    return _engagementNotifier.state[ServiceType.events]!.getAllEventTypee();
+    return _engagementNotifier.state[ServiceType.events]!.getAllEventType();
   }
 }
 

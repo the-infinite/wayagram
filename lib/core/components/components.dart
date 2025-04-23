@@ -26,3 +26,4 @@ export 'waya_preloader.dart';
 export 'waya_video.dart';
 export 'waya_error_widget.dart';
 export 'waya_progress_bar.dart';
+export 'waya_state_adapter.dart';

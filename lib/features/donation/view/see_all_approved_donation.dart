@@ -26,7 +26,7 @@ class _SeeAllApprovedDonationsState extends ConsumerState<SeeAllApprovedDonation
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(donationVmProvider.notifier).getHostedDonation();
+      ref.read(donationVmProvider.notifier).getApprovedDonation();
       ref.read(donationVmProvider.notifier).getMyKYC();
     });
     searchController = TextEditingController();

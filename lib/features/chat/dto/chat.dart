@@ -62,7 +62,7 @@ class SendMessageDto {
         momentId: momentId,
         media: media
             ?.map(
-              (file) => MessageMedia(
+              (file) => MessageMediaModel(
                 id: WayaValueHelper.createUid(),
                 messageId: messageId,
                 mediaType: type,

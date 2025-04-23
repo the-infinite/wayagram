@@ -134,7 +134,7 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
                 textStyle: wayaTheme.textTheme.labelSmall
                     ?.wayaCopyWith(color: wayaTheme.colorScheme.onPrimary),
                 callback: (){
-                  print('Request ==>> Wallet');
+                  debugPrint('Request ==>> Wallet');
                   WayaNav.toNamed(RequestPayout.route);
                 }),
              SizedBox(width: 10,),

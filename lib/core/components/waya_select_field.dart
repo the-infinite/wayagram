@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -93,26 +95,40 @@ class WayaSelectFieldViewModel extends ChangeNotifier {
 
   WayaSelectFieldViewModel(this.ref);
 
-  Future<void> selectValue(
-      BuildContext context, String title, List<Select> items, Function(List<Select>) onSelected, bool multi, {String? subTitle, double? contextHeight}) async {
-    final result = await WayaUtils.showSelectModal(
+  Future<T> selectValue<T>(
+    BuildContext context,
+    String title,
+    List<Select> items,
+    FutureOr<T> Function(List<Select>) onSelected,
+    bool multi, {
+    String? subTitle,
+    double? contextHeight,
+  }) {
+    final completer = Completer<T>();
+
+    //? Then we do it like this.
+    WayaUtils.showSelectModal(
       context: context,
       title: title,
       items: items,
       subTitle: subTitle,
-      contextHeight:contextHeight,
+      contextHeight: contextHeight,
       selectedItems: selectedItems,
       multi: multi,
+    ).then(
+      (result) async {
+        selectedItems = result;
+        final response = await onSelected(selectedItems);
+        notifyListeners();
+        completer.complete(response);
+      },
     );
 
-    selectedItems = result;
-
-    onSelected(selectedItems);
-    notifyListeners();
+    //? Then send this one.
+    return completer.future;
   }
 }
 
-final wayaSelectFieldViewModelProvider =
-    ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>((ref, uniqueKey) {
-  return WayaSelectFieldViewModel(ref);
-});
+final wayaSelectFieldViewModelProvider = ChangeNotifierProvider.family<WayaSelectFieldViewModel, String>(
+  (ref, uniqueKey) => WayaSelectFieldViewModel(ref),
+);

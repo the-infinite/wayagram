@@ -65,7 +65,7 @@ class WayaVideoController {
       },
     ).catchError(
       (e) {
-        debugPrint(e);
+        debugPrint(e.toString());
       },
     );
   }
@@ -78,7 +78,7 @@ class WayaVideoController {
       },
     ).catchError(
       (e) {
-        debugPrint(e);
+        debugPrint(e.toString());
       },
     );
   }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
@@ -9,12 +9,21 @@ import 'package:wayagram/features/promotion/widgets/promoted_service.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/model/pages.dart';
+import 'package:wayagram/shared/features/profile/model/post.dart';
 
-class PromotionCard<T> extends ConsumerWidget {
+class PromotionCard extends ConsumerWidget {
   final String contentType;
-  final T data;
+  final dynamic data;
+  final bool showTimeLeft;
+  final String? timeLeft;
+  final String? id;
   const PromotionCard(
-      {super.key, required this.contentType, required this.data});
+      {super.key,
+      required this.contentType,
+      required this.data,
+      this.timeLeft = '',
+      this.id,
+      this.showTimeLeft = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,9 +35,8 @@ class PromotionCard<T> extends ConsumerWidget {
       'page' => _buildPromotedPage(context: context, data: data as PageModel),
       'donation' =>
         _buildPromotedDonation(context: context, data: data as MyDonationDocs),
-      'poll & vote' =>
-        _buildPromotedDonation(context: context, data: data as MyDonationDocs),
-      'post' => _buildPromotedPoll(context: context, data: data as Docs),
+      'poll & vote' => _buildPromotedPoll(context: context, data: data as Docs),
+      'post' => _buildPromotedPost(context: context, data: data as PostModel),
       'group' =>
         _buildPromotedGroup(context: context, data: data as GroupModel),
       'contest' => const SizedBox(),
@@ -37,6 +45,7 @@ class PromotionCard<T> extends ConsumerWidget {
       _ => const SizedBox.shrink(),
     };
   }
+  //
 
 //> Event
   Widget _buildPromotedEvent(
@@ -44,6 +53,9 @@ class PromotionCard<T> extends ConsumerWidget {
     return PromotedService(
         title: data.title,
         description: data.description ?? '',
+        showTimeLeft: showTimeLeft,
+        timeLeft: timeLeft,
+        id: id,
         image: data.image);
   }
 
@@ -53,6 +65,9 @@ class PromotionCard<T> extends ConsumerWidget {
     final String image = data.images.isEmpty ? "" : data.images[0];
     return PromotedService(
         title: data.name,
+        showTimeLeft: showTimeLeft,
+        timeLeft: timeLeft,
+        id: id,
         description: WayaHelpers.formatPrice(double.parse(data.price).toInt()),
         image: image);
   }
@@ -63,6 +78,9 @@ class PromotionCard<T> extends ConsumerWidget {
     return PromotedService(
         title: data.title ?? '',
         description: data.description ?? '',
+        showTimeLeft: showTimeLeft,
+        timeLeft: timeLeft,
+        id: id,
         image: data.imageURL ?? '');
   }
 
@@ -72,6 +90,9 @@ class PromotionCard<T> extends ConsumerWidget {
     return PromotedService(
         title: data.name,
         description: data.description,
+        timeLeft: timeLeft,
+        id: id,
+        showTimeLeft: showTimeLeft,
         image: data.coverImage ?? '');
   }
 
@@ -81,6 +102,9 @@ class PromotionCard<T> extends ConsumerWidget {
     return PromotedService(
         title: data.name,
         description: data.description,
+        showTimeLeft: showTimeLeft,
+        id: id,
+        timeLeft: timeLeft,
         image: data.coverImage ?? '');
   }
 
@@ -88,6 +112,26 @@ class PromotionCard<T> extends ConsumerWidget {
   Widget _buildPromotedPoll(
       {required BuildContext context, required Docs data}) {
     return PromotedService(
-        title: data.description ?? '', description: '', image: '');
+        title: data.description ?? '',
+        showTimeLeft: showTimeLeft,
+        timeLeft: timeLeft,
+        id: id,
+        description: '',
+        image:
+            'https://res.cloudinary.com/dkdrbjfdt/image/upload/v1744627768/Misc_icon_y32o57.png');
+  }
+
+//> Post
+  Widget _buildPromotedPost(
+      {required BuildContext context, required PostModel data}) {
+    final String media = data.media.isEmpty ? "" : data.media[0];
+    return PromotedService(
+        showTimeLeft: showTimeLeft,
+        timeLeft: timeLeft,
+        id: id,
+        title:
+            "${data.user?.firstName.capitalizeFirst} ${data.user?.lastName.capitalizeFirst}",
+        description: data.content,
+        image: media);
   }
 }

@@ -242,7 +242,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                         // model: widget.model,
                         votingLink: "",
                         onTap: () {
-                          print("i am on the verge");
+                          debugPrint("i am on the verge");
                         },
                         candidateName: "",
                       ),

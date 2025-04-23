@@ -864,7 +864,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                                   'daysLeft': '$daysLeft',
                                   'privacy': '${donation.privacy}',
                                   'id': donation.id,
-                                  'donationCount': '${donation.donationCount}'
+                                  'donationCount': '${donation.donationCount}',
+                                  "donation": donation
                                 });
                               },
                               buttonWidth: 60.0,

@@ -1,17 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
-import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/wallet/widget/payout_modal.dart';
-import 'package:wayagram/shared/components/loading_dialog.dart';
-import 'package:wayagram/features/wallet/view/bank_transfer_screen.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class EnterRequestAmountScreen extends ConsumerStatefulWidget {
@@ -19,8 +14,7 @@ class EnterRequestAmountScreen extends ConsumerStatefulWidget {
   const EnterRequestAmountScreen({super.key});
 
   @override
-  ConsumerState<EnterRequestAmountScreen> createState() =>
-      _EnterRequestAmountScreenState();
+  ConsumerState<EnterRequestAmountScreen> createState() => _EnterRequestAmountScreenState();
 }
 
 class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScreen> {
@@ -76,13 +70,15 @@ class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScr
         errorMessage = "Amount cannot exceed 50,000,000 NGN";
       });
       return;
-    }else{
+    } else {
       WayaUtils.showModalSheet(
         context,
-        child: PayoutPinEntryBottomSheet(amount: amount,),
+        child: PayoutPinEntryBottomSheet(
+          amount: amount,
+        ),
       );
     }
-  /*  final args =
+    /*  final args =
     ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
     final fundOptionCode = args!["code"];
     final name = args["name"];
@@ -134,7 +130,7 @@ class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScr
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+      final dynamic args = ModalRoute.of(context)?.settings.arguments;
       ref.read(walletVmProvider.notifier).getSinglePayoutMethod(id: args['id']);
     });
   }
@@ -142,9 +138,8 @@ class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScr
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final args =
-    ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    final name = args?["name"];
+    //final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    //final name = args?["name"];
     final viewModel = ref.watch(walletVmProvider);
     return WayaScaffold(
       backgroundColor: wayaTheme.colorScheme.greyColor50,
@@ -155,7 +150,7 @@ class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScr
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => WayaNav.goBack(),
         ),
-        title:  Text(
+        title: Text(
           'Request Payout',
           style: TextStyle(
             color: Colors.black,
@@ -198,7 +193,8 @@ class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScr
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('${viewModel.bankName} - ${viewModel.payoutAccountNumber}',
+                Text(
+                  '${viewModel.bankName} - ${viewModel.payoutAccountNumber}',
                   style: TextStyle(
                     color: Colors.black87,
                     fontSize: 14.sp,
@@ -276,7 +272,7 @@ class _EnterRequestAmountScreenState extends ConsumerState<EnterRequestAmountScr
               ),
               NumPadButton(
                 icon: Icons.arrow_forward,
-                iconColor:wayaTheme.primaryColor,
+                iconColor: wayaTheme.primaryColor,
                 //backgroundColor: ,
                 onTap: _handleSubmit,
               ),
@@ -311,9 +307,7 @@ class NumPadButton extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(32),
         side: BorderSide(
-          color: backgroundColor != null
-              ? Colors.transparent
-              : Colors.grey.shade300,
+          color: backgroundColor != null ? Colors.transparent : Colors.grey.shade300,
         ),
       ),
       child: InkWell(
@@ -322,16 +316,16 @@ class NumPadButton extends StatelessWidget {
         child: Center(
           child: icon != null
               ? Icon(
-            icon,
-            color: iconColor ?? Colors.grey.shade600,
-          )
+                  icon,
+                  color: iconColor ?? Colors.grey.shade600,
+                )
               : Text(
-            text!,
-            style: TextStyle(
-              fontSize: 24.sp,
-              color: Colors.grey.shade800,
-            ),
-          ),
+                  text!,
+                  style: TextStyle(
+                    fontSize: 24.sp,
+                    color: Colors.grey.shade800,
+                  ),
+                ),
         ),
       ),
     );

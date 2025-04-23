@@ -52,7 +52,7 @@ class _CreatePollState extends ConsumerState<CreatePoll> {
                 ? () async {
               if(_formKey.currentState!.validate()) {
 
-                print('PAID POLL =>>>> ${viewModel.pollType}');
+                debugPrint('PAID POLL =>>>> ${viewModel.pollType}');
                 WayaNav.toNamed("/add-choices");
 
               }

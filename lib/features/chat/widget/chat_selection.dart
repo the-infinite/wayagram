@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -134,6 +135,7 @@ class SelectConversationWidget extends StatelessWidget {
 class SelectUserWidget extends StatelessWidget {
   final String id;
   final int index;
+  final int? max;
   final ValueNotifier<List<UserDetailsModel>> controller;
   final FutureOr<void> Function(UserDetailsModel, bool) onSelect;
 
@@ -143,6 +145,7 @@ class SelectUserWidget extends StatelessWidget {
     required this.index,
     required this.controller,
     required this.onSelect,
+    this.max,
   });
 
   @override
@@ -173,7 +176,8 @@ class SelectUserWidget extends StatelessWidget {
                 }
 
                 //? This is fine.
-                controller.value = value;
+                final size = value.length;
+                controller.value = max != null ? value.sublist((size - max!).abs(), size) : value;
                 onSelect(data.$1, isSelected);
               },
               splashColor: WayaColors.primary.withAlpha(30),
@@ -267,6 +271,144 @@ class SelectUserWidget extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class UserActionWidget extends StatelessWidget {
+  final String id;
+  final int index;
+  final bool actionAvailable;
+  final bool useYou;
+  final bool hideAction;
+  final String actionText;
+  final VoidCallback onTap;
+  final Widget? child;
+
+  // Construct.
+  const UserActionWidget({
+    super.key,
+    required this.id,
+    required this.index,
+    required this.actionText,
+    required this.onTap,
+    this.useYou = true,
+    this.hideAction = false,
+    this.actionAvailable = true,
+    this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ChatAndSocialUserWidget(
+      id: id,
+      index: index,
+      useYou: useYou,
+      child: child ?? Visibility(
+            visible: !hideAction,
+            child: InkWell(
+              onTap: actionAvailable ? onTap : null,
+              splashColor: WayaColors.primary.withAlpha(30),
+              focusColor: WayaColors.primary.withAlpha(30),
+              highlightColor: WayaColors.primary.withAlpha(30),
+              borderRadius: BorderRadius.circular(10),
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 5.h),
+                child: Text(
+                  actionText,
+                  style: WayaTextStyles.bodyBold.copyWith(
+                    color: actionAvailable ? WayaColors.primary : WayaColors.greyColor500,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ),
+            ),
+          ),
+    );
+  }
+}
+
+class ChatAndSocialUserWidget extends StatelessWidget {
+  final String id;
+  final int index;
+  final Widget? child;
+  final bool useYou;
+
+  // Construct.
+  const ChatAndSocialUserWidget({
+    super.key,
+    required this.id,
+    required this.index,
+    this.useYou = true,
+    this.child,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return WayaFutureSubscriber(
+      future: UserResource.getUserDetails(id),
+      suspense: (context) => const SizedBox(),
+      builder: (context, data) => Padding(
+        padding: index == 0 ? EdgeInsets.zero : const EdgeInsets.only(top: 10),
+        child: InkWell(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 10.w,
+            children: [
+              // The user's chat profile picture.
+              ChatProfilePicture(
+                user: data!.$1,
+                radius: 27.r,
+                showActive: false,
+                canMove: true,
+              ),
+
+              //* For the messages part.
+              Expanded(
+                child: InkWell(
+                  onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(id)),
+                  splashColor: WayaColors.primary.withAlpha(30),
+                  focusColor: WayaColors.primary.withAlpha(30),
+                  highlightColor: WayaColors.primary.withAlpha(30),
+                  borderRadius: BorderRadius.circular(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //* For the other person's name.
+                      Text(
+                        useYou && id == ConversationState.self.id ? "You " : data.$1.fullname,
+                        maxLines: 1,
+                        style: WayaTextStyles.titleMedium.copyWith(
+                          fontWeight: FontWeight.w600,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+
+                      //? For the message content...
+                      if (data.$2.username != null)
+                        Text(
+                          "@${data.$2.username!}",
+                          maxLines: 1,
+                          style: WayaTextStyles.titleMedium.copyWith(
+                            fontWeight: FontWeight.w600,
+                            overflow: TextOverflow.ellipsis,
+                            color: WayaColors.greyColor500,
+                            fontSize: 14.sp,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+
+              //* Selection icon
+              if (child != null) child!,
+            ],
+          ),
+        ),
       ),
     );
   }

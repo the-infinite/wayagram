@@ -1,34 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
-import 'package:wayagram/core/utils/utils.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
-import 'package:wayagram/features/general_settings/privacy_settings/widget/block_dialog.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/widget/blocked_card.dart';
-import 'package:wayagram/features/role_access/view/add_team_member_page.dart';
-import 'package:wayagram/features/role_access/view/member_details_page.dart';
-import 'package:wayagram/features/role_access/vm/role_access_vm.dart';
-import 'package:wayagram/features/role_access/widget/role_access_card.dart';
-import 'package:wayagram/features/role_access/widget/role_admin_card.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
-import 'package:wayagram/shared/features/user/models/default.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
-import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class BlockedUserPage extends StatefulHookConsumerWidget {
   static const route = '/blocked-user-page';
   const BlockedUserPage({super.key});
 
   @override
-  _ForYouContestState createState() => _ForYouContestState();
+  ConsumerState<BlockedUserPage> createState() => _ForYouContestState();
 }
 
 class _ForYouContestState extends ConsumerState<BlockedUserPage> {
@@ -48,9 +33,8 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
 
     // ✅ Fetch data only when scrolling **downward** and near the bottom
     if (currentOffset > _previousScrollOffset &&
-        _scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent - 100) {
-      // print("fetching .....${_scrollController.position.pixels}");
+        _scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
+      // debugPrint("fetching .....${_scrollController.position.pixels}");
       ref.read(conversationProvider.notifier).getBlockedUsers();
     }
     _previousScrollOffset = currentOffset;
@@ -65,12 +49,14 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     // final viewModel = ref.watch(roleAccessVm);
 
     final viewModelReal = ref.watch(conversationProvider);
     final viewModelNotifier = ref.read(conversationProvider.notifier);
     final isLoading = useState(false);
+
+    //? This is fine.
     useEffect(() {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         viewModelNotifier.getBlockedUsers();
@@ -89,9 +75,7 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text("Blocked Users"),
-        leading: WayaBackButton(
-            //onTap: onTapBackButton,
-            ),
+        leading: WayaBackButton(),
       ),
       body: SizedBox(
         height: context.height,
@@ -100,8 +84,7 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (viewModelReal.isLoading == true)
-              Center(child: CircularProgressIndicator()),
+            if (viewModelReal.isLoading == true) Center(child: CircularProgressIndicator()),
             if (viewModelReal.blocked.isEmpty) emptyWidget(),
             Expanded(
               // height: context.height - 200,
@@ -110,11 +93,7 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
                 physics: AlwaysScrollableScrollPhysics(),
                 itemCount: viewModelReal.blocked.length,
                 itemBuilder: (context, index) {
-                 
-                 
-
-                  return BlockedCard( viewModelReal.blocked[index]);
-                 
+                  return BlockedCard(viewModelReal.blocked[index]);
                 },
               ),
             ),
@@ -127,11 +106,12 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
 
   Widget emptyWidget() {
     return UgtEmptyState(
-        icon: Image.asset("assets/images/u-emptystate.png"),
-        desc: "No User added yet",
-        title: "Blocked Users",
-        buttonText: "",
-        hideButton: false,
-        onTap: () {});
+      icon: Image.asset("assets/images/u-emptystate.png"),
+      desc: "No User added yet",
+      title: "Blocked Users",
+      buttonText: "",
+      hideButton: false,
+      onTap: () {},
+    );
   }
 }

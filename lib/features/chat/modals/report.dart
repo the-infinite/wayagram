@@ -8,7 +8,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
-import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class ReportDialog extends StatefulWidget {
   final UserDetailsModel user;
@@ -31,7 +30,7 @@ class _ReportUserDialogState extends State<ReportDialog> {
   late final notifier = widget.ref.read(conversationProvider.notifier);
   late final buttonController = ValueNotifier(false);
   final inputController = TextEditingController();
-   ReportModel? selectedReport = null;
+  ReportModel? selectedReport;
   final list = [
     ReportModel(
       id: 1,
@@ -72,7 +71,6 @@ class _ReportUserDialogState extends State<ReportDialog> {
   Widget build(BuildContext context) {
     //? First, we obtain all things needed to build this widget.
     final user = widget.user;
-    final profile = widget.profile;
     final theme = Theme.of(context);
 
     return Padding(
@@ -162,8 +160,7 @@ class _ReportUserDialogState extends State<ReportDialog> {
                         int index = list.indexOf(e);
                         setState(() {
                           for (int i = 0; i < list.length; i++) {
-                            list[i].value =
-                                (i == index); // Only selected index is true
+                            list[i].value = (i == index); // Only selected index is true
                           }
                         });
                       },
@@ -173,13 +170,10 @@ class _ReportUserDialogState extends State<ReportDialog> {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           border: Border.all(
-                            color: e.value
-                                ? theme.colorScheme.primary
-                                : Colors.transparent, // Border color
+                            color: e.value ? theme.colorScheme.primary : Colors.transparent, // Border color
                             width: 0.5, // Border width
                           ),
-                          borderRadius: BorderRadius.circular(
-                              8), // Optional rounded corners
+                          borderRadius: BorderRadius.circular(8), // Optional rounded corners
                         ),
                         child: Text(
                           e.text,
@@ -218,13 +212,14 @@ class _ReportUserDialogState extends State<ReportDialog> {
                 notifier: buttonController,
                 color: theme.colorScheme.primary,
                 callback: () async {
-                  if(selectedReport == null && inputController.text.trim().isEmpty){ 
+                  if (selectedReport == null && inputController.text.trim().isEmpty) {
                     WayaSnackBar.showToast("Please select a reason for reporting this user", showSuccess: false);
                     return;
                   }
                   //? If this went well...
-                  final result = await notifier.reportUser(user.id, 
-                  inputController.text.trim().isEmpty?selectedReport?.text??"": inputController.text.trim()
+                  final result = await notifier.reportUser(
+                    user.id,
+                    inputController.text.trim().isEmpty ? selectedReport?.text ?? "" : inputController.text.trim(),
                   );
 
                   //? Then leave.
