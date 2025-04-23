@@ -75,6 +75,7 @@ class ChatMember {
   final bool isDeletedChat;
   final bool isArchived;
   final bool isPined;
+  final bool isMuted;
   final DateTime joinedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -90,6 +91,7 @@ class ChatMember {
     required this.isDeletedChat,
     required this.isArchived,
     required this.isPined,
+    required this.isMuted,
     required this.joinedAt,
     required this.createdAt,
     required this.updatedAt,
@@ -111,6 +113,7 @@ class ChatMember {
       isDeletedChat: isDeletedChat,
       isArchived: isArchived,
       isPined: isPined,
+      isMuted: isMuted,
       joinedAt: joinedAt,
       createdAt: createdAt,
       updatedAt: updatedAt,
