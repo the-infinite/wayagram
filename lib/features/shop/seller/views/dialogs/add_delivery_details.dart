@@ -270,7 +270,7 @@ class AddDeliveryDetailsViewModel extends StateNotifier<AddDeliveryDetailState> 
         state = state.copyWith(deliveryDateIso: response.toIso8601String());
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -288,7 +288,7 @@ class AddDeliveryDetailsViewModel extends StateNotifier<AddDeliveryDetailState> 
         state = AddDeliveryDetailState();
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }

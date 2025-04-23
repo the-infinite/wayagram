@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/modals/block.dart';
+import 'package:wayagram/features/chat/modals/report.dart';
 import 'package:wayagram/features/chat/modals/unblock.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
@@ -288,7 +289,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                   value: 2,
                   height: 36.h,
                   onTap: () {
-                    conversationNotifier.muteOrUnmuteUser(widget.data.$1.id);
+                    conversationNotifier.muteOrUnmuteUser(
+                        context, ref, widget.data.$1.id);
                   },
                   child: WayaActionNav(
                     context: context,
@@ -305,8 +307,24 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                 PopupMenuItem<int>(
                   value: 3,
                   height: 36.h,
-                  onTap: () {
-                    conversationNotifier.reportUser(widget.data.$1.id);
+                  onTap: () async {
+                    //conversationNotifier.reportUser(widget.data.$1.id);
+                    final result = await WayaUtils.showModalSheet<bool?>(
+                      context,
+                      child: ReportDialog(
+                        user: widget.data.$1,
+                        profile: widget.data.$2,
+                        ref: ref,
+                      ),
+                    );
+
+                    // If this is defined...
+                    if (result == null) return;
+
+                    //? Then pop.
+                    if (result) {
+                      WayaSnackBar.showToast("This user has been Reported");
+                    }
                   },
                   child: WayaActionNav(
                     context: context,

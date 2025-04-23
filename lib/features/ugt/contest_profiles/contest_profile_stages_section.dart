@@ -26,7 +26,7 @@ class _ContestProfileStagesSectionState
 
   @override
   void initState() {
-    print("i am looping  wewe ${widget.stages?.length}");
+    debugPrint("i am looping  wewe ${widget.stages?.length}");
     super.initState();
   }
 

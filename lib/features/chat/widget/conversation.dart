@@ -300,7 +300,7 @@ class _ConversationWidgetState extends State<ConversationWidget> {
               lastSeen: widget.chat.other.chatUser?.lastSeen,
               showActive: widget.chat.chatType != ChatType.group && userStatus == ChatUserActivity.online,
               chat: widget.chat,
-              radius: 25,
+              radius: 25.r,
             ),
 
             // Some space.

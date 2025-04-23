@@ -32,7 +32,7 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
   }
 
   void _addStage() {
-    print(
+    debugPrint(
         'i dey ghhhhhhhh ${ref.read(contestNotifierProvider.notifier).getEditStageList()}');
     ref
         .read(contestNotifierProvider.notifier)
@@ -246,7 +246,7 @@ class _StageContestSettingsState extends ConsumerState<StageContestSettings> {
             border:
                 Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              print("stages  ${_contestController.contestStages.toString()}");
+              debugPrint("stages  ${_contestController.contestStages.toString()}");
               WayaNav.goBack();
             })
       ],

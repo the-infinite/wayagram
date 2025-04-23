@@ -77,10 +77,10 @@ class AddProductVm extends StateNotifier<AddProductState> {
         }
         state = state.copyWith(uploadedDocuments: updatedDocuments);
       } else {
-        print("No images were selected.");
+        debugPrint("No images were selected.");
       }
     }).catchError((error) {
-      print("Error picking images: $error");
+      debugPrint("Error picking images: $error");
     });
   }
 
@@ -115,7 +115,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
       return SelectTypePaginatedResult(
           items: allDiscounts, totalPages: state.totalNoOfDiscountPages);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     }
   }
@@ -140,7 +140,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
       return SelectTypePaginatedResult(
           items: allDiscounts, totalPages: state.totalNoOfDiscountPages);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     }
   }
@@ -270,11 +270,11 @@ class AddProductVm extends StateNotifier<AddProductState> {
         }
 
         WayaSnackBar.showToast("${response.data["data"]}");
-        //print(response.data);
+        //debugPrint(response.data.toString());
       }
       //
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -331,7 +331,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
         WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isDeleting: true);
     }
@@ -415,7 +415,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
         state = state.copyWith(uploadedDocuments: existingImages);
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       state = state.copyWith(isLoadingEditingMode: false);
     }
   }

@@ -96,15 +96,15 @@ class WalletVm extends StateNotifier<WalletState> {
       state = state.copyWith(isLoading: true);
       final response = await _walletRepository.getPayoutMethod();
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         PayoutMethodModel responseModel = PayoutMethodModel.fromJson(response.data);
         state = state.copyWith(payoutMethod: responseModel.data);
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -130,7 +130,7 @@ class WalletVm extends StateNotifier<WalletState> {
         );
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -142,8 +142,8 @@ class WalletVm extends StateNotifier<WalletState> {
       state = state.copyWith(isLoading: true);
       final response = await _walletRepository.getSingleRequest(id);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         SingleRequestModel responseModel = SingleRequestModel.fromJson(response.data);
@@ -157,7 +157,7 @@ class WalletVm extends StateNotifier<WalletState> {
             time: responseModel.data?.createdAt);
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 
@@ -167,8 +167,8 @@ class WalletVm extends StateNotifier<WalletState> {
       state = state.copyWith(isLoading: true);
       final response = await _walletRepository.getSinglePayoutMethod(id);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         SinglePayoutMethodModel responseModel = SinglePayoutMethodModel.fromJson(response.data);
@@ -178,7 +178,7 @@ class WalletVm extends StateNotifier<WalletState> {
         );
       } else {}
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 

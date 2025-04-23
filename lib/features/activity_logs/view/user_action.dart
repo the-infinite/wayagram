@@ -157,7 +157,7 @@ class _UserActionState extends ConsumerState<UserAction> {
   sortList(s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.userActionsDocs = [];
-    print('ACTIVITY End ====> $s');
+    debugPrint('ACTIVITY End ====> $s');
     setState(() {
       if(s == 'all time'){
         viewModel.userActionsDocs = viewModel.userActionsDocs1;
@@ -172,24 +172,24 @@ class _UserActionState extends ConsumerState<UserAction> {
           String a = DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2,'0'));
-          print('AAAA $b');
+          debugPrint('AAAA $b');
         }
 
         for (int i = 0; i < y; i++) {
           String a = DateTime.now().subtract(Duration(days: i +1)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2,'0'));
-          print('AAAABBBBB $b');
+          debugPrint('AAAABBBBB $b');
         }
 
-        print('WeekDAY $w');
+        debugPrint('WeekDAY $w');
         for (int i = 0; i < viewModel.userActionsDocs1.length; i++) {
           String week = viewModel.userActionsDocs1[i].createdAt.toString().split('T')[0];
           if (allWeekDays.contains(week.split('-')[2]) ) {
             viewModel.userActionsDocs.add(viewModel.userActionsDocs1[i]);
           }
         }
-        print('ACTIVIVBVB ${viewModel.userActionsDocs.length}');
+        debugPrint('ACTIVIVBVB ${viewModel.userActionsDocs.length}');
       } else if(s =='this month'){
         String m =  DateTime.now().month.toString().padLeft(2,'0');
         for (int i = 0; i < viewModel.userActionsDocs1.length; i++) {

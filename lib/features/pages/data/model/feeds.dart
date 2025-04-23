@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 
@@ -13,7 +14,7 @@ class PostsResponse {
   });
 
   factory PostsResponse.fromJson(Map<String, dynamic> json) {
-    print('Parsing Posts Response: $json');
+    debugPrint('Parsing Posts Response: $json');
     return PostsResponse(
       currentPage: json['currentPage'],
       totalPages: json['totalPages'],

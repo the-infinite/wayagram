@@ -13,7 +13,6 @@ class CreateNewPasswordVm extends ChangeNotifier {
   bool _isButtonEnabled = false;
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
-  final bool _isFocused = false;
   bool _isConfirmPasswordFocused = false;
   bool _isPasswordFocused = false;
   bool _isLoading = false;
@@ -47,7 +46,7 @@ class CreateNewPasswordVm extends ChangeNotifier {
   }
 
   Future<void> onSubmit(String email, String otp) async {
-    print("$email $otp ${confirmPassword.text} ${password.text}");
+    debugPrint("$email $otp");
     try {
       _isLoading = true;
       notifyListeners();

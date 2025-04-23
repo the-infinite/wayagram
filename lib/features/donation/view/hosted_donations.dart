@@ -42,7 +42,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(donationVmProvider.notifier).getHostedDonation();
+      ref.read(donationVmProvider.notifier).getApprovedDonation();
       ref.read(donationVmProvider.notifier).getAppliedDonation();
       ref.read(donationVmProvider.notifier).getRejectedDonation();
       ref.read(donationVmProvider.notifier).getMyKYC();
@@ -331,7 +331,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
       child: CircularProgressIndicator(),
       )),
       emptyState:DonationEmptyState(),
-      fetchData: ref.read(donationVmProvider.notifier).getHostedDonation,
+      fetchData: ref.read(donationVmProvider.notifier).getApprovedDonation,
       result: (data, s ) {
       return ListView.builder(
       //physics: const NeverScrollableScrollPhysics(),

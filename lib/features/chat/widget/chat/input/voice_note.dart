@@ -1,8 +1,8 @@
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
@@ -68,6 +68,7 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
+                  spacing: 10.w,
                   children: [
                     //? First, the pause and record button.
                     AnimatedCrossFade(
@@ -76,9 +77,7 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
                           ? CrossFadeState.showFirst
                           : CrossFadeState.showSecond,
                       firstChild: WayaButton(
-                        callback: () async {
-                          await widget.controller.pauseRecording();
-                        },
+                        callback: () async => await widget.controller.pauseRecording(),
                         shape: BoxShape.circle,
                         height: null,
                         color: WayaColors.primary,
@@ -91,9 +90,7 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
                         ),
                       ),
                       secondChild: WayaButton(
-                        callback: () async {
-                          widget.controller.resumeRecording();
-                        },
+                        callback: () async => await widget.controller.resumeRecording(),
                         shape: BoxShape.circle,
                         height: null,
                         color: WayaColors.primary,
@@ -106,9 +103,6 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
                         ),
                       ),
                     ),
-
-                    // Some space.
-                    const Gap(5),
 
                     //? Second, if this is not currently recording...
                     Expanded(
@@ -126,6 +120,31 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
                         ),
                       ),
                     ),
+
+                    //? Third, the button to delete the voice note when we have
+                    //? paused recording
+                    if (widget.controller.recorderState == RecorderState.paused)
+                      WayaButton(
+                        callback: () async {
+                          //? Cancel recording
+                          final result = await widget.controller.cancelRecording();
+
+                          //? If this failed.
+                          if (!result) {
+                            WayaSnackBar.showToast("Failed to delete the voice message");
+                          }
+                        },
+                        shape: BoxShape.circle,
+                        height: null,
+                        color: WayaColors.error,
+                        horizontalPadding: 7,
+                        verticalPadding: 7,
+                        centerWidget: WayaAssets.icons.cBin.svg(
+                          color: WayaColors.white,
+                          height: 18,
+                          width: 18,
+                        ),
+                      )
                   ],
                 ),
               ),
