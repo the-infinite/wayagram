@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/referral/data/referral_state.dart';
 import 'package:wayagram/features/referral/data/repo/referral_repo.dart';
@@ -73,7 +74,7 @@ class ReferralVm extends StateNotifier<ReferralState> {
       }
     } catch (e) {
       state = state.copyWith(isLoading: false);
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
 }

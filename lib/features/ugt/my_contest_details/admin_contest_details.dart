@@ -36,7 +36,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     final wayaTheme = Theme.of(context);
     final String myPassedContestId = Get.parameters['id'] ?? 'Unknown';
     final myContestId = useState("");
-    //  print("COntest DI $myPassedContestId");
+    //  debugPrint("COntest DI $myPassedContestId");
     useEffect(() {
       String contestId = ref.read(selectedContestProvider.notifier).state?.id ??
           myPassedContestId;
@@ -44,7 +44,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
         myContestId.value = contestId;
       });
 
-      print("COntest DI  2 $contestId");
+      debugPrint("COntest DI  2 $contestId");
       ref.read(postProvider.notifier).fetchSingleContest(contestId:contestId, ref: ref);
       ref
           .read(votersContestNotifier.notifier)

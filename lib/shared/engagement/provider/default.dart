@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
@@ -31,14 +32,14 @@ class EngagementNotifier
           .map((entry) => {"category": entry.key, "score": entry.value})
           .toList();
 
-      print("Sending postCategory data to backend: $postCategoryData");
+      debugPrint("Sending postCategory data to backend: $postCategoryData");
 
       final response = await AuthRepository().selectInterest(postCategoryData);
       if (response.success) {
-        print("Post category data sent successfully.");
+        debugPrint("Post category data sent successfully.");
       }
     } catch (error) {
-      print("Error sending data: $error");
+      debugPrint("Error sending data: $error");
     }
   }
 
@@ -93,7 +94,7 @@ class EngagementNotifier
   // Future<void> sendData() async {
   //   final engagementData = state;
 
-  //   print("Engagement data sent to backend: $engagementData");
+  //   debugPrint("Engagement data sent to backend: $engagementData");
   // }
 }
 

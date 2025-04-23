@@ -141,7 +141,7 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
     }
 
     final businessId = await _secureDataSource.getBusinessId();
-    print("feefer $businessId");
+    debugPrint("feefer $businessId");
     final formdata = state.selected == 'CAC'
         ? {
             'nin': await formattedImage(state.uploadedDocuments

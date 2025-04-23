@@ -31,28 +31,22 @@ class WayaPaginatedSelectField extends ConsumerStatefulWidget {
       required this.uniqueKey});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _WayaPaginatedSelectFieldState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _WayaPaginatedSelectFieldState();
 }
 
-class _WayaPaginatedSelectFieldState
-    extends ConsumerState<WayaPaginatedSelectField> {
+class _WayaPaginatedSelectFieldState extends ConsumerState<WayaPaginatedSelectField> {
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref
-          .read(paginatedSelectFieldNotifierProvider(widget.uniqueKey).notifier)
-          .initialize(widget.fetchData);
+      ref.read(paginatedSelectFieldNotifierProvider(widget.uniqueKey).notifier).initialize(widget.fetchData);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final notifier = ref
-        .read(paginatedSelectFieldNotifierProvider(widget.uniqueKey).notifier);
-    final state =
-        ref.watch(paginatedSelectFieldNotifierProvider(widget.uniqueKey));
+    final notifier = ref.read(paginatedSelectFieldNotifierProvider(widget.uniqueKey).notifier);
+    final state = ref.watch(paginatedSelectFieldNotifierProvider(widget.uniqueKey));
 
     final wayaTheme = Theme.of(context);
 
@@ -62,8 +56,7 @@ class _WayaPaginatedSelectFieldState
         if (widget.label != null)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 4),
-            child: Text(widget.label!,
-                style: wayaTheme.textTheme.bodyMedium?.copyWith(fontSize: 14.sp)),
+            child: Text(widget.label!, style: wayaTheme.textTheme.bodyMedium?.copyWith(fontSize: 14.sp)),
           ),
         WayaButton(
           callback: () async {
@@ -94,14 +87,8 @@ class _WayaPaginatedSelectFieldState
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                        widget.displayText == null
-                            ? widget.hintText
-                            : widget.displayText!.label,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.wayaCopyWith(
+                    Text(widget.displayText == null ? widget.hintText : widget.displayText!.label,
+                        style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
                               fontSize: 14.sp,
                               color: widget.displayText == null
                                   ? wayaTheme.colorScheme.greyColor300
@@ -116,9 +103,7 @@ class _WayaPaginatedSelectFieldState
               )),
           border: Border.all(
               width: 1,
-              color: state.isFocused
-                  ? wayaTheme.colorScheme.customPrimary
-                  : wayaTheme.colorScheme.greyColor300),
+              color: state.isFocused ? wayaTheme.colorScheme.customPrimary : wayaTheme.colorScheme.greyColor300),
         ),
       ],
     );
@@ -141,8 +126,7 @@ class PaginatedBottomSheet extends ConsumerStatefulWidget {
       required this.uniqueKey});
 
   @override
-  ConsumerState<PaginatedBottomSheet> createState() =>
-      _PaginatedBottomSheetState();
+  ConsumerState<PaginatedBottomSheet> createState() => _PaginatedBottomSheetState();
 }
 
 class _PaginatedBottomSheetState extends ConsumerState<PaginatedBottomSheet> {
@@ -153,12 +137,8 @@ class _PaginatedBottomSheetState extends ConsumerState<PaginatedBottomSheet> {
     super.initState();
     _scrollController = ScrollController()
       ..addListener(() {
-        if (_scrollController.position.pixels ==
-            _scrollController.position.maxScrollExtent) {
-          ref
-              .read(paginatedSelectFieldNotifierProvider(widget.uniqueKey)
-                  .notifier)
-              .loadMoreItems(widget.fetchData);
+        if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+          ref.read(paginatedSelectFieldNotifierProvider(widget.uniqueKey).notifier).loadMoreItems(widget.fetchData);
         }
       });
   }
@@ -166,8 +146,7 @@ class _PaginatedBottomSheetState extends ConsumerState<PaginatedBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final state =
-        ref.watch(paginatedSelectFieldNotifierProvider(widget.uniqueKey));
+    final state = ref.watch(paginatedSelectFieldNotifierProvider(widget.uniqueKey));
 
     return Container(
       padding: EdgeInsets.symmetric(vertical: 30, horizontal: 20),
@@ -197,8 +176,7 @@ class _PaginatedBottomSheetState extends ConsumerState<PaginatedBottomSheet> {
                 final item = state.items[index];
                 return ListTile(
                   minTileHeight: 25,
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 2, vertical: 0),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 2, vertical: 0),
                   title: Text(item.label),
                   onTap: () => widget.onSelected(item),
                 );
@@ -242,14 +220,11 @@ class WayaPaginatedSelectFieldState {
   }
 }
 
-class WayaPaginatedSelectFieldNotifier
-    extends StateNotifier<WayaPaginatedSelectFieldState> {
+class WayaPaginatedSelectFieldNotifier extends StateNotifier<WayaPaginatedSelectFieldState> {
   final Ref ref;
-  WayaPaginatedSelectFieldNotifier(this.ref)
-      : super(WayaPaginatedSelectFieldState());
+  WayaPaginatedSelectFieldNotifier(this.ref) : super(WayaPaginatedSelectFieldState());
 
-  Future<void> initialize(
-      Future<SelectTypePaginatedResult?> Function(int page) fetchData) async {
+  Future<void> initialize(Future<SelectTypePaginatedResult?> Function(int page) fetchData) async {
     state = state.copyWith(isLoading: true);
     try {
       final result = await fetchData(1);
@@ -260,7 +235,6 @@ class WayaPaginatedSelectFieldNotifier
           totalPages: result.totalPages,
           isLoading: false,
         );
-       //   print("itwems hjbjbkjnkjnknkn ${result.items}");
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -270,8 +244,7 @@ class WayaPaginatedSelectFieldNotifier
     }
   }
 
-  Future<void> loadMoreItems(
-      Future<SelectTypePaginatedResult?> Function(int page) fetchData) async {
+  Future<void> loadMoreItems(Future<SelectTypePaginatedResult?> Function(int page) fetchData) async {
     if (state.currentPage >= state.totalPages) return;
 
     state = state.copyWith(isLoading: true);
@@ -285,7 +258,6 @@ class WayaPaginatedSelectFieldNotifier
           totalPages: result.totalPages,
           isLoading: false,
         );
-      
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -300,9 +272,8 @@ class WayaPaginatedSelectFieldNotifier
   }
 }
 
-final paginatedSelectFieldNotifierProvider = StateNotifierProvider.family<
-    WayaPaginatedSelectFieldNotifier,
-    WayaPaginatedSelectFieldState,
-    String>((ref, uniqueKey) {
+final paginatedSelectFieldNotifierProvider =
+    StateNotifierProvider.family<WayaPaginatedSelectFieldNotifier, WayaPaginatedSelectFieldState, String>(
+        (ref, uniqueKey) {
   return WayaPaginatedSelectFieldNotifier(ref);
 });

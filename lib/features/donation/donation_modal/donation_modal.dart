@@ -263,7 +263,7 @@ class _DonationModalState extends ConsumerState<DonationModal> {
   calculateAmount() {
     num x = 0;
     //x = num.parse(widget.voteFee)*num.parse(amount);
-    print(x);
+    debugPrint(x.toString());
     return x;
   }
 }
@@ -322,7 +322,7 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
 
       if (isPass) {
         //WayaNav.goBack();
-        print('DOANTION AMOUNT ${widget.amount}');
+        debugPrint('DOANTION AMOUNT ${widget.amount}');
         await ref.watch(donationVmProvider.notifier).makeDonation(
             widget.campaignId,
             int.parse(widget.amount),
@@ -353,7 +353,7 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
 
   @override
   Widget build(BuildContext context) {
-    //print('DARLINGTON AMOUNT ${widget.amount}');
+    //debugPrint('DARLINGTON AMOUNT ${widget.amount}');
     //final viewModel = ref.watch(donationVmProvider.notifier);
     return SafeArea(
       child: Container(

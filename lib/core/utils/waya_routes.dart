@@ -100,7 +100,6 @@ import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute_detail.dart';
 import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/application_product_details.dart';
-import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/product_listing.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
 import 'package:wayagram/features/shop/views/products_view_page.dart';
@@ -214,7 +213,7 @@ class WayaAppRoutes {
     EditNamePage.route: () => EditNamePage(),
     EditProfilePage.route: () => EditProfilePage(),
     AddProduct.route: () => AddProduct(),
-    ProductListing.route: () => ProductListing(),
+    //ProductListing.route: () => ProductListing(),
     WayaDealAd.route: () => WayaDealAd(),
     WayaGramDeals.route: () => WayaGramDeals(),
     ApplicationProductDetails.route: () => ApplicationProductDetails(),
@@ -495,14 +494,12 @@ class WayaAppRoutes {
 
   /// This is fine.
   static List<GetPage> get getPages {
-    return routes.entries.map(
-      (entry) {
-        return GetPage(
-          name: entry.key,
-          page: entry.value,
-          transition: Transition.cupertino,
-        );
-      },
-    ).toList();
+    return routes.entries
+        .map((entry) => GetPage(
+              name: entry.key,
+              page: entry.value,
+              transition: Transition.cupertino,
+            ))
+        .toList();
   }
 }

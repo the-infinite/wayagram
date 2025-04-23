@@ -57,7 +57,7 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
 
       return singleProduct;
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
       return null;
     } finally {
       state.copyWith(isLoading: false);
@@ -74,7 +74,7 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
         WayaSnackBar.showToast("Added to your favorites");
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 

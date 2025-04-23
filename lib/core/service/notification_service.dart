@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class PushNotifications {
@@ -21,7 +22,7 @@ class PushNotifications {
         sound: true,
       );
     } catch (e) {
-      print("Failed to initialize firebase notifications because ${e.toString().toLowerCase()}");
+      debugPrint("Failed to initialize firebase notifications because ${e.toString().toLowerCase()}");
     }
 
     //? Second, initialize local notifications.
@@ -56,7 +57,7 @@ class PushNotifications {
         onDidReceiveBackgroundNotificationResponse: onNotificationTap,
       );
     } catch (e) {
-      print("Failed to initialize local notifications because ${e.toString().toLowerCase()}");
+      debugPrint("Failed to initialize local notifications because ${e.toString().toLowerCase()}");
     }
 
     //? Third, and finally, try to include our firebase notification listeners.
@@ -65,7 +66,7 @@ class PushNotifications {
       FirebaseMessaging.onMessageOpenedApp.listen(onNotificationStartApp);
       FirebaseMessaging.onBackgroundMessage(onReceiveBackgroundNotification);
     } catch (e) {
-      print("Failed to bind notification listeners because ${e.toString().toLowerCase()}");
+      debugPrint("Failed to bind notification listeners because ${e.toString().toLowerCase()}");
     }
   }
 
@@ -92,7 +93,7 @@ class PushNotifications {
       deviceToken = (await FirebaseMessaging.instance.getToken())!;
     } catch (e) {
       if (maxRetires > 0) {
-        print("try after 2 sec  -------------=---------------------");
+        debugPrint("try after 2 sec  -------------=---------------------");
         await Future.delayed(Duration(seconds: 2));
         return _getDeviceToken(maxRetires: maxRetires - 1);
       }
@@ -137,7 +138,7 @@ class PushNotifications {
       //? Next, subscribe to topics.
       FirebaseMessaging.instance.subscribeToTopic("all_all_all");
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
 
     //? Leave if no token was generated.

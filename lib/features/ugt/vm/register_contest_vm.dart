@@ -25,8 +25,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
   String? postId = "";
   Contest? post;
 
-  RegisterFormNotifier(this._contestRepository, this._localDataSource)
-      : super([]) {
+  RegisterFormNotifier(this._contestRepository, this._localDataSource) : super([]) {
     fullName = TextEditingController();
     emailAddress = TextEditingController();
     address = TextEditingController();
@@ -77,7 +76,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     ]; */
 
     for (var model in model) {
-      //  print("Model type ${model.requirementType}");
+      //  debugPrint("Model type ${model.requirementType}");
       if (model.requirementType == "TEXT") {
         fieldList.add(
           DynamicField(
@@ -101,30 +100,26 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
     state = [...fieldList];
   }
 
-  Future<void> submitDetail(BuildContext context, ValueNotifier<bool> isLoading,
-      String mySelectedState, VoidCallback onPressed) async {
+  Future<void> submitDetail(
+      BuildContext context, ValueNotifier<bool> isLoading, String mySelectedState, VoidCallback onPressed) async {
     isLoading.value = true;
-    print("Mean  werr $state");
+    debugPrint("Mean  werr $state");
     List<Map<String, dynamic>> detailsList = state.map(
       (model) {
         String? image = model.imagePath;
-        print("Mean1  ${model.imagePath}");
-        print("Mean1  ${model.title}");
-        print("Mean2  ${model.textController?.text}");
-        // print("Mean  sow ${model.textController?.text}");
+        debugPrint("Mean1  ${model.imagePath}");
+        debugPrint("Mean1  ${model.title}");
+        debugPrint("Mean2  ${model.textController?.text}");
+        // debugPrint("Mean  sow ${model.textController?.text}");
         /*  if(model.type== FieldType.image ){
             image = await WayaFileRepository.instance.uploadFile(
       File(image!),
     );
         } */
-        return <String, dynamic>{
-          "title": model.title,
-          "data": image,
-          "type": model.type
-        };
+        return <String, dynamic>{"title": model.title, "data": image, "type": model.type};
       },
     ).toList();
-    print("Mean $detailsList");
+    debugPrint("Mean $detailsList");
     List<Map<String, dynamic>> detailsListRight = [];
     var mapNew = {};
     for (var oldMap in detailsList) {
@@ -139,7 +134,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
       }
     }
 
-    print("Mean 1 $detailsListRight");
+    debugPrint("Mean 1 $detailsListRight");
 
     var map = {
       "userId": _localDataSource.getUserId().toString(),
@@ -153,13 +148,12 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
       "state": mySelectedState,
       "applicationData": mapNew
     };
-    print(map);
+    debugPrint(map.toString());
     final response = await _contestRepository.registerContest(map);
     isLoading.value = false;
 
     if (response.success) {
-      WayaSnackBar.showToast(
-          "Application sent, Your Application is under review");
+      WayaSnackBar.showToast("Application sent, Your Application is under review");
       Future.delayed(Duration(seconds: 1), () {
         WayaNav.removeAllUntil(UgtHome(), "/ugt-home");
       });
@@ -184,7 +178,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
   void updateText(String id, String text) {
     state = state.map((field) {
       if (field.id == id && field.type == FieldType.text) {
-        print("Mean jjj ");
+        debugPrint("Mean jjj ");
         return field.copyWith(imagePath: text);
       }
       return field;
@@ -202,8 +196,7 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
 }
 
 // Provider for the StateNotifier
-final registerFormProvider =
-    StateNotifierProvider<RegisterFormNotifier, List<DynamicField>>(
+final registerFormProvider = StateNotifierProvider<RegisterFormNotifier, List<DynamicField>>(
   (ref) => RegisterFormNotifier(ContestRepo(), WayaLocalDataSource()),
 );
 

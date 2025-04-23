@@ -135,7 +135,7 @@ class VerifyYourIdentityPage extends ConsumerWidget {
             callback: !viewModelState.isLoading
                 ? () {
                 final code = ref.watch(verifyAccountProvider).inputCode;
-                print('DARLINGTON Code ==> $code');
+                debugPrint('DARLINGTON Code ==> $code');
 
                 //viewModel.verifyYourIdentity(() => WayaNav.to(const ResetPinPage()), code);
                 // viewModel.verifyYourIdentity((){

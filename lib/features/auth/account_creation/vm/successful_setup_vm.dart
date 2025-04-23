@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
@@ -55,7 +56,7 @@ class SuccessfulSetupVm extends StateNotifier<SuccessfulSetUpState> {
         
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isloading: false);
     }

@@ -294,7 +294,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
 
   void _submitPin(BuildContext context1, ValueNotifier<bool> isLoading) async {
     if (_pin.length == _pinLength) {
-      print("i dey here ee $_pin");
+      debugPrint("i dey here ee $_pin");
       //  WayaNav.goBack();
 
       var isPass = await ref.read(votersContestNotifier.notifier).verifyAndPayForPaidContest(
@@ -318,7 +318,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
             buttonText: "Create Contest Profile",
             onTap: (myContext, myRef) {
               //  WayaNav.goBack();
-              print("i am cooking");
+              debugPrint("i am cooking");
               myRef.read(selectedAppliedContestProvider.notifier).state = widget.model;
 
               WayaNav.goBack();
@@ -409,10 +409,10 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                         : const Icon(Icons.arrow_forward, color: Colors.black54),
                     onPressed: isLoading.value
                         ? () {
-                            print(" i am so here");
+                            debugPrint(" i am so here");
                           }
                         : () {
-                            print(" i am so noooooooot here");
+                            debugPrint(" i am so noooooooot here");
                             //   widget.onTap();
                             _submitPin(context, isLoading);
                           },

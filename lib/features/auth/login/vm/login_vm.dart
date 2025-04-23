@@ -95,7 +95,7 @@ class LoginVm extends StateNotifier<LoginState> {
   Future<void> signinWithGoogle() async {
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     if (googleUser == null) {
-      print("User cancelled sign-in");
+      debugPrint("User cancelled sign-in");
       return;
     }
 
@@ -108,7 +108,7 @@ class LoginVm extends StateNotifier<LoginState> {
 
     final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
     final String? idToken = await userCredential.user?.getIdToken();
-    print(idToken);
+    debugPrint(idToken);
 
     // if (idToken != null) {
     //   await oauthSignIn(authType: 'GOOGLE', token: idToken);
@@ -120,7 +120,7 @@ class LoginVm extends StateNotifier<LoginState> {
       final response = await _authRepository.oauth(token, authType);
 
       if (response.success) {
-        print(response.data);
+        debugPrint(response.data.toString());
       } else {
         if (response.data['responseCode'] == 404) {
           return WayaSnackBar.showToast("User does not exist");
@@ -129,7 +129,7 @@ class LoginVm extends StateNotifier<LoginState> {
         }
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 

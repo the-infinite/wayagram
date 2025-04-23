@@ -145,7 +145,7 @@ class EventDateWidgetVm extends StateNotifier<EventDateWidgetState> {
       selectTime(time: time24Hour);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 }
