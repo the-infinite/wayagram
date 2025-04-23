@@ -12,13 +12,14 @@ import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dar
 import 'package:wayagram/features/auth/transaction_pin/views/transaction_pin_view.dart';
 
 class VerifyAccount extends ConsumerWidget {
-  final Function goToNextTab;
+  final Function({String? emailAddress}) goToNextTab;
   final String type;
-  const VerifyAccount({
-    super.key,
-    required this.goToNextTab,
-    required this.type,
-  });
+  final String email;
+  const VerifyAccount(
+      {super.key,
+      required this.goToNextTab,
+      required this.type,
+      this.email = ''});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -96,7 +97,8 @@ class VerifyAccount extends ConsumerWidget {
                     alignment: Alignment.center,
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                        color: wayaTheme.colorScheme.primary75, borderRadius: BorderRadius.all(Radius.circular(8))),
+                        color: wayaTheme.colorScheme.primary75,
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Text(
                       "Resend OTP",
                       style: WayaTextStyles.smallActiveLinkStyle,
@@ -140,9 +142,11 @@ class VerifyAccount extends ConsumerWidget {
               ? () {
                   if (type == 'account-creation') {
                     final code = ref.watch(verifyAccountProvider).inputCode;
-                    viewModel.verifyAccount(() => WayaNav.to(const TransactionPinView()), code);
-                  } else {
-                    goToNextTab();
+                    viewModel.verifyAccount(
+                        onSuccess: () => WayaNav.to(const TransactionPinView()),
+                        code: code);
+                  } else if (type == "forgot-password") {
+                    goToNextTab(emailAddress: email);
                   }
                 }
               : null,

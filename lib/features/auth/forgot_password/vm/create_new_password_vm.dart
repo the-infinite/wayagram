@@ -47,10 +47,11 @@ class CreateNewPasswordVm extends ChangeNotifier {
   }
 
   Future<void> onSubmit(String email, String otp) async {
-    print("$email $otp");
+    print("$email $otp ${confirmPassword.text} ${password.text}");
     try {
       _isLoading = true;
       notifyListeners();
+
       final response = await _authRepository.resetPassword(ForgotPassword(
           confirmPassword: confirmPassword.text,
           newPassword: password.text,
