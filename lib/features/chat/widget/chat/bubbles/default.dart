@@ -21,7 +21,6 @@ import 'package:wayagram/features/chat/widget/chat/bubbles/text.dart';
 import 'package:wayagram/features/chat/widget/chat/input/reply_to.dart';
 import 'package:wayagram/features/chat/widget/chat/reaction/bubble.dart';
 import 'package:wayagram/features/chat/widget/chat/reaction/selector.dart';
-import 'package:wayagram/shared/features/user/resource/default.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 bool _isMediaFile(MessageModel data) {
@@ -264,226 +263,225 @@ class _YourBubbleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final user = chat.allOthers.firstWhere((member) => member.userId == data.senderId).combined;
+
+    // This is fine.
     return Padding(
       padding: EdgeInsets.only(top: 7.h, bottom: 7.h, right: 30.w),
-      child: WayaFutureSubscriber(
-        future: UserResource.getUserDetails(data.senderId),
-        suspense: (context) => const SizedBox(),
-        builder: (context, user) => SizedBox(
-          width: MediaQuery.sizeOf(context).width,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            spacing: 5.w,
-            children: [
-              //? If this is a group chat, and we know this user.
-              if (chat.chatType == ChatType.group && user != null)
-                ChatProfilePicture(
-                  user: user.$1,
-                  chat: chat,
-                  useGroup: false,
-                  canMove: false,
-                  showActive: false,
-                  radius: 13.r,
-                ),
+      child: SizedBox(
+        width: MediaQuery.sizeOf(context).width,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          spacing: 5.w,
+          children: [
+            //? If this is a group chat, and we know this user.
+            if (chat.chatType == ChatType.group && user != null)
+              ChatProfilePicture(
+                user: user.$1,
+                chat: chat,
+                useGroup: false,
+                canMove: false,
+                showActive: false,
+                radius: 13.r,
+              ),
 
-              //? Our column here for good measure.
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        //? First, the message box.
-                        Container(
-                          padding: _isMediaFile(data) && (data.content?.isEmpty ?? true)
-                              ? const EdgeInsets.all(2)
-                              : const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: WayaColors.greyColor200,
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(10),
-                              bottomRight: Radius.circular(10),
-                              bottomLeft: Radius.circular(10),
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              //? First, if this message was forwarded to this conversation...
-                              if (data.forwardedFrom != null || data.edited) ...[
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    //* Icon
-                                    if (data.forwardedFrom != null) ...[
-                                      WayaAssets.icons.cCornerUpRight.svg(
-                                        height: 20,
-                                        width: 20,
-                                        color: WayaColors.primary600,
-                                      ),
-
-                                      // Space.
-                                      const Gap(5),
-
-                                      //* Text.
-                                      Text(
-                                        "Forwarded",
-                                        style: WayaTextStyles.bodySemiBold.copyWith(
-                                          fontSize: 13.sp,
-                                          color: WayaColors.primary600,
-                                        ),
-                                      ),
-                                    ],
-
-                                    //? If this was edited...
-                                    if (data.forwardedFrom != null && data.edited) ...[
-                                      Container(
-                                        width: 5,
-                                        height: 10,
-                                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(200),
-                                          color: WayaColors.primary600,
-                                        ),
-                                      )
-                                    ],
-
-                                    //? If this was edited.
-                                    if (data.edited) ...[
-                                      WayaAssets.icons.cPencil.svg(
-                                        height: 20,
-                                        width: 20,
-                                        color: WayaColors.primary600,
-                                      ),
-
-                                      // Space.
-                                      const Gap(5),
-
-                                      //* Text.
-                                      Text(
-                                        "Edited",
-                                        style: WayaTextStyles.bodySemiBold.copyWith(
-                                          fontSize: 13.sp,
-                                          color: WayaColors.primary600,
-                                        ),
-                                      ),
-                                    ],
-                                  ],
-                                ),
-
-                                // Some space.
-                                const Gap(5),
-                              ]
-
-                              //? Second, we need to show the reply to of this message
-                              //? if it exists.
-                              else if (data.originalMessage != null)
-                                Container(
-                                  margin: const EdgeInsets.only(bottom: 10),
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: WayaColors.primary50,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: ChatReplyToWidget(
-                                    controller: controller,
-                                    message: data.originalMessage!,
-                                    interactive: false,
-                                  ),
-                                ),
-
-                              //? Second below.
-                              switch (data.messageType) {
-                                MessageType.text => TextMessageWidget(
-                                    data: data,
-                                    textColor: WayaColors.black,
-                                  ),
-                                MessageType.voiceNote => VoiceMessageWidget(
-                                    data: data,
-                                    isSender: false,
-                                  ),
-                                MessageType.file || MessageType.image || MessageType.video => FileMessageWidget(
-                                    data: data,
-                                    textColor: WayaColors.black,
-                                  ),
-                                _ => Text(
-                                    data.contentDescription,
-                                    style: WayaTextStyles.bodyMedium.copyWith(
-                                      fontSize: 15.sp,
-                                      fontWeight: FontWeight.normal,
-                                      color: WayaColors.black,
-                                    ),
-                                  ),
-                              }
-                            ],
+            //? Our column here for good measure.
+            Expanded(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      //? First, the message box.
+                      Container(
+                        padding: _isMediaFile(data) && (data.content?.isEmpty ?? true)
+                            ? const EdgeInsets.all(2)
+                            : const EdgeInsets.all(10),
+                        decoration: BoxDecoration(
+                          color: WayaColors.greyColor200,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(10),
+                            bottomRight: Radius.circular(10),
+                            bottomLeft: Radius.circular(10),
                           ),
                         ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //? First, if this message was forwarded to this conversation...
+                            if (data.forwardedFrom != null || data.edited) ...[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  //* Icon
+                                  if (data.forwardedFrom != null) ...[
+                                    WayaAssets.icons.cCornerUpRight.svg(
+                                      height: 20,
+                                      width: 20,
+                                      color: WayaColors.primary600,
+                                    ),
 
-                        //? Second, the reaction part of things.
-                        if (interactive && (data.messageReaction?.isNotEmpty ?? false))
-                          Positioned(
-                            right: 5,
-                            top: -15,
-                            child: Container(
-                              height: 22,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(200),
-                                color: WayaColors.primary50,
+                                    // Space.
+                                    const Gap(5),
+
+                                    //* Text.
+                                    Text(
+                                      "Forwarded",
+                                      style: WayaTextStyles.bodySemiBold.copyWith(
+                                        fontSize: 13.sp,
+                                        color: WayaColors.primary600,
+                                      ),
+                                    ),
+                                  ],
+
+                                  //? If this was edited...
+                                  if (data.forwardedFrom != null && data.edited) ...[
+                                    Container(
+                                      width: 5,
+                                      height: 10,
+                                      padding: const EdgeInsets.symmetric(horizontal: 5),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(200),
+                                        color: WayaColors.primary600,
+                                      ),
+                                    )
+                                  ],
+
+                                  //? If this was edited.
+                                  if (data.edited) ...[
+                                    WayaAssets.icons.cPencil.svg(
+                                      height: 20,
+                                      width: 20,
+                                      color: WayaColors.primary600,
+                                    ),
+
+                                    // Space.
+                                    const Gap(5),
+
+                                    //* Text.
+                                    Text(
+                                      "Edited",
+                                      style: WayaTextStyles.bodySemiBold.copyWith(
+                                        fontSize: 13.sp,
+                                        color: WayaColors.primary600,
+                                      ),
+                                    ),
+                                  ],
+                                ],
                               ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: List.generate(
-                                  data.reactionPairs.length,
-                                  (index) {
-                                    final part = data.reactionPairs.entries.elementAt(index);
 
-                                    //? This is fine.
-                                    return ReactionWidgetBubble(
-                                      reaction: part.key,
-                                      count: part.value,
-                                    );
-                                  },
+                              // Some space.
+                              const Gap(5),
+                            ]
+
+                            //? Second, we need to show the reply to of this message
+                            //? if it exists.
+                            else if (data.originalMessage != null)
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 10),
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: WayaColors.primary50,
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
+                                child: ChatReplyToWidget(
+                                  controller: controller,
+                                  message: data.originalMessage!,
+                                  interactive: false,
+                                ),
+                              ),
+
+                            //? Second below.
+                            switch (data.messageType) {
+                              MessageType.text => TextMessageWidget(
+                                  data: data,
+                                  textColor: WayaColors.black,
+                                ),
+                              MessageType.voiceNote => VoiceMessageWidget(
+                                  data: data,
+                                  isSender: false,
+                                ),
+                              MessageType.file || MessageType.image || MessageType.video => FileMessageWidget(
+                                  data: data,
+                                  textColor: WayaColors.black,
+                                ),
+                              _ => Text(
+                                  data.contentDescription,
+                                  style: WayaTextStyles.bodyMedium.copyWith(
+                                    fontSize: 15.sp,
+                                    fontWeight: FontWeight.normal,
+                                    color: WayaColors.black,
+                                  ),
+                                ),
+                            }
+                          ],
+                        ),
+                      ),
+
+                      //? Second, the reaction part of things.
+                      if (interactive && (data.messageReaction?.isNotEmpty ?? false))
+                        Positioned(
+                          right: 5,
+                          top: -15,
+                          child: Container(
+                            height: 22,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(200),
+                              color: WayaColors.primary50,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: List.generate(
+                                data.reactionPairs.length,
+                                (index) {
+                                  final part = data.reactionPairs.entries.elementAt(index);
+
+                                  //? This is fine.
+                                  return ReactionWidgetBubble(
+                                    reaction: part.key,
+                                    count: part.value,
+                                  );
+                                },
                               ),
                             ),
                           ),
-                      ],
-                    ),
+                        ),
+                    ],
+                  ),
 
-                    //? Second, the date and time relevant to it.
-                    if (interactive)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          //? If this is a group, for the person who sent the message.
-                          if (chat.chatType == ChatType.group && user != null)
-                            Text(
-                              "${user.$2.displayName} • ",
-                              style: WayaTextStyles.labelSmall.copyWith(
-                                color: WayaColors.greyColor400,
-                              ),
-                            ),
-
-                          //? For the time the message was sent...
+                  //? Second, the date and time relevant to it.
+                  if (interactive)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //? If this is a group, for the person who sent the message.
+                        if (chat.chatType == ChatType.group && user != null)
                           Text(
-                            WayaDateHelper.getTimestamp(data.updatedAt),
+                            "${user.$2.displayName} • ",
                             style: WayaTextStyles.labelSmall.copyWith(
                               color: WayaColors.greyColor400,
                             ),
                           ),
-                        ],
-                      ),
-                  ],
-                ),
+
+                        //? For the time the message was sent...
+                        Text(
+                          WayaDateHelper.getTimestamp(data.updatedAt),
+                          style: WayaTextStyles.labelSmall.copyWith(
+                            color: WayaColors.greyColor400,
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
