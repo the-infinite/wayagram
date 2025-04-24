@@ -12,9 +12,9 @@ enum ChatUserActivity {
 }
 
 enum ChatMemberRole {
-    member,
-    admin,
-    owner,
+  member,
+  admin,
+  owner,
 }
 
 @JsonSerializable()
@@ -111,6 +111,8 @@ class ChatMember {
   factory ChatMember.fromJson(Map<String, dynamic> json) => _$ChatMemberFromJson(json);
 
   Map<String, dynamic> toJson() => _$ChatMemberToJson(this);
+
+  CachedUserDataTuple? get combined => userData == null || profileData == null ? null : (userData!, profileData!);
 
   ChatMember copyWith(UserDetailsModel user, SocialProfileModel profile) {
     return ChatMember(
