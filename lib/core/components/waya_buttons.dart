@@ -514,7 +514,10 @@ class _WayaExpandedTabButtonState extends State<WayaExpandedTabButton> {
 
               //? Put the thing here if needed.
               WayaAssets.icons.mChevronDown.svg(
-                color: widget.isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor500,
+                colorFilter: ColorFilter.mode(
+                  widget.isSelected ? theme.colorScheme.primary : theme.colorScheme.greyColor500,
+                  BlendMode.srcIn,
+                ),
                 height: 16,
                 width: 16,
               ),
