@@ -27,7 +27,6 @@ class PollsForYou extends ConsumerStatefulWidget {
 }
 
 class _PollsForYouState extends ConsumerState<PollsForYou> {
-
   // @override
   // void initState() {
   //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -69,8 +68,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                   final poll = viewModel.fetchAllPols[index];
                   int hoursLeft =
                       DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inHours;
-                  int daysLeft =
-                      DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inDays;
+                  //   int daysLeft =
+                  //       DateTime.parse('${poll.endDate}').difference(DateTime.parse('${poll.startDate}')).inDays;
 
                   DateTime expirationDate = DateTime.parse("${poll.endDate}");
                   DateTime currentDate = DateTime.now(); // Get current date and time
@@ -135,7 +134,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
 
                         Text("${poll.question?.capitalizeFirst}", style: wayaTheme.textTheme.titleLarge),
                         const Gap(3),
-                       /* if (poll.choices != null)
+                        /* if (poll.choices != null)
                           ...poll.choices!.map(
                             (e) => poll.description == null ? Container() :Text(
                               '${poll.description?.capitalizeFirst}',
@@ -145,14 +144,14 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                   color: Theme.of(context).colorScheme.greyColor500),
                             ),
                           ),*/
-                        if(poll.description != null)
-                        Text(
-                          '${poll.description?.capitalizeFirst}',
-                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 12.sp,
-                              fontWeight: FontWeight.w400,
-                              color: Theme.of(context).colorScheme.greyColor500),
-                        ),
+                        if (poll.description != null)
+                          Text(
+                            '${poll.description?.capitalizeFirst}',
+                            style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.w400,
+                                color: Theme.of(context).colorScheme.greyColor500),
+                          ),
                         const Gap(10),
                         Text(
                           '${poll.voteCount} ${poll.voteCount == 0 || poll.voteCount == 1 ? 'Vote' : 'Votes'} • $hoursLeft hours remaining',
@@ -168,9 +167,9 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                           children: [
                             if (poll.choices != null)
                               ...poll.choices!.map(
-                                  (e)=> InkWell(
-                                  onTap:(){
-                                   if (currentDate.isAfter(expirationDate)) {
+                                (e) => InkWell(
+                                  onTap: () {
+                                    if (currentDate.isAfter(expirationDate)) {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(
                                           content: Text(
@@ -181,16 +180,10 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                           duration: Duration(seconds: 2),
                                         ),
                                       );
-                                    }else if(poll.pollType == 'free'){
+                                    } else if (poll.pollType == 'free') {
                                       ref.read(createPollVotingProvider.notifier).castFreeVote(
-                                         1,
-                                          '${e.id}',
-                                          '${poll.id}',
-                                          context,
-                                          '${e.text}',
-                                          '${poll.url}');
-                                    }
-                                    else {
+                                          1, '${e.id}', '${poll.id}', context, '${e.text}', '${poll.url}');
+                                    } else {
                                       WayaUtils.showModalSheet(
                                         context,
                                         child: VoteOptionModal(
@@ -201,24 +194,26 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                           votingLink: '${poll.url}',
                                         ),
                                       );
-                                    }},
-                                    child: WayaInformativeProgressBar(
-                                      title: '${e.text?.capitalizeFirst}',
-                                      text: '${e.text?.capitalizeFirst}',
-                                      subtitle: '',
-                                      //progress: 0,
-                                      progress: double.parse(((e.voteCount!) / viewModel.fetchAllPols[index].voteCount!).toStringAsFixed(2)),
-                                      height: 60.0,
-                                      filledRegion: wayaTheme.colorScheme.customPrimary,
-                                      unfilledRegion: wayaTheme.colorScheme.greyColor200,
-                                      count: e.voteCount!,
-                                      fontSize: 12,
-                                      activeTextColor:  wayaTheme.colorScheme.white,
-                                      inactiveTextColor:  wayaTheme.colorScheme.primary500,
-                                      imageUrl: e.imageUrl,
-                                    ),
+                                    }
+                                  },
+                                  child: WayaInformativeProgressBar(
+                                    title: '${e.text?.capitalizeFirst}',
+                                    text: '${e.text?.capitalizeFirst}',
+                                    subtitle: '',
+                                    //progress: 0,
+                                    progress: double.parse(
+                                        ((e.voteCount!) / viewModel.fetchAllPols[index].voteCount!).toStringAsFixed(2)),
+                                    height: 60.0,
+                                    filledRegion: wayaTheme.colorScheme.customPrimary,
+                                    unfilledRegion: wayaTheme.colorScheme.greyColor200,
+                                    count: e.voteCount!,
+                                    fontSize: 12,
+                                    activeTextColor: wayaTheme.colorScheme.white,
+                                    inactiveTextColor: wayaTheme.colorScheme.primary500,
+                                    imageUrl: e.imageUrl,
                                   ),
-                               /* (e) =>
+                                ),
+                                /* (e) =>
                                     choiceStatisticsSecond(
                                     e.imageUrl == null,
                                   e.imageUrl == null ? '':'${e.imageUrl}',
@@ -351,10 +346,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                 height: 44.h,
                                 width: MediaQuery.of(ctx).size.height / 12,
                                 child: Center(
-                                  child:
-                                       Text('Image\nError',
-                                          textAlign: TextAlign.center,
-                                          style: TextStyle(color: Colors.white, fontSize: 8)),
+                                  child: Text('Image\nError',
+                                      textAlign: TextAlign.center, style: TextStyle(color: Colors.white, fontSize: 8)),
                                 ),
                               );
                             },
@@ -391,7 +384,7 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
     );
   }
 
-  choiceStatistics( img, name, ctx, chk, voteFee, choiceId, pollId, candidateName, votingLink, votePercentage, voteCount,
+  choiceStatistics(img, name, ctx, chk, voteFee, choiceId, pollId, candidateName, votingLink, votePercentage, voteCount,
       dateCheck, onTap) {
     return voteCount == '0'
         ? Padding(
@@ -422,15 +415,15 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                 ),
                 child: chk
                     ? Row(
-
                         children: [
-                          chk && img != null ? Container():
-                          WayaImage(
-                            imageUrl: img,
-                            height: 44.h,
-                            width: 59.w,
-                            radius: BorderRadius.circular(4),
-                          ),
+                          chk && img != null
+                              ? Container()
+                              : WayaImage(
+                                  imageUrl: img,
+                                  height: 44.h,
+                                  width: 59.w,
+                                  radius: BorderRadius.circular(4),
+                                ),
                           const Gap(30),
                           Expanded(
                             flex: 3,
@@ -490,20 +483,22 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                     ),
                     child: chk
                         ? Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              chk && img != null ? Container():
-                              WayaImage(
-                                imageUrl: img,
-                                height: 44.h,
-                                width: 59.w,
-                                radius: BorderRadius.circular(4),
-                              ),
+                              chk && img != null
+                                  ? Container()
+                                  : WayaImage(
+                                      imageUrl: img,
+                                      height: 44.h,
+                                      width: 59.w,
+                                      radius: BorderRadius.circular(4),
+                                    ),
                               const Gap(30),
                               Text(
                                 '$name  ',
                                 style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                                    fontSize: 14.sp, fontWeight: FontWeight.w600,
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w600,
                                     color: Theme.of(ctx).colorScheme.white),
                               ),
                             ],
@@ -542,8 +537,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
           );
   }
 
-  choiceStatisticsSecond(chkImg, img, name, ctx, chk, voteFee, choiceId, pollId, candidateName, votingLink, votePercentage, voteCount,
-      dateCheck, onTap, double range) {
+  choiceStatisticsSecond(chkImg, img, name, ctx, chk, voteFee, choiceId, pollId, candidateName, votingLink,
+      votePercentage, voteCount, dateCheck, onTap, double range) {
     final wayaTheme = Theme.of(context);
     return SizedBox(
       width: double.infinity,
@@ -564,38 +559,46 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                   ),
                   height: 60.h,
                   width: context.width * 0.72,
-                  child:  Padding(
+                  child: Padding(
                     padding: const EdgeInsets.only(top: 20, left: 20),
                     child: Text(
-                      voteCount == '0'? '$name  ':'',
+                      voteCount == '0' ? '$name  ' : '',
                       style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 14.w, fontWeight: FontWeight.w600,
-                          color: voteCount == '0'? Theme.of(ctx).colorScheme.primary600: Theme.of(ctx).colorScheme.black),
-                          textAlign: TextAlign.start,
+                          fontSize: 14.w,
+                          fontWeight: FontWeight.w600,
+                          color: voteCount == '0'
+                              ? Theme.of(ctx).colorScheme.primary600
+                              : Theme.of(ctx).colorScheme.black),
+                      textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
                 Gap(10),
-                voteCount == '0'? Container():
-                Expanded(
-                  child: Column(
-                    children: [
-                      FittedBox(
-                        child: Text(
-                          voteCount == '0' ? '0%': '$votePercentage%',
-                          style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                              fontSize: 20.w, fontWeight: FontWeight.w700, color: Theme.of(ctx).colorScheme.black),
+                voteCount == '0'
+                    ? Container()
+                    : Expanded(
+                        child: Column(
+                          children: [
+                            FittedBox(
+                              child: Text(
+                                voteCount == '0' ? '0%' : '$votePercentage%',
+                                style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                                    fontSize: 20.w,
+                                    fontWeight: FontWeight.w700,
+                                    color: Theme.of(ctx).colorScheme.black),
+                              ),
+                            ),
+                            Text(
+                              '$voteCount ${voteCount == '0' || voteCount == '1' ? 'vote' : 'votes'}',
+                              style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
+                                  fontSize: 12.w,
+                                  fontWeight: FontWeight.w400,
+                                  color: Theme.of(ctx).colorScheme.greyColor500),
+                            ),
+                          ],
                         ),
                       ),
-                      Text(
-                        '$voteCount ${voteCount == '0' || voteCount == '1'  ? 'vote' : 'votes'}',
-                        style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 12.w, fontWeight: FontWeight.w400, color: Theme.of(ctx).colorScheme.greyColor500),
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
             Gap(10),
@@ -605,27 +608,27 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                 color: wayaTheme.colorScheme.customPrimary,
               ),
               height: 60.h,
-              width: voteCount == '0' ? 0: 0.72*context.width * range,
+              width: voteCount == '0' ? 0 : 0.72 * context.width * range,
               //
-              child:  Row(
+              child: Row(
                 children: [
-                  chkImg? Container():
-                  Padding(
-                    padding: const EdgeInsets.only(left: 15),
-                    child: WayaImage(
-                      imageUrl: img,
-                      height: 44.h,
-                      width: 59.w,
-                      radius: BorderRadius.circular(4),
-                    ),
-                  ),
+                  chkImg
+                      ? Container()
+                      : Padding(
+                          padding: const EdgeInsets.only(left: 15),
+                          child: WayaImage(
+                            imageUrl: img,
+                            height: 44.h,
+                            width: 59.w,
+                            radius: BorderRadius.circular(4),
+                          ),
+                        ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10, left: 20),
                     child: Text(
-                        '$name  ',
+                      '$name  ',
                       style: Theme.of(ctx).textTheme.bodyMedium!.wayaCopyWith(
-                          fontSize: 14.sp, fontWeight: FontWeight.w600,
-                          color: Theme.of(ctx).colorScheme.white),
+                          fontSize: 14.sp, fontWeight: FontWeight.w600, color: Theme.of(ctx).colorScheme.white),
                       textAlign: TextAlign.center,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -637,7 +640,6 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
         ),
       ),
     );
-
   }
 
   Widget _buildActionNav({

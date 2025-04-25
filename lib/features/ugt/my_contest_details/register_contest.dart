@@ -59,7 +59,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
       notifier.emailAddress.text = ConversationState.self.email ?? "";
       notifier.address.text = ConversationState.self.address ?? "";
       notifier.phoneNumber.text =
-          "${ConversationState.self.phoneNumber?.split("234").last}" ?? "";
+          "${ConversationState.self.phoneNumber?.split("234").last}";
       return null;
     }, []);
     return WayaScaffold(

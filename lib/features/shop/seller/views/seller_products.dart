@@ -16,8 +16,6 @@ import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart
 import 'package:wayagram/features/shop/seller/vm/seller_products_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
-import 'package:wayagram/features/shop/widgets/product_card.dart';
-import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/widgets/products_grid.dart';
 
 class SellerProducts extends ConsumerStatefulWidget {
@@ -122,59 +120,59 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
               ));
   }
 
-  Widget _buildProductGrid(List<SellerProduct> products) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 12.0,
-        mainAxisSpacing: 12.0,
-        childAspectRatio: 3 / 5,
-      ),
-      itemCount: products.length,
-      itemBuilder: (context, index) {
-        return SellerProductCard(
-          product: products[index],
-          isExplore: false,
-          isWayaGramDeal: false,
-          canbeAddedTocart: false,
-          sellerProduct: true,
-        );
-      },
-    );
-  }
+//   Widget _buildProductGrid(List<SellerProduct> products) {
+//     return GridView.builder(
+//       shrinkWrap: true,
+//       physics: const NeverScrollableScrollPhysics(),
+//       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+//         crossAxisCount: 2,
+//         crossAxisSpacing: 12.0,
+//         mainAxisSpacing: 12.0,
+//         childAspectRatio: 3 / 5,
+//       ),
+//       itemCount: products.length,
+//       itemBuilder: (context, index) {
+//         return SellerProductCard(
+//           product: products[index],
+//           isExplore: false,
+//           isWayaGramDeal: false,
+//           canbeAddedTocart: false,
+//           sellerProduct: true,
+//         );
+//       },
+//     );
+//   }
 
-  Widget _productLoadingState({required BuildContext context}) {
-    return Column(
-      children: [
-        for (int i = 0; i < 6; i += 2)
-          Row(
-            children: [
-              Expanded(
-                child: ProductCardSekeleton(
-                  isExplore: false,
-                  isWayaGramDeal: false,
-                  canbeAddedTocart: false,
-                  sellerProduct: true,
-                ),
-              ),
-              if (i + 1 < 6) ...[
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ProductCardSekeleton(
-                    isExplore: false,
-                    isWayaGramDeal: false,
-                    canbeAddedTocart: false,
-                    sellerProduct: true,
-                  ),
-                ),
-              ],
-            ],
-          ),
-      ],
-    );
-  }
+//   Widget _productLoadingState({required BuildContext context}) {
+//     return Column(
+//       children: [
+//         for (int i = 0; i < 6; i += 2)
+//           Row(
+//             children: [
+//               Expanded(
+//                 child: ProductCardSekeleton(
+//                   isExplore: false,
+//                   isWayaGramDeal: false,
+//                   canbeAddedTocart: false,
+//                   sellerProduct: true,
+//                 ),
+//               ),
+//               if (i + 1 < 6) ...[
+//                 const SizedBox(width: 12),
+//                 Expanded(
+//                   child: ProductCardSekeleton(
+//                     isExplore: false,
+//                     isWayaGramDeal: false,
+//                     canbeAddedTocart: false,
+//                     sellerProduct: true,
+//                   ),
+//                 ),
+//               ],
+//             ],
+//           ),
+//       ],
+//     );
+//   }
 }
 
 class SellerProductEmptyState extends StatelessWidget {

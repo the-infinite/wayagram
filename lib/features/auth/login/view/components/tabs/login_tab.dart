@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_validators.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/login/vm/login_vm.dart';
+import 'dart:io' show Platform;
 
 import '../../../../../../core/utils/waya_navigation.dart';
 
@@ -31,14 +32,15 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
+        Platform.isAndroid ?
         WayaButton(
           color: wayaTheme.colorScheme.secondaryColor,
           callback: ref.read(loginVmProvider.notifier).signinWithGoogle,
           leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
           text: "Continue with Google",
           textColor: wayaTheme.colorScheme.black,
-        ),
-        Gap(10),
+        ):
+        //Gap(10),
         WayaButton(
           color: wayaTheme.colorScheme.black,
           callback: () {},
@@ -232,14 +234,15 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
     final viewModel = ref.watch(loginVmProvider);
     return Column(
       children: [
+        Platform.isAndroid ?
         WayaButton(
           color: wayaTheme.colorScheme.secondaryColor,
           callback: () {},
           leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
           text: "Continue with Google",
           textColor: wayaTheme.colorScheme.black,
-        ),
-        Gap(10),
+        ):
+        //Gap(10),
         WayaButton(
           color: wayaTheme.colorScheme.black,
           callback: () {},

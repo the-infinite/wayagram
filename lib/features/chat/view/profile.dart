@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/shared/cache/chat.dart';
 
 import 'profile/dispute.dart';
 import 'profile/group.dart';
@@ -33,24 +34,33 @@ class _ChatProfilePageState extends ConsumerState<ChatProfilePage> {
 
     //? If this is a group chat.
     if (state.chat!.chatType == ChatType.group) {
-      return GroupChatProfilePage(
-        chat: state.chat!,
-        ref: ref,
+      return ValueListenableBuilder(
+        valueListenable: wayaChatsCache,
+        builder: (context, redraws, _) => GroupChatProfilePage(
+          chat: wayaChatsCache.getCachedData(state.chat!.id)!,
+          ref: ref,
+        ),
       );
     }
 
     //? If this is a dispute chat.
     if (state.chat!.chatType == ChatType.dispute) {
-      return DisputeChatProfilePage(
-        chat: state.chat!,
-        ref: ref,
+      return ValueListenableBuilder(
+        valueListenable: wayaChatsCache,
+        builder: (context, redraws, _) => DisputeChatProfilePage(
+          chat: wayaChatsCache.getCachedData(state.chat!.id)!,
+          ref: ref,
+        ),
       );
     }
 
     //? This is fine.
-    return PersonalChatProfilePage(
-      chat: state.chat!,
-      ref: ref,
+    return ValueListenableBuilder(
+      valueListenable: wayaChatsCache,
+      builder: (context, redraws, _) => PersonalChatProfilePage(
+        chat: wayaChatsCache.getCachedData(state.chat!.id)!,
+        ref: ref,
+      ),
     );
   }
 }

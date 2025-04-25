@@ -22,7 +22,7 @@ class MyContests extends ConsumerWidget {
         hideButton:
             ConversationState.self.accountType == UserAccountType.business ? true : false,
         onTap: () {
-          ivalidateUGTVM(ref);
+          invalidateUGTVm(ref);
           WayaNav.toNamed("/create-contest");
         });
   }

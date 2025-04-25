@@ -35,7 +35,7 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
     var model = ref.watch(selectedApplicantProfile);
     var selectedContestModel =
         ref.watch(selectedContestProvider.notifier).state;
-    var viewModel = ref.watch(votersContestNotifier.notifier);
+    //var viewModel = ref.watch(votersContestNotifier.notifier);
     var isLoading = useState(false);
     return WayaScaffold(
       isLoading: false,

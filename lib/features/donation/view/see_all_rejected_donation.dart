@@ -5,7 +5,6 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
-import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/view/application_details.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/donation/widget/applied_donationi_widget.dart';
@@ -40,14 +39,14 @@ class _SeeAllRejectedDonationsState extends ConsumerState<SeeAllRejectedDonation
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
-    final wayaTheme = Theme.of(context);
+    // final wayaTheme = Theme.of(context);
 
     // Filter the myDonations
-    final filteredMyDonations = WayaUtils.search<MyDonationDocs>(
-      viewModel.myDonationDocs!,
-      ['title'],
-      searchController.text,
-    );
+    // final filteredMyDonations = WayaUtils.search<MyDonationDocs>(
+    //   viewModel.myDonationDocs!,
+    //   ['title'],
+    //   searchController.text,
+    // );
 
     return WayaScaffold(
         resizeToAvoidBottomInset: false,

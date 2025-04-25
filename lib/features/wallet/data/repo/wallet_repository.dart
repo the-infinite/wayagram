@@ -1,11 +1,12 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/features/wallet/model/dto.dart';
 
 class WalletRepository extends BaseRepository {
-  static const serviceUrl = 'wayagram-wallet/api/v2';
+  static const serviceUrl = WayaServiceUri.wallet;
   static final instance = WalletRepository._();
   WalletRepository._();
 

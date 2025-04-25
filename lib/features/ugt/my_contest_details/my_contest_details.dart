@@ -155,7 +155,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                           UserAccountType.business)
                         WayaButton(
                           callback: () {
-                            ivalidateUGTVM(ref);
+                            invalidateUGTVm(ref);
                             WayaNav.toNamed('/create-contest');
                           },
                           color: wayaTheme.colorScheme.primary50,
@@ -281,7 +281,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                 : */
             false,
         onTap: () {
-          ivalidateUGTVM(ref);
+          invalidateUGTVm(ref);
           WayaNav.toNamed("/create-contest");
         });
   }
