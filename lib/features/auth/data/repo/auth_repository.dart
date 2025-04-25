@@ -19,6 +19,11 @@ class AuthRepository extends BaseRepository {
         showErrors: true);
   }
 
+  Future<WayaRequestResponse> verify(VerifyOtp payload) {
+    final data = {...payload.toJson(), "purpose": "USER_RESET_PASSWORD"};
+    return post('$serviceUrl/client/auth/verify-otp', data, showErrors: true);
+  }
+
   Future<WayaRequestResponse> resendOtp(String email,
       {String purpose = 'REGISTER_USER'}) {
     return post('$serviceUrl/client/auth/resend-otp',
@@ -51,7 +56,7 @@ class AuthRepository extends BaseRepository {
       String? businessInfo,
       bool? isBusinessLogin}) {
     final payload = <String, dynamic>{};
-    
+
     if (isBusinessLogin == true && businessInfo != null) {
       if (WayaValidators.isValidEmail(businessInfo) == null) {
         payload['email'] = businessInfo;

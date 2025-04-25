@@ -183,7 +183,6 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                   color: wayaTheme.colorScheme.primary500,
                   callback: !viewModel.isLoading
                       ? () async {
-
                           if (_formKey.currentState!.validate()) {
                             debugPrint('TEST BUTTOn');
                             ref
@@ -402,6 +401,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
           title1: "Don't have an account? ",
           title2: "Create new account",
           onTap2: () {
+            print("dsvdvdf");
             WayaNav.toNamed("/account-creation");
           },
           style1: wayaTheme.textTheme.hintStyle
