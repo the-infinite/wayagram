@@ -145,7 +145,12 @@ class _WayaConfirmationViewState<T> extends State<WayaConfirmationView<T>> {
                       child: Padding(
                         padding: const EdgeInsets.all(7),
                         child: WayaAssets.icons.actonDismiss.svg(
-                          color: widget.buttonTextStyle.color,
+                          colorFilter: widget.buttonTextStyle.color != null
+                              ? ColorFilter.mode(
+                                  widget.buttonTextStyle.color!,
+                                  BlendMode.srcIn,
+                                )
+                              : null,
                         ),
                       ),
                     ),

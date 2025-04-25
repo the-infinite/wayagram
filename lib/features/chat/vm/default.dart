@@ -13,6 +13,7 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/repo/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/shared/cache/chat.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
 
@@ -119,6 +120,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
 
       //? This is fine.
       result.addAll(docs);
+      wayaChatsCache.cacheAll(docs);
 
       //? Update state.
       state = state.copyWith(
@@ -252,6 +254,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
       }
 
       //* Return this as the case may be.
+      wayaChatsCache.cache(id, result);
       return result;
     }
 
@@ -399,6 +402,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
       final chats = state.conversations;
       chats.removeWhere((chat) => chat.id == id);
       state = state.copyWith(conversations: [...chats]);
+      wayaChatsCache.deleteItem(id);
     }
 
     //? Return whether or not this is true.
@@ -546,6 +550,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
 
       //? This is fine.
       result.addAll(docs);
+      wayaChatsCache.cacheAll(docs);
 
       //? Update state.
       state = state.copyWith(

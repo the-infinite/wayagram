@@ -51,10 +51,9 @@ class _ForYouContestState extends ConsumerState<BlockedUserPage> {
   Widget build(BuildContext context) {
     //final wayaTheme = Theme.of(context);
     // final viewModel = ref.watch(roleAccessVm);
-
     final viewModelReal = ref.watch(conversationProvider);
     final viewModelNotifier = ref.read(conversationProvider.notifier);
-    final isLoading = useState(false);
+    //final isLoading = useState(false);
 
     //? This is fine.
     useEffect(() {

@@ -78,7 +78,7 @@ class ChatProfilePicture extends StatelessWidget {
                 clipper: const ShapeBorderClipper(shape: CircleBorder()),
                 child: CircleAvatar(
                   radius: radius,
-                  backgroundColor: chat != null && chat?.groupImage == null
+                  backgroundColor: chat != null && ((isGroup && chat?.groupImage == null) || (!isGroup && user.profilePicture == null))
                       ? theme.colorScheme.primary50
                       : theme.colorScheme.greyColor200,
                   backgroundImage: isGroup
@@ -90,7 +90,7 @@ class ChatProfilePicture extends StatelessWidget {
                           : null,
                   child: chat != null && ((isGroup && chat?.groupImage == null) || (!isGroup && user.profilePicture == null))
                       ? Text(
-                          chat!.initials(useGroup),
+                          chat!.initials(useGroup, user.id),
                           style: theme.textTheme.headlineLarge?.copyWith(
                             color: theme.colorScheme.customPrimary,
                             fontSize: (radius * 0.75).sp,

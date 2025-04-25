@@ -8,8 +8,7 @@ import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 
 class MediaCard extends StatefulWidget {
   final List<CardMediaContent> mediaUrls;
-  final Function(String, MyFullMediaType)?
-      ontap; // List of image and video URLs
+  final Function(String, MyFullMediaType)? ontap; // List of image and video URLs
 
   const MediaCard({super.key, required this.mediaUrls, this.ontap});
 
@@ -19,7 +18,7 @@ class MediaCard extends StatefulWidget {
 
 class _MediaCardState extends State<MediaCard> {
   final PageController _pageController = PageController();
-  int _currentPage = 0;
+  //int _currentPage = 0;
   VideoPlayerController? _videoController;
 
   @override
@@ -69,15 +68,14 @@ class _MediaCardState extends State<MediaCard> {
               controller: _pageController,
               itemCount: widget.mediaUrls.length,
               onPageChanged: (index) {
-                setState(() => _currentPage = index);
+                //setState(() => _currentPage = index);
                 _initializeVideoIfNeeded(index);
               },
               itemBuilder: (context, index) {
                 String url = widget.mediaUrls[index].url ?? "";
                 // String type = ??"";
                 if (widget.mediaUrls[index].type?.toLowerCase() == "video") {
-                  return _videoController != null &&
-                          _videoController!.value.isInitialized
+                  return _videoController != null && _videoController!.value.isInitialized
                       ? VisibilityDetector(
                           key: UniqueKey(),
                           onVisibilityChanged: (visibilityInfo) {
@@ -87,17 +85,14 @@ class _MediaCardState extends State<MediaCard> {
                             } else {
                               // Play video when the card is in view
                               // Check if the video is not playing and the page is not the first page
-                              if (_videoController != null &&
-                                  !_videoController!.value.isPlaying) {
+                              if (_videoController != null && !_videoController!.value.isPlaying) {
                                 _videoController!.play();
                               } else {
                                 // Check if the video is playing and the page is not the first page
                                 // Pause the video
-                                if (_videoController != null &&
-                                    !_videoController!.value.isPlaying) {
+                                if (_videoController != null && !_videoController!.value.isPlaying) {
                                   _pageController.animateToPage(0,
-                                      duration: Duration(milliseconds: 300),
-                                      curve: Curves.easeInOut);
+                                      duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
                                 }
                               }
                             }
@@ -105,8 +100,7 @@ class _MediaCardState extends State<MediaCard> {
                           child: GestureDetector(
                               onTap: () {
                                 //play or pause video on tap
-                                if (_videoController != null &&
-                                    _videoController!.value.isPlaying) {
+                                if (_videoController != null && _videoController!.value.isPlaying) {
                                   _videoController!.pause();
                                 } else {
                                   _videoController!.play();
@@ -120,9 +114,7 @@ class _MediaCardState extends State<MediaCard> {
                                       right: 10,
                                       child: GestureDetector(
                                         onTap: () {
-                                          widget.ontap!(
-                                                  url, MyFullMediaType.video) ??
-                                              () {};
+                                          widget.ontap!(url, MyFullMediaType.video) ?? () {};
                                         },
                                         child: Container(
                                             width: 40,
@@ -139,16 +131,14 @@ class _MediaCardState extends State<MediaCard> {
                                 ],
                               )))
                       : Center(child: CircularProgressIndicator());
-                } else if (widget.mediaUrls[index].type?.toLowerCase() ==
-                    "image") {
+                } else if (widget.mediaUrls[index].type?.toLowerCase() == "image") {
                   _videoController?.pause();
                   return GestureDetector(
                     onTap: () {
                       widget.ontap!(url, MyFullMediaType.image) ?? () {};
                     },
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(
-                          16), // Adjust the radius as needed
+                      borderRadius: BorderRadius.circular(16), // Adjust the radius as needed
                       child: WayaImage(
                         imageUrl: url,
                         height: 200,

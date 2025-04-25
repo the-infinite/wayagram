@@ -8,7 +8,7 @@ import 'package:wayagram/features/auth/account_creation/view/loading_state.dart'
 import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 
 class CredentialInput extends ConsumerStatefulWidget {
-  final Function goToNextTab;
+  final Function({String? emailAddress}) goToNextTab;
   const CredentialInput({super.key, required this.goToNextTab});
 
   @override
@@ -181,7 +181,9 @@ class _CredentialInputState extends ConsumerState<CredentialInput> {
                   callback: !viewModel.isLoading
                       ? () {
                           if (_formKey.currentState!.validate()) {
-                            viewModel.onSubmit(() => widget.goToNextTab());
+                            ref.read(credentialInputProvider.notifier).onSubmit(
+                                () => widget.goToNextTab(
+                                    emailAddress: viewModel.email.text));
                           }
                         }
                       : null,

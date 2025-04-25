@@ -26,7 +26,7 @@ class ConversationFeedWidget extends ConsumerWidget {
         isExpanded ? state.conversations.length : min(state.conversations.length, 3),
         (index) => ConversationWidget(
           index: index,
-          chat: state.conversations[index],
+          chatId: state.conversations[index].id,
           notifier: chatNotifier,
           conversationNotifier: notifier,
           isInteractive: false,

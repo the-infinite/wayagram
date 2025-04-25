@@ -45,7 +45,8 @@ class _ChangePinPageState extends ConsumerState<ChangePinPage> {
               children: [
                 Text("Change PIN", style: WayaTextStyles.titleLarge),
                 const Gap(5),
-                Text("For added security, please create a 4-digit PIN \n to confirm your transactions",
+                Text(
+                    "For added security, please create a 4-digit PIN \n to confirm your transactions",
                     style: WayaTextStyles.hintStyle),
                 const Gap(10),
                 PinInputField(
@@ -61,9 +62,13 @@ class _ChangePinPageState extends ConsumerState<ChangePinPage> {
                   padding: EdgeInsets.only(right: 50.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [// viewModel.onSubmit(() => widget.goToNextTab());
+                    children: [
+                      // viewModel.onSubmit(() => widget.goToNextTab());
                       InkWell(
-                        onTap: () => pinModel.onSubmitPin(()=> WayaNav.toNamed('/verify-your-identity')),
+                        onTap: () => ref
+                            .read(credentialInputProvider.notifier)
+                            .onSubmitPin(
+                                () => WayaNav.toNamed('/verify-your-identity')),
                         child: Text("Forgot Old PIN?",
                             style: WayaTextStyles.hintStyle.copyWith(
                               color: wayaTheme.colorScheme.primary,
@@ -95,7 +100,9 @@ class _ChangePinPageState extends ConsumerState<ChangePinPage> {
                 ),
                 const Gap(10),
                 Visibility(
-                    visible: confirmNewPin.isNotEmpty && confirmPin.isNotEmpty && !isInValid,
+                    visible: confirmNewPin.isNotEmpty &&
+                        confirmPin.isNotEmpty &&
+                        !isInValid,
                     child: Text("The PINs don't match. Pls try again",
                         style: TextStyle().wayaCopyWith(
                           fontWeight: FontWeight.w400,

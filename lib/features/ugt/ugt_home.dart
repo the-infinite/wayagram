@@ -80,7 +80,7 @@ class _UgtHomeState extends ConsumerState<UgtHome> {
                   width: 50,
                   child: WayaButton(
                     callback: () {
-                      ivalidateUGTVM(ref);
+                      invalidateUGTVm(ref);
 
                       WayaNav.toNamed('/create-contest');
                     },

@@ -11,11 +11,14 @@ class ForgotPasswordStep extends ConsumerStatefulWidget {
   const ForgotPasswordStep({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ForgotPasswordStepState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ForgotPasswordStepState();
 }
 
-class _ForgotPasswordStepState extends ConsumerState<ForgotPasswordStep> with SingleTickerProviderStateMixin {
+class _ForgotPasswordStepState extends ConsumerState<ForgotPasswordStep>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
+   String email = '';
 
   @override
   void initState() {
@@ -29,15 +32,24 @@ class _ForgotPasswordStepState extends ConsumerState<ForgotPasswordStep> with Si
     }
   }
 
+  void getEmail({String? emailAddress}) {
+    if (emailAddress != null) {
+      setState(() {
+      email = emailAddress;
+    });
+    }
+    _goToNextTab();
+  }
+
   @override
   Widget build(BuildContext context) {
     return WayaScaffoldWithProgressBar(
         isLoading: false,
         padding: EdgeInsets.symmetric(horizontal: 15.w).copyWith(bottom: 20.h),
         tabsView: [
-          CredentialInput(goToNextTab: _goToNextTab),
-          VerifyAccount(goToNextTab: _goToNextTab, type: "forgot-password"),
-          CreateNewPassword(),
+          CredentialInput(goToNextTab: getEmail),
+          VerifyAccount(goToNextTab: getEmail, type: "forgot-password", email: email),
+          CreateNewPassword(email: email),
         ],
         tabController: _tabController);
   }

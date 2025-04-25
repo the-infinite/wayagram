@@ -8,6 +8,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'dart:io' show Platform;
 
 class LoginCoverPage extends ConsumerWidget {
   static const route = '/login-cover-page';
@@ -41,14 +42,15 @@ class LoginCoverPage extends ConsumerWidget {
             ),
           ),
           Gap(Get.height * 0.25),
+          Platform.isAndroid ?
           WayaButton(
             color: wayaTheme.colorScheme.secondaryColor,
             callback: () {},
             leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
             text: "Continue with Google",
             textColor: wayaTheme.colorScheme.black,
-          ),
-          Gap(10),
+          ):
+         // Gap(10),
           WayaButton(
             color: wayaTheme.colorScheme.black,
             callback: () {},
