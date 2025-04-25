@@ -428,23 +428,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     }
   }
 
-/*  Future<void> fetchStates() async {
-    try {
-      final response = await _contestRepository.getAllStates();
 
-      if (response.success) {
-        StatesResponseModel responseModel =
-        StatesResponseModel.fromJson(response.data);
-
-        final List<Select> allStates = responseModel.data.map((val) {
-          return Select(label: val.name, value: val.isoCode);
-        }).toList();
-        state = state.copyWith(states: allStates);
-      }
-    } catch (e) {
-      _logger.e(e);
-    }
-  }*/
 
   List<Select> ugtCategory() {
     return state.category.asMap().entries.map((entries) {
