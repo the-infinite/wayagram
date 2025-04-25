@@ -154,7 +154,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                     UserAccountType.business)
                   WayaButton(
                     callback: () {
-                      ivalidateUGTVM(ref);
+                      invalidateUGTVm(ref);
                       //WayaNav.toNamed('/create-profile-contest1');
                       WayaNav.toNamed('/create-contest');
                     },
@@ -210,7 +210,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                 ? true
                 : false,
         onTap: () {
-          ivalidateUGTVM(ref);
+          invalidateUGTVm(ref);
           WayaNav.toNamed("/create-contest");
         });
   }

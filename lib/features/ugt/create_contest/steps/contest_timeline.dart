@@ -10,7 +10,7 @@ import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
 import '../../../../core/utils/waya_utils.dart';
-import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
+//import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
 import '../../ugt_buttomsheet_modal/ugt_modal.dart';
 import '../../vm/ugt_vm.dart';
 
@@ -27,7 +27,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(personalFirstStepProvider);
+    //final viewModel = ref.watch(personalFirstStepProvider);
     final viewModel2 = ref.watch(contestNotifierProvider);
     var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
     final wayaTheme = Theme.of(context);

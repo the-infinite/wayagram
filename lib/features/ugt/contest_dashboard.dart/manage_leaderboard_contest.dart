@@ -19,14 +19,13 @@ class ManageLeaderboardContest extends StatefulHookConsumerWidget {
   const ManageLeaderboardContest({super.key});
 
   @override
-  ConsumerState<ManageLeaderboardContest> createState() =>
-      _ManageStateContestState();
+  ConsumerState<ManageLeaderboardContest> createState() => _ManageStateContestState();
 }
 
 class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     final dashboardVm = ref.read(ugtAdminDashboardVm);
     final viewModel = ref.watch(votersContestNotifier);
     var model = ref.watch(selectedContestProvider);
@@ -115,10 +114,7 @@ class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
                   final post = viewModel.myContestList[index];
                   return GestureDetector(
                     onTap: () {},
-                    child: UgtLeaderboardCard(
-                        model: model!,
-                        position: index + 1,
-                        contestantData: post),
+                    child: UgtLeaderboardCard(model: model!, position: index + 1, contestantData: post),
                   );
                 },
               ),
@@ -130,8 +126,7 @@ class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
     );
   }
 
-  Widget _buildStatCard(
-      BuildContext context, String title, String value, Widget widget) {
+  Widget _buildStatCard(BuildContext context, String title, String value, Widget widget) {
     final wayaTheme = Theme.of(context);
     return Expanded(
       child: Container(
@@ -149,15 +144,12 @@ class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title,
-                    textAlign: TextAlign.start,
-                    style: WayaTextStyles.hintStyleBold),
+                Text(title, textAlign: TextAlign.start, style: WayaTextStyles.hintStyleBold),
                 Container(
                     width: 50.w, // Must be equal to height for a perfect circle
                     height: 50.w,
                     decoration: BoxDecoration(
-                      color:
-                          wayaTheme.colorScheme.primary500, // Background color
+                      color: wayaTheme.colorScheme.primary500, // Background color
                       shape: BoxShape.circle, // Makes the container circular
                       border: Border.all(
                         color: Colors.white, // Optional: Border color

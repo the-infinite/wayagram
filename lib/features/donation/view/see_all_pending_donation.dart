@@ -42,7 +42,7 @@ class _SeeAllDonationsState extends ConsumerState<SeeAllDonations> with SingleTi
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
-    final wayaTheme = Theme.of(context);
+    // final wayaTheme = Theme.of(context);
 
     // Filter the myDonations
     final filteredMyDonations = WayaUtils.search<MyDonationDocs>(

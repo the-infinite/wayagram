@@ -11,15 +11,18 @@ class StatusOngoing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style:  WayaTextStyles.hintStyleBold
-                                    .wayaCopyWith(
-                                        color: WayaColors.greyColor500,
-                                        fontWeight: FontWeight.w400)),
+        Text(
+          title,
+          style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+            color: WayaColors.greyColor500,
+            fontWeight: FontWeight.w400,
+          ),
+        ),
         const Gap(5),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 3),

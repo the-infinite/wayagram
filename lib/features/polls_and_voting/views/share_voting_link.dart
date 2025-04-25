@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -43,8 +42,8 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink>  {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
-    final poll = ref.watch(createPollVotingProvider.notifier);
-    final wayaTheme = Theme.of(context);
+    //final poll = ref.watch(createPollVotingProvider.notifier);
+    //final wayaTheme = Theme.of(context);
     return WayaScaffold(
       removeAppBar: true,
         backgroundColor: WayaColors.success,
@@ -119,42 +118,42 @@ class _ShareVotingLinkState extends ConsumerState<ShareVotingLink>  {
           ),
         ) );
   }
-  Widget _scoreCard(){
-    return Center(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Circular Percent Indicator
-          LinearPercentIndicator(
-            percent: 0.7, // 70% indicator
-            center: Image.asset(
-              'assets/images/polls/tinubu.png', // Replace with your image path
-              width: 40,
-              height: 40,
-            ),
-            progressColor: Colors.blue,
-            backgroundColor: Colors.grey.shade300,
-          ),
-          const SizedBox(width: 16), // Space between widgets
-          // Text Widget
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children:  [
-              Text(
-                "Profile Progress",
-                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
-              ),
-              Text(
-                "70% completed",
-                style: TextStyle(fontSize: 14.sp, color: Colors.grey),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+//   Widget _scoreCard(){
+//     return Center(
+//       child: Row(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           // Circular Percent Indicator
+//           LinearPercentIndicator(
+//             percent: 0.7, // 70% indicator
+//             center: Image.asset(
+//               'assets/images/polls/tinubu.png', // Replace with your image path
+//               width: 40,
+//               height: 40,
+//             ),
+//             progressColor: Colors.blue,
+//             backgroundColor: Colors.grey.shade300,
+//           ),
+//           const SizedBox(width: 16), // Space between widgets
+//           // Text Widget
+//           Column(
+//             mainAxisSize: MainAxisSize.min,
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children:  [
+//               Text(
+//                 "Profile Progress",
+//                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
+//               ),
+//               Text(
+//                 "70% completed",
+//                 style: TextStyle(fontSize: 14.sp, color: Colors.grey),
+//               ),
+//             ],
+//           ),
+//         ],
+//       ),
+//     );
+//   }
 
   screenshotNSend(ctx) async{
     final directory = (await getApplicationDocumentsDirectory ()).path;

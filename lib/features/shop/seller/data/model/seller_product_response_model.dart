@@ -43,8 +43,7 @@ class Data {
 
   factory Data.fromJson(Map<String, dynamic> json) {
     var productList = json['data'] as List;
-    List<SellerProduct> productItems =
-        productList.map((i) => SellerProduct.fromJson(i)).toList();
+    List<SellerProduct> productItems = productList.map((i) => SellerProduct.fromJson(i)).toList();
 
     return Data(
       products: productItems,
@@ -108,7 +107,7 @@ class SellerProduct {
       required this.materialType,
       required this.depth,
       required this.condition,
-   this.wayagramDeal,
+      this.wayagramDeal,
       this.dealStatus,
       this.wayagramDealRejectedReason,
       required this.approve,
@@ -129,8 +128,8 @@ class SellerProduct {
       this.shopRating});
 
   factory SellerProduct.fromJson(Map<String, dynamic> json) {
-    var imageList = json['images'] as List;
-    List<String> imageItems = List<String>.from(imageList);
+    // var imageList = json['images'] as List;
+    // List<String> imageItems = List<String>.from(imageList);
 
     return SellerProduct(
         id: json['id'],
@@ -139,8 +138,7 @@ class SellerProduct {
         name: json['name'] ?? '',
         description: json['description'] ?? '',
         price: json['price'],
-        images:
-            (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
+        images: (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
         height: json['height'],
         width: json['width'],
         color: json['color'] ?? '',

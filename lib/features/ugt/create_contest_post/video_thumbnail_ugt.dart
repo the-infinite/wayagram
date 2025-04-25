@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoThumbnail extends StatefulWidget {
-  String videoPath;
-  double width;
-  double height;
-  VideoThumbnail(this.videoPath, this.height, this.width, {super.key});
+  final String videoPath;
+  final double width;
+  final double height;
+  const VideoThumbnail(this.videoPath, this.height, this.width, {super.key});
 
   @override
   State<VideoThumbnail> createState() => _VideoThumbnailState();
