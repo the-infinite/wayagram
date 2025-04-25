@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
 
@@ -70,39 +69,64 @@ class _ChatVoiceMessageInputState extends State<ChatVoiceMessageInput> with Sing
                   crossAxisAlignment: CrossAxisAlignment.center,
                   spacing: 10.w,
                   children: [
-                    //? First, the pause and record button.
-                    AnimatedCrossFade(
-                      duration: const Duration(milliseconds: 350),
-                      crossFadeState: widget.controller.recorderState == RecorderState.recording
-                          ? CrossFadeState.showFirst
-                          : CrossFadeState.showSecond,
-                      firstChild: WayaButton(
-                        callback: () async => await widget.controller.pauseRecording(),
+                    //? First, the pause and record button. It also doubles as 
+                    //? the delete  button in times where the recording has been
+                    //? completed.
+                    if (widget.controller.recorderState == RecorderState.stopped)
+                      WayaButton(
+                        callback: () async {
+                          //? Cancel recording
+                          final result = await widget.controller.cancelRecording();
+
+                          //? If this failed.
+                          if (!result) {
+                            WayaSnackBar.showToast("Failed to delete the voice message");
+                          }
+                        },
                         shape: BoxShape.circle,
                         height: null,
-                        color: WayaColors.primary,
+                        color: WayaColors.error,
                         horizontalPadding: 7,
                         verticalPadding: 7,
-                        centerWidget: WayaAssets.icons.cPause.svg(
+                        centerWidget: WayaAssets.icons.cBin.svg(
                           color: WayaColors.white,
                           height: 18,
                           width: 18,
                         ),
-                      ),
-                      secondChild: WayaButton(
-                        callback: () async => await widget.controller.resumeRecording(),
-                        shape: BoxShape.circle,
-                        height: null,
-                        color: WayaColors.primary,
-                        horizontalPadding: 7,
-                        verticalPadding: 7,
-                        centerWidget: WayaAssets.icons.cButtonVoicenote.svg(
-                          color: WayaColors.white,
-                          height: 18,
-                          width: 18,
+                      )
+                    else
+                      AnimatedCrossFade(
+                        duration: const Duration(milliseconds: 350),
+                        crossFadeState: widget.controller.recorderState == RecorderState.recording
+                            ? CrossFadeState.showFirst
+                            : CrossFadeState.showSecond,
+                        firstChild: WayaButton(
+                          callback: () async => await widget.controller.pauseRecording(),
+                          shape: BoxShape.circle,
+                          height: null,
+                          color: WayaColors.primary,
+                          horizontalPadding: 7,
+                          verticalPadding: 7,
+                          centerWidget: WayaAssets.icons.cPause.svg(
+                            color: WayaColors.white,
+                            height: 18,
+                            width: 18,
+                          ),
+                        ),
+                        secondChild: WayaButton(
+                          callback: () async => await widget.controller.resumeRecording(),
+                          shape: BoxShape.circle,
+                          height: null,
+                          color: WayaColors.primary,
+                          horizontalPadding: 7,
+                          verticalPadding: 7,
+                          centerWidget: WayaAssets.icons.cButtonVoicenote.svg(
+                            color: WayaColors.white,
+                            height: 18,
+                            width: 18,
+                          ),
                         ),
                       ),
-                    ),
 
                     //? Second, if this is not currently recording...
                     Expanded(

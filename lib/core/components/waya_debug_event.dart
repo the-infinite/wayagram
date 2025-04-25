@@ -131,8 +131,7 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                               WayaDebugEventType.http => WayaAssets.icons.bugHttp,
                               WayaDebugEventType.flutter => WayaAssets.icons.bugFlutter,
                               WayaDebugEventType.exception => WayaAssets.icons.bugFatal,
-                            }
-                                .svg(color: color, height: 20.dg, width: 20.dg),
+                            }.svg( colorFilter: ColorFilter.mode(color, BlendMode.srcIn), height: 20.dg, width: 20.dg),
 
                             //* The type of this debug event.
                             Text(

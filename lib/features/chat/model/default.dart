@@ -58,7 +58,7 @@ class ChatModel {
     required this.membersCanSendMessages,
   });
 
-  String initials([bool useGroup = true]) {
+  String initials(bool useGroup, String userId) {
     if (useGroup && chatType == ChatType.group) {
       return (name?.split(" ") ?? ["Group", "Chat"])
           .take(2)
@@ -68,9 +68,14 @@ class ChatModel {
           .join();
     }
 
+    // Pick this.
+    final usedMember = chatMembers.firstWhere((member) => member.userId == userId);
+    final userData = usedMember.userData;
+    final profileData = usedMember.profileData;
+
     //? This is our alternative
-    return other.userData?.initials ??
-        (other.chatUser?.displayName.split(" ") ?? ["WayaGram", "User"])
+    return userData?.initials ??
+        (profileData?.displayName?.split(" ") ?? ["WayaGram", "User"])
             .take(2)
             .map((word) => WayaValueHelper.isEmoji(word) ? word : word[0].toUpperCase())
             .join();

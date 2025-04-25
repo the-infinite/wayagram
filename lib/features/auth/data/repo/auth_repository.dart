@@ -1,12 +1,12 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/utils/waya_validators.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/data/model/upgrade_to_business_model.dart';
 
 class AuthRepository extends BaseRepository {
-  static const serviceUrl = "wayagram-profile/api/v2";
-  static const graphServiceUrl = "wayagram-graph/api/v2";
+  static const serviceUrl = WayaServiceUri.account;
+  static const graphServiceUrl = WayaServiceUri.graph;
 
   Future<WayaRequestResponse> register(Register payload) {
     return post('$serviceUrl/client/auth/register', payload.toJson(),
@@ -17,6 +17,11 @@ class AuthRepository extends BaseRepository {
     return post(
         '$serviceUrl/client/auth/register/verify-email', payload.toJson(),
         showErrors: true);
+  }
+
+  Future<WayaRequestResponse> verify(VerifyOtp payload) {
+    final data = {...payload.toJson(), "purpose": "USER_RESET_PASSWORD"};
+    return post('$serviceUrl/client/auth/verify-otp', data, showErrors: true);
   }
 
   Future<WayaRequestResponse> resendOtp(String email,
@@ -70,7 +75,7 @@ class AuthRepository extends BaseRepository {
       String? businessInfo,
       bool? isBusinessLogin}) {
     final payload = <String, dynamic>{};
-    
+
     if (isBusinessLogin == true && businessInfo != null) {
       if (WayaValidators.isValidEmail(businessInfo) == null) {
         payload['email'] = businessInfo;

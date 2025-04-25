@@ -14,7 +14,7 @@ class CreateDonation extends ConsumerStatefulWidget {
 }
 
 class _CreateDonationState extends ConsumerState<CreateDonation> with SingleTickerProviderStateMixin {
-
+  //final _formKey = GlobalKey<FormState>();
   late TabController _tabController;
 
   @override
@@ -38,7 +38,6 @@ class _CreateDonationState extends ConsumerState<CreateDonation> with SingleTick
   void _goBack(int index) {
     _tabController.animateTo(index);
   }
-  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {

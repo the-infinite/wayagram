@@ -1,12 +1,13 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/dto/default.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 
 class ChatRepository extends BaseRepository {
-  static const serviceUrl = 'communication-service/api/v2';
-  static const serviceUrlGraph = 'wayagram-graph/api/v2';
+  static const serviceUrl = WayaServiceUri.communication;
+  static const serviceUrlGraph = WayaServiceUri.graph;
 
   Future<WayaRequestResponse> startConversation(
     ChatType type,

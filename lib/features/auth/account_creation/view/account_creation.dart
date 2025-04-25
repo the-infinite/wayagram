@@ -28,7 +28,7 @@ class _AccountCreationState extends ConsumerState<AccountCreation>
     _tabController = TabController(length: 3, vsync: this);
   }
 
-  void _goToNextTab() {
+  void _goToNextTab({String? emailAddress}) {
     if (_tabController.index < _tabController.length - 1) {
       _tabController.animateTo(_tabController.index + 1);
     }

@@ -1,8 +1,9 @@
 import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class PageRepository extends BaseRepository {
-  static const serviceUrl = "wayagram-graph/api/v2";
+  static const serviceUrl = WayaServiceUri.graph;
   static final instance = PageRepository._();
   PageRepository._();
 

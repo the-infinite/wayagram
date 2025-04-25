@@ -11,7 +11,7 @@ class UgtDetailsPost extends ConsumerStatefulWidget {
   const UgtDetailsPost(this.contestApplicant, {super.key});
 
   @override
-  _UgtDetailsPostState createState() => _UgtDetailsPostState();
+  ConsumerState<UgtDetailsPost> createState() => _UgtDetailsPostState();
 }
 
 class _UgtDetailsPostState extends ConsumerState<UgtDetailsPost> {
@@ -25,10 +25,9 @@ class _UgtDetailsPostState extends ConsumerState<UgtDetailsPost> {
   @override
   Widget build(BuildContext context) {
     // final posts = ref.watch(postProvider);
-
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     final posts = ref.watch(ugtContestantProfileVm);
-     var contestModel = ref.watch(selectedContestProvider.notifier).state;
+    var contestModel = ref.watch(selectedContestProvider.notifier).state;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -48,9 +47,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtDetailsPost> {
               }
  */
               final post = posts[index];
-              return GestureDetector(
-                  onTap: () {},
-                  child: UgtPostCard(post, widget.contestApplicant, contestModel!));
+              return GestureDetector(onTap: () {}, child: UgtPostCard(post, widget.contestApplicant, contestModel!));
             },
           ),
       ],
