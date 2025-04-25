@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
@@ -42,8 +41,6 @@ class AvailableBalanceModal extends StatefulHookConsumerWidget {
 }
 
 class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
-  final WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {

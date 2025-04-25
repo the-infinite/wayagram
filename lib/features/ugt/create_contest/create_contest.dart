@@ -6,7 +6,6 @@ import 'package:wayagram/features/ugt/create_contest/steps/contest_timeline.dart
 import 'package:wayagram/features/ugt/create_contest/steps/create_ultimate.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/participant_details.dart';
-import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 
 class CreateContest extends ConsumerStatefulWidget {
   static const route = '/create-contest';
@@ -16,8 +15,7 @@ class CreateContest extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _CreateContestState();
 }
 
-class _CreateContestState extends ConsumerState<CreateContest>
-    with SingleTickerProviderStateMixin {
+class _CreateContestState extends ConsumerState<CreateContest> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -32,11 +30,11 @@ class _CreateContestState extends ConsumerState<CreateContest>
     }
   }
 
-  void _goToPreviousTab() {
-    if (_tabController.index > 1) {
-      _tabController.animateTo(_tabController.index - 1);
-    }
-  }
+//   void _goToPreviousTab() {
+//     if (_tabController.index > 1) {
+//       _tabController.animateTo(_tabController.index - 1);
+//     }
+//   }
 
   void _goBack(int index) {
     _tabController.animateTo(index);
@@ -44,7 +42,7 @@ class _CreateContestState extends ConsumerState<CreateContest>
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(contestNotifierProvider);
+    //final viewModel = ref.watch(contestNotifierProvider);
     return WayaScaffoldWithProgressBar(
         isLoading: false,
         isScrollable: true,

@@ -32,8 +32,7 @@ class ReferralCard extends StatelessWidget {
             Container(
               child: model.referredUser?.avatar != null
                   ? CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(model.referredUser?.avatar ?? ""),
+                      backgroundImage: NetworkImage(model.referredUser?.avatar ?? ""),
                       radius: 20,
                     )
                   : CircleAvatar(
@@ -41,8 +40,7 @@ class ReferralCard extends StatelessWidget {
                       radius: 20,
                       child: Text(
                         getInitials(model.referredUser?.displayName ?? ""),
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, color: Colors.black),
+                        style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
                       ),
                     ),
             ),
@@ -67,13 +65,16 @@ class ReferralCard extends StatelessWidget {
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
               decoration: BoxDecoration(
-                color: true ? Colors.green[100] : Colors.orange[100],
+                color: model.isEligible ?? false ? Colors.green[100] : Colors.orange[100],
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Text(true ? "Active" : "Deactivated",
-                  style: WayaTextStyles.hintStyleSemiBold.copyWith(
-                      color: true ? Colors.green[700] : Colors.orange[700],
-                      fontWeight: FontWeight.bold)),
+              child: Text(
+                model.isEligible ?? false ? "Active" : "Deactivated",
+                style: WayaTextStyles.hintStyleSemiBold.copyWith(
+                  color: model.isEligible ?? false ? Colors.green[700] : Colors.orange[700],
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
           ],
         ),
@@ -89,7 +90,7 @@ class ReferralCard extends StatelessWidget {
     DateTime dateTime = DateTime.parse(dateString);
 
     // Convert to the desired format
-    String formattedDate = DateFormat("d MMM y").format(dateTime);
+    // final formattedDate = DateFormat("d MMM y").format(dateTime);
 
     // Add the ordinal suffix
     String day = DateFormat("d").format(dateTime);

@@ -57,7 +57,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
       return null;
     }, []);
     final hasClickedLiked = useState(false);
-    final hasClickedShared = useState(false);
+    //final hasClickedShared = useState(false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
