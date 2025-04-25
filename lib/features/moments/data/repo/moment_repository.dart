@@ -1,9 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class MomentRepository extends BaseRepository {
-  static const serviceUrl = "wayagram-graph/api/v2";
+  static const serviceUrl = WayaServiceUri.graph;
   static final instance = MomentRepository._();
 
   MomentRepository._();

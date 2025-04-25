@@ -81,7 +81,7 @@ class _WayaDebugMessage extends StatelessWidget {
                       WayaDebugEventType.flutter => WayaAssets.icons.bugFlutter,
                       WayaDebugEventType.exception => WayaAssets.icons.bugFatal,
                     }
-                        .svg(color: color, height: 20.dg, width: 20.dg),
+                        .svg(colorFilter: ColorFilter.mode(color, BlendMode.srcIn), height: 20.dg, width: 20.dg),
 
                     //* For the text.
                     ClipPath(
@@ -343,10 +343,16 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
                                         ),
                                         child: WayaDebugConsoleController.instance.visible
                                             ? WayaAssets.icons.actonDismiss.svg(
-                                                color: WayaColors.customBlack,
+                                                colorFilter: ColorFilter.mode(
+                                                  WayaColors.customBlack,
+                                                  BlendMode.srcIn,
+                                                ),
                                               )
                                             : WayaAssets.icons.bug.svg(
-                                                color: WayaColors.white,
+                                                colorFilter: ColorFilter.mode(
+                                                  WayaColors.white,
+                                                  BlendMode.srcIn,
+                                                ),
                                               ),
                                       ),
                                     ),
@@ -394,9 +400,12 @@ class _WayaDebugConsoleState extends State<WayaDebugConsole> {
                                         ? Colors.black
                                         : Colors.white,
                                     leadingIcon: WayaAssets.icons.cRead.svg(
-                                      color: WayaDebugConsoleController.instance.unreadCount == 0
-                                          ? Colors.black
-                                          : Colors.white,
+                                      colorFilter: ColorFilter.mode(
+                                        WayaDebugConsoleController.instance.unreadCount == 0
+                                            ? Colors.black
+                                            : Colors.white,
+                                        BlendMode.srcIn,
+                                      ),
                                     ),
                                   ),
                               ],

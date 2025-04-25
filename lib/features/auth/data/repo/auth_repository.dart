@@ -1,12 +1,12 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
-import 'package:wayagram/core/utils/waya_validators.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/data/model/upgrade_to_business_model.dart';
 
 class AuthRepository extends BaseRepository {
-  static const serviceUrl = "wayagram-profile/api/v2";
-  static const graphServiceUrl = "wayagram-graph/api/v2";
+  static const serviceUrl = WayaServiceUri.account;
+  static const graphServiceUrl = WayaServiceUri.graph;
 
   Future<WayaRequestResponse> register(Register payload) {
     return post('$serviceUrl/client/auth/register', payload.toJson(),
