@@ -4,8 +4,6 @@ import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:flutter/material.dart';
-
 
 class CredentialInputState {
   final bool isEmail;
@@ -45,7 +43,6 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
   final _logger = getLogger("CredentialInputNotifier");
   final _authRepository = AuthRepository();
   final _snackbarService = SnackbarService();
-  final _localDataSource = WayaLocalDataSource();
 
   CredentialInputNotifier(this.ref)
       : super(
