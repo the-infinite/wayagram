@@ -92,6 +92,7 @@ dependencies:
   #for pdf generation
   pdf: ^3.11.3
   avatar_glow: ^3.0.1
+  sign_in_with_apple: ^7.0.1
   
 
 

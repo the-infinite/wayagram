@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_validators.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/login/vm/login_vm.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'dart:io' show Platform;
 
 import '../../../../../../core/utils/waya_navigation.dart';
@@ -43,7 +44,9 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
         //Gap(10),
         WayaButton(
           color: wayaTheme.colorScheme.black,
-          callback: () {},
+          callback: () {
+           ref.watch(loginVmProvider.notifier).signinWithApple();
+          },
           leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
           text: "Continue with Apple",
           textColor: wayaTheme.colorScheme.onPrimary,
@@ -245,7 +248,9 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
         //Gap(10),
         WayaButton(
           color: wayaTheme.colorScheme.black,
-          callback: () {},
+          callback: () {
+           ref.watch(loginVmProvider.notifier).signinWithApple();
+          },
           leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
           text: "Continue with Apple",
           textColor: wayaTheme.colorScheme.onPrimary,

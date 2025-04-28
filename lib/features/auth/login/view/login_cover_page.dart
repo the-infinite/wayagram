@@ -8,13 +8,17 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'dart:io' show Platform;
+
+import 'package:wayagram/features/auth/login/vm/login_vm.dart';
 
 class LoginCoverPage extends ConsumerWidget {
   static const route = '/login-cover-page';
   const LoginCoverPage({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final viewModel = ref.watch(loginVmProvider.notifier);
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       removeAppBar: true,
@@ -53,7 +57,9 @@ class LoginCoverPage extends ConsumerWidget {
          // Gap(10),
           WayaButton(
             color: wayaTheme.colorScheme.black,
-            callback: () {},
+            callback: () {
+              viewModel.signinWithApple();
+            },
             leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
             text: "Continue with Apple",
             textColor: wayaTheme.colorScheme.onPrimary,
