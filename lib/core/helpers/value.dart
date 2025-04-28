@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 
+enum WayaPostAction { comment, share, likes }
+
 class WayaValueHelper {
   WayaValueHelper._();
 
@@ -63,8 +65,22 @@ class WayaValueHelper {
   ///
   /// Returns a formatted string with thousands separators and specified decimal places.
   static String formatPrice(num number, [int decimalDigits = 2]) {
-    final format = NumberFormat.currency(decimalDigits: decimalDigits, symbol: "₦");
+    final format =
+        NumberFormat.currency(decimalDigits: decimalDigits, symbol: "₦");
     return format.format(number);
+  }
+
+  static String getComment(int number, WayaPostAction name) {
+    //? if this is a comment, then we need to return the comment string.
+    if (name == WayaPostAction.comment) {
+      return number > 1 ? "Comments" : "Comment";
+    } else if (name == WayaPostAction.likes) {
+      //? if this is a likes, then we need to return the likes string.
+      return number > 1 ? "Likes" : "Like";
+    } else {
+      //? if this is a share, then we need to return the share string.
+      return number > 1 ? "Shares" : "Share";
+    }
   }
 
   /// Returns a human-readable string representation of a [WayaDebugEventModule].
@@ -113,7 +129,8 @@ class WayaValueHelper {
   /// [route] The route path to be transformed into a shareable URL
   ///
   /// Returns a [String] containing the complete shareable URL
-  static String getShareableUrl(String route) => switch (WayaConstants.isProduction) {
+  static String getShareableUrl(String route) =>
+      switch (WayaConstants.isProduction) {
         true => "https://wayagram.ng$route",
         false => "https://staging.wayagram.ng$route",
       };

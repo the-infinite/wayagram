@@ -344,7 +344,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                 children: [
                   PostActionType(
                     text:
-                        "${widget.post.likeCount} ${widget.post.likeCount! > 0 ? "Likes" : "Like"}",
+                        "${widget.post.likeCount} ${WayaValueHelper.getComment(widget.post.likeCount??0, WayaPostAction.likes)}",
                     image: WayaAssets.images.pages.like2.path,
                     color: widget.post.hasLiked == true
                         ? wayaTheme.colorScheme.primary
@@ -400,7 +400,8 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   ), */
                   const Gap(30),
                   PostActionType(
-                    text: "${widget.post.shareCount} Shares",
+                    text:
+                        "${widget.post.shareCount} ${WayaValueHelper.getComment(widget.post.shareCount??0, WayaPostAction.share)}",
                     image: WayaAssets.images.pages.share2.path,
                     color: wayaTheme.colorScheme.primary,
                     onPressed: () async {
