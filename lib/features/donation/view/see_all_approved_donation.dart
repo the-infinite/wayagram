@@ -1,21 +1,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
 import 'package:wayagram/features/donation/model/my_donation_model.dart';
-import 'package:wayagram/features/donation/view/all_donations.dart';
-import 'package:wayagram/features/donation/view/application_details.dart';
-import 'package:wayagram/features/donation/view/my_donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
-import 'package:wayagram/features/donation/widget/applied_donationi_widget.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
-import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-import 'dart:io' show Platform;
 
 class SeeAllApprovedDonations extends ConsumerStatefulWidget {
   static const route = '/seeAllApprovedDonations';
@@ -34,7 +26,7 @@ class _SeeAllApprovedDonationsState extends ConsumerState<SeeAllApprovedDonation
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(donationVmProvider.notifier).getHostedDonation();
+      ref.read(donationVmProvider.notifier).getApprovedDonation();
       ref.read(donationVmProvider.notifier).getMyKYC();
     });
     searchController = TextEditingController();
@@ -47,7 +39,7 @@ class _SeeAllApprovedDonationsState extends ConsumerState<SeeAllApprovedDonation
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
 
     // Filter the myDonations
     final filteredMyDonations = WayaUtils.search<MyDonationDocs>(

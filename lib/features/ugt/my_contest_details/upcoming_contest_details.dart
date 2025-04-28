@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
@@ -6,21 +5,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
-import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
-import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 
-import '../../../core/components/waya_scaffold.dart';
 import '../widgets/about_ugt_widget.dart';
-import '../widgets/status_ongoing.dart';
 
 class UpcomingContestDetails extends StatefulHookConsumerWidget {
   static const route = '/upcoming-contest-details';
@@ -39,7 +33,7 @@ class _UpcomingContestDetailsState
     var model = ref.watch(selectedContestProvider.notifier).state;
     var viewModel = ref.watch(votersContestNotifier.notifier);
     final hasProfile = useState(false);
-    print("my value ${model?.hasApplied}");
+    debugPrint("my value ${model?.hasApplied}");
 
     useEffect(() {
       ref
@@ -48,12 +42,12 @@ class _UpcomingContestDetailsState
               ref, model?.id ?? "", viewModel.getLoggedInUserId() ?? "")
           .then((model) {
         if (model != null) {
-          print("i am here");
+          debugPrint("i am here");
           if (model.data?.totalDocs == 1) {
-            print("i am here 2");
+            debugPrint("i am here 2");
             if (model.data?.docs?.first.profilePhoto != null &&
                 model.data?.docs?.first.bio != null) {
-              print("i am here 3");
+              debugPrint("i am here 3");
               hasProfile.value = true;
             }
           } else {
@@ -206,10 +200,29 @@ class _UpcomingContestDetailsState
               SizedBox(height: 8),
               _buildStagesContestFinal(),
               SizedBox(height: 16), */
+
+              if (model?.hasApplied != true)
+                Center(
+                  child: WayaButton(
+                    callback: () {
+                      //? if user has a profile
+
+                      // if (hasProfile.value || model?.hasApplied == true) {
+                      ref.read(selectedContestProvider.notifier).state = model;
+                      WayaNav.toNamed('/upcoming-manage-contest-details');
+                    },
+                    text: "View Contest Details",
+                  ),
+                ),
+              Gap(20),
               Center(
                 child: WayaButton(
+                  color: Colors.white,
+                  border: Border.all(color: WayaColors.primary),
+                  textColor: WayaColors.black,
                   callback: () {
                     //? if user has a profile
+
                     if (hasProfile.value || model?.hasApplied == true) {
                       ref.read(selectedContestProvider.notifier).state = model;
                       WayaNav.toNamed('/upcoming-manage-contest-details');
@@ -232,7 +245,6 @@ class _UpcomingContestDetailsState
       ),
     );
   }
-  
 
   Color getColor(bool isText, String text) {
     if (text == "active") {
@@ -296,149 +308,149 @@ class _UpcomingContestDetailsState
     );
   }
 
-  Widget _buildStagesContestLevel1() {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      title: Text(
-        "Contest Level 1",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
-            const Gap(20),
-            UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
-  }
+//   Widget _buildStagesContestLevel1() {
+//     final wayaTheme = Theme.of(context);
+//     return ExpansionTile(
+//       title: Text(
+//         "Contest Level 1",
+//         style: wayaTheme.textTheme.bodyMedium,
+//       ),
+//       children: [
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
+//             const Gap(20),
+//             UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
+//             const Gap(20),
+//             UpcomingWidget(title: "Entry Type", content: "Free"),
+//           ],
+//         ),
+//         const Gap(10),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
+//             const Gap(20),
+//             UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
+//             const Gap(20),
+//             UpcomingWidget(title: "Entry Type", content: "Free"),
+//           ],
+//         ),
+//         const Gap(20),
+//       ],
+//     );
+//   }
 
-  Widget _buildStagesContestLevel2() {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      title: Text(
-        "Contest Level 2",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
-            const Gap(20),
-            UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
-  }
+//   Widget _buildStagesContestLevel2() {
+//     final wayaTheme = Theme.of(context);
+//     return ExpansionTile(
+//       title: Text(
+//         "Contest Level 2",
+//         style: wayaTheme.textTheme.bodyMedium,
+//       ),
+//       children: [
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
+//             const Gap(20),
+//             UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
+//             const Gap(20),
+//             UpcomingWidget(title: "Entry Type", content: "Free"),
+//           ],
+//         ),
+//         const Gap(10),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
+//             const Gap(20),
+//             UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
+//             const Gap(20),
+//             UpcomingWidget(title: "Entry Type", content: "Free"),
+//           ],
+//         ),
+//         const Gap(20),
+//       ],
+//     );
+//   }
 
-  Widget _buildStagesContestLevel3() {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      title: Text(
-        "Contest Level 3",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
-            const Gap(20),
-            UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
-  }
+//   Widget _buildStagesContestLevel3() {
+//     final wayaTheme = Theme.of(context);
+//     return ExpansionTile(
+//       title: Text(
+//         "Contest Level 3",
+//         style: wayaTheme.textTheme.bodyMedium,
+//       ),
+//       children: [
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
+//             const Gap(20),
+//             UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
+//             const Gap(20),
+//             UpcomingWidget(title: "Entry Type", content: "Free"),
+//           ],
+//         ),
+//         const Gap(10),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
+//             const Gap(20),
+//             UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
+//             const Gap(20),
+//             UpcomingWidget(title: "Entry Type", content: "Free"),
+//           ],
+//         ),
+//         const Gap(20),
+//       ],
+//     );
+//   }
 
-  Widget _buildStagesContestFinal() {
-    final wayaTheme = Theme.of(context);
-    return ExpansionTile(
-      title: Text(
-        "Final Stage",
-        style: wayaTheme.textTheme.bodyMedium,
-      ),
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(10),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
-            const Gap(20),
-            UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
-            const Gap(20),
-            UpcomingWidget(title: "Entry Type", content: "Free"),
-          ],
-        ),
-        const Gap(20),
-      ],
-    );
-  }
+//   Widget _buildStagesContestFinal() {
+//     final wayaTheme = Theme.of(context);
+//     return ExpansionTile(
+//       title: Text(
+//         "Final Stage",
+//         style: wayaTheme.textTheme.bodyMedium,
+//       ),
+//       children: [
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             UpcomingWidget(title: "Start Date", content: "21st of July\n 2024"),
+//             const Gap(20),
+//             UpcomingWidget(title: "End Date", content: "21st of Jul\n 2024"),
+//             const Gap(20),
+//             UpcomingWidget(title: "Entry Type", content: "Free"),
+//           ],
+//         ),
+//         const Gap(10),
+//         Row(
+//           mainAxisAlignment: MainAxisAlignment.start,
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: [
+//             UpcomingWidget(title: "No of Posts", content: "6 Posts Per Week"),
+//             const Gap(20),
+//             UpcomingWidget(title: "Prize for Winner", content: "0 NGN"),
+//             const Gap(20),
+//             UpcomingWidget(title: "Entry Type", content: "Free"),
+//           ],
+//         ),
+//         const Gap(20),
+//       ],
+//     );
+//   }
 }
 
 String formatMoney(String value) {

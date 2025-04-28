@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class FilterState {
@@ -156,6 +157,6 @@ class FilterVm extends StateNotifier<FilterState> {
 
 
   void applyFilters() {
-    print('Applying filters: $state');
+    debugPrint('Applying filters: $state');
   }
 }

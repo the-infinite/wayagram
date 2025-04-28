@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
@@ -29,6 +26,7 @@ import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/delete_post_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 
 import '../../data/model/ugt_post_model.dart';
@@ -51,13 +49,15 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     var notifier = ref.watch(ugtContestantProfileVm.notifier);
+    final viewModel = ref.read(votersContestNotifier.notifier);
+
     var contestModel2 = ref.watch(selectedContestProvider.notifier).state;
     useEffect(() {
       createdDate = widget.post.createdAt?.toString() ?? "";
       return null;
     }, []);
     final hasClickedLiked = useState(false);
-    final hasClickedShared = useState(false);
+    //final hasClickedShared = useState(false);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -136,30 +136,33 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                               ),
                               /*   if (viewModel.getLoggedInUserId() ==
                                   widget.post.contestantProfileId) */
-                              PopupMenuItem<int>(
-                                value: 1,
-                                child: _buildActionNav(
-                                    context: context,
-                                    onTap: () {
-                                      WayaNav.goBack();
-                                      WayaUtils.showModalSheet(
-                                        context,
-                                        child: DeletePostModal(
-                                          postId: widget.post.id ?? "",
-                                          contestantId:
-                                              widget.contestApplicant?.id ?? "",
-                                          contestId:
-                                              widget.post.contestId ?? "",
-                                        ),
-                                      );
-                                    },
-                                    asset: Icon(
-                                      Icons.delete_outline_outlined,
-                                      size: 24,
-                                    ),
-                                    text: "Delete Post",
-                                    color: wayaTheme.colorScheme.customBlack),
-                              )
+                              if (viewModel.getLoggedInUserId() ==
+                                  widget.contestApplicant?.profileId)
+                                PopupMenuItem<int>(
+                                  value: 1,
+                                  child: _buildActionNav(
+                                      context: context,
+                                      onTap: () {
+                                        WayaNav.goBack();
+                                        WayaUtils.showModalSheet(
+                                          context,
+                                          child: DeletePostModal(
+                                            postId: widget.post.id ?? "",
+                                            contestantId:
+                                                widget.contestApplicant?.id ??
+                                                    "",
+                                            contestId:
+                                                widget.post.contestId ?? "",
+                                          ),
+                                        );
+                                      },
+                                      asset: Icon(
+                                        Icons.delete_outline_outlined,
+                                        size: 24,
+                                      ),
+                                      text: "Delete Post",
+                                      color: wayaTheme.colorScheme.customBlack),
+                                )
                             ];
                           },
                           child: Container(
@@ -251,7 +254,6 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                           });
                         },
                       ),
-                    
                       const Gap(10),
                       PostActionType(
                         text: "${widget.post.shares} Shares",
@@ -272,8 +274,6 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                           }
                         },
                       ),
-
-                    
                     ],
                   ),
                   WayaButton(

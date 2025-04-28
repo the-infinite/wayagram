@@ -29,7 +29,7 @@ class _VideoThumbnailPlayerState extends State<VideoThumbnailPlayer> {
     super.initState();
     _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl))
       ..initialize().then((_) {
-        print("i am initialized finish");
+        debugPrint("i am initialized finish");
         setState(() {
           _isInitialized = true;
         });

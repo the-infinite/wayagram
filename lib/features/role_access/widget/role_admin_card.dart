@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/features/role_access/data/model/role_member.dart';
-import 'package:wayagram/features/role_access/data/model/shop_model.dart';
 
 class RoleAdminCard extends StatelessWidget {
   const RoleAdminCard({
@@ -15,7 +11,7 @@ class RoleAdminCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // bool isCurrentUser = user["isCurrentUser"] ?? false;
-    final wayaTheme = Theme.of(context);
+    // final wayaTheme = Theme.of(context);
     return Card(
       elevation: 0.2,
       child: Container(
@@ -29,21 +25,12 @@ class RoleAdminCard extends StatelessWidget {
           children: [
             // Profile Avatar or Initials
             if (true)
-              Container(
-                child: /* user != null
-                    ? CircleAvatar(
-                        backgroundImage: NetworkImage(user["image"]),
-                        radius: 20,
-                      )
-                    : */
-                    CircleAvatar(
-                  backgroundColor: Colors.pink[100],
-                  radius: 20,
-                  child: Text(
-                    getInitials("You"),
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.black),
-                  ),
+              CircleAvatar(
+                backgroundColor: Colors.pink[100],
+                radius: 20,
+                child: Text(
+                  getInitials("You"),
+                  style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
                 ),
               ),
             SizedBox(width: 12),
@@ -71,8 +58,8 @@ class RoleAdminCard extends StatelessWidget {
                         SizedBox(width: 4),
                         Text(
                           "Super Admin",
-                          style: WayaTextStyles.hintStyleBold.copyWith(
-                              color: Colors.green, fontWeight: FontWeight.bold),
+                          style:
+                              WayaTextStyles.hintStyleBold.copyWith(color: Colors.green, fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),

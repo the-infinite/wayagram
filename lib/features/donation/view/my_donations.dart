@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/donation/model/my_donation_model.dart';
 import 'package:wayagram/features/donation/view/applied_donations.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/donation/widget/donation_tab.dart';
-import 'package:wayagram/features/shop/widgets/empty_state.dart';
 
 import 'hosted_donations.dart';
 
@@ -29,7 +23,7 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       ref.read(donationVmProvider.notifier).getDonatedDonation;
       ref.read(donationVmProvider.notifier).getMyKYC();
-      ref.read(donationVmProvider.notifier).getHostedDonation();
+      ref.read(donationVmProvider.notifier).getApprovedDonation();
       ref.read(donationVmProvider.notifier).getAppliedDonation();
     });
     searchController = TextEditingController();
@@ -48,18 +42,18 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(donationVmProvider);
-    final wayaTheme = Theme.of(context);
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    //final viewModel = ref.watch(donationVmProvider);
+    // final wayaTheme = Theme.of(context);
+    //final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
     // Filter the myDonations
-    final filteredMyDonations = WayaUtils.search<MyDonationDocs>(
-      viewModel.myDonationDocs!,
-      [
-        'title',
-      ],
-      searchController.text,
-    );
+    // final filteredMyDonations = WayaUtils.search<MyDonationDocs>(
+    //   viewModel.myDonationDocs!,
+    //   [
+    //     'title',
+    //   ],
+    //   searchController.text,
+    // );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -78,46 +72,11 @@ class _MyDonationsState extends ConsumerState<MyDonations> {
               text: 'Applied Donations',
               onTap: () => setState(() => _selectedIndex = 1),
             ),
-
           ],
         ),
         const Gap(20),
-
         _selectedIndex == 0 ? HostedDonations() : AppliedDonations(),
-
-
       ],
     );
-
   }
 }
-
-class DonationEmptyState extends StatelessWidget {
-  const DonationEmptyState({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
-    return Center(
-      child: Container(
-        padding: EdgeInsets.all(30),
-        child: EmptyState(
-            hasButton: false,
-            onTap: () {
-              //WayaNav.toNamed(CreatePost.route);
-            },
-            buttonTrailingIcon: SvgPicture.asset(
-              WayaAssets.icons.addEventIcon.path,
-              colorFilter: ColorFilter.mode(
-                  wayaTheme.colorScheme.white, BlendMode.srcIn),
-            ),
-            assetImage: Image.asset(
-              WayaAssets.images.emptyEvent.path,
-              scale: 1.5,
-            ),
-            message: "You haven't added any donations yet"),
-      ),
-    );
-  }
-}
-

@@ -50,7 +50,7 @@ class CartData {
 
   factory CartData.fromJson(Map<String, dynamic> json) {
     return CartData(
-      id: json['id'],
+      id: json['id'] ?? '',
       userId: json['userId'],
       items: (json['items'] as List)
           .map((item) => CartItem.fromJson(item))

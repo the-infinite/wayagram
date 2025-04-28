@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,33 +13,42 @@ import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
+import 'package:wayagram/shared/cache/chat.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
-class ConversationWidget extends StatelessWidget {
-  final ChatModel chat;
+class ConversationWidget extends StatefulWidget {
+  final String chatId;
   final ChatNotifier notifier;
   final ConversationVm conversationNotifier;
   final int index;
   final bool isInteractive;
+  final bool canClick;
 
   // Construct.
   const ConversationWidget({
     super.key,
-    required this.chat,
+    required this.chatId,
     required this.index,
     required this.notifier,
     required this.conversationNotifier,
     this.isInteractive = true,
+    this.canClick = true,
   });
 
+  @override
+  State<ConversationWidget> createState() => _ConversationWidgetState();
+}
+
+class _ConversationWidgetState extends State<ConversationWidget> {
   /// Helper function used to navigate to the current chat screen.
   void _toChat() async {
-    conversationNotifier.dismissOverlay();
-    notifier.setChat((await conversationNotifier.getChatDetails(chat.id)) ?? chat);
-    notifier.markAllAsRead().then((result) {
+    final chat = wayaChatsCache.getCachedData(widget.chatId)!;
+    widget.conversationNotifier.dismissOverlay();
+    widget.notifier.setChat((await widget.conversationNotifier.getChatDetails(chat.id)) ?? chat);
+    widget.notifier.markAllAsRead().then((result) {
       if (!result) return;
-      conversationNotifier.getChats(true);
-      conversationNotifier.getArchivedChats(true);
+      widget.conversationNotifier.getChats(true);
+      widget.conversationNotifier.getArchivedChats(true);
     });
     WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
   }
@@ -45,6 +56,7 @@ class ConversationWidget extends StatelessWidget {
   //? This is how we show actions.
   void _showActions(BuildContext context) async {
     final renderBox = context.findRenderObject() as RenderBox?;
+    final chat = wayaChatsCache.getCachedData(widget.chatId)!;
     final mySize = renderBox?.size;
     final screenSize = MediaQuery.sizeOf(context);
     final sizeNotifier = ValueNotifier(Size.zero);
@@ -83,7 +95,7 @@ class ConversationWidget extends StatelessWidget {
               callback: () {
                 sizeNotifier.dispose();
                 entry.remove();
-                conversationNotifier.pinOrUnpinChat(chat.id);
+                widget.conversationNotifier.pinOrUnpinChat(chat.id);
               },
               height: null,
               alignment: Alignment.centerLeft,
@@ -107,7 +119,7 @@ class ConversationWidget extends StatelessWidget {
               callback: () {
                 sizeNotifier.dispose();
                 entry.remove();
-                conversationNotifier.archiveOrUnarchiveChat(chat.id);
+                widget.conversationNotifier.archiveOrUnarchiveChat(chat.id);
               },
               height: null,
               alignment: Alignment.centerLeft,
@@ -159,7 +171,7 @@ class ConversationWidget extends StatelessWidget {
               callback: () {
                 sizeNotifier.dispose();
                 entry.remove();
-                conversationNotifier.deleteChat(chat.id);
+                widget.conversationNotifier.deleteChat(chat.id);
               },
               height: null,
               alignment: Alignment.centerLeft,
@@ -192,12 +204,64 @@ class ConversationWidget extends StatelessWidget {
           valueListenable: sizeNotifier,
           builder: (context, popupSize, _) {
             final popupExtent = offset.dy + mySize.height + popupSize.height + 5;
-            return Positioned(
-              left: 20,
-              top: popupExtent > screenSize.height ? offset.dy - 10 - popupSize.height : offset.dy + 10 + mySize.height,
-              child: Material(
-                color: Colors.transparent,
-                child: actions,
+
+            //? This is fine.
+            return Material(
+              color: Colors.transparent,
+              child: Stack(
+                children: [
+                  //? Our background.
+                  BackdropFilter(
+                    filter: ImageFilter.blur(
+                      sigmaX: 2,
+                      sigmaY: 2,
+                    ),
+                    child: Opacity(
+                      opacity: 0.6,
+                      child: SizedBox(
+                        child: ModalBarrier(
+                          dismissible: true,
+                          color: Colors.white,
+                          onDismiss: () => entry.remove(),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  //? Second, the actions and conversation component.
+                  Positioned(
+                    top: popupExtent > screenSize.height ? offset.dy - 10 - popupSize.height : offset.dy,
+                    child: SizedBox(
+                      width: screenSize.width,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        verticalDirection:
+                            popupExtent > screenSize.height ? VerticalDirection.up : VerticalDirection.down,
+                        spacing: 10.h,
+                        children: [
+                          //? This is fine.
+                          ColoredBox(
+                            color: WayaColors.primary50,
+                            child: ConversationWidget(
+                              chatId: chat.id,
+                              index: widget.index,
+                              notifier: widget.notifier,
+                              conversationNotifier: widget.conversationNotifier,
+                              isInteractive: widget.isInteractive,
+                              canClick: false,
+                            ),
+                          ),
+
+                          //? The actions themselves
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: actions,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             );
           },
@@ -206,7 +270,7 @@ class ConversationWidget extends StatelessWidget {
     );
 
     // Set the overlay we are interacting with currently.
-    conversationNotifier.setOverlay(entry);
+    widget.conversationNotifier.setOverlay(entry);
 
     // Then we do it like this.
     Overlay.of(context).insert(entry);
@@ -215,126 +279,132 @@ class ConversationWidget extends StatelessWidget {
   // This is fine too.
   @override
   Widget build(BuildContext context) {
+    final chat = wayaChatsCache.getCachedData(widget.chatId)!;
     final isMine = chat.lastMessage?.senderId == ConversationState.self.id;
     final unread = chat.unreadCount;
+    final userStatus = chat.other.chatUser?.onlineStatus;
 
     // The thing that you are sending.
-    return InkWell(
-      onTap: _toChat,
-      onLongPress: () => _showActions(context),
-      splashColor: WayaColors.primary.withAlpha(30),
-      focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
-      highlightColor: WayaColors.primary.withAlpha(30),
-      child: Padding(
-        padding: !isInteractive
-            ? const EdgeInsets.symmetric(vertical: 5)
-            : const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            // The user's chat profile picture.
-            ChatProfilePicture(
-              user: chat.other.userData!,
-              lastSeen: chat.other.chatUser?.lastSeen,
-              showActive: chat.other.chatUser?.onlineStatus == ChatUserActivity.online,
-              radius: 25,
-            ),
+    return ValueListenableBuilder(
+      valueListenable: wayaChatsCache,
+      builder: (context, redraws, _) => InkWell(
+        onTap: widget.canClick ? _toChat : null,
+        onLongPress: widget.canClick ? () => _showActions(context) : null,
+        splashColor: WayaColors.primary.withAlpha(30),
+        focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+        highlightColor: WayaColors.primary.withAlpha(30),
+        child: Padding(
+          padding: !widget.isInteractive
+              ? const EdgeInsets.symmetric(vertical: 5)
+              : const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // The user's chat profile picture.
+              ChatProfilePicture(
+                user: chat.other.userData!,
+                lastSeen: chat.other.chatUser?.lastSeen,
+                showActive: chat.chatType != ChatType.group && userStatus == ChatUserActivity.online,
+                chat: chat,
+                radius: 25.r,
+              ),
 
-            // Some space.
-            const Gap(10),
+              // Some space.
+              const Gap(10),
 
-            //* For the messages part.
-            Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //* For the other person's name.
-                  Text(
-                    chat.name ?? chat.other.userData?.fullname ?? chat.other.chatUser?.displayName ?? "WayaGram User",
-                    maxLines: 1,
-                    style: WayaTextStyles.titleMedium.copyWith(
-                      fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-
-                  //? For the message content...
-                  if (chat.lastMessage != null)
+              //* For the messages part.
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //* For the other person's name.
                     Text(
-                      "${isMine ? "You: " : ""}${chat.lastMessage!.contentDescription}",
+                      chat.name ?? chat.other.userData?.fullname ?? chat.other.chatUser?.displayName ?? "WayaGram User",
                       maxLines: 1,
                       style: WayaTextStyles.titleMedium.copyWith(
                         fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
                         overflow: TextOverflow.ellipsis,
-                        color: unread < 1 ? WayaColors.greyColor400 : WayaColors.greyColor500,
-                        fontSize: 14.sp,
                       ),
+                    ),
+
+                    //? For the message content...
+                    if (chat.lastMessage != null)
+                      Text(
+                        "${isMine ? "You: " : ""}${chat.lastMessage!.contentDescription}",
+                        maxLines: 1,
+                        style: WayaTextStyles.titleMedium.copyWith(
+                          fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
+                          overflow: TextOverflow.ellipsis,
+                          color: unread < 1 ? WayaColors.greyColor400 : WayaColors.greyColor500,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+
+              // Some space
+              const Gap(10),
+
+              //* The timing for the messages.
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // First, the time.
+                  Text(
+                    WayaDateHelper.getSocialTimeAgo(chat.lastMessage?.updatedAt ?? chat.updatedAt),
+                    style: WayaTextStyles.titleMedium.copyWith(
+                      fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
+                      overflow: TextOverflow.ellipsis,
+                      color: unread < 1 ? WayaColors.black : WayaColors.primary,
+                      fontSize: 13.sp,
+                    ),
+                  ),
+
+                  // Some space.
+                  const Gap(2),
+
+                  // This is fine.
+                  if (unread > 0)
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 9),
+                      decoration: BoxDecoration(
+                        color: WayaColors.primary,
+                        borderRadius: BorderRadius.circular(500),
+                      ),
+                      child: Text(
+                        chat.unreadText,
+                        style: WayaTextStyles.bodyMedium.copyWith(
+                          color: WayaColors.white,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    )
+                  else if (isMine && chat.lastMessage?.readAt != null)
+                    WayaAssets.icons.cRead.svg(
+                      color: WayaColors.primary,
+                      height: 16,
+                      width: 16,
+                    )
+                  else if (isMine && chat.lastMessage?.deliveredAt != null)
+                    WayaAssets.icons.cRead.svg(
+                      color: WayaColors.greyColor400,
+                      height: 16,
+                      width: 16,
+                    )
+                  else if (isMine && chat.lastMessage?.createdAt != null)
+                    WayaAssets.icons.cSent.svg(
+                      color: WayaColors.greyColor400,
+                      height: 16,
+                      width: 16,
                     ),
                 ],
               ),
-            ),
-
-            // Some space
-            const Gap(10),
-
-            //* The timing for the messages.
-            Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // First, the time.
-                Text(
-                  WayaDateHelper.getTimestamp(chat.lastMessage?.updatedAt ?? chat.updatedAt),
-                  style: WayaTextStyles.titleMedium.copyWith(
-                    fontWeight: unread < 1 ? FontWeight.normal : FontWeight.w600,
-                    overflow: TextOverflow.ellipsis,
-                    color: unread < 1 ? WayaColors.black : WayaColors.primary,
-                    fontSize: 13.sp,
-                  ),
-                ),
-
-                // Some space.
-                const Gap(2),
-
-                // This is fine.
-                if (unread > 0)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 9),
-                    decoration: BoxDecoration(
-                      color: WayaColors.primary,
-                      borderRadius: BorderRadius.circular(500),
-                    ),
-                    child: Text(
-                      chat.unreadText,
-                      style: WayaTextStyles.bodyMedium.copyWith(
-                        color: WayaColors.white,
-                        fontSize: 14.sp,
-                      ),
-                    ),
-                  )
-                else if (isMine && chat.lastMessage?.readAt != null)
-                  WayaAssets.icons.cRead.svg(
-                    color: WayaColors.primary,
-                    height: 16,
-                    width: 16,
-                  )
-                else if (isMine && chat.lastMessage?.deliveredAt != null)
-                  WayaAssets.icons.cRead.svg(
-                    color: WayaColors.greyColor400,
-                    height: 16,
-                    width: 16,
-                  )
-                else if (isMine && chat.lastMessage?.createdAt != null)
-                  WayaAssets.icons.cSent.svg(
-                    color: WayaColors.greyColor400,
-                    height: 16,
-                    width: 16,
-                  ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

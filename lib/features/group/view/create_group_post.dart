@@ -138,7 +138,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
                                       widget.id,
                                     );
                                     notifier.reset();
-                                    WayaNav.replaceNamed("/groups");
+                                    WayaNav.goBack(closeOverlays: true);
                                   }
                                 }
                               : null,
@@ -205,7 +205,7 @@ class _CreateGroupPostState extends ConsumerState<CreateGroupPost> with SingleTi
                                           WayaTextFormField(
                                             line: 6,
                                             showBorder: false,
-                                            keyboardType: TextInputType.text,
+                                            keyboardType: TextInputType.multiline,
                                             controller: viewModel.content,
                                             hintText: 'what is on your mind?',
                                             borderColor: formState.hasError && viewModel.content.text.isEmpty

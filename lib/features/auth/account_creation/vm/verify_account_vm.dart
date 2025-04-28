@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -9,6 +8,7 @@ import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_v
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
+import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 
 class VerifyAccountState {
@@ -44,14 +44,13 @@ class VerifyAccountState {
 }
 
 class VerifyAccountVm extends Notifier<VerifyAccountState> {
-  final WayaLocalDataSource _localDataSource;
   final AuthRepository _authRepository;
   final WayaSecureDataSource _secureDataSource = WayaSecureDataSource();
   final _logger = getLogger("VerifyAccountVm");
   Timer? _timer;
   final SnackbarService _snackbarService = SnackbarService();
 
-  VerifyAccountVm(this._localDataSource, this._authRepository);
+  VerifyAccountVm(this._authRepository);
 
   @override
   VerifyAccountState build() {
@@ -62,7 +61,6 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
   void _startCountdown() {
     _timer?.cancel();
-    state = state.copyWith(countdown: 40);
     _timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) {
@@ -84,13 +82,17 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     state = state.copyWith(isEditing: value);
   }
 
-  Future<void> verifyAccount(VoidCallback onSuccess, String code) async {
+  Future<void> verifyAccount({
+    required VoidCallback onSuccess,
+    required String code,
+  }) async {
     state = state.copyWith(isLoading: true);
 
     try {
-      final email = ref.watch(personalFirstStepProvider).email.text;
-      final response =
-          await _authRepository.verifyOtp(VerifyOtp(email: email, otp: code));
+      String personalEmail = ref.watch(personalFirstStepProvider).email.text;
+
+      final response = await _authRepository
+          .verifyOtp(VerifyOtp(email: personalEmail, otp: code));
       if (response.success) {
         final token = response.data['data']['token']['token'];
         final refreshToken = response.data['data']['token']['refreshToken'];
@@ -106,12 +108,32 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     }
   }
 
-  Future<void> verifyYourIdentity(VoidCallback onSuccess, String code) async {
+  Future<void> verifyEmail(
+      {required VoidCallback onSuccess,
+      required String code,
+      required String email}) async {
     state = state.copyWith(isLoading: true);
 
     try {
       final response =
-      await _authRepository.verifyOtp(VerifyOtp(email: '${ConversationState.self.email}', otp: code));
+          await _authRepository.verify(VerifyOtp(email: email, otp: code));
+      if (response.success) {
+       
+        onSuccess();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> verifyYourIdentity(VoidCallback onSuccess, String code) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      final response = await _authRepository.verifyOtp(
+          VerifyOtp(email: '${ConversationState.self.email}', otp: code));
       if (response.success) {
         final token = response.data['data']['token']['token'];
         final refreshToken = response.data['data']['token']['refreshToken'];
@@ -192,5 +214,5 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
 final verifyAccountProvider =
     NotifierProvider<VerifyAccountVm, VerifyAccountState>(() {
-  return VerifyAccountVm(WayaLocalDataSource(), AuthRepository());
+  return VerifyAccountVm(AuthRepository());
 });

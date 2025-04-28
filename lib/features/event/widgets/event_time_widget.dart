@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -146,7 +145,7 @@ class EventDateWidgetVm extends StateNotifier<EventDateWidgetState> {
       selectTime(time: time24Hour);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 }

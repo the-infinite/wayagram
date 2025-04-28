@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/referral/vm/referral_vm.dart';
@@ -55,7 +53,7 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(referralVm);
 
     return WayaScaffold(
@@ -86,7 +84,7 @@ class _ReferralHistoryPageState extends ConsumerState<ReferralHistoryPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _infoCard("Total Friends Referred",
-                        viewModel.count?.toString() ?? ""),
+                        viewModel.referralList.length.toString()),
                     _infoCard("Total Rewards Earned",
                         "₦${formatMoney(viewModel.earned?.toString() ?? "")}"),
                   ],

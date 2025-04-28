@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 
@@ -5,20 +6,11 @@ class OrderRepository extends BaseRepository {
   static const serviceUrl = "wayagram-shop/api/v2";
 
   Future<WayaRequestResponse> createOrder(
-      {required String cartId,
-      required String shopId,
-      required String userId,
-      String? pickupAddress}) {
-    Map<String, dynamic> payload = {
-      'cartId': cartId,
-      'shopId': shopId,
-      'userId': userId
-    };
+      {required String cartId, required String shopId, required String userId, String? pickupAddress}) {
+    Map<String, dynamic> payload = {'cartId': cartId, 'shopId': shopId, 'userId': userId};
 
     if (pickupAddress != null) payload['pickupAddress'] = pickupAddress;
-
-    print(payload);
-
+    debugPrint(payload.toString());
     return post("$serviceUrl/orders/place-order", payload);
   }
 
@@ -32,20 +24,16 @@ class OrderRepository extends BaseRepository {
   //
 
   Future<WayaRequestResponse> deliveryStatusUpdate(
-      {required String orderId, required String status}) async {
-    return put("$serviceUrl/orders/deliveryStatus/$orderId",
-        {"deliveryStatus": status});
+      {required String orderId, required String status, required String shopId}) async {
+    return put("$serviceUrl/orders/deliveryStatus/$orderId?shopId=$shopId", {"deliveryStatus": status});
   }
 
   Future<WayaRequestResponse> pickupStatusUpdate(
-      {required String orderId, required String status}) async {
-    return put(
-        "$serviceUrl/orders/pickupStatus/$orderId", {"pickupStatus": status});
+      {required String orderId, required String status, required String shopId}) async {
+    return put("$serviceUrl/orders/pickupStatus/$orderId?shopId=$shopId", {"pickupStatus": status});
   }
 
-  Future<WayaRequestResponse> declineOrder(
-      {required String orderId, required String reason}) {
-    return post("$serviceUrl/orders/decline-order",
-        {"orderId": orderId, "reason": reason});
+  Future<WayaRequestResponse> declineOrder({required String orderId, required String reason, required String shopId}) {
+    return post("$serviceUrl/orders/decline-order?shopId=$shopId", {"orderId": orderId, "reason": reason});
   }
 }

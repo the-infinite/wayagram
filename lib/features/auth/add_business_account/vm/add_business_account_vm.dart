@@ -11,7 +11,6 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:mime/mime.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 
@@ -142,7 +141,7 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
     }
 
     final businessId = await _secureDataSource.getBusinessId();
-    print("feefer $businessId");
+    debugPrint("feefer $businessId");
     final formdata = state.selected == 'CAC'
         ? {
             'nin': await formattedImage(state.uploadedDocuments

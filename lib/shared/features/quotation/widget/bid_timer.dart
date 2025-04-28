@@ -24,14 +24,27 @@ class QuotationBidTimer extends StatefulWidget {
   /// The color of text to use in the timer.
   final Color? textColor;
 
+  /// The color of the background to use.
+  final Color? backgroundColor;
+
+  /// Is this thing expanded in width, or does it only take up as much space as
+  /// it should?
+  final bool isExpanded;
+
+  /// The font weight we are going to be using here on the text.
+  final FontWeight? fontWeight;
+
   /// Construct.
   const QuotationBidTimer({
     super.key,
     required this.request,
+    this.isExpanded = false,
     this.isStandalone = true,
     this.isShortTime = false,
+    this.fontWeight,
     this.fontSize,
     this.textColor,
+    this.backgroundColor,
   });
 
   @override
@@ -39,13 +52,15 @@ class QuotationBidTimer extends StatefulWidget {
 }
 
 class _QuotationBidTimerState extends State<QuotationBidTimer> {
-  late final isClosed = [BuyRequestStatus.cancelled, BuyRequestStatus.closed].contains(widget.request.status);
+  late final isClosed = [BuyRequestStatus.cancelled, BuyRequestStatus.closed].contains(widget.request.status) ||
+      widget.request.bidEnd.isBefore(DateTime.now());
   final timeNotifier = ValueNotifier(Duration.zero);
   Timer? timer;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      //? If this is no longer open for any reason.
       if (isClosed) return;
 
       //? If the status is not started, then we need to calculate the time left
@@ -92,9 +107,10 @@ class _QuotationBidTimerState extends State<QuotationBidTimer> {
         WayaDateHelper.convertDurationToCountdown(timeLeft, !widget.isShortTime),
         textAlign: TextAlign.center,
         style: wayaTheme.textTheme.descriptionStyle.copyWith(
-          color: widget.textColor ?? wayaTheme.colorScheme.customPrimary,
+          color:
+              widget.textColor ?? (isClosed ? wayaTheme.colorScheme.greyColor400 : wayaTheme.colorScheme.customPrimary),
           fontSize: widget.fontSize ?? 16.sp,
-          fontWeight: FontWeight.w400,
+          fontWeight: widget.fontWeight ?? FontWeight.w400,
         ),
       ),
     );
@@ -107,9 +123,11 @@ class _QuotationBidTimerState extends State<QuotationBidTimer> {
 
     //? The component itself.
     return Container(
+      width: widget.isExpanded ? double.infinity : null,
       padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 15.h),
       decoration: BoxDecoration(
-        color: wayaTheme.colorScheme.primary50,
+        color:
+            widget.backgroundColor ?? (isClosed ? wayaTheme.colorScheme.greyColor50 : wayaTheme.colorScheme.primary50),
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: view,

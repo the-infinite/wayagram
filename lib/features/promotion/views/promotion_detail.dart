@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -13,7 +12,8 @@ import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventor
 
 class PromotionDetail extends ConsumerStatefulWidget {
   static const route = "/promotion-detail";
-  const PromotionDetail({super.key});
+  final String id;
+  const PromotionDetail({super.key, required this.id});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _PromotionDetail();
@@ -33,28 +33,26 @@ class _PromotionDetail extends ConsumerState<PromotionDetail> {
           children: [
             PromotedWidget(isDetail: true),
             const Gap(15),
-            GridView(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  mainAxisSpacing: 0,
-                  childAspectRatio: 1.2,
-                  crossAxisSpacing: 8),
+            Row(
+              spacing: 6,
               children: [
-                InventoryWidget(
-                  metrics: "N240,000",
-                  color: wayaTheme.colorScheme.transparent,
-                  title: "Promotion Cost",
-                  border: Border.all(
-                      width: 1, color: wayaTheme.colorScheme.greyColor300),
-                ),
-                InventoryWidget(
-                    metrics: "2,343",
+                Expanded(
+                  child: InventoryWidget(
+                    metrics: "N240,000",
                     color: wayaTheme.colorScheme.transparent,
-                    title: "Impression",
+                    title: "Promotion Cost",
                     border: Border.all(
-                        width: 1, color: wayaTheme.colorScheme.greyColor300)),
+                        width: 1, color: wayaTheme.colorScheme.greyColor300),
+                  ),
+                ),
+                Expanded(
+                  child: InventoryWidget(
+                      metrics: "2,343",
+                      color: wayaTheme.colorScheme.transparent,
+                      title: "Impression",
+                      border: Border.all(
+                          width: 1, color: wayaTheme.colorScheme.greyColor300)),
+                )
               ],
             ),
             const Gap(10),

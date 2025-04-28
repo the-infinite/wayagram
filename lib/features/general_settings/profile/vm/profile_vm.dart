@@ -11,15 +11,22 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_state_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
+import 'package:wayagram/shared/cache/comment.dart';
+import 'package:wayagram/shared/cache/group.dart';
+import 'package:wayagram/shared/cache/page.dart';
+import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/features/file/repo/default.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
+import 'package:wayagram/shared/features/group/notifier/default.dart';
 import 'package:wayagram/shared/features/moments/notifier/default.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 
 class ProfileVm extends StateNotifier<ProfileState> {
   final ProfileRepo _profileRepo;
   final WayaSecureDataSource _secureDataSource;
   final WayaLocalDataSource _localDataSource;
-  ProfileVm(this._profileRepo, this._localDataSource, this._secureDataSource) : super(ProfileState());
+  ProfileVm(this._profileRepo, this._localDataSource, this._secureDataSource)
+      : super(ProfileState());
 
   void refetchUserData() {
     getUserData();
@@ -31,7 +38,8 @@ class ProfileVm extends StateNotifier<ProfileState> {
     try {
       state = ProfileState(isLoading: true);
 
-      final response = await _profileRepo.updateAccountRepo(userId: userId, dob: dob, address: address);
+      final response = await _profileRepo.updateAccountRepo(
+          userId: userId, dob: dob, address: address);
       if (response.success) {
         WayaSnackBar.showToast('Account Updated Successfully');
         Future.delayed(Duration(seconds: 2), () {
@@ -45,37 +53,55 @@ class ProfileVm extends StateNotifier<ProfileState> {
   }
 
   Future<bool> updateProfile(
-      {String? username, String? displayName, String? bio, bool? isPublic, bool load = true}) async {
+      {String? username,
+      String? displayName,
+      String? bio,
+      bool? isPublic,
+      bool load = true}) async {
     final userId = _localDataSource.getUserId();
 
     // Get the last update and creation dates
-    final lastUsernameUpdate = state.userAccountModel!.data!.userdata!.profile!.updatedAt ?? DateTime.now();
-    final lastDisplayNameUpdate = state.userAccountModel!.data!.userdata!.profile!.createdAt ?? DateTime.now();
+    DateTime? lastUsernameUpdate;
+    DateTime? lastDisplayNameUpdate;
 
-    // Check if the account is newly created
-    final isNewAccount = lastUsernameUpdate.isAtSameMomentAs(lastDisplayNameUpdate);
-
-    // Determine if updates are allowed based on the conditions
-    final canUpdateUsername = isNewAccount || DateTime.now().difference(lastUsernameUpdate).inDays >= 30;
-    final canUpdateDisplayName = isNewAccount || DateTime.now().difference(lastDisplayNameUpdate).inDays >= 7;
-
-    // Check if username can be updated
-    if (username != null && !canUpdateUsername) {
-      WayaSnackBar.showToast('You can only update your username once every 30 days.');
-      return false;
+    lastUsernameUpdate = _localDataSource.getLastUpdateUserName();
+    lastDisplayNameUpdate = _localDataSource.getLastUpdateDisplayName();
+    if (lastUsernameUpdate == null && username != null) {
+      _localDataSource.saveLastUpdateUserName(DateTime.now());
+    } else if (lastUsernameUpdate != null && username != null) {
+      // Determine if updates are allowed based on the conditions
+      final cannotUpdateUsername =
+          DateTime.now().difference(lastUsernameUpdate).inDays <= 30;
+      if (cannotUpdateUsername) {
+        WayaSnackBar.showToast(
+            'You can only update your username once every 30 days.');
+      }
+      return cannotUpdateUsername;
     }
 
-    // Check if display name can be updated
-    if (displayName != null && !canUpdateDisplayName) {
-      WayaSnackBar.showToast('You can only update your display name once every 7 days.');
-      return false;
+    if (lastDisplayNameUpdate == null && displayName != null) {
+      _localDataSource.saveLastUpdateDisplayName(DateTime.now());
+    } else if (lastDisplayNameUpdate != null && displayName != null) {
+      // Determine if updates are allowed based on the conditions
+      final cannotUpdateDisplayName =
+          DateTime.now().difference(lastDisplayNameUpdate).inDays <= 7;
+      if (cannotUpdateDisplayName) {
+          WayaSnackBar.showToast(
+              'You can only update your display name once every 7 days.');
+        return cannotUpdateDisplayName;
+      }
     }
+
 
     try {
       state = state.copyWith(isLoading: load);
 
       final response = await _profileRepo.updateProfileRepo(
-          userId: userId, username: username, displayName: displayName, bio: bio, isPublic: isPublic);
+          userId: userId,
+          username: username,
+          displayName: displayName,
+          bio: bio,
+          isPublic: isPublic);
       if (response.success) {
         WayaSnackBar.showToast('Profile Updated Successfully');
         isPublic != null
@@ -107,7 +133,8 @@ class ProfileVm extends StateNotifier<ProfileState> {
       final response = await _profileRepo.getUserDataRepo(userId: userId);
 
       if (response.success) {
-        UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
+        UserAccountModel userAccountModel =
+            UserAccountModel.fromJson(response.data);
 
         //? Set who is currently logged in somewhere that is easily accessible
         //? for conversation's sake.
@@ -118,7 +145,8 @@ class ProfileVm extends StateNotifier<ProfileState> {
         );
 
         // Finally, update general state.
-        state = state.copyWith(userAccountModel: userAccountModel, isLoading: false);
+        state = state.copyWith(
+            userAccountModel: userAccountModel, isLoading: false);
       } else {
         state = state.copyWith(isLoading: false);
       }
@@ -131,10 +159,20 @@ class ProfileVm extends StateNotifier<ProfileState> {
     await _secureDataSource.saveToken("");
     await _secureDataSource.saveRefreshToken("");
     await _secureDataSource.saveBusinessId("");
-    myFollowProvider.reset();
-    otherUserMoments.reset();
     _localDataSource.saveUserId("");
     await _secureDataSource.saveUserId("");
+
+    //? Reset all notifiers, providers, and caches.
+    myFollowProvider.reset();
+    myGroupNotifier.reset();
+    myPageNotifier.reset();
+    otherUserMoments.reset();
+    wayaCommentCache.clear();
+    wayaPostCache.clear();
+    wayaGroupCache.clear();
+    wayaPageCache.clear();
+
+    //? Go all the wat to the last page.
     WayaNav.removeUntilNamed(LoginCoverPage.route);
   }
 
@@ -147,7 +185,9 @@ class ProfileVm extends StateNotifier<ProfileState> {
       try {
         state = state.copyWith(isLoading: true);
         final response = await _profileRepo.updateProfileImageRepo(
-            userId: userId, fileName: WayaHelpers.extractFileName(profileImage), image: imageBytes);
+            userId: userId,
+            fileName: WayaHelpers.extractFileName(profileImage),
+            image: imageBytes);
 
         if (response.success) {
           WayaSnackBar.showToast('Profile Picture Updated Successfully');
@@ -182,7 +222,8 @@ class ProfileVm extends StateNotifier<ProfileState> {
       }
 
       //? Now, try submitting the result to the person who needs it.
-      final response = await _profileRepo.updateProfileRepo(userId: ConversationState.self.id, coverPhoto: result);
+      final response = await _profileRepo.updateProfileRepo(
+          userId: ConversationState.self.id, coverPhoto: result);
 
       //? This is fine too.
       if (response.success) {

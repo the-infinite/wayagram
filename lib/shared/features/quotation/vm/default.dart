@@ -39,7 +39,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
       state = state.copyWith(isLoadingRequests: true);
 
       //? This is fine.
-      final response = !state.isUser && ConversationState.self.accountType == UserAccountType.business
+      final response = !state.isUser &&
+              ConversationState.self.accountType == UserAccountType.business &&
+              ShopResource.hasSelectedShop
           ? await repo.getAllAvailableQuotation(state.limit, state.requestPage)
           : await repo.getBuyerRequest(state.limit, state.requestPage, state.requestStatus, state.isUser);
 
@@ -86,6 +88,72 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
     //? Return this collated result.
     return result;
+  }
+
+  /// Helper function used to retrieve a single bid from the server-side. It is
+  /// worth noting that this function would effectively update the value of the
+  /// retrieved bid inside of the list of bids.
+  Future<QuotationBidModel?> getSingleBid(String id) async {
+    //? This is fine.
+    try {
+      final response = await repo.retrieveBid(id);
+
+      //? Now, try to send the request.
+      if (response.success) {
+        //? The data.
+        final data = response.data['data'];
+
+        //? Parse the single buy request to ensure we are doing things right.
+        final doc = QuotationBidModel.fromJson(data);
+
+        //? Update the buy request in the list of buy requests.
+        final index = state.requests.indexWhere((element) => element.id == id);
+
+        //? This is fine.
+        if (index != -1) {
+          final previous = state.bids;
+          previous[index] = doc;
+          state = state.copyWith(
+            bids: [...previous],
+          );
+        }
+
+        //? Return the document.
+        return doc;
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Since it failed.
+    return null;
+  }
+
+  /// Helper function used for confirming the status of a payment. It is nice to
+  /// have in the sense that it doesn't take anything away from our implementation.
+  Future<bool> verifyPaymentStatus(String id, bool value) async {
+    try {
+      //? This is an okay attempt.
+      final response = await repo.verifyPaymentStatus(id, value);
+
+      //? Now, try to send the request.
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Fail here.
+    return false;
   }
 
   /// Helper function used to retrieve all information pertaining to a single
@@ -216,6 +284,9 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
             ...state.bids,
           ],
         );
+
+        //? This is fine.
+        await getBuyRequest(requestId);
 
         //? Return the document.
         return doc;
@@ -362,6 +433,69 @@ class QuotationsNotifier extends StateNotifier<QuotationsState> {
 
     //? Since it failed.
     return null;
+  }
+
+  /// Retrieves a list of bid orders for a specific entity.
+  ///
+  /// Takes an [entityId] string parameter to identify the entity whose orders are to be fetched.
+  /// Returns a [Future] that resolves to a [List] of [BidOrderModel] objects.
+  ///
+  /// This asynchronous operation fetches bid orders associated with the specified entity from the data source.
+  Future<List<BidOrderModel>> getOrders(String entityId) async {
+    final result = <BidOrderModel>[];
+
+    try {
+      //? Now, we are loading bro.
+      state = state.copyWith(isLoadingOrders: true);
+
+      //? This is fine.
+      final response = ConversationState.self.accountType == UserAccountType.business
+          ? await repo.getSellerOrders(entityId, state.limit, state.orderPage)
+          : await repo.getBuyerOrders(entityId, state.limit, state.orderPage);
+
+      //? This is fine.
+      if (response.success) {
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextRequest) {
+          result.addAll(state.orders);
+        }
+
+        //? The data.
+        final data = response.data['data'];
+
+        //? Parse the buy requests first so we can extrapolate what we need.
+        final docs = (data['docs'] as List).map((doc) => BidOrderModel.fromJson(doc)).toList();
+
+        //? Then add all the quotes (buy requests)
+        result.addAll(docs);
+
+        //? Update state.
+        state = state.copyWith(
+          hasLoadedOrders: true,
+          orders: result,
+          totalOrders: data['totalDocs'],
+          orderPages: data['totalPages'],
+          hasNextOrder: data['hasNextPage'],
+          orderPage: int.tryParse(data['nextPage'].toString()) ?? 1,
+          isLoadingOrders: false,
+        );
+      }
+
+      //? Since it failed.
+      else {
+        state = state.copyWith(isLoadingOrders: false);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.quotations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Return our compounded result.
+    return result;
   }
 
   /// Helper function used to update the status of a single order. This is useful

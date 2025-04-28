@@ -31,7 +31,7 @@ class OrderVm extends StateNotifier<OrderState> {
 
       return PaginatedResult<Order>(hasNextPage: hasNextPage, items: orders);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     } finally {
       state = state.copyWith(isLoading: false);
@@ -41,26 +41,29 @@ class OrderVm extends StateNotifier<OrderState> {
   Future<void> declineOrder(
       {required String orderId,
       required String reason,
+      required String shopId,
       required BuildContext context}) async {
     try {
       state = state.copyWith(isRejecting: true);
-      final response =
-          await _orderRepository.declineOrder(orderId: orderId, reason: reason);
+      final response = await _orderRepository.declineOrder(
+          orderId: orderId, reason: reason, shopId: shopId);
 
       if (response.success && context.mounted) {
         WayaSnackBar.showToast("You have declined this order");
         WayaNav.goBack();
         WayaNav.toNamed(BottomView.route,
             arguments: {'index': 1, 'current': 2});
+      } else {
+        if (response.data['responseCode'] == 704) {
+          WayaSnackBar.showToast("Access not granted by the shop owner");
+        }
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }
   }
-
-  
 }
 
 final orderVmProvider = StateNotifierProvider<OrderVm, OrderState>((ref) {

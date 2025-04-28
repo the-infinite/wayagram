@@ -1,36 +1,12 @@
-
-import 'dart:convert';
-import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
-import 'package:wayagram/core/theme/theme.dart';
-import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/cms_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
-import 'package:wayagram/features/activity_logs/data/model/login_history_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/group_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_interaction_model.dart';
-import 'package:wayagram/features/activity_logs/view/visited_page.dart';
-import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
-import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
-import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
-import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/donation/data/repo/donation_repository.dart';
-import 'package:wayagram/features/donation/donation_modal/donation_modal.dart';
-import 'package:wayagram/features/donation/model/all_donation_model.dart';
-import 'package:wayagram/features/donation/model/create_donation_response.dart';
-import 'package:wayagram/features/donation/model/kyc_model.dart';
-import 'package:wayagram/features/donation/model/login_response.dart';
-import 'package:wayagram/features/donation/model/my_donation_model.dart';
-import 'package:wayagram/features/donation/state/donation_state.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
-import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
-import '../../auth/transaction_pin/vm/transaction_pin_vm.dart';
 import '../data/model/account_activity_model.dart';
 import '../data/model/payment_activity_model.dart';
 import '../data/model/search_log_model.dart';
@@ -71,6 +47,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<DonationDocs>?> getDonationLogs({required int page}) async {
@@ -96,6 +73,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getPageLogs({required int page}) async {
@@ -121,18 +99,19 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
-  Future<PaginatedResult<DonationDocs>?> getGroupLogs({required int page}) async {
+  Future<PaginatedResult<GroupDocs>?> getGroupLogs({required int page}) async {
 
     try{
       state = state.copyWith(isLoading: true);
       final response = await _activityLogsRepository.getGroupLogs(page);
-      List<DonationDocs>? fetchGroupDocs = [];
+      List<GroupDocs>? fetchGroupDocs = [];
       bool? hasNextPage = false;
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        DonationActivityModel responseModel = DonationActivityModel.fromJson(response.data);
+        GroupActivityModel responseModel = GroupActivityModel.fromJson(response.data);
         fetchGroupDocs = responseModel.data?.docs;
         hasNextPage = responseModel.data?.hasNextPage;
         state = state.copyWith(groupDocs: fetchGroupDocs);
@@ -146,6 +125,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getSocialLogs({required int page}) async {
@@ -171,6 +151,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getUgtLogs({required int page}) async {
@@ -196,6 +177,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getEventLogs({required int page}) async {
@@ -221,6 +203,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getShopLogs({required int page}) async {
@@ -246,6 +229,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getPollLogs({required int page}) async {
@@ -271,6 +255,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getWalletLogs({required int page}) async {
@@ -296,6 +281,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PageDocs>?> getQuotationLogs({required int page}) async {
@@ -321,6 +307,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<VisitedPagesDocs>?>  getVisitedPages({required int page}) async {
@@ -348,6 +335,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<CmsDocs>?> getCmsClicks({required int page}) async {
@@ -374,6 +362,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<UserActionsDocs>?> getUserAction({required int page}) async {
@@ -400,6 +389,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<PaymentActivityDocs>?> getPaymentActivity({required int page}) async {
@@ -426,6 +416,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<UserInteractionDocs>?> getUserInteraction({required int page}) async {
@@ -452,6 +443,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
   Future<PaginatedResult<SearchLogDocs>?> getSearchLog({required int page}) async {
@@ -478,6 +470,7 @@ class ActivityLogsVm extends StateNotifier<ActivityLogsState> {
     }finally {
       state = state.copyWith(isLoading: false);
     }
+    return null;
   }
 
 

@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/service/repos/transactions/transaction_history_model.dart';
@@ -17,25 +18,23 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
   TransactionVm(this._transactionRepository, this._walletRepository, this._localDataSource)
       : super(TransactionHistoryState());
 
-
   Future<void> getTransaction({int? page = 1, int? limit = 10, bool? hasNextPage, String? filters}) async {
     try {
       // API call
       state = state.copyWith(isLoading: true);
       final response = await _transactionRepository.getUserTransactions(page: page, limit: limit, filters: filters);
       state = state.copyWith(isLoading: false);
-      print('API Response: ${response.data}');
-      print('Status Code: ${response.statusCode}');
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
         TransactionModel responseModel = TransactionModel.fromJson(response.data);
         state = state.copyWith(docs: responseModel.data?.docs);
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {}
   }
-
 
   Future<void> getUserTransactions({int? page = 1, int? limit = 10, bool? hasNextPage, String? filters}) async {
     try {
@@ -69,7 +68,7 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
       final response = await _transactionRepository.getSingleTransactions(transactionId);
       if (response.success) {
         final transaction = TransactionDetail.fromJson(response.data["data"]);
-        log("${transaction}");
+        log("$transaction");
         state = state.copyWith(isLoadingSingle: false, transaction: transaction);
       } else {
         state = state.copyWith(isLoadingSingle: false);

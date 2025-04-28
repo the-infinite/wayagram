@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/upt_post_approve_card.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_post_all_card.dart';
@@ -19,7 +16,7 @@ class UgtPostAllContestant extends ConsumerStatefulWidget {
   const UgtPostAllContestant(this.model, {super.key});
 
   @override
-  _UgtDetailsPostState createState() => _UgtDetailsPostState();
+  ConsumerState<UgtPostAllContestant> createState() => _UgtDetailsPostState();
 }
 
 class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
@@ -58,14 +55,12 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
                       callback: () {
                         //?switch to active posts
                         viewModelNotifier.changeActive(true);
-                        viewModelNotifier
-                            .fetchAllContestPosts(widget.model?.id ?? "");
+                        viewModelNotifier.fetchAllContestPosts(widget.model?.id ?? "");
                       },
                       color: Colors.white,
                       text: "Active Posts",
 
-                      border:
-                          Border.all(color: wayaTheme.colorScheme.greyColor400),
+                      border: Border.all(color: wayaTheme.colorScheme.greyColor400),
                       //   leadingIcon: WayaAssets.icons.caution.svg(),
                       textColor: wayaTheme.colorScheme.greyColor700,
                     ),
@@ -76,9 +71,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
                       callback: () {
                         //?switch to pending posts
                         viewModelNotifier.changeActive(false);
-                        viewModelNotifier.fetchAllContestPosts(
-                            widget.model?.id ?? "",
-                            hostApproved: false);
+                        viewModelNotifier.fetchAllContestPosts(widget.model?.id ?? "", hostApproved: false);
                       },
                       color: wayaTheme.colorScheme.primary50,
                       text: "Pending Posts",
@@ -86,8 +79,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
                       // border: Border.all(),
                       // trailingIcon: WayaAssets.icons.caution.svg(),
                       textColor: wayaTheme.colorScheme.customPrimary,
-                      trailingIcon:
-                          _counter(context, viewModel.pendingPostCount ?? 0),
+                      trailingIcon: _counter(context, viewModel.pendingPostCount ?? 0),
                     ),
                   ),
                 ],
@@ -103,59 +95,57 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
           shrinkWrap: true,
           itemCount: viewModel.myPostList.length,
           itemBuilder: (context, index) {
-            /*  if (postNotifier.isLoading) {
-            
-                return Center(child: CircularProgressIndicator());
-              }
- */
             final post = viewModel.myPostList[index];
             return viewModelNotifier.getActive()
                 ? GestureDetector(
-                    onTap: () {}, child: UgtPostAllCard(post, widget.model!))
+                    onTap: () {},
+                    child: UgtPostAllCard(post, widget.model!),
+                  )
                 : GestureDetector(
                     onTap: () {},
-                    child: UptPostApproveCard(post, widget.model!));
+                    child: UptPostApproveCard(post, widget.model!),
+                  );
           },
         )
       ],
     );
   }
 
-  Widget _ourButtons(
-    BuildContext context,
-  ) {
-    final wayaTheme = Theme.of(context);
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Expanded(
-          child: WayaButton(
-            callback: () {},
-            color: Colors.white,
-            text: "Active Posts",
+//   Widget _ourButtons(
+//     BuildContext context,
+//   ) {
+//     final wayaTheme = Theme.of(context);
+//     return Row(
+//       crossAxisAlignment: CrossAxisAlignment.center,
+//       mainAxisAlignment: MainAxisAlignment.center,
+//       children: [
+//         Expanded(
+//           child: WayaButton(
+//             callback: () {},
+//             color: Colors.white,
+//             text: "Active Posts",
 
-            border: Border.all(color: wayaTheme.colorScheme.greyColor400),
-            //   leadingIcon: WayaAssets.icons.caution.svg(),
-            textColor: wayaTheme.colorScheme.greyColor700,
-          ),
-        ),
-        Gap(10),
-        Expanded(
-          child: WayaButton(
-            callback: () {},
-            color: wayaTheme.colorScheme.primary50,
-            text: "Pending Posts",
-            leadingIcon: Container(),
-            // border: Border.all(),
-            // trailingIcon: WayaAssets.icons.caution.svg(),
-            textColor: wayaTheme.colorScheme.customPrimary,
-            trailingIcon: _counter(context, 0),
-          ),
-        ),
-      ],
-    );
-  }
+//             border: Border.all(color: wayaTheme.colorScheme.greyColor400),
+//             //   leadingIcon: WayaAssets.icons.caution.svg(),
+//             textColor: wayaTheme.colorScheme.greyColor700,
+//           ),
+//         ),
+//         Gap(10),
+//         Expanded(
+//           child: WayaButton(
+//             callback: () {},
+//             color: wayaTheme.colorScheme.primary50,
+//             text: "Pending Posts",
+//             leadingIcon: Container(),
+//             // border: Border.all(),
+//             // trailingIcon: WayaAssets.icons.caution.svg(),
+//             textColor: wayaTheme.colorScheme.customPrimary,
+//             trailingIcon: _counter(context, 0),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
 
   Widget emptyWidget() {
     return UgtEmptyState(

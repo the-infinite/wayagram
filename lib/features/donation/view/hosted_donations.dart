@@ -6,7 +6,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -21,9 +20,7 @@ import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/donation/widget/applied_donationi_widget.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
-import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
 import '../../../shared/features/user/models/default.dart';
 import 'dart:io' show Platform;
@@ -45,7 +42,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(donationVmProvider.notifier).getHostedDonation();
+      ref.read(donationVmProvider.notifier).getApprovedDonation();
       ref.read(donationVmProvider.notifier).getAppliedDonation();
       ref.read(donationVmProvider.notifier).getRejectedDonation();
       ref.read(donationVmProvider.notifier).getMyKYC();
@@ -68,27 +65,14 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
     final wayaTheme = Theme.of(context);
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
-
     final state = ref.watch(donationVmProvider);
-
-    // Filter the myDonations
-    final filteredMyDonations = WayaUtils.search<MyDonationDocs>(
-      viewModel.myDonationDocs!,
-      [
-        'title',
-      ],
-      searchController.text,
-    );
-
     List<MyDonationDocs>? myDonations = widget.isExpanded
-        ? state.myDonationDocs
-        : state.myDonationDocs!.sublist(0, min(state.myDonationDocs!.length, 1));
+        ? state.approvedDonations
+        : state.approvedDonations!.sublist(0, min(state.approvedDonations!.length, 1));
 
     return SizedBox(
       height: 560,
       child: ListView(
-       // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           WayaButton(
             centerWidget: Row(
@@ -110,22 +94,9 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                 ),
               ],
             ),
-            callback: () {
-              if(viewModel.kycStatus != 'APPROVED' && ConversationState.self.accountType == UserAccountType.business){
-                WayaUtils.showNotice(
-                    context: context,
-                    title: "Update KYC Information ",
-                    message: 'You must complete KYC verification before creating a donation post',
-                    onPress: () {
-                      WayaNav.goBack();
-                      WayaNav.toNamed('/kycUpdate', arguments: {
-                        'kyc': '${viewModel.kycStatus}'
-                      });
-                    },
-                    buttonText: 'Update KYC',
-                    secondButtonText: 'Cancel',
-                    icon: Image.asset('assets/images/cp-shop.png'));
-              } else if (ConversationState.self.accountType == UserAccountType.personal) {
+            callback: () async{
+              await ref.read(donationVmProvider.notifier).getMyKYC();
+               if (ConversationState.self.accountType == UserAccountType.personal) {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   WayaUtils.showNotice(
                       context: context,
@@ -139,11 +110,29 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
                       secondButtonText: 'Cancel',
                       icon: Image.asset('assets/images/cp-shop.png'));
                 });
-              } else{
+                return;
+              }
+               if(viewModel.kycStatus != 'APPROVED'){
+                 WayaUtils.showNotice(
+                     context: context,
+                     title: "Update KYC Information ",
+                     message: 'You must complete KYC verification before creating a donation post',
+                     onPress: () {
+                       WayaNav.goBack();
+                       WayaNav.toNamed('/kycUpdate', arguments: {
+                         'kyc': '${viewModel.kycStatus}'
+                       });
+                     },
+                     buttonText: 'Update KYC',
+                     secondButtonText: 'Cancel',
+                     icon: Image.asset('assets/images/cp-shop.png'));
+               }
+               else{
                 WayaNav.toNamed('/createDonation');
               }
             },
             color: wayaTheme.colorScheme.primary50,
+            isLoading: viewModel.isLoading,
           ),
           Gap(20),
           FilterWidget(
@@ -218,12 +207,11 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
             height: Platform.isAndroid ? 300 : 460,
             //height: Platform.isAndroid ? 560 : 460,
             child: ListView.builder(
-              //physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: myDonations.length,
                 //filteredMyDonations.length,
                 itemBuilder: (context, index) {
-                  final donation = myDonations![index];
+                  final donation = myDonations[index];
                   //final donation = filteredMyDonations[index];
                   int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
 
@@ -343,7 +331,7 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
       child: CircularProgressIndicator(),
       )),
       emptyState:DonationEmptyState(),
-      fetchData: ref.read(donationVmProvider.notifier).getHostedDonation,
+      fetchData: ref.read(donationVmProvider.notifier).getApprovedDonation,
       result: (data, s ) {
       return ListView.builder(
       //physics: const NeverScrollableScrollPhysics(),

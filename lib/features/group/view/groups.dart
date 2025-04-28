@@ -30,7 +30,20 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
       // final id  = ModalRoute.of(context)?.settings.arguments as String;
       // final fetchGroup =  await ref.read(createGroupProvider.notifier).getSingleGroup(id);
       // ref.read(createGroupProvider.notifier).setGroup(fetchGroup);
-      //print('THE PUBLIC GROUP ID is $id');
+      //debugPrint('THE PUBLIC GROUP ID is $id');
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      final args = ModalRoute.of(context)?.settings.arguments as dynamic;
+      if(args != null){
+        setState(() {
+          _selectedIndex = args['index'];
+        });
+      }
     });
   }
 

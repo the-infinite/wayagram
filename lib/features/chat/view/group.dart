@@ -70,7 +70,7 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
             verticalPadding: 6.h,
             horizontalPadding: 12.w,
             text: 'Create',
-            isDisabled: state.image == null || state.members.isEmpty,
+            isDisabled: state.members.isEmpty,
             textStyle: theme.textTheme.bodySmall?.copyWith(
               fontSize: 12.sp,
               fontWeight: FontWeight.w600,
@@ -164,9 +164,7 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
               padding: EdgeInsets.all(15),
               onChanged: (value) => debounce(
                 key: "save-name",
-                () {
-                  notifier.saveData(nameController.text.trim(), descriptionController.text.trim());
-                },
+                () => notifier.saveData(nameController.text.trim(), descriptionController.text.trim()),
               ),
               validator: (value) {
                 if (descriptionController.text.trim().isEmpty) {
@@ -178,7 +176,7 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
               },
             ),
 
-            //? This is fine.
+            // This is fine.
             SizedBox(height: 20.h),
 
             //? Section title.
@@ -190,7 +188,7 @@ class _CreateConversationGroupScreenState extends ConsumerState<CreateConversati
               ),
             ),
 
-            //? This is fine.
+            // This is fine.
             SizedBox(height: 10.h),
 
             //? Group members.

@@ -1,119 +1,182 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
-import 'package:wayagram/core/data/model/model.dart';
-import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/upgrade_to_business/vm/upgrade_to_business_vm.dart';
+import 'package:wayagram/features/donation/vm/donation_vm.dart';
+import 'package:wayagram/features/event/vm/event_vm.dart';
+import 'package:wayagram/features/moments/vm/moment_vm.dart';
+import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/features/promotion/data/models/promotion_plan_response_model.dart';
+import 'package:wayagram/features/promotion/data/models/promotion_response_model.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_state.dart';
+import 'package:wayagram/features/promotion/data/repo/promotion_repository.dart';
+import 'package:wayagram/features/shop/vm/product_detail_vm.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
+import 'package:wayagram/shared/features/group/notifier/default.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 
 class PromotionVm extends StateNotifier<PromotionState> {
   final Ref ref;
-  PromotionVm(this.ref) : super(PromotionState());
+  final PromotionRepository _repository;
 
-  final List<Select> genderOptions = [
-    Select(label: "All", value: "All"),
-    Select(label: "Male", value: "Male"),
-    Select(label: "Female", value: "Female")
-  ];
+  PromotionVm(this.ref, this._repository) : super(PromotionState());
 
-  final List<Select> durationOption = [
-    Select(label: "Daily", value: "Daily"),
-    Select(label: "Weekly", value: "Weekly"),
-    Select(label: "Monthly", value: "Monthly")
-  ];
-
-  void setRangeStart(double value) {
-    state = state.copyWith(rangeStart: value);
-  }
-
-  void setRangeEnd(double value) {
-    state = state.copyWith(rangeEnds: value);
-  }
-
-  void selectGender(String type) {
-    List<String> c = List.from(state.gender);
-    if (c.contains(type)) {
-      c.remove(type);
-    } else {
-      c.add(type);
-    }
-    state = state.copyWith(gender: c);
-  }
-
-  Future<void> selectState(Select value) async {
-    String _state = state.state;
-    state = state.copyWith(state: value.label);
-
-    if (_state.isNotEmpty && value.label != _state) {
-      state.copyWith(cities: []);
-      state = state.copyWith(city: '');
-      state.copyWith(lgas: []);
-      state = state.copyWith(lga: '');
-    }
-    await getAllLGA(stateCode: value.value, countryCode: 'NG');
-    await getAllCiites(stateCode: value.value, countryCode: 'NG');
-  }
-
-  void selectLGA(Select value) {
-    state = state.copyWith(lga: value.value);
-  }
-
-  Future<void> selectCity(Select value) async {
-    state = state.copyWith(city: value.label);
-  }
-
-  Future<void> getAllStates() async {
-    final response =
-        await ref.read(upgradeToBusinessVmProvider.notifier).fetchStates();
-
-    if (response != null) {
-      state = state.copyWith(states: response);
-    }
-  }
-
-  Future<void> getAllCiites(
-      {required String stateCode, required String countryCode}) async {
-    final response = await ref
-        .read(upgradeToBusinessVmProvider.notifier)
-        .fetchCities(stateCode, countryCode);
-
-    if (response != null) {
-      state = state.copyWith(cities: response);
-    }
-  }
-
-  Future<void> getAllLGA(
-      {required String stateCode, required String countryCode}) async {
-    final response = await ref
-        .read(upgradeToBusinessVmProvider.notifier)
-        .fetchLGA(stateCode, countryCode);
-
-    if (response != null) {
-      state = state.copyWith(lgas: response);
-    }
-  }
-
-  Future<void> payForPromotion({required BuildContext context}) async {
+  Future<List<PromotionPlanDoc>?> getPlans(
+      {required String serviceType}) async {
     try {
-      if (context.mounted) {
-        return WayaUtils.showNotice(
-            context: context,
-            title: "Your Promotion is Live!",
-            buttonText: "View Promotion Analytics",
-            onPress: () {
-              // view analytics
-            },
-            message:
-                "Your moment is now being promoted to your selected audience. Track its performance in the analytics section.",
-            icon: Image.asset(WayaAssets.images.successPromote.path));
+      final response =
+          await _repository.getPromotionPlans(serviceType: serviceType);
+
+      List<PromotionPlanDoc> promoPlans = [];
+      if (response.success) {
+        debugPrint(response.data.toString());
+        PromotionPlanResponse plansResponse =
+            PromotionPlanResponse.fromJson(response.data);
+        promoPlans = plansResponse.data.docs;
+        state = state.copyWith(plans: promoPlans);
+      }
+      return promoPlans;
+    } catch (error) {
+      debugPrint(error.toString());
+      return null;
+    }
+  }
+
+  Future<void> getPromos() async {
+    try {
+      state = state.copyWith(loadingPromos: true);
+      final response = await _repository.getPromotions();
+
+      if (response.success) {
+        PromotionResponse promotionResponse =
+            PromotionResponse.fromJson(response.data);
+
+        if (promotionResponse.data!.docs.isNotEmpty) {
+          List<Future<Promotion>> promoFutures =
+              promotionResponse.data!.docs.map((promo) async {
+            return promo.copyWith(
+                metadata: await getServiceData(
+                    contentId: promo.contentId,
+                    contentType: promo.contentType));
+          }).toList();
+
+          List<Promotion> refineAllPromo = await Future.wait(promoFutures);
+          state = state.copyWith(allPromotions: refineAllPromo);
+        }
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
+    } finally {
+      state = state.copyWith(loadingPromos: false);
+    }
+  }
+
+  Future<void> getSinglePromo({required String id}) async {
+    try {
+      final response = await _repository.getSinglePromotion(promoId: id);
+
+      if (response.success) {
+        debugPrint(response.data.toString());
+      }
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+  }
+
+  Future<dynamic> getServiceData(
+      {required String contentId, required String contentType}) async {
+    try {
+      dynamic metadata;
+
+      switch (contentType) {
+        // event
+        case 'event':
+          metadata = await ref
+              .read(eventVmProvider.notifier)
+              .getSingleEvent(contentId);
+          // EventDoc
+          break;
+
+        // moment
+        case 'moment':
+          metadata = await ref
+              .read(momentVmProvider.notifier)
+              .getSingleMoment(contentId);
+
+          // MomentData
+          break;
+
+        // product
+        case 'product':
+          metadata = await ref
+              .read(productDetailVmProvider.notifier)
+              .getCurrentProduct(id: contentId);
+
+          // Product
+          break;
+
+        // pages
+        case 'page':
+          metadata = await myPageNotifier.getSinglePage(contentId);
+
+          // PageModel
+          break;
+
+        // groups
+        case 'group':
+          metadata = await myGroupNotifier.getSingleGroup(contentId);
+
+          // GroupModel
+          break;
+
+        // contest
+        case 'contest':
+          metadata = await ref
+              .read(postProvider.notifier)
+              .fetchSingleContest(contestId: contentId);
+
+          // Contest
+          break;
+
+        // donation
+        case 'donation':
+          metadata = await ref
+              .read(donationVmProvider.notifier)
+              .getSingleCampaign(contentId);
+
+          // MyDonationDocs
+          break;
+
+        // poll & vote
+        case 'poll & vote':
+          metadata = await ref
+              .read(createPollVotingProvider.notifier)
+              .getPollById(contentId);
+
+          //Docs
+          break;
+
+        // post
+        case 'post':
+          metadata = await ref
+              .read(createPageProvider.notifier)
+              .getSinglePost(contentId);
+          //PostModel
+
+          break;
+
+        default:
+          null;
+      }
+
+      return metadata;
+    } catch (error) {
+      debugPrint(error.toString());
+      return null;
     }
   }
 }
 
-final promotionVmProvider =
+final promoteVmProvider =
     StateNotifierProvider<PromotionVm, PromotionState>((ref) {
-  return PromotionVm(ref);
+  return PromotionVm(ref, PromotionRepository());
 });

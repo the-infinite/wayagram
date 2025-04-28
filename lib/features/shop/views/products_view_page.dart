@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -19,12 +18,10 @@ class ProductsViewPage extends ConsumerStatefulWidget {
   const ProductsViewPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ProductsViewPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ProductsViewPageState();
 }
 
-class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
-    with ProductMixin {
+class _ProductsViewPageState extends ConsumerState<ProductsViewPage> with ProductMixin {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -37,58 +34,55 @@ class _ProductsViewPageState extends ConsumerState<ProductsViewPage>
   Widget build(BuildContext context) {
     // TODO: implement build
 
-    final ProductDetailType? arg =
-        ModalRoute.of(context)?.settings.arguments as ProductDetailType?;
+    final ProductDetailType? arg = ModalRoute.of(context)?.settings.arguments as ProductDetailType?;
 
     final productDetail = getProduct(type: arg!, ref: ref);
     return WayaScaffold(
-        isLoading: false,
-        isScrollable: false,
-        title: productDetail.title,
-        body: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FilterWidget(
-              hintText: 'Search Product',
-              search: searchController,
+      isLoading: false,
+      isScrollable: false,
+      title: productDetail.title,
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FilterWidget(
+            hintText: 'Search Product',
+            search: searchController,
+          ),
+          const Gap(25),
+          Expanded(
+            child: PaginatedDataView<Product>(
+              uniqueKey: 'product',
+              emptyState: EmptyState(
+                  assetImage: WayaAssets.images.wallet.searchDocu.image(scale: 1.5), message: "No Product Yet"),
+              loadingState: _recommendedProductLoadingState(context: context),
+              fetchData: productDetail.fetchData,
+              result: (data, s) {
+                final filteredProducts = WayaUtils.search<Product>(
+                    data,
+                    [
+                      'id',
+                      'categoryId',
+                      'deliveryAddress',
+                      'name',
+                      'options',
+                      'condition',
+                      'materialType',
+                      'description'
+                    ],
+                    searchController.text);
+
+                debugPrint(filteredProducts.map((s) => s.toJson()).toString());
+
+                return ProductsGrid(
+                  isWayaGramDeal: arg == ProductDetailType.wayagramdeal ? true : false,
+                  products: filteredProducts,
+                );
+              },
             ),
-            const Gap(25),
-            Expanded(
-                child: PaginatedDataView<Product>(
-                    uniqueKey: 'product',
-                    emptyState: EmptyState(
-                        assetImage: WayaAssets.images.wallet.searchDocu
-                            .image(scale: 1.5),
-                        message: "No Product Yet"),
-                    loadingState:
-                        _recommendedProductLoadingState(context: context),
-                    fetchData: productDetail.fetchData,
-                    result: (data, s) {
-                      final filteredProducts = WayaUtils.search<Product>(
-                          data,
-                          [
-                            'id',
-                            'categoryId',
-                            'deliveryAddress',
-                            'name',
-                            'options',
-                            'condition',
-                            'materialType',
-                            'description'
-                          ],
-                          searchController.text);
-
-                      print(filteredProducts.map((s) => s.toJson()));
-
-                      return ProductsGrid(
-                          isWayaGramDeal: arg == ProductDetailType.wayagramdeal
-                              ? true
-                              : false,
-                          products: filteredProducts);
-                    })),
-                  
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _recommendedProductLoadingState({required BuildContext context}) {

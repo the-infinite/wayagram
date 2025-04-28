@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/view/successful_setup.dart';
@@ -54,19 +55,22 @@ class SelectInterestVm extends StateNotifier<States> {
   SelectInterestVm(this._repository, this.ref) : super(States());
   final Ref ref;
 
-  Future<void> getInterest() async {
+  Future<Map<String, Map<String, int>>?> getInterest() async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _repository.getInterestsCategories();
 
+      Map<String, Map<String, int>>? allInterests;
       if (response.success) {
         InterestsResponseModel responseModel =
             InterestsResponseModel.fromJson(response.data);
         state = state.copyWith(interests: responseModel.data);
-        print(response.data);
+        allInterests = responseModel.data;
       }
+      return allInterests;
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
+      return null;
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -81,10 +85,10 @@ class SelectInterestVm extends StateNotifier<States> {
         SelectedInterestsResponseModel responseModel =
             SelectedInterestsResponseModel.fromJson(response.data);
         state = state.copyWith(userInterests: responseModel.data);
-        print(response.data);
+        debugPrint(response.data.toString());
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -96,11 +100,11 @@ class SelectInterestVm extends StateNotifier<States> {
         return {"category": d.category, "score": d.interest.length};
       }).toList();
 
-      print(data);
+      debugPrint(data.toString());
       state = state.copyWith(isPostingInterest: true);
       final response = await _repository.selectInterest(data);
       if (response.success) {
-         final accountState = ref.read(selectAccountProvider);
+        final accountState = ref.read(selectAccountProvider);
 
         if (accountState.selectedType!.type == 'BUSINESS') {
           WayaNav.toNamed('/add-business-account');
@@ -109,7 +113,7 @@ class SelectInterestVm extends StateNotifier<States> {
         }
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     } finally {
       state = state.copyWith(isPostingInterest: false);
     }

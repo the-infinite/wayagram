@@ -21,10 +21,11 @@ class _EventAttendeesState extends ConsumerState<EventAttendees> {
         child: PaginatedDataView<Doc>(
       uniqueKey: 'attendees',
       loadingState: SizedBox(
-          height: context.height * 0.2,
-          child: Center(
-            child: CircularProgressIndicator(),
-          )),
+        height: context.height * 0.2,
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
       emptyState: SizedBox(
         height: context.height * 0.2,
         child: Center(

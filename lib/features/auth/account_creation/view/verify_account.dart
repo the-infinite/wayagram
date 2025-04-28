@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -8,24 +9,24 @@ import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
-import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/auth/transaction_pin/views/transaction_pin_view.dart';
 
 class VerifyAccount extends ConsumerWidget {
-  final Function goToNextTab;
+  final Function({String? emailAddress}) goToNextTab;
   final String type;
-  const VerifyAccount({
-    super.key,
-    required this.goToNextTab,
-    required this.type,
-  });
+  final String email;
+  const VerifyAccount(
+      {super.key,
+      required this.goToNextTab,
+      required this.type,
+      this.email = ''});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModelState = ref.watch(verifyAccountProvider);
     final viewModel = ref.watch(verifyAccountProvider.notifier);
     final wayaTheme = Theme.of(context);
-    final credentialProvider = ref.watch(credentialInputProvider);
+    //final credentialProvider = ref.watch(credentialInputProvider);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -96,7 +97,8 @@ class VerifyAccount extends ConsumerWidget {
                     alignment: Alignment.center,
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                        color: wayaTheme.colorScheme.primary75, borderRadius: BorderRadius.all(Radius.circular(8))),
+                        color: wayaTheme.colorScheme.primary75,
+                        borderRadius: BorderRadius.all(Radius.circular(8))),
                     child: Text(
                       "Resend OTP",
                       style: WayaTextStyles.smallActiveLinkStyle,
@@ -104,7 +106,7 @@ class VerifyAccount extends ConsumerWidget {
                   ),
                 )
               : Container(
-                  width: 200,
+                  width: 220.sp,
                   alignment: Alignment.center,
                   padding: EdgeInsets.all(12),
                   decoration: BoxDecoration(
@@ -140,9 +142,11 @@ class VerifyAccount extends ConsumerWidget {
               ? () {
                   if (type == 'account-creation') {
                     final code = ref.watch(verifyAccountProvider).inputCode;
-                    viewModel.verifyAccount(() => WayaNav.to(const TransactionPinView()), code);
-                  } else {
-                    goToNextTab();
+                    viewModel.verifyAccount(
+                        onSuccess: () => WayaNav.to(const TransactionPinView()),
+                        code: code);
+                  } else if (type == "forgot-password") {
+                    goToNextTab(emailAddress: email);
                   }
                 }
               : null,

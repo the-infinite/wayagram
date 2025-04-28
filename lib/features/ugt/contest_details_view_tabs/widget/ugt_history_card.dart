@@ -6,19 +6,22 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/ugt/data/model/contestant_transaction_model.dart';
-import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
 class UgtHistoryCard extends ConsumerWidget {
   final Transaction model;
-
   final int position;
-  const UgtHistoryCard(
-      {required this.model, required this.position, super.key});
+
+  // Construct.
+  const UgtHistoryCard({
+    required this.model,
+    required this.position,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
-    final notifier = ref.read(votersContestNotifier.notifier);
+    //final notifier = ref.read(votersContestNotifier.notifier);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -36,14 +39,12 @@ class UgtHistoryCard extends ConsumerWidget {
             leading: Text(
               "$position",
               overflow: TextOverflow.ellipsis,
-              style: wayaTheme.textTheme.bodyMedium!
-                  .copyWith(color: wayaTheme.colorScheme.black),
+              style: wayaTheme.textTheme.bodyMedium!.copyWith(color: wayaTheme.colorScheme.black),
             ),
             title: Row(
               children: [
                 ClipRRect(
-                    borderRadius: BorderRadius.circular(
-                        45), // Adjust the radius as needed
+                    borderRadius: BorderRadius.circular(45), // Adjust the radius as needed
                     child: WayaImage(
                       imageUrl: "",
                       height: 45,
@@ -64,15 +65,13 @@ class UgtHistoryCard extends ConsumerWidget {
                 Text(
                   model.purpose ?? "",
                   overflow: TextOverflow.ellipsis,
-                  style: wayaTheme.textTheme.bodyMedium!
-                      .copyWith(color: wayaTheme.colorScheme.black),
+                  style: wayaTheme.textTheme.bodyMedium!.copyWith(color: wayaTheme.colorScheme.black),
                 ),
               ],
             ),
             trailing: Text(
               "₦${model.amount}",
-              style: wayaTheme.textTheme.hintStyle
-                  .copyWith(color: wayaTheme.colorScheme.greyColor400),
+              style: wayaTheme.textTheme.hintStyle.copyWith(color: wayaTheme.colorScheme.greyColor400),
             ),
           ),
           // const Gap(10)

@@ -1,5 +1,4 @@
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,7 +10,6 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/user_actions_model.dart';
 import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
@@ -159,7 +157,7 @@ class _UserActionState extends ConsumerState<UserAction> {
   sortList(s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.userActionsDocs = [];
-    print('ACTIVITY End ====> ${s}');
+    debugPrint('ACTIVITY End ====> $s');
     setState(() {
       if(s == 'all time'){
         viewModel.userActionsDocs = viewModel.userActionsDocs1;
@@ -174,24 +172,24 @@ class _UserActionState extends ConsumerState<UserAction> {
           String a = DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2,'0'));
-          print('AAAA $b');
+          debugPrint('AAAA $b');
         }
 
         for (int i = 0; i < y; i++) {
           String a = DateTime.now().subtract(Duration(days: i +1)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2,'0'));
-          print('AAAABBBBB $b');
+          debugPrint('AAAABBBBB $b');
         }
 
-        print('WeekDAY $w');
+        debugPrint('WeekDAY $w');
         for (int i = 0; i < viewModel.userActionsDocs1.length; i++) {
           String week = viewModel.userActionsDocs1[i].createdAt.toString().split('T')[0];
           if (allWeekDays.contains(week.split('-')[2]) ) {
             viewModel.userActionsDocs.add(viewModel.userActionsDocs1[i]);
           }
         }
-        print('ACTIVIVBVB ${viewModel.userActionsDocs.length}');
+        debugPrint('ACTIVIVBVB ${viewModel.userActionsDocs.length}');
       } else if(s =='this month'){
         String m =  DateTime.now().month.toString().padLeft(2,'0');
         for (int i = 0; i < viewModel.userActionsDocs1.length; i++) {

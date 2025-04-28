@@ -88,6 +88,6 @@ class EngagementData {
     Map<String, int> getAllPosttags() => postHashTags;
   Map<String, int> getAllPostCategories() => postCategory;
   Map<String, int> getAllEventLocation() => eventLocationType;
-  Map<String, int> getAllEventTypee() => eventType;
+  Map<String, int> getAllEventType() => eventType;
   Map<String, int> getAllProductCategories() => productCategories;
 }

@@ -1,48 +1,37 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
-import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
-import 'package:wayagram/features/ugt/contest_profiles/contest_profile_page.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
-import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/widgets/about_ugt_widget.dart';
 import 'package:wayagram/features/ugt/widgets/status_ongoing.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
-import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 
 class ContestProfileStagesSection extends StatefulHookConsumerWidget {
   final List<Stage>? stages;
   const ContestProfileStagesSection(this.stages, {super.key});
 
   @override
-  _ContestProfileStagesSectionState createState() =>
-      _ContestProfileStagesSectionState();
+  ConsumerState<ContestProfileStagesSection> createState() => _ContestProfileStagesSectionState();
 }
 
-class _ContestProfileStagesSectionState
-    extends ConsumerState<ContestProfileStagesSection> {
+class _ContestProfileStagesSectionState extends ConsumerState<ContestProfileStagesSection> {
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
-    print("i am looping  wewe ${widget.stages?.length}");
+    debugPrint("i am looping ${widget.stages?.length}");
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     // final posts = ref.watch(postProvider);
-
-    final wayaTheme = Theme.of(context);
-
+    // final wayaTheme = Theme.of(context);
     // final postNotifier = ref.read(postProvider.notifier);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -55,7 +44,7 @@ class _ContestProfileStagesSectionState
   }
 
   Widget _buildStages(Stage model) {
-    final wayaTheme = Theme.of(context);
+    // final wayaTheme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -85,9 +74,7 @@ class _ContestProfileStagesSectionState
                 AboutUgtWidget(
                     // isFromDetailsPage: true,
                     title: "Position",
-                    content: model.position?.toString() == "0"
-                        ? "No Position"
-                        : model.position?.toString() ?? ""),
+                    content: model.position?.toString() == "0" ? "No Position" : model.position?.toString() ?? ""),
               ],
             ),
             //  const Gap(20),
@@ -103,8 +90,7 @@ class _ContestProfileStagesSectionState
                 AboutUgtWidget(
                     // isFromDetailsPage: true,
                     title: "Prize for Winner",
-                    content:
-                        "₦${formatMoney(model.amountEarned.toString())}"),
+                    content: "₦${formatMoney(model.amountEarned.toString())}"),
               ],
             ),
             Column(
@@ -114,7 +100,7 @@ class _ContestProfileStagesSectionState
                 AboutUgtWidget(
                     // isFromDetailsPage: true,
                     title: "Entry Type",
-                    content: "${model.entryType}\n" ?? ""),
+                    content: "${model.entryType}\n"),
                 const Gap(20),
                 StatusOngoing(
                   title: "Qualification Status",

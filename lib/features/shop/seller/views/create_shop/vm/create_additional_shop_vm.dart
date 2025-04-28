@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/model/model.dart';
-import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
@@ -20,24 +19,20 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
   final ShopRepository _shopRepository;
   final AuthRepository _authRepository;
   final ImagePicker _picker;
-  final WayaSecureDataSource _secureDataSource;
+  //final WayaSecureDataSource _secureDataSource;
 
   final Ref ref;
 
   final _logger = getLogger('CreateAdditionalShopVm');
-  CreateAdditionalShopVm(this._shopRepository, this._authRepository,
-      this._picker, this._secureDataSource, this.ref)
-      : super(CreateShopState());
+  CreateAdditionalShopVm(this._shopRepository, this._authRepository, this._picker, this.ref) : super(CreateShopState());
 
   Future<void> selectState(Select value) async {
-    String _state = state.state;
+    String finalState = state.state;
     state = state.copyWith(state: value.label);
-
-    if (_state.isNotEmpty && value.label != _state) {
+    if (finalState.isNotEmpty && value.label != finalState) {
       state.copyWith(lgas: []);
       state = state.copyWith(lga: '');
     }
-
     await fetchLGA(value.value, 'NG');
   }
 
@@ -51,17 +46,13 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
 
   Future<void> createSellerShop() async {
     try {
-      if ((state.image == null && !state.isEditingMode) ||
-          state.isEditingMode && state.url == null) {
+      if ((state.image == null && !state.isEditingMode) || state.isEditingMode && state.url == null) {
         return WayaSnackBar.showToast('Pls add a Logo');
       }
       state = state.copyWith(isLoading: true);
       if (state.image != null) {
-         String? url =
-            await WayaFileRepository.instance.uploadFile(state.image!);
-       state =  state.copyWith(logo: url);
-
-       
+        String? url = await WayaFileRepository.instance.uploadFile(state.image!);
+        state = state.copyWith(logo: url);
       }
       state = state.copyWith(vendorId: ConversationState.self.id);
       final response = state.isEditingMode
@@ -86,8 +77,7 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
       final response = await _authRepository.getAllStates();
 
       if (response.success) {
-        StatesResponseModel responseModel =
-            StatesResponseModel.fromJson(response.data);
+        StatesResponseModel responseModel = StatesResponseModel.fromJson(response.data);
 
         final List<Select> allStates = responseModel.data.map((val) {
           return Select(label: val.name, value: val.isoCode);
@@ -101,12 +91,10 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
 
   Future<void> fetchLGA(String stateCode, String countryCode) async {
     try {
-      final response = await _authRepository.getAllLGA(
-          stateCode: stateCode, countryCode: countryCode);
+      final response = await _authRepository.getAllLGA(stateCode: stateCode, countryCode: countryCode);
 
       if (response.success) {
-        LGAResponseModel responseModel =
-            LGAResponseModel.fromJson(response.data);
+        LGAResponseModel responseModel = LGAResponseModel.fromJson(response.data);
 
         final List<Select> lgas = responseModel.data.lgas.map((val) {
           return Select(label: val, value: val);
@@ -156,8 +144,7 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
   }
 }
 
-final createAdditionalShopVmProvider = StateNotifierProvider.family<
-    CreateAdditionalShopVm, CreateShopState, String>((ref, uniqueKey) {
-  return CreateAdditionalShopVm(ShopRepository.instance, AuthRepository(),
-      ImagePicker(), WayaSecureDataSource(), ref);
+final createAdditionalShopVmProvider =
+    StateNotifierProvider.family<CreateAdditionalShopVm, CreateShopState, String>((ref, uniqueKey) {
+  return CreateAdditionalShopVm(ShopRepository.instance, AuthRepository(), ImagePicker(), ref);
 });

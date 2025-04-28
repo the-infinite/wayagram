@@ -1,25 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/contest_signup_requirement.dart';
 import 'package:wayagram/features/ugt/contest_setting/steps/stage_contest_settings.dart';
-import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 
 import '../../../core/components/waya_scaffold.dart';
-import '../create_contest/steps/edit_stage_preference.dart';
 
 class ContestSettingContent extends ConsumerStatefulWidget {
   static const route = '/contest-setting-content';
   const ContestSettingContent({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ContestSettingContentState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ContestSettingContentState();
 }
 
-class _ContestSettingContentState extends ConsumerState<ContestSettingContent>
-    with SingleTickerProviderStateMixin {
+class _ContestSettingContentState extends ConsumerState<ContestSettingContent> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -34,11 +29,11 @@ class _ContestSettingContentState extends ConsumerState<ContestSettingContent>
     }
   }
 
-  void _goToPreviousTab() {
-    if (_tabController.index > 1) {
-      _tabController.animateTo(_tabController.index - 1);
-    }
-  }
+//   void _goToPreviousTab() {
+//     if (_tabController.index > 1) {
+//       _tabController.animateTo(_tabController.index - 1);
+//     }
+//   }
 
   void _goBack(int index) {
     _tabController.animateTo(index);

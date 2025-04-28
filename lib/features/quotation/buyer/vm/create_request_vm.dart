@@ -8,6 +8,7 @@ import 'package:wayagram/features/quotation/data/model/model.dart';
 import 'package:wayagram/features/quotation/data/model/quotation_model.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/repo/default.dart';
+import 'package:wayagram/shared/features/shop/resource/default.dart';
 
 class CreateRequestVm extends StateNotifier<CreateRequestState> {
   final _quotationRepository = QuotationRepository.instance;
@@ -48,8 +49,8 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
   }
 
   List<Select> restructuredCategory() {
-    return categories.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.category);
+    return ShopResource.categories.asMap().entries.map((entries) {
+      return Select(value: entries.value.name, label: entries.value.name);
     }).toList();
   }
 
@@ -84,7 +85,11 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
       final response = await showDatePicker(
-          context: context, firstDate: DateTime(1950), lastDate: DateTime.now(), initialDate: DateTime.now());
+        context: context,
+        firstDate: DateTime.now(),
+        lastDate: DateTime.now(),
+        initialDate: DateTime.now(),
+      );
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
@@ -92,7 +97,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
         state = state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -101,7 +106,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
       final moment = DateTime.now();
       final response = await showDatePicker(
         context: context,
-        firstDate: DateTime(1950),
+        firstDate: DateTime.now(),
         lastDate: DateTime(moment.year + 1),
         initialDate: moment,
       );
@@ -112,7 +117,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
         state = state.copyWith(endDate: endDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -170,7 +175,7 @@ class CreateRequestVm extends StateNotifier<CreateRequestState> {
       BuyerRequestModel responseModel = BuyerRequestModel.fromJson(response.data);
 
       state = state.copyWith(buyerRequest: responseModel.data?.buyerRequests);
-      //print(state.productDescription);
+      //debugPrint(state.productDescription);
     } else {
       state = state.copyWith(isLoading: false);
     }

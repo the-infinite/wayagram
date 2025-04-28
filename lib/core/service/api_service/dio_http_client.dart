@@ -28,14 +28,11 @@ class RequestRepeater {
 class DioHttpClient implements WayaHttpClientInterface {
   late final Dio dio;
   final String baseURL = WayaConstants.baseUrl;
-
   final _logger = getLogger('DioHttpClient');
-
-  final WayaSecureDataSource secureDataSource = WayaSecureDataSource();
+  final secureDataSource = WayaSecureDataSource();
+  static final _instance = DioHttpClient._internal();
   //removing the snackbar
   //final SnackbarService _snackBarService = SnackbarService();
-
-  static final DioHttpClient _instance = DioHttpClient._internal();
 
   DioHttpClient._internal() {
     dio = initializeDio();
@@ -138,7 +135,8 @@ class DioHttpClient implements WayaHttpClientInterface {
         //? Finished this.
         final fullRoute = '$baseURL$route';
         _logger.i('fullRoute: $fullRoute');
-        _logger.f('headers: ${dio.options.headers}');
+        _logger.i('headers: ${dio.options.headers}');
+        _logger.i('body: $body');
 
         params?.removeWhere((key, value) => value == null);
 

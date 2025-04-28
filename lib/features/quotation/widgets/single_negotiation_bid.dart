@@ -1,9 +1,13 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
-import 'package:wayagram/core/components/waya_buttons.dart';
+import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
@@ -11,6 +15,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/quotation/quotation_bottomsheet_modal/quotation_modal.dart';
 import 'package:wayagram/shared/features/quotation/model/default.dart';
 import 'package:wayagram/shared/features/quotation/vm/default.dart';
+import 'package:wayagram/shared/features/quotation/widget/bid_status.dart';
 import 'package:wayagram/shared/features/shop/model/default.dart';
 import 'package:wayagram/shared/features/shop/resource/default.dart';
 
@@ -18,11 +23,13 @@ class SingleNegotiationBidWidget extends ConsumerStatefulWidget {
   final BuyRequestModel request;
   final QuotationBidModel bid;
   final BidActionAuthor negotiator;
+  final Timer? timer;
 
   const SingleNegotiationBidWidget({
     super.key,
     required this.request,
     required this.bid,
+    required this.timer,
     this.negotiator = BidActionAuthor.buyer,
   });
 
@@ -33,31 +40,123 @@ class SingleNegotiationBidWidget extends ConsumerStatefulWidget {
 class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBidWidget> {
   late final userQuotationNotifier = ref.read(userQuotationsProvider.notifier);
   final stateNotifier = ValueNotifier(false);
+  bool locked = false;
   ShopDetailsModel? _shopData;
 
-  Future<void> _rejectBid() async {
-    await WayaUtils.showNotice(
-      context: context,
-      title: 'Are you sure you want to reject this bid?',
-      message: 'Are you sure you want to reject this bid? Once confirmed this can\'t be undone',
-      onPress: () => WayaNav.goBack(),
-      icon: WayaAssets.images.dCodeInvalid.image(),
-      buttonCenterWidget: WayaButton(
-        text: 'Yes, Reject Bid',
-        callback: () async {
-          final result = await userQuotationNotifier.sendBidAction(
-            BidActionModel.reject(
-              bidId: widget.bid.id,
-              lastCounterSentBy: widget.negotiator,
-            ),
-          );
-
-          //? If this was fine, leave.
-          if (result) WayaNav.goBack();
-        },
-        color: WayaColors.error500,
+  Future<void> _negotiateBid() async {
+    final amount = await WayaUtils.showModalSheet<double>(
+      context,
+      child: EditOfferModal(
+        title: 'Negotiate',
+        hint: 'Update your asking price for this request',
+        delta: widget.request.bidStartingAmount >= 3000000
+            ? 25000
+            : widget.request.bidStartingAmount >= 200000
+                ? 5000
+                : 1000,
       ),
     );
+
+    //! If this was dismissed before an amount was even calculated...
+    if (amount == null) return;
+
+    //? Now, send the bid.
+    final result = await userQuotationNotifier.sendBidAction(BidActionModel.negotiate(
+      bidId: widget.bid.id,
+      lastCounterSentBy: widget.negotiator,
+      counterAmount: amount.toStringAsFixed(2),
+    ));
+
+    //! Since bidding failed, you can leave.
+    if (result) return;
+
+    //? Since this was done well.
+    WayaSnackBar.showToast("Bid countered successfully");
+  }
+
+  Future<void> _acceptBid() async {
+    final wayaTheme = Theme.of(context);
+    final acceptController = ValueNotifier(false);
+
+    //? Now, show the modal.
+    final result = await WayaUtils.showNotice<bool>(
+      context: context,
+      onCancel: () => WayaNav.goBack(),
+      title: 'Are you sure you want to accept this bid?',
+      message: 'Are you sure you want to accept this bid? Once confirmed this can\'t be undone',
+      icon: WayaAssets.images.dCodeValid.image(
+        height: 117.dg,
+        width: 117.dg,
+      ),
+      buttonColor: wayaTheme.colorScheme.success700,
+      buttonText: 'Yes, Accept Bid',
+      actionNotifier: acceptController,
+      onPress: () async {
+        final result = await userQuotationNotifier.sendBidAction(
+          BidActionModel.accept(
+            bidId: widget.bid.id,
+            lastCounterSentBy: widget.negotiator,
+          ),
+        );
+
+        //? If this was fine, leave.
+        WayaNav.goBack(result: result);
+      },
+    );
+
+    //! Since bidding failed, you can leave.
+    if (!(result ?? false)) return;
+
+    //? Prevent some confusing visuals.
+    locked = true;
+    widget.timer?.cancel();
+
+    //? Since this was done well.
+    await WayaUtils.showModalSheet<double>(
+      context,
+      child: BidWonModal(
+        request: widget.request,
+        bid: widget.bid,
+        user: widget.negotiator,
+      ),
+    );
+  }
+
+  Future<void> _rejectBid() async {
+    final wayaTheme = Theme.of(context);
+    final acceptController = ValueNotifier(false);
+
+    //? Now, show the modal.
+    final result = await WayaUtils.showNotice<bool>(
+      context: context,
+      onCancel: () => WayaNav.goBack(),
+      title: 'Are you sure you want to reject this bid?',
+      message: 'Are you sure you want to reject this bid? Once confirmed this can\'t be undone',
+      icon: WayaAssets.images.dCodeInvalid.image(
+        height: 117.dg,
+        width: 117.dg,
+      ),
+      buttonColor: wayaTheme.colorScheme.error500,
+      buttonText: 'Yes, Reject Bid',
+      actionNotifier: acceptController,
+      onPress: () async {
+        final result = await userQuotationNotifier.sendBidAction(
+          BidActionModel.reject(
+            bidId: widget.bid.id,
+            lastCounterSentBy: widget.negotiator,
+          ),
+        );
+
+        //? If this was fine, leave.
+        WayaNav.goBack(result: result);
+      },
+    );
+
+    //! Since bidding failed, you can leave.
+    if (!(result ?? false)) return;
+
+    //? Then notify the user that he or she has rejected the bid properly.
+    WayaSnackBar.showToast("You have successfully rejected this bid");
   }
 
   @override
@@ -78,182 +177,189 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final sentBid = widget.bid.usedAmount != widget.request.bidStartingAmount;
+
+    //? If this has been
+    if (widget.bid.lastCounterSentBy == BidActionAuthor.vendor && widget.bid.status == BidActionType.accept) {
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) {
+          if (!locked) {
+            //? Prevent this from possibly repeating again.
+            locked = true;
+            widget.timer?.cancel();
+
+            //? Now, show the modal in question.
+            WayaUtils.showModalSheet<double>(
+              context,
+              child: QuotationModal(
+                request: widget.request,
+                bid: widget.bid,
+                user: widget.negotiator,
+              ),
+            );
+          }
+        },
+      );
+    }
 
     //? This is fine.
-    return GestureDetector(
-      onTap: () {},
-      child: ValueListenableBuilder(
-        valueListenable: stateNotifier,
-        builder: (context, isNegotiating, _) => Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-              decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.scaffoldColor,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //? Something like this.
-                      WayaAssets.images.bid.store.image(
-                        height: 48,
-                      ),
+    return ValueListenableBuilder(
+      valueListenable: stateNotifier,
+      builder: (context, isNegotiating, _) => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            decoration: BoxDecoration(
+              color: wayaTheme.colorScheme.scaffoldColor,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //? Something like this.
+                    WayaDp(
+                      image: _shopData?.shop.coverImage,
+                      isSelf: false,
+                      radius: 24.r,
+                    ),
 
-                      // Some space.
-                      const Gap(10),
+                    // Some space.
+                    const Gap(10),
 
-                      //?
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.fromLTRB(4, 1, 4, 1),
-                                  decoration: BoxDecoration(
-                                    color: switch (widget.bid.status) {
-                                      BidActionType.noop || BidActionType.accept => wayaTheme.colorScheme.success,
-                                      BidActionType.reject => wayaTheme.colorScheme.error,
-                                      BidActionType.negotiate => wayaTheme.colorScheme.primary,
-                                    },
-                                    borderRadius: BorderRadius.circular(20000),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      WayaAssets.images.bid.down.image(
-                                        height: 10,
-                                      ),
+                    //?
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //? The status card.
+                          BidNegotiationStatusCard(
+                            bid: widget.bid,
+                            user: widget.negotiator,
+                          ),
 
-                                      // Some space.
-                                      const Gap(5),
+                          // Some space.
+                          const Gap(8),
 
-                                      //? Title.
-                                      Text(
-                                        switch (widget.bid.status) {
-                                          BidActionType.noop => "New Bid",
-                                          BidActionType.reject => "Rejected",
-                                          BidActionType.negotiate => widget.bid.lastCounterSentBy != widget.negotiator
-                                              ? "Negotiating"
-                                              : "Counteroffer Sent",
-                                          BidActionType.accept => "Accepted",
-                                        },
-                                        style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                                          color: wayaTheme.colorScheme.white,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 11.sp,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                          //? The name of the store.
+                          Text(
+                            _shopData?.shop.name ?? "Loading",
+                            style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                              color: wayaTheme.colorScheme.customBlack,
+                              fontSize: 14.sp,
                             ),
+                          ),
 
-                            // Some space.
-                            const Gap(8),
+                          // Some space.
+                          const Gap(8),
 
-                            //? The name of the store.
-                            Text(
-                              _shopData?.shop.name ?? "Loading",
-                              style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                                color: wayaTheme.colorScheme.customBlack,
-                                fontSize: 14.sp,
-                              ),
-                            ),
+                          //? The timing, distance and reviews for this store.
+                          Row(
+                            children: [
+                              // RichText(
+                              //   text: TextSpan(
+                              //     children: [
+                              //       //? How much time it would take to get to this store.
+                              //       TextSpan(
+                              //         text: '15min ',
+                              //         style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                              //           color: wayaTheme.colorScheme.black,
+                              //           fontSize: 12.sp,
+                              //           fontWeight: FontWeight.w400,
+                              //         ),
+                              //       ),
 
-                            // Some space.
-                            const Gap(8),
+                              //       //? The distance from this user.
+                              //       TextSpan(
+                              //         text: '2km ',
+                              //         style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                              //           color: WayaColors.greyColor400,
+                              //           fontSize: 12.sp,
+                              //           fontWeight: FontWeight.w400,
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
 
-                            //? The timing, distance and reviews for this store.
-                            Row(
-                              children: [
-                                RichText(
-                                  text: TextSpan(
-                                    children: [
-                                      //? How much time it would take to get to this store.
-                                      TextSpan(
-                                        text: '15min ',
-                                        style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                                          color: wayaTheme.colorScheme.black,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-
-                                      //? The distance from this user.
-                                      TextSpan(
-                                        text: '2km ',
-                                        style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                                          color: WayaColors.greyColor400,
-                                          fontSize: 12.sp,
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ],
+                              //? The reviews and ratings a store has.
+                              Row(
+                                children: [
+                                  //? The rating icon.
+                                  WayaAssets.images.bid.star.image(
+                                    height: 16.h,
+                                    width: 16.w,
                                   ),
-                                ),
 
-                                //? The reviews and ratings a store has.
-                                Row(
-                                  children: [
-                                    //? The rating icon.
-                                    WayaAssets.images.bid.star.image(
-                                      height: 16.h,
-                                      width: 16.w,
+                                  //? The average rating and the total reviews
+                                  //? count.
+                                  Text(
+                                    " ${_shopData?.averageRating ?? '0'} (${_shopData?.ratings.length ?? 0} reviews)",
+                                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                      color: WayaColors.greyColor400,
+                                      fontSize: 12.sp,
                                     ),
+                                  ),
+                                ],
+                              )
+                            ],
+                          ),
 
-                                    //? The average rating and the total reviews
-                                    //? count.
-                                    Text(
-                                      " ${_shopData?.averageRating ?? '0'} (${_shopData?.ratings.length ?? 0} reviews)",
-                                      style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                                        color: WayaColors.greyColor400,
-                                        fontSize: 12.sp,
-                                      ),
-                                    ),
-                                  ],
-                                )
-                              ],
-                            ),
-
-                            // Some space.
-                            const Gap(10),
-                          ],
-                        ),
+                          // Some space.
+                          const Gap(10),
+                        ],
                       ),
-                    ],
+                    ),
+                  ],
+                ),
+
+                // A divider.
+                const Divider(
+                  thickness: 1,
+                  color: WayaColors.greyColor100,
+                ),
+
+                // Some space.
+                const Gap(10),
+
+                //? Second, the amount of money that we are keeping notice of here.
+                Text(
+                  WayaValueHelper.formatPrice(widget.request.bidStartingAmount),
+                  textAlign: TextAlign.center,
+                  style: wayaTheme.textTheme.headlineLarge?.copyWith(
+                    fontSize: sentBid ? 16.sp : 20.sp,
+                    fontWeight: sentBid ? FontWeight.normal : FontWeight.w500,
+                    decoration: sentBid ? TextDecoration.lineThrough : null,
+                    decorationColor: wayaTheme.colorScheme.greyColor300,
+                    color: sentBid ? wayaTheme.colorScheme.greyColor300 : wayaTheme.colorScheme.customBlack,
                   ),
+                ),
 
-                  // A divider.
-                  const Divider(
-                    thickness: 1,
-                    color: WayaColors.greyColor100,
-                  ),
+                // Some space.
+                Gap(5.h),
 
-                  // Some space.
-                  const Gap(10),
-
-                  //? The bid amount.
+                //? Third, the amount of money that we are keeping notice of here.
+                if (sentBid)
                   Text(
-                    WayaValueHelper.formatPrice(double.tryParse(widget.bid.bidAmount) ?? 0),
-                    style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                      color: wayaTheme.colorScheme.customBlack,
+                    WayaValueHelper.formatPrice(widget.bid.usedAmount),
+                    textAlign: TextAlign.center,
+                    style: wayaTheme.textTheme.displaySmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      fontFamily: WayaConstants.fontFamily,
                       fontSize: 20.sp,
-                      fontWeight: FontWeight.w700,
+                      color: wayaTheme.colorScheme.customBlack,
                     ),
                   ),
 
-                  // Some space.
-                  const Gap(10),
+                // Some space.
+                const Gap(10),
 
-                  //? For the buttons we would be using to
+                //? For the buttons we would be using to
+                if (widget.bid.status != BidActionType.accept)
                   FittedBox(
                     fit: BoxFit.fitWidth,
                     child: Row(
@@ -280,7 +386,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                         SizedBox(
                           width: context.width * 0.45,
                           child: WayaButton(
-                            callback: () {},
+                            callback: _negotiateBid,
                             text: 'Negotiate',
                             height: 38,
                             color: WayaColors.greyColor400,
@@ -296,16 +402,7 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                         SizedBox(
                           width: context.width * 0.45,
                           child: WayaButton(
-                            callback: () async {
-                              await WayaUtils.showModalSheetQuotation(
-                                context,
-                                child: BidWonModal(),
-                              );
-                              WayaUtils.showModalSheetQuotation(
-                                context,
-                                child: QuotationModal(),
-                              );
-                            },
+                            callback: _acceptBid,
                             text: 'Accept',
                             height: 38,
                           ),
@@ -313,49 +410,12 @@ class _SingleNegotiationBidWidgetState extends ConsumerState<SingleNegotiationBi
                       ],
                     ),
                   )
-                ],
-              ),
+              ],
             ),
-            const Gap(10),
-          ],
-        ),
+          ),
+          const Gap(10),
+        ],
       ),
     );
   }
 }
-
-class SingleNegotiationBidWidgetViewModel extends ChangeNotifier {
-  final Ref ref;
-  SingleNegotiationBidWidgetViewModel(this.ref);
-
-  Future<void> addDeliveryDetail(BuildContext context) async {
-    /**
-   await showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AddDeliveryDetails();
-        });
-   */
-  }
-
-  Future<void> sellerBidAction(BuildContext context, QuotationBidModel bid) async {
-    WayaUtils.showNotice(
-      context: context,
-      buttonText: 'Add Delivery Details',
-      secondButtonText: 'See your Order Details',
-      title: 'Populate Delivery Details',
-      message: "Add the delivery price and date of delivery for this order so the \n customer can review and pay",
-      onPress: () async {
-        await addDeliveryDetail(context);
-      },
-      onCancel: () {
-        WayaNav.toNamed(WayaAppRoutes.getBidDetailsScreen(bid.id, bid.requestId));
-      },
-      icon: Image.asset('assets/images/shop/delivery-van.png'),
-    );
-  }
-}
-
-final singleSettlementWidgetViewModelProvider = ChangeNotifierProvider<SingleNegotiationBidWidgetViewModel>(
-  (ref) => SingleNegotiationBidWidgetViewModel(ref),
-);

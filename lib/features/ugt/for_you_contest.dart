@@ -1,11 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
@@ -13,8 +9,6 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
@@ -77,7 +71,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
   void initState() {
     super.initState();
 
-    print("user ${ConversationState.self.accountType}");
+    debugPrint("user ${ConversationState.self.accountType}");
     // Scroll listener for pagination
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollController.addListener(_scrollListener);
@@ -95,7 +89,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
         // 👇 Scrolled to the top
         if (!isAtTop) {
           setState(() => isAtTop = true);
-          print("Scrolled to the top!");
+          debugPrint("Scrolled to the top!");
         }
       } else {
         if (isAtTop) {
@@ -106,13 +100,13 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
       if (currentOffset < _previousScrollOffset) {
         // ✅ Scrolling Up (Show Widget)
         if (!isScrollingUp) {
-          print("Scrolling Up - Show Widget");
+          debugPrint("Scrolling Up - Show Widget");
           setState(() => isScrollingUp = true);
         }
       } else if (currentOffset > _previousScrollOffset) {
         // ✅ Scrolling Down (Hide Widget)
         if (isScrollingUp) {
-          print("Scrolling Down - Hide Widget");
+          debugPrint("Scrolling Down - Hide Widget");
           setState(() => isScrollingUp = false);
         }
       }
@@ -122,7 +116,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
     if (currentOffset > _previousScrollOffset &&
         _scrollController.position.pixels >=
             _scrollController.position.maxScrollExtent - 150) {
-      // print("fetching .....${_scrollController.position.pixels}");
+      // debugPrint("fetching .....${_scrollController.position.pixels}");
       ref.read(postProvider.notifier).fetchContestForYou(false);
     }
     _previousScrollOffset = currentOffset;
@@ -147,7 +141,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (isScrollingUp && isAtTop)
+          if (isAtTop)
             Column(
               children: [
                 GroupedWidgetHeader(
@@ -160,7 +154,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                     UserAccountType.business)
                   WayaButton(
                     callback: () {
-                      ivalidateUGTVM(ref);
+                      invalidateUGTVm(ref);
                       //WayaNav.toNamed('/create-profile-contest1');
                       WayaNav.toNamed('/create-contest');
                     },
@@ -216,7 +210,7 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
                 ? true
                 : false,
         onTap: () {
-          ivalidateUGTVM(ref);
+          invalidateUGTVm(ref);
           WayaNav.toNamed("/create-contest");
         });
   }

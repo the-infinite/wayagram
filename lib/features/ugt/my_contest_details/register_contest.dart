@@ -1,31 +1,21 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
 import 'package:wayagram/features/ugt/vm/register_contest_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
-import '../../../core/components/waya_buttons.dart';
-import '../../../core/components/waya_scaffold.dart';
-import '../../../core/components/waya_select_field.dart';
-import '../../../core/components/waya_text_form_field.dart';
 import '../../../core/theme/waya_textstyles.dart';
-import '../../../core/utils/waya_utils.dart';
-import '../../auth/account_creation/vm/personal_first_step_vm.dart';
 
 class RegisterContest extends StatefulHookConsumerWidget {
   static const route = '/register-contest1';
@@ -69,7 +59,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
       notifier.emailAddress.text = ConversationState.self.email ?? "";
       notifier.address.text = ConversationState.self.address ?? "";
       notifier.phoneNumber.text =
-          "${ConversationState.self.phoneNumber?.split("234").last}" ?? "";
+          "${ConversationState.self.phoneNumber?.split("234").last}";
       return null;
     }, []);
     return WayaScaffold(
@@ -300,7 +290,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     items:
                         ref.read(contestNotifierProvider.notifier).ugtStates(),
                     onSelected: (value) {
-                      print(" heree $value");
+                      debugPrint(" heree $value");
                       selectedState.value = value.first.label;
                       return ref
                           .read(contestNotifierProvider.notifier)
@@ -445,7 +435,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                               WayaTextFormField(
                                 controller: field.textController,
                                 onChanged: (value) {
-                                  // print("Mean kkkkkk  $value");
+                                  // debugPrint("Mean kkkkkk  $value");
                                   // field.textController!.text = value;
                                   ref
                                       .read(registerFormProvider.notifier)
@@ -492,15 +482,15 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                   loading: isLoading.value, text: 'Apply Now & Join the Fun!'),
               callback: !isLoading.value
                   ? () {
-                      print("2222");
+                      debugPrint("2222");
                       if (_formKey.currentState!.validate()) {
-                        print("1");
+                        debugPrint("1");
                         for (var model in viewModel) {
-                          print("2");
+                          debugPrint("2");
                           if (model.isRequired) {
-                            print("3");
+                            debugPrint("3");
                             if (model.type == FieldType.image) {
-                              print("4");
+                              debugPrint("4");
                               if (model.imagePath == null ||
                                   model.imagePath!.trim().isEmpty) {
                                 WayaSnackBar.showToast(
@@ -516,7 +506,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                           WayaNav.goBack();
                         });
                       } else {
-                        print(_formKey.currentState!.toString());
+                        debugPrint(_formKey.currentState!.toString());
                       }
                     }
                   : null,

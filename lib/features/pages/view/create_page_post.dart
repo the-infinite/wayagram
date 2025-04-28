@@ -106,64 +106,66 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
         isLoading: viewModel.isLoading,
         isScrollable: false,
         appBar: AppBar(
-            actions: [
-              Padding(
-                padding: const EdgeInsets.only(right: 20),
-                child: SizedBox(
-                  width: context.width * 0.15,
-                  child: viewModel.content.text.isEmpty
-                      ? WayaButton(
-                          callback: viewModel.isLoading
-                              ? () async {
-                                  if (_formKey.currentState!.validate()) {}
-                                }
-                              : null,
-                          height: 30,
-                          text: 'Post',
-                          isLoading: viewModel.isLoading,
-                          textStyle: WayaTextStyles.bodySmall.copyWith(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context).colorScheme.white,
-                          ),
-                        )
-                      : WayaButton(
-                          callback: !viewModel.isLoading
-                              ? () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    await notifier.createPagePost(
-                                      context,
-                                      viewModel.content.text,
-                                      sel ? "public" : "private",
-                                      _selectedImages,
-                                      widget.id,
-                                    );
-                                    notifier.reset();
-                                    WayaNav.replaceNamed("/pages");
-                                  }
-                                }
-                              : null,
-                          height: 30,
-                          text: 'Post',
-                          isLoading: viewModel.isLoading,
-                          textStyle: WayaTextStyles.bodySmall.copyWith(
-                              fontSize: 12.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.white),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: SizedBox(
+                width: context.width * 0.15,
+                child: viewModel.content.text.isEmpty
+                    ? WayaButton(
+                        callback: viewModel.isLoading
+                            ? () async {
+                                if (_formKey.currentState!.validate()) {}
+                              }
+                            : null,
+                        height: 30,
+                        text: 'Post',
+                        isLoading: viewModel.isLoading,
+                        textStyle: WayaTextStyles.bodySmall.copyWith(
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                          color: wayaTheme.colorScheme.white,
                         ),
-                ),
+                      )
+                    : WayaButton(
+                        callback: !viewModel.isLoading
+                            ? () async {
+                                if (_formKey.currentState!.validate()) {
+                                  await notifier.createPagePost(
+                                    context,
+                                    viewModel.content.text,
+                                    sel ? "public" : "private",
+                                    _selectedImages,
+                                    widget.id,
+                                  );
+                                  notifier.reset();
+                                  WayaNav.goBack(closeOverlays: true);
+                                }
+                              }
+                            : null,
+                        height: 30,
+                        text: 'Post',
+                        isLoading: viewModel.isLoading,
+                        textStyle: WayaTextStyles.bodySmall
+                            .copyWith(fontSize: 12.sp, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.white),
+                      ),
               ),
-            ],
-            leading: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: InkWell(
-                  onTap: () {
-                    notifier.reset();
-                    WayaNav.goBack();
-                  },
-                  child: Image.asset(
-                    'assets/images/pages/cancel.png',
-                    height: 16.h,
-                  )),
-            )),
+            ),
+          ],
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: InkWell(
+              onTap: () {
+                notifier.reset();
+                WayaNav.goBack();
+              },
+              child: Image.asset(
+                'assets/images/pages/cancel.png',
+                height: 16.h,
+              ),
+            ),
+          ),
+        ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -203,13 +205,15 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                           WayaTextFormField(
                                             line: 6,
                                             showBorder: false,
-                                            keyboardType: TextInputType.text,
+                                            keyboardType: TextInputType.multiline,
                                             controller: viewModel.content,
                                             hintText: 'what is on your mind?',
                                             borderColor: formState.hasError && viewModel.content.text.isEmpty
                                                 ? wayaTheme.colorScheme.error
                                                 : null,
                                           ),
+
+                                          //? This is fine.
                                           if (formState.hasError && viewModel.content.text.isEmpty)
                                             Padding(
                                               padding: const EdgeInsets.only(top: 5),
@@ -304,7 +308,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                       child: Icon(
                                         Icons.close,
                                         size: 10,
-                                        color: Theme.of(context).colorScheme.primary,
+                                        color: wayaTheme.colorScheme.primary,
                                       ),
                                     ),
                                   ),
@@ -354,8 +358,8 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                       Gap(5),
                       Text(
                         sel ? 'Public post' : 'Private post',
-                        style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
-                            fontSize: 14.sp, fontWeight: FontWeight.w600, color: Theme.of(context).colorScheme.primary),
+                        style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
+                            fontSize: 14.sp, fontWeight: FontWeight.w600, color: wayaTheme.colorScheme.primary),
                       ),
                     ],
                   ),
@@ -367,6 +371,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
   }
 
   void showCustomDialog(BuildContext context, chk) {
+    final wayaTheme = Theme.of(context);
     showDialog(
       barrierDismissible: true,
       context: context,
@@ -398,7 +403,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                 Container(
                                   width: double.infinity,
                                   height: 56.h,
-                                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary50),
+                                  decoration: BoxDecoration(color: wayaTheme.colorScheme.primary50),
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Column(
@@ -406,19 +411,19 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                       children: [
                                         Text(
                                           'Public',
-                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                          style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                               fontSize: 14.sp,
                                               fontWeight: FontWeight.w600,
-                                              color: Theme.of(context).colorScheme.primary),
+                                              color: wayaTheme.colorScheme.primary),
                                         ),
                                         Row(
                                           children: [
                                             Text(
                                               'Everybody can see and interact with this post',
-                                              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                              style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                                   fontSize: 14.sp,
                                                   fontWeight: FontWeight.w400,
-                                                  color: Theme.of(context).colorScheme.primary),
+                                                  color: wayaTheme.colorScheme.primary),
                                             ),
                                             Spacer(),
                                             Padding(
@@ -428,7 +433,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                                 child: Container(
                                                   padding: const EdgeInsets.all(2),
                                                   decoration: BoxDecoration(
-                                                    color: Theme.of(context).colorScheme.primary,
+                                                    color: wayaTheme.colorScheme.primary,
                                                     shape: BoxShape.circle,
                                                   ),
                                                   child: Icon(
@@ -455,17 +460,17 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                       children: [
                                         Text(
                                           'Private',
-                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                          style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                               fontSize: 14.sp,
                                               fontWeight: FontWeight.w600,
-                                              color: Theme.of(context).colorScheme.black),
+                                              color: wayaTheme.colorScheme.black),
                                         ),
                                         Text(
                                           'Only your friends can see and interact with this post',
-                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                          style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                               fontSize: 14.sp,
                                               fontWeight: FontWeight.w400,
-                                              color: Theme.of(context).colorScheme.greyColor500),
+                                              color: wayaTheme.colorScheme.greyColor500),
                                         ),
                                       ],
                                     ),
@@ -486,17 +491,17 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                       children: [
                                         Text(
                                           'Public',
-                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                          style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                               fontSize: 14.sp,
                                               fontWeight: FontWeight.w600,
-                                              color: Theme.of(context).colorScheme.black),
+                                              color: wayaTheme.colorScheme.black),
                                         ),
                                         Text(
                                           'Everybody can see and interact with this post',
-                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                          style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                               fontSize: 14.sp,
                                               fontWeight: FontWeight.w400,
-                                              color: Theme.of(context).colorScheme.greyColor500),
+                                              color: wayaTheme.colorScheme.greyColor500),
                                         ),
                                       ],
                                     ),
@@ -506,7 +511,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                 Container(
                                   width: double.infinity,
                                   height: 56.h,
-                                  decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary50),
+                                  decoration: BoxDecoration(color: wayaTheme.colorScheme.primary50),
                                   child: Padding(
                                     padding: const EdgeInsets.only(left: 10),
                                     child: Column(
@@ -514,19 +519,19 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                       children: [
                                         Text(
                                           'Private',
-                                          style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                          style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                               fontSize: 14.sp,
                                               fontWeight: FontWeight.w600,
-                                              color: Theme.of(context).colorScheme.primary),
+                                              color: wayaTheme.colorScheme.primary),
                                         ),
                                         Row(
                                           children: [
                                             Text(
                                               'Only your friends can see and interact with this post',
-                                              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                                              style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                                                   fontSize: 14.sp,
                                                   fontWeight: FontWeight.w400,
-                                                  color: Theme.of(context).colorScheme.primary),
+                                                  color: wayaTheme.colorScheme.primary),
                                             ),
                                             Spacer(),
                                             Padding(
@@ -536,7 +541,7 @@ class _CreatePagePostState extends ConsumerState<CreatePagePost> with SingleTick
                                                 child: Container(
                                                   padding: const EdgeInsets.all(2),
                                                   decoration: BoxDecoration(
-                                                    color: Theme.of(context).colorScheme.primary,
+                                                    color: wayaTheme.colorScheme.primary,
                                                     shape: BoxShape.circle,
                                                   ),
                                                   child: Icon(

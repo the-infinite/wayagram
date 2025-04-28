@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -23,7 +22,7 @@ class MyContests extends ConsumerWidget {
         hideButton:
             ConversationState.self.accountType == UserAccountType.business ? true : false,
         onTap: () {
-          ivalidateUGTVM(ref);
+          invalidateUGTVm(ref);
           WayaNav.toNamed("/create-contest");
         });
   }

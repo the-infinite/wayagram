@@ -22,6 +22,11 @@ class PostNotifier extends StateNotifier<PostState> {
       if (response.success) {
         final data = response.data["data"];
 
+        //? If the previous page had a next page, offload them onto this place.
+        if (state.hasNextPage) {
+          result.addAll(state.posts);
+        }
+
         //? Parse the posts as they are in the response object...
         final docs = (data['docs'] as List).map((doc) => PostModel.fromJson(doc));
 
@@ -30,11 +35,6 @@ class PostNotifier extends StateNotifier<PostState> {
 
         //? Now, add these to what we have here.
         result.addAll(docs);
-
-        //? If the previous page had a next page, offload them onto this place.
-        if (state.hasNextPage) {
-          result.addAll(state.posts);
-        }
 
         //? This is fine.
         state = state.copyWith(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/waya_image.dart';
@@ -13,6 +14,7 @@ import 'package:wayagram/features/moments/data/model/moment_response_model.dart'
 import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
+import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
 
 class MyMomentWidget extends ConsumerWidget {
@@ -20,12 +22,13 @@ class MyMomentWidget extends ConsumerWidget {
   final List<MomentData> allMoments;
   final int index;
   final bool isMine;
-  const MyMomentWidget(
-      {super.key,
-      required this.moment,
-      required this.allMoments,
-      this.isMine = true,
-      required this.index});
+  const MyMomentWidget({
+    super.key,
+    required this.moment,
+    required this.allMoments,
+    this.isMine = true,
+    required this.index,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,11 +36,12 @@ class MyMomentWidget extends ConsumerWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        WayaNav.replaceNamed(ViewMoment.route, arguments: {
-          "moments": allMoments,
-          "isMine": isMine,
-          'index': index
-        });
+        WayaNav.goBack();
+        await WayaNav.to(
+          transition: Transition.downToUp,
+          duration: const Duration(milliseconds: 600),
+          ViewMoment(moments: allMoments, isMine: isMine, index: index),
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -219,7 +223,11 @@ class MyMomentActions extends StatelessWidget {
                   context: context,
                   onTap: () async {
                     WayaNav.goBack();
-                    WayaNav.toNamed(Promote.route);
+                    WayaNav.toNamed(Promote.route, arguments: {
+                      "contentId": moment.id,
+                      "contentType": PromotionServiceType.moment.name,
+                      "data": moment
+                    });
                   },
                   asset: SvgPicture.asset(WayaAssets.icons.mFire.path),
                   text: "Promote"),

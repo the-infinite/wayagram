@@ -562,9 +562,9 @@ class _CreateBuyingRequestState extends ConsumerState<CreateBuyingRequest> {
                 WayaButton(
                   callback: () async {
                     if (_formKey.currentState!.validate()) {
-                      print(viewModel.minDistance.text);
+                      debugPrint(viewModel.minDistance.text);
                       widget.gotoNextTab();
-                      print('=>>>>> ${viewModel.productCategory}');
+                      debugPrint('=>>>>> ${viewModel.productCategory}');
                     }
                   },
                   text: 'Setup Pricing & Delivery',

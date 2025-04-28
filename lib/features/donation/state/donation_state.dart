@@ -19,6 +19,8 @@ class DonationState{
     final TextEditingController details;
     final List<DocType> donationImage;
     final MultipartFile? image;
+    final List<String>? selectedCategoryId;
+    final List<String> selected;
     final String category;
     final String? kycStatus;
     final String kycMessage;
@@ -52,6 +54,8 @@ class DonationState{
       this.allDonationDocs = const [],
       this.appliedDonationDocs = const [],
       this.myDonationDocs = const [],
+      this.selectedCategoryId = const [],
+      this.selected = const [],
       this.approvedDonations = const [],
       this.rejectedDonations = const [],
       this.donationImage = const [],
@@ -90,6 +94,8 @@ class DonationState{
     TextEditingController? minimumDonationAmount,
     TextEditingController? details,
       List<Select>? categories,
+      List<String>? selectedCategoryId,
+      List<String>? selected,
       List<AllDonationDocs>? allDonationDocs,
       List<AppliedDonationDocs>? appliedDonationDocs,
       List<MyDonationDocs>? myDonationDocs,
@@ -128,10 +134,12 @@ class DonationState{
       donationImage: donationImage ?? this.donationImage,
       category: category ?? this.category,
       categories: categories ?? this.categories,
+      selected: selected ?? this.selected,
       image: image ?? this.image,
       privacyOption: privacyOption ?? this.privacyOption,
       accountType: accountType ?? this.accountType,
       startDate: startDate ?? this.startDate,
+      selectedCategoryId: selectedCategoryId ?? this.selectedCategoryId,
       endDate: endDate ?? this.endDate,
       startDateString: startDateString ?? this.startDateString,
       endDateString: endDateString ?? this.endDateString,

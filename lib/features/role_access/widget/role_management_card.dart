@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/role_access/data/model/role_management_model.dart';
-import 'package:wayagram/features/role_access/data/model/role_member.dart';
-import 'package:wayagram/features/role_access/data/model/shop_model.dart';
 
 class RoleManagementCard extends StatelessWidget {
   final RoleManagementModel user;
   final bool showImage;
 
-  const RoleManagementCard(
-      {super.key, required this.user, this.showImage = true});
+  // Construct.
+  const RoleManagementCard({
+    super.key,
+    required this.user,
+    this.showImage = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +44,9 @@ class RoleManagementCard extends StatelessWidget {
                   ),
                   if (user.roleName == "me")
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                       decoration: BoxDecoration(
-                        color: false ? Colors.green[100] : Colors.orange[100],
+                        color: user.roleName != null ? Colors.green[100] : Colors.orange[100],
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -56,9 +56,8 @@ class RoleManagementCard extends StatelessWidget {
                           SizedBox(width: 4),
                           Text(
                             user.roleName ?? "",
-                            style: WayaTextStyles.hintStyleBold.copyWith(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold),
+                            style:
+                                WayaTextStyles.hintStyleBold.copyWith(color: Colors.green, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -66,8 +65,7 @@ class RoleManagementCard extends StatelessWidget {
                   else
                     Text(
                       "Total Members: ${user.userCount}",
-                      style: WayaTextStyles.hintStyleBold.wayaCopyWith(
-                          color: wayaTheme.colorScheme.greyColor700),
+                      style: WayaTextStyles.hintStyleBold.wayaCopyWith(color: wayaTheme.colorScheme.greyColor700),
                     ),
                 ],
               ),

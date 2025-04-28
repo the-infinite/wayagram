@@ -30,7 +30,9 @@ class SimpleLogPrinter extends LogPrinter {
 
     if (excludeLogsFromClasses
             .any((excludeClass) => className == excludeClass) ||
-        (showOnlyClass != null && className != showOnlyClass)) return [];
+        (showOnlyClass != null && className != showOnlyClass)) {
+      return [];
+    }
 
     final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
     List<String> result = [];
@@ -136,7 +138,7 @@ class MultipleLoggerOutput extends LogOutput {
       try {
         logOutput.output(event);
       } catch (e) {
-        print('Log output failed');
+        debugPrint('Log output failed');
       }
     }
   }

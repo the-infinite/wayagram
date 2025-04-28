@@ -65,11 +65,11 @@ class Product extends BaseModel<Product> {
   final dynamic price;
   final int stockQuantity;
   final List<String> images;
-  final int height;
-  final int width;
+  final int? height;
+  final int? width;
   final String? color;
   final String materialType;
-  final int depth;
+  final int? depth;
   final String condition;
   final dynamic wayagramDeal;
   final dynamic dealStatus;
@@ -114,7 +114,6 @@ class Product extends BaseModel<Product> {
       required this.options,
       required this.pickupAddress,
       this.rating,
-
       required this.discountPercentage,
       required this.shopId,
       required this.discountedPrice,
@@ -137,15 +136,14 @@ class Product extends BaseModel<Product> {
         description: json['description'] ?? '',
         price: json['price'],
         stockQuantity: json['stockQuantity'] ?? 0,
-        images:
-            (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
+        images: (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
         height: json['height'],
         width: json['width'],
         color: json['color'] ?? '',
         materialType: json['materialType'] ?? '',
         depth: json['depth'],
         condition: json['condition'] ?? '',
-        wayagramDeal: json['wayagramDeal'] ,
+        wayagramDeal: json['wayagramDeal'],
         dealStatus: json['dealStatus'] ?? false,
         wayagramDealRejectedReason: json['wayagramDealRejectedReason'],
         approve: json['approve'] ?? false,
@@ -275,8 +273,7 @@ class Product extends BaseModel<Product> {
         condition: condition ?? this.condition,
         wayagramDeal: wayagramDeal ?? this.wayagramDeal,
         dealStatus: dealStatus ?? this.dealStatus,
-        wayagramDealRejectedReason:
-            wayagramDealRejectedReason ?? this.wayagramDealRejectedReason,
+        wayagramDealRejectedReason: wayagramDealRejectedReason ?? this.wayagramDealRejectedReason,
         approve: approve ?? this.approve,
         deliveryCharge: deliveryCharge ?? this.deliveryCharge,
         options: options ?? this.options,
@@ -296,12 +293,12 @@ class Product extends BaseModel<Product> {
         shopRating: shopRating ?? this.shopRating);
   }
 
-  static int _parseToInt(dynamic value) {
-    if (value == null) return 0;
-    if (value is int) return value;
-    if (value is String) {
-      return int.parse(value);
-    }
-    return 0;
-  }
+  //   static int _parseToInt(dynamic value) {
+  //     if (value == null) return 0;
+  //     if (value is int) return value;
+  //     if (value is String) {
+  //       return int.parse(value);
+  //     }
+  //     return 0;
+  //   }
 }

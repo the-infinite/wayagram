@@ -9,14 +9,14 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
-import 'package:wayagram/features/event/vm/event_vm.dart';
-import 'package:wayagram/features/promotion/vm/promotion_vm.dart';
+import 'package:wayagram/features/promotion/vm/create_promotion_vm.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class PayForPromotion extends ConsumerStatefulWidget {
   final String title;
-  const PayForPromotion({super.key, required this.title});
+  final int budget;
+  const PayForPromotion({super.key, required this.title, required this.budget});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _JoinEventState();
@@ -31,7 +31,7 @@ class _JoinEventState extends ConsumerState<PayForPromotion> {
     final walletState = ref.watch(walletVmProvider);
     final state = ref.watch(promotionVmProvider);
     final walletBalance = walletState.data?.balance ?? '0';
-    final isInsufficientBalance = double.parse(walletBalance).toInt() < 200;
+    final isInsufficientBalance = double.parse(walletBalance).toInt() < widget.budget;
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 30, horizontal: 12),
       child: Column(
@@ -49,7 +49,7 @@ class _JoinEventState extends ConsumerState<PayForPromotion> {
                   style: wayaTheme.textTheme.hintStyle,
                 ),
                 TextSpan(
-                  text: WayaHelpers.formatPrice(300),
+                  text: WayaHelpers.formatPrice(widget.budget),
                   style: wayaTheme.textTheme.bodyMedium!.wayaCopyWith(
                     color: wayaTheme.colorScheme.customPrimary,
                     fontWeight: FontWeight.w500,

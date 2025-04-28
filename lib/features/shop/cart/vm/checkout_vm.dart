@@ -7,9 +7,6 @@ import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
-import 'package:wayagram/features/shop/cart/data/repo/cart_repository.dart';
-import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 import 'package:wayagram/features/shop/order/data/repo/order_repository.dart';
@@ -91,7 +88,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -141,7 +138,7 @@ class CheckoutVm extends StateNotifier<CheckoutState> {
         );
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }

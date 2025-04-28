@@ -1,7 +1,6 @@
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -12,7 +11,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/group/vm/group_vm.dart';
+// import 'package:wayagram/features/group/vm/group_vm.dart';
 
 class ApplicationStatus extends ConsumerStatefulWidget {
   final String causeTitle;
@@ -65,9 +64,8 @@ class _ApplicationDetailsState extends ConsumerState<ApplicationStatus> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     final wayaTheme = Theme.of(context);
-    final reportState = ref.watch(createGroupProvider);
+    // final reportState = ref.watch(createGroupProvider);
     return SingleChildScrollView(
       padding: EdgeInsets.symmetric(vertical: 30, horizontal: 16),
       child: Column(

@@ -22,6 +22,7 @@ import 'package:wayagram/features/post/model/fetch_all_post.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
 import 'package:wayagram/shared/cache/page.dart';
 import 'package:wayagram/shared/cache/post.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/model/pages.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/model/media_upload_model.dart';
@@ -53,7 +54,9 @@ class PageVm extends StateNotifier<PageState> {
   }
 
   void reset() {
-    state = PageState();
+    state.pageName.clear();
+    state.pageDescription.clear();
+    state.content.clear();
   }
 
   final String _errorMessage = '';
@@ -195,7 +198,7 @@ class PageVm extends StateNotifier<PageState> {
     } finally {
       // _isLoading = false;
       // notifyListeners();
-      //print('Saved posts fetch completed. Loading state: $_isLoading');
+      //debugPrint('Saved posts fetch completed. Loading state: $_isLoading');
     }
   }
 
@@ -438,7 +441,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> createPagePost(ctx, content, postType, List<XFile> images, postId) async {
+  Future<void> createPagePost(ctx, String content, String postType, List<XFile> images, String pageId) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
     // get url
@@ -466,22 +469,26 @@ class PageVm extends StateNotifier<PageState> {
         break;
       }
     }
-    //WayaHelpers.
 
     try {
-      state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.createPagePost(content, publicUrl, postType, postId);
-      //final response = await _pageRepository.createPost(content, choiceMap, postType);
+      state = state.copyWith(isLoading: true, allPostData: null);
+      final response = await _pageRepository.createPagePost(content, publicUrl, postType, pageId);
       state = state.copyWith(isLoading: false);
+
       //? If this is fine...
-      if (response.success && ctx.mounted) {
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Post created successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
+      if (response.success) {
+        final page = await myPageNotifier.getSinglePage(pageId);
+        final post = PostModel.fromJson(response.data['data']).copyWith(page: page);
+        final previous = state.getAllPost;
+        wayaPostCache.cache(post.id, post);
+
+        //? Then update the list of posts with the one that has just been made.
+        state = state.copyWith(
+          getAllPost: [post, ...(previous ?? [])],
         );
+
+        //? This is fine.
+        WayaSnackBar.showToast('Post created successfully!');
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(

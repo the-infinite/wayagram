@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
@@ -18,13 +15,9 @@ import 'package:wayagram/features/auth/account_creation/view/loading_state.dart'
 import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contestant_reject_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
-import 'package:wayagram/features/ugt/video_player.dart';
-import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
-import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
 
-import '../../../core/components/waya_scaffold.dart';
 
 class ViewSingleContestantData extends StatefulHookConsumerWidget {
   static const route = '/view-contestant-single-data';
@@ -42,7 +35,7 @@ class _ManageStateContestState extends ConsumerState<ViewSingleContestantData> {
     var model = ref.watch(selectedApplicantProfile);
     var selectedContestModel =
         ref.watch(selectedContestProvider.notifier).state;
-    var viewModel = ref.watch(votersContestNotifier.notifier);
+    //var viewModel = ref.watch(votersContestNotifier.notifier);
     var isLoading = useState(false);
     return WayaScaffold(
       isLoading: false,

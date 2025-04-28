@@ -1,12 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -24,7 +22,6 @@ import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
-import '../../../core/components/waya_scaffold.dart';
 
 class DashboardContestPage extends StatefulHookConsumerWidget {
   static const route = '/contest-mydashboard-profile-page';
@@ -200,7 +197,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         height: 42,
                         text: "Edit contest details",
                         callback: () async {
-                          ivalidateUGTVM(ref);
+                          invalidateUGTVm(ref);
                           ref
                               .read(stateIsEditingContestProvider.notifier)
                               .state = true;
@@ -557,7 +554,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         Switch(
                             value: e.isActive ?? false,
                             onChanged: (bool value) {
-                              print("map ${e.toString()}");
+                              debugPrint("map ${e.toString()}");
                               notifier.startStageContest(e.stageName ?? "", {
                                 "contestId": model?.id ?? "",
                                 "stageName": e.stageName ?? ""

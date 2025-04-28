@@ -1,12 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/route_manager.dart';
-// import 'package:get_thumbnail_video/index.dart';
-// import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -22,18 +18,12 @@ import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_stages_section.dart';
 import 'package:wayagram/features/ugt/create_contest_post/video_thumbnail_ugt.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
-import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart' as post;
-import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
-import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
+import 'package:wayagram/features/ugt/my_contest_details/full_video_view.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_details_stage_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
-import 'package:wayagram/features/ugt/video_player.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
-import 'package:wayagram/features/ugt/widgets/contest_card.dart';
-import 'package:wayagram/features/ugt/widgets/upcoming_widgets/upcoming_widget.dart';
-import '../../../core/components/waya_scaffold.dart';
 
 class ContestProfilePage extends StatefulHookConsumerWidget {
   static const route = '/contest-profile-page';
@@ -76,23 +66,19 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     final String contestId = Get.parameters['contest'] ?? 'Unknown';
     var model = ref.watch(selectedContestantProfile);
     var viewModel = ref.watch(votersContestNotifier.notifier);
-    //  print("profile id ${model?.id}");
-    final imageUrl = useState(model?.profilePhoto ?? "");
 
     useEffect(() {
       ref.read(postProvider.notifier).fetchSingleContestantDetails(
           ref, model?.contestId ?? contestId, model?.id ?? id);
-      /*   print("dedee ${model?.contestApplicant?.userId}");
-      print("dedee ${model?.profileId}");
-      print("dedee ${viewModel.getLoggedInUserId()}"); */
+     
 
       if (viewModel.getLoggedInUserId() == model?.contestApplicant?.userId) {
         model?.stages?.forEach((element) {
-          //  print("i am looping");
+          //  debugPrint("i am looping");
           if (element.entryType?.toLowerCase() != "free" &&
               element.isActive == true &&
               element.hasPaid != true) {
-            //  print("looping and have picked one");
+            //  debugPrint("looping and have picked one");
 
             selectedStage = element;
             Future.delayed(Duration(seconds: 2), () {
@@ -162,7 +148,9 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
         return ref.read(postProvider.notifier).fetchSingleContestantDetails(
             ref, model?.contestId ?? contestId, model?.id ?? id);
       },
-      title: "My Profile",
+      title: model?.profileId == viewModel.getLoggedInUserId()
+          ? "My Profile"
+          : "${model?.contestApplicant?.fullName?.split(" ").first}`s Profile",
       appBarTrailing: Row(
         children: [
           GestureDetector(
@@ -195,7 +183,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        WayaNav.toNamed("/view-media-full-page", arguments: {
+                        WayaNav.toNamed(FullVideoView.route, arguments: {
                           "url": model?.introVideo ?? "",
                           "title": "",
                           "createdAt": "",
@@ -204,46 +192,48 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                           "showDescription": false,
                           "discription": "",
                           "shareCount": "",
-                          "type": MyFullMediaType.video
+                          
                         });
                       },
                       child: VideoThumbnail(
                         model?.introVideo ?? "",
+                        250.h,
                         context.width,
-                        context.height / 4,
                       ),
                     ),
                     const Gap(20),
-                    Container(
-                      margin: EdgeInsets.only(right: 20.w),
-                      padding: REdgeInsets.symmetric(
-                          vertical: 8.dg, horizontal: 12.dg),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: wayaTheme.colorScheme.primary600,
-                          width: 1.5,
-                        ),
-                        color: wayaTheme.colorScheme.white,
-                        borderRadius: BorderRadius.circular(5.r),
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          print("Edit Profile");
-                          WayaNav.toNamed('/edit-profile-contest');
-                        },
-                        child: Text(
-                          'Edit Profile',
-                          style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                    if (model?.profileId == viewModel.getLoggedInUserId())
+                      Container(
+                        margin: EdgeInsets.only(right: 20.w),
+                        padding: REdgeInsets.symmetric(
+                            vertical: 8.dg, horizontal: 12.dg),
+                        decoration: BoxDecoration(
+                          border: Border.all(
                             color: wayaTheme.colorScheme.primary600,
-                            fontWeight: FontWeight.w600,
+                            width: 1.5,
+                          ),
+                          color: wayaTheme.colorScheme.white,
+                          borderRadius: BorderRadius.circular(5.r),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            debugPrint("Edit Profile");
+                            WayaNav.toNamed('/edit-profile-contest');
+                          },
+                          child: Text(
+                            'Edit Profile',
+                            style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                              color: wayaTheme.colorScheme.primary600,
+                              fontWeight: FontWeight.w600,
+                            ),
                           ),
                         ),
                       ),
-                    ),
                   ],
                 ),
                 Positioned(
-                  bottom: 10,
+                  //   bo: -10,
+                  bottom: -15,
                   left: 20,
                   child: Container(
                     padding: const EdgeInsets.all(0),
@@ -262,10 +252,10 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                 ),
               ],
             ),
-            //const Gap(10),
+            const Gap(15),
             GestureDetector(
               onTap: () {
-                print("Edit Profile");
+                debugPrint("Edit Profile");
                 WayaNav.toNamed('/edit-profile-contest');
               },
               child: Text(model?.contestApplicant?.fullName ?? "",

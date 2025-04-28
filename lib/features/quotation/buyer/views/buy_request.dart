@@ -106,11 +106,12 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
           child: Center(
             child: SmoothPageIndicator(
               effect: ExpandingDotsEffect(
-                  dotWidth: 16,
-                  dotHeight: 6,
-                  spacing: 4,
-                  dotColor: WayaColors.greyColor200,
-                  activeDotColor: WayaColors.primary),
+                dotWidth: 16,
+                dotHeight: 6,
+                spacing: 4,
+                dotColor: WayaColors.greyColor200,
+                activeDotColor: WayaColors.primary,
+              ),
               controller: pageController,
               count: 3,
             ),
@@ -125,9 +126,7 @@ class _BuyRequestsState extends ConsumerState<BuyRequests> {
 
         //? Explore the recommended bids.
         GroupedWidgetHeader(
-          onTap: () {
-            WayaNav.toNamed(SellerBuyRequestsScreen.route);
-          },
+          onTap: () => WayaNav.toNamed(SellerBuyRequestsScreen.route),
           subTitle: 'Explore Categories & Best Offers',
           title: 'Recommended Bids',
         ),

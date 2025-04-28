@@ -8,7 +8,6 @@ import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/business_account_model.dart';
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
@@ -96,7 +95,7 @@ class LoginVm extends StateNotifier<LoginState> {
   Future<void> signinWithGoogle() async {
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     if (googleUser == null) {
-      print("User cancelled sign-in");
+      debugPrint("User cancelled sign-in");
       return;
     }
 
@@ -109,7 +108,7 @@ class LoginVm extends StateNotifier<LoginState> {
 
     final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
     final String? idToken = await userCredential.user?.getIdToken();
-    print(idToken);
+    debugPrint(idToken);
 
     // if (idToken != null) {
     //   await oauthSignIn(authType: 'GOOGLE', token: idToken);
@@ -121,7 +120,7 @@ class LoginVm extends StateNotifier<LoginState> {
       final response = await _authRepository.oauth(token, authType);
 
       if (response.success) {
-        print(response.data);
+        debugPrint(response.data.toString());
       } else {
         if (response.data['responseCode'] == 404) {
           return WayaSnackBar.showToast("User does not exist");
@@ -130,7 +129,7 @@ class LoginVm extends StateNotifier<LoginState> {
         }
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -168,6 +167,7 @@ class LoginVm extends StateNotifier<LoginState> {
           // Now, in a contained region, load up this person's stores.
           try {
             await ShopResource.configureShop(ConversationState.self.id);
+            await ShopResource.getShopCategories();
           } catch (e) {
             WayaDebugConsoleController.instance.addException(
               WayaDebugHelpers.getMessage(e),
@@ -232,7 +232,7 @@ class LoginVm extends StateNotifier<LoginState> {
         }
 
         // This is good too.
-        WayaNav.toNamed("/explore");
+        WayaNav.replaceNamed("/explore");
       } else {
         if (response.data['responseCode'] == 625) {
           await ref

@@ -11,6 +11,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/data/model/donation_activity_model.dart';
+import 'package:wayagram/features/activity_logs/data/model/group_activity_model.dart';
 import 'package:wayagram/features/activity_logs/data/model/page_activity_model.dart';
 import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_card_widget.dart';
@@ -18,7 +19,6 @@ import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
-import '../data/model/search_log_model.dart';
 import '../widget/activity_image_widget.dart';
 
 class ActivityLog extends ConsumerStatefulWidget {
@@ -789,7 +789,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
               ),
               Gap(10),
               Expanded(
-                child: PaginatedDataView<DonationDocs>(
+                child: PaginatedDataView<GroupDocs>(
                     uniqueKey: 'group-logs',
                     loadingState: SizedBox(
                         height: context.height * 0.4,
@@ -826,6 +826,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
                                         fontWeight: FontWeight.w600,
                                         color: Colors.black,
                                       )),
+
                                   Gap(10),
                                   ListView.builder(
                                     shrinkWrap: true,
@@ -1192,7 +1193,7 @@ class _ActivityLogState extends ConsumerState<ActivityLog> {
   }
 
   sortList(s, log1, log2) {
-    final viewModel = ref.watch(activityLogsVmProvider);
+    //final viewModel = ref.watch(activityLogsVmProvider);
     log1 = [];
     setState(() {
       if(s == 'all time'){

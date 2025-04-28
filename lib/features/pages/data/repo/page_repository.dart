@@ -1,8 +1,9 @@
 import 'package:wayagram/core/service/api_service/api_service.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class PageRepository extends BaseRepository {
-  static const serviceUrl = "wayagram-graph/api/v2";
+  static const serviceUrl = WayaServiceUri.graph;
   static final instance = PageRepository._();
   PageRepository._();
 
@@ -14,8 +15,8 @@ class PageRepository extends BaseRepository {
     return post("$serviceUrl/posts", payload);
   }
 
-  Future<WayaRequestResponse> createPagePost(String content, List<String> images, postType, postId) {
-    final payload = {"content": content, "postId": postId, "type": "generic", "media": images, "privacy": postType};
+  Future<WayaRequestResponse> createPagePost(String content, List<String> images, String postType, String pageId) {
+    final payload = {"content": content, "pageId": pageId, "type": "generic", "media": images, "privacy": postType};
 
     return post("$serviceUrl/posts", payload);
   }
@@ -25,7 +26,7 @@ class PageRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> fetchSinglePagePost(String pageId, [int page = 1, int limit = 15]) {
-    return get("$serviceUrl/posts?pageId=$pageId&status=active&page=$page&limit=$limit");
+    return get("$serviceUrl/posts?pageId=$pageId&status=active&page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
   }
 
   Future<WayaRequestResponse> putImage(url, image) {

@@ -9,7 +9,6 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/donation/vm/donation_vm.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
-import 'dart:io' show Platform;
 
 class AppliedDonations extends ConsumerStatefulWidget {
   const AppliedDonations({super.key});
@@ -43,8 +42,8 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
-    final wayaTheme = Theme.of(context);
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    //final wayaTheme = Theme.of(context);
+    //final dynamic args = ModalRoute.of(context)?.settings.arguments;
     
     return
       viewModel.appliedDonationDocs?.isEmpty ?? true ? DonationEmptyState()
@@ -88,7 +87,9 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
                       'privacy':'${donation?.privacy}',
                       'id': '${donation?.id}',
                       'donationCount': '${donation?.donationCount}',
-                      'ratioLeft': ratioLeft
+                      'ratioLeft': ratioLeft,
+                      'organizerId': donation?.organizerId,
+                       "donation": donation
 
                     });
               },
@@ -244,7 +245,7 @@ class DonationEmptyState extends StatelessWidget {
               WayaAssets.images.emptyEvent.path,
               scale: 1.5,
             ),
-            message: "You don\'t have applied donations yet"),
+            message: "You don't have applied donations yet"),
       ),
     );
   }

@@ -1,16 +1,12 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
 import 'package:wayagram/features/kyc/vm/kyc_vm.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
@@ -100,7 +96,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                     color: WayaColors.greyColor800),
               ),
           ],),
-          Gap(250),
+          Gap(200),
           args['kyc'] == 'APPROVED'?
           WayaButton(
               text: 'Start Using Your Account',

@@ -58,6 +58,7 @@ class QuotationsState {
 
   // For orders.
   final bool isLoadingOrders;
+  final bool hasLoadedOrders;
   final int orderPage;
   final int orderPages;
   final int totalOrders;
@@ -89,6 +90,7 @@ class QuotationsState {
     required this.overview,
     required this.isLoadingOrders,
     required this.orderPage,
+    required this.hasLoadedOrders,
     required this.orderPages,
     required this.totalOrders,
     required this.hasNextOrder,
@@ -117,6 +119,7 @@ class QuotationsState {
     requests: [],
     requestStatus: null,
     overview: null,
+    hasLoadedOrders: false,
     isLoadingOrders: false,
     orderPage: 1,
     orderPages: 1,
@@ -147,6 +150,7 @@ class QuotationsState {
     requests: [],
     requestStatus: null,
     overview: null,
+    hasLoadedOrders: false,
     isLoadingOrders: false,
     orderPage: 1,
     orderPages: 1,
@@ -178,6 +182,7 @@ class QuotationsState {
     String? requestStatus,
     BidDashboardModel? overview,
     bool? isLoadingOrders,
+    bool? hasLoadedOrders,
     int? orderPage,
     int? orderPages,
     int? totalOrders,
@@ -206,6 +211,7 @@ class QuotationsState {
       requests: requests ?? this.requests,
       requestStatus: requestStatus ?? this.requestStatus,
       overview: overview ?? this.overview,
+      hasLoadedOrders: hasLoadedOrders ?? this.hasLoadedOrders,
       isLoadingOrders: isLoadingOrders ?? this.isLoadingOrders,
       orderPage: orderPage ?? this.orderPage,
       orderPages: orderPages ?? this.orderPages,

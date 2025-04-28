@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/role_access/vm/role_access_vm.dart';
 import 'package:wayagram/features/role_access/widget/manage_user_tab.dart';
 import 'package:wayagram/features/role_access/widget/role_management_tab.dart';
-import 'package:wayagram/shared/features/user/models/default.dart';
 
 class RoleAccessPage extends StatefulHookConsumerWidget {
   static const route = '/role-access-page';
@@ -25,15 +20,19 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
+    //? get access to the theme
+    //final wayaTheme = Theme.of(context);
+    //? get access to the provider
     final rollAccessNotifier = ref.read(roleAccessVm.notifier);
 
     //  ConversationState.self.id
-    // print("UGT HOME ${ConversationState.self.role?.name}");
+    // debugPrint("UGT HOME ${ConversationState.self.role?.name}");
 
+    //? init necessary data with useEffect
     useEffect(() {
       rollAccessNotifier.getRoles();
       rollAccessNotifier.getShops();
+      //? delay once second to avoid UI problem
       Future.delayed(Duration(seconds: 1), () {
         rollAccessNotifier.getAllMembers(true);
         rollAccessNotifier.getRoleManagementMemberList();
@@ -46,6 +45,7 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
       isLoading: false,
       isScrollable: true,
       onRefresh: () {
+        //? refresh the UI with new Data
         rollAccessNotifier.getAllMembers(true);
         return rollAccessNotifier.getRoleManagementMemberList();
       },
@@ -57,6 +57,7 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
           const Gap(10),
           Row(
             children: [
+              //? tabs to switch between the two tabs
               WayaTabButton(
                 isSelected: _selectedIndex == 0,
                 text: 'Manage Users',
@@ -70,6 +71,7 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
             ],
           ),
           const Gap(20),
+          //? the tabs themselves
           if (_selectedIndex == 0) ManageUserTab(),
           if (_selectedIndex == 1) RoleManagementTab(),
           // const Gap(50),

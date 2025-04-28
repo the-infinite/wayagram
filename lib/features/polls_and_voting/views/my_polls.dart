@@ -15,7 +15,6 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/shared/paginated_data/paginated_data_view.dart';
 
@@ -66,7 +65,8 @@ class _MyPollsState extends ConsumerState<MyPolls> {
                             backgroundColor: wayaTheme.colorScheme.greyColor200,
                           ),
                           const Gap(3),
-                          Text('${poll.userData?.firstName} ${poll.userData?.lastName}', style: wayaTheme.textTheme.titleLarge),
+                          Text('${poll.userData?.firstName} ${poll.userData?.lastName}',
+                              style: wayaTheme.textTheme.titleLarge),
                           const Gap(3),
                           Text(' • ${ WayaHelpers.formatTimeAgo('${poll.createdAt}')}',
                             style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(

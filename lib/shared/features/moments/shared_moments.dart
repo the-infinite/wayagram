@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -80,16 +81,17 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                           context: context,
                           builder: (context) => PopModal(
                             create: () => WayaNav.toNamed(MyMoments.route),
-                            view: () => WayaNav.toNamed(
-                              ViewMoment.route,
-                              arguments: {
-                                "moments": momentState.myMoments,
-                                "isMine": true,
-                              },
+                            view: () => WayaNav.to(
+                              transition: Transition.downToUp,
+                              duration: const Duration(milliseconds: 600),
+                              ViewMoment(
+                                  moments: momentState.myMoments, isMine: true),
                             ),
                           ),
                         );
                       }
+
+                      //? By default, create a new moment.
                       WayaNav.toNamed(MyMoments.route);
                     },
                   ),
@@ -108,13 +110,12 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                 children: [
                   MomentsWidget(
                     moment: moment,
-                    hasMoment: !notifier.hasViewedMoment(moment.moments.first.id),
-                    onTap: () => WayaNav.toNamed(
-                      ViewMoment.route,
-                      arguments: {
-                        "moments": moment.moments,
-                        "isMine": false,
-                      },
+                    hasMoment:
+                        !notifier.hasViewedMoment(moment.moments.first.id),
+                    onTap: () => WayaNav.to(
+                      transition: Transition.downToUp,
+                      duration: const Duration(milliseconds: 600),
+                      ViewMoment(moments: moment.moments, isMine: false),
                     ),
                   ),
                   const Gap(6),
@@ -155,7 +156,9 @@ class PopModal extends StatelessWidget {
                 textAlign: TextAlign.start,
                 "Create New Moment",
                 style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
-                    color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp, fontWeight: FontWeight.w500),
+                    color: wayaTheme.colorScheme.customBlack,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500),
               ),
             ),
             SizedBox(height: 10),
@@ -168,7 +171,9 @@ class PopModal extends StatelessWidget {
                 "View Moment",
                 textAlign: TextAlign.start,
                 style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
-                    color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp, fontWeight: FontWeight.w500),
+                    color: wayaTheme.colorScheme.customBlack,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500),
               ),
             ),
           ],

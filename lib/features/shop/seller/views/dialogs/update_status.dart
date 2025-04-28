@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:gap/gap.dart';
@@ -43,7 +42,7 @@ class _UpdateStatusState extends State<UpdateStatus> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    print(widget.currentStatus);
+    debugPrint(widget.currentStatus);
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16, horizontal: 14),
       decoration: BoxDecoration(

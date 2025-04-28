@@ -13,11 +13,9 @@ import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
-import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 
 import 'package:wayagram/features/shop/order/data/model/order_response_model.dart';
-import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/dispute_chat.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/dispute_chat/widgets/dispute_profile_picture.dart';
 import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';

@@ -18,8 +18,7 @@ class AddDeliveryDetails extends ConsumerStatefulWidget {
   const AddDeliveryDetails({super.key, required this.data});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _AddDeliveryDetailsState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _AddDeliveryDetailsState();
 }
 
 class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
@@ -33,8 +32,7 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
     return Container(
         padding: EdgeInsets.symmetric(vertical: 16, horizontal: 14),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.horizontal(
-              left: Radius.circular(16), right: Radius.circular(16)),
+          borderRadius: BorderRadius.horizontal(left: Radius.circular(16), right: Radius.circular(16)),
         ),
         child: SingleChildScrollView(
           child: Column(
@@ -42,9 +40,7 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text("Populate Delivery Details",
-                  textAlign: TextAlign.start,
-                  style: wayaTheme.textTheme.headlineMedium),
+              Text("Populate Delivery Details", textAlign: TextAlign.start, style: wayaTheme.textTheme.headlineMedium),
               const Gap(12),
               Text(
                 "Add the delivery price and date of delivery for this order so the customer can review and pay",
@@ -99,25 +95,20 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                                 keyboardType: TextInputType.number,
                                 controller: viewModel.deliveryPrice,
                                 hintText: 'Enter Total Delivery Price',
-                                borderColor: formState.hasError &&
-                                        viewModel.deliveryPrice.text.isEmpty
+                                borderColor: formState.hasError && viewModel.deliveryPrice.text.isEmpty
                                     ? wayaTheme.colorScheme.error
                                     : null,
                                 label: 'Delivery Price',
                                 suffixIcon: Padding(
                                   padding: EdgeInsets.symmetric(vertical: 15),
-                                  child: Text("NGN",
-                                      style: wayaTheme.textTheme.hintStyle),
+                                  child: Text("NGN", style: wayaTheme.textTheme.hintStyle),
                                 )),
-                            if (formState.hasError &&
-                                viewModel.deliveryPrice.text.isEmpty)
+                            if (formState.hasError && viewModel.deliveryPrice.text.isEmpty)
                               Padding(
                                 padding: const EdgeInsets.only(top: 5),
                                 child: Text(
                                   formState.errorText!,
-                                  style: TextStyle(
-                                      color: wayaTheme.colorScheme.error,
-                                      fontSize: 12.sp),
+                                  style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                                 ),
                               ),
                           ],
@@ -137,60 +128,39 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text("Delivery Date",
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
-                                      ?.wayaCopyWith(
+                                  style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
                                         fontSize: 14.sp,
-                                        color:
-                                            wayaTheme.colorScheme.greyColor900,
+                                        color: wayaTheme.colorScheme.greyColor900,
                                       )),
                               const Gap(4),
                               WayaButton(
                                 callback: () {
-                                  ref
-                                      .read(addDeliveryDetailsViewModelProvider
-                                          .notifier)
-                                      .showDatePickerDialog(context);
+                                  ref.read(addDeliveryDetailsViewModelProvider.notifier).showDatePickerDialog(context);
                                 },
                                 horizontalPadding: 0,
                                 color: wayaTheme.colorScheme.transparent,
                                 centerWidget: Focus(
                                     onFocusChange: (hasFocus) {
-                                      ref
-                                          .read(
-                                              addDeliveryDetailsViewModelProvider
-                                                  .notifier)
-                                          .focusChanged(hasFocus);
+                                      ref.read(addDeliveryDetailsViewModelProvider.notifier).focusChanged(hasFocus);
                                     },
                                     child: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 10),
+                                      padding: EdgeInsets.symmetric(horizontal: 10),
                                       child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
                                               viewModel.deliveryDate.isEmpty
                                                   ? 'Select Delivery Date'
                                                   : viewModel.deliveryDate,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .bodyMedium
-                                                  ?.wayaCopyWith(
+                                              style: Theme.of(context).textTheme.bodyMedium?.wayaCopyWith(
                                                     fontSize: 14.sp,
-                                                    color: viewModel
-                                                            .deliveryDate
-                                                            .isEmpty
-                                                        ? wayaTheme.colorScheme
-                                                            .greyColor300
-                                                        : wayaTheme.colorScheme
-                                                            .customBlack,
+                                                    color: viewModel.deliveryDate.isEmpty
+                                                        ? wayaTheme.colorScheme.greyColor300
+                                                        : wayaTheme.colorScheme.customBlack,
                                                   )),
                                           Icon(
                                             Icons.date_range,
-                                            color: wayaTheme
-                                                .colorScheme.greyColor300,
+                                            color: wayaTheme.colorScheme.greyColor300,
                                           )
                                         ],
                                       ),
@@ -201,15 +171,12 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                                         ? wayaTheme.colorScheme.customPrimary
                                         : wayaTheme.colorScheme.greyColor300),
                               ),
-                              if (formState.hasError &&
-                                  viewModel.deliveryDate.isEmpty)
+                              if (formState.hasError && viewModel.deliveryDate.isEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 5),
                                   child: Text(
                                     formState.errorText!,
-                                    style: TextStyle(
-                                        color: wayaTheme.colorScheme.error,
-                                        fontSize: 12.sp),
+                                    style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
                                   ),
                                 ),
                             ],
@@ -221,16 +188,9 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                           callback: !viewModel.isLoading
                               ? () {
                                   if (_formKey.currentState!.validate()) {
-                                    ref
-                                        .read(
-                                            addDeliveryDetailsViewModelProvider
-                                                .notifier)
-                                        .deliveryUpdate(
-                                            deliveryAddress: address,
-                                            userId: widget.data.userId,
-                                            shopId: shopId);
-                                    WayaSnackBar.showToast(
-                                        "Delivery detail updated");
+                                    ref.read(addDeliveryDetailsViewModelProvider.notifier).deliveryUpdate(
+                                        deliveryAddress: address, userId: widget.data.userId, shopId: shopId);
+                                    WayaSnackBar.showToast("Delivery detail updated");
 
                                     WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
                                   }
@@ -246,8 +206,7 @@ class _AddDeliveryDetailsState extends ConsumerState<AddDeliveryDetails> {
                   },
                   textColor: wayaTheme.colorScheme.greyColor500,
                   color: wayaTheme.colorScheme.transparent,
-                  border: Border.all(
-                      color: wayaTheme.colorScheme.greyColor500, width: 1),
+                  border: Border.all(color: wayaTheme.colorScheme.greyColor500, width: 1),
                   text: 'Cancel')
             ],
           ),
@@ -270,12 +229,13 @@ class AddDeliveryDetailState {
     this.isFocused = false,
   }) : deliveryPrice = deliveryPrice ?? TextEditingController();
 
-  AddDeliveryDetailState copyWith(
-      {bool? isLoading,
-      TextEditingController? deliveryPrice,
-      String? deliveryDate,
-      bool? isFocused,
-      String? deliveryDateIso}) {
+  AddDeliveryDetailState copyWith({
+    bool? isLoading,
+    TextEditingController? deliveryPrice,
+    String? deliveryDate,
+    bool? isFocused,
+    String? deliveryDateIso,
+  }) {
     return AddDeliveryDetailState(
         isLoading: isLoading ?? this.isLoading,
         deliveryPrice: deliveryPrice ?? this.deliveryPrice,
@@ -285,12 +245,10 @@ class AddDeliveryDetailState {
   }
 }
 
-class AddDeliveryDetailsViewModel
-    extends StateNotifier<AddDeliveryDetailState> {
+class AddDeliveryDetailsViewModel extends StateNotifier<AddDeliveryDetailState> {
   final Ref ref;
   final CartRepository _cartRepository;
-  AddDeliveryDetailsViewModel(this._cartRepository, this.ref)
-      : super(AddDeliveryDetailState());
+  AddDeliveryDetailsViewModel(this._cartRepository, this.ref) : super(AddDeliveryDetailState());
 
   void focusChanged(bool hasFocus) {
     state = state.copyWith(isFocused: hasFocus);
@@ -301,25 +259,22 @@ class AddDeliveryDetailsViewModel
       final currentYear = DateTime.now().year;
       final nextYear = currentYear + 1;
       final response = await showDatePicker(
-          context: context,
-          firstDate: DateTime(1950),
-          lastDate: DateTime(nextYear),
-          initialDate: DateTime.now());
+        context: context,
+        firstDate: DateTime.now(),
+        lastDate: DateTime(nextYear),
+        initialDate: DateTime.now(),
+      );
 
       if (response != null) {
-        state = state.copyWith(
-            deliveryDate: "${response.year}-${response.month}-${response.day}");
+        state = state.copyWith(deliveryDate: "${response.year}-${response.month}-${response.day}");
         state = state.copyWith(deliveryDateIso: response.toIso8601String());
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
-  Future<void> deliveryUpdate(
-      {required String deliveryAddress,
-      required String userId,
-      required String shopId}) async {
+  Future<void> deliveryUpdate({required String deliveryAddress, required String userId, required String shopId}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _cartRepository.updateDeliveryFee(
@@ -333,13 +288,12 @@ class AddDeliveryDetailsViewModel
         state = AddDeliveryDetailState();
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }
   }
 }
 
-final addDeliveryDetailsViewModelProvider =
-    StateNotifierProvider<AddDeliveryDetailsViewModel, AddDeliveryDetailState>(
-        (ref) => AddDeliveryDetailsViewModel(CartRepository(), ref));
+final addDeliveryDetailsViewModelProvider = StateNotifierProvider<AddDeliveryDetailsViewModel, AddDeliveryDetailState>(
+    (ref) => AddDeliveryDetailsViewModel(CartRepository(), ref));

@@ -1,18 +1,11 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/padding_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
 import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -26,14 +19,13 @@ class ManageLeaderboardContest extends StatefulHookConsumerWidget {
   const ManageLeaderboardContest({super.key});
 
   @override
-  ConsumerState<ManageLeaderboardContest> createState() =>
-      _ManageStateContestState();
+  ConsumerState<ManageLeaderboardContest> createState() => _ManageStateContestState();
 }
 
 class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     final dashboardVm = ref.read(ugtAdminDashboardVm);
     final viewModel = ref.watch(votersContestNotifier);
     var model = ref.watch(selectedContestProvider);
@@ -122,10 +114,7 @@ class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
                   final post = viewModel.myContestList[index];
                   return GestureDetector(
                     onTap: () {},
-                    child: UgtLeaderboardCard(
-                        model: model!,
-                        position: index + 1,
-                        contestantData: post),
+                    child: UgtLeaderboardCard(model: model!, position: index + 1, contestantData: post),
                   );
                 },
               ),
@@ -137,8 +126,7 @@ class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
     );
   }
 
-  Widget _buildStatCard(
-      BuildContext context, String title, String value, Widget widget) {
+  Widget _buildStatCard(BuildContext context, String title, String value, Widget widget) {
     final wayaTheme = Theme.of(context);
     return Expanded(
       child: Container(
@@ -156,15 +144,12 @@ class _ManageStateContestState extends ConsumerState<ManageLeaderboardContest> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title,
-                    textAlign: TextAlign.start,
-                    style: WayaTextStyles.hintStyleBold),
+                Text(title, textAlign: TextAlign.start, style: WayaTextStyles.hintStyleBold),
                 Container(
                     width: 50.w, // Must be equal to height for a perfect circle
                     height: 50.w,
                     decoration: BoxDecoration(
-                      color:
-                          wayaTheme.colorScheme.primary500, // Background color
+                      color: wayaTheme.colorScheme.primary500, // Background color
                       shape: BoxShape.circle, // Makes the container circular
                       border: Border.all(
                         color: Colors.white, // Optional: Border color

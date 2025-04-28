@@ -1,13 +1,14 @@
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/data/model/add_event_request_model.dart';
 import 'package:wayagram/features/event/data/model/update_event_request_model.dart';
 
 class EventRepository extends BaseRepository {
-  static const serviceUrl = "wayagram-graph/api/v2";
+  static const serviceUrl = WayaServiceUri.graph;
 
   Future<WayaRequestResponse> createEvent(AddEventRequestModel payload) {
-    return post("$serviceUrl/events/create", payload.toJson(), formdata: false);
+    return post("$serviceUrl/events/create", payload.toJson(), formdata: false, showErrors: true);
   }
 
   Future<WayaRequestResponse> getEvents({int? limit = 500, int? page = 1}) {
@@ -23,21 +24,18 @@ class EventRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> editEvent(UpdateEventRequestModel payload, String id) {
-    return patch("$serviceUrl/events/edit-event/$id", payload.toJson(), formdata: false);
+    return patch("$serviceUrl/events/edit-event/$id", payload.toJson(), formdata: false, showErrors: true);
   }
 
   Future<WayaRequestResponse> joinEvent({required String userId, required String eventId}) {
-    return post(
-      "$serviceUrl/join-events",
-      {"userId": userId, "eventId": eventId},
-    );
+    return post("$serviceUrl/join-events", {"userId": userId, "eventId": eventId}, showErrors: true);
   }
 
   Future<WayaRequestResponse> reportEvent(
       {required String userId, required String eventId, required String reason, String? comment}) {
     final payload = {"userId": userId, "eventId": eventId, "reason": reason};
     if (comment != null) payload['comment'] = comment;
-    return post("$serviceUrl/join-events", payload);
+    return post("$serviceUrl/join-events", payload, showErrors: true);
   }
 
   Future<WayaRequestResponse> joinedUsers({required String id, int? page = 100, int? limit = 10}) {

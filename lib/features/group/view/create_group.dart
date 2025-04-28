@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -30,22 +29,21 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
 
   File? _selectedImage; // Holds the selected image
   File? _coverImage; // Holds the selected image
-  final ImagePicker _picker = ImagePicker();
 
   Future<void> _pickImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await WayaUtils.pickAndCropImage(16, 9);
     if (pickedFile != null) {
       setState(() {
-        _selectedImage = File(pickedFile.path);
+        _selectedImage = pickedFile;
       });
     }
   }
 
   Future<void> _pickCoverImage() async {
-    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    final pickedFile = await WayaUtils.pickAndCropImage(1, 1);
     if (pickedFile != null) {
       setState(() {
-        _coverImage = File(pickedFile.path);
+        _coverImage = pickedFile;
       });
     }
   }
@@ -69,38 +67,47 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
         child: WayaButton(
           callback: !viewModel.isLoading
               ? () async {
-                  if (_formKey.currentState!.validate()) {
-                    if (!sel && !sel2) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Select group type',
-                            style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+                  //? If there is no type selected for this page currently...
+                  if (!sel && !sel2) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Select group type',
+                          style: TextStyle(
+                            fontFamily: WayaConstants.fontFamily,
+                            fontSize: 12.sp,
                           ),
-                          backgroundColor: Colors.red,
-                          duration: Duration(seconds: 2),
                         ),
-                      );
-                    } else if (_selectedImage == null || _coverImage == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            'Add Images',
-                            style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+                        backgroundColor: Colors.red,
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
+
+                  //? If there are  no images selected for this group yet...
+                  else if (!(_selectedImage?.existsSync() ?? false) || !(_coverImage?.existsSync() ?? false)) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'You must add a cover photo and profile image',
+                          style: TextStyle(
+                            fontFamily: WayaConstants.fontFamily,
+                            fontSize: 12.sp,
                           ),
-                          backgroundColor: Colors.red,
-                          duration: Duration(seconds: 2),
                         ),
-                      );
-                    } else {
-                      WayaNav.toNamed("/confirmGroupDetails", arguments: {
-                        'image': _selectedImage,
-                        'coverImage': _coverImage,
-                        'type': sel ? 'Public Group' : 'Private Group'
-                      }
-                          // arguments: sel?'Public Group': 'Private Group',
-                          );
-                    }
+                        backgroundColor: Colors.red,
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                  }
+
+                  //? Since there are no immediately noticeable issues, continue.
+                  else if (_formKey.currentState!.validate()) {
+                    WayaNav.toNamed("/confirmGroupDetails", arguments: {
+                      'image': _selectedImage,
+                      'coverImage': _coverImage,
+                      'type': sel ? 'Public Group' : 'Private Group'
+                    });
                   }
                 }
               : null,
@@ -173,9 +180,12 @@ class _CreateGroupState extends ConsumerState<CreateGroup> {
                         backgroundColor: wayaTheme.colorScheme.greyColor200,
                         backgroundImage: _coverImage != null ? FileImage(_coverImage!) : null,
                         child: _coverImage == null
-                            ? Icon(
-                                Icons.person,
-                                color: wayaTheme.colorScheme.greyColor600,
+                            ? GestureDetector(
+                                onTap: _pickCoverImage,
+                                child: Icon(
+                                  Icons.person,
+                                  color: wayaTheme.colorScheme.greyColor600,
+                                ),
                               )
                             : null,
                       ),

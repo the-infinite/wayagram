@@ -8,10 +8,8 @@ import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/activity_logs/data/model/payment_activity_model.dart';
 import 'package:wayagram/features/activity_logs/vm/activity_logs_vm.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
@@ -162,7 +160,7 @@ class _UserInteractionState extends ConsumerState<UserInteraction > {
   sortList(s) {
     final viewModel = ref.watch(activityLogsVmProvider);
     viewModel.userInteractionDocs = [];
-    print('ACTIVITY End ====> ${s}');
+    debugPrint('ACTIVITY End ====> $s');
     setState(() {
       if(s == 'all time'){
         viewModel.userInteractionDocs = viewModel.userInteractionDocs1;
@@ -177,24 +175,24 @@ class _UserInteractionState extends ConsumerState<UserInteraction > {
           String a = DateTime.now().add(Duration(days: i)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2,'0'));
-          print('AAAA $b');
+          debugPrint('AAAA $b');
         }
 
         for (int i = 0; i < y; i++) {
           String a = DateTime.now().subtract(Duration(days: i +1)).toString().split(' ')[0];
           String b = a.split('-')[2];
           allWeekDays.add(b.padLeft(2,'0'));
-          print('AAAABBBBB $b');
+          debugPrint('AAAABBBBB $b');
         }
 
-        print('WeekDAY $w');
+        debugPrint('WeekDAY $w');
         for (int i = 0; i < viewModel.userInteractionDocs1.length; i++) {
           String week = viewModel.userInteractionDocs1[i].createdAt.toString().split('T')[0];
           if (allWeekDays.contains(week.split('-')[2]) ) {
             viewModel.userInteractionDocs.add(viewModel.userInteractionDocs1[i]);
           }
         }
-        print('ACTIVIVBVB ${viewModel.userInteractionDocs.length}');
+        debugPrint('ACTIVIVBVB ${viewModel.userInteractionDocs.length}');
       } else if(s =='this month'){
         String m =  DateTime.now().month.toString().padLeft(2,'0');
         for (int i = 0; i < viewModel.userInteractionDocs1.length; i++) {

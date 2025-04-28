@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
@@ -9,7 +8,7 @@ class UgtDetailsGallery extends ConsumerStatefulWidget {
   const UgtDetailsGallery(this.model, {super.key});
 
   @override
-  _UgtDetailsGalleryState createState() => _UgtDetailsGalleryState();
+  ConsumerState<UgtDetailsGallery> createState() => _UgtDetailsGalleryState();
 }
 
 class _UgtDetailsGalleryState extends ConsumerState<UgtDetailsGallery> {
@@ -24,7 +23,7 @@ class _UgtDetailsGalleryState extends ConsumerState<UgtDetailsGallery> {
   Widget build(BuildContext context) {
     // final posts = ref.watch(postProvider);
 
-    final wayaTheme = Theme.of(context);
+    // final wayaTheme = Theme.of(context);
     // final postNotifier = ref.read(postProvider.notifier);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -63,8 +62,7 @@ class _UgtDetailsGalleryState extends ConsumerState<UgtDetailsGallery> {
   Widget emptyWidget() {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc:
-            "You don’t have any active contest here. Create a \n contest and have different participant",
+        desc: "You don’t have any active contest here. Create a \n contest and have different participant",
         title: "No Contest Created",
         buttonText: "Host a Contest",
         onTap: () {

@@ -42,8 +42,7 @@ class _ExportTransactionState extends State<ExportTransaction> {
   Future<void> _selectDate(BuildContext context, bool isStartDate) async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate:
-          isStartDate ? startDate ?? DateTime.now() : endDate ?? DateTime.now(),
+      initialDate: isStartDate ? startDate ?? DateTime.now() : endDate ?? DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );
@@ -71,7 +70,7 @@ class _ExportTransactionState extends State<ExportTransaction> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           Text(
+          Text(
             'Export Transaction',
             style: TextStyle(
               fontSize: 24.sp,
@@ -79,7 +78,7 @@ class _ExportTransactionState extends State<ExportTransaction> {
             ),
           ),
           const SizedBox(height: 20),
-           Text(
+          Text(
             'Time Frame',
             style: TextStyle(
               fontSize: 16.sp,
@@ -97,7 +96,7 @@ class _ExportTransactionState extends State<ExportTransaction> {
             ],
           ),
           const SizedBox(height: 20),
-           Text(
+          Text(
             'Start Date',
             style: TextStyle(
               fontSize: 16.sp,
@@ -107,7 +106,7 @@ class _ExportTransactionState extends State<ExportTransaction> {
           const SizedBox(height: 10),
           _buildDateField(context, true),
           const SizedBox(height: 20),
-           Text(
+          Text(
             'End Date',
             style: TextStyle(
               fontSize: 16.sp,
@@ -122,7 +121,7 @@ class _ExportTransactionState extends State<ExportTransaction> {
             child: ElevatedButton(
               onPressed: () {
                 // Handle export logic here
-                print('Exporting transactions from ${startDate} to ${endDate}');
+                debugPrint('Exporting transactions from $startDate to $endDate');
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepOrange,
@@ -131,7 +130,7 @@ class _ExportTransactionState extends State<ExportTransaction> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child:  Text(
+              child: Text(
                 'Export Transaction',
                 style: TextStyle(
                   color: Colors.white,
@@ -193,9 +192,7 @@ class _ExportTransactionState extends State<ExportTransaction> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              date != null
-                  ? DateFormat('MMMM dd\'th\' yyyy').format(date)
-                  : 'Select date',
+              date != null ? DateFormat('MMMM dd\'th\' yyyy').format(date) : 'Select date',
               style: TextStyle(
                 color: date != null ? Colors.black : Colors.grey,
               ),

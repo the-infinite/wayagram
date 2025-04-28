@@ -202,8 +202,8 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
       final response = await showDatePicker(
           context: context,
           firstDate: DateTime(1950),
-          lastDate: DateTime.now(),
-          initialDate: DateTime.now());
+          lastDate: DateTime.now().subtract(const Duration(days: 365 * 18)),
+          initialDate: DateTime.now().subtract(const Duration(days: 365 * 18)));
 
       if (response != null) {
         final dateOfBirth =
@@ -213,7 +213,7 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
             dateOfBirth: dateOfBirth, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 
@@ -224,7 +224,7 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
       state = state.copyWith(isLoading: true);
       final accountState = ref.watch(selectAccountProvider);
       final bool isPersonal = accountState.selectedType!.type == 'PERSONAL';
-      // print("isPersonal $isPersonal");
+      // debugPrint("isPersonal $isPersonal");
       final response = await _authRepository.register(Register(
         email: state.email.text,
         password: state.password.text,

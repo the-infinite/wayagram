@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -73,9 +72,7 @@ class _EventDateWidgetState extends ConsumerState<EventDateWidget> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                            widget.date.isEmpty
-                                ? widget.hintText
-                                : widget.date,
+                            widget.date.isEmpty ? widget.hintText : widget.date,
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium
@@ -135,31 +132,30 @@ class EventDateWidgetVm extends StateNotifier<EventDateWidgetState> {
   }
 
   Future<void> showDatePickerDialog(BuildContext context,
-    Function({required String date, required String iso}) selectDate) async {
-  try {
-    final currentYear = DateTime.now().year;
-    final nextYear = currentYear + 1;
-    final response = await showDatePicker(
-      context: context,
-      firstDate: DateTime(1950),
-      lastDate: DateTime(nextYear),
-      initialDate: DateTime.now(),
-    );
-
-    if (response != null) {
-      String formattedDate =
-          "${response.year}-${response.month.toString().padLeft(2, '0')}-${response.day.toString().padLeft(2, '0')}";
-
-      selectDate(
-        date: formattedDate, 
-        iso: response.toIso8601String(), 
+      Function({required String date, required String iso}) selectDate) async {
+    try {
+      final currentYear = DateTime.now().year;
+      final nextYear = currentYear + 1;
+      final response = await showDatePicker(
+        context: context,
+        firstDate: DateTime.now(),
+        lastDate: DateTime(nextYear),
+        initialDate: DateTime.now(),
       );
-    }
-  } catch (error) {
-    print(error);
-  }
-}
 
+      if (response != null) {
+        String formattedDate =
+            "${response.year}-${response.month.toString().padLeft(2, '0')}-${response.day.toString().padLeft(2, '0')}";
+
+        selectDate(
+          date: formattedDate,
+          iso: response.toIso8601String(),
+        );
+      }
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+  }
 }
 
 final eventDateWidgetVmProvider = StateNotifierProvider.family<

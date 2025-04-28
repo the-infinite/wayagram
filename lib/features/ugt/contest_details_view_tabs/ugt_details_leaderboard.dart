@@ -1,11 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
-import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
@@ -15,7 +12,7 @@ class UgtDetailsLeaderboard extends ConsumerStatefulWidget {
   const UgtDetailsLeaderboard(this.model, {super.key});
 
   @override
-  _UgtDetailsLeaderboardState createState() => _UgtDetailsLeaderboardState();
+  ConsumerState<UgtDetailsLeaderboard> createState() => _UgtDetailsLeaderboardState();
 }
 
 class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
@@ -29,11 +26,10 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
   @override
   Widget build(BuildContext context) {
     // final posts = ref.watch(postProvider);
-
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     // final postNotifier = ref.read(postProvider.notifier);
     final viewModel = ref.read(votersContestNotifier);
-    final notifier = ref.read(votersContestNotifier.notifier);
+    //final notifier = ref.read(votersContestNotifier.notifier);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -41,18 +37,14 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
       children: [
         //  UgtLeaderboardCard(),
 
-        if(viewModel.myContestList.isEmpty)emptyWidget(),
-          if (viewModel.isLoading!) 
-               Center(child: CircularProgressIndicator()),
-            
-
+        if (viewModel.myContestList.isEmpty) emptyWidget(),
+        if (viewModel.isLoading!) Center(child: CircularProgressIndicator()),
 
         ListView.builder(
           controller: _scrollController,
           shrinkWrap: true,
           itemCount: viewModel.myContestList.length,
           itemBuilder: (context, index) {
-          
             final post = viewModel.myContestList[index];
             return GestureDetector(
               onTap: () {
@@ -62,10 +54,7 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
                   '/contest-profile-page',
                 );
               },
-              child: UgtLeaderboardCard(
-                  model: widget.model!,
-                  position: index + 1,
-                  contestantData: post),
+              child: UgtLeaderboardCard(model: widget.model!, position: index + 1, contestantData: post),
             );
           },
         ),
@@ -100,17 +89,15 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
     );
   }
 
-
   Widget emptyWidget() {
     return UgtEmptyState(
-        icon: Image.asset("assets/images/u-emptystate.png"),
-        desc: "There is no Contestant for this contest yet",
-        title: "No Post Created",
-        buttonText: "",
-        hideButton: false,
-        onTap: () {
-         
-        });
+      icon: Image.asset("assets/images/u-emptystate.png"),
+      desc: "There is no Contestant for this contest yet",
+      title: "No Post Created",
+      buttonText: "",
+      hideButton: false,
+      onTap: () {},
+    );
   }
 
   @override

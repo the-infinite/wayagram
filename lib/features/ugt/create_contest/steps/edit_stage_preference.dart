@@ -1,21 +1,14 @@
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import '../../../../core/components/waya_buttons.dart';
-import '../../../../core/components/waya_scaffold.dart';
-import '../../../../core/components/waya_select_field.dart';
-import '../../../../core/components/waya_text_form_field.dart';
 import '../../../../core/utils/waya_navigation.dart';
 
 import '../../data/controller/contest_controller.dart';
@@ -41,7 +34,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
     StagePrefModel model = ref.read(stateContactProvider.notifier).state[
         _contestController
             .selectedIndex]; /* state.firstWhere((value) {
-        print("${value.toJson()}");
+        debugPrint("${value.toJson()}");
       return _contestController.selectedIndex == value.id;
     }); */
     final entryType = useState(model.entryType ?? "Paid");
@@ -470,7 +463,7 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           Select(label: "No", value: "0")
                         ],
                         onSelected: (value) {
-                          print(" i am poo ${value.first.label}");
+                          debugPrint(" i am poo ${value.first.label}");
                           if (value.first.label == "Free") {
                             _contestController
                                 .contestPrizeWinnerTextController.text = "0";

@@ -27,7 +27,7 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
     final wayaTheme = Theme.of(context);
     //final type  = ModalRoute.of(context)?.settings.arguments as String?;
     //final dynamic args  = ModalRoute.of(context)?.settings.arguments;
-    //print("GROUP TYPE ID  ${args['id']}");
+    //debugPrint("GROUP TYPE ID  ${args['id']}");
     return WayaScaffold(
       removeAppBar: false,
       isLoading: viewModel.isLoading,
@@ -65,7 +65,8 @@ class _SuccessGroupState extends ConsumerState<SuccessGroup> {
           WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-                    WayaNav.toNamed("/groups");
+                    WayaNav.toNamed("/groups",
+                        arguments: {'index': 2});
                   }
                 : null,
             centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Manage Group'),

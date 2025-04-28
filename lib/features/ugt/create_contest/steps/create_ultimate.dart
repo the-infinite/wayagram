@@ -67,7 +67,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
     useEffect(() {
       if (isEditing) {
         Future.delayed(Duration(seconds: 1), () {
-          //  print("my title ${contestViewModel?.toJson()}");
+          //  debugPrint("my title ${contestViewModel?.toJson()}");
           notifier.title.text = contestViewModel?.title ?? "";
           notifier.description.text = contestViewModel?.description ?? "";
           notifier.winnerPrize.text = contestViewModel?.winnerPrize ?? "";
@@ -180,7 +180,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   items:
                       ref.read(contestNotifierProvider.notifier).ugtCategory(),
                   onSelected: (value) {
-                    print('eee ${value.first.toJson()}');
+                    debugPrint('eee ${value.first.toJson()}');
                     ref
                         .read(contestNotifierProvider.notifier)
                         .update(value.first, "contestCat");
@@ -217,7 +217,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                   hintText: 'Select Contest State',
                   items: ref.read(contestNotifierProvider.notifier).ugtStates(),
                   onSelected: (value) {
-                    print(" heree $value");
+                    debugPrint(" heree $value");
                     return ref
                         .read(contestNotifierProvider.notifier)
                         .selectState(value.first);
@@ -516,7 +516,7 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
                         name: 'NGN', symbol: 'NGN', locale: 'en_NG')
                   ],
                   onChanged: (value) {
-                    print(
+                    debugPrint(
                         "Amount in word${value.replaceAll(",", "").substring(3)}");
                     if (value.trim().isNotEmpty) {
                       if (double.parse(

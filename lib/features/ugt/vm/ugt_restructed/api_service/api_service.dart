@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../../data/model/category_model.dart';
 
 class ApiService {
   final String baseUrl = "https://services.staging.wayagram.ng/school-contest/api/v1";
@@ -22,7 +21,7 @@ class ApiService {
       body: jsonEncode({"name": name, "job": job}),
     );
     if (kDebugMode) {
-      print("response => ${response.body}");
+      debugPrint("response => ${response.body}");
     }
     if (response.statusCode == 201) {
       return CreateUser.fromJson(jsonDecode(response.body));

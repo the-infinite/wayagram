@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -8,10 +7,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_history_card.dart';
-import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_leaderboard_card.dart';
 import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
-import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
-import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/ugt_empty_state.dart';
 
 import '../../../core/components/waya_scaffold.dart';
@@ -21,17 +17,16 @@ class AdminTransactionHistory extends StatefulHookConsumerWidget {
   const AdminTransactionHistory({super.key});
 
   @override
-  ConsumerState<AdminTransactionHistory> createState() =>
-      _ManageStateContestState();
+  ConsumerState<AdminTransactionHistory> createState() => _ManageStateContestState();
 }
 
 class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     final dashboardVm = ref.read(ugtAdminDashboardVm);
-    final viewModel = ref.watch(votersContestNotifier);
-    var model = ref.watch(selectedContestProvider);
+    //final viewModel = ref.watch(votersContestNotifier);
+    //var model = ref.watch(selectedContestProvider);
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -133,8 +128,7 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
     );
   }
 
-  Widget _buildStatCard(
-      BuildContext context, String title, String value, Widget widget) {
+  Widget _buildStatCard(BuildContext context, String title, String value, Widget widget) {
     final wayaTheme = Theme.of(context);
     return Expanded(
       child: Container(
@@ -152,15 +146,12 @@ class _ManageStateContestState extends ConsumerState<AdminTransactionHistory> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(title,
-                    textAlign: TextAlign.start,
-                    style: WayaTextStyles.hintStyleBold),
+                Text(title, textAlign: TextAlign.start, style: WayaTextStyles.hintStyleBold),
                 Container(
                     width: 50.w, // Must be equal to height for a perfect circle
                     height: 50.w,
                     decoration: BoxDecoration(
-                      color:
-                          wayaTheme.colorScheme.primary500, // Background color
+                      color: wayaTheme.colorScheme.primary500, // Background color
                       shape: BoxShape.circle, // Makes the container circular
                       border: Border.all(
                         color: Colors.white, // Optional: Border color

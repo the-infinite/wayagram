@@ -8,7 +8,6 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
 import 'package:wayagram/features/shop/filter/constants/filter_options.dart';
-import 'package:wayagram/features/shop/seller/data/model/add_product_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/category_response_model.dart';
@@ -17,6 +16,7 @@ import 'package:wayagram/features/shop/seller/views/manage_shop/manage_shop.dart
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
+import 'package:wayagram/features/shop/vm/shop_vm.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 final addProductProvider =
@@ -77,10 +77,10 @@ class AddProductVm extends StateNotifier<AddProductState> {
         }
         state = state.copyWith(uploadedDocuments: updatedDocuments);
       } else {
-        print("No images were selected.");
+        debugPrint("No images were selected.");
       }
     }).catchError((error) {
-      print("Error picking images: $error");
+      debugPrint("Error picking images: $error");
     });
   }
 
@@ -103,7 +103,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
         DiscountsResponse responseModel =
             DiscountsResponse.fromJson(response.data);
         final filtered =
-            responseModel.discounts.where((v) => v.active).toList();
+            responseModel.discounts.where((v) => v.active && !v.deal).toList();
         allDiscounts = filtered.map((val) {
           return Select(label: "${val.type} ${val.percentage}%", value: val.id);
         }).toList();
@@ -115,7 +115,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
       return SelectTypePaginatedResult(
           items: allDiscounts, totalPages: state.totalNoOfDiscountPages);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     }
   }
@@ -140,7 +140,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
       return SelectTypePaginatedResult(
           items: allDiscounts, totalPages: state.totalNoOfDiscountPages);
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       return null;
     }
   }
@@ -213,7 +213,6 @@ class AddProductVm extends StateNotifier<AddProductState> {
         }
       }
       state = state.copyWith(images: addedimages);
-
       final response = state.isEditMode
           ? await _shopRepository.editProductRequest(
               payload: state.addProductModel, productId: state.productId)
@@ -227,6 +226,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
             message:
                 "Your product has been submitted. We'll notify you \n once it's reviewed.",
             onPress: () {
+              WayaNav.goBack();
               WayaNav.replaceNamed(WayaGramDeals.route);
               // reset();
             },
@@ -234,6 +234,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
             buttonText: 'View Application Status',
             secondButtonText: 'Go to Dashboard',
             onCancel: () {
+              WayaNav.goBack();
               WayaNav.replaceNamed(ManageShop.route, arguments: state.shopId);
               // reset();
             },
@@ -249,6 +250,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
                 ? "Your product has been updated and changes are now live."
                 : "Your product is now live in your shop and ready for customers to discover.",
             onPress: () {
+              WayaNav.goBack();
               WayaNav.replaceNamed(ManageShop.route, arguments: state.shopId);
               //reset();
             },
@@ -256,16 +258,23 @@ class AddProductVm extends StateNotifier<AddProductState> {
             buttonText: 'Add Another Product',
             secondButtonText: 'Go to Shop',
             onCancel: () {
+              WayaNav.goBack();
               WayaNav.removeUntilNamed(BottomView.route, arguments: 1);
               //reset();
             });
       } else {
+        if (response.data['responseCode'] == 704) {
+          WayaSnackBar.showToast("Access not granted by the shop owner");
+
+          return;
+        }
+
         WayaSnackBar.showToast("${response.data["data"]}");
-        //print(response.data);
+        //debugPrint(response.data.toString());
       }
       //
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isLoading: false);
     }
@@ -316,10 +325,13 @@ class AddProductVm extends StateNotifier<AddProductState> {
       final response = await _shopRepository.deleteProductRequest(
           shopId: shopId, productId: productId);
       if (response.success) {
+        await ref
+            .read(shopVmProvider.notifier)
+            .getAllProducts(page: 1, limit: 20);
         WayaNav.replaceNamed(ManageShop.route, arguments: shopId);
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     } finally {
       state = state.copyWith(isDeleting: true);
     }
@@ -359,9 +371,12 @@ class AddProductVm extends StateNotifier<AddProductState> {
         isWayagramDeal: product.wayagramDeal == null ? false : true,
         includeMeasurement:
             product.height != 0 || product.width != 0 || product.depth != 0,
-        productHeight: TextEditingController(text: product.height.toString()),
-        productWidth: TextEditingController(text: product.height.toString()),
-        productDepth: TextEditingController(text: product.height.toString()),
+        productHeight:
+            TextEditingController(text: product.height?.toString() ?? ''),
+        productWidth:
+            TextEditingController(text: product.width?.toString() ?? ''),
+        productDepth:
+            TextEditingController(text: product.depth?.toString() ?? ''),
         discountPercentage: TextEditingController(
             text: product.discountPercentage.toInt().toString()),
         discountType: product.discountTypeId,
@@ -400,7 +415,7 @@ class AddProductVm extends StateNotifier<AddProductState> {
         state = state.copyWith(uploadedDocuments: existingImages);
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
       state = state.copyWith(isLoadingEditingMode: false);
     }
   }

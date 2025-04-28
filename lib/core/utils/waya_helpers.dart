@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -63,12 +65,12 @@ class WayaHelpers {
     return formattedCurrency;
   }
 
-  static void countFormCharacters(TextEditingController contoller, int length) {
-    if (contoller.text.length >= length) {
-      contoller.text = contoller.text.substring(0, length);
+  static void countFormCharacters(TextEditingController controller, int length) {
+    if (controller.text.length >= length) {
+      controller.text = controller.text.substring(0, length);
 
-      contoller.selection = TextSelection.fromPosition(
-        TextPosition(offset: contoller.text.length),
+      controller.selection = TextSelection.fromPosition(
+        TextPosition(offset: controller.text.length),
       );
     }
   }
@@ -105,9 +107,9 @@ class WayaHelpers {
 
   static Future<MultipartFile> formattedImageFromUrl(String imageUrl) async {
     // Download
-    print("ewfefe humb $imageUrl");
+    debugPrint("?? $imageUrl");
     final response = await http.get(Uri.parse(imageUrl));
-    print("ewfefe humb 2");
+    debugPrint("??? 2");
     if (response.statusCode == 200) {
       final fileName = basename(Uri.parse(imageUrl).path);
 

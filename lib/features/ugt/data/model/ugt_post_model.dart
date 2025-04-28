@@ -246,7 +246,7 @@ class Contest {
       likeCount: likeCount ?? this.likeCount,
       hasLiked: hasLiked ?? this.hasLiked,
       isFollowing: isFollowing ?? this.isFollowing,
-      hasApplied: hasApplied ?? this.hasApplied,
+      hasApplied: hasApplied ?? hasApplied,
       shareCount: shareCount ?? this.shareCount,
       followCount: followCount ?? this.followCount,
       applicantCount: applicantCount ?? this.applicantCount,

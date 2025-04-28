@@ -1,22 +1,16 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
-import '../../../../core/components/waya_text_form_field.dart';
-import '../../../../core/utils/waya_navigation.dart';
 import '../../../../core/utils/waya_utils.dart';
-import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
-import '../../../wallet/view/components/modal_content.dart';
+//import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
 import '../../ugt_buttomsheet_modal/ugt_modal.dart';
 import '../../vm/ugt_vm.dart';
 
@@ -33,7 +27,7 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(personalFirstStepProvider);
+    //final viewModel = ref.watch(personalFirstStepProvider);
     final viewModel2 = ref.watch(contestNotifierProvider);
     var contestViewModel = ref.watch(selectedContestProvider.notifier).state;
     final wayaTheme = Theme.of(context);
@@ -209,45 +203,46 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
           const Gap(15),
           // const Gap(15),
 
-          //  if (viewModel2.contestTimelineMultipleStage.toLowerCase() != "no")
-          FormField<String>(validator: (value) {
-            if (viewModel2.contestTimelineCurrentStage.isEmpty) {
-              return 'Current Stage is required';
-            }
+          if (viewModel2.contestTimelineMultipleStage.toLowerCase() != "no")
+            FormField<String>(validator: (value) {
+              if (viewModel2.contestTimelineCurrentStage.isEmpty) {
+                return 'Current Stage is required';
+              }
 
-            return null;
-          }, builder: (formState) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WayaSelectField<String>(
-                  height: 0.3,
-                  value: viewModel2.contestTimelineCurrentStage,
-                  label: "What is the current stage",
-                  hintText: 'Select Current Stage',
-                  items: ref
-                      .read(contestNotifierProvider.notifier)
-                      .ugtCurrentStage(),
-                  onSelected: (value) {
-                    ref
+              return null;
+            }, builder: (formState) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WayaSelectField<String>(
+                    height: 0.3,
+                    value: viewModel2.contestTimelineCurrentStage,
+                    label: "What is the current stage",
+                    hintText: 'Select Current Stage',
+                    items: ref
                         .read(contestNotifierProvider.notifier)
-                        .updateContestTimeCurrentStage(value.first.label);
-                  },
-                  uniqueKey: 'contest-state',
-                ),
-                if (formState.hasError &&
-                    viewModel2.contestTimelineCurrentStage.isEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      formState.errorText!,
-                      style: TextStyle(
-                          color: wayaTheme.colorScheme.error, fontSize: 12.sp),
-                    ),
+                        .ugtCurrentStage(),
+                    onSelected: (value) {
+                      ref
+                          .read(contestNotifierProvider.notifier)
+                          .updateContestTimeCurrentStage(value.first.label);
+                    },
+                    uniqueKey: 'contest-state',
                   ),
-              ],
-            );
-          }),
+                  if (formState.hasError &&
+                      viewModel2.contestTimelineCurrentStage.isEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        formState.errorText!,
+                        style: TextStyle(
+                            color: wayaTheme.colorScheme.error,
+                            fontSize: 12.sp),
+                      ),
+                    ),
+                ],
+              );
+            }),
           const Gap(60),
           WayaButton(
             callback: () {
@@ -255,6 +250,12 @@ class _ContestTimelineState extends ConsumerState<ContestTimeline> {
                 context,
                 child: UgtModal(),
               ); */
+              if (viewModel2.contestTimelineMultipleStage.toLowerCase() !=
+                  "no") {
+                ref
+                    .read(contestNotifierProvider.notifier)
+                    .updateContestTimeCurrentStage("Nil");
+              }
               if (_formKey.currentState!.validate()) {
                 WayaUtils.showModalSheetUgt(
                   context,

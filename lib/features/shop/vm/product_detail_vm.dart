@@ -6,9 +6,7 @@ import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/shop/data/repo/shop_repository.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
-import 'package:wayagram/features/shop/seller/data/model/shop_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
-import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 
 class ProductDetailState {
   final Product? product;
@@ -59,7 +57,7 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
 
       return singleProduct;
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
       return null;
     } finally {
       state.copyWith(isLoading: false);
@@ -76,7 +74,7 @@ class ProductDetailVm extends StateNotifier<ProductDetailState> {
         WayaSnackBar.showToast("Added to your favorites");
       }
     } catch (error) {
-      print(error);
+      debugPrint(error.toString());
     }
   }
 

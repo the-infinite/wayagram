@@ -15,7 +15,6 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
@@ -38,14 +37,14 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
     final setUp = ref.watch(successfulSetupVmProvider);
-    print('MY POLL TYPE ${viewModel.pollType}');
+    debugPrint('MY POLL TYPE ${viewModel.pollType}');
     String startDate = viewModel.startDate;
     String endDate = viewModel.endDate;
     DateFormat format = DateFormat("yyyy-M-d");
     DateTime parsedDate = format.parse(startDate);
     DateTime parsedDate2 = format.parse(endDate);
     num daysLeft = parsedDate2.difference(parsedDate).inDays;
-    print('POLL DESCRIPTION ${viewModel.pollDescription.text}');
+    debugPrint('POLL DESCRIPTION ${viewModel.pollDescription.text}');
     return WayaScaffold(
         title: "Polls Summary",
         isLoading: viewModel.isLoading,
@@ -55,7 +54,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-              print('DIALA POLL');
+              debugPrint('DIALA POLL');
               if (viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.personal) {
 
                 WidgetsBinding.instance.addPostFrameCallback((_) {

@@ -37,7 +37,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
       notifier.fetchBusinessTypes();
       notifier.fetchLocation();
 
-      if (widget.referral != null) {
+      if (widget.referral != null && widget.referral != 'null') {
         notifier.updateReferralCode(widget.referral ?? '');
       }
     });

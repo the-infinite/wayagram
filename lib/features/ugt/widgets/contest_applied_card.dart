@@ -1,17 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/components/waya_image.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_applied_post_model.dart';
+import 'package:wayagram/features/ugt/my_contest_details/ended_contest_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/application_status.dart';
@@ -24,8 +22,8 @@ import '../../../core/components/waya_buttons.dart';
 import 'about_ugt_widget.dart';
 
 class ContestAppliedCard extends StatelessWidget {
-  AppliedContestModel post;
-  ContestAppliedCard(this.post, {super.key});
+  final AppliedContestModel post;
+  const ContestAppliedCard(this.post, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -132,7 +130,7 @@ class ContestAppliedCard extends StatelessWidget {
                       "createdAt": post.contest?.createdAt,
                       "likeCount": 0,
                       "isLike": false,
-                        "showDescription":false,
+                      "showDescription": false,
                       "discription": post.contest?.description,
                       "shareCount": 0,
                       "type": MyFullMediaType.image
@@ -227,12 +225,20 @@ class ContestAppliedCard extends StatelessWidget {
               // const Gap(25),
               WayaButton(
                 callback: () {
-                  WayaUtils.showModalSheetUgt(
-                    context,
-                    child: ApplicationStatus(post),
-                  );
+                  if (post.contest?.status == "CLOSED") {
+                    WayaNav.toNamed(EndedContestPage.route, arguments: {
+                      'id': post.contestId,
+                    });
+                  } else {
+                    WayaUtils.showModalSheetUgt(
+                      context,
+                      child: ApplicationStatus(post),
+                    );
+                  }
                 },
-                text: "View Application Status",
+                text: post.contest?.status == "CLOSED"
+                    ? "View Result"
+                    : "View Application Status",
               ),
             ],
           ),

@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,10 +13,8 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
-import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
-import 'dart:io' show Platform;
 
 class InActivePolls extends ConsumerStatefulWidget {
   final bool isExpanded;
@@ -40,7 +37,6 @@ class _InActivePollsState extends ConsumerState<InActivePolls> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -49,7 +45,6 @@ class _InActivePollsState extends ConsumerState<InActivePolls> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
     return viewModel.fetchAllPols.isEmpty ? ActivityLogsEmptyState(text: "You don'\t have any completed polls"):
     SizedBox(
@@ -190,12 +185,12 @@ class _InActivePollsState extends ConsumerState<InActivePolls> {
                                     );
                                   }
                                   else{
-                                    WayaUtils.showModalSheet(
-                                      context,
-                                      child: VoteOptionModal(voteFee:  '${poll.feePerVote}',choiceId: '${e.id}',
-                                        pollId: '${poll.id}',candidateName: '${e.text}',
-                                        votingLink: '${poll.url}',),
-                                    );
+                                    // WayaUtils.showModalSheet(
+                                    //   context,
+                                    //   child: VoteOptionModal(voteFee:  '${poll.feePerVote}',choiceId: '${e.id}',
+                                    //     pollId: '${poll.id}',candidateName: '${e.text}',
+                                    //     votingLink: '${poll.url}',),
+                                    // );
                                   }
                                 }))
                     ],

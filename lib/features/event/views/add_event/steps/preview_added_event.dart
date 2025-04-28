@@ -25,7 +25,8 @@ class PreviewAddedEvent extends ConsumerWidget {
       children: [
         Text("Review Event Details", style: wayaTheme.textTheme.titleLarge),
         const Gap(5),
-        Text("Review your event details before submission", style: wayaTheme.textTheme.hintStyle),
+        Text("Review your event details before submission",
+            style: wayaTheme.textTheme.hintStyle),
         const Gap(30),
         Text(
           "Event Thumbnail",
@@ -66,7 +67,8 @@ class PreviewAddedEvent extends ConsumerWidget {
         Gap(15.h),
         AboutEvent(title: 'Organizer Name', content: viewModel.organizer.text),
         Gap(15.h),
-        AboutEvent(title: "Event Description", content: viewModel.description.text),
+        AboutEvent(
+            title: "Event Description", content: viewModel.description.text),
         Gap(15.h),
 
         //? The location.
@@ -74,15 +76,18 @@ class PreviewAddedEvent extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutEvent(title: 'Event Location', content: viewModel.location),
+              child: AboutEvent(
+                  title: 'Event Location', content: viewModel.location),
             ),
             if (viewModel.location == 'Physical')
               Expanded(
-                child: AboutEvent(title: 'Event Address', content: viewModel.address.text),
+                child: AboutEvent(
+                    title: 'Event Address', content: viewModel.address.text),
               ),
             if (viewModel.location == 'Virtual')
               Expanded(
-                child: AboutEvent(title: 'Virtual Event Link', content: viewModel.link.text),
+                child: AboutEvent(
+                    title: 'Virtual Event Link', content: viewModel.link.text),
               ),
           ],
         ),
@@ -107,10 +112,12 @@ class PreviewAddedEvent extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutEvent(title: 'Start Date', content: viewModel.startDate),
+              child:
+                  AboutEvent(title: 'Start Date', content: viewModel.startDate),
             ),
             Expanded(
-              child: AboutEvent(title: 'Start Time', content: viewModel.startTime),
+              child:
+                  AboutEvent(title: 'Start Time', content: viewModel.startTime),
             ),
           ],
         ),
@@ -161,10 +168,13 @@ class PreviewAddedEvent extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: AboutEvent(title: 'Maximum Capacity', content: viewModel.maxCapacity!.text),
+              child: AboutEvent(
+                  title: 'Maximum Capacity',
+                  content: viewModel.maxCapacity!.text),
             ),
             Expanded(
-              child: AboutEvent(title: 'Privacy Settings', content: viewModel.privacyOption),
+              child: AboutEvent(
+                  title: 'Privacy Settings', content: viewModel.privacyOption),
             ),
           ],
         ),
@@ -176,7 +186,9 @@ class PreviewAddedEvent extends ConsumerWidget {
           ),
           callback: !viewModel.isLoading
               ? () async {
-                  if (await ref.read(addEventVmProvider.notifier).onSubmit(context: context)) {
+                  if (await ref
+                      .read(addEventVmProvider.notifier)
+                      .onSubmit(context: context)) {
                     WayaNav.goBack();
                   }
                 }
@@ -187,7 +199,8 @@ class PreviewAddedEvent extends ConsumerWidget {
           text: 'Go Back',
           color: wayaTheme.colorScheme.transparent,
           textColor: wayaTheme.colorScheme.customBlack,
-          border: Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
+          border:
+              Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
           callback: () => gotoPreviousTab(),
         )
       ],

@@ -62,7 +62,9 @@ class _SuccessPageState extends ConsumerState<SuccessPage> {
           WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-                    WayaNav.toNamed("/pages");
+                    WayaNav.toNamed("/pages", arguments: {
+                      'index': 2
+                    });
                   }
                 : null,
             centerWidget: LoadingState(loading: viewModel.isLoading, text: 'Manage Page'),

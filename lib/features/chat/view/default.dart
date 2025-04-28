@@ -234,7 +234,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       conversationState.results.length,
                       (index) => ConversationWidget(
                         index: index,
-                        chat: conversationState.results[index],
+                        chatId: conversationState.results[index].id,
                         notifier: chatNotifier,
                         conversationNotifier: notifier,
                       ),
@@ -261,7 +261,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                         conversationState.pinned.length,
                         (index) => ConversationWidget(
                           index: index,
-                          chat: conversationState.pinned[index],
+                          chatId: conversationState.pinned[index].id,
                           notifier: chatNotifier,
                           conversationNotifier: notifier,
                         ),
@@ -290,7 +290,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       conversationState.unpinned.length,
                       (index) => ConversationWidget(
                         index: index,
-                        chat: conversationState.unpinned[index],
+                        chatId: conversationState.unpinned[index].id,
                         notifier: chatNotifier,
                         conversationNotifier: notifier,
                       ),

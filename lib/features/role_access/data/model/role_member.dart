@@ -145,13 +145,13 @@ class Metadata {
     required this.offset,
     required this.searchApplied,
     required this.searchFields,
-    required this.appliedFilters,
+   // required this.appliedFilters,
   });
 
   final int? offset;
   final bool? searchApplied;
   final List<dynamic>? searchFields;
-  final AppliedFilters? appliedFilters;
+  //final AppliedFilters? appliedFilters;
 
   factory Metadata.fromJson(Map<String, dynamic> json) =>
       _$MetadataFromJson(json);
@@ -159,7 +159,7 @@ class Metadata {
   Map<String, dynamic> toJson() => _$MetadataToJson(this);
 }
 
-@JsonSerializable()
+/* @JsonSerializable()
 class AppliedFilters {
   AppliedFilters({
     required this.shopId,
@@ -171,4 +171,4 @@ class AppliedFilters {
       _$AppliedFiltersFromJson(json);
 
   Map<String, dynamic> toJson() => _$AppliedFiltersToJson(this);
-}
+} */

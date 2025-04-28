@@ -73,10 +73,13 @@ class _SharedPostState extends ConsumerState<SharedPosts> {
         //? Just if there are some top rated posts to show.
         if (state.topPosts.isNotEmpty) ...[
           Text(
-            "Based on people you Follow",
+            "Trending Posts",
             style: widget.isExpanded
-                ? wayaTheme.textTheme.descriptionStyle
-                    .copyWith(color: wayaTheme.colorScheme.greyColor700, fontSize: 12.sp, fontWeight: FontWeight.w500)
+                ? wayaTheme.textTheme.descriptionStyle.copyWith(
+                    color: wayaTheme.colorScheme.greyColor700,
+                    fontSize: 12.sp,
+                    fontWeight: FontWeight.w500,
+                  )
                 : wayaTheme.textTheme.bodyMedium,
           ),
           const Gap(10),

@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,7 +16,6 @@ import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state
 import 'package:wayagram/features/polls_and_voting/polls_bottomsheet_modal/polls_modal.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
-import 'dart:io' show Platform;
 
 class ActivePolls extends ConsumerStatefulWidget {
   final bool isExpanded;
@@ -41,7 +39,7 @@ class _ActivePollsState extends ConsumerState<ActivePolls> {
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    //final dynamic args = ModalRoute.of(context)?.settings.arguments;
 
     return
       viewModel.fetchAllPols.isEmpty ? ActivityLogsEmptyState(text: "You don'\t have any active polls"):
@@ -174,8 +172,15 @@ class _ActivePollsState extends ConsumerState<ActivePolls> {
                                             duration: Duration(seconds: 2),
                                           ),
                                         );
-                                      }
-                                      else{
+                                      }else if(poll.pollType == 'free'){
+                                        ref.read(createPollVotingProvider.notifier).castFreeVote(
+                                            1,
+                                            '${e.id}',
+                                            '${poll.id}',
+                                            context,
+                                            '${e.text}',
+                                            '${poll.url}');
+                                      } else{
                                         WayaUtils.showModalSheet(
                                           context,
                                           child: VoteOptionModal(voteFee:  '${poll.feePerVote}',choiceId: '${e.id}',

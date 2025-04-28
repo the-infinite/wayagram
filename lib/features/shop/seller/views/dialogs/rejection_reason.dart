@@ -21,7 +21,7 @@ class RejectionReason extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final TextEditingController _controller = TextEditingController();
+    final TextEditingController controller = TextEditingController();
     final wayaTheme = Theme.of(context);
     final state = ref.watch(orderVmProvider);
 
@@ -72,7 +72,7 @@ class RejectionReason extends ConsumerWidget {
               ),
               const Gap(24),
               WayaTextFormField(
-                controller: _controller,
+                controller: controller,
                 hintText: "Write something ...",
                 line: 5,
                 padding: const EdgeInsets.all(12),
@@ -82,15 +82,15 @@ class RejectionReason extends ConsumerWidget {
               WayaButton(
                 callback: !state.isRejecting
                     ? () {
-                        if (_controller.text.isEmpty) {
+                        if (controller.text.isEmpty) {
                           return WayaSnackBar.showToast(
                               "Enter rejection reason");
                         }
 
                         ref.read(orderVmProvider.notifier).declineOrder(
                             orderId: orderId,
-                           
-                            reason: _controller.text,
+                            shopId: shopId,
+                            reason: controller.text,
                             context: context);
                       }
                     : null,

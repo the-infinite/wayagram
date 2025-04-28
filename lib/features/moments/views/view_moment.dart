@@ -15,8 +15,17 @@ import 'package:wayagram/features/moments/widgets/my_moment_metrics.dart';
 import 'package:wayagram/features/moments/widgets/reply_moment_widget.dart';
 
 class ViewMoment extends ConsumerStatefulWidget {
-  static const route = "/view-moment";
-  const ViewMoment({super.key});
+  final List<MomentData> moments;
+  final bool isMine;
+  final int? index;
+
+  // Construct.
+  const ViewMoment({
+    super.key,
+    required this.moments,
+    required this.isMine,
+    this.index,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ViewMomentState();
@@ -25,31 +34,17 @@ class ViewMoment extends ConsumerStatefulWidget {
 class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProviderStateMixin {
   late PageController _pageController;
   late AnimationController _animationController;
+  late final isMine = widget.isMine;
+  late final moments = widget.moments;
   final textController = TextEditingController();
   final pauseController = ValueNotifier(false);
-  List<MomentData> moments = [];
-  int currentIndex = 0;
-  bool isMine = false;
+  late int currentIndex = widget.index ?? 0;
 
   @override
   void initState() {
     super.initState();
     _pageController = PageController();
     _animationController = AnimationController(vsync: this);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final dynamic args = ModalRoute.of(context)?.settings.arguments;
-      if (args != null && args['index'] != null) {
-        setState(() {
-          currentIndex = args['index'];
-        });
-      }
-      if (args != null && args['moments'] != null) {
-        setState(() {
-          isMine = args['isMine'];
-          moments = args['moments'];
-        });
-      }
-    });
   }
 
   void _startTimer() {

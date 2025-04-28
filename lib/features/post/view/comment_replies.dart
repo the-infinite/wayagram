@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,16 +31,29 @@ class WayaCommentRepliesScreen extends ConsumerStatefulWidget {
 }
 
 class _WayaCommentRepliesScreenState extends ConsumerState<WayaCommentRepliesScreen> {
-  late final notifier = ref.read(createCommentProvider.notifier);
+  late final objectProvider = createCommentProvider("repl-${widget.comment.id}");
+  late final notifier = ref.read(objectProvider.notifier);
   final inputController = CommentInputController.instance;
   final loadingController = ValueNotifier(false);
   final handler = WayaObservableScrollController();
   final formKey = GlobalKey<FormState>();
+  Timer? _timer;
 
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       inputController.setNotifier(notifier);
+      _timer ??= Timer.periodic(const Duration(seconds: 5), (timer) {
+        //? Fetch and update the comments every 5 seconds.
+        notifier.getReplies(widget.post.id, widget.comment.id).then(
+          (result) {
+            //? Since it is not mounted, cancel the timer.
+            if (!mounted) {
+              timer.cancel();
+            }
+          },
+        );
+      });
     });
     super.initState();
   }
@@ -46,6 +61,7 @@ class _WayaCommentRepliesScreenState extends ConsumerState<WayaCommentRepliesScr
   @override
   void dispose() {
     try {
+      _timer?.cancel();
       loadingController.dispose();
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -61,7 +77,7 @@ class _WayaCommentRepliesScreenState extends ConsumerState<WayaCommentRepliesScr
   @override
   Widget build(BuildContext context) {
     //? First, the wayaTheme.
-    final state = ref.watch(createCommentProvider);
+    final state = ref.watch(objectProvider);
 
     //? Now, return the screen.
     return PopScope(
