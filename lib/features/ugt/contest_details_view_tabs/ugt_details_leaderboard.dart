@@ -12,7 +12,7 @@ class UgtDetailsLeaderboard extends ConsumerStatefulWidget {
   const UgtDetailsLeaderboard(this.model, {super.key});
 
   @override
-  _UgtDetailsLeaderboardState createState() => _UgtDetailsLeaderboardState();
+  ConsumerState<UgtDetailsLeaderboard> createState() => _UgtDetailsLeaderboardState();
 }
 
 class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
@@ -26,11 +26,10 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
   @override
   Widget build(BuildContext context) {
     // final posts = ref.watch(postProvider);
-
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     // final postNotifier = ref.read(postProvider.notifier);
     final viewModel = ref.read(votersContestNotifier);
-    final notifier = ref.read(votersContestNotifier.notifier);
+    //final notifier = ref.read(votersContestNotifier.notifier);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -38,18 +37,14 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
       children: [
         //  UgtLeaderboardCard(),
 
-        if(viewModel.myContestList.isEmpty)emptyWidget(),
-          if (viewModel.isLoading!) 
-               Center(child: CircularProgressIndicator()),
-            
-
+        if (viewModel.myContestList.isEmpty) emptyWidget(),
+        if (viewModel.isLoading!) Center(child: CircularProgressIndicator()),
 
         ListView.builder(
           controller: _scrollController,
           shrinkWrap: true,
           itemCount: viewModel.myContestList.length,
           itemBuilder: (context, index) {
-          
             final post = viewModel.myContestList[index];
             return GestureDetector(
               onTap: () {
@@ -59,10 +54,7 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
                   '/contest-profile-page',
                 );
               },
-              child: UgtLeaderboardCard(
-                  model: widget.model!,
-                  position: index + 1,
-                  contestantData: post),
+              child: UgtLeaderboardCard(model: widget.model!, position: index + 1, contestantData: post),
             );
           },
         ),
@@ -97,17 +89,15 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
     );
   }
 
-
   Widget emptyWidget() {
     return UgtEmptyState(
-        icon: Image.asset("assets/images/u-emptystate.png"),
-        desc: "There is no Contestant for this contest yet",
-        title: "No Post Created",
-        buttonText: "",
-        hideButton: false,
-        onTap: () {
-         
-        });
+      icon: Image.asset("assets/images/u-emptystate.png"),
+      desc: "There is no Contestant for this contest yet",
+      title: "No Post Created",
+      buttonText: "",
+      hideButton: false,
+      onTap: () {},
+    );
   }
 
   @override

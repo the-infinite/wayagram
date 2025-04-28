@@ -31,8 +31,8 @@ class CardLoadingState extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
-                      width: 20,
-                      height: 20,
+                      width: 40,
+                      height: 40,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: wayaTheme.colorScheme.greyColor100,

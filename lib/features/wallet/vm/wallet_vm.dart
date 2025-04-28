@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -267,9 +266,8 @@ final walletVmProvider = StateNotifierProvider<WalletVm, WalletState>((ref) {
 
 class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
   final WalletRepository? _walletRepository;
-  final WayaLocalDataSource _localDataSource;
   final SuccessfulSetUpState _setupState;
-  WalletFundingOptionsVm(this._walletRepository, this._localDataSource, this._setupState)
+  WalletFundingOptionsVm(this._walletRepository, this._setupState)
       : super(WalletFundingOptionState());
 
   Future<void> getWalletFundingOptions() async {
@@ -311,7 +309,7 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
 
   Future<bool> verifyWalletPin(String pin) async {
     final user = _setupState.user?.user;
-    final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(userId: user!.id ?? "", pin: pin));
+    final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(userId: user!.id, pin: pin));
     if (response.success) {
       return true;
     } else {
@@ -322,5 +320,5 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
 
 final walletFundingOptionsVmProvider = StateNotifierProvider<WalletFundingOptionsVm, WalletFundingOptionState>((ref) {
   final successfulSetupVm = ref.watch(successfulSetupVmProvider);
-  return WalletFundingOptionsVm(WalletRepository.instance, WayaLocalDataSource(), successfulSetupVm);
+  return WalletFundingOptionsVm(WalletRepository.instance, successfulSetupVm);
 });

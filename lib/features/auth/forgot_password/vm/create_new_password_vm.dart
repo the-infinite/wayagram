@@ -50,6 +50,7 @@ class CreateNewPasswordVm extends ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
+
       final response = await _authRepository.resetPassword(ForgotPassword(
           confirmPassword: confirmPassword.text,
           newPassword: password.text,

@@ -18,7 +18,6 @@ import 'package:wayagram/features/auth/account_creation/view/loading_state.dart'
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 
-
 class CreateProfile extends StatefulHookConsumerWidget {
   static const route = '/create-profile-contest1';
   const CreateProfile({super.key});
@@ -127,7 +126,7 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
   @override
   Widget build(BuildContext context) {
     // final viewModel = ref.watch(createC);
-    final viewModel = ref.watch(contestNotifierProvider);
+    // final viewModel = ref.watch(contestNotifierProvider);
     final notifier = ref.watch(contestNotifierProvider.notifier);
     final wayaTheme = Theme.of(context);
     final isLoading = useState(false);

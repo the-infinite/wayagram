@@ -22,8 +22,8 @@ import '../../../core/components/waya_buttons.dart';
 import 'about_ugt_widget.dart';
 
 class ContestAppliedCard extends StatelessWidget {
-  AppliedContestModel post;
-  ContestAppliedCard(this.post, {super.key});
+  final AppliedContestModel post;
+  const ContestAppliedCard(this.post, {super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -32,7 +32,7 @@ class _PreviewProductState extends ConsumerState<PreviewProduct> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    final provider = ref.watch(addProductProvider(widget.uniqueKey).notifier);
+    //final provider = ref.watch(addProductProvider(widget.uniqueKey).notifier);
     final viewModel = ref.watch(addProductProvider(widget.uniqueKey));
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,

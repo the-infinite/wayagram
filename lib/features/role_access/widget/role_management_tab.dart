@@ -9,7 +9,7 @@ class RoleManagementTab extends ConsumerStatefulWidget {
   const RoleManagementTab({super.key});
 
   @override
-  _ForYouContestState createState() => _ForYouContestState();
+  ConsumerState<RoleManagementTab> createState() => _ForYouContestState();
 }
 
 class _ForYouContestState extends ConsumerState<RoleManagementTab> {
@@ -22,17 +22,14 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(roleAccessVm);
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-       
         const Gap(10),
-     
-        if (viewModel.isLoading == true)
-          Center(child: CircularProgressIndicator()),
+        if (viewModel.isLoading == true) Center(child: CircularProgressIndicator()),
         if (viewModel.listRoleManagement.isEmpty) emptyWidget(),
         ListView.builder(
           shrinkWrap: true,

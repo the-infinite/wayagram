@@ -21,14 +21,14 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
   @override
   Widget build(BuildContext context) {
     //? get access to the theme
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     //? get access to the provider
     final rollAccessNotifier = ref.read(roleAccessVm.notifier);
 
     //  ConversationState.self.id
     // debugPrint("UGT HOME ${ConversationState.self.role?.name}");
 
-//? init nessessary data with useEffect
+    //? init necessary data with useEffect
     useEffect(() {
       rollAccessNotifier.getRoles();
       rollAccessNotifier.getShops();

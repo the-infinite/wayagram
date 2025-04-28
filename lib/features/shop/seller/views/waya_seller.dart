@@ -18,41 +18,41 @@ class _WayaSellerState extends ConsumerState<WayaSeller> with SingleTickerProvid
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
-
+    // final wayaTheme = Theme.of(context);
     return WayaScaffold(
-        isLoading: false,
-        isScrollable: true,
-        onTapBackButton: () => WayaNav.toNamed(BottomView.route, arguments: 0),
-        title: 'Shop',
-        appBarTrailing: WayaCartIcon(),
-        body: Column(
-          children: [
-            const Gap(10),
-            Row(
-              children: [
-                WayaTabButton(
-                  isSelected: _selectedIndex == 0,
-                  text: 'All Products',
-                  onTap: () => setState(() => _selectedIndex = 0),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 1,
-                  text: 'My Products',
-                  onTap: () => setState(() => _selectedIndex = 1),
-                ),
-                WayaTabButton(
-                  isSelected: _selectedIndex == 2,
-                  text: 'Manage Shops',
-                  onTap: () => setState(() => _selectedIndex = 2),
-                ),
-              ],
-            ),
-            const Gap(10),
-            // if (_selectedIndex == 0) AllProducts(),
-            // if (_selectedIndex == 1) SellerProducts(),
-            // if (_selectedIndex == 2) ManageShop()
-          ],
-        ));
+      isLoading: false,
+      isScrollable: true,
+      onTapBackButton: () => WayaNav.toNamed(BottomView.route, arguments: 0),
+      title: 'Shop',
+      appBarTrailing: WayaCartIcon(),
+      body: Column(
+        children: [
+          const Gap(10),
+          Row(
+            children: [
+              WayaTabButton(
+                isSelected: _selectedIndex == 0,
+                text: 'All Products',
+                onTap: () => setState(() => _selectedIndex = 0),
+              ),
+              WayaTabButton(
+                isSelected: _selectedIndex == 1,
+                text: 'My Products',
+                onTap: () => setState(() => _selectedIndex = 1),
+              ),
+              WayaTabButton(
+                isSelected: _selectedIndex == 2,
+                text: 'Manage Shops',
+                onTap: () => setState(() => _selectedIndex = 2),
+              ),
+            ],
+          ),
+          const Gap(10),
+          // if (_selectedIndex == 0) AllProducts(),
+          // if (_selectedIndex == 1) SellerProducts(),
+          // if (_selectedIndex == 2) ManageShop()
+        ],
+      ),
+    );
   }
 }

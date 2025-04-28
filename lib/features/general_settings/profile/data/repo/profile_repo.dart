@@ -4,9 +4,10 @@ import 'package:dio/dio.dart' as waya;
 import 'package:http_parser/http_parser.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class ProfileRepo extends BaseRepository {
-  String get serviceUrl => 'wayagram-profile/api/v2';
+  String get serviceUrl => WayaServiceUri.account;
 
   Future<WayaRequestResponse> updateAccountRepo({
     required String userId,

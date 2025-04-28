@@ -197,7 +197,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         height: 42,
                         text: "Edit contest details",
                         callback: () async {
-                          ivalidateUGTVM(ref);
+                          invalidateUGTVm(ref);
                           ref
                               .read(stateIsEditingContestProvider.notifier)
                               .state = true;

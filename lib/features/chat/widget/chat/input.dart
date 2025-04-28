@@ -200,7 +200,7 @@ class ChatInputController {
   Future<bool> cancelRecording() async {
     try {
       //? First, obtain the URI we need.
-      final result = await _soundRecorder!.stop();
+      final result = _voiceMessage.value ?? await _soundRecorder!.stop();
 
       //? If this is null, just stop at this point with a null.
       if (result == null) return false;
@@ -216,6 +216,8 @@ class ChatInputController {
       //? After moving forward.
       _recorderState.value = _soundRecorder!.recorderState;
       _currentType.value = MessageType.text;
+      _voiceMessage.value = null;
+      _canSend.value = _textController.text.trim().isNotEmpty;
 
       //? Then we move forward.
       await recordedFile.delete();
