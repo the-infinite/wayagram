@@ -6,6 +6,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/wallet/view/components/components.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
@@ -97,7 +98,13 @@ class _MoreBalanceCardState extends ConsumerState<MoreBalanceCard> {
                       text: 'Learn More',
                       textStyle: wayaTheme.textTheme.labelSmall,
                       textColor: wayaTheme.colorScheme.customPrimary,
-                      callback: () {},
+                      callback: () {
+                        WayaUtils.showModalSheet(
+                          context,
+                          child: LearnMoreInstructionsContent(),
+                        );
+
+                      },
                     ),
                   ],
                 ),
