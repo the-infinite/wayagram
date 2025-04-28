@@ -1,10 +1,11 @@
 
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
+import 'package:wayagram/core/utils/waya_constants.dart';
 
 
 class RoleAccessRepo extends BaseRepository {
-  static const serviceUrl2 = "wayagram-shop/api/v2";
+  static const serviceUrl2 = WayaServiceUri.shop;
 
   Future<WayaRequestResponse> getRoles() {
     return get('$serviceUrl2/admin/role/get-roles');

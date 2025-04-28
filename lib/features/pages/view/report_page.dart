@@ -17,9 +17,9 @@ class ReportPage extends ConsumerStatefulWidget {
   final List<String> statuses;
   const ReportPage(
       {super.key,
-        required this.statuses,
-        required this.currentStatus,
-        required this.pageId});
+      required this.statuses,
+      required this.currentStatus,
+      required this.pageId});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ReportPageState();
@@ -48,135 +48,139 @@ class _ReportPageState extends ConsumerState<ReportPage> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final reportState = ref.watch(createGroupProvider);
-    return SingleChildScrollView(
-      padding: EdgeInsets.symmetric(vertical: 30, horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Report ",
-              style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
-          const Gap(5),
-          Text(
-              maxLines: 3,
-              "Help us improve the platform by letting us know you are reporting this group",
-              style: wayaTheme.textTheme.hintStyle),
-          const Gap(30),
-          Row(
-            children: [
-              Expanded(
-                child: Divider(
-                  color: wayaTheme.colorScheme.greyColor200,
-                  thickness: 1,
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Report ",
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
+            const Gap(5),
+            Text(
+                maxLines: 3,
+                "Help us improve the platform by letting us know you are reporting this group",
+                style: wayaTheme.textTheme.hintStyle),
+            const Gap(30),
+            Row(
+              children: [
+                Expanded(
+                  child: Divider(
+                    color: wayaTheme.colorScheme.greyColor200,
+                    thickness: 1,
+                  ),
                 ),
-              ),
-              Gap(10),
-              Text(
-                "Choose Reason for Reporting",
-                style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
-                  color: wayaTheme.colorScheme.greyColor600,
+                Gap(10),
+                Text(
+                  "Choose Reason for Reporting",
+                  style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                    color: wayaTheme.colorScheme.greyColor600,
+                  ),
                 ),
-              ),
-              Gap(10),
-              Expanded(
-                child: Divider(
-                  color: wayaTheme.colorScheme.greyColor200,
-                  thickness: 1,
+                Gap(10),
+                Expanded(
+                  child: Divider(
+                    color: wayaTheme.colorScheme.greyColor200,
+                    thickness: 1,
+                  ),
                 ),
-              ),
-            ],
-          ),
-          const Gap(30),
-          Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListView.builder(
-                      itemCount: widget.statuses.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            ListTile(
-                              minTileHeight: 30,
-                              selectedTileColor:
-                              selectedStatus == widget.statuses[index]
-                                  ? wayaTheme.colorScheme.scaffoldColor
-                                  : null,
-                              trailing: selectedStatus == widget.statuses[index]
-                                  ? Icon(
-                                Icons.check_circle,
-                                size: 20,
-                                color:
-                                wayaTheme.colorScheme.customPrimary,
-                              )
-                                  : null,
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: 1, horizontal: 1),
-                              title: Text(
-                                WayaHelpers.removeCamelCaseAndUnderscore(
-                                    widget.statuses[index]),
-                                style: TextStyle().wayaCopyWith(
-                                    color: wayaTheme.colorScheme.customBlack,
-                                    fontSize: 14.sp),
+              ],
+            ),
+            const Gap(30),
+            Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ListView.builder(
+                        itemCount: widget.statuses.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              ListTile(
+                                minTileHeight: 30,
+                                selectedTileColor:
+                                    selectedStatus == widget.statuses[index]
+                                        ? wayaTheme.colorScheme.scaffoldColor
+                                        : null,
+                                trailing: selectedStatus ==
+                                        widget.statuses[index]
+                                    ? Icon(
+                                        Icons.check_circle,
+                                        size: 20,
+                                        color:
+                                            wayaTheme.colorScheme.customPrimary,
+                                      )
+                                    : null,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 1, horizontal: 1),
+                                title: Text(
+                                  WayaHelpers.removeCamelCaseAndUnderscore(
+                                      widget.statuses[index]),
+                                  style: TextStyle().wayaCopyWith(
+                                      color: wayaTheme.colorScheme.customBlack,
+                                      fontSize: 14.sp),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    selectedStatus = widget.statuses[index];
+                                  });
+                                },
                               ),
-                              onTap: () {
-                                setState(() {
-                                  selectedStatus = widget.statuses[index];
-                                });
-                              },
-                            ),
-                            if (index < widget.statuses.length - 1)
-                              const Gap(0), // Adjust the gap as needed
-                          ],
-                        );
-                      }),
-                  const Gap(24),
-                  FormField<String>(validator: (value) {
-                    return null;
-                  }, builder: (formState) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        WayaTextFormField(
-                          line: 6,
-                          keyboardType: TextInputType.text,
-                          controller: comment,
-                          hintText: 'Provide more detail about the issue',
-                          label: 'Additional Comment (Optional)',
-                        ),
-                      ],
-                    );
-                  }),
-                  const Gap(24),
-                  WayaButton(
-                      callback: !reportState.isReportingGroup
-                          ? () {
-                        ref.read(createPageProvider.notifier).reportPage(
-                            pageId: widget.pageId,
-                            reason: selectedStatus,
-                            comment: comment.text,
-                            context: context);
-
-                      }
-                          : null,
-                      centerWidget: LoadingState(
-                          loading: reportState.isReportingGroup,
-                          text: "Submit Report")),
-                ],
-              )),
-          const Gap(10),
-          WayaButton(
-              callback: () {
-                WayaNav.goBack();
-              },
-              textColor: wayaTheme.colorScheme.greyColor500,
-              color: wayaTheme.colorScheme.transparent,
-              border: Border.all(
-                  color: wayaTheme.colorScheme.greyColor500, width: 1),
-              text: 'Cancel')
-        ],
+                              if (index < widget.statuses.length - 1)
+                                const Gap(0), // Adjust the gap as needed
+                            ],
+                          );
+                        }),
+                    const Gap(24),
+                    FormField<String>(validator: (value) {
+                      return null;
+                    }, builder: (formState) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          WayaTextFormField(
+                            line: 6,
+                            keyboardType: TextInputType.text,
+                            controller: comment,
+                            hintText: 'Provide more detail about the issue',
+                            label: 'Additional Comment (Optional)',
+                          ),
+                        ],
+                      );
+                    }),
+                    const Gap(24),
+                    WayaButton(
+                        callback: !reportState.isReportingGroup
+                            ? () {
+                                ref
+                                    .read(createPageProvider.notifier)
+                                    .reportPage(
+                                        pageId: widget.pageId,
+                                        reason: selectedStatus,
+                                        comment: comment.text,
+                                        context: context);
+                              }
+                            : null,
+                        centerWidget: LoadingState(
+                            loading: reportState.isReportingGroup,
+                            text: "Submit Report")),
+                  ],
+                )),
+            const Gap(10),
+            WayaButton(
+                callback: () {
+                  WayaNav.goBack();
+                },
+                textColor: wayaTheme.colorScheme.greyColor500,
+                color: wayaTheme.colorScheme.transparent,
+                border: Border.all(
+                    color: wayaTheme.colorScheme.greyColor500, width: 1),
+                text: 'Cancel')
+          ],
+        ),
       ),
     );
   }
