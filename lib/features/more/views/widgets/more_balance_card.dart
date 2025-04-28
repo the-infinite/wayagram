@@ -99,6 +99,7 @@ class _MoreBalanceCardState extends ConsumerState<MoreBalanceCard> {
                       textStyle: wayaTheme.textTheme.labelSmall,
                       textColor: wayaTheme.colorScheme.customPrimary,
                       callback: () {
+
                         WayaUtils.showModalSheet(
                           context,
                           child: LearnMoreInstructionsContent(),
