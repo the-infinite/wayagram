@@ -32,7 +32,7 @@ class SingleChatScreen extends ConsumerStatefulWidget {
 }
 
 class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
-  late final notifier = ref.watch(chatProvider.notifier);
+  late final notifier = ref.watch(chatProvider(widget.chatId).notifier);
   final focusNode = FocusNode();
   final handler = WayaObservableScrollController();
   bool _initialized = false;
@@ -89,7 +89,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
 
     // This is fine.
     return Consumer(builder: (context, ref, _) {
-      final state = ref.watch(chatProvider);
+      final state = ref.watch(chatProvider(widget.chatId));
 
       //? If this is after the state of this has been reset.
       if (state.chat == null) return const SizedBox();
@@ -117,7 +117,6 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
         onPopInvokedWithResult: (popping, _) {
           if (!popping) return;
           inputController.reset();
-          notifier.reset();
         },
         child: WayaScaffold(
           isLoading: false,

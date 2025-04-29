@@ -78,7 +78,7 @@ class _ForwardMessageModalState extends State<ForwardMessageModal> with SingleTi
         child: Consumer(
           builder: (context, ref, _) {
             final notifier = ref.watch(conversationProvider.notifier);
-            final chatNotifier = ref.watch(chatProvider.notifier);
+            final chatNotifier = ref.watch(chatProvider(widget.message.chatId).notifier);
             final state = ref.watch(conversationProvider);
             final results = state.results;
 

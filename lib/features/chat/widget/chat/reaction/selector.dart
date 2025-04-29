@@ -22,7 +22,7 @@ class ChatReactionInput extends StatelessWidget {
     return Consumer(
       builder: (context, ref, _) {
         //? For our notifier.
-        final notifier = ref.watch(chatProvider.notifier);
+        final notifier = ref.watch(chatProvider(controller.chat.id).notifier);
         final myReaction = controller.focusedMessage?.messageReaction
             ?.where((value) => value.userId == ConversationState.self.id)
             .firstOrNull;

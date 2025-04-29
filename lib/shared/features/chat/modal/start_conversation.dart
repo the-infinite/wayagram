@@ -39,7 +39,6 @@ class _StartConversationModalState extends State<StartConversationModal> {
         width: size.width,
         child: Consumer(builder: (context, ref, _) {
           final notifier = ref.read(conversationProvider.notifier);
-          final chatNotifier = ref.read(chatProvider.notifier);
 
           //? This is fine.
           return Column(
@@ -109,6 +108,7 @@ class _StartConversationModalState extends State<StartConversationModal> {
                         if (chat == null) return;
 
                         //? If we could make this chat...
+                        final chatNotifier = ref.read(chatProvider(chat.id).notifier);
                         chatNotifier.setChat(chat);
                         WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
                       },
@@ -198,6 +198,7 @@ class _StartConversationModalState extends State<StartConversationModal> {
                                       if (chat == null) return;
 
                                       //? If we could make this chat...
+                                      final chatNotifier = ref.read(chatProvider(chat.id).notifier);
                                       chatNotifier.setChat(chat);
                                       WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
                                     },
