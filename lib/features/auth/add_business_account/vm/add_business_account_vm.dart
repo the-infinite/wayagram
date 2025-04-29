@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
@@ -32,7 +33,12 @@ class AddBusinessAccountState {
   final TextEditingController businessName;
   final TextEditingController businessAddress;
   final TextEditingController cac;
+  final TextEditingController bvn;
   final bool isLoading;
+  final bool isCACVerify;
+  final bool isBVNVerify;
+  final bool isValidCAC;
+  final bool isValidBVN;
   final bool isButtonEnabled;
   final List<DocType> uploadedDocuments;
 
@@ -41,7 +47,12 @@ class AddBusinessAccountState {
     required this.businessName,
     required this.businessAddress,
     required this.cac,
+    required this.bvn,
     this.isLoading = false,
+    this.isCACVerify = false,
+    this.isBVNVerify = false,
+    this.isValidCAC = false,
+    this.isValidBVN = false,
     this.isButtonEnabled = false,
     this.uploadedDocuments = const [],
   });
@@ -51,7 +62,12 @@ class AddBusinessAccountState {
     TextEditingController? businessName,
     TextEditingController? businessAddress,
     TextEditingController? cac,
+    TextEditingController? bvn,
     bool? isLoading,
+    bool? isCACVerify,
+    bool? isBVNVerify,
+    bool? isValidCAC,
+    bool? isValidBVN,
     bool? isButtonEnabled,
     List<DocType>? uploadedDocuments,
   }) {
@@ -60,7 +76,12 @@ class AddBusinessAccountState {
       businessName: businessName ?? this.businessName,
       businessAddress: businessAddress ?? this.businessAddress,
       cac: cac ?? this.cac,
+      bvn: bvn ?? this.bvn,
       isLoading: isLoading ?? this.isLoading,
+      isCACVerify: isCACVerify ?? this.isCACVerify,
+      isBVNVerify: isBVNVerify ?? this.isBVNVerify,
+      isValidCAC: isValidCAC ?? this.isValidCAC,
+      isValidBVN: isValidBVN ?? this.isValidBVN,
       isButtonEnabled: isButtonEnabled ?? this.isButtonEnabled,
       uploadedDocuments: uploadedDocuments ?? this.uploadedDocuments,
     );
@@ -83,10 +104,12 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
           businessName: TextEditingController(),
           businessAddress: TextEditingController(),
           cac: TextEditingController(),
+          bvn: TextEditingController(),
         )) {
     state.businessName.addListener(validateInputs);
     state.businessAddress.addListener(validateInputs);
     state.cac.addListener(validateInputs);
+    state.bvn.addListener(validateInputs);
   }
 
   void addFile(File? file, String type) {
@@ -121,6 +144,63 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
     state = state.copyWith(isButtonEnabled: isButtonEnabled);
   }
 
+  Future<bool> verifyBVN() async {
+     //? change the state for loading and BVN verification
+    state = state.copyWith(isLoading: true, isBVNVerify: true);
+    try {
+      final response = await _authRepository.verifyBVN(state.bvn.text);
+
+  //? check for is successful response
+      if (response.data["statusCode"] == 200) {
+        state = state.copyWith(
+          isValidBVN: true,
+          isLoading: false,
+        );
+        return true;
+      }
+        //? Tell that isValidCAC is false not verifying BVN again
+      state = state.copyWith(isValidBVN: false);
+      return false;
+    } catch (e) {
+       //? Tell that isValidCAC is false not verifying BVN again
+      state = state.copyWith(isValidBVN: false);
+      _logger.e(e);
+    } finally {
+        //? close off all on the verification of BVN
+      state = state.copyWith(isLoading: false, isBVNVerify: false);
+    }
+
+    return false;
+  }
+
+  Future<bool> verifyCAC() async {
+    //? change the state for loading and CAC verification
+    state = state.copyWith(isLoading: true, isCACVerify: true);
+    try {
+      final response = await _authRepository.verifyCAC(state.cac.text);
+
+      //? check for is successful response
+      if (response.data["statusCode"] == 200) {
+        state = state.copyWith(
+          isValidCAC: true,
+          isLoading: false,
+        );
+        return true;
+      }
+      //? Tell that isValidCAC is false not verifying CAC again
+      state = state.copyWith(isValidCAC: false);
+      return true;
+    } catch (e) {
+      //? an error occurred
+      state = state.copyWith(isValidCAC: false);
+      _logger.e(e);
+    } finally {
+      //? close off all on the verification of CAC
+      state = state.copyWith(isLoading: false, isCACVerify: false);
+    }
+    return true;
+  }
+
   @override
   void dispose() {
     state.businessName.dispose();
@@ -130,6 +210,23 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
   }
 
   Future<void> submit(BuildContext context) async {
+    //? check if bvn has been validated to continue
+    if (!state.isValidBVN) {
+      //?Display an error message
+      WayaSnackBar.showToast("Please Enter a valid BVN number ");
+      return;
+    }
+
+    //? check if CAC has been validated to continue
+    if (state.cac.text.trim().isNotEmpty) {
+      if (!state.isValidCAC) {
+         //?Display an error message
+        WayaSnackBar.showToast("Please Enter a valid CAC number ");
+
+        return;
+      }
+    }
+    //? method for upload file
     Future<MultipartFile> formattedImage(File file) async {
       final mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
 
@@ -157,7 +254,8 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
                 .firstWhere((element) => element.type == 'passport')
                 .file!),
             'businessId': businessId,
-            'cacNumber': state.cac.text
+            'cacNumber': state.cac.text,
+            "bvn": state.bvn.text,
           }
         : {
             'nin': await formattedImage(state.uploadedDocuments
