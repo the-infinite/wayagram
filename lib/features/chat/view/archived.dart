@@ -18,7 +18,6 @@ class ArchivedChatsScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     //? This is fine.
     final notifier = ref.watch(conversationProvider.notifier);
-    final chatNotifier = ref.watch(chatProvider.notifier);
     final state = ref.watch(conversationProvider);
 
     //? This is the case.
@@ -78,7 +77,7 @@ class ArchivedChatsScreen extends ConsumerWidget {
                 (index) => ConversationWidget(
                   index: index,
                   chatId: state.archivedResults[index].id,
-                  notifier: chatNotifier,
+                  notifier: ref.read(chatProvider(state.archivedResults[index].id).notifier),
                   conversationNotifier: notifier,
                 ),
               ),

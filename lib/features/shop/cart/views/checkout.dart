@@ -78,7 +78,6 @@ class _CheckoutState extends ConsumerState<Checkout> {
     final key = "checkout";
     final viewModel = ref.watch(checkoutVmProvider);
     final notifier = ref.read(conversationProvider.notifier);
-    final chatNotifier = ref.read(chatProvider.notifier);
     final selectedOption = ref.watch(radioSelectProvider(key));
     final CheckoutArg? arg = ModalRoute.of(context)?.settings.arguments as CheckoutArg?;
 
@@ -107,6 +106,7 @@ class _CheckoutState extends ConsumerState<Checkout> {
           if (chat == null) return;
 
           //? If we could make this chat...
+          final chatNotifier = ref.read(chatProvider(chat.id).notifier);
           chatNotifier.setChat(chat);
           WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
         },

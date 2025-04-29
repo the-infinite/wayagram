@@ -75,7 +75,6 @@ class _StartConversationGroupModalState extends State<StartConversationGroupModa
         child: Consumer(
           builder: (context, ref, _) {
             final notifier = ref.read(createChatGroupProvider.notifier);
-            final chatNotifier = ref.read(chatProvider.notifier);
 
             //? Now return the component.
             return PopScope(
@@ -238,6 +237,7 @@ class _StartConversationGroupModalState extends State<StartConversationGroupModa
                                 if (result == null) return;
 
                                 //? This is fine.
+                                final chatNotifier = ref.read(chatProvider(result.id).notifier);
                                 chatNotifier.setChat(result);
                                 WayaNav.replaceNamed(WayaAppRoutes.getSingleChatRoute(result.id));
                               },

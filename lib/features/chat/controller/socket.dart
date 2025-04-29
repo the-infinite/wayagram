@@ -8,8 +8,12 @@ import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 
 class WayaChatSocketArgs {
+  static int _lastId = -1;
+  final int id;
   final String chatId;
+  final String eventUid;
   final String command;
+  final int timestamp;
   final String senderId;
   final String? messageId;
   final String? content;
@@ -19,9 +23,12 @@ class WayaChatSocketArgs {
 
   //? This is fine.
   WayaChatSocketArgs._({
+    required this.id,
     required this.command,
+    required this.eventUid,
     required this.chatId,
     required this.senderId,
+    required this.timestamp,
     this.action,
     this.content,
     this.messageId,
@@ -31,6 +38,9 @@ class WayaChatSocketArgs {
 
   factory WayaChatSocketArgs.typing(String chatId, bool isTyping, [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
+      id: _lastId++,
+      eventUid: WayaValueHelper.createUid(),
+      timestamp: DateTime.now().millisecondsSinceEpoch,
       command: "typing",
       chatId: chatId,
       senderId: ConversationState.self.id,
@@ -42,6 +52,9 @@ class WayaChatSocketArgs {
 
   factory WayaChatSocketArgs.sendMessage(String chatId, String messageId, [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
+      id: _lastId++,
+      eventUid: WayaValueHelper.createUid(),
+      timestamp: DateTime.now().millisecondsSinceEpoch,
       command: "sendMessage",
       chatId: chatId,
       senderId: ConversationState.self.id,
@@ -53,6 +66,9 @@ class WayaChatSocketArgs {
 
   factory WayaChatSocketArgs.markAsRead(String chatId, String messageId, [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
+      id: _lastId++,
+      eventUid: WayaValueHelper.createUid(),
+      timestamp: DateTime.now().millisecondsSinceEpoch,
       command: "markAsRead",
       chatId: chatId,
       senderId: ConversationState.self.id,
@@ -64,6 +80,9 @@ class WayaChatSocketArgs {
 
   factory WayaChatSocketArgs.markAllAsRead(String chatId, [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
+      id: _lastId++,
+      eventUid: WayaValueHelper.createUid(),
+      timestamp: DateTime.now().millisecondsSinceEpoch,
       command: "markAllAsRead",
       chatId: chatId,
       senderId: ConversationState.self.id,
@@ -74,6 +93,9 @@ class WayaChatSocketArgs {
 
   factory WayaChatSocketArgs.deleteMessage(String chatId, String messageId, [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
+      id: _lastId++,
+      eventUid: WayaValueHelper.createUid(),
+      timestamp: DateTime.now().millisecondsSinceEpoch,
       command: "deleteMessage",
       chatId: chatId,
       senderId: ConversationState.self.id,
@@ -85,6 +107,9 @@ class WayaChatSocketArgs {
 
   factory WayaChatSocketArgs.join(String chatId, [bool? isSynced, bool? isFlagged]) {
     return WayaChatSocketArgs._(
+      id: _lastId++,
+      eventUid: WayaValueHelper.createUid(),
+      timestamp: DateTime.now().millisecondsSinceEpoch,
       command: "join",
       chatId: chatId,
       senderId: ConversationState.self.id,
@@ -102,6 +127,9 @@ class WayaChatSocketArgs {
     bool? isFlagged,
   }) {
     return WayaChatSocketArgs._(
+      id: _lastId++,
+      eventUid: WayaValueHelper.createUid(),
+      timestamp: DateTime.now().millisecondsSinceEpoch,
       command: command,
       chatId: chatId,
       senderId: ConversationState.self.id,
@@ -114,7 +142,9 @@ class WayaChatSocketArgs {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'chatId': chatId,
+      'eventUid': eventUid,
       'senderId': senderId,
       if (messageId != null) 'messageId': messageId,
       if (content != null) 'content': content,
@@ -127,6 +157,9 @@ class WayaChatSocketArgs {
   factory WayaChatSocketArgs.fromJson(Map<String, dynamic> json) {
     return WayaChatSocketArgs._(
       command: "",
+      eventUid: json['eventUid'],
+      timestamp: json['timestamp'],
+      id: json['id'],
       chatId: json['chatId'],
       senderId: json['senderId'],
       messageId: json['messageId'],
@@ -140,6 +173,7 @@ class WayaChatSocketArgs {
 
 class WayaSocketController {
   static final instance = WayaSocketController._();
+  static final history = <WayaChatSocketArgs>[];
 
   // Now the fields.
   final _rooms = <String>[];
@@ -190,6 +224,9 @@ class WayaSocketController {
       debugPrint("socket-error> Error: $event");
     });
 
+    //? Set up the ordinals for the events originating from this user.
+    WayaChatSocketArgs._lastId = ConversationState.self.id.hashCode;
+
     //? Connect our socket.
     _socket = _socket!.connect();
   }
@@ -203,6 +240,8 @@ class WayaSocketController {
     _socket = null;
   }
 
+  /// Our utility function used to update the contents of each chat list inside
+  /// of a users conversations geed.
   Future<void> updateChats() async {
     final notifier = ref!.read(conversationProvider.notifier);
 
@@ -216,7 +255,6 @@ class WayaSocketController {
   /// Our utility function that is used to start listening for socket events.
   Future<void> listen() async {
     final socket = _socket!;
-    final chatNotifier = ref!.read(chatProvider.notifier);
 
     //? On any event.
     socket.onAny(
@@ -238,6 +276,7 @@ class WayaSocketController {
       "messageRead",
       (data) async {
         final args = _quickDecode(data);
+        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
         final state = chatNotifier.getState();
 
         //? If this is not fine.
@@ -256,6 +295,7 @@ class WayaSocketController {
       "start-typing",
       (data) async {
         final args = _quickDecode(data);
+        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
         final state = chatNotifier.getState();
 
         //? If this is not fine.
@@ -271,6 +311,7 @@ class WayaSocketController {
       "stop-typing",
       (data) async {
         final args = _quickDecode(data);
+        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
         final state = chatNotifier.getState();
 
         //? If this is not fine.
@@ -286,6 +327,7 @@ class WayaSocketController {
       "messageDeleted",
       (data) async {
         final args = _quickDecode(data);
+        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
         final state = chatNotifier.getState();
 
         //? If this is not fine.
@@ -304,6 +346,7 @@ class WayaSocketController {
       "receiveMessage",
       (data) async {
         final args = _quickDecode(data);
+        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
         final state = chatNotifier.getState();
 
         //? If this is not fine.
@@ -322,6 +365,7 @@ class WayaSocketController {
       "readMessages",
       (data) async {
         final args = _quickDecode(data);
+        final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
         final state = chatNotifier.getState();
 
         //? If this is not fine.
@@ -340,6 +384,7 @@ class WayaSocketController {
   Future<void> emit(WayaChatSocketArgs args) async {
     if (_socket == null) return;
     _socket!.emit(args.command, args.toJson());
+    history.add(args);
     debugPrint("socket-${args.command}> -->\$${args.toJson()}");
   }
 

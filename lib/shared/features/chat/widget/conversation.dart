@@ -16,7 +16,6 @@ class ConversationFeedWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(conversationProvider);
-    final chatNotifier = ref.watch(chatProvider.notifier);
     final notifier = ref.watch(conversationProvider.notifier);
 
     //? This is fine.
@@ -27,7 +26,7 @@ class ConversationFeedWidget extends ConsumerWidget {
         (index) => ConversationWidget(
           index: index,
           chatId: state.conversations[index].id,
-          notifier: chatNotifier,
+          notifier: ref.read(chatProvider(state.conversations[index].id).notifier),
           conversationNotifier: notifier,
           isInteractive: false,
         ),
