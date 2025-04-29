@@ -17,6 +17,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
+import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/products_grid.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
@@ -311,10 +312,9 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                     //conversationNotifier.reportUser(widget.data.$1.id);
                     final result = await WayaUtils.showModalSheet<bool?>(
                       context,
-                      child: ReportDialog(
-                        user: widget.data.$1,
-                        profile: widget.data.$2,
-                        ref: ref,
+                      child: ReportChatPage(
+                        statuses: pageReport,
+                        userId: widget.data.$1.id,
                       ),
                     );
 

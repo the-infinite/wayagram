@@ -13,6 +13,7 @@ import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/profile/chat_media.dart';
 import 'package:wayagram/features/chat/widget/profile/button.dart';
+import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class PersonalChatProfilePage extends StatelessWidget {
@@ -119,10 +120,11 @@ class PersonalChatProfilePage extends StatelessWidget {
                 onTap: () async {
                   final result = await WayaUtils.showModalSheet<bool?>(
                     context,
-                    child: ReportDialog(
-                      user: chat.other.userData!,
-                      profile: chat.other.profileData!,
-                      ref: ref,
+                    child: ReportChatPage(
+                      statuses: pageReport,
+                      userId: chat.other.userData!.id,
+                    
+                     
                     ),
                   );
 
