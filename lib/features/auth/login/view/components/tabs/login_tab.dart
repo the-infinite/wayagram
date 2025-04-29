@@ -45,6 +45,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
         WayaButton(
           color: wayaTheme.colorScheme.black,
           callback: () {
+            print("IDRIS IDRIS");
            ref.watch(loginVmProvider.notifier).signinWithApple();
           },
           leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),

@@ -98,10 +98,12 @@ class LoginVm extends StateNotifier<LoginState> {
       scopes: [
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
+
       ],
     );
 
-    debugPrint(credential.toString());
+    debugPrint(credential.identityToken.toString());
+    oauthSignIn(token: credential.identityToken.toString(), authType: 'APPLE');
   }
 
   Future<void> signinWithGoogle() async {
