@@ -204,7 +204,7 @@ class WayaSocketController {
   }
 
   Future<void> updateChats() async {
-    final notifier = ref!.watch(conversationProvider.notifier);
+    final notifier = ref!.read(conversationProvider.notifier);
 
     //? Wait for this to finish
     await debounce(key: "chat-list-update", () async {
@@ -216,12 +216,12 @@ class WayaSocketController {
   /// Our utility function that is used to start listening for socket events.
   Future<void> listen() async {
     final socket = _socket!;
-    final chatNotifier = ref!.watch(chatProvider.notifier);
+    final chatNotifier = ref!.read(chatProvider.notifier);
 
     //? On any event.
     socket.onAny(
       (event, args) {
-        debugPrint("socket-$event> <--#$args");
+        debugPrint("socket(${ConversationState.self.id})-$event> <--#$args");
       },
     );
 
@@ -244,7 +244,7 @@ class WayaSocketController {
         if (state.chat?.id != args.chatId) return;
 
         //? Since we are in this chat...
-        chatNotifier.getMessages(true);
+        await chatNotifier.getMessages(true);
 
         //? Wait for this to finish
         await updateChats();
