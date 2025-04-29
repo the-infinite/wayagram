@@ -8,7 +8,6 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
 import 'package:wayagram/features/auth/forgot_password/vm/create_new_password_vm.dart';
-// import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 
 class CreateNewPassword extends ConsumerStatefulWidget {
   final String email;
@@ -25,7 +24,7 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createNewPasswordProvider);
-    //final credential = ref.watch(credentialInputProvider);
+    // final credential = ref.watch(credentialInputProvider);
     final verify = ref.watch(verifyAccountProvider);
     final wayaTheme = Theme.of(context);
 

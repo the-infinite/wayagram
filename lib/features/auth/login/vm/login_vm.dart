@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/controller/preloader.dart';
@@ -92,6 +93,19 @@ class LoginVm extends StateNotifier<LoginState> {
     super.dispose();
   }
 
+  Future<void> signinWithApple() async {
+    final credential = await SignInWithApple.getAppleIDCredential(
+      scopes: [
+        AppleIDAuthorizationScopes.email,
+        AppleIDAuthorizationScopes.fullName,
+
+      ],
+    );
+
+    debugPrint(credential.identityToken.toString());
+    oauthSignIn(token: credential.identityToken.toString(), authType: 'APPLE');
+  }
+
   Future<void> signinWithGoogle() async {
     final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
     if (googleUser == null) {
@@ -127,6 +141,7 @@ class LoginVm extends StateNotifier<LoginState> {
         } else {
           throw "Error";
         }
+
       }
     } catch (error) {
       debugPrint(error.toString());

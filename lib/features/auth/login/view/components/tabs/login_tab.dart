@@ -43,7 +43,10 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
         //Gap(10),
         WayaButton(
           color: wayaTheme.colorScheme.black,
-          callback: () {},
+          callback: () {
+            print("IDRIS IDRIS");
+           ref.watch(loginVmProvider.notifier).signinWithApple();
+          },
           leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
           text: "Continue with Apple",
           textColor: wayaTheme.colorScheme.onPrimary,
@@ -245,7 +248,9 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
         //Gap(10),
         WayaButton(
           color: wayaTheme.colorScheme.black,
-          callback: () {},
+          callback: () {
+           ref.watch(loginVmProvider.notifier).signinWithApple();
+          },
           leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
           text: "Continue with Apple",
           textColor: wayaTheme.colorScheme.onPrimary,

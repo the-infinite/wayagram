@@ -236,7 +236,8 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                   Row(
                     children: [
                       PostActionType(
-                        text: "${widget.post.likes} Likes",
+                        text:
+                            "${widget.post.likes} ${WayaValueHelper.getComment(widget.post.likes ?? 0, WayaPostAction.likes)}",
                         image: WayaAssets.images.pages.like2.path,
                         color: widget.post.hasLiked != true
                             ? wayaTheme.colorScheme.greyColor500
@@ -256,7 +257,8 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                       ),
                       const Gap(10),
                       PostActionType(
-                        text: "${widget.post.shares} Shares",
+                        text:
+                            "${widget.post.shares} ${WayaValueHelper.getComment(widget.post.shares ?? 0, WayaPostAction.share)}",
                         image: WayaAssets.images.pages.share2.path,
                         color: wayaTheme.colorScheme.primary,
                         onPressed: () async {

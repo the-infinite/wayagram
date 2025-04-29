@@ -43,6 +43,25 @@ class AuthRepository extends BaseRepository {
         },
         showErrors: true);
   }
+   Future<WayaRequestResponse> verifyCAC(String cacNumber) {
+    return post(
+        '$serviceUrl/client/kyc/verify-cac-number',
+        {
+          "cacNumber": cacNumber,
+           "mode": "basic"
+        },
+        showErrors: true);
+  }
+
+     Future<WayaRequestResponse> verifyBVN(String bvnNumber) {
+    return post(
+        '$serviceUrl/client/kyc/verify-bvn',
+        {
+          "bvn": bvnNumber,
+           "mode": "basic"
+        },
+        showErrors: true);
+  }
 
   Future<WayaRequestResponse> resetPassword(ForgotPassword payload) {
     return post(
