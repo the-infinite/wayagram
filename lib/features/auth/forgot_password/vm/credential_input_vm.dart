@@ -85,7 +85,7 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _authRepository.resendOtp(
-        '${ConversationState.self.email}',
+        email: '${ConversationState.self.email}',
         purpose: 'Reset_PIN',
       );
 

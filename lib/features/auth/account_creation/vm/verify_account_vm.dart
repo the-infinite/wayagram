@@ -54,11 +54,11 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
   @override
   VerifyAccountState build() {
     state = VerifyAccountState();
-    _startCountdown();
+    startCountdown();
     return state;
   }
 
-  void _startCountdown() {
+  void startCountdown() {
     _timer?.cancel();
     _timer = Timer.periodic(
       Duration(seconds: 1),
@@ -81,6 +81,47 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     state = state.copyWith(isEditing: value);
   }
 
+  Future<void> verifyPhone(
+      {required VoidCallback onSuccess, required String code}) async {
+    final personalPhone = ref.watch(personalFirstStepProvider).phoneNumber.text;
+
+    
+
+
+
+    state = state.copyWith(isLoading: true);
+    try {
+      final response =
+          await _authRepository.phoneVerification(code, "234$personalPhone");
+
+      if (response.success) {
+        onSuccess();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+    Future<void> resendPhoneOtp() async {
+    try {
+      final personalPhone = ref.watch(personalFirstStepProvider).phoneNumber.text;
+      final response = await _authRepository.resendOtp(phone: "234$personalPhone");
+      _logger.d(" result ${response.data['message']}");
+      if (response.data["statusCode"] == 200) {
+        _snackbarService.showCustomSnackbar(
+            variant: SnackbarType.success,
+            message: "OTP has been resend to 234$personalPhone");
+        state = state.copyWith(isResend: false);
+        //? Start the countdown since our attempt to resend the OTP was successful.
+        startCountdown();
+      }
+    } catch (e) {
+      _logger.e(e.toString());
+    }
+  }
+
   Future<void> verifyAccount({
     required VoidCallback onSuccess,
     required String code,
@@ -98,6 +139,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
         _secureDataSource.saveToken(token);
         _secureDataSource.saveRefreshToken(refreshToken);
+        state = state.copyWith(inputCode: '');
         onSuccess();
       }
     } catch (e) {
@@ -117,7 +159,6 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
       final response =
           await _authRepository.verify(VerifyOtp(email: email, otp: code));
       if (response.success) {
-       
         onSuccess();
       }
     } catch (e) {
@@ -127,31 +168,34 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     }
   }
 
-  Future<void> verifyYourIdentity(VoidCallback onSuccess, String code) async {
-    state = state.copyWith(isLoading: true);
+  // Future<void> verifyEmail(
+  //     {required VoidCallback onSuccess,
+  //     required String code,
+  //     required String email}) async {
+  //   state = state.copyWith(isLoading: true);
 
-    try {
-      final response = await _authRepository.verifyOtp(
-          VerifyOtp(email: '${ConversationState.self.email}', otp: code));
-      if (response.success) {
-        final token = response.data['data']['token']['token'];
-        final refreshToken = response.data['data']['token']['refreshToken'];
+  //   try {
+  //     final response = await _authRepository.verifyOtp(
+  //         VerifyOtp(email: '${ConversationState.self.email}', otp: code));
+  //     if (response.success) {
+  //       final token = response.data['data']['token']['token'];
+  //       final refreshToken = response.data['data']['token']['refreshToken'];
 
-        _secureDataSource.saveToken(token);
-        _secureDataSource.saveRefreshToken(refreshToken);
-        onSuccess();
-      }
-    } catch (e) {
-      _logger.e(e.toString());
-    } finally {
-      state = state.copyWith(isLoading: false);
-    }
-  }
+  //       _secureDataSource.saveToken(token);
+  //       _secureDataSource.saveRefreshToken(refreshToken);
+  //       onSuccess();
+  //     }
+  //   } catch (e) {
+  //     _logger.e(e.toString());
+  //   } finally {
+  //     state = state.copyWith(isLoading: false);
+  //   }
+  // }
 
   Future<void> resendOtp() async {
     try {
       final email = ref.watch(personalFirstStepProvider).email.text;
-      final response = await _authRepository.resendOtp(email);
+      final response = await _authRepository.resendOtp(email: email);
       _logger.d(" result ${response.data['message']}");
       if (response.data["statusCode"] == 200) {
         _snackbarService.showCustomSnackbar(
@@ -159,7 +203,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
             message: "OTP has been resend to $email");
         state = state.copyWith(isResend: false);
         //? Start the countdown since our attempt to resend the OTP was successful.
-        _startCountdown();
+        startCountdown();
       }
     } catch (e) {
       _logger.e(e.toString());
@@ -169,7 +213,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
   Future<void> resendOtpForRegisteredButNotVerifiedUser(
       {required String email}) async {
     try {
-      final response = await _authRepository.resendOtp(email);
+      final response = await _authRepository.resendOtp(email:email);
       _logger.d(" result ${response.data['message']}");
       if (response.data["statusCode"] == 200) {
         _snackbarService.showCustomSnackbar(
@@ -177,7 +221,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
             message: "OTP has been resend to $email");
         state = state.copyWith(isResend: false);
         //? Start the countdown since our attempt to resend the OTP was successful.
-        _startCountdown();
+        startCountdown();
       }
     } catch (e) {
       _logger.e(e.toString());

@@ -35,6 +35,7 @@ class ProductCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final String image = product.images.isEmpty ? "" : product.images[0];
+    print("${product.discountPercentage} ${product.name} ${product.discountPercentage.toString() == "0"}");
 
     return GestureDetector(
       onTap: () {
@@ -73,10 +74,11 @@ class ProductCard extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(6)),
                     child: Center(
                       child: Text("WAYAGRAM DEAL",
-                          style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
-                              color: wayaTheme.colorScheme.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 10.sp)),
+                          style: wayaTheme.textTheme.descriptionStyle
+                              .wayaCopyWith(
+                                  color: wayaTheme.colorScheme.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 10.sp)),
                     ),
                   )
                 ],
@@ -92,8 +94,8 @@ class ProductCard extends ConsumerWidget {
               )),
           SizedBox(height: 3),
           Text(product.name.capitalizeFirst!,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
               visible: !isExplore,
@@ -140,9 +142,8 @@ class ProductCard extends ConsumerWidget {
           SizedBox(height: 3),
           Text(
               product.discountPercentage > 0
-                  ? 
-                          WayaHelpers.calculatedDiscountPrice(
-                              product.price, product.discountPercentage)
+                  ? WayaHelpers.calculatedDiscountPrice(
+                      product.price, product.discountPercentage)
                   : WayaHelpers.formatPrice(
                       double.parse(product.price).toInt()),
               style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
@@ -230,6 +231,10 @@ class SellerProductCard extends ConsumerWidget {
             radius: BorderRadius.circular(8),
             color: wayaTheme.colorScheme.transparent,
           ),
+             if (product.discountPercentage == 0)
+            SizedBox(
+              height: 20,
+            ),
           Visibility(
               visible: product.wayagramDeal != null,
               child: Column(
@@ -243,10 +248,11 @@ class SellerProductCard extends ConsumerWidget {
                         borderRadius: BorderRadius.circular(6)),
                     child: Center(
                       child: Text("WAYAGRAM DEAL",
-                          style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
-                              color: wayaTheme.colorScheme.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 10.sp)),
+                          style: wayaTheme.textTheme.descriptionStyle
+                              .wayaCopyWith(
+                                  color: wayaTheme.colorScheme.white,
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 10.sp)),
                     ),
                   )
                 ],
@@ -262,8 +268,8 @@ class SellerProductCard extends ConsumerWidget {
               )),
           SizedBox(height: 3),
           Text(product.name.capitalizeFirst!,
-             maxLines: 1,
-          overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
               style: wayaTheme.textTheme.bodyXtraMedium),
           Visibility(
               visible: !isExplore,
@@ -296,7 +302,8 @@ class SellerProductCard extends ConsumerWidget {
                 children: [
                   SizedBox(height: 3),
                   Text(
-                    WayaHelpers.formatPrice(double.parse(product.price).toInt()),
+                    WayaHelpers.formatPrice(
+                        double.parse(product.price).toInt()),
                     style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
                         decoration: TextDecoration.lineThrough,
                         decorationColor: wayaTheme.colorScheme.greyColor400,
@@ -311,7 +318,8 @@ class SellerProductCard extends ConsumerWidget {
               product.discountPercentage > 0
                   ? WayaHelpers.calculatedDiscountPrice(
                       product.price, product.discountPercentage.toInt())
-                  : WayaHelpers.formatPrice(double.parse(product.price).toInt()),
+                  : WayaHelpers.formatPrice(
+                      double.parse(product.price).toInt()),
               style: TextStyle().wayaCopyWith(
                   color: isExplore
                       ? wayaTheme.colorScheme.customPrimary

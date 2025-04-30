@@ -8,6 +8,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_vm.dart';
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
 import 'package:wayagram/features/auth/transaction_pin/views/transaction_pin_view.dart';
 
@@ -26,7 +27,7 @@ class VerifyAccount extends ConsumerWidget {
     final viewModelState = ref.watch(verifyAccountProvider);
     final viewModel = ref.watch(verifyAccountProvider.notifier);
     final wayaTheme = Theme.of(context);
-    //final credentialProvider = ref.watch(credentialInputProvider);
+    String personalEmail = ref.watch(personalFirstStepProvider).email.text;
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -34,7 +35,7 @@ class VerifyAccount extends ConsumerWidget {
       children: [
         //? First, for the page title.
         Text(
-          "Verify your Account",
+          "Verify your email address",
           style: WayaTextStyles.titleLarge,
         ),
 
@@ -43,7 +44,7 @@ class VerifyAccount extends ConsumerWidget {
 
         //? Give it a little bit more space.
         Text(
-          "Enter the 6-digits code sent to your email address and Phone number",
+          "We sent a 6-digits code sent to ${email.isNotEmpty ? email : personalEmail} to verify your email",
           maxLines: 3,
           style: WayaTextStyles.hintStyle,
         ),

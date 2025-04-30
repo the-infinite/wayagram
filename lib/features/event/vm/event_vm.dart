@@ -59,10 +59,10 @@ class EventVm extends StateNotifier<EventState> {
     }
   }
 
-  Future<PaginatedResult<EventDoc>?> getEventWithStatus({required int page}) async {
+  Future<PaginatedResult<EventDoc>?> getEventWithStatus({required int page, int limit = 10}) async {
     try {
       state = state.copyWith(isLoadingEventWithStatus: true);
-      final response = await _eventRepository.getEventWithStatus(status: "upcoming", page: page);
+      final response = await _eventRepository.getEventWithStatus(status: "upcoming", page: page, limit: limit);
 
       List<EventDoc> upcoming = [];
       bool hasNextPage = false;
