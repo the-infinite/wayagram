@@ -24,7 +24,6 @@ class ConversationScreen extends ConsumerStatefulWidget {
 }
 
 class _ConversationScreenState extends ConsumerState<ConversationScreen> {
-  late final chatNotifier = ref.watch(chatProvider.notifier);
   late final notifier = ref.watch(conversationProvider.notifier);
 
   @override
@@ -235,7 +234,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       (index) => ConversationWidget(
                         index: index,
                         chatId: conversationState.results[index].id,
-                        notifier: chatNotifier,
+                        notifier: ref.read(chatProvider(conversationState.results[index].id).notifier),
                         conversationNotifier: notifier,
                       ),
                     ),
@@ -262,7 +261,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                         (index) => ConversationWidget(
                           index: index,
                           chatId: conversationState.pinned[index].id,
-                          notifier: chatNotifier,
+                          notifier: ref.read(chatProvider(conversationState.pinned[index].id).notifier),
                           conversationNotifier: notifier,
                         ),
                       ),
@@ -291,7 +290,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       (index) => ConversationWidget(
                         index: index,
                         chatId: conversationState.unpinned[index].id,
-                        notifier: chatNotifier,
+                        notifier: ref.read(chatProvider(conversationState.unpinned[index].id).notifier),
                         conversationNotifier: notifier,
                       ),
                     ),

@@ -158,5 +158,4 @@ class ContestRepo extends BaseRepository {
   Future<WayaRequestResponse> fetchSingleContest(String contestId) {
     return get('$serviceUrl2/admin/contests/?id=$contestId');
   }
-
 }

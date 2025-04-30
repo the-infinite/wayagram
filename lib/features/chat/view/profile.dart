@@ -27,7 +27,7 @@ class _ChatProfilePageState extends ConsumerState<ChatProfilePage> {
   @override
   Widget build(BuildContext context) {
     final _ = ref.watch(conversationProvider);
-    final state = ref.watch(chatProvider);
+    final state = ref.watch(chatProvider(widget.chatId));
 
     //? If this is after the state of this has been reset.
     if (state.chat == null) return const SizedBox();

@@ -8,7 +8,6 @@ import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_v
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
-import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 
 class VerifyAccountState {

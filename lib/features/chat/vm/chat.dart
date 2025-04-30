@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/controller/message.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/features/chat/dto/chat.dart';
 import 'package:wayagram/features/chat/model/default.dart';
@@ -10,9 +11,26 @@ import 'package:wayagram/features/shop/shop_dispute/data/repo/shop_dispute_repos
 
 class ChatNotifier extends StateNotifier<ChatState> {
   final repo = MessageRepository();
+  final controllers = <String, MessageController>{};
   final shopDisputeRepo = ShopDisputeRepository();
 
   ChatNotifier(super.state);
+
+  /// Helper function used to get or create and then get a message controller for
+  /// a chat using the ID of the chat.
+  MessageController getController(MessageModel message) {
+    final id = message.id;
+    var found = controllers[id];
+
+    if (found == null) {
+      found = MessageController(id);
+      found.updateData(message);
+      controllers[id] = found;
+    }
+
+    // Do it like this.
+    return found;
+  }
 
   /// Helper function used to get the list of messages from the back-end so they
   /// can be stored locally on this device.
@@ -48,13 +66,13 @@ class ChatNotifier extends StateNotifier<ChatState> {
       //? Parse the conversations as they are in the response object...
       final docs = (data['docs'] as List).map((doc) => MessageModel.fromJson(doc));
 
-      //? This is fine.
-      result.addAll(docs.where((msg) => msg.myStatus?.status != MessageStatusCode.deleted).toList().reversed);
-
       //? If the previous page had a next page, offload them onto this place.
       if (!reset && state.hasNextPage) {
         result.addAll(state.messages);
       }
+
+      //? Add our new messages
+      result.addAll(docs.where((msg) => msg.myStatus?.status != MessageStatusCode.deleted).toList().reversed);
 
       //? Update state.
       state = state.copyWith(
@@ -86,27 +104,20 @@ class ChatNotifier extends StateNotifier<ChatState> {
     if (response.success) {
       final result = MessageModel.fromJson(response.data['data']);
       final pos = state.messages.indexWhere((message) => message.id == id);
+      final controller = getController(result);
 
-      //? If this was found...
-      if (replace && pos != -1) {
-        final messages = state.messages;
-        final previous = messages[pos];
-
-        //? Fix the bug where the latest message is not always guaranteed to be
-        //? showing up here.
-        messages[pos] = result.copyWith(false, previous.originalMessage);
-
-        //? Then update this.
-        state = state.copyWith(messages: messages);
-      }
-
-      //? If this message is not in your list of messages.
-      else {
+      //? If this was not found in the list of messages...
+      if (pos < 0) {
         //? First, get the messages.
         final messages = state.messages;
 
         //? Finally, scroll infinitely.
-        state = state.copyWith(messages: [result, ...messages]);
+        state = state.copyWith(messages: [...messages, result]);
+      }
+
+      //? You can go ahead to update the value of this message in its controller.
+      else {
+        controller.updateData(result);
       }
 
       //? Return this result.
@@ -163,16 +174,15 @@ class ChatNotifier extends StateNotifier<ChatState> {
       //? If this went well...
       if (response.success) {
         final result = MessageModel.fromJson(response.data['data']);
-        final conversation = state.messages;
-        final found = conversation.lastIndexWhere((message) => message.id == messageId);
+        final found = state.messages.lastIndexWhere((message) => message.id == messageId);
 
         //? Now, replace this.
         if (found != -1) {
-          conversation[found] = result.copyWith(false, message.originalMessage);
+          final controller = getController(state.messages[found]);
+          controller.updateData(result.copyWith(false, message.originalMessage), result.id);
+          controllers[result.id] = controller;
+          controllers.remove(messageId);
         }
-
-        //? Now update the UI with our changes...
-        state = state.copyWith(messages: [...conversation], isLoading: false);
 
         // Notify everyone of it.
         WayaSocketController.instance.emit(WayaChatSocketArgs.sendMessage(state.chat!.id, result.id));
@@ -183,28 +193,27 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       //? Turn this into an error.
       else {
-        final conversation = state.messages;
-        final found = conversation.lastIndexWhere((message) => message.id == messageId);
+        final found = state.messages.lastIndexWhere((message) => message.id == messageId);
 
         //? Now, replace this.
         if (found != -1) {
-          conversation[found] = conversation[found].copyWith(true, message.originalMessage);
+          final controller = getController(state.messages[found]);
+          final result = state.messages[found];
+          controller.updateData(result.copyWith(true, message.originalMessage));
         }
 
         //? Now update the UI with our changes...
-        state = state.copyWith(messages: [...conversation], isLoading: false);
+        // state = state.copyWith(messages: [...conversation], isLoading: false);
       }
     } catch (_) {
-      final conversation = state.messages;
-      final found = conversation.lastIndexWhere((message) => message.id == messageId);
+      final found = state.messages.lastIndexWhere((message) => message.id == messageId);
 
       //? Now, replace this.
       if (found != -1) {
-        conversation[found] = conversation[found].copyWith(true, message.originalMessage);
+        final controller = getController(state.messages[found]);
+        final result = state.messages[found];
+        controller.updateData(result.copyWith(true, message.originalMessage));
       }
-
-      //? Now update the UI with our changes...
-      state = state.copyWith(messages: [...conversation], isLoading: false);
     }
 
     //? Since we are in test mode, it would always succeed.
@@ -245,6 +254,8 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
     //? Now, replace this.
     if (found != -1) {
+      final controller = getController(state.messages[found]);
+      controller.setRemoved(true);
       conversation.removeAt(found);
 
       //? Now update the UI with our changes...
@@ -339,22 +350,22 @@ class ChatNotifier extends StateNotifier<ChatState> {
     return response.success;
   }
 
-  /// A nice way of resetting this to its primal origin.
-  void reset() {
-    state = ChatState.initial;
-  }
-
   /// A helper function used to update the currently viewable chat on screen. It
   /// would clear out all visible messages and only retrieve messages sent by
   /// a given user.
   void setChat(ChatModel chat) {
+    if (state.chat != null) {
+      return;
+    }
+
+    // Clear the controllers and then update the chat we are listening to.
+    controllers.clear();
     state = state.copyWith(
       chat: chat,
-      messages: [],
     );
   }
 }
 
-final chatProvider = StateNotifierProvider<ChatNotifier, ChatState>(
-  (ref) => ChatNotifier(ChatState.initial),
+final chatProvider = StateNotifierProvider.family<ChatNotifier, ChatState, String>(
+  (ref, id) => ChatNotifier(ChatState.initial),
 );
