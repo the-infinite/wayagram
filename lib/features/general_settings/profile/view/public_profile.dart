@@ -75,7 +75,6 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
   late final productsNotifier = ref.watch(userProductsProvider.notifier);
   late final conversationNotifier = ref.watch(conversationProvider.notifier);
 
-  late final chatNotifier = ref.read(chatProvider.notifier);
   final scrollHandler = WayaObservableScrollController();
   final _pageController = ValueNotifier(0);
   final _tabController = ExpandedTabController();
@@ -192,6 +191,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
         if (chat == null) return;
 
         //? If we could make this chat...
+        final chatNotifier = ref.read(chatProvider(chat.id).notifier);
         chatNotifier.setChat(chat);
         WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
       },
