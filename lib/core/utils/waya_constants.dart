@@ -17,4 +17,7 @@ class WayaServiceUri {
   static const account = "wayagram-profile/api/v2";
   static const quotation = "wayagram-shop/api/v2/quotation";
   static const shop = "wayagram-shop/api/v2";
+  static const contest = "school-contest/api/v1";
+  
+
 }

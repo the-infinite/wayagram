@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
@@ -46,7 +45,6 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
   final _logger = getLogger("CredentialInputNotifier");
   final _authRepository = AuthRepository();
   final _snackbarService = SnackbarService();
-  final _localDataSource = WayaLocalDataSource();
 
   CredentialInputNotifier(this.ref)
       : super(
@@ -89,7 +87,7 @@ class CredentialInputNotifier extends StateNotifier<CredentialInputState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _authRepository.resendOtp(
-        '${ConversationState.self.email}',
+        email: '${ConversationState.self.email}',
         purpose: 'Reset_PIN',
       );
 

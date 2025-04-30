@@ -169,26 +169,29 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     }
   }
 
-  Future<void> verifyYourIdentity(VoidCallback onSuccess, String code) async {
-    state = state.copyWith(isLoading: true);
+  // Future<void> verifyEmail(
+  //     {required VoidCallback onSuccess,
+  //     required String code,
+  //     required String email}) async {
+  //   state = state.copyWith(isLoading: true);
 
-    try {
-      final response = await _authRepository.verifyOtp(
-          VerifyOtp(email: '${ConversationState.self.email}', otp: code));
-      if (response.success) {
-        final token = response.data['data']['token']['token'];
-        final refreshToken = response.data['data']['token']['refreshToken'];
+  //   try {
+  //     final response = await _authRepository.verifyOtp(
+  //         VerifyOtp(email: '${ConversationState.self.email}', otp: code));
+  //     if (response.success) {
+  //       final token = response.data['data']['token']['token'];
+  //       final refreshToken = response.data['data']['token']['refreshToken'];
 
-        _secureDataSource.saveToken(token);
-        _secureDataSource.saveRefreshToken(refreshToken);
-        onSuccess();
-      }
-    } catch (e) {
-      _logger.e(e.toString());
-    } finally {
-      state = state.copyWith(isLoading: false);
-    }
-  }
+  //       _secureDataSource.saveToken(token);
+  //       _secureDataSource.saveRefreshToken(refreshToken);
+  //       onSuccess();
+  //     }
+  //   } catch (e) {
+  //     _logger.e(e.toString());
+  //   } finally {
+  //     state = state.copyWith(isLoading: false);
+  //   }
+  // }
 
   Future<void> resendOtp() async {
     try {
