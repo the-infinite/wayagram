@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/general_settings/chat_call_pref/view/chat_call_pref_page.dart';
+import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/modals/logout.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
-import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings_page.dart';
+
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/referral/view/referral_page.dart';
 import 'package:wayagram/features/role_access/view/role_access_page.dart';
@@ -93,20 +93,20 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               ),
 
               //
-              GeneralSettingsOptionModel(
-                title: 'Change Transaction PIN',
-                iconPath: 'password',
-                onTap: () => WayaNav.toNamed('/change-pin-page'),
-              ),
             ],
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(
+                title: 'Change Transaction PIN',
+                iconPath: 'password',
+                onTap: () => WayaNav.toNamed('/change-pin-page'),
+              ),
+              /*   GeneralSettingsOptionModel(
                 title: 'Privacy Settings',
                 iconPath: 'shield_plus',
                 onTap: () => WayaNav.toNamed(PrivacySettingsPage.route),
-              ),
+              ), */
               GeneralSettingsOptionModel(
                 title: 'Profile Visibility',
                 iconPath: 'user_settings',
@@ -131,9 +131,11 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(
-                title: 'Chat & Call Preferences',
-                iconPath: 'chat2',
-                onTap: () => WayaNav.toNamed(ChatCallPrefPage.route),
+                //title: 'Chat & Call Preferences',
+                title: 'Privacy Settings',
+                // iconPath: 'chat2',
+                iconPath: 'shield_plus',
+                onTap: () => WayaNav.toNamed(PrivacySettingsPage.route),
               ),
               GeneralSettingsOptionModel(
                 title: 'Notification Settings',

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/model/model.dart';
-import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/data/model/location_response_model.dart';
@@ -20,13 +19,12 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
   final ShopRepository _shopRepository;
   final AuthRepository _authRepository;
   final ImagePicker _picker;
-  final WayaSecureDataSource _secureDataSource;
+  //final WayaSecureDataSource _secureDataSource;
 
   final Ref ref;
 
   final _logger = getLogger('CreateAdditionalShopVm');
-  CreateAdditionalShopVm(this._shopRepository, this._authRepository, this._picker, this._secureDataSource, this.ref)
-      : super(CreateShopState());
+  CreateAdditionalShopVm(this._shopRepository, this._authRepository, this._picker, this.ref) : super(CreateShopState());
 
   Future<void> selectState(Select value) async {
     String finalState = state.state;
@@ -148,5 +146,5 @@ class CreateAdditionalShopVm extends StateNotifier<CreateShopState> {
 
 final createAdditionalShopVmProvider =
     StateNotifierProvider.family<CreateAdditionalShopVm, CreateShopState, String>((ref, uniqueKey) {
-  return CreateAdditionalShopVm(ShopRepository.instance, AuthRepository(), ImagePicker(), WayaSecureDataSource(), ref);
+  return CreateAdditionalShopVm(ShopRepository.instance, AuthRepository(), ImagePicker(), ref);
 });

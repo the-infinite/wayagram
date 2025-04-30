@@ -26,57 +26,90 @@ class _CategoriesFilterWidgetState
     final wayaTheme = Theme.of(context);
     final viewModel =
         ref.watch(categoriesFilterWidgetVmProvider(widget.uniqueKey));
+    final notifier =
+        ref.read(categoriesFilterWidgetVmProvider(widget.uniqueKey).notifier);
 
     final categories = ref.watch(shopVmProvider).categories;
+
+    if (categories == null) {
+      return SizedBox.shrink();
+    }
 
     return SizedBox(
       height: 45,
       child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: categories!.length,
+          itemCount: 1 + categories.length,
           itemBuilder: (context, index) {
-            return Row(
-              children: [
-                const Gap(6),
-                WayaButton(
-                  callback: () {
-                    final selected = ref
-                        .read(categoriesFilterWidgetVmProvider(widget.uniqueKey)
-                            .notifier)
-                        .updateSelectedCategory(categories[index]);
-
-                    widget.setCategory(selected);
-                  },
-                  border: Border.all(
-                      color:
-                          viewModel.selected.contains(categories[index].value)
+            if (index == 0) {
+              return Row(
+                children: [
+                  const Gap(6),
+                  WayaButton(
+                      callback: () {
+                        print("eveve");
+                        notifier.selectAll();
+                        //  widget.setCategory(['All']);
+                      },
+                      border: Border.all(
+                          color: viewModel.selected.isEmpty ||
+                                  viewModel.selected.contains('All')
                               ? wayaTheme.colorScheme.customPrimary
                               : wayaTheme.colorScheme.greyColor300),
-                  horizontalPadding: 8,
-                  color: viewModel.selected.contains(categories[index].value)
-                      ? wayaTheme.colorScheme.primaryBrown50
-                      : wayaTheme.colorScheme.transparent,
-                  radius: 10,
-                  height: 40,
-                  centerWidget: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      WayaDp(
-                        radius: 10,
-                        image: categories[index].image,
-                      ),
-                      SizedBox(
-                        width: 2.w,
-                      ),
-                      Text(categories[index].label,
-                          style: WayaTextStyles.hintStyle)
-                    ],
+                      horizontalPadding: 8,
+                      color: viewModel.selected.isEmpty ||
+                              viewModel.selected.contains('All')
+                          ? wayaTheme.colorScheme.primaryBrown50
+                          : wayaTheme.colorScheme.transparent,
+                      radius: 10,
+                      height: 40,
+                      centerWidget: Text("All Categories",
+                          style: WayaTextStyles.hintStyle)),
+                  const Gap(6),
+                ],
+              );
+            } else {
+              return Row(
+                children: [
+                  WayaButton(
+                    callback: () {
+                      final selected = notifier
+                          .updateSelectedCategory(categories[index - 1]);
+
+                      widget.setCategory(selected);
+                    },
+                    border: Border.all(
+                        color: viewModel.selected
+                                .contains(categories[index - 1].value)
+                            ? wayaTheme.colorScheme.customPrimary
+                            : wayaTheme.colorScheme.greyColor300),
+                    horizontalPadding: 8,
+                    color:
+                        viewModel.selected.contains(categories[index - 1].value)
+                            ? wayaTheme.colorScheme.primaryBrown50
+                            : wayaTheme.colorScheme.transparent,
+                    radius: 10,
+                    height: 40,
+                    centerWidget: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        WayaDp(
+                          radius: 10,
+                          image: categories[index - 1].image,
+                        ),
+                        SizedBox(
+                          width: 2.w,
+                        ),
+                        Text(categories[index - 1].label,
+                            style: WayaTextStyles.hintStyle)
+                      ],
+                    ),
                   ),
-                ),
-                const Gap(6),
-              ],
-            );
+                  const Gap(6),
+                ],
+              );
+            }
           }),
     );
   }

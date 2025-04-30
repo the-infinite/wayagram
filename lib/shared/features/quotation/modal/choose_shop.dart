@@ -100,7 +100,12 @@ class _ChooseShopModalState extends State<ChooseShopModal> {
 
             //? Now, we are fine.
             WayaButton(
-              callback: () => WayaNav.goBack(result: selectedShop!),
+              callback: () {
+                try {
+                  ShopResource.setShop(shops.where((shop) => shop.id == selectedShop).first);
+                } catch (_) {}
+                WayaNav.goBack(result: selectedShop!);
+              },
               isDisabled: selectedShop == null,
               text: 'Confirm',
             )

@@ -103,7 +103,7 @@ class _CreateProfileState extends ConsumerState<EditContestantProfile> {
   @override
   Widget build(BuildContext context) {
     // final viewModel = ref.watch(createC);
-    final viewModel = ref.watch(contestNotifierProvider);
+    // final viewModel = ref.watch(contestNotifierProvider);
     final notifier = ref.watch(contestNotifierProvider.notifier);
     final wayaTheme = Theme.of(context);
     final isLoading = useState(false);

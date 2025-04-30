@@ -84,7 +84,8 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                             view: () => WayaNav.to(
                               transition: Transition.downToUp,
                               duration: const Duration(milliseconds: 600),
-                              ViewMoment(moments: momentState.myMoments, isMine: true),
+                              ViewMoment(
+                                  moments: momentState.myMoments, isMine: true),
                             ),
                           ),
                         );
@@ -109,7 +110,8 @@ class _SharedMomentsState extends ConsumerState<SharedMoments> {
                 children: [
                   MomentsWidget(
                     moment: moment,
-                    hasMoment: !notifier.hasViewedMoment(moment.moments.first.id),
+                    hasMoment:
+                        !notifier.hasViewedMoment(moment.moments.first.id),
                     onTap: () => WayaNav.to(
                       transition: Transition.downToUp,
                       duration: const Duration(milliseconds: 600),
@@ -154,7 +156,9 @@ class PopModal extends StatelessWidget {
                 textAlign: TextAlign.start,
                 "Create New Moment",
                 style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
-                    color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp, fontWeight: FontWeight.w500),
+                    color: wayaTheme.colorScheme.customBlack,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500),
               ),
             ),
             SizedBox(height: 10),
@@ -167,7 +171,9 @@ class PopModal extends StatelessWidget {
                 "View Moment",
                 textAlign: TextAlign.start,
                 style: wayaTheme.textTheme.descriptionStyle.wayaCopyWith(
-                    color: wayaTheme.colorScheme.customBlack, fontSize: 14.sp, fontWeight: FontWeight.w500),
+                    color: wayaTheme.colorScheme.customBlack,
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500),
               ),
             ),
           ],

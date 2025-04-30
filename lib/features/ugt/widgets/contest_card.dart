@@ -114,7 +114,10 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                           mainAxisSize: MainAxisSize.max,
                           children: [
                             SizedBox(
-                              width: context.width * 0.45,
+                              width: widget.post.profileId ==
+                                      voteNotifier.getLoggedInUserId()
+                                  ? context.width * 0.38
+                                  : context.width * 0.45,
                               child: Text(
                                 //"you are going to print the form help me now qwerty",
                                 widget.post.title ?? "Title",
@@ -139,7 +142,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   if (widget.post.profileId ==
                       voteNotifier.getLoggedInUserId()) ...[
                     Expanded(
-                        flex: 1,
+                        flex: 2,
                         child: WayaButton(
                           fontSize: 12.sp,
                           callback: () {
@@ -302,7 +305,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
 
               WayaButton(
                 callback: () {
-                  print("date date ID: ${widget.post.startDate ?? ""}");
+                  debugPrint("date date ID: ${widget.post.startDate ?? ""}");
                   if (widget.post.status == "CLOSED") {
                     WayaNav.toNamed(EndedContestPage.route, arguments: {
                       'id': widget.post.id,
@@ -341,7 +344,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                 children: [
                   PostActionType(
                     text:
-                        "${widget.post.likeCount} ${widget.post.likeCount! > 0 ? "Likes" : "Like"}",
+                        "${widget.post.likeCount} ${WayaValueHelper.getComment(widget.post.likeCount??0, WayaPostAction.likes)}",
                     image: WayaAssets.images.pages.like2.path,
                     color: widget.post.hasLiked == true
                         ? wayaTheme.colorScheme.primary
@@ -397,7 +400,8 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   ), */
                   const Gap(30),
                   PostActionType(
-                    text: "${widget.post.shareCount} Shares",
+                    text:
+                        "${widget.post.shareCount} ${WayaValueHelper.getComment(widget.post.shareCount??0, WayaPostAction.share)}",
                     image: WayaAssets.images.pages.share2.path,
                     color: wayaTheme.colorScheme.primary,
                     onPressed: () async {
@@ -503,7 +507,7 @@ bool isCurrentDateBetween(
 
     return currentDate.isAfter(startDate) && currentDate.isBefore(endDate);
   } catch (e) {
-    print("Invalid date format: $e");
+    debugPrint("Invalid date format: $e");
     return false;
   }
 }

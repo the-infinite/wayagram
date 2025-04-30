@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -82,7 +81,8 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
               children: [
                 UpcomingWidget(title: "Entry type", content: widget.post?.entryType ?? ""),
                 //  const Gap(20),
-                UpcomingWidget(title: "Entry fee", content: "₦${formatMoney(widget.post?.entryAmount?.toString() ?? "")}"),
+                UpcomingWidget(
+                    title: "Entry fee", content: "₦${formatMoney(widget.post?.entryAmount?.toString() ?? "")}"),
                 //   const Gap(20),
                 UpcomingWidget(
                   title: "Vote to qualify",
@@ -110,7 +110,7 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
                       stageName: widget.post?.stageName ?? "",
                       votingLink: "",
                       onTap: () {
-                        print("i am on the verge");
+                        debugPrint("i am on the verge");
                       },
                       candidateName: "",
                     ),
@@ -132,13 +132,13 @@ class _ApplicationStatusState extends ConsumerState<ContestDetailsStageModal> {
                       buttonText: "Go to Contest Dashboard",
                       onTap: (myContext, myRef) {
                         //  WayaNav.goBack();
-                        print("i am cooking");
+                        debugPrint("i am cooking");
 
                         // WayaNav.goBack();
 
                         viewModel.fetchAllContestApplicant(widget.model?.contestId ?? "");
 
-                        WayaNav.removeAllUntil(AdminContestDetails(id:""), AdminContestDetails.route);
+                        WayaNav.removeAllUntil(AdminContestDetails(id: ""), AdminContestDetails.route);
                       },
                     ),
                   );
@@ -187,23 +187,22 @@ class AvailableBalanceModal extends StatefulHookConsumerWidget {
   final MyContestContestantModel? model;
 
   //String amount;
-  const AvailableBalanceModal(
-      {super.key,
-      required this.voteFee,
-      required this.voteCount,
-      required this.stageName,
-      required this.candidateName,
-      this.model,
-      required this.onTap,
-      required this.votingLink});
+  const AvailableBalanceModal({
+    super.key,
+    required this.voteFee,
+    required this.voteCount,
+    required this.stageName,
+    required this.candidateName,
+    this.model,
+    required this.onTap,
+    required this.votingLink,
+  });
 
   @override
   ConsumerState<AvailableBalanceModal> createState() => _AvailableBalanceModalState();
 }
 
 class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
-  final WayaLocalDataSource _wayaLocalDataSource = WayaLocalDataSource();
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -227,10 +226,8 @@ class _AvailableBalanceModalState extends ConsumerState<AvailableBalanceModal> {
           children: [
             Text(
               'Pay for contest',
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .wayaCopyWith(fontSize: 24.sp, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
+              style: Theme.of(context).textTheme.bodyMedium!.wayaCopyWith(
+                  fontSize: 24.sp, fontWeight: FontWeight.w700, color: Theme.of(context).colorScheme.black),
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
@@ -457,7 +454,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
 
   void _submitPin(BuildContext context1, ValueNotifier<bool> isLoading) async {
     if (_pin.length == _pinLength) {
-      print("i dey here ee $_pin");
+      debugPrint("i dey here ee $_pin");
       //  WayaNav.goBack();
 
       var isPass = await ref.read(votersContestNotifier.notifier).verifyAndPayForPaidStageContest(isLoading, _pin, {
@@ -481,10 +478,10 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
             buttonText: "Go to Contest Dashboard",
             onTap: (myContext, myRef) {
               //  WayaNav.goBack();
-              print("i am cooking");
+              debugPrint("i am cooking");
               myRef.read(votersContestNotifier.notifier).fetchAllContestApplicant(widget.model?.contestId ?? "");
               // WayaNav.removeUntil(AdminContestDetails());
-              WayaNav.removeAllUntil(AdminContestDetails(id:""), AdminContestDetails.route);
+              WayaNav.removeAllUntil(AdminContestDetails(id: ""), AdminContestDetails.route);
               // WayaNav.goBack();
               //  WayaNav.toNamed("/create-profile-contest1");
             },
@@ -506,7 +503,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-           Text(
+          Text(
             'Enter your PIN',
             style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
           ),
@@ -534,7 +531,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
               child: Center(
                 child: index < _pin.length
                     ? Text("*",
-                        style:  TextStyle(
+                        style: TextStyle(
                           fontSize: 24.sp,
                           fontWeight: FontWeight.bold,
                         ))
@@ -563,7 +560,7 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                   );
                 } else if (index == 10) {
                   return _buildKeypadButton(
-                    child:  Text('0', style: TextStyle(fontSize: 20.sp)),
+                    child: Text('0', style: TextStyle(fontSize: 20.sp)),
                     onPressed: () => _addDigit('0'),
                   );
                 } else if (index == 11) {
@@ -573,17 +570,17 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
                         : const Icon(Icons.arrow_forward, color: Colors.black54),
                     onPressed: isLoading.value
                         ? () {
-                            print(" i am so here");
+                            debugPrint(" i am so here");
                           }
                         : () {
-                            print(" i am so noooooooot here");
+                            debugPrint(" i am so noooooooot here");
                             //   widget.onTap();
                             _submitPin(context, isLoading);
                           },
                   );
                 } else {
                   return _buildKeypadButton(
-                    child: Text('${index + 1}', style:  TextStyle(fontSize: 24.sp)),
+                    child: Text('${index + 1}', style: TextStyle(fontSize: 24.sp)),
                     onPressed: () => _addDigit('${index + 1}'),
                   );
                 }

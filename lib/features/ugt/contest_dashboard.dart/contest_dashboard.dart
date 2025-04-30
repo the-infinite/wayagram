@@ -197,7 +197,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         height: 42,
                         text: "Edit contest details",
                         callback: () async {
-                          ivalidateUGTVM(ref);
+                          invalidateUGTVm(ref);
                           ref
                               .read(stateIsEditingContestProvider.notifier)
                               .state = true;
@@ -554,7 +554,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         Switch(
                             value: e.isActive ?? false,
                             onChanged: (bool value) {
-                              print("map ${e.toString()}");
+                              debugPrint("map ${e.toString()}");
                               notifier.startStageContest(e.stageName ?? "", {
                                 "contestId": model?.id ?? "",
                                 "stageName": e.stageName ?? ""

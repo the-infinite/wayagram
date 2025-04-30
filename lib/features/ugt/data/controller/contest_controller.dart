@@ -146,65 +146,7 @@ class ContestController extends GetxController {
     //  getAllCategoryController();
     super.onInit();
   }
-/*
-  Future getAllCategoryController() async {
-    try {
-      loadingAllCategory(true);
-      var result = await contestRepo.getCategory();
 
-      loadingAllCategory(false);
-      print("allCategoryFred ${result.toString()}");
 
-      loadedGetAllCategory.value = allCategoryDetailModelFromJson(result.toString());
-      print("allCategoryFred ${loadedGetAllCategory.value.data![0].name}");
-    } catch (e) {
-      loadingAllCategory(false);
-    }
-  }*/
-
-  /* Future createContestController(contestStatus, profileId, title, category,
-      state, winnerPrize, description, voteCountToQualify, amount, durationType,
-      numberOfDuration, descriptionOfAwards, amountPerVote, type, overallResult,
-      multipleStages, publicity, status, howItWorks, numberOfWeeks,
-      currentStage, participationStartDate, startDate, endDate, entryType,
-      contestStages, formRequirements) async {
-    try {
-      creating(true);
-      await contestRepo.createContestController(contestStatus: contestStatus,
-          profileId: profileId,
-          title: title,
-          category: category,
-          state: state,
-          winnerPrize:
-          winnerPrize,
-          description: description,
-          voteCountToQualify: voteCountToQualify,
-          amount: amount,
-          durationType: durationType,
-          numberOfDuration: numberOfDuration,
-          descriptionOfAwards: descriptionOfAwards,
-          amountPerVote: amountPerVote,
-          type: type,
-          overallResult: overallResult,
-          multipleStages: multipleStages,
-          publicity: publicity,
-          status: status,
-          howItWorks: howItWorks,
-          numberOfWeeks: numberOfWeeks,
-          currentStage: currentStage,
-          participationStartDate: participationStartDate,
-          startDate: startDate,
-          endDate: endDate,
-          entryType: entryType,
-          stages: contestStages,
-          formRequirements: formRequirements);
-         creating(false);
-
-      print("successFred");
-
-    } catch (e) {
-      creating(false);
-      print("failed ${e.toString()}");
-    }
-  }*/
+ 
 }

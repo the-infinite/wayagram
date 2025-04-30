@@ -13,7 +13,6 @@ class CreateNewPasswordVm extends ChangeNotifier {
   bool _isButtonEnabled = false;
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
-  final bool _isFocused = false;
   bool _isConfirmPasswordFocused = false;
   bool _isPasswordFocused = false;
   bool _isLoading = false;
@@ -47,10 +46,11 @@ class CreateNewPasswordVm extends ChangeNotifier {
   }
 
   Future<void> onSubmit(String email, String otp) async {
-    print("$email $otp");
+    debugPrint("$email $otp");
     try {
       _isLoading = true;
       notifyListeners();
+
       final response = await _authRepository.resetPassword(ForgotPassword(
           confirmPassword: confirmPassword.text,
           newPassword: password.text,

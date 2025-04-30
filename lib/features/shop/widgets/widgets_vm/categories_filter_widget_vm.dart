@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/model/model.dart';
 
@@ -24,16 +25,19 @@ class CategoriesFilterWidgetVm extends StateNotifier<CategoryFilterState> {
     } else {
       List<String> selectedList = List.from(state.selected);
       selectedList.add(cat.value);
-
       state = state.copyWith(selected: selectedList);
     }
-    print(cat.value);
+    debugPrint(cat.value);
 
     return state.selected;
   }
+
+  void selectAll() {
+    state = state.copyWith(selected: []);
+  }
 }
 
-final categoriesFilterWidgetVmProvider =
-    StateNotifierProvider.family<CategoriesFilterWidgetVm, CategoryFilterState, String>(
+final categoriesFilterWidgetVmProvider = StateNotifierProvider.family<
+    CategoriesFilterWidgetVm, CategoryFilterState, String>(
   (ref, uniqueKey) => CategoriesFilterWidgetVm(ref),
 );

@@ -32,7 +32,7 @@ class _DonationsState extends ConsumerState<Donations> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     return WayaScaffold(
       resizeToAvoidBottomInset: false,
         title: "Donations",

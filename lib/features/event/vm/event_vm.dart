@@ -59,10 +59,10 @@ class EventVm extends StateNotifier<EventState> {
     }
   }
 
-  Future<PaginatedResult<EventDoc>?> getEventWithStatus({required int page}) async {
+  Future<PaginatedResult<EventDoc>?> getEventWithStatus({required int page, int limit = 10}) async {
     try {
       state = state.copyWith(isLoadingEventWithStatus: true);
-      final response = await _eventRepository.getEventWithStatus(status: "upcoming", page: page);
+      final response = await _eventRepository.getEventWithStatus(status: "upcoming", page: page, limit: limit);
 
       List<EventDoc> upcoming = [];
       bool hasNextPage = false;
@@ -171,7 +171,7 @@ class EventVm extends StateNotifier<EventState> {
       } else {
         WayaNav.goBack();
         String? message = response.data['message'];
-        WayaSnackBar.showToast(message ?? 'Sth is wrong. Try again later');
+        WayaSnackBar.showToast(message ?? 'Something is wrong. Try again later');
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -206,7 +206,7 @@ class EventVm extends StateNotifier<EventState> {
               message: 'Your report has been submitted. Our team will review the issue and take appropriate action.',
               buttonText: 'Go to Event Page');
         }
-        debugPrint(response.data);
+        debugPrint(response.data.toString());
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(

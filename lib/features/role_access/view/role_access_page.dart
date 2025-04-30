@@ -20,15 +20,19 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
+    //? get access to the theme
+    //final wayaTheme = Theme.of(context);
+    //? get access to the provider
     final rollAccessNotifier = ref.read(roleAccessVm.notifier);
 
     //  ConversationState.self.id
-    // print("UGT HOME ${ConversationState.self.role?.name}");
+    // debugPrint("UGT HOME ${ConversationState.self.role?.name}");
 
+    //? init necessary data with useEffect
     useEffect(() {
       rollAccessNotifier.getRoles();
       rollAccessNotifier.getShops();
+      //? delay once second to avoid UI problem
       Future.delayed(Duration(seconds: 1), () {
         rollAccessNotifier.getAllMembers(true);
         rollAccessNotifier.getRoleManagementMemberList();
@@ -41,6 +45,7 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
       isLoading: false,
       isScrollable: true,
       onRefresh: () {
+        //? refresh the UI with new Data
         rollAccessNotifier.getAllMembers(true);
         return rollAccessNotifier.getRoleManagementMemberList();
       },
@@ -52,6 +57,7 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
           const Gap(10),
           Row(
             children: [
+              //? tabs to switch between the two tabs
               WayaTabButton(
                 isSelected: _selectedIndex == 0,
                 text: 'Manage Users',
@@ -65,6 +71,7 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
             ],
           ),
           const Gap(20),
+          //? the tabs themselves
           if (_selectedIndex == 0) ManageUserTab(),
           if (_selectedIndex == 1) RoleManagementTab(),
           // const Gap(50),

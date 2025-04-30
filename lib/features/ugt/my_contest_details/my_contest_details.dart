@@ -57,7 +57,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
     if (currentOffset > _previousScrollOffset &&
         _appliedScrollController.position.pixels >=
             _appliedScrollController.position.maxScrollExtent - 100) {
-      // print("fetching .....${_scrollController.position.pixels}");
+      // debugPrint("fetching .....${_scrollController.position.pixels}");
       ref.read(appliedContestProvider.notifier).fetchAppliedContest(false);
     }
     _previousScrollOffset = currentOffset;
@@ -155,7 +155,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                           UserAccountType.business)
                         WayaButton(
                           callback: () {
-                            ivalidateUGTVM(ref);
+                            invalidateUGTVm(ref);
                             WayaNav.toNamed('/create-contest');
                           },
                           color: wayaTheme.colorScheme.primary50,
@@ -281,7 +281,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                 : */
             false,
         onTap: () {
-          ivalidateUGTVM(ref);
+          invalidateUGTVm(ref);
           WayaNav.toNamed("/create-contest");
         });
   }

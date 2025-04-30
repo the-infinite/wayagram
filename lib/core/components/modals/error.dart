@@ -43,7 +43,10 @@ class WayaErrorDialog extends StatelessWidget {
               Align(
                 alignment: Alignment.center,
                 child: WayaAssets.icons.erError.svg(
-                  color: theme.colorScheme.error,
+                  colorFilter: ColorFilter.mode(
+                    theme.colorScheme.error,
+                    BlendMode.srcIn,
+                  ),
                   height: 80,
                   width: 80,
                 ),

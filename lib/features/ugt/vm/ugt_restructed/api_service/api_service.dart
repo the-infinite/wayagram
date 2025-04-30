@@ -21,7 +21,7 @@ class ApiService {
       body: jsonEncode({"name": name, "job": job}),
     );
     if (kDebugMode) {
-      print("response => ${response.body}");
+      debugPrint("response => ${response.body}");
     }
     if (response.statusCode == 201) {
       return CreateUser.fromJson(jsonDecode(response.body));

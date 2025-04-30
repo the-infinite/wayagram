@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+//import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -30,8 +30,8 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(votersContestNotifier.notifier);
-    final hasClickedLiked = useState(false);
-    final hasClickedShared = useState(false);
+    //final hasClickedLiked = useState(false);
+    //final hasClickedShared = useState(false);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

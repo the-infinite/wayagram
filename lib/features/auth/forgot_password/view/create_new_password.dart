@@ -11,7 +11,8 @@ import 'package:wayagram/features/auth/forgot_password/vm/create_new_password_vm
 import 'package:wayagram/features/auth/forgot_password/vm/credential_input_vm.dart';
 
 class CreateNewPassword extends ConsumerStatefulWidget {
-  const CreateNewPassword({super.key});
+  final String email;
+  const CreateNewPassword({super.key, required this.email});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -146,9 +147,8 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                 WayaButton(
                   callback: !viewModel.isLoading
                       ? () {
-                          if (_formKey.currentState?.validate() == true) {
-                            viewModel.onSubmit(
-                                credential.email.text, verify.inputCode);
+                          if (_formKey.currentState!.validate()) {
+                            viewModel.onSubmit(widget.email, verify.inputCode);
                           }
                         }
                       : null,

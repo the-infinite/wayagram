@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/shop/data/model/product_detail_type.dart';
@@ -125,6 +123,7 @@ class _AllProductsState extends ConsumerState<AllProducts> {
                   CategoriesFilterWidget(
                     setCategory: (value) => {
                       setState(() {
+                        print("wefewfwe $value");
                         categories = value;
                       })
                     },

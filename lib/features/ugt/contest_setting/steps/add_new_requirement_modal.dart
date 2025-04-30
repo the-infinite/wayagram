@@ -11,7 +11,7 @@ import 'package:wayagram/features/ugt/data/controller/contest_controller.dart';
 import '../../../../core/components/waya_buttons.dart';
 import '../../../../core/components/waya_select_field.dart';
 import '../../../../core/components/waya_text_form_field.dart';
-import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
+//import '../../../auth/account_creation/vm/personal_first_step_vm.dart';
 import '../../vm/ugt_vm.dart';
 
 class AddNewRequirementModal extends StatefulHookConsumerWidget {
@@ -29,7 +29,7 @@ class _AddNewRequirementModalState extends ConsumerState<AddNewRequirementModal>
 
   @override
   Widget build(BuildContext context) {
-    final viewModel = ref.watch(personalFirstStepProvider);
+    //final viewModel = ref.watch(personalFirstStepProvider);
     final wayaTheme = Theme.of(context);
 
     NewRequirementModel model =

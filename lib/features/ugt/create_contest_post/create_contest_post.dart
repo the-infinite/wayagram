@@ -215,12 +215,12 @@ class _CreateContestPostState extends ConsumerState<CreateContestPost> with Sing
                                             line: 5,
                                             showBorder: false,
                                             onChanged: (value) {
-                                              print(value);
+                                              debugPrint(value);
                                               if (value.trim().isEmpty) {
-                                                print("ff   $value");
+                                                debugPrint("ff   $value");
                                                 isEmptyTest.value = false;
                                               } else {
-                                                print("bbb   $value");
+                                                debugPrint("bbb   $value");
                                                 isEmptyTest.value = true;
                                               }
                                             },

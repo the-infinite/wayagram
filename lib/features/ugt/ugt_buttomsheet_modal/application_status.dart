@@ -22,8 +22,8 @@ import '../../../core/utils/waya_navigation.dart';
 import 'custom_modal_contest.dart';
 
 class ApplicationStatus extends StatefulHookConsumerWidget {
-  AppliedContestModel? post;
-  ApplicationStatus(this.post, {super.key});
+  final AppliedContestModel? post;
+  const ApplicationStatus(this.post, {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -242,7 +242,7 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                         // model: widget.model,
                         votingLink: "",
                         onTap: () {
-                          print("i am on the verge");
+                          debugPrint("i am on the verge");
                         },
                         candidateName: "",
                       ),

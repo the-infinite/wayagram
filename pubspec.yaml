@@ -2,7 +2,7 @@ name: wayagram
 description: The codebase for the entire WayaGram application
 homepage: https://wayagram.ng
 publish_to: "none" # NEVER PUBLISH TO pub.dev!
-version: 1.91.18+168
+version: 1.91.25+175
 
 
 environment:
@@ -66,8 +66,8 @@ dependencies:
   timeago: ^3.2.2
   carousel_slider: ^5.0.0
   url_launcher: ^6.3.1
-  #sqfentity: ^2.5.0
-  #sqfentity_gen: ^2.5.0
+  sqfentity: ^2.5.0
+  sqfentity_gen: ^2.5.0
   google_maps_flutter: ^2.10.0
   currency_text_input_formatter: ^2.2.3
   hooks_riverpod: ^2.6.1
@@ -92,6 +92,7 @@ dependencies:
   #for pdf generation
   pdf: ^3.11.3
   avatar_glow: ^3.0.1
+  sign_in_with_apple: ^7.0.1
   
 
 
@@ -176,13 +177,3 @@ flutter:
           weight: 500
         - asset: assets/fonts/SF-Pro-Display-Regular.otf
           weight: 400
-
-  # for generating the splash screen        
-flutter_native_splash:
-  color: "#ffffff"
-  image: assets/images/splash_image.png
-  
-  android_12:
-    color: "#ffffff"
-    image: assets/images/splash_image.png
-

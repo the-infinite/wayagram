@@ -6,8 +6,6 @@ import 'package:wayagram/features/polls_and_voting/views/active_polls.dart';
 import 'package:wayagram/features/polls_and_voting/views/inactive_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
-
-
 class MyPollsTwo extends ConsumerStatefulWidget {
   const MyPollsTwo({super.key});
 
@@ -16,7 +14,6 @@ class MyPollsTwo extends ConsumerStatefulWidget {
 }
 
 class _MyPollsTwoState extends ConsumerState<MyPollsTwo> {
-
   @override
   void initState() {
     super.initState();
@@ -24,18 +21,13 @@ class _MyPollsTwoState extends ConsumerState<MyPollsTwo> {
       ref.read(createPollVotingProvider.notifier).getActivePolls(1);
       ref.read(createPollVotingProvider.notifier).getInActivePolls(1);
     });
-
   }
 
   int _selectedIndex = 0;
 
-
   @override
   Widget build(BuildContext context) {
-
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
-
-
+    //final dynamic args = ModalRoute.of(context)?.settings.arguments;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -53,19 +45,12 @@ class _MyPollsTwoState extends ConsumerState<MyPollsTwo> {
               text: 'Completed Polls',
               onTap: () => setState(() => _selectedIndex = 1),
             ),
-
           ],
         ),
         const Gap(20),
 
         _selectedIndex == 0 ? ActivePolls() : InActivePolls(),
-
-
       ],
     );
-
   }
 }
-
-
-

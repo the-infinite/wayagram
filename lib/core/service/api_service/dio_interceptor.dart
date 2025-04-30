@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 
 class DioInterceptor extends Interceptor {
@@ -10,9 +11,9 @@ class DioInterceptor extends Interceptor {
   @override
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     final token = await secureDataSource.getToken();
-    print('token: $token');
+    debugPrint('token: $token');
     options.headers['Authorization'] = 'Bearer $token';
-    print('options: $options');
+    debugPrint('options: $options');
     return handler.next(options);
   }
 
@@ -35,7 +36,7 @@ class DioInterceptor extends Interceptor {
 
           final newtoken = response.data['data']['token']['token'];
           final newrefreshToken = response.data['data']['token']['refreshToken'];
-          print(" new token $newtoken");
+          debugPrint(" new token $newtoken");
           secureDataSource.saveToken(newtoken);
           secureDataSource.saveRefreshToken(newrefreshToken);
 
@@ -47,13 +48,13 @@ class DioInterceptor extends Interceptor {
               method: retryRequest.method,
               headers: retryRequest.headers,
             ),
-            data: retryRequest.data,  
+            data: retryRequest.data,
             queryParameters: retryRequest.queryParameters,
           );
 
           return handler.resolve(retryResponse);
         } catch (e) {
-          print(" new token $e");
+          debugPrint(" new token $e");
           return handler.next(err);
         }
       }

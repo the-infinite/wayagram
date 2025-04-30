@@ -32,7 +32,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -54,7 +54,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
         }
       }
     } catch (e) {
-      print(e);
+      debugPrint(e.toString());
     }
   }
 
@@ -98,7 +98,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
       required BuildContext context,
       required String orderId}) async {
     orderStatus = current ?? 'pending';
-    //print(current);
+    //debugPrint(current);
     notifyListeners();
     final response = await WayaUtils.showModalSheet(context,
         child: UpdateStatus(
@@ -112,7 +112,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
   }
 
   void wdfew() {
-    print("wefwef");
+    debugPrint("wefwef");
   }
 
   Future<void> updateDeliveryStatus(
@@ -120,7 +120,7 @@ class SellerOrderDetailVm extends ChangeNotifier {
       String? current,
       required BuildContext context,
       required String orderId}) async {
-    print("wefvewfew");
+    debugPrint("wefvewfew");
 
     delivery = current ?? 'pending';
     notifyListeners();

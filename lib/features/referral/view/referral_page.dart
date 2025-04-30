@@ -25,11 +25,11 @@ class ReferralPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final viewModel = ref.watch(referralVm);
-    final notifier = ref.watch(referralVm.notifier);
+    //final notifier = ref.watch(referralVm.notifier);
     final shareService = ref.watch(shareProvider);
     final wayaTheme = Theme.of(context);
-    String url = WayaAppRoutes.getAccountCreationScreen(
-        ConversationState.profile.referenceCode ?? "");
+    String url =
+        WayaAppRoutes.getProfileRoute(ConversationState.profile.userId ?? "");
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -97,8 +97,7 @@ class ReferralPage extends ConsumerWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        "Referral Code:  ${ConversationState.profile.referenceCode}" ??
-                            "",
+                        "Referral Code:  ${ConversationState.profile.referenceCode}",
                         overflow: TextOverflow.ellipsis,
                         style: WayaTextStyles.bodyMedium,
                       ),
@@ -139,8 +138,8 @@ class ReferralPage extends ConsumerWidget {
                         _actionButton(context, Icons.share_outlined, "Share")),
                 GestureDetector(
                     onTap: () {
-                      shareService.copyLink(
-                          ConversationState.profile.referenceCode ?? "");
+                      shareService
+                          .copyLink(WayaValueHelper.getShareableUrl(url));
                       WayaSnackBar.showToast("Copied");
                     },
                     child: _actionButton(context, Icons.copy, "Copy Link")),

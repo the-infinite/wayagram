@@ -44,7 +44,8 @@ class WayaPostWidget extends StatefulWidget {
 }
 
 class _WayaPostWidgetState extends State<WayaPostWidget> {
-  late final videoControllers = widget.data.media.map((_) => WayaVideoController()).toList();
+  late final videoControllers =
+      widget.data.media.map((_) => WayaVideoController()).toList();
   final pageController = PageController(initialPage: 0);
 
   @override
@@ -364,8 +365,9 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                             arguments: {
                                               "contentId": postData.id,
                                               "contentType":
-                                                  PromotionServiceType.post.name,
-                                              "data": postData    
+                                                  PromotionServiceType
+                                                      .post.name,
+                                              "data": postData
                                             });
                                       },
                                       child: WayaActionNav(
@@ -478,18 +480,23 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               postData.media.length,
                               (index) {
                                 //? Stop when we are getting ahead of ourselves.
-                                if (index >= postData.media.length) return const SizedBox();
+                                if (index >= postData.media.length)
+                                  return const SizedBox();
 
                                 //? Just leave this as is.
                                 final resource = postData.media[index];
 
                                 //? This is fine.
-                                if (WayaFileExtensions.videos.contains(WayaFileHelper.getFileExtension(resource))) {
+                                if (WayaFileExtensions.videos.contains(
+                                    WayaFileHelper.getFileExtension(
+                                        resource))) {
                                   final controller = videoControllers[index];
                                   return Container(
                                     height: 300.h,
                                     width: screenSize.width * 0.90,
-                                    padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                                    padding: widget.padded
+                                        ? EdgeInsets.symmetric(horizontal: 8.w)
+                                        : EdgeInsets.zero,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10.r),
                                       child: Stack(
@@ -506,7 +513,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                             child: GestureDetector(
                                               onTap: () async {
                                                 final result = await WayaNav.to(
-                                                  transition: Transition.circularReveal,
+                                                  transition:
+                                                      Transition.circularReveal,
                                                   WayaVideoDetailScreen(
                                                     file: null,
                                                     videoUrl: resource,
@@ -520,7 +528,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                                 child: Container(
                                                   decoration: BoxDecoration(
                                                     shape: BoxShape.circle,
-                                                    color: Colors.white.withOpacity(0.7),
+                                                    color: Colors.white
+                                                        .withOpacity(0.7),
                                                   ),
                                                   padding: EdgeInsets.all(8),
                                                   child: Icon(
@@ -541,7 +550,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                 //? Return this one.
                                 return GestureDetector(
                                   onTap: () async {
-                                    final result = await WayaNavigationHelper.toImageDetailsScreen(
+                                    final result = await WayaNavigationHelper
+                                        .toImageDetailsScreen(
                                       null,
                                       [resource],
                                     );
@@ -550,13 +560,16 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                     if (result == null) return;
                                   },
                                   child: Padding(
-                                    padding: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
+                                    padding: widget.padded
+                                        ? EdgeInsets.symmetric(horizontal: 8.w)
+                                        : EdgeInsets.zero,
                                     child: ClipRRect(
                                       borderRadius: BorderRadius.circular(10.r),
                                       child: WayaImage(
                                         imageUrl: resource,
                                         fit: BoxFit.cover,
-                                        width: screenSize.width - (widget.padded ? 15.w : 0),
+                                        width: screenSize.width -
+                                            (widget.padded ? 15.w : 0),
                                         height: 300.h,
                                       ),
                                     ),
@@ -575,8 +588,11 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                               bottom: 0,
                               child: Container(
                                 alignment: Alignment.center,
-                                margin: widget.padded ? EdgeInsets.symmetric(horizontal: 8.w) : EdgeInsets.zero,
-                                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 15.w),
+                                margin: widget.padded
+                                    ? EdgeInsets.symmetric(horizontal: 8.w)
+                                    : EdgeInsets.zero,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 10.h, horizontal: 15.w),
                                 decoration: BoxDecoration(
                                   color: Colors.black.withAlpha(60),
                                   borderRadius: BorderRadius.circular(6000.r),
@@ -586,8 +602,10 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                     dotWidth: 16,
                                     dotHeight: 6,
                                     spacing: 4,
-                                    dotColor: wayaTheme.colorScheme.greyColor200,
-                                    activeDotColor: wayaTheme.colorScheme.primary,
+                                    dotColor:
+                                        wayaTheme.colorScheme.greyColor200,
+                                    activeDotColor:
+                                        wayaTheme.colorScheme.primary,
                                   ),
                                   controller: pageController,
                                   count: postData.media.length,
@@ -609,7 +627,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                         //? For liking a post.
                         PostActionType(
                           text:
-                              '${WayaValueHelper.formatNumber(postData.likeCount)} ${postData.likeCount <= 1 ? 'Like' : 'Likes'}',
+                              '${WayaValueHelper.formatNumber(postData.likeCount)} ${WayaValueHelper.getComment(postData.likeCount ?? 0, WayaPostAction.likes)}',
                           image: WayaAssets.images.pages.like2.path,
                           color: postData.isLiked
                               ? wayaTheme.colorScheme.primary
@@ -645,7 +663,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                         //? The action button for comments.
                         PostActionType(
                           text:
-                              '${WayaValueHelper.formatNumber(postData.commentCount)} Comments',
+                              '${WayaValueHelper.formatNumber(postData.commentCount)} ${WayaValueHelper.getComment(postData.commentCount, WayaPostAction.comment)}',
                           image: WayaAssets.images.pages.comment2.path,
                           color: postData.commentCount == 0
                               ? wayaTheme.colorScheme.greyColor500
@@ -665,7 +683,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                         //? For sharing a post.
                         PostActionType(
                           text:
-                              '${WayaValueHelper.formatNumber(postData.shareCount)} Shares',
+                              '${WayaValueHelper.formatNumber(postData.shareCount)} ${WayaValueHelper.getComment(postData.shareCount, WayaPostAction.share)}',
                           image: WayaAssets.images.pages.share2.path,
                           color: postData.shareCount == 0
                               ? wayaTheme.colorScheme.greyColor500

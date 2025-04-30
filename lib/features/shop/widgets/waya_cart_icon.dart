@@ -17,7 +17,7 @@ class WayaCartIcon extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
 
-    final cartItemCount = ref.watch(cartVmProvider).totalItem ?? 0;
+    final cartItemCount = ref.watch(cartVmProvider).totalItem;
     return GestureDetector(
       onTap: () {
         WayaNav.toNamed(CartView.route);

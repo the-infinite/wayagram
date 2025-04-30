@@ -26,7 +26,7 @@ class _SeeAllApprovedDonationsState extends ConsumerState<SeeAllApprovedDonation
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(donationVmProvider.notifier).getHostedDonation();
+      ref.read(donationVmProvider.notifier).getApprovedDonation();
       ref.read(donationVmProvider.notifier).getMyKYC();
     });
     searchController = TextEditingController();
@@ -39,7 +39,7 @@ class _SeeAllApprovedDonationsState extends ConsumerState<SeeAllApprovedDonation
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
 
     // Filter the myDonations
     final filteredMyDonations = WayaUtils.search<MyDonationDocs>(

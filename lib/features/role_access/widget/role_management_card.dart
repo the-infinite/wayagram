@@ -9,8 +9,12 @@ class RoleManagementCard extends StatelessWidget {
   final RoleManagementModel user;
   final bool showImage;
 
-  const RoleManagementCard(
-      {super.key, required this.user, this.showImage = true});
+  // Construct.
+  const RoleManagementCard({
+    super.key,
+    required this.user,
+    this.showImage = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,10 +44,9 @@ class RoleManagementCard extends StatelessWidget {
                   ),
                   if (user.roleName == "me")
                     Container(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+                      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 2),
                       decoration: BoxDecoration(
-                        color: false ? Colors.green[100] : Colors.orange[100],
+                        color: user.roleName != null ? Colors.green[100] : Colors.orange[100],
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
@@ -53,9 +56,8 @@ class RoleManagementCard extends StatelessWidget {
                           SizedBox(width: 4),
                           Text(
                             user.roleName ?? "",
-                            style: WayaTextStyles.hintStyleBold.copyWith(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold),
+                            style:
+                                WayaTextStyles.hintStyleBold.copyWith(color: Colors.green, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -63,8 +65,7 @@ class RoleManagementCard extends StatelessWidget {
                   else
                     Text(
                       "Total Members: ${user.userCount}",
-                      style: WayaTextStyles.hintStyleBold.wayaCopyWith(
-                          color: wayaTheme.colorScheme.greyColor700),
+                      style: WayaTextStyles.hintStyleBold.wayaCopyWith(color: wayaTheme.colorScheme.greyColor700),
                     ),
                 ],
               ),

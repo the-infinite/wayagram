@@ -8,6 +8,7 @@ import 'package:wayagram/features/auth/verify_email/verify_email.dart';
 import 'package:wayagram/features/buyer_dispute/views/detail.dart';
 import 'package:wayagram/features/chat/view/archived.dart';
 import 'package:wayagram/features/chat/view/profile.dart';
+import 'package:wayagram/features/chat/view/profile/edit_group.dart';
 import 'package:wayagram/features/donation/view/create_donation.dart';
 import 'package:wayagram/features/donation/view/donation_details.dart';
 import 'package:wayagram/features/donation/view/donation_management.dart';
@@ -24,10 +25,10 @@ import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/follow/view/follow_page.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
-import 'package:wayagram/features/general_settings/chat_call_pref/view/chat_call_pref_page.dart';
+import 'package:wayagram/features/general_settings/privacy_settings/view/blocked_user_page.dart';
+import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
-import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
@@ -99,7 +100,6 @@ import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute.dart';
 import 'package:wayagram/features/shop/shop_dispute/views/seller_dispute_detail.dart';
 import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/application_product_details.dart';
-import 'package:wayagram/features/shop/seller/views/waya_deals/product_listing/product_listing.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
 import 'package:wayagram/features/shop/views/products_view_page.dart';
@@ -188,7 +188,10 @@ class WayaAppRoutes {
         ),
     SeeBuyerBids.route: () => SeeBuyerBids(id: WayaNav.search['id'].toString()),
     Checkout.route: () => Checkout(),
-    BuyerCheckout.route: () => BuyerCheckout(),
+    BuyerCheckout.route: () => BuyerCheckout(
+          id: WayaNav.search['id'].toString(),
+          requestId: WayaNav.search['requestId'].toString(),
+        ),
     FilterView.route: () => FilterView(),
     GeneralSettingsPage.route: () => GeneralSettingsPage(),
     ChangePasswordGenSettings.route: () => ChangePasswordGenSettings(),
@@ -210,7 +213,7 @@ class WayaAppRoutes {
     EditNamePage.route: () => EditNamePage(),
     EditProfilePage.route: () => EditProfilePage(),
     AddProduct.route: () => AddProduct(),
-    ProductListing.route: () => ProductListing(),
+    //ProductListing.route: () => ProductListing(),
     WayaDealAd.route: () => WayaDealAd(),
     WayaGramDeals.route: () => WayaGramDeals(),
     ApplicationProductDetails.route: () => ApplicationProductDetails(),
@@ -358,14 +361,17 @@ class WayaAppRoutes {
     ReferralPage.route: () => ReferralPage(),
     ReferralHistoryPage.route: () => ReferralHistoryPage(),
     PrivacySettingsPage.route: () => PrivacySettingsPage(),
-    ChatCallPrefPage.route: () => ChatCallPrefPage(),
     FriendFollowerPage.route: () => FriendFollowerPage(),
     RequestPayout.route: () => RequestPayout(),
     AddPayoutMethodScreen.route: () => AddPayoutMethodScreen(),
     PayoutDetails.route: () => PayoutDetails(),
     PayoutSuccessScreen.route: () => PayoutSuccessScreen(),
     EnterRequestAmountScreen.route: () => EnterRequestAmountScreen(),
-
+    BlockedUserPage.route: () => BlockedUserPage(),
+    EditChatGroupScreen.route: () => EditChatGroupScreen(
+          groupId: WayaNav.search['id'].toString(),
+          chatId: WayaNav.search['chatId'].toString(),
+        ),
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -464,6 +470,11 @@ class WayaAppRoutes {
   static String getBidDetailsScreen(String id, String requestId) =>
       "${SellerBidDetails.route}?id=$id&requestId=$requestId";
 
+  /// Helper function used to generate the route that leads to the quotation
+  /// checkout screen for a buyer.
+  static String getQuotationCheckoutScreen(String id, String requestId) =>
+      "${BuyerCheckout.route}?id=$id&requestId=$requestId";
+
   /// Helper function used to generate the route that is supposed to take you a
   /// single donation by its ID.
   static String getWalletDetailsPage(String id) => "${Donations.route}?id=$id";
@@ -476,17 +487,19 @@ class WayaAppRoutes {
   /// for the details of a single product.
   static String getPromotionDetailScreen(String id) => "${PromotionDetail.route}?id=$id";
 
+  /// Helper function used to generate the route that takes a user to the screen
+  /// to edit the profile of a single chat group.
+  static String getEditChatGroupProfileScreen(String id, String chatId) =>
+      "${EditChatGroupScreen.route}?id=$id&chatId=$chatId";
 
   /// This is fine.
   static List<GetPage> get getPages {
-    return routes.entries.map(
-      (entry) {
-        return GetPage(
-          name: entry.key,
-          page: entry.value,
-          transition: Transition.cupertino,
-        );
-      },
-    ).toList();
+    return routes.entries
+        .map((entry) => GetPage(
+              name: entry.key,
+              page: entry.value,
+              transition: Transition.cupertino,
+            ))
+        .toList();
   }
 }

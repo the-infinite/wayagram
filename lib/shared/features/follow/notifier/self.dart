@@ -216,6 +216,29 @@ class UserFollowerNotifier extends ValueNotifier<FollowState> {
     return false;
   }
 
+    /// Helper function used to update user chat settings
+  Future<bool> updateUserSettings(UserSettingsDto dto) async {
+    final response = await repo.updateUserSettings(dto);
+
+    //? Return whether or not this is true.
+    return response.success;
+  }
+
+  /// Helper function used to retrieve all of the details of just one conversation.
+  Future<UserSettingsDto?> getUserSettings() async {
+    //? This is fine.- getting from server with userId
+    final response = await repo.getUserSettings();
+
+    //? This is fine.
+    if (response.success) {
+      return UserSettingsDto.fromJson(response.data['data']);
+    }
+
+    //? Return null if empty
+    return null;
+  }
+
+
   Future<void> getIfEmpty() async {
     //? If this user has not loaded followers yet.
     if (state.followers.isEmpty) await getFollowersOf();

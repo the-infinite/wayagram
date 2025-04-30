@@ -271,7 +271,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                             ),
                             const Gap(3),
                             Text(
-                              "${widget.post.likes} Likes",
+                              "${widget.post.likes} ${WayaValueHelper.getComment(widget.post.likes ?? 0, WayaPostAction.likes)}",
                               style: wayaTheme.textTheme.bodySmall,
                             )
                           ],
@@ -279,7 +279,8 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                       ),
                       const Gap(20),
                       PostActionType(
-                        text: "${widget.post.shares ?? 0} Shares",
+                        text:
+                            "${widget.post.shares ?? 0} ${WayaValueHelper.getComment(widget.post.shares ?? 0, WayaPostAction.share)}",
                         image: WayaAssets.images.pages.share2.path,
                         color: wayaTheme.colorScheme.primary,
                         onPressed: () async {
@@ -338,7 +339,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                     fontSize: 12.sp,
                     height: 40,
                     callback: () {
-                      //  print(widget.model.endDate ?? "");
+                      //  debugPrint(widget.model.endDate ?? "");
                       if (isPresentIsPast(widget.model.endDate ?? "")) {
                         WayaSnackBar.showToast("Contest has ended");
                         return;

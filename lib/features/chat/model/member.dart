@@ -11,6 +11,12 @@ enum ChatUserActivity {
   offline;
 }
 
+enum ChatMemberRole {
+  member,
+  admin,
+  owner,
+}
+
 @JsonSerializable()
 class ChatUser {
   final String id;
@@ -74,10 +80,14 @@ class ChatMember {
   final bool isDeletedChat;
   final bool isArchived;
   final bool isPined;
+  final bool isMuted;
   final DateTime joinedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
   final ChatUser? chatUser;
+  final DateTime? mutedUntil;
+  final ChatMemberRole role;
+  final bool notificationsEnabled;
   final UserDetailsModel? userData;
   final SocialProfileModel? profileData;
 
@@ -85,13 +95,17 @@ class ChatMember {
     required this.id,
     required this.chatId,
     required this.userId,
+    required this.mutedUntil,
     required this.isDeletedChat,
     required this.isArchived,
     required this.isPined,
+    required this.isMuted,
     required this.joinedAt,
     required this.createdAt,
     required this.updatedAt,
     required this.chatUser,
+    required this.role,
+    required this.notificationsEnabled,
     this.profileData,
     this.userData,
   });
@@ -100,18 +114,24 @@ class ChatMember {
 
   Map<String, dynamic> toJson() => _$ChatMemberToJson(this);
 
+  CachedUserDataTuple? get combined => userData == null || profileData == null ? null : (userData!, profileData!);
+
   ChatMember copyWith(UserDetailsModel user, SocialProfileModel profile) {
     return ChatMember(
       id: id,
       chatId: chatId,
       userId: userId,
+      mutedUntil: mutedUntil,
       isDeletedChat: isDeletedChat,
       isArchived: isArchived,
       isPined: isPined,
+      isMuted: isMuted,
       joinedAt: joinedAt,
       createdAt: createdAt,
       updatedAt: updatedAt,
       chatUser: chatUser,
+      notificationsEnabled: notificationsEnabled,
+      role: role,
       userData: user,
       profileData: profile,
     );

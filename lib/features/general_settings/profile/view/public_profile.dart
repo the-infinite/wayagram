@@ -11,8 +11,11 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/modals/block.dart';
+import 'package:wayagram/features/chat/modals/report.dart';
 import 'package:wayagram/features/chat/modals/unblock.dart';
+import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
@@ -71,6 +74,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
   late final donationsNotifier = ref.watch(userDonationsProvider.notifier);
   late final productsNotifier = ref.watch(userProductsProvider.notifier);
   late final conversationNotifier = ref.watch(conversationProvider.notifier);
+
+  late final chatNotifier = ref.read(chatProvider.notifier);
   final scrollHandler = WayaObservableScrollController();
   final _pageController = ValueNotifier(0);
   final _tabController = ExpandedTabController();
@@ -177,6 +182,24 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
     if (result.status == ShareResultStatus.success) return;
   }
 
+  void _chatWithUser() async {
+    conversationNotifier.startChat(ChatType.personal, [widget.data.$1.id]).then(
+      (chat) {
+        // //? Leave here.
+        // WayaNav.goBack();
+
+        //? Stop if we could not make this chat.
+        if (chat == null) return;
+
+        //? If we could make this chat...
+        chatNotifier.setChat(chat);
+        WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
+      },
+    ).catchError(
+      (_) {},
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
@@ -200,7 +223,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
         isScrollable: false,
         padding: EdgeInsets.zero,
         appBarTrailing: Row(
-          spacing: 12,
+          spacing: 6,
           children: [
             //? Search
             IconButton(
@@ -210,11 +233,20 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
 
             //? Share
             IconButton(
-              icon: WayaAssets.icons.genSet.share.svg(
+              icon: WayaAssets.icons.chat.svg(
                 fit: BoxFit.none,
+                color: wayaTheme.colorScheme.customBlack
               ),
-              onPressed: _shareProfile,
+              onPressed: _chatWithUser,
             ),
+
+            // //? Share
+            // IconButton(
+            //   icon: WayaAssets.icons.genSet.share.svg(
+            //     fit: BoxFit.none,
+            //   ),
+            //   onPressed: _shareProfile,
+            // ),
 
             //? More
             PopupMenuButton(
@@ -288,7 +320,8 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                   value: 2,
                   height: 36.h,
                   onTap: () {
-                    conversationNotifier.muteOrUnmuteUser(widget.data.$1.id);
+                    conversationNotifier.muteOrUnmuteUser(
+                        context, ref, widget.data.$1.id);
                   },
                   child: WayaActionNav(
                     context: context,
@@ -305,8 +338,24 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                 PopupMenuItem<int>(
                   value: 3,
                   height: 36.h,
-                  onTap: () {
-                    conversationNotifier.reportUser(widget.data.$1.id);
+                  onTap: () async {
+                    //conversationNotifier.reportUser(widget.data.$1.id);
+                    final result = await WayaUtils.showModalSheet<bool?>(
+                      context,
+                      child: ReportDialog(
+                        user: widget.data.$1,
+                        profile: widget.data.$2,
+                        ref: ref,
+                      ),
+                    );
+
+                    // If this is defined...
+                    if (result == null) return;
+
+                    //? Then pop.
+                    if (result) {
+                      WayaSnackBar.showToast("This user has been Reported");
+                    }
                   },
                   child: WayaActionNav(
                     context: context,

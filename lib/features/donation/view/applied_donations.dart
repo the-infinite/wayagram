@@ -42,8 +42,8 @@ class _AppliedDonationsState extends ConsumerState<AppliedDonations> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(donationVmProvider);
-    final wayaTheme = Theme.of(context);
-    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    //final wayaTheme = Theme.of(context);
+    //final dynamic args = ModalRoute.of(context)?.settings.arguments;
     
     return
       viewModel.appliedDonationDocs?.isEmpty ?? true ? DonationEmptyState()

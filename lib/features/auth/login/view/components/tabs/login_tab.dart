@@ -10,6 +10,8 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_validators.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/login/vm/login_vm.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import 'dart:io' show Platform;
 
 import '../../../../../../core/utils/waya_navigation.dart';
 
@@ -28,20 +30,22 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(loginVmProvider);
+    final notifier = ref.read(loginVmProvider.notifier);
     final wayaTheme = Theme.of(context);
     return Column(
       children: [
+        Platform.isAndroid ?
         WayaButton(
           color: wayaTheme.colorScheme.secondaryColor,
-          callback: ref.read(loginVmProvider.notifier).signinWithGoogle,
+          callback: notifier.signinWithGoogle,
           leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
           text: "Continue with Google",
           textColor: wayaTheme.colorScheme.black,
-        ),
-        Gap(10),
+        ):
+        //Gap(10),
         WayaButton(
           color: wayaTheme.colorScheme.black,
-          callback: () {},
+          callback: notifier.signinWithApple,
           leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
           text: "Continue with Apple",
           textColor: wayaTheme.colorScheme.onPrimary,
@@ -181,9 +185,8 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                   color: wayaTheme.colorScheme.primary500,
                   callback: !viewModel.isLoading
                       ? () async {
-
                           if (_formKey.currentState!.validate()) {
-                            print('TEST BUTTOn');
+                            debugPrint('TEST BUTTOn');
                             ref
                                 .read(loginVmProvider.notifier)
                                 .onSubmit(ref, isBusinessLogin: false);
@@ -233,17 +236,20 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
     final viewModel = ref.watch(loginVmProvider);
     return Column(
       children: [
+        Platform.isAndroid ?
         WayaButton(
           color: wayaTheme.colorScheme.secondaryColor,
           callback: () {},
           leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
           text: "Continue with Google",
           textColor: wayaTheme.colorScheme.black,
-        ),
-        Gap(10),
+        ):
+        //Gap(10),
         WayaButton(
           color: wayaTheme.colorScheme.black,
-          callback: () {},
+          callback: () {
+           ref.watch(loginVmProvider.notifier).signinWithApple();
+          },
           leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
           text: "Continue with Apple",
           textColor: wayaTheme.colorScheme.onPrimary,
@@ -394,16 +400,18 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
               ],
             )),
         Gap(30),
-        Chip(
-            label: WayaRichText(
-          title1: "Don't have an account? ",
-          title2: "Create new account",
-          onTap2: () {
+        InkWell(
+          onTap: () {
             WayaNav.toNamed("/account-creation");
           },
-          style1: wayaTheme.textTheme.hintStyle
-              .wayaCopyWith(color: wayaTheme.colorScheme.black),
-        )),
+          child: Chip(
+              label: WayaRichText(
+            title1: "Don't have an account? ",
+            title2: "Create new account",
+            style1: wayaTheme.textTheme.hintStyle
+                .wayaCopyWith(color: wayaTheme.colorScheme.black),
+          )),
+        )
       ],
     );
   }
