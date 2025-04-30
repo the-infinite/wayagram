@@ -169,23 +169,16 @@ class ConversationState {
             //? checking if the user id is the same as the current user
             if (model.userId == ConversationState.self.id) {
               //?if null means it could be muted, i had to check if the date is past or not
-              if (model.isMuted) {
-                //? checking if the user is muted by doing the now and
-                //?date comparison with the returned date
-                if (model.mutedUntil != null) {
-                  //? format the date
-                  DateTime targetTime = model.mutedUntil!;
+              if (model.mutedUntil != null) {
+                //? format the date
+                DateTime targetTime = model.mutedUntil!;
 
-                  //? Current time (in UTC)
-                  DateTime now = DateTime.now().toUtc();
+                //? Current time (in UTC)
+                DateTime now = DateTime.now().toUtc();
 
-                  //? Check if target time  is after the current time
+                //? Check if target time  is after the current time
 
-                  return targetTime.isAfter(now);
-                }
-              } else {
-                //? checking if the user is not muted
-                return false;
+                return targetTime.isAfter(now);
               }
             }
           }

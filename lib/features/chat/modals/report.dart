@@ -73,184 +73,182 @@ class _ReportUserDialogState extends State<ReportDialog> {
     final user = widget.user;
     final theme = Theme.of(context);
 
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: SizedBox(
-          width: Get.width,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                // Some space to give a decent amount of spacing between concerned
-                // sections.
-                Gap(30.h),
-      
-                //? Next, the title of this popup.
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    "Report User",
-                    style: theme.textTheme.headlineMedium?.copyWith(
-                      color: theme.colorScheme.black,
-                    ),
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: SizedBox(
+        width: Get.width,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Some space to give a decent amount of spacing between concerned
+              // sections.
+              Gap(30.h),
+
+              //? Next, the title of this popup.
+              Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Report User",
+                  style: theme.textTheme.headlineMedium?.copyWith(
+                    color: theme.colorScheme.black,
                   ),
                 ),
-      
-                // Some space.
-                Gap(5.h),
-      
-                //? Next, this user's username.
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Help us improve the platform by letting us know why you're reporting this user",
-                    textAlign: TextAlign.start,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: theme.colorScheme.greyColor500,
-                    ),
+              ),
+
+              // Some space.
+              Gap(5.h),
+
+              //? Next, this user's username.
+              Align(
+                alignment: Alignment.center,
+                child: Text(
+                  "Help us improve the platform by letting us know why you're reporting this user",
+                  textAlign: TextAlign.start,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.greyColor500,
                   ),
                 ),
-      
-                // Some space.
-                Gap(25.h),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 0.5,
-                        width: 100.w,
-                        color: theme.colorScheme.greyColor300,
+              ),
+
+              // Some space.
+              Gap(25.h),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 0.5,
+                      width: 100.w,
+                      color: theme.colorScheme.greyColor300,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Text(
+                      "Choose Reason For Reporting",
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.greyColor900,
                       ),
                     ),
-                    Expanded(
-                      flex: 3,
-                      child: Text(
-                        "Choose Reason For Reporting",
-                        textAlign: TextAlign.center,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.greyColor900,
+                  ),
+                  Expanded(
+                    child: Container(
+                      height: 0.5,
+                      width: 100.w,
+                      color: theme.colorScheme.greyColor300,
+                    ),
+                  ),
+                ],
+              ),
+              Gap(25.h),
+
+              //? A titular action section.
+              ...list.map(
+                (e) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        selectedReport = e;
+                        int index = list.indexOf(e);
+                        setState(() {
+                          for (int i = 0; i < list.length; i++) {
+                            list[i].value = (i == index); // Only selected index is true
+                          }
+                        });
+                      },
+                      child: Container(
+                        width: Get.width,
+                        padding: EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                            color: e.value ? theme.colorScheme.primary : Colors.transparent, // Border color
+                            width: 0.5, // Border width
+                          ),
+                          borderRadius: BorderRadius.circular(8), // Optional rounded corners
+                        ),
+                        child: Text(
+                          e.text,
+                          textAlign: TextAlign.start,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.greyColor900,
+                          ),
                         ),
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        height: 0.5,
-                        width: 100.w,
-                        color: theme.colorScheme.greyColor300,
-                      ),
-                    ),
+                    Gap(25),
                   ],
                 ),
-                Gap(25.h),
-      
-                //? A titular action section.
-                ...list.map(
-                  (e) => Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          selectedReport = e;
-                          int index = list.indexOf(e);
-                          setState(() {
-                            for (int i = 0; i < list.length; i++) {
-                              list[i].value = (i == index); // Only selected index is true
-                            }
-                          });
-                        },
-                        child: Container(
-                          width: Get.width,
-                          padding: EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border.all(
-                              color: e.value ? theme.colorScheme.primary : Colors.transparent, // Border color
-                              width: 0.5, // Border width
-                            ),
-                            borderRadius: BorderRadius.circular(8), // Optional rounded corners
-                          ),
-                          child: Text(
-                            e.text,
-                            textAlign: TextAlign.start,
-                            style: theme.textTheme.bodyMedium?.copyWith(
-                              color: theme.colorScheme.greyColor900,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Gap(25),
-                    ],
-                  ),
-                ),
-      
-                // Some space.
-                Gap(10.h),
-      
-                //? A titular action section.
-                WayaTextFormField(
-                  controller: inputController,
-                  hintText: "Provide more details about the issue...",
-                  label: "Additional Comments (Optional)",
-                  maxLines: 5,
-                  line: 5,
-                  // isReadOnly: true,
-      
-                  //  label: 'Business Name',
-                ),
-      
-                // Some space.
-                Gap(15.h),
-      
-                //? Our block button.
-                WayaProgressiveButton(
-                  notifier: buttonController,
-                  color: theme.colorScheme.primary,
-                  callback: () async {
-                    if (selectedReport == null && inputController.text.trim().isEmpty) {
-                      WayaSnackBar.showToast("Please select a reason for reporting this user", showSuccess: false);
-                      return;
-                    }
-                    //? If this went well...
-                    final result = await notifier.reportUser(
-                      user.id,
-                      inputController.text.trim().isEmpty ? selectedReport?.text ?? "" : inputController.text.trim(),
-                    );
-      
-                    //? Then leave.
-                    if (result) {
-                      WayaNav.goBack(result: true);
-                      return;
-                    }
-      
-                    //? Then we leave.
-                    WayaNav.goBack();
-                  },
-                  text: "Submit",
-                ),
-      
-                // Some space.
-                Gap(5.h),
-      
-                //? Our block button.
-                WayaButton(
-                  color: theme.colorScheme.transparent,
-                  border: Border.all(color: theme.colorScheme.greyColor300),
-                  textColor: theme.colorScheme.greyColor500,
-                  callback: () => WayaNav.goBack(),
-                  text: "Cancel",
-                ),
-      
-                // Some space.
-                Gap(25.h),
-              ],
-            ),
+              ),
+
+              // Some space.
+              Gap(10.h),
+
+              //? A titular action section.
+              WayaTextFormField(
+                controller: inputController,
+                hintText: "Provide more details about the issue...",
+                label: "Additional Comments (Optional)",
+                maxLines: 5,
+                line: 5,
+                // isReadOnly: true,
+
+                //  label: 'Business Name',
+              ),
+
+              // Some space.
+              Gap(15.h),
+
+              //? Our block button.
+              WayaProgressiveButton(
+                notifier: buttonController,
+                color: theme.colorScheme.primary,
+                callback: () async {
+                  if (selectedReport == null && inputController.text.trim().isEmpty) {
+                    WayaSnackBar.showToast("Please select a reason for reporting this user", showSuccess: false);
+                    return;
+                  }
+                  //? If this went well...
+                  final result = await notifier.reportUser(
+                    user.id,
+                    inputController.text.trim().isEmpty ? selectedReport?.text ?? "" : inputController.text.trim(),
+                  );
+
+                  //? Then leave.
+                  if (result) {
+                    WayaNav.goBack(result: true);
+                    return;
+                  }
+
+                  //? Then we leave.
+                  WayaNav.goBack();
+                },
+                text: "Submit",
+              ),
+
+              // Some space.
+              Gap(5.h),
+
+              //? Our block button.
+              WayaButton(
+                color: theme.colorScheme.transparent,
+                border: Border.all(color: theme.colorScheme.greyColor300),
+                textColor: theme.colorScheme.greyColor500,
+                callback: () => WayaNav.goBack(),
+                text: "Cancel",
+              ),
+
+              // Some space.
+              Gap(25.h),
+            ],
           ),
         ),
       ),

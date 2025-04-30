@@ -24,14 +24,10 @@ class AuthRepository extends BaseRepository {
     return post('$serviceUrl/client/auth/verify-otp', data, showErrors: true);
   }
 
-  Future<WayaRequestResponse> resendOtp(
-      {String purpose = 'REGISTER_USER', String? email, String? phone}) {
-    final payload = {"purpose": purpose};
-
-    if (email != null) payload['email'] = email;
-    if (phone != null) payload['phoneNumber'] = phone;
-
-    return post('$serviceUrl/client/auth/resend-otp', payload);
+  Future<WayaRequestResponse> resendOtp(String email,
+      {String purpose = 'REGISTER_USER'}) {
+    return post('$serviceUrl/client/auth/resend-otp',
+        {"email": email, "purpose": purpose});
   }
 
   Future<WayaRequestResponse> oauth(String token, String authType) {

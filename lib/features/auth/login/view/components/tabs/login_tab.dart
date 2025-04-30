@@ -10,7 +10,6 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_validators.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/login/vm/login_vm.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'dart:io' show Platform;
 
 import '../../../../../../core/utils/waya_navigation.dart';
@@ -400,7 +399,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
               ],
             )),
         Gap(30),
-        InkWell(
+    InkWell(
           onTap: () {
             WayaNav.toNamed("/account-creation");
           },
@@ -411,8 +410,9 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
             style1: wayaTheme.textTheme.hintStyle
                 .wayaCopyWith(color: wayaTheme.colorScheme.black),
           )),
-        )
+        ),
       ],
+    
     );
   }
 }

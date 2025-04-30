@@ -159,5 +159,4 @@ class ContestRepo extends BaseRepository {
     return get('$serviceUrl2/admin/contests/?id=$contestId');
   }
 
-
 }
