@@ -561,6 +561,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
     // This is fine.
     final offset = renderBox.localToGlobal(Offset.zero);
     final isMe = widget.data.senderId == ConversationState.self.id;
+    final messageController = notifier.getController(widget.data);
 
     // This is fine.
     _entry = OverlayEntry(
@@ -897,7 +898,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
 
     // Insert this overlay.
     Overlay.of(context).insert(_entry!);
-    widget.controller.setFocus(widget.data);
+    widget.controller.setFocus(messageController.data);
 
     // Update this lad.
     setState(() {

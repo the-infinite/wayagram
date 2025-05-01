@@ -59,7 +59,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   void reassemble() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) {
-        notifier.getMessages(true);
+        notifier.getMessages(true, true);
       },
     );
 
