@@ -336,7 +336,7 @@ class WayaSocketController {
 
     //? Sixth, listen for when a message has been received by me.
     socket.on(
-      "receiveMessage",
+      "recieveMessage",
       (data) async {
         final args = _quickDecode(data);
         final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
