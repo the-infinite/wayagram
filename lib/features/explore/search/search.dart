@@ -34,7 +34,6 @@ class _SearchState extends ConsumerState<SearchView> {
   final storage = WayaLocalDataSource.instance;
   List<EventDoc> events = [];
   List<MomentData> moments = [];
-  bool _isNotFirstLoad = false;
   // Tracks selected services
   Set<String> selectedServices = {};
 
