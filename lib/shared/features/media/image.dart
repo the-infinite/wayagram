@@ -2,7 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class WayaImageDetailScreen extends StatefulWidget {
   final List<File>? file;
@@ -33,6 +37,9 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
     assert(widget.imageUrl != null || widget.file != null, "This must contain either a file or a network URL");
     assert(widget.imageUrl == null || widget.file == null, "The two properties cannot have non-null values");
 
+    // Then get the theme.
+    final wayaTheme = Theme.of(context);
+
     //? Show the widget.
     return WayaScaffold(
       padding: EdgeInsets.zero,
@@ -40,6 +47,49 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         leading: WayaBackButton(),
+      ),
+      appBarTrailing: Row(
+        spacing: 12.w,
+        children: [
+          PopupMenuButton(
+            onSelected: (value) {},
+            iconColor: wayaTheme.colorScheme.white,
+            position: PopupMenuPosition.under,
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem<int>(
+                  value: 0,
+                  child: WayaActionNav(
+                    context: context,
+                    onTap: () async {
+                      bool hasSaved = await WayaFileHelper.saveNetworkVideo(
+                        widget.imageUrl?.elementAt(pageController.page!.ceil()) ??
+                            widget.file!.elementAt(pageController.page!.ceil()).uri.toString(),
+                      );
+
+                      if (hasSaved) {
+                        WayaSnackBar.showToast("Image saved", showSuccess: true);
+                      } else {
+                        WayaSnackBar.showToast(
+                          "Unable to save image!",
+                        );
+                      }
+                    },
+                    asset: WayaAssets.icons.download.svg(
+                      height: 20,
+                    ),
+                    text: "  Download Media",
+                    color: wayaTheme.colorScheme.customBlack,
+                  ),
+                ),
+              ];
+            },
+            child: WayaAssets.icons.genSet.moreHorz.svg(
+              fit: BoxFit.none,
+              color: Colors.white,
+            ),
+          ),
+        ],
       ),
       isLoading: false,
       isScrollable: false,
