@@ -31,7 +31,8 @@ class ViewMoment extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ViewMomentState();
 }
 
-class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProviderStateMixin {
+class _ViewMomentState extends ConsumerState<ViewMoment>
+    with SingleTickerProviderStateMixin {
   late PageController _pageController;
   late AnimationController _animationController;
   late final isMine = widget.isMine;
@@ -44,11 +45,16 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
   void initState() {
     super.initState();
     _pageController = PageController();
-    _animationController = AnimationController(vsync: this);
+    _animationController = AnimationController(
+      vsync: this,
+    );
   }
 
   void _startTimer() {
     if (moments.isEmpty) return;
+
+    _animationController.reset();
+
     _animationController.forward(from: 0.0).whenComplete(() {
       if (mounted && !pauseController.value) {
         _nextMoment();
@@ -91,7 +97,8 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
   void _previousMoment() {
     //? If this is actually at an index greater than 0....
     if (currentIndex > 0) {
-      _pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.ease);
+      _pageController.previousPage(
+          duration: Duration(milliseconds: 300), curve: Curves.ease);
     }
 
     //? Since it is not mine, I just go somewhere else.
@@ -104,11 +111,12 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
     if (!mounted) return;
 
     //? This is fine.
+    _animationController.reset();
     if (index < moments.length) {
       setState(() {
         currentIndex = index;
-        _animationController.reset();
       });
+      _startTimer();
     }
 
     //? Then we can just do it like this.
@@ -164,7 +172,8 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
           },
           child: Container(
             color: moments[currentIndex].contentType == 'text'
-                ? MomentHelper.hexToColor(moments[currentIndex].color ?? "#1D2939")
+                ? MomentHelper.hexToColor(
+                    moments[currentIndex].color ?? "#1D2939")
                 : wayaTheme.colorScheme.black,
             child: Stack(
               fit: StackFit.expand,
@@ -187,7 +196,8 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                         index: index,
                         pause: () => pauseAnimation(false),
                         resume: continueAnimating,
-                        setDuration: (duration) => _animationController.duration = duration,
+                        setDuration: (duration) =>
+                            _animationController.duration = duration,
                       );
                     }
 
@@ -198,7 +208,8 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                       moment: moment,
                       pause: () => pauseAnimation(false),
                       resume: continueAnimating,
-                      setDuration: (duration) => _animationController.duration = duration,
+                      setDuration: (duration) =>
+                          _animationController.duration = duration,
                     );
                   },
                 ),
@@ -252,19 +263,32 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                           moments.length,
                           (index) => Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
                               child: AnimatedBuilder(
-                                animation: _animationController,
-                                builder: (context, child) => LinearProgressIndicator(
-                                  minHeight: 6,
-                                  borderRadius: BorderRadius.circular(12),
-                                  value: index == currentIndex
-                                      ? _animationController.value
-                                      : (index < currentIndex ? 1.0 : 0.0),
-                                  backgroundColor: Colors.black.withOpacity(0.25),
-                                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                                ),
-                              ),
+                                  animation: _animationController,
+                                  builder: (context, child) {
+                                    double? progressValue;
+                                    if (index == currentIndex) {
+                                      progressValue =
+                                          _animationController.isAnimating
+                                              ? _animationController.value
+                                              : null;
+                                    } else if (index < currentIndex) {
+                                      progressValue = 1.0;
+                                    } else {
+                                      progressValue = 0.0;
+                                    }
+                                    return LinearProgressIndicator(
+                                      minHeight: 6,
+                                      borderRadius: BorderRadius.circular(12),
+                                      value: progressValue,
+                                      backgroundColor:
+                                          Colors.black.withOpacity(0.25),
+                                      valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white),
+                                    );
+                                  }),
                             ),
                           ),
                         ),
@@ -289,7 +313,8 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                       top: 30,
                       child: MomentUserInfoWidget(
                         moment: moments[currentIndex],
-                        isMine: moments[currentIndex].userId == ConversationState.self.id,
+                        isMine: moments[currentIndex].userId ==
+                            ConversationState.self.id,
                         pause: pauseAnimation,
                         continues: continueAnimating,
                       ),
@@ -307,7 +332,8 @@ class _ViewMomentState extends ConsumerState<ViewMoment> with SingleTickerProvid
                       textController: textController,
                       pause: pauseAnimation,
                       continues: continueAnimating,
-                      uniqueKey: "up-${moments[currentIndex].userId}-$currentIndex",
+                      uniqueKey:
+                          "up-${moments[currentIndex].userId}-$currentIndex",
                       moment: moments[currentIndex],
                     ),
                   )
@@ -367,7 +393,9 @@ class _TextMoment extends StatefulWidget {
 }
 
 class __TextMomentState extends State<_TextMoment> {
-  late final notifier = widget.ref.read(replyMomentVmProvider("up-${widget.moment.userId}-${widget.index}").notifier);
+  late final notifier = widget.ref.read(
+      replyMomentVmProvider("up-${widget.moment.userId}-${widget.index}")
+          .notifier);
 
   @override
   void initState() {
@@ -380,7 +408,8 @@ class __TextMomentState extends State<_TextMoment> {
       widget.resume();
 
       //? Mark this as viewed.
-      notifier.postSingleUserMoment(momentId: widget.moment.id, userId: widget.moment.userId);
+      notifier.postSingleUserMoment(
+          momentId: widget.moment.id, userId: widget.moment.userId);
     });
     super.initState();
   }
@@ -432,7 +461,9 @@ class _MediaMomentWidget extends StatefulWidget {
 }
 
 class __MediaMomentWidgetState extends State<_MediaMomentWidget> {
-  late final notifier = widget.ref.read(replyMomentVmProvider("up-${widget.moment.userId}-${widget.index}").notifier);
+  late final notifier = widget.ref.read(
+      replyMomentVmProvider("up-${widget.moment.userId}-${widget.index}")
+          .notifier);
 
   @override
   void initState() {
@@ -444,7 +475,8 @@ class __MediaMomentWidgetState extends State<_MediaMomentWidget> {
       }
 
       //? Next, We view it.
-      notifier.postSingleUserMoment(momentId: widget.moment.id, userId: widget.moment.userId);
+      notifier.postSingleUserMoment(
+          momentId: widget.moment.id, userId: widget.moment.userId);
     });
     super.initState();
   }
@@ -464,7 +496,8 @@ class __MediaMomentWidgetState extends State<_MediaMomentWidget> {
         // Media Preview
         if (widget.moment.contentType == "video")
           WayaFutureSubscriber(
-            future: WayaFileHelper.getMomentDirectory(widget.moment, widget.moment.content),
+            future: WayaFileHelper.getMomentDirectory(
+                widget.moment, widget.moment.content),
             builder: (context, data) {
               if (data == null) {
                 return const SizedBox();
@@ -483,7 +516,8 @@ class __MediaMomentWidgetState extends State<_MediaMomentWidget> {
           )
         else
           WayaFutureSubscriber(
-            future: WayaFileHelper.getMomentDirectory(widget.moment, widget.moment.content),
+            future: WayaFileHelper.getMomentDirectory(
+                widget.moment, widget.moment.content),
             builder: (context, data) {
               if (data == null) {
                 return const SizedBox();
