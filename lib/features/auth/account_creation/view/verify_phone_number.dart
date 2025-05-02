@@ -161,7 +161,7 @@ class VerifyPhoneNumber extends ConsumerWidget {
           child: TextButton(
               onPressed: () => WayaNav.to(const TransactionPinView()),
               child: Text(
-                "Skip",
+                "Skip for now",
                 style: wayaTheme.textTheme.descriptionStyle.copyWith(
                     color: wayaTheme.colorScheme.customPrimary,
                     fontWeight: FontWeight.w600),
