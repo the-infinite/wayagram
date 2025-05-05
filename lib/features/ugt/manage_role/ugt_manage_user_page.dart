@@ -4,14 +4,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/role_access/vm/role_access_vm.dart';
 import 'package:wayagram/features/role_access/widget/manage_user_tab.dart';
 import 'package:wayagram/features/role_access/widget/role_admin_card.dart';
 import 'package:wayagram/features/role_access/widget/role_management_tab.dart';
+import 'package:wayagram/features/ugt/manage_role/ugt_add_manage_user_page.dart';
 
 class UgtManageUserPage extends StatefulHookConsumerWidget {
   static const route = '/ugt-manage-user-page';
- 
+
   const UgtManageUserPage({super.key});
 
   @override
@@ -92,7 +94,7 @@ class _UgtHomeState extends ConsumerState<UgtManageUserPage> {
               WayaButton(
                 callback: () {
                   // ref.read(editingRoleMemberProvider.notifier).state = false;
-                  //WayaNav.toNamed(AddTeamMemberPage.route);
+                  WayaNav.toNamed(UgtAddManageUserPage.route);
                 },
                 color: wayaTheme.colorScheme.primary50,
                 text: "Add Member",
