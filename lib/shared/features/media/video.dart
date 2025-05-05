@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -44,10 +45,8 @@ class _WayaVideoDetailScreenState extends State<WayaVideoDetailScreen> {
     return WayaScaffold(
       padding: EdgeInsets.zero,
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: WayaBackButton(),
-      ),
+      appBarColor: Colors.black,
+      automaticallyImplyLeading: true,
       appBarTrailing: Row(
         spacing: 12.w,
         children: [
@@ -59,20 +58,20 @@ class _WayaVideoDetailScreenState extends State<WayaVideoDetailScreen> {
               return [
                 PopupMenuItem<int>(
                   value: 0,
+                  onTap: () async {
+                    bool hasSaved =
+                        await WayaFileHelper.saveNetworkVideo(widget.videoUrl ?? widget.file!.uri.toString());
+
+                    if (hasSaved) {
+                      WayaSnackBar.showToast("Video saved", showSuccess: true);
+                    } else {
+                      WayaSnackBar.showToast(
+                        "Unable to save video!",
+                      );
+                    }
+                  },
                   child: WayaActionNav(
                     context: context,
-                    onTap: () async {
-                      bool hasSaved =
-                          await WayaFileHelper.saveNetworkVideo(widget.videoUrl ?? widget.file!.uri.toString());
-
-                      if (hasSaved) {
-                        WayaSnackBar.showToast("Video saved", showSuccess: true);
-                      } else {
-                        WayaSnackBar.showToast(
-                          "Unable to save video!",
-                        );
-                      }
-                    },
                     asset: WayaAssets.icons.download.svg(
                       height: 20,
                     ),
@@ -87,6 +86,7 @@ class _WayaVideoDetailScreenState extends State<WayaVideoDetailScreen> {
               color: Colors.white,
             ),
           ),
+          Gap(8.sp),
         ],
       ),
       isLoading: false,

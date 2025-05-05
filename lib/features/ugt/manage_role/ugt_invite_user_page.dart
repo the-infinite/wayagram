@@ -5,9 +5,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/role_access/vm/role_access_vm.dart';
-import 'package:wayagram/features/role_access/widget/manage_user_tab.dart';
 import 'package:wayagram/features/role_access/widget/role_admin_card.dart';
-import 'package:wayagram/features/role_access/widget/role_management_tab.dart';
 
 class UgtInviteUserPage extends StatefulHookConsumerWidget {
   static const route = '/ugt-invite-user-page';
@@ -56,7 +54,7 @@ class _UgtHomeState extends ConsumerState<UgtInviteUserPage> {
     final wayaTheme = Theme.of(context);
     //? get access to the provider
     final rollAccessNotifier = ref.read(roleAccessVm.notifier);
-    final viewModel = ref.watch(selectedRoleMemberProvider);
+    //final viewModel = ref.watch(selectedRoleMemberProvider);
 
     //  ConversationState.self.id
     // debugPrint("UGT HOME ${ConversationState.self.role?.name}");
