@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -189,17 +190,17 @@ class ReferralPage extends ConsumerWidget {
         color: wayaTheme.colorScheme.primary50,
         borderRadius: BorderRadius.circular(4), // Rounded corners
       ),
-      width: context.width / 3.5,
+      width: context.width / 3.4,
       padding: EdgeInsets.symmetric(horizontal: 2, vertical: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: wayaTheme.colorScheme.primary500),
+          Icon(icon, color: wayaTheme.colorScheme.primary500, size: 20,),
           Gap(4),
           Text(label,
               style: WayaTextStyles.bodyMedium
-                  .copyWith(color: wayaTheme.colorScheme.primary500)),
+                  .copyWith(color: wayaTheme.colorScheme.primary500, fontSize: 14.sp)),
         ],
       ),
     );
