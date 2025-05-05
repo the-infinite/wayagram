@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -29,14 +28,13 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       final args = ModalRoute.of(context)?.settings.arguments as dynamic;
-      if(args != null){
+      if (args != null) {
         setState(() {
-        _selectedIndex = args['index'];
+          _selectedIndex = args['index'];
         });
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -49,14 +47,7 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
       title: 'Pages',
       appBarTrailing: Row(
         spacing: 12,
-        children: [
-          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-          WayaDp(
-            radius: 15.r,
-            
-          ),
-          Gap(8)
-        ],
+        children: [WayaAssets.icons.genSet.search.svg(fit: BoxFit.none), Gap(8)],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,

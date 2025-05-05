@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
@@ -44,10 +45,8 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
     return WayaScaffold(
       padding: EdgeInsets.zero,
       backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        leading: WayaBackButton(),
-      ),
+      appBarColor: Colors.black,
+      automaticallyImplyLeading: true,
       appBarTrailing: Row(
         spacing: 12.w,
         children: [
@@ -59,22 +58,22 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
               return [
                 PopupMenuItem<int>(
                   value: 0,
+                  onTap: () async {
+                    bool hasSaved = await WayaFileHelper.saveNetworkImage(
+                      widget.imageUrl?.elementAt(pageController.page!.ceil()) ??
+                          widget.file!.elementAt(pageController.page!.ceil()).uri.toString(),
+                    );
+
+                    if (hasSaved) {
+                      WayaSnackBar.showToast("Image saved", showSuccess: true);
+                    } else {
+                      WayaSnackBar.showToast(
+                        "Unable to save image!",
+                      );
+                    }
+                  },
                   child: WayaActionNav(
                     context: context,
-                    onTap: () async {
-                      bool hasSaved = await WayaFileHelper.saveNetworkVideo(
-                        widget.imageUrl?.elementAt(pageController.page!.ceil()) ??
-                            widget.file!.elementAt(pageController.page!.ceil()).uri.toString(),
-                      );
-
-                      if (hasSaved) {
-                        WayaSnackBar.showToast("Image saved", showSuccess: true);
-                      } else {
-                        WayaSnackBar.showToast(
-                          "Unable to save image!",
-                        );
-                      }
-                    },
                     asset: WayaAssets.icons.download.svg(
                       height: 20,
                     ),
@@ -89,6 +88,7 @@ class _WayaImageDetailScreenState extends State<WayaImageDetailScreen> {
               color: Colors.white,
             ),
           ),
+          Gap(8.sp),
         ],
       ),
       isLoading: false,
