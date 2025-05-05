@@ -144,8 +144,7 @@ class VerifyAccount extends ConsumerWidget {
                   if (type == 'account-creation') {
                     final code = ref.watch(verifyAccountProvider).inputCode;
                     viewModel.verifyAccount(
-                        onSuccess: () => WayaNav.to(const TransactionPinView()),
-                        code: code);
+                        onSuccess: () => goToNextTab(), code: code);
                   } else if (type == "forgot-password") {
                     goToNextTab(emailAddress: email);
                   }

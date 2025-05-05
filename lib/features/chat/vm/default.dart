@@ -335,7 +335,7 @@ class ConversationVm extends StateNotifier<ConversationState> {
     return response.success;
   }
 
-  /// Helper function used to mute or unmute a user as the case may be.
+  /// Helper function used to report a user as the case may be.
   Future<bool> reportUser(String id, String reason) async {
     final response = await repo.reportUser(id, reason);
 
