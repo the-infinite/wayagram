@@ -25,6 +25,7 @@ class WayaScaffold extends ConsumerWidget {
   final bool isLoading;
   final bool? resizeToAvoidBottomInset;
   final Color? color;
+  final Color? appBarColor;
   final PreferredSizeWidget? appBar;
   final VoidCallback? onTapBackButton;
   final Widget? progressIndicator;
@@ -37,6 +38,7 @@ class WayaScaffold extends ConsumerWidget {
     required this.body,
     this.isLoading = false,
     this.padding,
+    this.appBarColor,
     this.floatingActionButton,
     this.title,
     this.appBarTrailing,
@@ -70,7 +72,7 @@ class WayaScaffold extends ConsumerWidget {
                 AppBar(
                   elevation: 0,
                   scrolledUnderElevation: 0,
-                  backgroundColor: wayaTheme.colorScheme.white,
+                  backgroundColor: appBarColor ?? backgroundColor ?? wayaTheme.colorScheme.white,
                   title: Text(title ?? ''),
                   leading: automaticallyImplyLeading
                       ? WayaBackButton(

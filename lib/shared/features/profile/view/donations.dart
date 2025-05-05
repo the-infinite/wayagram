@@ -17,10 +17,8 @@ class DonationsFeedWidget extends ConsumerStatefulWidget {
 class _DonationsFeedWidget extends ConsumerState<DonationsFeedWidget> {
   @override
   void initState() {
-    // TODO: implement initState
-  
     WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(donationVmProvider.notifier).getMyDonation();
+      ref.read(donationVmProvider.notifier).getMyDonation();
     });
     super.initState();
   }
@@ -32,7 +30,7 @@ class _DonationsFeedWidget extends ConsumerState<DonationsFeedWidget> {
     List<MyDonationDocs>? myDonations = widget.isExpanded
         ? state.myDonationDocs
         : state.myDonationDocs!.sublist(0, min(state.myDonationDocs!.length, 2));
-    // TODO: implement build
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,

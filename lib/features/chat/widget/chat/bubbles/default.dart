@@ -518,7 +518,7 @@ class ChatBubbleWidget extends ConsumerStatefulWidget {
 
 class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
   OverlayEntry? _entry;
-  late final notifier = ref.watch(chatProvider.notifier);
+  late final notifier = ref.watch(chatProvider(widget.chat?.id ?? widget.data.chatId).notifier);
 
   /// This is the message we are replying to.
   void _replyTo() {
@@ -561,6 +561,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
     // This is fine.
     final offset = renderBox.localToGlobal(Offset.zero);
     final isMe = widget.data.senderId == ConversationState.self.id;
+    final messageController = notifier.getController(widget.data);
 
     // This is fine.
     _entry = OverlayEntry(
@@ -897,7 +898,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
 
     // Insert this overlay.
     Overlay.of(context).insert(_entry!);
-    widget.controller.setFocus(widget.data);
+    widget.controller.setFocus(messageController.data);
 
     // Update this lad.
     setState(() {
@@ -907,7 +908,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
 
   /// Utility runnable used to resend this message when it failed.
   Future<void> _resendMessage() async {
-    final notifier = ref.watch(chatProvider.notifier);
+    final notifier = ref.watch(chatProvider(widget.chat!.id).notifier);
 
     //? If this is actually fine.
     notifier.sendMessage(widget.data.dto!, widget.data.id);
@@ -971,6 +972,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
   @override
   Widget build(BuildContext context) {
     final user = ConversationState.self;
+    final messageController = notifier.getController(widget.data);
 
     //? Our other option.
     return PopScope(
@@ -1031,16 +1033,22 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                     : null,
                 onRightSwipe: widget.interactive ? (details) => _replyTo() : null,
                 child: widget.data.senderId == user.id
-                    ? _MyBubbleWidget(
-                        data: widget.data,
-                        controller: widget.controller,
-                        interactive: widget.interactive,
+                    ? ValueListenableBuilder(
+                        valueListenable: messageController,
+                        builder: (context, redraws, _) => _MyBubbleWidget(
+                          data: messageController.data,
+                          controller: widget.controller,
+                          interactive: widget.interactive,
+                        ),
                       )
-                    : _YourBubbleWidget(
-                        data: widget.data,
-                        chat: widget.chat!,
-                        controller: widget.controller,
-                        interactive: widget.interactive,
+                    : ValueListenableBuilder(
+                        valueListenable: messageController,
+                        builder: (context, redraws, _) => _YourBubbleWidget(
+                          data: messageController.data,
+                          chat: widget.chat!,
+                          controller: widget.controller,
+                          interactive: widget.interactive,
+                        ),
                       ),
               ),
             ],

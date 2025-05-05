@@ -4,28 +4,28 @@ part 'business_account_model.g.dart';
 
 @JsonSerializable(createFactory: false)
 class BusinessAccountData {
-  final String? id;
+  final dynamic id;
   final bool isActive;
-  final String? deletedAt;
-  final String? name;
-  final String? address;
-  final String? businessTypeId;
-  final String? userId;
-  final String? businessId;
-  final String? updatedAt;
-  final String? createdAt;
-  final String? contactEmail;
-  final String? contactPhone;
-  final String? description;
-  final String? logoUrl;
-  final String? websiteUrl;
-  final String? city;
-  final String? state;
-  final String? country;
-  final String? verifiedAt;
+  final dynamic deletedAt;
+  final dynamic name;
+  final dynamic address;
+  final dynamic businessTypeId;
+  final dynamic userId;
+  final dynamic businessId;
+  final dynamic updatedAt;
+  final dynamic createdAt;
+  final dynamic contactEmail;
+  final dynamic contactPhone;
+  final dynamic description;
+  final dynamic logoUrl;
+  final dynamic websiteUrl;
+  final dynamic city;
+  final dynamic state;
+  final dynamic country;
+  final dynamic verifiedAt;
   @JsonKey(name: '_v')
-  final String? v;
-  final String? lga;
+  final dynamic v;
+  final dynamic lga;
 
   BusinessAccountData({
     required this.id,
@@ -53,27 +53,27 @@ class BusinessAccountData {
 
   factory BusinessAccountData.fromJson(Map<String, dynamic> json) {
     return BusinessAccountData(
-      id: json['id'] as String?,
+      id: json['id'] ,
       isActive: json['isActive'] as bool? ?? false,
-      deletedAt: json['deletedAt'] as String?,
-      v: json['_v'] as String?,
-      name: json['name'] as String? ?? '',
-      address: json['address'] as String? ?? '',
-      businessTypeId: json['businessTypeId'] as String? ?? '',
-      userId: json['userId'] as String? ?? '',
-      businessId: json['businessId'] as String? ?? '',
-      updatedAt: json['updatedAt'] as String? ?? '',
-      createdAt: json['createdAt'] as String? ?? '',
-      contactEmail: json['contactEmail'] as String?,
-      contactPhone: json['contactPhone'] as String?,
-      description: json['description'] as String?,
-      logoUrl: json['logoUrl'] as String?,
-      websiteUrl: json['websiteUrl'] as String?,
-      city: json['city'] as String?,
-      state: json['state'] as String?,
-      country: json['country'] as String?,
-      verifiedAt: json['verifiedAt'] as String?,
-      lga: json['lga'] as String?
+      deletedAt: json['deletedAt'],
+      v: json['_v'],
+      name: json['name'] ?? '',
+      address: json['address'] ?? '',
+      businessTypeId: json['businessTypeId']  ?? '',
+      userId: json['userId'] ??'',
+      businessId: json['businessId']?? '',
+      updatedAt: json['updatedAt']  ?? '',
+      createdAt: json['createdAt']  ?? '',
+      contactEmail: json['contactEmail'] ?? '',
+      contactPhone: json['contactPhone'] ?? '',
+      description: json['description'] ?? '',
+      logoUrl: json['logoUrl'] ?? '',
+      websiteUrl: json['websiteUrl'] ?? '',
+      city: json['city'] ?? '',
+      state: json['state'] ?? '',
+      country: json['country'],
+      verifiedAt: json['verifiedAt'] ?? '',
+      lga: json['lga'] ?? ''
     );
   }
 

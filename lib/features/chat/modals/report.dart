@@ -1,269 +1,223 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
-import 'package:wayagram/shared/features/user/models/default.dart';
 
-class ReportDialog extends StatefulWidget {
-  final UserDetailsModel user;
-  final SocialProfileModel profile;
-  final WidgetRef ref;
-
-  // Construct.
-  const ReportDialog({
+class ReportChatPage extends StatefulHookConsumerWidget {
+  final List<String> statuses;
+  final String userId;
+  const ReportChatPage({
     super.key,
-    required this.user,
-    required this.profile,
-    required this.ref,
+    required this.statuses,
+    required this.userId,
   });
 
   @override
-  State<ReportDialog> createState() => _ReportUserDialogState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ReportChatPageState();
 }
 
-class _ReportUserDialogState extends State<ReportDialog> {
-  late final notifier = widget.ref.read(conversationProvider.notifier);
-  late final buttonController = ValueNotifier(false);
-  final inputController = TextEditingController();
-  ReportModel? selectedReport;
-  final list = [
-    ReportModel(
-      id: 1,
-      text: "Spam or misleading content",
-      value: false,
-    ),
-    ReportModel(
-      id: 2,
-      text: "Inappropriate content",
-      value: false,
-    ),
-    ReportModel(
-      id: 3,
-      text: "Fraudulent activity",
-      value: false,
-    ),
-    ReportModel(
-      id: 4,
-      text: "Violates terms and conditions",
-      value: false,
-    ),
-    ReportModel(
-      id: 5,
-      text: "Other",
-      value: false,
-    ),
-  ];
+class _ReportChatPageState extends ConsumerState<ReportChatPage> {
+  final _formKey = GlobalKey<FormState>();
+  late TextEditingController comment;
+
+  String? selectedStatus;
+
+  @override
+  void initState() {
+    super.initState();
+
+    comment = TextEditingController();
+  }
 
   @override
   void dispose() {
-    buttonController.dispose();
-    inputController.dispose();
+    comment.dispose();
     super.dispose();
   }
 
-  // This is fine.
   @override
   Widget build(BuildContext context) {
-    //? First, we obtain all things needed to build this widget.
-    final user = widget.user;
-    final theme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
+    final isLoading = useState(false);
+    final notifier = ref.read(conversationProvider.notifier);
 
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: SizedBox(
-        width: Get.width,
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // Some space to give a decent amount of spacing between concerned
-              // sections.
-              Gap(30.h),
-
-              //? Next, the title of this popup.
-              Align(
-                alignment: Alignment.topLeft,
-                child: Text(
-                  "Report User",
-                  style: theme.textTheme.headlineMedium?.copyWith(
-                    color: theme.colorScheme.black,
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: EdgeInsets.symmetric(vertical: 30, horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Report ",
+                style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.w600)),
+            const Gap(5),
+            Text(
+                maxLines: 3,
+                "Help us improve the platform by letting us know you are reporting this group",
+                style: wayaTheme.textTheme.hintStyle),
+            const Gap(30),
+            Row(
+              children: [
+                Expanded(
+                  child: Divider(
+                    color: wayaTheme.colorScheme.greyColor200,
+                    thickness: 1,
                   ),
                 ),
-              ),
-
-              // Some space.
-              Gap(5.h),
-
-              //? Next, this user's username.
-              Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "Help us improve the platform by letting us know why you're reporting this user",
-                  textAlign: TextAlign.start,
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    color: theme.colorScheme.greyColor500,
+                Gap(10),
+                Text(
+                  "Choose Reason for Reporting",
+                  style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                    color: wayaTheme.colorScheme.greyColor600,
                   ),
                 ),
-              ),
-
-              // Some space.
-              Gap(25.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Expanded(
-                    child: Container(
-                      height: 0.5,
-                      width: 100.w,
-                      color: theme.colorScheme.greyColor300,
-                    ),
+                Gap(10),
+                Expanded(
+                  child: Divider(
+                    color: wayaTheme.colorScheme.greyColor200,
+                    thickness: 1,
                   ),
-                  Expanded(
-                    flex: 3,
-                    child: Text(
-                      "Choose Reason For Reporting",
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: theme.colorScheme.greyColor900,
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      height: 0.5,
-                      width: 100.w,
-                      color: theme.colorScheme.greyColor300,
-                    ),
-                  ),
-                ],
-              ),
-              Gap(25.h),
-
-              //? A titular action section.
-              ...list.map(
-                (e) => Column(
+                ),
+              ],
+            ),
+            const Gap(30),
+            Form(
+                key: _formKey,
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        selectedReport = e;
-                        int index = list.indexOf(e);
-                        setState(() {
-                          for (int i = 0; i < list.length; i++) {
-                            list[i].value = (i == index); // Only selected index is true
-                          }
-                        });
-                      },
-                      child: Container(
-                        width: Get.width,
-                        padding: EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          border: Border.all(
-                            color: e.value ? theme.colorScheme.primary : Colors.transparent, // Border color
-                            width: 0.5, // Border width
+                    ListView.builder(
+                        itemCount: widget.statuses.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemBuilder: (context, index) {
+                          return Column(
+                            children: [
+                              ListTile(
+                                minTileHeight: 30,
+                                selectedTileColor:
+                                    selectedStatus == widget.statuses[index]
+                                        ? wayaTheme.colorScheme.scaffoldColor
+                                        : null,
+                                trailing: selectedStatus ==
+                                        widget.statuses[index]
+                                    ? Icon(
+                                        Icons.check_circle,
+                                        size: 20,
+                                        color:
+                                            wayaTheme.colorScheme.customPrimary,
+                                      )
+                                    : null,
+                                contentPadding: EdgeInsets.symmetric(
+                                    vertical: 1, horizontal: 1),
+                                title: Text(
+                                  WayaHelpers.removeCamelCaseAndUnderscore(
+                                      widget.statuses[index]),
+                                  style: TextStyle().wayaCopyWith(
+                                      color: wayaTheme.colorScheme.customBlack,
+                                      fontSize: 14.sp),
+                                ),
+                                onTap: () {
+                                  setState(() {
+                                    selectedStatus = widget.statuses[index];
+                                  });
+                                },
+                              ),
+                              if (index < widget.statuses.length - 1)
+                                const Gap(0), // Adjust the gap as needed
+                            ],
+                          );
+                        }),
+                    const Gap(24),
+                    FormField<String>(validator: (value) {
+                      return null;
+                    }, builder: (formState) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          WayaTextFormField(
+                            line: 6,
+                            keyboardType: TextInputType.text,
+                            controller: comment,
+                            hintText: 'Provide more detail about the issue',
+                            label: 'Additional Comment (Optional)',
                           ),
-                          borderRadius: BorderRadius.circular(8), // Optional rounded corners
-                        ),
-                        child: Text(
-                          e.text,
-                          textAlign: TextAlign.start,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.greyColor900,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Gap(25),
+                        ],
+                      );
+                    }),
+                    const Gap(24),
+                    WayaButton(
+                        callback: !isLoading.value
+                            ? () async {
+                                if (selectedStatus == null &&
+                                    comment.text.trim().isEmpty) {
+                                  WayaSnackBar.showToast(
+                                      "Please select a reason for reporting this user",
+                                      showSuccess: false);
+                                  return;
+                                }
+                                //? If this went well...
+                                isLoading.value = true;
+                                final result = await notifier.reportUser(
+                                  widget.userId,
+                                  comment.text.trim().isEmpty
+                                      ? selectedStatus ?? ""
+                                      : comment.text.trim(),
+                                );
+
+                                //? Then leave.
+                                isLoading.value = true;
+                                if (result) {
+                                  WayaNav.goBack(result: true);
+                                  if (context.mounted) {
+                                    await WayaUtils.showNotice(
+                                      context: context,
+                                      title: "Thank you for reporting",
+                                      onPress: () => WayaNav.goBack(),
+                                      icon: Image.asset(
+                                        WayaAssets.images.eCheckEvent.path,
+                                        scale: 1.5,
+                                      ),
+                                      message:
+                                          'Your report has been submitted. Our team will review the issue and take appropriate action.',
+                                      buttonText: 'Continue',
+                                    );
+
+                                    //? This is fine.
+                                    //  WayaNav.goBack();
+                                  }
+                                  return;
+                                }
+
+                                //? Then we leave.
+                                WayaNav.goBack();
+                              }
+                            : null,
+                        centerWidget: LoadingState(
+                            loading: isLoading.value, text: "Submit Report")),
                   ],
-                ),
-              ),
-
-              // Some space.
-              Gap(10.h),
-
-              //? A titular action section.
-              WayaTextFormField(
-                controller: inputController,
-                hintText: "Provide more details about the issue...",
-                label: "Additional Comments (Optional)",
-                maxLines: 5,
-                line: 5,
-                // isReadOnly: true,
-
-                //  label: 'Business Name',
-              ),
-
-              // Some space.
-              Gap(15.h),
-
-              //? Our block button.
-              WayaProgressiveButton(
-                notifier: buttonController,
-                color: theme.colorScheme.primary,
-                callback: () async {
-                  if (selectedReport == null && inputController.text.trim().isEmpty) {
-                    WayaSnackBar.showToast("Please select a reason for reporting this user", showSuccess: false);
-                    return;
-                  }
-                  //? If this went well...
-                  final result = await notifier.reportUser(
-                    user.id,
-                    inputController.text.trim().isEmpty ? selectedReport?.text ?? "" : inputController.text.trim(),
-                  );
-
-                  //? Then leave.
-                  if (result) {
-                    WayaNav.goBack(result: true);
-                    return;
-                  }
-
-                  //? Then we leave.
+                )),
+            const Gap(10),
+            WayaButton(
+                callback: () {
                   WayaNav.goBack();
                 },
-                text: "Submit",
-              ),
-
-              // Some space.
-              Gap(5.h),
-
-              //? Our block button.
-              WayaButton(
-                color: theme.colorScheme.transparent,
-                border: Border.all(color: theme.colorScheme.greyColor300),
-                textColor: theme.colorScheme.greyColor500,
-                callback: () => WayaNav.goBack(),
-                text: "Cancel",
-              ),
-
-              // Some space.
-              Gap(25.h),
-            ],
-          ),
+                textColor: wayaTheme.colorScheme.greyColor500,
+                color: wayaTheme.colorScheme.transparent,
+                border: Border.all(
+                    color: wayaTheme.colorScheme.greyColor500, width: 1),
+                text: 'Cancel')
+          ],
         ),
       ),
     );
   }
-}
-
-class ReportModel {
-  final int id;
-  final String text;
-  bool value;
-
-  ReportModel({
-    required this.id,
-    required this.text,
-    this.value = false,
-  });
 }

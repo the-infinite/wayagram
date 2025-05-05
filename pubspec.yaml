@@ -2,7 +2,7 @@ name: wayagram
 description: The codebase for the entire WayaGram application
 homepage: https://wayagram.ng
 publish_to: "none" # NEVER PUBLISH TO pub.dev!
-version: 1.91.23+173
+version: 1.91.27+177
 
 
 environment:
@@ -56,9 +56,11 @@ dependencies:
   slide_countdown: ^2.0.2
   file_picker: ^9.0.2
   video_player: ^2.9.2
+  video_thumbnail: ^0.5.3
   # flutter_webrtc: ^0.12.9
   permission_handler: ^11.3.1
   audio_waveforms: ^1.2.0
+  package_info_plus: ^8.3.0
   socket_io_client: ^3.0.2
   #rtmp_broadcaster:
    # git: https://github.com/OlJohnny/flutter_rtmp_broadcaster.git
@@ -92,6 +94,7 @@ dependencies:
   #for pdf generation
   pdf: ^3.11.3
   avatar_glow: ^3.0.1
+  sign_in_with_apple: ^7.0.1
   
 
 

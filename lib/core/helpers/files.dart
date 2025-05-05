@@ -528,6 +528,18 @@ class WayaFileHelper {
   }
 
   // helper method for saving file from online to user gallery
+  // call the method passing in the video url
+  // returns true when successful and false when it fails
+  static Future<bool> saveNetworkVideo(
+    String videoPath, {
+    String? albumName,
+    bool toDcim = false,
+    Map<String, String>? headers,
+  }) async {
+    return await GallerySaver.saveVideo(videoPath, albumName: albumName, toDcim: toDcim, headers: headers) ?? false;
+  }
+
+  // helper method for saving file from online to user gallery
   // call the method passing in the image url
   // returns true when successful and false when it fails
   static Future<bool> saveNetworkImage(

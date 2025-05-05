@@ -52,7 +52,8 @@ class ManageShopVm extends StateNotifier<ManageShopState> {
       if (businessProfile.success) {
         businessData =
             BusinessAccountData.fromJson(businessProfile.data['data']);
-        debugPrint(businessProfile.data);
+        debugPrint(businessProfile.data.toString());
+
         state = state.copyWith(isPersonalNotUpgradedToBusiness: false);
       } else {
         if (shopMemberShops != null && shopMemberShops.isNotEmpty) {

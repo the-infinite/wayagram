@@ -30,7 +30,6 @@ class OrderDetails extends ConsumerWidget {
     final wayaTheme = Theme.of(context);
     final arg = ModalRoute.of(context)?.settings.arguments as OrderDetailArg?;
     final notifier = ref.read(conversationProvider.notifier);
-    final chatNotifier = ref.read(chatProvider.notifier);
 
     void chatWithUser() async {
       //? This is fine.
@@ -40,6 +39,7 @@ class OrderDetails extends ConsumerWidget {
           if (chat == null) return;
 
           //? If we could make this chat...
+          final chatNotifier = ref.read(chatProvider(chat.id).notifier);
           chatNotifier.setChat(chat);
           WayaNav.toNamed(WayaAppRoutes.getSingleChatRoute(chat.id));
         },

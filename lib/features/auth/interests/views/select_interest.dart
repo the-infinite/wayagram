@@ -24,7 +24,7 @@ class _SelectInterestState extends ConsumerState<SelectInterest> {
   List<String> selectedInterests = [];
   @override
   void initState() {
-    // TODO: implement initState
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(selectInterestProvider.notifier).getInterest();
     });
