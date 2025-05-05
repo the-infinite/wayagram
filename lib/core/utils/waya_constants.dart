@@ -1,9 +1,9 @@
 class WayaConstants {
   WayaConstants._();
   static const appName = 'Wayagram';
-  static const baseUrl = 'https://services.staging.wayagram.ng/';
+  static const baseUrl = 'https://services.wayagram.ng/';
   static const fontFamily = 'SFProDisplay';
-  static const isProduction = false;
+  static const isProduction = true;
   static const shopLogo = "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1742170216/m-shop_jcpp32.svg";
 }
 
@@ -18,6 +18,4 @@ class WayaServiceUri {
   static const quotation = "wayagram-shop/api/v2/quotation";
   static const shop = "wayagram-shop/api/v2";
   static const contest = "school-contest/api/v1";
-  
-
 }
