@@ -1,10 +1,16 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'dart:typed_data';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/modals/error.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
@@ -23,6 +29,8 @@ import 'package:wayagram/core/utils/utils.dart';
 import '../views/media_moment.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:image/image.dart' as img;
+import 'package:path/path.dart' as path;
 import 'dart:io';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
@@ -271,7 +279,49 @@ class MomentVm extends StateNotifier<MomentState> {
     }
   }
 
-  Future<void> submitMoment({required BuildContext context}) async {
+//> generate image preview
+  Future<File> generateImagePreview(File imageFile) async {
+    final imageBytes = await imageFile.readAsBytes();
+    final image = img.decodeImage(imageBytes);
+
+    final thumbnail = img.copyResize(image!, width: 150);
+    final previewFile = File(
+        '${imageFile.path}_preview.${WayaFileHelper.getFileExtension(imageFile.path)}');
+    await previewFile.writeAsBytes(img.encodeJpg(thumbnail, quality: 60));
+
+    return previewFile;
+  }
+
+//> generate video preview
+  Future<File?> generateVideoPreview(String videoPath) async {
+    final thumb = await VideoThumbnail.thumbnailFile(
+      video: videoPath,
+      imageFormat: ImageFormat.JPEG,
+      maxHeight: 150,
+      quality: 60,
+    );
+
+    return thumb != null ? File(thumb) : null;
+  }
+
+//> generate text preview
+  Future<Uint8List?> captureTextMomentPreview(GlobalKey previewKey) async {
+    RenderRepaintBoundary boundary =
+        previewKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
+
+    if (boundary.debugNeedsPaint) {
+      await Future.delayed(Duration(milliseconds: 20));
+      return captureTextMomentPreview(previewKey);
+    }
+
+    final image = await boundary.toImage(pixelRatio: 2.0);
+    final byteData = await image.toByteData(format: ImageByteFormat.png);
+    return byteData?.buffer.asUint8List();
+  }
+
+  Future<void> submitMoment(
+      {required BuildContext context,
+      GlobalKey<State<StatefulWidget>>? previewKey}) async {
     final text = state.text;
     final backgroundColor = state.backgroundColor;
     final textStyle = state.textStyle;
@@ -298,7 +348,21 @@ class MomentVm extends StateNotifier<MomentState> {
       contentType = 'text';
       fontType = MomentHelper.textStyleToJson(textStyle);
       color = MomentHelper.colorToHex(backgroundColor);
-    } else if (state.type == StatusType.media && state.mediaType == MediaType.image) {
+
+      if (previewKey != null) {
+        final previewBytes = await captureTextMomentPreview(previewKey);
+        if (previewBytes != null) {
+          final tempDir = await getTemporaryDirectory();
+          final fileName =
+              '${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}_text_preview.png';
+          final filePath = path.join(tempDir.path, fileName);
+
+          final textPreviewFile =
+              await File(filePath).writeAsBytes(previewBytes);
+        }
+      }
+    } else if (state.type == StatusType.media &&
+        state.mediaType == MediaType.image) {
       contentType = 'image';
       // image
       if (state.selectedFile != null) {
@@ -306,6 +370,8 @@ class MomentVm extends StateNotifier<MomentState> {
           selectedAsset!,
           "su-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(selectedAsset.path)}}",
         );
+        //> get preview
+        final preview = await generateImagePreview(state.selectedFile!);
 
         if (publicUrl != null) {
           content = publicUrl;
@@ -325,6 +391,8 @@ class MomentVm extends StateNotifier<MomentState> {
           selectedAsset!,
           "su-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(selectedAsset.path)}}",
         );
+        //> get preview
+        final preview = await generateVideoPreview(publicUrl ?? '');
 
         if (publicUrl != null) {
           content = publicUrl;

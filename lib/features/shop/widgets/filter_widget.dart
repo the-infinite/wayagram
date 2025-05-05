@@ -6,21 +6,27 @@ import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/filter/views/filter_view.dart';
+import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 
+//********* */
+// NB: This filter shop is for shop use only.
+//********* */
 class FilterWidget extends ConsumerStatefulWidget {
   final String? hintText;
   final bool isPopFilter;
   final TextEditingController search;
   final void Function(String)? onTextChanged;
+  final List<Product> products;
 
   // This is fine.
-  const FilterWidget({
-    super.key,
-    this.hintText = 'Search Shop',
-    required this.search,
-    this.isPopFilter = false,
-    this.onTextChanged,
-  });
+  const FilterWidget(
+      {super.key,
+      this.hintText = 'Search Shop',
+      required this.search,
+      this.isPopFilter = false,
+      this.onTextChanged,
+      this.products = const []});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _FilterWidgetState();
@@ -40,7 +46,8 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
         children: [
           //? If this is a popup filter.
           SizedBox(
-            width: widget.isPopFilter ? context.width * 0.76 : context.width * 0.9,
+            width:
+                widget.isPopFilter ? context.width * 0.76 : context.width * 0.9,
             child: WayaTextFormField(
               padding: EdgeInsets.all(1),
               prefixIcon: Icon(
@@ -62,7 +69,8 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
                 const Gap(2),
                 WayaButton(
                   callback: () {
-                    WayaNav.toNamed('/filter');
+                    WayaNav.toNamed(FilterView.route,
+                        arguments: widget.products);
                   },
                   centerWidget: Center(
                     child: Icon(
