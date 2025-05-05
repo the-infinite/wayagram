@@ -118,6 +118,7 @@ class _AllProductsState extends ConsumerState<AllProducts> {
                     isPopFilter: true,
                     hintText: 'Search Product',
                     search: searchController,
+                    products: allProducts,
                   ),
                   const Gap(5),
                   CategoriesFilterWidget(

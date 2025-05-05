@@ -1,4 +1,5 @@
 import 'package:wayagram/features/shop/seller/data/model/pagination_model.dart';
+import 'package:wayagram/shared/model/base_model.dart';
 
 class SellerProductResponseModel {
   final String message;
@@ -59,7 +60,7 @@ class Data {
   }
 }
 
-class SellerProduct {
+class SellerProduct  extends BaseModel<SellerProduct>{
   final String id;
   final String categoryId;
   final String? discountTypeId;
@@ -80,7 +81,7 @@ class SellerProduct {
   final String options;
   final String? pickupAddress;
   final int? rating;
-  final double discountPercentage;
+  final int discountPercentage;
   final String shopId;
   final String? discountedPrice;
   final String shopName;
@@ -153,7 +154,7 @@ class SellerProduct {
         options: json['options'] ?? '',
         pickupAddress: json['pickupAddress'] ?? '',
         rating: json['rating'],
-        discountPercentage: json['discountPercentage'].toDouble(),
+        discountPercentage: json['discountPercentage'],
         shopId: json['shopId'] ?? '',
         discountedPrice: json['discountedPrice'],
         shopName: json['shopName'] ?? '',
@@ -195,11 +196,27 @@ class SellerProduct {
       'shopName': shopName,
       'shopPhone': shopPhone,
       'categoryName': categoryName,
-      'createdAt': createdAt,
-      'updatedAt': updatedAt,
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
       'isDeleted': isDeleted,
       'shopRating': shopRating,
       'vendorId': vendorId
     };
   }
+
+    @override
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'categoryId': categoryId,
+        'name': name,
+        'description': description,
+        'price': price,
+        'materialType': materialType,
+        'condition': condition,
+        'deliveryCharge': deliveryCharge,
+        'options': options,
+        'pickupAddress': pickupAddress,
+        'discountPercentage': discountPercentage,
+        'shopRating': shopRating
+      };
 }
