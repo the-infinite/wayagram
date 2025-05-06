@@ -96,7 +96,7 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
                     color: WayaColors.greyColor800),
               ),
           ],),
-          Gap(200),
+          Gap(100.h),
           args['kyc'] == 'APPROVED'?
           WayaButton(
               text: 'Start Using Your Account',

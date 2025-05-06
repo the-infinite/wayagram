@@ -10,8 +10,11 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
+import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_products_vm.dart';
 import 'package:wayagram/features/shop/widgets/categories_filter_widget.dart';
@@ -27,6 +30,8 @@ class SellerProducts extends ConsumerStatefulWidget {
 }
 
 class _SellerProductsState extends ConsumerState<SellerProducts> {
+  late TextEditingController searchController;
+
   @override
   void initState() {
     super.initState();
@@ -37,12 +42,32 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
           .read(sellerProductsVmProvider.notifier)
           .sellerProducts(shopId: shopId);
     });
+    searchController = TextEditingController();
+    searchController.addListener(() {
+      setState(() {}); // Rebuild when search text changes
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(sellerProductsVmProvider);
+    final sellerProds =
+        ref.watch(sellerProductsVmProvider.notifier).filteredProducts;
+
+    // search filter
+    final searchFilteredProducts = WayaUtils.search<SellerProduct>(
+        sellerProds,
+        [
+          'id',
+          'deliveryAddress',
+          'name',
+          'options',
+          'condition',
+          'materialType',
+          'description'
+        ],
+        searchController.text);
     return WayaScaffold(
         isLoading: state.isLoading,
         isScrollable: true,
@@ -65,8 +90,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                       WayaButton(
                         callback: () {
                           WayaNav.toNamed(AddProduct.route,
-                              arguments:
-                                  AddProductArg(uniqueKey: Uuid().v4()));
+                              arguments: AddProductArg(uniqueKey: Uuid().v4()));
                         },
                         color: wayaTheme.colorScheme.primary50,
                         centerWidget: Row(
@@ -92,17 +116,21 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                       ),
                       const Gap(10),
                       FilterWidget(
-                        search: state.search,
+                        search: searchController,
+                        hintText: 'Search Products',
+                        isPopFilter: true,
+                        products: sellerProds
+                            .map((prod) => Product.fromJson(prod.toJson()))
+                            .toList(),
                       ),
                       const Gap(10),
-                      
-                    GroupedWidgetHeader(
+                      GroupedWidgetHeader(
                           isVisible: true,
                           onTap: () {},
                           subTitle:
                               "Extensive view of all the products you have created",
                           title: "My Products"),
-                           const Gap(10),
+                      const Gap(10),
                       CategoriesFilterWidget(
                         setCategory: (value) => {
                           ref
@@ -111,9 +139,7 @@ class _SellerProductsState extends ConsumerState<SellerProducts> {
                         },
                       ),
                       const Gap(25),
-                      SellerProductGrid( products: ref
-                          .watch(sellerProductsVmProvider.notifier)
-                          .filteredProducts)
+                      SellerProductGrid(products: searchFilteredProducts)
                     ],
                   )
                 ],

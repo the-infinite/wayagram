@@ -277,10 +277,6 @@ class WayaSocketController {
       (data) async {
         final args = _quickDecode(data);
         final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
-        final state = chatNotifier.getState();
-
-        //? If this is not fine.
-        if (state.chat?.id != args.chatId) return;
 
         //? Since we are in this chat...
         await chatNotifier.getMessages(true);
@@ -296,10 +292,9 @@ class WayaSocketController {
       (data) async {
         final args = _quickDecode(data);
         final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
-        final state = chatNotifier.getState();
 
         //? If this is not fine.
-        if (state.chat?.id != args.chatId || args.senderId == ConversationState.self.id) return;
+        if (args.senderId == ConversationState.self.id) return;
 
         // This is fine.
         chatNotifier.setTyping(true);
@@ -312,10 +307,9 @@ class WayaSocketController {
       (data) async {
         final args = _quickDecode(data);
         final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
-        final state = chatNotifier.getState();
 
         //? If this is not fine.
-        if (state.chat?.id != args.chatId || args.senderId == ConversationState.self.id) return;
+        if (args.senderId == ConversationState.self.id) return;
 
         // This is fine.
         chatNotifier.setTyping(false);
@@ -328,10 +322,9 @@ class WayaSocketController {
       (data) async {
         final args = _quickDecode(data);
         final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
-        final state = chatNotifier.getState();
 
         //? If this is not fine.
-        if (state.chat?.id != args.chatId || args.messageId == null) return;
+        if (args.messageId == null) return;
 
         // This is fine.
         chatNotifier.removeMessage(args.messageId!);
@@ -343,17 +336,16 @@ class WayaSocketController {
 
     //? Sixth, listen for when a message has been received by me.
     socket.on(
-      "receiveMessage",
+      "recieveMessage",
       (data) async {
         final args = _quickDecode(data);
         final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
-        final state = chatNotifier.getState();
 
         //? If this is not fine.
-        if (state.chat?.id != args.chatId || args.messageId == null) return;
+        if (args.messageId == null) return;
 
         // This is fine.
-        chatNotifier.getMessage(args.messageId!);
+        await chatNotifier.getMessage(args.messageId!);
 
         //? Wait for this to finish
         await updateChats();
@@ -366,13 +358,12 @@ class WayaSocketController {
       (data) async {
         final args = _quickDecode(data);
         final chatNotifier = ref!.read(chatProvider(args.chatId).notifier);
-        final state = chatNotifier.getState();
 
         //? If this is not fine.
-        if (state.chat?.id != args.chatId || args.messageId == null) return;
+        if (args.messageId == null) return;
 
         // This is fine.
-        chatNotifier.markAllAsRead();
+        await chatNotifier.markAllAsRead();
 
         // This is fine.
         await updateChats();

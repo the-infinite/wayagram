@@ -34,7 +34,7 @@ class _AllUpcomingEventsState extends ConsumerState<AllUpcomingEvents>
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    
 
   
     return WayaScaffold(

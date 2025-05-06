@@ -31,9 +31,13 @@ class CategoriesFilterWidgetVm extends StateNotifier<CategoryFilterState> {
 
     return state.selected;
   }
+
+  void selectAll() {
+    state = state.copyWith(selected: []);
+  }
 }
 
-final categoriesFilterWidgetVmProvider =
-    StateNotifierProvider.family<CategoriesFilterWidgetVm, CategoryFilterState, String>(
+final categoriesFilterWidgetVmProvider = StateNotifierProvider.family<
+    CategoriesFilterWidgetVm, CategoryFilterState, String>(
   (ref, uniqueKey) => CategoriesFilterWidgetVm(ref),
 );

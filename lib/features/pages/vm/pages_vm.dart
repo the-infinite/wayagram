@@ -35,7 +35,8 @@ class UploadedImage {
   final String file;
   final String fileName;
 
-  UploadedImage({required this.url, required this.file, required this.fileName});
+  UploadedImage(
+      {required this.url, required this.file, required this.fileName});
 }
 
 class PageVm extends StateNotifier<PageState> {
@@ -185,7 +186,8 @@ class PageVm extends StateNotifier<PageState> {
         // Clear existing saved posts
         _savedPosts.clear();
       } else {
-        _errorMessage2 = 'Failed to fetch saved posts. Status code: ${response.statusCode}';
+        _errorMessage2 =
+            'Failed to fetch saved posts. Status code: ${response.statusCode}';
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -213,9 +215,12 @@ class PageVm extends StateNotifier<PageState> {
         GetAllPost responseModel = GetAllPost.fromJson(response.data);
         GroupPostModel postModel = GroupPostModel.fromJson(response.data);
         wayaPostCache.cacheAll(responseModel.data?.docs ?? []);
-        state = state.copyWith(getAllPost: responseModel.data?.docs, postCount: postModel.data?.totalPages);
+        state = state.copyWith(
+            getAllPost: responseModel.data?.docs,
+            postCount: postModel.data?.totalPages);
       } else {
-        _errorMessage2 = 'Failed to fetch saved posts. Status code: ${response.statusCode}';
+        _errorMessage2 =
+            'Failed to fetch saved posts. Status code: ${response.statusCode}';
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -241,7 +246,8 @@ class PageVm extends StateNotifier<PageState> {
         state = state.copyWith(getAllPost: responseModel.data?.docs);
         return responseModel.data?.docs?.first;
       } else {
-        _errorMessage2 = 'Failed to fetch saved posts. Status code: ${response.statusCode}';
+        _errorMessage2 =
+            'Failed to fetch saved posts. Status code: ${response.statusCode}';
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -270,18 +276,21 @@ class PageVm extends StateNotifier<PageState> {
       if (response.success && context.mounted) {
         // show success modal
         wayaPageCache.deleteItem(pageId);
-        WayaNav.goBack();
+        // WayaNav.goBack();
 
         if (context.mounted) {
           await WayaUtils.showNotice(
             context: context,
             title: "Thank you for reporting",
-            onPress: () => WayaNav.goBack(),
+            onPress: () {
+              WayaNav.goBack();
+            },
             icon: Image.asset(
               WayaAssets.images.eCheckEvent.path,
               scale: 1.5,
             ),
-            message: 'Your report has been submitted. Our team will review the issue and take appropriate action.',
+            message:
+                'Your report has been submitted. Our team will review the issue and take appropriate action.',
             buttonText: 'Go to Page Dashboard',
           );
 
@@ -323,12 +332,13 @@ class PageVm extends StateNotifier<PageState> {
             WayaAssets.images.eCheckEvent.path,
             scale: 1.5,
           ),
-          message: 'Your report has been submitted. Our team will review the issue and take appropriate action.',
+          message:
+              'Your report has been submitted. Our team will review the issue and take appropriate action.',
           buttonText: 'Go to Page Dashboard',
         );
 
         // This is fine.
-        WayaNav.goBack();
+        // WayaNav.goBack();
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -362,7 +372,8 @@ class PageVm extends StateNotifier<PageState> {
             WayaAssets.images.eCheckEvent.path,
             scale: 1.5,
           ),
-          message: 'Your report has been submitted. Our team will review the issue and take appropriate action.',
+          message:
+              'Your report has been submitted. Our team will review the issue and take appropriate action.',
           buttonText: 'Go to Page Dashboard',
         );
       }
@@ -383,9 +394,14 @@ class PageVm extends StateNotifier<PageState> {
     List<String> publicUrl = [];
     // get url
     for (XFile image in images) {
-      final uploadImageResponse = await _pageRepository.getUploadImage(image.name);
-      MediaUploadModel mediaUploadModel = MediaUploadModel.fromJson(uploadImageResponse.data);
-      urls.add(UploadedImage(url: mediaUploadModel.data!.url!, file: image.path, fileName: image.name));
+      final uploadImageResponse =
+          await _pageRepository.getUploadImage(image.name);
+      MediaUploadModel mediaUploadModel =
+          MediaUploadModel.fromJson(uploadImageResponse.data);
+      urls.add(UploadedImage(
+          url: mediaUploadModel.data!.url!,
+          file: image.path,
+          fileName: image.name));
       publicUrl.add(mediaUploadModel.data!.publicUrl!);
     }
 
@@ -410,7 +426,8 @@ class PageVm extends StateNotifier<PageState> {
 
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.createPost(content, publicUrl, postType);
+      final response =
+          await _pageRepository.createPost(content, publicUrl, postType);
       //final response = await _pageRepository.createPost(content, choiceMap, postType);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
@@ -441,14 +458,20 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> createPagePost(ctx, String content, String postType, List<XFile> images, String pageId) async {
+  Future<void> createPagePost(ctx, String content, String postType,
+      List<XFile> images, String pageId) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
     // get url
     for (XFile image in images) {
-      final uploadImageResponse = await _pageRepository.getUploadImage(image.name);
-      MediaUploadModel mediaUploadModel = MediaUploadModel.fromJson(uploadImageResponse.data);
-      urls.add(UploadedImage(url: mediaUploadModel.data!.url!, file: image.path, fileName: image.name));
+      final uploadImageResponse =
+          await _pageRepository.getUploadImage(image.name);
+      MediaUploadModel mediaUploadModel =
+          MediaUploadModel.fromJson(uploadImageResponse.data);
+      urls.add(UploadedImage(
+          url: mediaUploadModel.data!.url!,
+          file: image.path,
+          fileName: image.name));
       publicUrl.add(mediaUploadModel.data!.publicUrl!);
     }
 
@@ -472,13 +495,15 @@ class PageVm extends StateNotifier<PageState> {
 
     try {
       state = state.copyWith(isLoading: true, allPostData: null);
-      final response = await _pageRepository.createPagePost(content, publicUrl, postType, pageId);
+      final response = await _pageRepository.createPagePost(
+          content, publicUrl, postType, pageId);
       state = state.copyWith(isLoading: false);
 
       //? If this is fine...
       if (response.success) {
         final page = await myPageNotifier.getSinglePage(pageId);
-        final post = PostModel.fromJson(response.data['data']).copyWith(page: page);
+        final post =
+            PostModel.fromJson(response.data['data']).copyWith(page: page);
         final previous = state.getAllPost;
         wayaPostCache.cache(post.id, post);
 
@@ -512,7 +537,8 @@ class PageVm extends StateNotifier<PageState> {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.fetchSinglePagePost(pageId, state.allPostData?.data?.nextPage ?? 1);
+      final response = await _pageRepository.fetchSinglePagePost(
+          pageId, state.allPostData?.data?.nextPage ?? 1);
 
       if (response.success) {
         final result = <PostModel>[];
@@ -548,7 +574,8 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> deletePost(ctx, {required String postId, required String userId}) async {
+  Future<void> deletePost(ctx,
+      {required String postId, required String userId}) async {
     try {
       final response = await _pageRepository.deletePost(postId);
       if (response.success) {
@@ -641,7 +668,8 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<bool> likePost(ctx, {required String postId, required String userId}) async {
+  Future<bool> likePost(ctx,
+      {required String postId, required String userId}) async {
     try {
       //state = state.copyWith(isLoading: true);
       final response = await _pageRepository.likePost(postId);
@@ -687,14 +715,20 @@ class PageVm extends StateNotifier<PageState> {
     return false;
   }
 
-  Future<void> editPost(ctx, content, postType, List<XFile> images, postId) async {
+  Future<void> editPost(
+      ctx, content, postType, List<XFile> images, postId) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
     // get url
     for (XFile image in images) {
-      final uploadImageResponse = await _pageRepository.getUploadImage(image.name);
-      MediaUploadModel mediaUploadModel = MediaUploadModel.fromJson(uploadImageResponse.data);
-      urls.add(UploadedImage(url: mediaUploadModel.data!.url!, file: image.path, fileName: image.name));
+      final uploadImageResponse =
+          await _pageRepository.getUploadImage(image.name);
+      MediaUploadModel mediaUploadModel =
+          MediaUploadModel.fromJson(uploadImageResponse.data);
+      urls.add(UploadedImage(
+          url: mediaUploadModel.data!.url!,
+          file: image.path,
+          fileName: image.name));
       publicUrl.add(mediaUploadModel.data!.publicUrl!);
     }
 
@@ -717,7 +751,8 @@ class PageVm extends StateNotifier<PageState> {
 
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.editPost(content, publicUrl, postType, postId);
+      final response =
+          await _pageRepository.editPost(content, publicUrl, postType, postId);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
@@ -778,7 +813,8 @@ class PageVm extends StateNotifier<PageState> {
       final response = await _pageRepository.getPageMembers(pageId);
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        GetPageMemberModel responseModel = GetPageMemberModel.fromJson(response.data);
+        GetPageMemberModel responseModel =
+            GetPageMemberModel.fromJson(response.data);
         state = state.copyWith(getPageMemberDocs: responseModel.data?.docs);
       }
     } catch (e) {
@@ -797,7 +833,8 @@ class PageVm extends StateNotifier<PageState> {
       final response = await _pageRepository.getRecommendedPages();
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        PagesUsersFollowModel responseModel = PagesUsersFollowModel.fromJson(response.data);
+        PagesUsersFollowModel responseModel =
+            PagesUsersFollowModel.fromJson(response.data);
         wayaPageCache.cacheAll(responseModel.data?.docs ?? []);
         state = state.copyWith(recommendedPages: responseModel.data?.docs);
       }
@@ -811,10 +848,12 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
-  Future<bool> updateTeamMember(BuildContext ctx, String role, String pageId, String memberId) async {
+  Future<bool> updateTeamMember(
+      BuildContext ctx, String role, String pageId, String memberId) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.updateTeamMember(role, pageId, memberId);
+      final response =
+          await _pageRepository.updateTeamMember(role, pageId, memberId);
       state = state.copyWith(isLoading: false);
       return response.success;
     } catch (e) {
@@ -854,6 +893,7 @@ final createPageProvider = StateNotifierProvider<PageVm, PageState>((ref) {
   return PageVm(ref, PageRepository());
 });
 
-final singlePageProvider = StateNotifierProvider.family<PageVm, PageState, String>((ref, key) {
+final singlePageProvider =
+    StateNotifierProvider.family<PageVm, PageState, String>((ref, key) {
   return PageVm(ref, PageRepository());
 });

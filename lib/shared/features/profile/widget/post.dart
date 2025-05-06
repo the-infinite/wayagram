@@ -331,11 +331,14 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                     PopupMenuItem<int>(
                                       value: 3,
                                       onTap: () async {
-                                        WayaNav.toNamed(Promote.route, arguments: {
-                                          "contentId": postData.id,
-                                          "contentType": PromotionServiceType.post.name,
-                                          "data": postData
-                                        });
+                                        WayaNav.toNamed(
+                                          Promote.route,
+                                          arguments: {
+                                            "contentId": postData.id,
+                                            "contentType": PromotionServiceType.post.name,
+                                            "data": postData
+                                          },
+                                        );
                                       },
                                       child: WayaActionNav(
                                         context: context,
@@ -574,8 +577,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                       children: [
                         //? For liking a post.
                         PostActionType(
-                          text:
-                              '${WayaValueHelper.formatNumber(postData.likeCount)} ${WayaValueHelper.getComment(postData.likeCount, WayaPostAction.likes)}',
+                          text: '${WayaValueHelper.formatNumber(postData.likeCount)} ${WayaValueHelper.getComment(postData.likeCount, WayaPostAction.likes)}',
                           image: WayaAssets.images.pages.like2.path,
                           color: postData.isLiked ? wayaTheme.colorScheme.primary : wayaTheme.colorScheme.greyColor500,
                           onPressed: postData.isLiked

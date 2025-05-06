@@ -30,7 +30,8 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
   final screenshotController = ScreenshotController();
 
   String _getLocation() {
-    final trace = Trace.from(widget.event.stackTrace ?? WayaDebugHelpers.getStackTrace(widget.event.raw));
+    final trace = Trace.from(widget.event.stackTrace ??
+        WayaDebugHelpers.getStackTrace(widget.event.raw));
     return "${trace.frames.first.uri} ${trace.frames.first.line}:${trace.frames.first.column}";
   }
 
@@ -44,11 +45,14 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
 
   Future<void> screenshotAndShare(BuildContext ctx) async {
     final directory = (await getApplicationDocumentsDirectory()).path;
-    String fileName = 'report-${DateTime.now().microsecondsSinceEpoch.toString()}.png';
+    String fileName =
+        'report-${DateTime.now().microsecondsSinceEpoch.toString()}.png';
     String path = directory;
 
     //? After taking the screenshot.
-    screenshotController.captureAndSave(directory, fileName: fileName).then((value) {
+    screenshotController
+        .captureAndSave(directory, fileName: fileName)
+        .then((value) {
       final file = XFile('$path/$fileName');
       Share.shareXFiles([file], text: '');
     });
@@ -90,7 +94,8 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                 child: ColoredBox(
                   color: theme.colorScheme.primary50,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                     child: Text(
                       WayaDateHelper.getFullTimestamp(widget.event.timestamp),
                       style: theme.textTheme.bodyMedium?.copyWith(
@@ -119,23 +124,35 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                     child: ColoredBox(
                       color: color.withAlpha(30),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 8.w, vertical: 3.h),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           spacing: 8.w,
                           children: [
                             //* The name of the module that caused this.
                             switch (widget.event.type) {
-                              WayaDebugEventType.runtime => WayaAssets.icons.bugRuntime,
-                              WayaDebugEventType.logical => WayaAssets.icons.bugLogical,
-                              WayaDebugEventType.http => WayaAssets.icons.bugHttp,
-                              WayaDebugEventType.flutter => WayaAssets.icons.bugFlutter,
-                              WayaDebugEventType.exception => WayaAssets.icons.bugFatal,
-                            }.svg( colorFilter: ColorFilter.mode(color, BlendMode.srcIn), height: 20.dg, width: 20.dg),
+                              WayaDebugEventType.runtime =>
+                                WayaAssets.icons.bugRuntime,
+                              WayaDebugEventType.logical =>
+                                WayaAssets.icons.bugLogical,
+                              WayaDebugEventType.http =>
+                                WayaAssets.icons.bugHttp,
+                              WayaDebugEventType.flutter =>
+                                WayaAssets.icons.bugFlutter,
+                              WayaDebugEventType.exception =>
+                                WayaAssets.icons.bugFatal,
+                            }
+                                .svg(
+                                    colorFilter: ColorFilter.mode(
+                                        color, BlendMode.srcIn),
+                                    height: 20.dg,
+                                    width: 20.dg),
 
                             //* The type of this debug event.
                             Text(
-                              WayaValueHelper.getEventTypeName(widget.event.type),
+                              WayaValueHelper.getEventTypeName(
+                                  widget.event.type),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: color,
                                 fontSize: 14.sp,
@@ -160,7 +177,8 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                 child: ColoredBox(
                   color: color.withAlpha(30),
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                     child: Text(
                       "Module: ${WayaValueHelper.getModuleName(widget.event.module)}",
                       style: theme.textTheme.bodyMedium?.copyWith(
@@ -194,7 +212,8 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                 child: ColoredBox(
                   color: theme.colorScheme.error50,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                     child: Text(
                       switch (widget.event.type) {
                         WayaDebugEventType.http =>
@@ -228,9 +247,13 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                   child: ColoredBox(
                     color: theme.colorScheme.primary50,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                       child: Text(
-                        (widget.event.raw as DioException?)?.requestOptions.method ?? "N/A",
+                        (widget.event.raw as DioException?)
+                                ?.requestOptions
+                                .method ??
+                            "N/A",
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.primary,
                           fontSize: 12.sp,
@@ -253,7 +276,8 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                   child: ColoredBox(
                     color: theme.colorScheme.scaffoldColor,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                       child: Text(
                         "Body: ${(widget.event.raw as DioException?)?.requestOptions.data?.toString() ?? "N/A"}",
                         style: theme.textTheme.bodyMedium?.copyWith(
@@ -278,7 +302,8 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                   child: ColoredBox(
                     color: theme.colorScheme.scaffoldColor,
                     child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                       child: Text(
                         "Response: ${(widget.event.raw as DioException?)?.response?.data?.toString() ?? "N/A"}",
                         style: theme.textTheme.bodyMedium?.copyWith(
@@ -304,14 +329,24 @@ class _WayaDebugEventScreenState extends State<WayaDebugEventScreen> {
                 child: ColoredBox(
                   color: theme.colorScheme.scaffoldColor,
                   child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 8.w, vertical: 3.h),
                     child: Text(
                       switch (widget.event.type) {
                         WayaDebugEventType.http =>
-                          (widget.event.raw as DioException?)?.requestOptions.uri.toString() ?? "N/A",
+                          (widget.event.raw as DioException?)
+                                  ?.requestOptions
+                                  .uri
+                                  .toString() ??
+                              "N/A",
                         WayaDebugEventType.flutter =>
-                          (widget.event.raw as FlutterErrorDetails?)?.context?.toString() ?? "N/A",
-                        WayaDebugEventType.runtime || WayaDebugEventType.exception => _getLocation(),
+                          (widget.event.raw as FlutterErrorDetails?)
+                                  ?.context
+                                  ?.toString() ??
+                              "N/A",
+                        WayaDebugEventType.runtime ||
+                        WayaDebugEventType.exception =>
+                          _getLocation(),
                         _ => "N/A",
                       },
                       style: theme.textTheme.bodyMedium?.copyWith(

@@ -52,7 +52,13 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
   /// Helper function used to get the list of messages from the back-end so they
   /// can be stored locally on this device.
-  Future<List<MessageModel>> getMessages([bool reset = false]) async {
+  Future<List<MessageModel>> getMessages([bool reset = false, bool onlyIfEmpty = false]) async {
+    //? If this should only operate if this is empty.
+    if (onlyIfEmpty && state.messages.isNotEmpty) {
+      return state.messages;
+    }
+
+    //? We can do it like this then.
     final result = <MessageModel>[];
 
     //? This is fine.

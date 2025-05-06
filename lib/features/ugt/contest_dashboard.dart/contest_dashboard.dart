@@ -15,13 +15,14 @@ import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/pdf/contestant_pdf.dart';
+import 'package:wayagram/features/ugt/manage_role/ugt_invite_user_page.dart';
+import 'package:wayagram/features/ugt/manage_role/ugt_manage_user_page.dart';
 import 'package:wayagram/features/ugt/vm/ugt_admin_dashboard_vm.dart';
 
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
-
 
 class DashboardContestPage extends StatefulHookConsumerWidget {
   static const route = '/contest-mydashboard-profile-page';
@@ -84,15 +85,47 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
-      onRefresh: (){
-          ref
-              .read(votersContestNotifier.notifier)
-              .fetchAllContestApplicant(model?.id??"");
-         dashboardNotifier.fetchTotalContestant(model?.id ?? "");
-     return dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
+      onRefresh: () {
+        ref
+            .read(votersContestNotifier.notifier)
+            .fetchAllContestApplicant(model?.id ?? "");
+        dashboardNotifier.fetchTotalContestant(model?.id ?? "");
+        return dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
       },
-      title: "",
+      title: "Dashboard",
       backgroundColor: Colors.white,
+      appBarTrailing: PopupMenuButton(
+          onSelected: (value) {},
+          position: PopupMenuPosition.under,
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem<int>(
+                value: 1,
+                onTap: () {
+                  WayaNav.toNamed(UgtInviteUserPage.route);
+                },
+                child: Text(
+                  "Invite User",
+                  style: WayaTextStyles.bodyMedium
+                      .copyWith(color: wayaTheme.colorScheme.greyColor500),
+                ),
+              ),
+              PopupMenuItem<int>(
+                value: 2,
+                onTap: () {
+                  WayaNav.toNamed(UgtManageUserPage.route);
+                },
+                child: Text(
+                  "Manage User",
+                  style: WayaTextStyles.bodyMedium
+                      .copyWith(color: wayaTheme.colorScheme.greyColor500),
+                ),
+              ),
+            ];
+          },
+          child: Row(
+            children: [Icon(Icons.more_vert), Gap(20)],
+          )),
       body: SingleChildScrollView(
         //  padding: EdgeInsets.all(),
         child: Column(
@@ -106,8 +139,8 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Text("Dashboard",
-                        style: wayaTheme.textTheme.displaySmall!
+                    Text("Host Dashboard",
+                        style: wayaTheme.textTheme.headlineLarge!
                             .wayaCopyWith(fontWeight: FontWeight.w700)),
                     const Gap(5),
                     Text("Manage your contest activity",
