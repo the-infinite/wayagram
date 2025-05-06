@@ -97,8 +97,9 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
       //? Since there is something to be seen here.
       final chat = state.chat!;
       final inputController = ChatInputController.instance;
-      final userStatus = chat.other.chatUser?.onlineStatus;
-      final lastSeenText = chat.other.chatUser?.lastSeen != null
+      final chatUser = chat.other.chatUser;
+      final userStatus = (chatUser?.canSeeOnlineStatus ?? true) ? chatUser?.onlineStatus : ChatUserActivity.offline;
+      final lastSeenText = chatUser?.lastSeen != null && (chatUser?.canSeeLastSeen ?? true)
           ? "Last seen ${WayaDateHelper.getSocialTimestamp(chat.other.chatUser!.lastSeen).toLowerCase()}"
           : null;
 
@@ -344,7 +345,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                       ),
                     ),
 
-                  //? Third, the chat input widget.
+                  //? Third, the chat input widget... probably?
                   ChatInputWidget(
                     controller: inputController,
                     notifier: notifier,

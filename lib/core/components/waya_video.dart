@@ -360,10 +360,8 @@ class _WayaVideoWidgetState extends State<WayaVideoWidget> with TickerProviderSt
     //? The widget that is used to compose the contents of this widget.
     final composition = widget.controller._controller!.value.isInitialized
         ? WayaErrorWidget(
-            onError: (context, _) => ColoredBox(
-              color: Colors.black,
-            ),
-            child: ColoredBox(
+            onError: (context, _) => ColoredBox(color: Colors.black),
+            builder: (context) => ColoredBox(
               color: Colors.black,
               child: Center(
                 child: AspectRatio(

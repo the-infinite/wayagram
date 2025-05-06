@@ -36,6 +36,7 @@ class ChatProfilePicture extends StatelessWidget {
     //? The theme.
     final theme = Theme.of(context);
     final isGroup = useGroup && chat?.chatType == ChatType.group;
+    final chatUser = chat?.chatMembers.where((member) => member.userId == user.id).firstOrNull?.chatUser;
 
     //? This is the component.
     return Consumer(
@@ -78,17 +79,21 @@ class ChatProfilePicture extends StatelessWidget {
                 clipper: const ShapeBorderClipper(shape: CircleBorder()),
                 child: CircleAvatar(
                   radius: radius,
-                  backgroundColor: chat != null && ((isGroup && chat?.groupImage == null) || (!isGroup && user.profilePicture == null))
+                  backgroundColor: chat != null &&
+                          ((isGroup && chat?.groupImage == null) ||
+                              (!isGroup && (!(chatUser?.canSeeProfilePicture ?? true) || user.profilePicture == null)))
                       ? theme.colorScheme.primary50
                       : theme.colorScheme.greyColor200,
                   backgroundImage: isGroup
                       ? chat?.groupImage != null
                           ? NetworkImage(chat!.groupImage!)
                           : null
-                      : user.profilePicture != null
+                      : (chatUser?.canSeeProfilePicture ?? true) && user.profilePicture != null
                           ? NetworkImage(user.profilePicture!)
                           : null,
-                  child: chat != null && ((isGroup && chat?.groupImage == null) || (!isGroup && user.profilePicture == null))
+                  child: chat != null &&
+                          ((isGroup && chat?.groupImage == null) ||
+                              (!isGroup && (!(chatUser?.canSeeProfilePicture ?? true) || user.profilePicture == null)))
                       ? Text(
                           chat!.initials(useGroup, user.id),
                           style: theme.textTheme.headlineLarge?.copyWith(
@@ -106,7 +111,7 @@ class ChatProfilePicture extends StatelessWidget {
               ),
 
               // Second, the activity marker.
-              if (showActive)
+              if ((chatUser?.canSeeOnlineStatus ?? true) && showActive)
                 Positioned(
                   right: 4.w,
                   bottom: 0,

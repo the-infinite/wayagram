@@ -7,6 +7,7 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/modals/block.dart';
+import 'package:wayagram/features/chat/modals/group/mute.dart';
 import 'package:wayagram/features/chat/modals/report.dart';
 import 'package:wayagram/features/chat/modals/unblock.dart';
 import 'package:wayagram/features/chat/model/default.dart';
@@ -58,6 +59,7 @@ class PersonalChatProfilePage extends StatelessWidget {
               radius: 40.r,
               showActive: false,
               chat: chat,
+              canMove: chat.other.chatUser!.canSeeProfilePicture,
             ),
           ),
 
@@ -109,10 +111,26 @@ class PersonalChatProfilePage extends StatelessWidget {
 
               //* Mute/Unmute this user.
               ProfileActionButton(
-                onTap: () => notifier.muteOrUnmuteUser(context, ref, chat.self.chatId),
-                icon: WayaAssets.icons.cProfileMute.path,
-                isBad: !state.isMuted(chat.self.chatId),
-                text: state.isMuted(chat.self.chatId) ? "Unmute" : "Mute",
+                onTap: () {
+                  //? This is muted.
+                  if (chat.self.isMuted) {
+                    notifier.muteOrUnmuteGroup(chat.id, null);
+                  }
+
+                  //? Then mute
+                  else {
+                    WayaUtils.showModalSheet(
+                      context,
+                      child: MuteChatGroupModal(
+                        chat: chat,
+                        notifier: notifier,
+                      ),
+                    );
+                  }
+                },
+                icon: chat.self.isMuted ? WayaAssets.icons.cProfileUnmute.path : WayaAssets.icons.cProfileMute.path,
+                isBad: !chat.self.isMuted,
+                text: chat.self.isMuted ? "Unmute" : "Mute",
               ),
 
               //* Next, report a user.
@@ -123,8 +141,6 @@ class PersonalChatProfilePage extends StatelessWidget {
                     child: ReportChatPage(
                       statuses: pageReport,
                       userId: chat.other.userData!.id,
-                    
-                     
                     ),
                   );
 
