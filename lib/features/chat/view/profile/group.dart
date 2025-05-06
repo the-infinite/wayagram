@@ -145,7 +145,9 @@ class _GroupChatProfilePageState extends State<GroupChatProfilePage> {
                               notifier: notifier,
                             ),
                           ),
-                  icon: WayaAssets.icons.cProfileMute.path,
+                  icon: widget.chat.self.isMuted
+                      ? WayaAssets.icons.cProfileUnmute.path
+                      : WayaAssets.icons.cProfileMute.path,
                   isBad: widget.chat.self.mutedUntil == null,
                   text: widget.chat.self.mutedUntil == null ? "Mute" : "Unmute",
                 ),

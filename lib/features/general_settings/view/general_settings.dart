@@ -198,7 +198,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           ),
           SizedBox(height: 10),
           Text(
-            "${PackageData.info.version}-${WayaConstants.isProduction ? "live" : "test"}",
+            "v${PackageData.info.version}-${WayaConstants.isProduction ? "live" : "test"}",
             textAlign: TextAlign.center,
             style: WayaTextStyles.bodySmall.copyWith(
               color: WayaColors.greyColor400,

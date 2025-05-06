@@ -58,7 +58,7 @@ class ChatRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> muteOrUnmuteUser(String id) {
-    return post("$serviceUrlGraph/client/chat/group/mute", {
+    return post("$serviceUrl/client/chat/group/mute", {
       "targetUserId": id,
     });
   }
