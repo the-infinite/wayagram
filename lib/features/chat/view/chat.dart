@@ -7,13 +7,11 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/modals/unblock.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/default.dart';
 import 'package:wayagram/features/chat/widget/chat/bubbles/typing.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
@@ -35,8 +33,6 @@ class SingleChatScreen extends ConsumerStatefulWidget {
 
 class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   late final notifier = ref.watch(chatProvider(widget.chatId).notifier);
-  final deleteController = ValueNotifier(false);
-  final unblockController = ValueNotifier(false);
   final focusNode = FocusNode();
   final handler = WayaObservableScrollController();
   bool _initialized = false;
@@ -56,8 +52,6 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
   @override
   void dispose() {
     focusNode.dispose();
-    deleteController.dispose();
-    unblockController.dispose();
     super.dispose();
   }
 
@@ -96,8 +90,6 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
     // This is fine.
     return Consumer(builder: (context, ref, _) {
       final state = ref.watch(chatProvider(widget.chatId));
-      final conversationState = ref.watch(conversationProvider);
-      final conversationNotifier = ref.read(conversationProvider.notifier);
 
       //? If this is after the state of this has been reset.
       if (state.chat == null) return const SizedBox();
@@ -105,8 +97,9 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
       //? Since there is something to be seen here.
       final chat = state.chat!;
       final inputController = ChatInputController.instance;
-      final userStatus = chat.other.chatUser?.onlineStatus;
-      final lastSeenText = chat.other.chatUser?.lastSeen != null
+      final chatUser = chat.other.chatUser;
+      final userStatus = (chatUser?.canSeeOnlineStatus ?? true) ? chatUser?.onlineStatus : ChatUserActivity.offline;
+      final lastSeenText = chatUser?.lastSeen != null && (chatUser?.canSeeLastSeen ?? true)
           ? "Last seen ${WayaDateHelper.getSocialTimestamp(chat.other.chatUser!.lastSeen).toLowerCase()}"
           : null;
 
@@ -353,90 +346,12 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                     ),
 
                   //? Third, the chat input widget... probably?
-                  if (chat.chatType == ChatType.personal && conversationState.isBlocked(chat.other.userId)) ...[
-                    //? First, a divider.
-                    const Divider(color: WayaColors.greyColor200, height: 1),
-
-                    // Some space.
-                    Gap(16.h),
-
-                    //? A notice that tells the user that he or she cannot message this person.
-                    Container(
-                      alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(horizontal: 20.w),
-                      child: Text(
-                        "You can't send messages to this user",
-                        textAlign: TextAlign.center,
-                        style: WayaTextStyles.hintStyle.copyWith(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-
-                    //? Third, a way to either delete the conversation or to unblock it.
-                    Padding(
-                      padding: EdgeInsets.all(16.w),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.max,
-                        spacing: 10.w,
-                        children: [
-                          //? First, a button to delete this chat.
-                          Expanded(
-                            child: WayaProgressiveButton(
-                              notifier: deleteController,
-                              callback: () async {
-                                final result = await conversationNotifier.deleteChat(widget.chatId);
-
-                                //? If this was successful, then we can go back.
-                                if (result) {
-                                  WayaNav.goBack();
-                                }
-                              },
-                              text: "Delete chat",
-                              color: WayaColors.error,
-                            ),
-                          ),
-
-                          //? Second a button to unblock this user.
-                          Expanded(
-                            child: WayaProgressiveButton(
-                              notifier: unblockController,
-                              callback: () async {
-                                final result = await WayaUtils.showModalSheet<bool?>(
-                                  context,
-                                  child: UnblockUserDialog(
-                                    user: chat.other.userData!,
-                                    profile: chat.other.profileData!,
-                                    ref: ref,
-                                  ),
-                                );
-
-                                // If this is defined...
-                                if (result == null) return;
-
-                                //? Then pop.
-                                if (result) {
-                                  WayaSnackBar.showToast("This user has been unblocked successfully");
-                                }
-                              },
-                              text: "Unblock user",
-                              color: WayaColors.primary,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    //? Some final space.
-                  ] else
-                    ChatInputWidget(
-                      controller: inputController,
-                      notifier: notifier,
-                      createChat: _startConversation,
-                      focusNode: focusNode,
-                    ),
+                  ChatInputWidget(
+                    controller: inputController,
+                    notifier: notifier,
+                    createChat: _startConversation,
+                    focusNode: focusNode,
+                  ),
                 ],
               ),
             ),
