@@ -19,16 +19,12 @@
 		<key>CFBundlePackageType</key>
 		<string>APPL</string>
 		<key>CFBundleShortVersionString</key>
-		<!--<string>$(FLUTTER_BUILD_NAME)</string>-->
-		<string>1.91.27</string>
-		<!--<string>"$(FLUTTER_BUILD_NAME)"</string>-->
-		<string>1.91.25</string>
-		<!--<string>$(FLUTTER_BUILD_NAME)</string>-->
-		<string>1.91.26</string>
+		<string>"$(FLUTTER_BUILD_NAME)"</string>
+		<!--<string>1.91.27</string>-->
 		<key>CFBundleSignature</key>
 		<string>????</string>
 		<key>CFBundleVersion</key>
-		<string>$(FLUTTER_BUILD_NUMBER)</string>
+		<string>"$(FLUTTER_BUILD_NUMBER)"</string>
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
 		<key>NSCameraUsageDescription</key>
