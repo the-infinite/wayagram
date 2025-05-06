@@ -11,6 +11,8 @@ class RoleAccessState {
   final bool? isLoading;
   final List<RolesModel> listRoleModel;
   final List<Select> listSelect;
+
+  final List<Select> listContestSelect;
   final List<Select> listShop;
   final List<ShopModel> originalListShop;
   final List<ShopMember> listMember;
@@ -23,6 +25,7 @@ class RoleAccessState {
     this.isLastPage = false,
     this.listRoleModel = const [],
     this.listSelect = const [],
+    this.listContestSelect = const [],
     this.listShop = const [],
     this.originalListShop = const [],
     this.listMember = const [],
@@ -36,6 +39,7 @@ class RoleAccessState {
     bool? isLastPage,
     List<RolesModel>? listRoleModel,
     List<Select>? listSelect,
+    List<Select>? listContestSelect,
     List<Select>? listShop,
     List<ShopModel>? originalListShop,
     List<ShopMember>? listMember,
@@ -45,6 +49,7 @@ class RoleAccessState {
         revenueGenerated: revenueGenerated ?? this.revenueGenerated,
         listRoleModel: listRoleModel ?? this.listRoleModel,
         listSelect: listSelect ?? this.listSelect,
+        listContestSelect: listContestSelect ?? this.listContestSelect,
         listShop: listShop ?? this.listShop,
         originalListShop: originalListShop ?? this.originalListShop,
         listMember: listMember ?? this.listMember,

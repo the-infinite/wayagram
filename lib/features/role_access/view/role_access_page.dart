@@ -31,6 +31,8 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
     //? init necessary data with useEffect
     useEffect(() {
       rollAccessNotifier.getRoles();
+
+      rollAccessNotifier.getContestRoles();
       rollAccessNotifier.getShops();
       //? delay once second to avoid UI problem
       Future.delayed(Duration(seconds: 1), () {

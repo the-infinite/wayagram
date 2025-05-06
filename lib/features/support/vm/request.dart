@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/support/state/request.dart';
 
 class SupportRequestNotifier extends StateNotifier<SupportRequestState> {
@@ -11,7 +12,11 @@ class SupportRequestNotifier extends StateNotifier<SupportRequestState> {
   final topicNotifier = ValueNotifier<Select?>(null);
 
   // Construct.
-  SupportRequestNotifier(super.state);
+  SupportRequestNotifier() : super(SupportRequestState.initial) {
+    email.text = ConversationState.self.email ?? "";
+    fullname.text = ConversationState.self.fullname ?? "";
+    phone.text = ConversationState.self.phoneNumber ?? "";
+  }
 
   // OUr support topics.
   List<Select> get supportTopics {
@@ -32,9 +37,9 @@ class SupportRequestNotifier extends StateNotifier<SupportRequestState> {
 
   /// Helper used to reset everything in this form.
   void reset() {
-    email.clear();
+    /*  email.clear();
     fullname.clear();
-    phone.clear();
+    phone.clear(); */
     details.clear();
     topicNotifier.value = null;
   }
@@ -50,8 +55,9 @@ class SupportRequestNotifier extends StateNotifier<SupportRequestState> {
   }
 }
 
-final supportRequestProvider = StateNotifierProvider<SupportRequestNotifier, SupportRequestState>(
+final supportRequestProvider =
+    StateNotifierProvider<SupportRequestNotifier, SupportRequestState>(
   (ref) {
-    return SupportRequestNotifier(SupportRequestState.initial);
+    return SupportRequestNotifier();
   },
 );

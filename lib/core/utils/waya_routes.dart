@@ -117,10 +117,6 @@ import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.d
 import 'package:wayagram/features/ugt/contest_setting/contest_setting_content.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
 import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.dart';
-import 'package:wayagram/features/ugt/manage_role/ugt_add_invite_user_page.dart';
-import 'package:wayagram/features/ugt/manage_role/ugt_add_manage_user_page.dart';
-import 'package:wayagram/features/ugt/manage_role/ugt_invite_user_page.dart';
-import 'package:wayagram/features/ugt/manage_role/ugt_manage_user_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
 import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/edit_contestant_profile.dart';
@@ -243,10 +239,7 @@ class WayaAppRoutes {
     ManageApplicationContest.route: () => ManageApplicationContest(),
     ManageStateSingleContest.route: () => ManageStateSingleContest(),
     DashboardContestPage.route: () => DashboardContestPage(),
-    UgtManageUserPage.route: () => UgtManageUserPage(),
-    UgtInviteUserPage.route: () => UgtInviteUserPage(),
-    UgtAddManageUserPage.route: () => UgtAddManageUserPage(),
-    UgtAddInviteUserPage.route: () => UgtAddInviteUserPage(),
+  
     ManageLeaderboardContest.route: () => ManageLeaderboardContest(),
     AdminTransactionHistory.route: () => AdminTransactionHistory(),
     ContestSettingContent.route: () => ContestSettingContent(),

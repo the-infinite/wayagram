@@ -1,38 +1,49 @@
-
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/core/utils/waya_constants.dart';
 
-
 class RoleAccessRepo extends BaseRepository {
   static const serviceUrl2 = WayaServiceUri.shop;
+  static const serviceUrl1 = WayaServiceUri.contest;
 
   Future<WayaRequestResponse> getRoles() {
     return get('$serviceUrl2/admin/role/get-roles');
   }
 
-    Future<WayaRequestResponse> getShopByUserId(String userId) {
+  Future<WayaRequestResponse> getContestRoles() {
+    return get('$serviceUrl1/admin/role/get-roles');
+  }
+
+  Future<WayaRequestResponse> addContestTeamMember(payLoad) {
+    print(payLoad);
+    return post('$serviceUrl1/judges/create', payLoad, formdata: false);
+  }
+
+  Future<WayaRequestResponse> getShopByUserId(String userId) {
     return get('$serviceUrl2/shops/$userId');
   }
 
-     Future<WayaRequestResponse> getMemberList(String vendorId, int page) {
+  Future<WayaRequestResponse> getMemberList(String vendorId, int page) {
     return get('$serviceUrl2/shopMember/get-members/$vendorId?page=$page');
   }
-      Future<WayaRequestResponse> getRoleManagementMemberList(String vendorId) {
+
+  Future<WayaRequestResponse> getRoleManagementMemberList(String vendorId) {
     return get('$serviceUrl2/shopMember/role-management/$vendorId');
   }
 
-    Future<WayaRequestResponse> addTeamMember(payLoad) {
+  Future<WayaRequestResponse> addTeamMember(payLoad) {
     return post('$serviceUrl2/shopMember/create', payLoad, formdata: false);
   }
 
-    Future<WayaRequestResponse> activateDeactivateShopMember(String shopMemberId, payLoad) {
-    return put('$serviceUrl2/shopMember/status/$shopMemberId', payLoad, formdata: false);
+  Future<WayaRequestResponse> activateDeactivateShopMember(
+      String shopMemberId, payLoad) {
+    return put('$serviceUrl2/shopMember/status/$shopMemberId', payLoad,
+        formdata: false);
   }
 
-
-      Future<WayaRequestResponse> editMember(String shopMemberId, payLoad) {
-    return put('$serviceUrl2/shopMember/status/$shopMemberId', payLoad, formdata: false);
+  Future<WayaRequestResponse> editMember(String shopMemberId, payLoad) {
+    return put('$serviceUrl2/shopMember/status/$shopMemberId', payLoad,
+        formdata: false);
   }
 
 /* 
@@ -62,6 +73,4 @@ class RoleAccessRepo extends BaseRepository {
     return get('$serviceUrl2/application/$userId/appliedContest');
   }
  */
-
-
 }
