@@ -9,6 +9,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/modals/delete.dart';
 import 'package:wayagram/features/chat/modals/group/mute.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
@@ -184,7 +185,14 @@ class _ConversationWidgetState extends State<ConversationWidget> {
               callback: () {
                 sizeNotifier.dispose();
                 entry.remove();
-                widget.conversationNotifier.deleteChat(chat.id);
+                WayaUtils.showModalSheet(
+                  context,
+                  isDismissible: false,
+                  child: DeleteChatModal(
+                    chat: chat,
+                    notifier: widget.conversationNotifier,
+                  ),
+                );
               },
               height: null,
               alignment: Alignment.centerLeft,

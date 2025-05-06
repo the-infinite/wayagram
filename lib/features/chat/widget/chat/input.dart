@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:audio_waveforms/audio_waveforms.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -14,10 +15,13 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/features/chat/dto/chat.dart';
 import 'package:wayagram/features/chat/modals/attachment.dart';
+import 'package:wayagram/features/chat/modals/delete.dart';
+import 'package:wayagram/features/chat/modals/unblock.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/types/attachment.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
+import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/chat/input/reply_to.dart';
 import 'package:wayagram/features/chat/widget/chat/input/selected_file.dart';
 import 'package:wayagram/features/chat/widget/chat/input/voice_note.dart';
@@ -368,7 +372,7 @@ class ChatInputController {
 }
 
 /// The widget that is used to denote/represent the
-class ChatInputWidget extends StatelessWidget {
+class ChatInputWidget extends StatefulWidget {
   final ChatInputController controller;
   final ChatNotifier notifier;
   final FocusNode focusNode;
@@ -387,12 +391,20 @@ class ChatInputWidget extends StatelessWidget {
     this.padded = true,
   });
 
+  @override
+  State<ChatInputWidget> createState() => _ChatInputWidgetState();
+}
+
+class _ChatInputWidgetState extends State<ChatInputWidget> {
+  final deleteController = ValueNotifier(false);
+  final unblockController = ValueNotifier(false);
+
   /// Helper function used to add an attachment.
   void _addAttachment(BuildContext context) async {
     final result = await WayaUtils.showModalSheet<AttachmentResult>(
       context,
       child: ChatAttachmentDialog(
-        controller: controller,
+        controller: widget.controller,
       ),
     );
 
@@ -402,16 +414,16 @@ class ChatInputWidget extends StatelessWidget {
     //? If there is actual data here and it is a file...
     if (result.type != MessageType.contact) {
       //? Change this to file.
-      controller._currentType.value = result.type;
+      widget.controller._currentType.value = result.type;
 
       //? Add all of the files that need to be added.
-      controller._files.value.addAll(result.files?.map((file) => File(file)) ?? []);
+      widget.controller._files.value.addAll(result.files?.map((file) => File(file)) ?? []);
 
       //? Update the value of this thing's controller.
-      controller._files.value = [...controller._files.value];
+      widget.controller._files.value = [...widget.controller._files.value];
 
       //? Now, we can send, if this is not empty.
-      controller._canSend.value = controller._files.value.isNotEmpty;
+      widget.controller._canSend.value = widget.controller._files.value.isNotEmpty;
     }
   }
 
@@ -419,11 +431,11 @@ class ChatInputWidget extends StatelessWidget {
   void _recordVoiceNote() async {
     try {
       //? If this cannot yet record, leave.
-      if (!controller._isRecorderOpen.value) return;
+      if (!widget.controller._isRecorderOpen.value) return;
 
       //? Start recording audio.
-      await controller._soundRecorder!.record(
-        path: await WayaFileHelper.getVoiceNoteFilePath(controller.chat.id),
+      await widget.controller._soundRecorder!.record(
+        path: await WayaFileHelper.getVoiceNoteFilePath(widget.controller.chat.id),
         androidEncoder: AndroidEncoder.aac,
         androidOutputFormat: AndroidOutputFormat.mpeg4,
         iosEncoder: IosEncoder.kAudioFormatMPEG4AAC,
@@ -431,37 +443,37 @@ class ChatInputWidget extends StatelessWidget {
       );
 
       //? Now notify the caller that you are recording.
-      controller._recorderState.value = controller._soundRecorder!.recorderState;
-      controller._currentType.value = MessageType.voiceNote;
-      controller._isRecorderOpen.value = true;
+      widget.controller._recorderState.value = widget.controller._soundRecorder!.recorderState;
+      widget.controller._currentType.value = MessageType.voiceNote;
+      widget.controller._isRecorderOpen.value = true;
 
       //? This is fine.
-      controller._canSend.value = false;
-      controller._textController.clear();
+      widget.controller._canSend.value = false;
+      widget.controller._textController.clear();
     } catch (_) {}
   }
 
   /// Helper function used to send a message.
   void _sendMessage() async {
     //? If this conversation does not yet exist...
-    if (controller._chat == null) {
-      final chat = await createChat();
-      controller.setChat(chat);
-      if (chat != null) notifier.setChat(chat);
+    if (widget.controller._chat == null) {
+      final chat = await widget.createChat();
+      widget.controller.setChat(chat);
+      if (chat != null) widget.notifier.setChat(chat);
     }
 
     //? Since we are fine, do all the needful.
-    final message = controller.buildMessage;
-    final quoted = controller._replyTo.value;
-    final isEdit = controller.isEditing;
+    final message = widget.controller.buildMessage;
+    final quoted = widget.controller._replyTo.value;
+    final isEdit = widget.controller.isEditing;
 
     //? Reset the input controller before sending the message so it looks fast.
-    controller.reset();
+    widget.controller.reset();
 
     //? If this is editing a message.
     if (isEdit) {
       //? If this is greater than 5 minutes ago...
-      final result = await notifier.editMessage(quoted!.id, message.content ?? '');
+      final result = await widget.notifier.editMessage(quoted!.id, message.content ?? '');
 
       //? This is fine.
       if (!result) return;
@@ -474,7 +486,7 @@ class ChatInputWidget extends StatelessWidget {
       //? This is fine.
       for (final singleMessage in messages) {
         //? Send the message.
-        final result = await notifier.sendMessage(singleMessage);
+        final result = await widget.notifier.sendMessage(singleMessage);
 
         //? If this failed..
         if (result == null) return;
@@ -484,7 +496,7 @@ class ChatInputWidget extends StatelessWidget {
     //? If we are not editing and this contains one media.
     else {
       //? Send the message.
-      final result = await notifier.sendMessage(message);
+      final result = await widget.notifier.sendMessage(message);
 
       //? If this succeeded...
       if (result == null) return;
@@ -495,260 +507,362 @@ class ChatInputWidget extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    deleteController.dispose();
+    unblockController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     //? For each time this gets constructed, notify the controller that the focus
     //? listener might have changed.
-    controller._focusNode = focusNode;
+    widget.controller._focusNode = widget.focusNode;
 
     //? Return your widget.
     return Padding(
-      padding: padded ? const EdgeInsets.only(left: 15, right: 15, bottom: 12) : EdgeInsets.zero,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          //? Extra, the divider.
-          Divider(color: WayaColors.greyColor200, height: 0),
+      padding: widget.padded ? const EdgeInsets.only(left: 15, right: 15, bottom: 12) : EdgeInsets.zero,
+      child: WayaErrorWidget(
+        onError: (context, e) => const SizedBox(),
+        builder: (context) => Consumer(
+          builder: (context, ref, _) {
+            final conversationState = ref.watch(conversationProvider);
+            final conversationNotifier = ref.read(conversationProvider.notifier);
+            final chat = widget.controller._chat;
 
-          //? First, some space before the reply-to
-          const Gap(6),
+            //? How fair enough.
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                //? Extra, the divider.
+                Divider(color: WayaColors.greyColor200, height: 0),
 
-          //? Second, the reply to ..
-          ValueListenableBuilder(
-            valueListenable: controller._replyTo,
-            builder: (context, message, _) {
-              //? If this is not defined...
-              if (message == null) return const SizedBox();
+                //? First, some space before the reply-to
+                const Gap(6),
 
-              //? Since it is defined...
-              return ChatReplyToWidget(
-                message: message,
-                controller: controller,
-              );
-            },
-          ),
-
-          //? Third, the space after the reply to
-          const Gap(6),
-
-          //? Fourth, the selected media space.
-          ValueListenableBuilder(
-            valueListenable: controller._files,
-            builder: (context, selectedFiles, _) {
-              //? If there is nothing to show...
-              if (selectedFiles.isEmpty) return const SizedBox();
-
-              //? Since there is something to show.
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // The actual chat file  component.
-                  ChatFileListWidget(
-                    controller: controller,
-                    interactive: true,
-                  ),
-
-                  // Space after the selected media widget.
-                  const Gap(6),
-                ],
-              );
-            },
-          ),
-
-          //? Finally, the row for actual chat controls.
-          ValueListenableBuilder(
-            valueListenable: controller._currentType,
-            builder: (context, messageType, _) {
-              //? Return the row of components that also represent and contain the
-              //? message input field.
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment:
-                    messageType == MessageType.voiceNote ? CrossAxisAlignment.center : CrossAxisAlignment.start,
-                children: [
-                  //? First, the button for attaching content.
-                  messageType == MessageType.voiceNote
-                      ? const SizedBox()
-                      : WayaButton(
-                          callback: () => _addAttachment(context),
-                          height: null,
-                          color: WayaColors.greyColor200,
-                          horizontalPadding: 10,
-                          verticalPadding: 10,
-                          centerWidget: WayaAssets.icons.cButtonAttach.svg(
-                            color: WayaColors.black,
-                            height: 18,
-                            width: 18,
-                          ),
-                        ),
-
-                  // Some space.
-                  Gap(12.w),
-
-                  //? Second, the input text
-                  Expanded(
-                    child: AnimatedCrossFade(
-                      crossFadeState:
-                          messageType == MessageType.voiceNote ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                      duration: const Duration(milliseconds: 350),
-                      firstChild: messageType != MessageType.voiceNote
-                          ? const SizedBox()
-                          : ValueListenableBuilder(
-                              valueListenable: controller._recorderState,
-                              builder: (context, _, __) => ChatVoiceMessageInput(
-                                controller: controller,
-                              ),
-                            ),
-                      secondChild: TextField(
-                        maxLines: 5,
-                        minLines: 1,
-                        focusNode: focusNode,
-                        onChanged: (value) {
-                          //? If this is a text message, allowing a user to send
-                          //? a message would need to ENTIRELY depend on the
-                          //? contents of the message text.
-                          if (controller._currentType.value == MessageType.text) {
-                            controller._canSend.value = value.trim().isNotEmpty;
-                          }
-
-                          //? If this has no chat yet...
-                          if (controller._chat == null) return;
-
-                          //? If this is not in the state we are thinking of...
-                          if (!controller._isTyping.value) {
-                            WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, true));
-                            controller._isTyping.value = true;
-                          }
-
-                          //? Since this is the case, emit the typing event so
-                          //? everyone knows this user is typing.
-                          debounce(key: "control-typing", delay: const Duration(milliseconds: 800), () {
-                            WayaSocketController.instance.emit(WayaChatSocketArgs.typing(controller.chat.id, false));
-                            controller._isTyping.value = false;
-                          })();
-                        },
-                        style: WayaTextStyles.labelMedium,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
-                          border: OutlineInputBorder(
-                            borderSide: BorderSide.none,
-                            borderRadius: BorderRadius.circular(8.r),
-                          ),
-                          fillColor: WayaColors.greyColor200,
-                          filled: true,
-                          hintText: "Write a message here",
-                          hintStyle: WayaTextStyles.hintStyle,
-                          labelStyle: WayaTextStyles.labelSmall,
-                        ),
-                        textInputAction: TextInputAction.newline,
-                        keyboardType: TextInputType.multiline,
-                        controller: controller._textController,
-                      ),
+                //? If this is a personal chat and the user is blocked...
+                if (chat != null &&
+                    chat.chatType == ChatType.personal &&
+                    conversationState.isBlocked(chat.other.userId)) ...[
+                  //? A notice that tells the user that he or she cannot message this person.
+                  Text(
+                    "You can't send messages to this user",
+                    textAlign: TextAlign.center,
+                    style: WayaTextStyles.hintStyle.copyWith(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
 
-                  // Some space.
-                  Gap(12.w),
+                  //? Third, a way to either delete the conversation or to unblock it.
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 6.h),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      spacing: 10.w,
+                      children: [
+                        //? First, a button to delete this chat.
+                        Expanded(
+                          child: WayaProgressiveButton(
+                            notifier: deleteController,
+                            callback: () async {
+                              final result = await WayaUtils.showModalSheet<bool>(
+                                context,
+                                isDismissible: false,
+                                child: DeleteChatModal(
+                                  chat: chat,
+                                  notifier: conversationNotifier,
+                                ),
+                              );
 
-                  //? Third, the button for either sending messages.
-                  ValueListenableBuilder(
-                    valueListenable: controller._canSend,
-                    builder: (context, canSend, _) {
-                      //? If voice messages cannot be sent
-                      if (!voiceEnabled) {
-                        return AnimatedCrossFade(
-                          duration: const Duration(milliseconds: 350),
-                          crossFadeState: canSend ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                          firstChild: WayaButton(
-                            callback: _sendMessage,
-                            height: null,
+                              //? This is fine.
+                              if (result ?? false) {
+                                WayaNav.goBack(closeOverlays: true);
+                              }
+                            },
+                            text: "Delete chat",
+                            color: WayaColors.error,
+                          ),
+                        ),
+
+                        //? Second a button to unblock this user.
+                        Expanded(
+                          child: WayaProgressiveButton(
+                            notifier: unblockController,
+                            callback: () async {
+                              final result = await WayaUtils.showModalSheet<bool?>(
+                                context,
+                                child: UnblockUserDialog(
+                                  user: chat.other.userData!,
+                                  profile: chat.other.profileData!,
+                                  ref: ref,
+                                ),
+                              );
+
+                              // If this is defined...
+                              if (result == null) return;
+
+                              //? Then pop.
+                              if (result) {
+                                WayaSnackBar.showToast("This user has been unblocked successfully");
+                              }
+                            },
+                            text: "Unblock user",
                             color: WayaColors.primary,
-                            horizontalPadding: 10,
-                            verticalPadding: 10,
-                            centerWidget: WayaAssets.icons.cSend.svg(
-                              color: WayaColors.white,
-                              height: 18,
-                              width: 18,
-                            ),
                           ),
-                          secondChild: WayaButton(
-                            callback: null,
-                            height: null,
-                            color: WayaColors.greyColor200,
-                            horizontalPadding: 10,
-                            verticalPadding: 10,
-                            centerWidget: WayaAssets.icons.cSend.svg(
-                              color: WayaColors.black,
-                              height: 18,
-                              width: 18,
-                            ),
-                          ),
-                        );
-                      }
+                        ),
+                      ],
+                    ),
+                  ),
+                ]
 
-                      //? Since we cannot send yet, show this message type's
-                      //? protocol icon.
-                      return AnimatedCrossFade(
-                        duration: const Duration(milliseconds: 350),
-                        crossFadeState: canSend ? CrossFadeState.showFirst : CrossFadeState.showSecond,
-                        firstChild: WayaButton(
-                          callback: _sendMessage,
-                          height: null,
-                          color: WayaColors.primary,
-                          horizontalPadding: 10,
-                          verticalPadding: 10,
-                          centerWidget: WayaAssets.icons.cSend.svg(
-                            color: WayaColors.white,
-                            height: 18,
-                            width: 18,
+                //? All is good and fine.
+                else ...[
+                  //? Second, the reply to ..
+                  ValueListenableBuilder(
+                    valueListenable: widget.controller._replyTo,
+                    builder: (context, message, _) {
+                      //? If this is not defined...
+                      if (message == null) return const SizedBox();
+
+                      //? Since it is defined...
+                      return ChatReplyToWidget(
+                        message: message,
+                        controller: widget.controller,
+                      );
+                    },
+                  ),
+
+                  //? Third, the space after the reply to
+                  const Gap(6),
+
+                  //? Fourth, the selected media space.
+                  ValueListenableBuilder(
+                    valueListenable: widget.controller._files,
+                    builder: (context, selectedFiles, _) {
+                      //? If there is nothing to show...
+                      if (selectedFiles.isEmpty) return const SizedBox();
+
+                      //? Since there is something to show.
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          // The actual chat file  component.
+                          ChatFileListWidget(
+                            controller: widget.controller,
+                            interactive: true,
                           ),
-                        ),
-                        secondChild: ValueListenableBuilder(
-                          valueListenable: controller._recorderState,
-                          builder: (context, recorderState, _) {
-                            return AnimatedCrossFade(
-                              crossFadeState:
-                                  recorderState == RecorderState.stopped || recorderState == RecorderState.initialized
-                                      ? CrossFadeState.showFirst
-                                      : CrossFadeState.showSecond,
+
+                          // Space after the selected media widget.
+                          const Gap(6),
+                        ],
+                      );
+                    },
+                  ),
+
+                  //? Finally, the row for actual chat controls.
+                  ValueListenableBuilder(
+                    valueListenable: widget.controller._currentType,
+                    builder: (context, messageType, _) {
+                      //? Return the row of components that also represent and contain the
+                      //? message input field.
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment:
+                            messageType == MessageType.voiceNote ? CrossAxisAlignment.center : CrossAxisAlignment.start,
+                        children: [
+                          //? First, the button for attaching content.
+                          messageType == MessageType.voiceNote
+                              ? const SizedBox()
+                              : WayaButton(
+                                  callback: () => _addAttachment(context),
+                                  height: null,
+                                  color: WayaColors.greyColor200,
+                                  horizontalPadding: 10,
+                                  verticalPadding: 10,
+                                  centerWidget: WayaAssets.icons.cButtonAttach.svg(
+                                    color: WayaColors.black,
+                                    height: 18,
+                                    width: 18,
+                                  ),
+                                ),
+
+                          // Some space.
+                          Gap(12.w),
+
+                          //? Second, the input text
+                          Expanded(
+                            child: AnimatedCrossFade(
+                              crossFadeState: messageType == MessageType.voiceNote
+                                  ? CrossFadeState.showFirst
+                                  : CrossFadeState.showSecond,
                               duration: const Duration(milliseconds: 350),
-                              firstChild: WayaButton(
-                                callback: _recordVoiceNote,
-                                height: null,
-                                color: WayaColors.greyColor200,
-                                horizontalPadding: 10,
-                                verticalPadding: 10,
-                                centerWidget: WayaAssets.icons.cButtonVoicenote.svg(
-                                  color: WayaColors.black,
-                                  height: 18,
-                                  width: 18,
+                              firstChild: messageType != MessageType.voiceNote
+                                  ? const SizedBox()
+                                  : ValueListenableBuilder(
+                                      valueListenable: widget.controller._recorderState,
+                                      builder: (context, _, __) => ChatVoiceMessageInput(
+                                        controller: widget.controller,
+                                      ),
+                                    ),
+                              secondChild: TextField(
+                                maxLines: 5,
+                                minLines: 1,
+                                focusNode: widget.focusNode,
+                                onChanged: (value) {
+                                  //? If this is a text message, allowing a user to send
+                                  //? a message would need to ENTIRELY depend on the
+                                  //? contents of the message text.
+                                  if (widget.controller._currentType.value == MessageType.text) {
+                                    widget.controller._canSend.value = value.trim().isNotEmpty;
+                                  }
+
+                                  //? If this has no chat yet...
+                                  if (widget.controller._chat == null) return;
+
+                                  //? If this is not in the state we are thinking of...
+                                  if (!widget.controller._isTyping.value) {
+                                    WayaSocketController.instance
+                                        .emit(WayaChatSocketArgs.typing(widget.controller.chat.id, true));
+                                    widget.controller._isTyping.value = true;
+                                  }
+
+                                  //? Since this is the case, emit the typing event so
+                                  //? everyone knows this user is typing.
+                                  debounce(key: "control-typing", delay: const Duration(milliseconds: 800), () {
+                                    WayaSocketController.instance
+                                        .emit(WayaChatSocketArgs.typing(widget.controller.chat.id, false));
+                                    widget.controller._isTyping.value = false;
+                                  })();
+                                },
+                                style: WayaTextStyles.labelMedium,
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  contentPadding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 9.h),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                    borderRadius: BorderRadius.circular(8.r),
+                                  ),
+                                  fillColor: WayaColors.greyColor200,
+                                  filled: true,
+                                  hintText: "Write a message here",
+                                  hintStyle: WayaTextStyles.hintStyle,
+                                  labelStyle: WayaTextStyles.labelSmall,
                                 ),
+                                textInputAction: TextInputAction.newline,
+                                keyboardType: TextInputType.multiline,
+                                controller: widget.controller._textController,
                               ),
-                              secondChild: WayaButton(
-                                callback: controller.stopRecording,
-                                height: null,
-                                color: WayaColors.greyColor200,
-                                horizontalPadding: 10,
-                                verticalPadding: 10,
-                                centerWidget: WayaAssets.icons.cStop.svg(
-                                  color: WayaColors.black,
-                                  height: 18,
-                                  width: 18,
+                            ),
+                          ),
+
+                          // Some space.
+                          Gap(12.w),
+
+                          //? Third, the button for either sending messages.
+                          ValueListenableBuilder(
+                            valueListenable: widget.controller._canSend,
+                            builder: (context, canSend, _) {
+                              //? If voice messages cannot be sent
+                              if (!widget.voiceEnabled) {
+                                return AnimatedCrossFade(
+                                  duration: const Duration(milliseconds: 350),
+                                  crossFadeState: canSend ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                  firstChild: WayaButton(
+                                    callback: _sendMessage,
+                                    height: null,
+                                    color: WayaColors.primary,
+                                    horizontalPadding: 10,
+                                    verticalPadding: 10,
+                                    centerWidget: WayaAssets.icons.cSend.svg(
+                                      color: WayaColors.white,
+                                      height: 18,
+                                      width: 18,
+                                    ),
+                                  ),
+                                  secondChild: WayaButton(
+                                    callback: null,
+                                    height: null,
+                                    color: WayaColors.greyColor200,
+                                    horizontalPadding: 10,
+                                    verticalPadding: 10,
+                                    centerWidget: WayaAssets.icons.cSend.svg(
+                                      color: WayaColors.black,
+                                      height: 18,
+                                      width: 18,
+                                    ),
+                                  ),
+                                );
+                              }
+
+                              //? Since we cannot send yet, show this message type's
+                              //? protocol icon.
+                              return AnimatedCrossFade(
+                                duration: const Duration(milliseconds: 350),
+                                crossFadeState: canSend ? CrossFadeState.showFirst : CrossFadeState.showSecond,
+                                firstChild: WayaButton(
+                                  callback: _sendMessage,
+                                  height: null,
+                                  color: WayaColors.primary,
+                                  horizontalPadding: 10,
+                                  verticalPadding: 10,
+                                  centerWidget: WayaAssets.icons.cSend.svg(
+                                    color: WayaColors.white,
+                                    height: 18,
+                                    width: 18,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                        ),
+                                secondChild: ValueListenableBuilder(
+                                  valueListenable: widget.controller._recorderState,
+                                  builder: (context, recorderState, _) {
+                                    return AnimatedCrossFade(
+                                      crossFadeState: recorderState == RecorderState.stopped ||
+                                              recorderState == RecorderState.initialized
+                                          ? CrossFadeState.showFirst
+                                          : CrossFadeState.showSecond,
+                                      duration: const Duration(milliseconds: 350),
+                                      firstChild: WayaButton(
+                                        callback: _recordVoiceNote,
+                                        height: null,
+                                        color: WayaColors.greyColor200,
+                                        horizontalPadding: 10,
+                                        verticalPadding: 10,
+                                        centerWidget: WayaAssets.icons.cButtonVoicenote.svg(
+                                          color: WayaColors.black,
+                                          height: 18,
+                                          width: 18,
+                                        ),
+                                      ),
+                                      secondChild: WayaButton(
+                                        callback: widget.controller.stopRecording,
+                                        height: null,
+                                        color: WayaColors.greyColor200,
+                                        horizontalPadding: 10,
+                                        verticalPadding: 10,
+                                        centerWidget: WayaAssets.icons.cStop.svg(
+                                          color: WayaColors.black,
+                                          height: 18,
+                                          width: 18,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                        ],
                       );
                     },
                   ),
                 ],
-              );
-            },
-          ),
-        ],
+              ],
+            );
+          },
+        ),
       ),
     );
   }
