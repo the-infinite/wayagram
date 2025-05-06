@@ -40,9 +40,6 @@ void main() async {
   //? have analytics, crashlytics, and push notifications set up.
   //? needed the widget reference
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  try {
-    await PackageData.getAndLoad;
-  } catch (_) {}
 
   //? splash screen preserving the state until after initialization
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -153,6 +150,17 @@ class Wayagram extends ConsumerStatefulWidget {
 }
 
 class _WayagramState extends ConsumerState<Wayagram> {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      try {
+        await Future.delayed(const Duration(milliseconds: 900));
+        await PackageData.getAndLoad;
+      } catch (_) {}
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);

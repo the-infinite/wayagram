@@ -117,4 +117,21 @@ abstract class WayaCacheUtility<T> extends ValueNotifier<int> {
     //? Refresh this notifier.
     refresh();
   }
+
+  ///  Helper function used to retrieve a single item in cache that matches any
+  /// item in the iterable.
+  T? getItem(bool Function(T) test) {
+    //? If this is debug mode.
+    if (kDebugMode) {
+      debugPrint("$runtimeType.Engine: Getting item from cache.");
+    }
+
+    //? Return the first item that matches the test.
+    return _data.values.where(test).firstOrNull;
+  }
+
+  /// Helper function used to return all the values in the cache. It gets all of
+  /// the data currently in the cache and returns them as an iterable so it can
+  /// be used however you want.
+  Iterable<T> get data => _data.values;
 }

@@ -3,11 +3,13 @@ import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/modals/group/mute.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/member.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -143,19 +145,30 @@ class _ConversationWidgetState extends State<ConversationWidget> {
               callback: () {
                 sizeNotifier.dispose();
                 entry.remove();
+                if (chat.self.isMuted) {
+                  widget.conversationNotifier.muteOrUnmuteGroup(chat.id, null);
+                } else {
+                  WayaUtils.showModalSheet(
+                    context,
+                    child: MuteChatGroupModal(
+                      chat: chat,
+                      notifier: widget.conversationNotifier,
+                    ),
+                  );
+                }
               },
               height: null,
               alignment: Alignment.centerLeft,
               verticalPadding: 8,
               horizontalPadding: 8,
-              textColor: WayaColors.black,
+              textColor: chat.self.isMuted ? WayaColors.black : WayaColors.error,
               color: Colors.transparent,
-              leadingIcon: Icon(
-                chat.self.isDeletedChat ? CupertinoIcons.volume_up : CupertinoIcons.volume_off,
-                size: 20,
-                color: WayaColors.black,
+              leadingIcon: SvgPicture.asset(
+                chat.self.isMuted ? WayaAssets.icons.cProfileUnmute.path : WayaAssets.icons.cProfileMute.path,
+                height: 20.sp,
+                color: chat.self.isMuted ? WayaColors.black : WayaColors.error,
               ),
-              text: chat.self.isDeletedChat ? "Unmute" : "Mute",
+              text: chat.self.isMuted ? "Unmute" : "Mute",
               textStyle: WayaTextStyles.bodySemiBold.copyWith(
                 fontSize: 13.sp,
               ),
@@ -368,7 +381,16 @@ class _ConversationWidgetState extends State<ConversationWidget> {
                   const Gap(2),
 
                   // This is fine.
-                  if (unread > 0)
+                  if (chat.self.isMuted)
+                    WayaAssets.icons.cProfileUnmute.svg(
+                      height: 16.sp,
+                      width: 16.sp,
+                      colorFilter: ColorFilter.mode(
+                        WayaColors.error,
+                        BlendMode.srcIn,
+                      ),
+                    )
+                  else if (unread > 0)
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 9),
                       decoration: BoxDecoration(
