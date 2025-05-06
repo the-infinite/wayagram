@@ -81,7 +81,7 @@ class ChatProfilePicture extends StatelessWidget {
                   radius: radius,
                   backgroundColor: chat != null &&
                           ((isGroup && chat?.groupImage == null) ||
-                              (!isGroup && !(chatUser?.canSeeProfilePicture ?? true) && user.profilePicture == null))
+                              (!isGroup && (!(chatUser?.canSeeProfilePicture ?? true) || user.profilePicture == null)))
                       ? theme.colorScheme.primary50
                       : theme.colorScheme.greyColor200,
                   backgroundImage: isGroup
@@ -93,7 +93,7 @@ class ChatProfilePicture extends StatelessWidget {
                           : null,
                   child: chat != null &&
                           ((isGroup && chat?.groupImage == null) ||
-                              (!isGroup && !(chatUser?.canSeeProfilePicture ?? true) && user.profilePicture == null))
+                              (!isGroup && (!(chatUser?.canSeeProfilePicture ?? true) || user.profilePicture == null)))
                       ? Text(
                           chat!.initials(useGroup, user.id),
                           style: theme.textTheme.headlineLarge?.copyWith(
