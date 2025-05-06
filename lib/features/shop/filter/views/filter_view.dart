@@ -15,6 +15,10 @@ import '../widgets/price_range_input.dart';
 import '../widgets/measurement_range.dart';
 import '../widgets/color_filter.dart';
 
+//********* */
+// NB: This filter view is for shop use only.
+//********* */
+
 class FilterView extends ConsumerStatefulWidget {
   static const route = '/filter';
   const FilterView({super.key});
@@ -25,16 +29,22 @@ class FilterView extends ConsumerStatefulWidget {
 
 class _FilterViewState extends ConsumerState<FilterView> {
   List<Product> filteredProducts = [];
+  List<Product> allProducts = [];
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final products =
+          ModalRoute.of(context)!.settings.arguments as List<Product>;
+      allProducts = products;
+    });
     applyFilter(); // Run filter initially to set the correct state
   }
 
   void applyFilter() {
     final filterState = ref.read(filterVmProvider);
-    final allProducts = ref.read(shopVmProvider).products;
+    // final allProducts = ref.read(shopVmProvider).products;
 
     setState(() {
       filteredProducts = allProducts.where((product) {
@@ -47,8 +57,7 @@ class _FilterViewState extends ConsumerState<FilterView> {
                 double.tryParse(product.price.toString())! <=
                     double.tryParse(filterState.maxPrice)!) &&
             (filterState.deliveryType.isEmpty ||
-                filterState.deliveryType.contains(product.options)
-                    ) &&
+                filterState.deliveryType.contains(product.options)) &&
             (filterState.discountType.isEmpty ||
                 filterState.discountType.contains(product.discountTypeId)) &&
             (filterState.condition.isEmpty ||
@@ -56,7 +65,7 @@ class _FilterViewState extends ConsumerState<FilterView> {
             ((product.height ?? 0) >= filterState.minHeight &&
                 (product.height ?? 0) <= filterState.maxHeight) &&
             ((product.width ?? 0) >= filterState.minWidth &&
-               ( product.width ?? 0) <= filterState.maxWidth) &&
+                (product.width ?? 0) <= filterState.maxWidth) &&
             ((product.depth ?? 0) >= filterState.minDepth &&
                 (product.depth ?? 0) <= filterState.maxDepth) &&
             (filterState.colors.isEmpty ||

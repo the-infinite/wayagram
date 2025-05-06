@@ -23,7 +23,7 @@ class _PromotionDetail extends ConsumerState<PromotionDetail> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
-    // TODO: implement build
+    
     return WayaScaffold(
         isLoading: false,
         isScrollable: true,

@@ -17,6 +17,7 @@ import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/helpers/debug.dart';
 import 'package:wayagram/core/helpers/deep_linking_listener.dart';
+import 'package:wayagram/core/helpers/package.dart';
 import 'package:wayagram/core/service/notification_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/theme/vm/theme_vm.dart';
@@ -39,6 +40,9 @@ void main() async {
   //? have analytics, crashlytics, and push notifications set up.
   //? needed the widget reference
   final widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await PackageData.getAndLoad;
+  } catch (_) {}
 
   //? splash screen preserving the state until after initialization
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -152,13 +156,13 @@ class _WayagramState extends ConsumerState<Wayagram> {
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider);
-
     var size = MediaQuery.of(context).size;
 
     //? added this screenutil init here to register before getting to the theme
     //? else it will throw an error
     ScreenUtil.init(
       context,
+      // designSize: Size(428, 926),
       designSize: Size(size.width, size.height),
       minTextAdapt: true,
       splitScreenMode: true,

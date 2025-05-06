@@ -26,7 +26,7 @@ class DealApplications extends ConsumerStatefulWidget {
 class _DealApplicationsState extends ConsumerState<DealApplications> {
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    
     final wayaTheme = Theme.of(context);
     return Expanded(
         child: PaginatedDataView<SellerProduct>(

@@ -8,7 +8,8 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 
 class PostMomentWidget extends ConsumerWidget {
-  const PostMomentWidget({super.key});
+  final GlobalKey<State<StatefulWidget>>? previewKey;
+  const PostMomentWidget({super.key, this.previewKey});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,14 +43,16 @@ class PostMomentWidget extends ConsumerWidget {
           SizedBox(
             width: 36,
             height: 36,
-            child:  WayaButton(
+            child: WayaButton(
               height: 36,
               radius: 36,
-              callback: !state.isCreatingMoment ?() {
-                ref
-                    .read(momentVmProvider.notifier)
-                    .submitMoment(context: context);
-              } : null,
+              callback: !state.isCreatingMoment
+                  ? () async {
+                      ref
+                          .read(momentVmProvider.notifier)
+                          .submitMoment(context: context, previewKey: previewKey);
+                    }
+                  : null,
               centerWidget: Center(
                 child: SvgPicture.asset(WayaAssets.icons.aMoment.path),
               ),

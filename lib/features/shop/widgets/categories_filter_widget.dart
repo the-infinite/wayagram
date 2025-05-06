@@ -26,6 +26,8 @@ class _CategoriesFilterWidgetState
     final wayaTheme = Theme.of(context);
     final viewModel =
         ref.watch(categoriesFilterWidgetVmProvider(widget.uniqueKey));
+    final notifier =
+        ref.read(categoriesFilterWidgetVmProvider(widget.uniqueKey).notifier);
 
     final categories = ref.watch(shopVmProvider).categories;
 
@@ -46,7 +48,8 @@ class _CategoriesFilterWidgetState
                   WayaButton(
                       callback: () {
                         print("eveve");
-                        widget.setCategory(['All']);
+                        notifier.selectAll();
+                        //  widget.setCategory(['All']);
                       },
                       border: Border.all(
                           color: viewModel.selected.isEmpty ||
@@ -70,10 +73,7 @@ class _CategoriesFilterWidgetState
                 children: [
                   WayaButton(
                     callback: () {
-                      final selected = ref
-                          .read(
-                              categoriesFilterWidgetVmProvider(widget.uniqueKey)
-                                  .notifier)
+                      final selected = notifier
                           .updateSelectedCategory(categories[index - 1]);
 
                       widget.setCategory(selected);
