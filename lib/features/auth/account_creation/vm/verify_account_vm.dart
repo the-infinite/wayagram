@@ -106,7 +106,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     Future<void> resendPhoneOtp() async {
     try {
       final personalPhone = ref.watch(personalFirstStepProvider).phoneNumber.text;
-      final response = await _authRepository.resendOtp(phone: "234$personalPhone");
+      final response = await _authRepository.resendOtp(phone: "234${personalPhone.length > 10 ? personalPhone.substring(1) : personalPhone}");
       _logger.d(" result ${response.data['message']}");
       if (response.data["statusCode"] == 200) {
         _snackbarService.showCustomSnackbar(

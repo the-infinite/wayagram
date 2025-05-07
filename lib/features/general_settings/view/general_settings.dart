@@ -7,6 +7,7 @@ import 'package:wayagram/core/helpers/package.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/modals/logout.dart';
@@ -99,6 +100,11 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
+                 GeneralSettingsOptionModel(
+                title: 'Interests',
+                iconPath: 'edit',
+                onTap: () => WayaNav.toNamed(EditInterest.route),
+              ),
               GeneralSettingsOptionModel(
                 title: 'Change Transaction PIN',
                 iconPath: 'password',
