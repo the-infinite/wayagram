@@ -37,9 +37,7 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
     final moduleID = useState("");
     final shopId = useState("");
     useEffect(() {
-      rollAccessNotifier.getRoles();
-      rollAccessNotifier.getContestRoles();
-      rollAccessNotifier.getShops();
+      rollAccessNotifier.fetchHostedContest();
       rollAccessNotifier.email.text = "";
       if (isEditing) {
         rollAccessNotifier.email.text = viewModelSelected?.email ?? "";
@@ -48,10 +46,30 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
 
         shopId.value = viewModelSelected?.shopId ?? "";
         roleId.value = viewModelSelected?.roles?.first.roleId ?? "";
+        if (viewModel.selectedRole == TypeRole.contest) {
+          rollAccessNotifier.getContestRoles();
+          rollAccessNotifier.fetchHostedContest();
 
-        for (var model in viewModel.listShop) {
-          if (model.value == viewModelSelected?.shopId) {
-            shopPicker.value = model.label;
+          moduleID.value = "Contest";
+          modulePicker.value = "Contest";
+          for (var model in viewModel.listShop) {
+            print("${model.label} ${model.value}");
+            print("my own ${viewModelSelected?.contestId}");
+            if (model.value == viewModelSelected?.contestId) {
+              shopPicker.value = model.label;
+              shopPicker.value = model.value;
+              print("I am here sha ${model.label}");
+            }
+          }
+        } else {
+          moduleID.value = "Shop";
+          modulePicker.value = "Shop";
+          rollAccessNotifier.getRoles();
+          rollAccessNotifier.getShops();
+          for (var model in viewModel.listShop) {
+            if (model.value == viewModelSelected?.shopId) {
+              shopPicker.value = model.label;
+            }
           }
         }
 

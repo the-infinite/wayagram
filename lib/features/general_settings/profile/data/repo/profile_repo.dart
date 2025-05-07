@@ -8,6 +8,7 @@ import 'package:wayagram/core/utils/utils.dart';
 
 class ProfileRepo extends BaseRepository {
   String get serviceUrl => WayaServiceUri.account;
+  String get serviceUrl2 => WayaServiceUri.product;
 
   Future<WayaRequestResponse> updateAccountRepo({
     required String userId,
@@ -55,6 +56,9 @@ class ProfileRepo extends BaseRepository {
 
   Future<WayaRequestResponse> getUserDataRepo({required String userId}) async {
     return get("$serviceUrl/client/users/$userId");
+  }
+    Future<WayaRequestResponse> postSupportDetails(payload) async {
+    return post("$serviceUrl2/client/support",  payload, formdata: false);
   }
 
   Future<WayaRequestResponse> getUserProfileRepo({required String userId}) async {

@@ -19,12 +19,22 @@ class RoleAccessRepo extends BaseRepository {
     return post('$serviceUrl1/judges/create', payLoad, formdata: false);
   }
 
+  Future<WayaRequestResponse> editContestTeamMember(String judgeId, payLoad) {
+    print(payLoad);
+    return patch('$serviceUrl1/judges/update/$judgeId', payLoad,
+        formdata: false);
+  }
+
   Future<WayaRequestResponse> getShopByUserId(String userId) {
     return get('$serviceUrl2/shops/$userId');
   }
 
   Future<WayaRequestResponse> getMemberList(String vendorId, int page) {
     return get('$serviceUrl2/shopMember/get-members/$vendorId?page=$page');
+  }
+
+  Future<WayaRequestResponse> getAllJudgeList(String userId, int page) {
+    return get('$serviceUrl1/judges/$userId?page=$page');
   }
 
   Future<WayaRequestResponse> getRoleManagementMemberList(String vendorId) {

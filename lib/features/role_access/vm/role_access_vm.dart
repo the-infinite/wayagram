@@ -10,9 +10,15 @@ import 'package:wayagram/features/role_access/data/model/shop_model.dart';
 import 'package:wayagram/features/role_access/data/role_access_repo.dart';
 
 import 'package:wayagram/features/role_access/vm/states/role_access_state.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/data/repository/ContestRepo.dart';
 import '../../../core/data/local_data_source.dart';
+
+enum TypeRole {
+  shop,
+  contest,
+}
 
 class RoleAccessVm extends StateNotifier<RoleAccessState> {
   final RoleAccessRepo _roleAccessRepository;
@@ -71,6 +77,10 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
     } else {
       return "Shop";
     }
+  }
+
+  void setTypeRole(TypeRole selectedRole) {
+    state = state.copyWith(selectedRole: selectedRole);
   }
 
   Future<void> fetchHostedContest() async {
@@ -132,7 +142,8 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
     WayaRequestResponse response;
     if (isEditing) {
       if (module == "Contest") {
-        response = await _roleAccessRepository.editMember(memberId, contestMap);
+        response = await _roleAccessRepository.editContestTeamMember(
+            memberId, contestMap);
       } else {
         response = await _roleAccessRepository.editMember(memberId, map);
       }
@@ -147,8 +158,17 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
 
     if (response.success) {
       onTap();
-      WayaSnackBar.showToast("Team Member added", showSuccess: true);
-      getAllMembers(true);
+      if (isEditing) {
+        WayaSnackBar.showToast("Team Member updated", showSuccess: true);
+      }else{
+
+        WayaSnackBar.showToast("Team Member added", showSuccess: true);
+      }
+      if (state.selectedRole == TypeRole.shop) {
+        getAllMembers(true);
+      } else {
+        getAllContestMembers(true);
+      }
     } else {
       WayaSnackBar.showToast("Unable to add member, please try again later");
     }
@@ -167,6 +187,45 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _roleAccessRepository.getMemberList(
+          _localDataSource.getUserId().toString(), isFirst ? 1 : state.page);
+      state = state.copyWith(isLoading: false);
+      if (response.success == true) {
+        ShopMemberBase responseModel = ShopMemberBase.fromJson(response.data);
+        state = state.copyWith(
+            isLastPage: responseModel.data?.hasNextPage == true ? false : true);
+        if (isFirst) {
+          state = state.copyWith(
+              listMember: responseModel.data?.docs ?? [], page: 1);
+        } else {
+          state = state.copyWith(listMember: [
+            ...state.listMember,
+            ...responseModel.data?.docs ?? []
+          ]);
+        }
+        state = state.copyWith(page: state.page + 1);
+        // contestList = responseModel.data?.docs ?? [];
+      } else {
+        state = state.copyWith(isLoading: false);
+      }
+    } catch (e) {
+      state = state.copyWith(isLoading: false);
+      debugPrint(e.toString());
+    } finally {}
+  }
+
+  Future<void> getAllContestMembers(bool isFirst) async {
+    /*   if (isFirst) {
+      state = state.copyWith(page: 1);
+    } */
+    if (state.isLastPage && isFirst == false) {
+      return;
+    }
+    if (state.isLoading == true) {
+      return;
+    }
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _roleAccessRepository.getAllJudgeList(
           _localDataSource.getUserId().toString(), isFirst ? 1 : state.page);
       state = state.copyWith(isLoading: false);
       if (response.success == true) {
@@ -260,6 +319,29 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
       return false;
     }
   }
+
+  Future<bool> activateDeactivateContestMember(ValueNotifier<bool> isLoading,
+      String shopMemberId, bool isActive, VoidCallback onTap) async {
+    final response = await _roleAccessRepository
+        .editContestTeamMember(shopMemberId, {"isActive": !isActive});
+    isLoading.value = false;
+    if (state.selectedRole == TypeRole.shop) {
+      getAllMembers(true);
+    } else {
+      getAllContestMembers(true);
+    }
+
+    if (response.success) {
+      onTap();
+      WayaSnackBar.showToast("Member Status Updated", showSuccess: true);
+      return true;
+    } else {
+      WayaSnackBar.showToast(
+        "Please try again later unable to update status",
+      );
+      return false;
+    }
+  }
 }
 
 final selectedRoleMemberProvider = StateProvider<ShopMember?>((ref) {
@@ -279,3 +361,7 @@ final roleAccessVm = StateNotifierProvider<RoleAccessVm, RoleAccessState>(
 final localDataSourceProvider = Provider<WayaLocalDataSource>((ref) {
   return WayaLocalDataSource();
 });
+var roleAccessFilterList = [
+  MyFilterModel(text: 'Shop', isActive: true),
+  MyFilterModel(text: 'Contest', isActive: false),
+];
