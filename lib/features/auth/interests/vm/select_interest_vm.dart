@@ -92,7 +92,7 @@ class SelectInterestVm extends StateNotifier<States> {
     }
   }
 
-  Future<void> addInterest() async {
+  Future<void> addInterest({bool? isSettingsScreen}) async {
     try {
       List<SelectedInterest> selectedData = [];
       selectedData = List.from(state.selected);
@@ -105,7 +105,7 @@ class SelectInterestVm extends StateNotifier<States> {
       final response = await _repository.selectInterest(data);
       if (response.success) {
         final accountState = ref.read(selectAccountProvider);
-
+        if (isSettingsScreen == true) return;
         if (accountState.selectedType!.type == 'BUSINESS') {
           WayaNav.toNamed('/add-business-account');
         } else {

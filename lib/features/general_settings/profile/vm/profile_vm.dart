@@ -43,11 +43,10 @@ class ProfileVm extends StateNotifier<ProfileState> {
           userId: userId, dob: dob, address: address);
       if (response.success) {
         WayaSnackBar.showToast('Account Updated Successfully');
-   
+
         Future.delayed(Duration(seconds: 1), () {
-          
-          WayaNav.toNamed(EditProfilePage.route);
-          // WayaAppRoutes.getProfileRoute(ConversationState.self.id);
+          WayaNav.replaceWithNamedAndRemoveScreens(EditProfilePage.route,
+              removeCount: 2);
         });
       }
       state = ProfileState(isLoading: false);
@@ -109,10 +108,9 @@ class ProfileVm extends StateNotifier<ProfileState> {
         WayaSnackBar.showToast('Profile Updated Successfully');
         isPublic != null
             ? null
-            : Future.delayed(Duration(seconds: 2), () {
-                WayaNav.removeUntilNamed(BottomView.route);
-                //WayaAppRoutes.getProfileRoute(ConversationState.self.id);
-                WayaNav.offNamed(GeneralSettingsPage.route);
+            : Future.delayed(Duration(seconds: 1), () {
+                WayaNav.replaceWithNamedAndRemoveScreens(EditProfilePage.route,
+                    removeCount: 2);
               });
         refetchUserData();
         state = state.copyWith(
