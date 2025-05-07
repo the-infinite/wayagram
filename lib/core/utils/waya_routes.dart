@@ -55,6 +55,7 @@ import 'package:wayagram/features/pages/view/add_team_member.dart';
 import 'package:wayagram/features/pages/view/confirm_page_details.dart';
 import 'package:wayagram/features/pages/view/create_page.dart';
 import 'package:wayagram/features/pages/view/create_page_post.dart';
+import 'package:wayagram/features/pages/view/page_settings.dart';
 import 'package:wayagram/features/pages/view/pages.dart';
 import 'package:wayagram/features/pages/view/public_page.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
@@ -254,6 +255,7 @@ class WayaAppRoutes {
     AddChoices.route: () => AddChoices(),
     PollSummary.route: () => PollSummary(),
     PollDashboard.route: () => PollDashboard(),
+    PageSetting.route: () => PageSetting(),
     UpcomingContestDetails.route: () => UpcomingContestDetails(),
     CreateProfile.route: () => CreateProfile(),
     RegisterContest.route: () => RegisterContest(),
