@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:share_plus/share_plus.dart';
@@ -56,7 +57,55 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
               fit: BoxFit.none,
             ),
           ),
-          WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
+          PopupMenuButton(
+            onSelected: (value) {},
+            iconColor: wayaTheme.colorScheme.greyColor400,
+            position: PopupMenuPosition.under,
+            child:  WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem<int>(
+                  value: 0,
+                  onTap: () {
+                    WayaNav.goBack();
+                    WayaNav.toNamed('/pageSetting');
+                  },
+                  child: WayaActionNav(
+                    context: context,
+                    asset: SvgPicture.asset('assets/images/pages/setting.svg'),
+                    text: "Page settings",
+                    color: wayaTheme.colorScheme.customBlack,
+                  ),
+                ),
+
+                PopupMenuItem<int>(
+                  value: 1,
+                  onTap: () async {
+                    await notifier.deletePage(context, pageId: widget.page.id);
+                    WayaNav.goBack();
+                  },
+                  child: WayaActionNav(
+                    context: context,
+                    asset: SvgPicture.asset(
+                      'assets/images/pages/delete.svg',
+                      color: wayaTheme.colorScheme.error500,
+                      height: 16,
+                    ),
+                    text: "Delete Page",
+                    color: wayaTheme.colorScheme.error500,
+                  ),
+                ),
+              ];
+            },
+          ),
+         /* InkWell(
+            onTap: () => Share.share(
+              WayaValueHelper.getShareableUrl(WayaAppRoutes.getPageDetailsPage(widget.page.id)),
+              subject: 'Share ${widget.page.name}',
+            ),
+            child:  WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
+          ),*/
+
           Gap(8)
         ],
       ),

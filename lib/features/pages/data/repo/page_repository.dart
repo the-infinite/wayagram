@@ -9,14 +9,27 @@ class PageRepository extends BaseRepository {
 
   factory PageRepository() => instance;
 
-  Future<WayaRequestResponse> createPost(String content, List<String> images, postType) {
-    final payload = {"content": content, "type": "generic", "media": images, "privacy": postType};
+  Future<WayaRequestResponse> createPost(
+      String content, List<String> images, postType) {
+    final payload = {
+      "content": content,
+      "type": "generic",
+      "media": images,
+      "privacy": postType
+    };
 
     return post("$serviceUrl/posts", payload);
   }
 
-  Future<WayaRequestResponse> createPagePost(String content, List<String> images, String postType, String pageId) {
-    final payload = {"content": content, "pageId": pageId, "type": "generic", "media": images, "privacy": postType};
+  Future<WayaRequestResponse> createPagePost(
+      String content, List<String> images, String postType, String pageId) {
+    final payload = {
+      "content": content,
+      "pageId": pageId,
+      "type": "generic",
+      "media": images,
+      "privacy": postType
+    };
 
     return post("$serviceUrl/posts", payload);
   }
@@ -25,8 +38,10 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/signed-url/$image");
   }
 
-  Future<WayaRequestResponse> fetchSinglePagePost(String pageId, [int page = 1, int limit = 15]) {
-    return get("$serviceUrl/posts?pageId=$pageId&status=active&page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
+  Future<WayaRequestResponse> fetchSinglePagePost(String pageId,
+      [int page = 1, int limit = 15]) {
+    return get(
+        "$serviceUrl/posts?pageId=$pageId&status=active&page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
   }
 
   Future<WayaRequestResponse> putImage(url, image) {
@@ -77,6 +92,8 @@ class PageRepository extends BaseRepository {
     return delete("$serviceUrl/posts/$postId");
   }
 
+
+
   Future<WayaRequestResponse> fetchPost(userId) {
     return get("$serviceUrl/posts?userId=$userId&status=active");
   }
@@ -85,7 +102,8 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/posts?id=$postId");
   }
 
-  Future<WayaRequestResponse> commentOnPost(String postId, String content, String? parentCommentId) {
+  Future<WayaRequestResponse> commentOnPost(
+      String postId, String content, String? parentCommentId) {
     final payload = {
       "content": content,
       if (parentCommentId != null) "parentCommentId": parentCommentId,
@@ -95,12 +113,13 @@ class PageRepository extends BaseRepository {
 
   Future<WayaRequestResponse> reportPage(String pageId, String reason) {
     final payload = {"pageId": pageId, "reason": reason};
-    return post("$serviceUrl/moderation", payload, showErrors: true);
+    return post("$serviceUrl/reports/create", payload, showErrors: true);
   }
 
   Future<WayaRequestResponse> reportPost(String postId, String reason) {
     final payload = {"postId": postId, "reason": reason};
-    return post("$serviceUrl/posts/report", payload, showErrors: true);
+    // return post("$serviceUrl/posts/report", payload, showErrors: true);
+    return post("$serviceUrl/reports/create", payload, showErrors: true);
   }
 
   // Future<WayaRequestResponse> likePost(postId) {
@@ -111,7 +130,8 @@ class PageRepository extends BaseRepository {
     return delete("$serviceUrl/posts/$id/comment");
   }
 
-  Future<WayaRequestResponse> editPost(String content, List<String> images, postType, String postId) {
+  Future<WayaRequestResponse> editPost(
+      String content, List<String> images, postType, String postId) {
     final payload = {"content": content, "media": images, "privacy": postType};
 
     return patch("$serviceUrl/posts/$postId", payload);
@@ -121,7 +141,8 @@ class PageRepository extends BaseRepository {
     return post("$serviceUrl/posts/$postId/like", postId);
   }
 
-  Future<WayaRequestResponse> removeReaction(String postId, String? reactionId) async {
+  Future<WayaRequestResponse> removeReaction(
+      String postId, String? reactionId) async {
     return delete("$serviceUrl/posts/$postId/like");
     // return getBooleanResponse(response);
   }
@@ -137,7 +158,8 @@ class PageRepository extends BaseRepository {
     );
   }
 
-  Future<WayaRequestResponse> getSingleComment(String postId, String commentId) {
+  Future<WayaRequestResponse> getSingleComment(
+      String postId, String commentId) {
     return get(
       "$serviceUrl/posts/comments/$postId?id=$commentId",
     );
@@ -155,7 +177,8 @@ class PageRepository extends BaseRepository {
     return delete("$serviceUrl/posts/comments/likes/$commentId");
   }
 
-  Future<WayaRequestResponse> editComment(String commentId, String content) async {
+  Future<WayaRequestResponse> editComment(
+      String commentId, String content) async {
     return patch("$serviceUrl/posts/comments/$commentId", {"content": content});
   }
 
@@ -177,7 +200,8 @@ class PageRepository extends BaseRepository {
     final payload = {
       "name": pageName,
       "description": pageDesc,
-      "isPublic": pageType, //Optional field, if you leave it blank it defaults to false
+      "isPublic":
+          pageType, //Optional field, if you leave it blank it defaults to false
       "coverImage": coverImage,
       "profileImage": profileImage
     };
@@ -200,8 +224,10 @@ class PageRepository extends BaseRepository {
         "$serviceUrl/posts/?status=active&&orderBy=popularityScore&orderDirection=DESC&privacy=public&categories=$category&page=$page&limit=$limit");
   }
 
-  Future<WayaRequestResponse> getAllPages(String ownerId, [int page = 1, int limit = 500]) {
-    return get("$serviceUrl/pages?page=$page&limit=$limit&ownerId=$ownerId&orderBy=createdAt&orderDirection=DESC");
+  Future<WayaRequestResponse> getAllPages(String ownerId,
+      [int page = 1, int limit = 500]) {
+    return get(
+        "$serviceUrl/pages?page=$page&limit=$limit&ownerId=$ownerId&orderBy=createdAt&orderDirection=DESC");
   }
 
   Future<WayaRequestResponse> getSinglePage(String pageId) {
@@ -216,14 +242,16 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/pages/team-members/$pageId");
   }
 
-  Future<WayaRequestResponse> updateTeamMember(String role, String pageId, String memberId) {
+  Future<WayaRequestResponse> updateTeamMember(
+      String role, String pageId, String memberId) {
     final payload = {"role": role};
 
-    return put("$serviceUrl/pages/$pageId/team-members/$memberId", payload, showErrors: true);
+    return put("$serviceUrl/pages/$pageId/team-members/$memberId", payload,
+        showErrors: true);
   }
 
-  Future<WayaRequestResponse> editPage(
-      String name, String desc, bool pageType, String coverImage, String profileImage, String pageId) {
+  Future<WayaRequestResponse> editPage(String name, String desc, bool pageType,
+      String coverImage, String profileImage, String pageId) {
     final payload = {
       "name": name,
       "description": desc,
@@ -235,8 +263,10 @@ class PageRepository extends BaseRepository {
     return put("$serviceUrl/pages/$pageId", payload, showErrors: true);
   }
 
-  Future<WayaRequestResponse> removePageTeamMember(String pageId, String memberId) async {
-    return delete("$serviceUrl/pages/$pageId/team-members/$memberId", showErrors: true);
+  Future<WayaRequestResponse> removePageTeamMember(
+      String pageId, String memberId) async {
+    return delete("$serviceUrl/pages/$pageId/team-members/$memberId",
+        showErrors: true);
   }
 
   Future<WayaRequestResponse> followPage(String pageId) async {
@@ -248,7 +278,8 @@ class PageRepository extends BaseRepository {
     return delete("$serviceUrl/pages/follow/$pageId");
   }
 
-  Future<WayaRequestResponse> getPagesAUserFollows([int page = 1, int limit = 15]) {
+  Future<WayaRequestResponse> getPagesAUserFollows(
+      [int page = 1, int limit = 15]) {
     return get("$serviceUrl/pages/user/followings?page=$page&limit=$limit");
   }
 

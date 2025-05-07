@@ -26,7 +26,7 @@ class _WayaShopState extends ConsumerState<WayaShop> with SingleTickerProviderSt
 
   @override
   void initState() {
-    // TODO: implement initState
+    
     _selectedIndex = widget.currentIndex;
     super.initState();
   }

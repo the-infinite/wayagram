@@ -561,6 +561,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
     // This is fine.
     final offset = renderBox.localToGlobal(Offset.zero);
     final isMe = widget.data.senderId == ConversationState.self.id;
+    final messageController = notifier.getController(widget.data);
 
     // This is fine.
     _entry = OverlayEntry(
@@ -897,7 +898,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
 
     // Insert this overlay.
     Overlay.of(context).insert(_entry!);
-    widget.controller.setFocus(widget.data);
+    widget.controller.setFocus(messageController.data);
 
     // Update this lad.
     setState(() {
@@ -916,11 +917,21 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
   /// A utility function used to check whether I have seen this message and then
   /// notify others of it.
   Future<void> _checkStatusAndNotify() async {
+    //? The member data.
+    final me = widget.chat?.self;
+    final other = widget.chat?.other;
+
     //? If this is not interactive, leave.
     if (!widget.interactive) return;
 
     //? If this message was sent by me, leave.
     if (widget.data.senderId == ConversationState.self.id) return;
+
+    //? If this user does not have read receipts...
+    if (widget.chat?.chatType == ChatType.personal && !(me?.chatUser?.canSeeReadReceipt ?? true)) return;
+
+    //? If the other user does not have read receipts...
+    if (widget.chat?.chatType == ChatType.personal && !(other?.chatUser?.canSeeReadReceipt ?? true)) return;
 
     //* My read status.
     final status = widget.data.myStatus?.status;

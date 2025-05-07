@@ -7,12 +7,14 @@ import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/modals/block.dart';
+import 'package:wayagram/features/chat/modals/group/mute.dart';
 import 'package:wayagram/features/chat/modals/report.dart';
 import 'package:wayagram/features/chat/modals/unblock.dart';
 import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/profile/chat_media.dart';
 import 'package:wayagram/features/chat/widget/profile/button.dart';
+import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
 class PersonalChatProfilePage extends StatelessWidget {
@@ -57,6 +59,7 @@ class PersonalChatProfilePage extends StatelessWidget {
               radius: 40.r,
               showActive: false,
               chat: chat,
+              canMove: chat.other.chatUser!.canSeeProfilePicture,
             ),
           ),
 
@@ -108,10 +111,26 @@ class PersonalChatProfilePage extends StatelessWidget {
 
               //* Mute/Unmute this user.
               ProfileActionButton(
-                onTap: () => notifier.muteOrUnmuteUser(context, ref, chat.self.chatId),
-                icon: WayaAssets.icons.cProfileMute.path,
-                isBad: !state.isMuted(chat.self.chatId),
-                text: state.isMuted(chat.self.chatId) ? "Unmute" : "Mute",
+                onTap: () {
+                  //? This is muted.
+                  if (chat.self.isMuted) {
+                    notifier.muteOrUnmuteGroup(chat.id, null);
+                  }
+
+                  //? Then mute
+                  else {
+                    WayaUtils.showModalSheet(
+                      context,
+                      child: MuteChatGroupModal(
+                        chat: chat,
+                        notifier: notifier,
+                      ),
+                    );
+                  }
+                },
+                icon: chat.self.isMuted ? WayaAssets.icons.cProfileUnmute.path : WayaAssets.icons.cProfileMute.path,
+                isBad: !chat.self.isMuted,
+                text: chat.self.isMuted ? "Unmute" : "Mute",
               ),
 
               //* Next, report a user.
@@ -119,10 +138,9 @@ class PersonalChatProfilePage extends StatelessWidget {
                 onTap: () async {
                   final result = await WayaUtils.showModalSheet<bool?>(
                     context,
-                    child: ReportDialog(
-                      user: chat.other.userData!,
-                      profile: chat.other.profileData!,
-                      ref: ref,
+                    child: ReportChatPage(
+                      statuses: pageReport,
+                      userId: chat.other.userData!.id,
                     ),
                   );
 

@@ -122,7 +122,7 @@ class GroupRepository extends BaseRepository {
 
   Future<WayaRequestResponse> reportGroup(String groupId, String reason) {
     final payload = {"groupId": groupId, "reason": reason};
-    return post("$serviceUrl/moderation", payload);
+    return post("$serviceUrl/reports/create", payload);
   }
 
   Future<WayaRequestResponse> approveJoinRequest(String requestId) {

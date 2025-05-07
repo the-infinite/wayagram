@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/helpers/package.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
@@ -25,8 +29,7 @@ class GeneralSettingsPage extends ConsumerStatefulWidget {
   static const route = '/general-settings';
   const GeneralSettingsPage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _GeneralSettingsPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _GeneralSettingsPageState();
 }
 
 class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
@@ -82,8 +85,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Edit Profile',
                 iconPath: 'edit',
-                onTap: () => WayaNav.toNamed(
-                    WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
+                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
               ),
 
               //
@@ -201,6 +203,27 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               ),
             ],
           ),
+          SizedBox(height: 10),
+          WayaErrorWidget(
+            onError: (context, e) {
+              WayaDebugConsoleController.instance.addException(
+                WayaDebugHelpers.getMessage(e),
+                e,
+                WayaDebugEventModule.unknown,
+                WayaDebugHelpers.getStackTrace(e),
+              );
+              return const SizedBox();
+            },
+            builder: (context) => Text(
+              "v${PackageData.info.version}-${WayaConstants.isProduction ? "live" : "test"}",
+              textAlign: TextAlign.center,
+              style: WayaTextStyles.bodySmall.copyWith(
+                color: WayaColors.greyColor400,
+                fontSize: 14.sp,
+              ),
+            ),
+          ),
+          SizedBox(height: 20),
         ],
       ),
     );

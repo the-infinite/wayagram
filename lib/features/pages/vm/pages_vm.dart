@@ -13,6 +13,7 @@ import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
 import 'package:wayagram/features/pages/data/model/page_popular_post_model.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
@@ -270,13 +271,15 @@ class PageVm extends StateNotifier<PageState> {
       if (response.success && context.mounted) {
         // show success modal
         wayaPageCache.deleteItem(pageId);
-        WayaNav.goBack();
+        // WayaNav.goBack();
 
         if (context.mounted) {
           await WayaUtils.showNotice(
             context: context,
             title: "Thank you for reporting",
-            onPress: () => WayaNav.goBack(),
+            onPress: () {
+              WayaNav.goBack();
+            },
             icon: Image.asset(
               WayaAssets.images.eCheckEvent.path,
               scale: 1.5,
@@ -328,7 +331,7 @@ class PageVm extends StateNotifier<PageState> {
         );
 
         // This is fine.
-        WayaNav.goBack();
+        // WayaNav.goBack();
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -415,11 +418,23 @@ class PageVm extends StateNotifier<PageState> {
       state = state.copyWith(isLoading: false);
       //? If this is fine...
       if (response.success && ctx.mounted) {
+        final post = PostModel.fromJson(response.data['data']);
+        wayaPostCache.cache(post.id, post);
+
         ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
+          SnackBar(
             content: Text('Post created successfully!'),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
+            action: SnackBarAction(
+              label: "Undo",
+              onPressed: () async => await deletePost(
+                ctx,
+                postId: post.id,
+                userId: ConversationState.self.id,
+                notify: false,
+              ),
+            ),
           ),
         );
       }
@@ -488,7 +503,22 @@ class PageVm extends StateNotifier<PageState> {
         );
 
         //? This is fine.
-        WayaSnackBar.showToast('Post created successfully!');
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text('Post created successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+            action: SnackBarAction(
+              label: "Undo",
+              onPressed: () async => await deletePost(
+                ctx,
+                postId: post.id,
+                userId: ConversationState.self.id,
+                notify: false,
+              ),
+            ),
+          ),
+        );
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -548,14 +578,42 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> deletePost(ctx, {required String postId, required String userId}) async {
+  Future<void> deletePost(ctx, {required String postId, required String userId, bool notify = true}) async {
     try {
       final response = await _pageRepository.deletePost(postId);
       if (response.success) {
         wayaPostCache.deleteItem(postId);
+        if (notify) {
+          ScaffoldMessenger.of(ctx).showSnackBar(
+            const SnackBar(
+              content: Text('Post deleted successfully!'),
+              backgroundColor: WayaColors.primary,
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.pages,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
+  Future<void> deletePage(ctx,
+      {required String pageId,}) async {
+    try {
+      final response = await _pageRepository.deletePage(pageId);
+      if (response.success) {
+        wayaPostCache.deleteItem(pageId);
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
-            content: Text('Post deleted successfully!'),
+            content: Text('Page deleted successfully!'),
             backgroundColor: WayaColors.primary,
             duration: Duration(seconds: 2),
           ),

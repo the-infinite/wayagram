@@ -33,8 +33,9 @@ class PostNotifier extends StateNotifier<PostState> {
         //? Now, add these ones.
         wayaPostCache.cacheAll(docs);
 
-        //? Now, add these to what we have here.
-        result.addAll(docs);
+        //? Now, add these to what we have here which are not from groups or pages.
+        //? This is a bit of a hacK, but it works.
+        result.addAll(docs.where((post) => post.pageId == null && post.groupId == null));
 
         //? This is fine.
         state = state.copyWith(

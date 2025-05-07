@@ -271,8 +271,9 @@ class LoginVm extends StateNotifier<LoginState> {
       final result = await notificationVm.sendDeviceToken();
 
       //? If this was fine...
-      if (result)
+      if (result) {
         WayaLocalDataSource().saveDeviceToken(WayaValueHelper.createUid());
+      }
 
       // Before moving forward, try to retrieve the user's notifications.
       notificationVm.getUserNotifications();

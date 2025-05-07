@@ -56,9 +56,9 @@ class _PagesForYouState extends ConsumerState<PagesForYou>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //@the-infinite -- I feel like if am not following any page,
-// i should not be seeing that empty state
-// it makes the UI look noisy
+          // @the-infinite -- I feel like if am not following any page,
+          // i should not be seeing that empty state
+          // it makes the UI look noisy
           if (viewPage.pagePopularPostDocs?.isEmpty ?? true) ...[
             SizedBox.shrink()
           ] else ...[
