@@ -600,6 +600,32 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
+  Future<void> deletePage(ctx,
+      {required String pageId,}) async {
+    try {
+      final response = await _pageRepository.deletePage(pageId);
+      if (response.success) {
+        wayaPostCache.deleteItem(pageId);
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          const SnackBar(
+            content: Text('Page deleted successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.pages,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   Future<void> repost(ctx, {required String postId}) async {
     try {
       state = state.copyWith(isLoading: true);

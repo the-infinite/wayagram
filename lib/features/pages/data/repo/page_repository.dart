@@ -92,6 +92,8 @@ class PageRepository extends BaseRepository {
     return delete("$serviceUrl/posts/$postId");
   }
 
+
+
   Future<WayaRequestResponse> fetchPost(userId) {
     return get("$serviceUrl/posts?userId=$userId&status=active");
   }
