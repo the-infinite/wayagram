@@ -217,8 +217,6 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
     }
   }
 
-  // Future<Waya>
-
   Future<void> onSubmit(Function gotoNextTab) async {
     try {
       state = state.copyWith(isLoading: true);
@@ -263,6 +261,10 @@ class PersonalFirstStepVm extends StateNotifier<PersonalFirstStepState> {
         final user = responseModel.data.user;
         final profile = responseModel.data.profile;
         state = state.copyWith(user: user);
+
+        await _authRepository.resendOtp(
+            phone:
+                "234${state.phoneNumber.text.length > 10 ? state.phoneNumber.text.substring(1) : state.phoneNumber.text}");
 
         // This is fine.
         ConversationState.setSelf(user, profile);

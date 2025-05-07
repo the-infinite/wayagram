@@ -153,6 +153,8 @@ class _SearchState extends ConsumerState<SearchView> {
               Icon(Icons.search, color: wayaTheme.colorScheme.greyColor400),
           controller: searchController,
           hintText: 'Search hashtags, accounts, comments, users, etc.',
+          maxLength: 10,
+          counterText: '',
         ),
       ),
       body: Column(

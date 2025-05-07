@@ -31,6 +31,8 @@ class AuthRepository extends BaseRepository {
     if (email != null) payload['email'] = email;
     if (phone != null) payload['phoneNumber'] = phone;
 
+    print(payload);
+
     return post('$serviceUrl/client/auth/resend-otp', payload);
   }
 
@@ -41,7 +43,7 @@ class AuthRepository extends BaseRepository {
 
   Future<WayaRequestResponse> phoneVerification(String code, String phone) {
     return post('$serviceUrl/client/auth/verify-phoneNumber',
-        {"otp": code, "phoneNumber": phone},
+        {"otp": code, "phoneNumber": phone, "purpose": 'REGISTER_USER'},
         showErrors: true);
   }
 
@@ -53,23 +55,16 @@ class AuthRepository extends BaseRepository {
         },
         showErrors: true);
   }
-   Future<WayaRequestResponse> verifyCAC(String cacNumber) {
-    return post(
-        '$serviceUrl/client/kyc/verify-cac-number',
-        {
-          "cacNumber": cacNumber,
-           "mode": "basic"
-        },
+
+  Future<WayaRequestResponse> verifyCAC(String cacNumber) {
+    return post('$serviceUrl/client/kyc/verify-cac-number',
+        {"cacNumber": cacNumber, "mode": "basic"},
         showErrors: true);
   }
 
-     Future<WayaRequestResponse> verifyBVN(String bvnNumber) {
-    return post(
-        '$serviceUrl/client/kyc/verify-bvn',
-        {
-          "bvn": bvnNumber,
-           "mode": "basic"
-        },
+  Future<WayaRequestResponse> verifyBVN(String bvnNumber) {
+    return post('$serviceUrl/client/kyc/verify-bvn',
+        {"bvn": bvnNumber, "mode": "basic"},
         showErrors: true);
   }
 

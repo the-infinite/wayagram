@@ -332,6 +332,7 @@ class MomentVm extends StateNotifier<MomentState> {
     String contentType = '';
     String color = '';
     String fontType = '';
+    String? thumbnail = state.thumbnail;
 
     debugPrint('Submitting moment:');
     debugPrint('Text: $text');
@@ -359,6 +360,12 @@ class MomentVm extends StateNotifier<MomentState> {
 
           final textPreviewFile =
               await File(filePath).writeAsBytes(previewBytes);
+
+          thumbnail =  await WayaFileRepository.instance.uploadFile(
+          textPreviewFile,
+          "thumbnail-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(textPreviewFile.path)}}",
+        );
+
         }
       }
     } else if (state.type == StatusType.media &&
@@ -372,6 +379,11 @@ class MomentVm extends StateNotifier<MomentState> {
         );
         //> get preview
         final preview = await generateImagePreview(state.selectedFile!);
+
+         thumbnail =  await WayaFileRepository.instance.uploadFile(
+          preview,
+          "thumbnail-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(preview.path)}}",
+        );
 
         if (publicUrl != null) {
           content = publicUrl;
@@ -393,6 +405,11 @@ class MomentVm extends StateNotifier<MomentState> {
         );
         //> get preview
         final preview = await generateVideoPreview(publicUrl ?? '');
+
+          thumbnail =  await WayaFileRepository.instance.uploadFile(
+          preview!,
+          "thumbnail-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(preview.path)}}",
+        );
 
         if (publicUrl != null) {
           content = publicUrl;
@@ -423,6 +440,7 @@ class MomentVm extends StateNotifier<MomentState> {
               color: color,
               momentId: state.momentId,
               fontType: fontType,
+              thumbnail: thumbnail ?? '',
               contentType: contentType)
           : await _momentRepository.createMoment(
               userId: userId!,
@@ -433,6 +451,7 @@ class MomentVm extends StateNotifier<MomentState> {
               caption: caption,
               color: color,
               fontType: fontType,
+               thumbnail: thumbnail ?? '',
               contentType: contentType);
       if (response.success) {
         reset();
@@ -661,6 +680,7 @@ class MomentVm extends StateNotifier<MomentState> {
             ? MomentHelper.hexToColor(moment.color!)
             : null,
         text: moment.contentType == 'text' ? moment.content : '',
+        thumbnail: moment.thumbnail ?? '',
         textStyle: moment.fontType != null && moment.fontType!.isNotEmpty
             ? MomentHelper.textStyleFromJson(moment.fontType!)
             : GoogleFonts.roboto(

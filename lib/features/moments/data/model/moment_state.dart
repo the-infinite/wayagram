@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 
 enum StatusType { text, media }
+
 enum MediaType { image, video }
 
 class MomentState {
@@ -25,6 +26,7 @@ class MomentState {
   final String userId;
   final bool isEditingMode;
   final String momentId;
+  final String? thumbnail;
 
   MomentState({
     required this.backgroundColor,
@@ -44,6 +46,7 @@ class MomentState {
     this.isReportingMoment = false,
     this.mediaUrl = '',
     this.momentId = '',
+    this.thumbnail = '',
     this.isLoadingUserMoments = false,
   });
 
@@ -64,6 +67,7 @@ class MomentState {
     bool? isEditingMode,
     String? momentId,
     String? mediaUrl,
+    String? thumbnail,
     bool? isReportingMoment,
     bool? isCreatingMoment,
   }) {
@@ -85,6 +89,7 @@ class MomentState {
         isReportingMoment: isReportingMoment ?? this.isReportingMoment,
         isLoadingUserMoment: isLoadingUserMoment ?? this.isLoadingUserMoment,
         myMoments: myMoments ?? this.myMoments,
+        thumbnail: thumbnail ?? this.thumbnail,
         isCreatingMoment: isCreatingMoment ?? this.isCreatingMoment);
   }
 }

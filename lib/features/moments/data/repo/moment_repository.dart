@@ -16,6 +16,7 @@ class MomentRepository extends BaseRepository {
       required String name,
       required String image,
       required String content,
+      required String thumbnail,
       String? fontType,
       String? caption,
       String? color,
@@ -25,7 +26,8 @@ class MomentRepository extends BaseRepository {
       'name': name,
       'image': image,
       'content': content,
-      'contentType': contentType
+      'contentType': contentType,
+      'thumbnail': thumbnail,
     };
     if (caption != null) payload['caption'] = caption;
     if (color != null) payload['color'] = color;
@@ -71,6 +73,7 @@ class MomentRepository extends BaseRepository {
       required String image,
       required String content,
       required String momentId,
+      required String thumbnail,
       String? caption,
       String? color,
       String? fontType,
@@ -80,7 +83,8 @@ class MomentRepository extends BaseRepository {
       'name': name,
       'image': image,
       'content': content,
-      'contentType': contentType
+      'contentType': contentType,
+      'thumbnail': thumbnail
     };
     if (caption != null) payload['caption'] = caption;
     if (color != null) payload['color'] = color;
