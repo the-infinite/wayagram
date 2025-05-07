@@ -69,7 +69,7 @@ class LoginVm extends StateNotifier<LoginState> {
   final _logger = getLogger("LoginVm");
   final Ref ref;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email'],
+    scopes: ['email', 'profile'],
   );
 
   LoginVm(this.ref, this._authRepository, this._localDataSource,

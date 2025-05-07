@@ -200,9 +200,8 @@ class _PollsForYouState extends ConsumerState<PollsForYou> {
                                     title: '${e.text?.capitalizeFirst}',
                                     text: '${e.text?.capitalizeFirst}',
                                     subtitle: '',
-                                    //progress: 0,
-                                    progress: double.parse(
-                                        ((e.voteCount!) / viewModel.fetchAllPols[index].voteCount!).toStringAsFixed(2)),
+                                   // progress: 0,
+                                   progress: viewModel.fetchAllPols[index].voteCount == 0 ? 0 :double.parse(((e.voteCount!) / viewModel.fetchAllPols[index].voteCount!).toStringAsFixed(2)),
                                     height: 60.0,
                                     filledRegion: wayaTheme.colorScheme.customPrimary,
                                     unfilledRegion: wayaTheme.colorScheme.greyColor200,

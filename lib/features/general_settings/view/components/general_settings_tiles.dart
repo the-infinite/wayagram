@@ -24,6 +24,7 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
     final userState = ref.watch(profileVmProvider);
+    //final user = ConversationState.self.
     return Container(
       decoration:
           BoxDecoration(borderRadius: BorderRadius.circular(10), color: wayaTheme.colorScheme.cardBackgroudColor2),
@@ -41,7 +42,7 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
             ),
             contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10).copyWith(bottom: 0),
             title: Text(
-              "${userState.userAccountModel?.data?.userdata?.user?.firstName ?? 'n/a'} ${userState.userAccountModel?.data?.userdata?.user?.lastName ?? ''}",
+              userState.userAccountModel?.data?.userdata?.profile?.displayName ?? 'n/a',
               style: wayaTheme.textTheme.hintStyleSemiBold.wayaCopyWith(color: wayaTheme.colorScheme.black),
             ),
             subtitle: Column(

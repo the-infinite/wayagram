@@ -11,6 +11,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_state_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
+import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/shared/cache/comment.dart';
 import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/cache/page.dart';
@@ -42,8 +43,10 @@ class ProfileVm extends StateNotifier<ProfileState> {
           userId: userId, dob: dob, address: address);
       if (response.success) {
         WayaSnackBar.showToast('Account Updated Successfully');
-        Future.delayed(Duration(seconds: 2), () {
-          WayaNav.offNamed('/general-settings');
+
+        Future.delayed(Duration(seconds: 1), () {
+          WayaNav.replaceWithNamedAndRemoveScreens(EditProfilePage.route,
+              removeCount: 2);
         });
       }
       state = ProfileState(isLoading: false);
@@ -86,12 +89,11 @@ class ProfileVm extends StateNotifier<ProfileState> {
       final cannotUpdateDisplayName =
           DateTime.now().difference(lastDisplayNameUpdate).inDays <= 7;
       if (cannotUpdateDisplayName) {
-          WayaSnackBar.showToast(
-              'You can only update your display name once every 7 days.');
+        WayaSnackBar.showToast(
+            'You can only update your display name once every 7 days.');
         return cannotUpdateDisplayName;
       }
     }
-
 
     try {
       state = state.copyWith(isLoading: load);
@@ -106,9 +108,9 @@ class ProfileVm extends StateNotifier<ProfileState> {
         WayaSnackBar.showToast('Profile Updated Successfully');
         isPublic != null
             ? null
-            : Future.delayed(Duration(seconds: 2), () {
-                WayaNav.removeUntilNamed(BottomView.route);
-                WayaNav.offNamed(GeneralSettingsPage.route);
+            : Future.delayed(Duration(seconds: 1), () {
+                WayaNav.replaceWithNamedAndRemoveScreens(EditProfilePage.route,
+                    removeCount: 2);
               });
         refetchUserData();
         state = state.copyWith(
