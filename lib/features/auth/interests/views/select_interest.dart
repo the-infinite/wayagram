@@ -57,7 +57,7 @@ class _SelectInterestState extends ConsumerState<SelectInterest> {
             Column(
               children: state.interests!.entries.map<Widget>((entry) {
                 return SelectInterestWidget(
-                  selectedInterets: selectedInterests,
+                  selectedInterests: selectedInterests,
                   interestData: entry.value.entries.map((e) => e.key).toList(),
                   onTap: (value) {
                     ref
