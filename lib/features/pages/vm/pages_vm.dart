@@ -456,6 +456,52 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
+  Future<PostModel?> repostPost(BuildContext context, PostModel post) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.createPost(
+        post.content,
+        post.media,
+        post.privacy,
+        post.id,
+      );
+      state = state.copyWith(isLoading: false);
+
+      if (response.success) {
+        final post = PostModel.fromJson(response.data['data']);
+        wayaPostCache.cache(post.id, post);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('This post has been reposted successfully!'),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+            action: SnackBarAction(
+              label: "Undo",
+              onPressed: () async => await deletePost(
+                context,
+                postId: post.id,
+                userId: ConversationState.self.id,
+                notify: false,
+              ),
+            ),
+          ),
+        );
+
+        return post;
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.pages,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+    return null;
+  }
+
   Future<void> createPagePost(ctx, String content, String postType, List<XFile> images, String pageId) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
@@ -605,8 +651,10 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> deletePage(ctx,
-      {required String pageId,}) async {
+  Future<void> deletePage(
+    ctx, {
+    required String pageId,
+  }) async {
     try {
       final response = await _pageRepository.deletePage(pageId);
       if (response.success) {

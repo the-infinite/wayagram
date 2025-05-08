@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -11,6 +10,8 @@ import 'package:wayagram/features/auth/interests/widget/select_interest_widget.d
 class EditInterest extends ConsumerStatefulWidget {
   static const route = "/edit-interest";
 
+  const EditInterest({super.key});
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _EditInterestState();
 }
@@ -19,7 +20,6 @@ class _EditInterestState extends ConsumerState<EditInterest> {
   List<String> selectedInterests = [];
   @override
   void initState() {
-    // TODO: implement initState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(selectInterestProvider.notifier).getInterest();
     });
@@ -29,57 +29,48 @@ class _EditInterestState extends ConsumerState<EditInterest> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(selectInterestProvider);
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
 
     if (state.selected.isNotEmpty) {
       selectedInterests = state.selected.expand((s) => s.interest).toList();
     }
 
-    // TODO: implement build
     return WayaScaffold(
       isScrollable: true,
       isLoading: state.isLoading,
-        title: "Add/Edit Interests",
-        body: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Choose some interest to personalize your feed",
-                  style: WayaTextStyles.titleLarge),
-              Gap(5.h),
-              Text("We’ll try and suggest some of those interest for you",
-                  style: WayaTextStyles.hintStyle),
-              Gap(30.h),
-              if (state.interests != null)
-                Column(
-                  children: state.interests!.entries.map<Widget>((entry) {
-                    return SelectInterestWidget(
-                      selectedInterets: selectedInterests,
-                      interestData:
-                          entry.value.entries.map((e) => e.key).toList(),
-                      onTap: (value) {
-                        ref
-                            .read(selectInterestProvider.notifier)
-                            .updateSelected(
-                                category: entry.key, interest: value);
-                      },
-                      title: entry.key,
-                    );
-                  }).toList(),
-                ),
-              Gap(25.h),
-              if (!state.isLoading) ...[
-                WayaButton(
-                  callback: selectedInterests.isEmpty
-                      ? null
-                      : () async {
-                          ref
-                              .read(selectInterestProvider.notifier)
-                              .addInterest(isSettingsScreen: true);
-                        },
-                  text: "Save Interests",
-                ),
-              ]
-            ]));
+      title: "Add/Edit Interests",
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Choose some interest to personalize your feed", style: WayaTextStyles.titleLarge),
+          Gap(5.h),
+          Text("We'll try and suggest some of those interest for you", style: WayaTextStyles.hintStyle),
+          Gap(30.h),
+          if (state.interests != null)
+            Column(
+              children: state.interests!.entries.map<Widget>((entry) {
+                return SelectInterestWidget(
+                  selectedInterests: selectedInterests,
+                  interestData: entry.value.entries.map((e) => e.key).toList(),
+                  onTap: (value) => ref.read(selectInterestProvider.notifier).updateSelected(category: entry.key, interest: value),
+                  title: entry.key,
+                );
+              }).toList(),
+            ),
+          Gap(25.h),
+          if (!state.isLoading) ...[
+            WayaButton(
+              callback: selectedInterests.isEmpty
+                  ? null
+                  : () async {
+                      ref.read(selectInterestProvider.notifier).addInterest(isSettingsScreen: true);
+                    },
+              text: "Save Interests",
+            ),
+          ]
+        ],
+      ),
+    );
   }
 }

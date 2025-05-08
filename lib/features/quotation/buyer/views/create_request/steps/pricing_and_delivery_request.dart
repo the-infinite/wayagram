@@ -24,9 +24,7 @@ class _PricingAndDeliveryRequestState extends ConsumerState<PricingAndDeliveryRe
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      regionNotifier.setUseAll(true);
-    });
+    WidgetsBinding.instance.addPostFrameCallback((_) => regionNotifier.setUseAll(false));
     super.initState();
   }
 
