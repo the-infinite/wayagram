@@ -100,6 +100,7 @@ class MomentData extends BaseModel<MomentData> {
   final String? color;
   final String? fontType;
   final String? caption;
+  final String? thumbnail;
   final int totalViews;
   final int totalLikes;
   final int totalComments;
@@ -120,6 +121,7 @@ class MomentData extends BaseModel<MomentData> {
     this.caption,
     this.color,
     this.fontType,
+    this.thumbnail,
     required this.totalViews,
     required this.totalLikes,
     required this.totalComments,
@@ -147,6 +149,7 @@ class MomentData extends BaseModel<MomentData> {
       active: json['active'],
       isDeleted: json['isDeleted'],
       fontType: json['fontType'],
+      thumbnail: json['thumbnail'],
       expiresAt: DateTime.parse(json['expiresAt']),
       version: json['_v'],
       createdAt: DateTime.parse(json['createdAt']),
@@ -168,6 +171,7 @@ class MomentData extends BaseModel<MomentData> {
       'fontType': fontType,
       'totalLikes': totalLikes,
       'totalComments': totalComments,
+      'thumbnail': thumbnail,
       'active': active,
       'isDeleted': isDeleted,
       'expiresAt': expiresAt.toIso8601String(),
@@ -187,6 +191,7 @@ class MomentData extends BaseModel<MomentData> {
     String? caption,
     String? color,
     String? fontType,
+    String? thumbnail,
     int? totalViews,
     int? totalLikes,
     int? totalComments,
@@ -210,6 +215,7 @@ class MomentData extends BaseModel<MomentData> {
       totalViews: totalViews ?? this.totalViews,
       totalLikes: totalLikes ?? this.totalLikes,
       totalComments: totalComments ?? this.totalComments,
+      thumbnail: thumbnail ?? this.thumbnail,
       active: active ?? this.active,
       isDeleted: isDeleted ?? this.isDeleted,
       expiresAt: expiresAt ?? this.expiresAt,

@@ -59,6 +59,7 @@ class PersonalChatProfilePage extends StatelessWidget {
               radius: 40.r,
               showActive: false,
               chat: chat,
+              canMove: chat.other.chatUser!.canSeeProfilePicture,
             ),
           ),
 

@@ -9,7 +9,8 @@ class WayaNav<T> {
   static String get currentRoute => Get.currentRoute;
   static VoidCallback? onChange;
   static BuildContext get context => Get.context!;
-  static bool get isDialogOpen => (Get.isBottomSheetOpen ?? false) || (Get.isDialogOpen ?? false);
+  static bool get isDialogOpen =>
+      (Get.isBottomSheetOpen ?? false) || (Get.isDialogOpen ?? false);
 
   WayaNav._();
 
@@ -53,7 +54,8 @@ class WayaNav<T> {
   }
 
   // Remove all screens on the stack until the target route
-  static Future<T?>? removeAllUntil<T extends Widget>(Widget newScreen, String targetRoute) {
+  static Future<T?>? removeAllUntil<T extends Widget>(
+      Widget newScreen, String targetRoute) {
     return Get.offUntil(
       GetPageRoute(page: () => newScreen),
       ModalRoute.withName(targetRoute),
@@ -62,7 +64,9 @@ class WayaNav<T> {
 
   // This remove all screens on the stack leaving just one screen
   static Future<T> removeUntilNamed<T>(String route,
-      {dynamic arguments, Function(dynamic)? onResult, RoutePredicate? predicate}) {
+      {dynamic arguments,
+      Function(dynamic)? onResult,
+      RoutePredicate? predicate}) {
     final completer = Completer<T>();
     Get.offAllNamed(
       route,
@@ -126,7 +130,9 @@ class WayaNav<T> {
   /// WayaNav.toNamed('/home');
   /// ```
   static Future<T> toNamed<T>(String route,
-      {dynamic arguments, Function(dynamic)? onResult, bool preventDuplicates = true}) {
+      {dynamic arguments,
+      Function(dynamic)? onResult,
+      bool preventDuplicates = true}) {
     final completer = Completer<T>();
     try {
       onChange?.call();
@@ -145,7 +151,8 @@ class WayaNav<T> {
     return completer.future;
   }
 
-  static Future<T?> replaceNamed<T>(String route, {dynamic arguments, Function(dynamic)? onResult}) {
+  static Future<T?> replaceNamed<T>(String route,
+      {dynamic arguments, Function(dynamic)? onResult}) {
     final completer = Completer<T>();
     Get.offNamed(
       route,
@@ -176,15 +183,44 @@ class WayaNav<T> {
     );
   }
 
+  static Future<T?> replaceWithNamedAndRemoveScreens<T>(
+    String route, {
+    int removeCount = 1,
+    dynamic arguments,
+    Function(dynamic)? onResult,
+  }) {
+    final completer = Completer<T>();
+
+    //> Remove the specified number of screens from the stack
+    int removed = 0;
+    Get.until((route) {
+      removed++;
+      return removed > removeCount;
+    });
+
+    //> Navigate to the specified route
+    Get.offNamed(
+      route,
+      arguments: arguments,
+    )?.then((result) {
+      if (onResult != null) {
+        onResult(result);
+      }
+      completer.complete(result);
+    });
+
+    return completer.future;
+  }
+
   //close the whole app
   // use case, when the app is opened with link
   static closeApp() {
-  if (Platform.isAndroid) {
-    SystemNavigator.pop();
-  } else if (Platform.isIOS) {
-    exit(0);
+    if (Platform.isAndroid) {
+      SystemNavigator.pop();
+    } else if (Platform.isIOS) {
+      exit(0);
+    }
   }
-}
 
   static bool canPop() => Navigator.canPop(context);
 

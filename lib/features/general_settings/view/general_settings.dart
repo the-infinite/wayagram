@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/helpers/package.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/modals/logout.dart';
@@ -98,6 +100,11 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
+                 GeneralSettingsOptionModel(
+                title: 'Interests',
+                iconPath: 'edit',
+                onTap: () => WayaNav.toNamed(EditInterest.route),
+              ),
               GeneralSettingsOptionModel(
                 title: 'Change Transaction PIN',
                 iconPath: 'password',
@@ -197,12 +204,23 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
             ],
           ),
           SizedBox(height: 10),
-          Text(
-            "v${PackageData.info.version}-${WayaConstants.isProduction ? "live" : "test"}",
-            textAlign: TextAlign.center,
-            style: WayaTextStyles.bodySmall.copyWith(
-              color: WayaColors.greyColor400,
-              fontSize: 14.sp,
+          WayaErrorWidget(
+            onError: (context, e) {
+              WayaDebugConsoleController.instance.addException(
+                WayaDebugHelpers.getMessage(e),
+                e,
+                WayaDebugEventModule.unknown,
+                WayaDebugHelpers.getStackTrace(e),
+              );
+              return const SizedBox();
+            },
+            builder: (context) => Text(
+              "v${PackageData.info.version}-${WayaConstants.isProduction ? "live" : "test"}",
+              textAlign: TextAlign.center,
+              style: WayaTextStyles.bodySmall.copyWith(
+                color: WayaColors.greyColor400,
+                fontSize: 14.sp,
+              ),
             ),
           ),
           SizedBox(height: 20),

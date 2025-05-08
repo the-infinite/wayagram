@@ -45,24 +45,27 @@ class LoginCoverPage extends ConsumerWidget {
             ),
           ),
           Gap(Get.height * 0.25),
-          Platform.isAndroid ?
-          WayaButton(
-            color: wayaTheme.colorScheme.secondaryColor,
-            callback: () {},
-            leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
-            text: "Continue with Google",
-            textColor: wayaTheme.colorScheme.black,
-          ):
-         // Gap(10),
-          WayaButton(
-            color: wayaTheme.colorScheme.black,
-            callback: () {
-              viewModel.signinWithApple();
-            },
-            leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
-            text: "Continue with Apple",
-            textColor: wayaTheme.colorScheme.onPrimary,
-          ),
+          Platform.isAndroid
+              ? WayaButton(
+                  color: wayaTheme.colorScheme.secondaryColor,
+                  callback: () {
+                    viewModel.signinWithGoogle();
+                  },
+                  leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
+                  text: "Continue with Google",
+                  textColor: wayaTheme.colorScheme.black,
+                )
+              :
+              // Gap(10),
+              WayaButton(
+                  color: wayaTheme.colorScheme.black,
+                  callback: () {
+                    viewModel.signinWithApple();
+                  },
+                  leadingIcon: SvgPicture.asset('assets/icons/apple.svg'),
+                  text: "Continue with Apple",
+                  textColor: wayaTheme.colorScheme.onPrimary,
+                ),
           Gap(10),
           WayaButton(
             color: wayaTheme.colorScheme.primary500,

@@ -2,18 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 
 class WayaSnackBar {
   WayaSnackBar._();
 
-  static void showToast(String message,{bool showSuccess=false}) {
+  static void showToast(String message, {bool showSuccess = false, String? buttonText, VoidCallback? onPressed}) {
     Get.showSnackbar(
       GetSnackBar(
         message: message,
         duration: Duration(seconds: 1),
         snackPosition: SnackPosition.BOTTOM, // Position of the Toast
-        backgroundColor:showSuccess? WayaColors.success700 : WayaColors.primary,
+        backgroundColor: showSuccess ? WayaColors.success700 : WayaColors.primary,
         isDismissible: true, // Whether the toast can be dismissed by tapping
+        mainButton: buttonText != null
+            ? TextButton(
+                onPressed: onPressed,
+                child: Text(
+                  buttonText,
+                  style: WayaTextStyles.bodyBold.copyWith(
+                    color: WayaColors.white,
+                  ),
+                ),
+              )
+            : null,
       ),
     );
   }

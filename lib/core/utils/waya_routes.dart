@@ -25,6 +25,7 @@ import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/follow/view/follow_page.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
+import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/blocked_user_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
@@ -263,6 +264,7 @@ class WayaAppRoutes {
     UpcomingContestDetails.route: () => UpcomingContestDetails(),
     CreateProfile.route: () => CreateProfile(),
     RegisterContest.route: () => RegisterContest(),
+    EditInterest.route: () => EditInterest(),
     VotersListPage.route: () => VotersListPage(),
     AdminContestDetails.route: () => AdminContestDetails(
           id: WayaNav.search['id'].toString(),
