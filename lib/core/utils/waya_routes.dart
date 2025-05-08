@@ -58,6 +58,7 @@ import 'package:wayagram/features/pages/view/create_page_post.dart';
 import 'package:wayagram/features/pages/view/page_settings.dart';
 import 'package:wayagram/features/pages/view/pages.dart';
 import 'package:wayagram/features/pages/view/public_page.dart';
+import 'package:wayagram/features/pages/view/search_group_and_page.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
@@ -156,6 +157,7 @@ import '../../features/activity_logs/view/search_log.dart';
 import '../../features/activity_logs/view/user_action.dart';
 import '../../features/activity_logs/view/user_interaction.dart';
 import '../../features/activity_logs/view/visited_page.dart';
+import '../../features/group/view/search_group.dart';
 
 class WayaAppRoutes {
   WayaAppRoutes._();
@@ -256,6 +258,8 @@ class WayaAppRoutes {
     PollSummary.route: () => PollSummary(),
     PollDashboard.route: () => PollDashboard(),
     PageSetting.route: () => PageSetting(),
+    SearchGroupAndPage.route:() => SearchGroupAndPage(),
+    SearchGroup.route:() => SearchGroup(),
     UpcomingContestDetails.route: () => UpcomingContestDetails(),
     CreateProfile.route: () => CreateProfile(),
     RegisterContest.route: () => RegisterContest(),

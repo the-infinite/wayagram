@@ -87,7 +87,14 @@ class _PublicGroupState extends ConsumerState<PublicGroup> with SingleTickerProv
       appBarTrailing: Row(
         spacing: 12,
         children: [
-          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+          InkWell(
+              onTap: ()=> WayaNav.toNamed('/searchGroupAndPage',
+                arguments: {
+                'groupId': widget.id,
+                  'name': 'group'
+                }
+              ),
+              child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           InkWell(
             onTap: () => Share.share(
               WayaValueHelper.getShareableUrl(WayaAppRoutes.getGroupDetailsPage(widget.id)),

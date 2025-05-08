@@ -46,14 +46,26 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
       isScrollable: true,
       appBarTrailing: Row(
         children: [
-          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+          InkWell(
+              onTap: ()=> WayaNav.toNamed('/searchGroupAndPage',
+                  arguments: {
+                    'groupId': widget.group.id,
+                    'name': 'group'
+                  }
+              ),
+              child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           const Gap(12),
           InkWell(
             onTap: () => Share.share(
               WayaValueHelper.getShareableUrl(WayaAppRoutes.getGroupDetailsPage(widget.group.id)),
               subject: 'Share ${widget.group.name}',
             ),
-            child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+            child: InkWell(
+                onTap: ()=> WayaNav.toNamed('/searchGroupAndPage',
+                    arguments: {
+                      'groupId': widget.group.id
+                    },),
+                child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none)),
           ),
           PopupMenuButton(
             onSelected: (value) {},
