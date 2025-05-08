@@ -26,6 +26,9 @@ class _PageSettingState extends ConsumerState<PageSetting>
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
 
+    /// Everyone, invited followers, restricted followers
+    ///For comments we have: Admins only, Everyone, followers
+
     return WayaScaffold(
       backgroundColor: Theme.of(context).colorScheme.greyColor50,
       isLoading: viewModel.isLoading,
