@@ -61,6 +61,11 @@ class ProfileRepo extends BaseRepository {
     return post("$serviceUrl2/client/support",  payload, formdata: false);
   }
 
+      Future<WayaRequestResponse> postDisputeDetails(payload) async {
+    return post("$serviceUrl2/client/dispute",  payload, formdata: false);
+    
+  }
+
   Future<WayaRequestResponse> getUserProfileRepo({required String userId}) async {
     return get("$serviceUrl/client/users/$userId/profile");
   }

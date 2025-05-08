@@ -6,6 +6,7 @@ import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 
 import 'package:wayagram/features/general_settings/privacy_settings/widget/privacy_widget.dart';
@@ -44,9 +45,9 @@ class _UgtHomeState extends ConsumerState<FriendFollowerPage> {
       isLoading: false,
       isScrollable: true,
       title: "Friends & Followers",
-      backgroundColor: Colors.white,
+      backgroundColor: WayaColors.scaffoldColor,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: WayaColors.white,
         title: Text("Friends & Followers"),
         leading: WayaBackButton(
             //onTap: onTapBackButton,
