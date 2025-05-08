@@ -33,6 +33,7 @@ class PostModel extends BaseModel<PostModel> {
   final String? originalPostId;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final PostModel? originalPost;
   final UserDetailsModel? user;
   final PageModel? page;
   final GroupModel? group;
@@ -52,7 +53,6 @@ class PostModel extends BaseModel<PostModel> {
     required this.sourceType,
     required this.linkedServiceId,
     required this.privacy,
-    this.url,
     required this.status,
     required this.likeCount,
     required this.commentCount,
@@ -60,15 +60,17 @@ class PostModel extends BaseModel<PostModel> {
     required this.popularityScore,
     required this.isPromoted,
     required this.isReposted,
-    this.promotionExpiry,
-    this.deletedAt,
-    this.originalPostId,
     required this.createdAt,
     required this.updatedAt,
+    required this.isLiked,
+    this.promotionExpiry,
+    this.url,
+    this.deletedAt,
+    this.originalPostId,
     this.user,
     this.page,
     this.group,
-    required this.isLiked,
+    this.originalPost,
   });
 
   PostModel copyWith({

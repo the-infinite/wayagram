@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -14,6 +13,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/view/report_group_post.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/features/post/modal/share.dart';
 import 'package:wayagram/features/post/view/comment.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
@@ -74,21 +74,17 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
     if (result == null) return;
   }
 
-  void _sharePost(engagementMonitor, pageNotifier, serviceNotifier) {
+  void _sharePost(engagementMonitor, pageNotifier, serviceNotifier) async {
     //? Acknowledge this user's choice to share the post.
     postEngagement(engagementMonitor, widget.data, PostPoints.sharePoint.value);
 
     //? Share the post.
-    Share.share('${widget.data.url}', subject: 'Share Options').then(
-      (value) {
-        if (value.status == ShareResultStatus.success) {
-          // Share the post.
-          pageNotifier.sharePost(context, postId: widget.data.id);
-
-          // Now stop.
-          return;
-        }
-      },
+    await WayaUtils.showModalSheet(
+      context,
+      child: SharePostModal(
+        post: widget.data,
+        pageNotifier: pageNotifier,
+      ),
     );
 
     // Notify all.
@@ -577,7 +573,8 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                       children: [
                         //? For liking a post.
                         PostActionType(
-                          text: '${WayaValueHelper.formatNumber(postData.likeCount)} ${WayaValueHelper.getComment(postData.likeCount, WayaPostAction.likes)}',
+                          text:
+                              '${WayaValueHelper.formatNumber(postData.likeCount)} ${WayaValueHelper.getComment(postData.likeCount, WayaPostAction.likes)}',
                           image: WayaAssets.images.pages.like2.path,
                           color: postData.isLiked ? wayaTheme.colorScheme.primary : wayaTheme.colorScheme.greyColor500,
                           onPressed: postData.isLiked

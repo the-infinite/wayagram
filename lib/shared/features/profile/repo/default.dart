@@ -14,6 +14,10 @@ class UserProfileRepository extends BaseRepository {
     );
   }
 
+  Future<WayaRequestResponse> getBookmarksForUser(String userId, int page, int limit) async {
+    return httpClient.getHttp("$serviceUri/client/posts/users/bookmarks?limit=$limit&page=$page");
+  }
+
   Future<WayaRequestResponse> getEventsForUser(String userId, int page, int limit) async {
     return httpClient.getHttp("$serviceUri/events/get-event?userId=$userId");
   }

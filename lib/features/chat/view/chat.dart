@@ -154,6 +154,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
+                        spacing: 5.w,
                         children: [
                           // First, the user's profile picture.
                           ChatProfilePicture(

@@ -6,13 +6,13 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 
 class SelectInterestWidget extends StatelessWidget {
-  final List<String> selectedInterets;
+  final List<String> selectedInterests;
   final List<String> interestData;
   final Function(String value) onTap;
   final String title;
   const SelectInterestWidget(
       {super.key,
-      required this.selectedInterets,
+      required this.selectedInterests,
       required this.interestData,
       required this.onTap,
       required this.title});
@@ -43,11 +43,11 @@ class SelectInterestWidget extends StatelessWidget {
                         onTap(firstSection[index]);
                       },
                       border: Border.all(
-                          color: selectedInterets.contains(firstSection[index])
+                          color: selectedInterests.contains(firstSection[index])
                               ? wayaTheme.colorScheme.customPrimary
                               : wayaTheme.colorScheme.greyColor300),
                       horizontalPadding: 8,
-                      color: selectedInterets.contains(firstSection[index])
+                      color: selectedInterests.contains(firstSection[index])
                           ? wayaTheme.colorScheme.primaryBrown50
                           : wayaTheme.colorScheme.transparent,
                       radius: 10,
@@ -75,11 +75,11 @@ class SelectInterestWidget extends StatelessWidget {
                         onTap(secondSection[index]);
                       },
                       border: Border.all(
-                          color: selectedInterets.contains(secondSection[index])
+                          color: selectedInterests.contains(secondSection[index])
                               ? wayaTheme.colorScheme.customPrimary
                               : wayaTheme.colorScheme.greyColor300),
                       horizontalPadding: 8,
-                      color: selectedInterets.contains(secondSection[index])
+                      color: selectedInterests.contains(secondSection[index])
                           ? wayaTheme.colorScheme.primaryBrown50
                           : wayaTheme.colorScheme.transparent,
                       radius: 10,

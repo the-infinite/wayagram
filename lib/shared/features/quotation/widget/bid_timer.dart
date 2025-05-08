@@ -107,8 +107,7 @@ class _QuotationBidTimerState extends State<QuotationBidTimer> {
         WayaDateHelper.convertDurationToCountdown(timeLeft, !widget.isShortTime),
         textAlign: TextAlign.center,
         style: wayaTheme.textTheme.descriptionStyle.copyWith(
-          color:
-              widget.textColor ?? (isClosed ? wayaTheme.colorScheme.greyColor400 : wayaTheme.colorScheme.customPrimary),
+          color: widget.textColor ?? (isClosed ? wayaTheme.colorScheme.greyColor400 : wayaTheme.colorScheme.customPrimary),
           fontSize: widget.fontSize ?? 16.sp,
           fontWeight: widget.fontWeight ?? FontWeight.w400,
         ),
