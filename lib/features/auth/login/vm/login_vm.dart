@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -122,7 +123,7 @@ class LoginVm extends StateNotifier<LoginState> {
     //   accessToken: googleAuth.accessToken,
     // );
 
-    print(googleAuth.idToken);
+    log(googleAuth.idToken ?? "");
     print("april fools -----------------wefwfwfwf wefw----------");
     // if (idToken != null) {
     await oauthSignIn(authType: 'GOOGLE', token: googleAuth.idToken ?? '');
