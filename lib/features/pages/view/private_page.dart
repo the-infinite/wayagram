@@ -38,6 +38,7 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(pageProvider);
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
 
     //? Our component.
     return WayaScaffold(
@@ -47,7 +48,14 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
       appBarTrailing: Row(
         spacing: 12.w,
         children: [
-          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+          InkWell(
+              onTap: (){
+                WayaNav.toNamed('/searchGroupAndPage', arguments: {
+                  'pageId': widget.page.id,
+                  'name': 'page'
+                });
+              },
+              child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           InkWell(
             onTap: () => Share.share(
               WayaValueHelper.getShareableUrl(WayaAppRoutes.getPageDetailsPage(widget.page.id)),

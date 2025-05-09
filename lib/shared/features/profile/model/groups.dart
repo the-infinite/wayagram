@@ -1,9 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:wayagram/shared/model/base_model.dart';
 
 part 'groups.g.dart';
 
 @JsonSerializable()
-class GroupModel {
+class GroupModel extends BaseModel<GroupModel>{
   final String id;
   final String name;
   final String? ownerId;
@@ -37,6 +38,8 @@ class GroupModel {
   });
 
   factory GroupModel.fromJson(Map<String, dynamic> json) => _$GroupModelFromJson(json);
-
   Map<String, dynamic> toJson() => _$GroupModelToJson(this);
+
+  @override
+  Map<String, dynamic> toMap() => toJson();
 }

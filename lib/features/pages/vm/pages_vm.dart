@@ -606,6 +606,7 @@ class PageVm extends StateNotifier<PageState> {
           postCount: responseModel.data?.totalDocs,
           allPostData: responseModel,
           isLoading: false,
+
         );
       }
     } catch (e) {
