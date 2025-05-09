@@ -826,7 +826,47 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                     Gap(5.w),
 
                     // Now our component.
-                    if (isEmpty) ...[
+                    if (!(widget.data.$2.isPublic ?? true) && _followStatus?.isUserFollowing == false) ...[
+                      Gap(100.h),
+
+                      //? Fair enough.
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            //? First, the lock icon.
+                            WayaAssets.icons.genSet.lock.svg(),
+
+                            // Some space.
+                            Gap(10.h),
+
+                            //? The private text.
+                            Text(
+                              'This account is private',
+                              style: wayaTheme.textTheme.titleLarge,
+                            ),
+
+                            // Some space.
+                            Gap(10.h),
+
+                            //?
+                            Text(
+                              'You must follow this user to see their posts and content',
+                              style: wayaTheme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: WayaConstants.fontFamily,
+                                fontSize: 16.sp,
+                              ),
+                            ),
+
+                            // Some space.
+                            Gap(30.h),
+                          ],
+                        ),
+                      ),
+                    ] else if (isEmpty) ...[
                       //? First, space that scales with the screen size.
                       Gap(60.h),
 
