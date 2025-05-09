@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -13,7 +14,6 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/group/view/report_group_post.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:wayagram/features/post/modal/share.dart';
 import 'package:wayagram/features/post/view/comment.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
@@ -23,6 +23,7 @@ import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/shared/features/media/video.dart';
 import 'package:wayagram/shared/features/profile/logic/default.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
+import 'package:wayagram/shared/features/profile/vm/default.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 import 'package:wayagram/shared/features/user/widget/profile_picture.dart';
 
@@ -74,21 +75,17 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
     if (result == null) return;
   }
 
-  void _sharePost(engagementMonitor, pageNotifier, serviceNotifier) async {
+  void _sharePost(engagementMonitor, pageNotifier, serviceNotifier, WidgetRef ref) async {
     //? Acknowledge this user's choice to share the post.
     postEngagement(engagementMonitor, widget.data, PostPoints.sharePoint.value);
 
     //? Share the post.
-    await WayaUtils.showModalSheet(
-      context,
-      child: SharePostModal(
-        post: widget.data,
-        pageNotifier: pageNotifier,
-      ),
-    );
+    final result = await WayaNavigationHelper.sharePost(widget.data, ref);
 
-    // Notify all.
-    invalidate(serviceNotifier);
+    //? Do the needful when needed.
+    if (result?.status == ShareResultStatus.success) {
+      invalidate(serviceNotifier);
+    }
   }
 
   @override
@@ -114,9 +111,11 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
           child: Consumer(
             builder: (context, ref, _) {
               //? Obtain any references to a component we need here.
-              final engagementMonitor = ref.watch(postEngagementProvider.notifier);
-              final serviceNotifier = ref.watch(servicesProvider.notifier);
-              final pageNotifier = ref.watch(createPageProvider.notifier);
+              final bookmarksState = ref.watch(userSavedPostsProvider);
+              final bookmarkNotifier = ref.read(userSavedPostsProvider.notifier);
+              final engagementMonitor = ref.read(postEngagementProvider.notifier);
+              final serviceNotifier = ref.read(servicesProvider.notifier);
+              final pageNotifier = ref.read(createPageProvider.notifier);
 
               //? Send the real widget forward.
               return Column(
@@ -292,7 +291,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                                   //? First, the button to share a post.
                                   PopupMenuItem<int>(
                                     value: 2,
-                                    onTap: () => _sharePost(engagementMonitor, pageNotifier, serviceNotifier),
+                                    onTap: () => _sharePost(engagementMonitor, pageNotifier, serviceNotifier, ref),
                                     child: WayaActionNav(
                                       context: context,
                                       asset: WayaAssets.icons.share.svg(
@@ -628,24 +627,41 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
                           color: postData.shareCount == 0
                               ? wayaTheme.colorScheme.greyColor500
                               : wayaTheme.colorScheme.primary,
-                          onPressed: () => _sharePost(engagementMonitor, pageNotifier, serviceNotifier),
+                          onPressed: () => _sharePost(engagementMonitor, pageNotifier, serviceNotifier, ref),
                         ),
 
                         //? For saving a post to booked posts.
-                        InkWell(
-                          onTap: () {
-                            //? Bookmark this post.
-                            pageNotifier.bookmarkPost(context, postId: postData.id);
+                        PostActionType(
+                          text: null,
+                          image: WayaAssets.images.pages.actionSave.path,
+                          color: bookmarksState.isSaved(postData.id) ? wayaTheme.colorScheme.primary : null,
+                          onPressed: bookmarksState.isSaved(postData.id)
+                              ? () async {
+                                  //? Bookmark this post.
+                                  final result = await bookmarkNotifier.removeBookmark(widget.data.id);
 
-                            // Record this user's choice to book this post.
-                            postEngagement(engagementMonitor, widget.data, PostPoints.bookedPoint.value);
+                                  //? If this was not fine, leave.
+                                  if (!result) return;
 
-                            //? Notify all.
-                            invalidate(serviceNotifier);
-                          },
-                          child: WayaAssets.images.pages.save.image(
-                            height: 32.h,
-                          ),
+                                  // Record this user's choice to book this post.
+                                  postEngagement(engagementMonitor, widget.data, -PostPoints.bookedPoint.value);
+
+                                  //? Notify all.
+                                  invalidate(serviceNotifier);
+                                }
+                              : () async {
+                                  //? Bookmark this post.
+                                  final result = await bookmarkNotifier.bookmarkPost(postData.id);
+
+                                  //? If this was not fine, leave.
+                                  if (!result) return;
+
+                                  // Record this user's choice to book this post.
+                                  postEngagement(engagementMonitor, widget.data, PostPoints.bookedPoint.value);
+
+                                  //? Notify all.
+                                  invalidate(serviceNotifier);
+                                },
                         ),
                       ],
                     ),

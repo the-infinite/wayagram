@@ -9,6 +9,27 @@ class PostCache extends WayaCacheUtility<PostModel> {
   static final instance = PostCache._();
   factory PostCache() => instance;
 
+  void _putForMeasure(PostModel post) {
+    final found = getCachedData(post.id);
+
+    if (found != null) {
+      putOrReplace(
+        post.id,
+        post.copyWith(
+          page: found.page,
+          group: found.group,
+          user: found.user,
+          originalPostId: found.originalPostId,
+          originalPost: found.originalPost,
+        ),
+      );
+      return;
+    }
+
+    //? Then just do what is regular.
+    putOrReplace(post.id, post);
+  }
+
   @override
   void cacheAll(Iterable<PostModel> data) {
     //? If there is no post to add, leave.
@@ -16,7 +37,7 @@ class PostCache extends WayaCacheUtility<PostModel> {
 
     //? Add each post here, iteratively.
     for (final post in data) {
-      putOrReplace(post.id, post);
+      _putForMeasure(post);
     }
 
     // Refresh this.

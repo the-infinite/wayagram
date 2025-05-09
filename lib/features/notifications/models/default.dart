@@ -48,7 +48,7 @@ enum NotificationMessageType {
   @JsonValue('views')
   view,
 
-  @JsonValue('donation')
+  @JsonValue('donations')
   donation,
 
   @JsonValue('events')
@@ -119,7 +119,7 @@ class NotificationModel {
   @JsonKey(name: "nType")
   final NotificationMessageType messageType;
   final NotificationMessage message;
-  @JsonKey(defaultValue: false)
+  @JsonKey(name: "isRead", defaultValue: false)
   final bool read;
   final DateTime createdAt;
   final DateTime updatedAt;

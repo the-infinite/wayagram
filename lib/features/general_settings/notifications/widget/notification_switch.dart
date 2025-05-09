@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/general_settings/notifications/controller/default.dart';
+import 'package:wayagram/features/general_settings/notifications/dto/default.dart';
 import 'package:wayagram/features/general_settings/notifications/vm/default.dart';
 
 class NotificationSwitchButton extends StatefulWidget {
@@ -11,6 +13,7 @@ class NotificationSwitchButton extends StatefulWidget {
   final bool value;
   final String uid;
   final NotificationSettingsVm notifier;
+  final NotificationSettingsController controller;
 
   // Construct.
   const NotificationSwitchButton({
@@ -20,6 +23,7 @@ class NotificationSwitchButton extends StatefulWidget {
     required this.value,
     required this.uid,
     required this.notifier,
+    required this.controller,
   });
 
   @override
@@ -30,10 +34,36 @@ class _NotificationSwitchButtonState extends State<NotificationSwitchButton> {
   late bool _isActive = widget.value;
 
   /// Helper function used to update the state of these buttons.
-  void _toggleValue() {
+  void _toggleValue() async {
+    final value = !_isActive;
+
+    //? Update this and then do what we need it to.
+    widget.controller.updateSetting(widget.uid, value);
+
+    //? Do the needful.
+    widget.notifier.updateSettings(widget.controller);
+
+    //? Now, update this.
     setState(() {
-      _isActive = !_isActive;
+      _isActive = value;
     });
+  }
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        widget.controller.addSetting(
+          widget.uid,
+          NotificationSetting(
+            category: widget.name,
+            notificationType: NotificationType.fromString(widget.uid),
+            enabled: widget.value,
+          ),
+        );
+      },
+    );
+    super.initState();
   }
 
   // This is fine.

@@ -6,9 +6,9 @@ import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/service/notification_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/general_settings/notifications/repo/default.dart';
 import 'package:wayagram/features/notifications/models/default.dart';
 import 'package:wayagram/features/notifications/models/notification_response.dart';
-import 'package:wayagram/features/notifications/repo/default.dart';
 import 'package:wayagram/features/notifications/state/default.dart';
 import 'package:wayagram/features/notifications/state/filter_notification.dart';
 
@@ -39,6 +39,11 @@ class NotificationVm extends StateNotifier<NotificationState> {
   /// Helper function used to clear any filters on this notification view model.
   void clearFilters() {
     state = state.copyWith(filters: FilterNotificationState.initial);
+  }
+
+  /// Helper function used to set the search query.
+  void setSearchQuery(String value) {
+    state = state.copyWith(searchQuery: value.trim().toLowerCase());
   }
 
   /// Helper function used to send the generated device token to the back-end.
@@ -127,7 +132,7 @@ class NotificationVm extends StateNotifier<NotificationState> {
 final notificationProvider = StateNotifierProvider<NotificationVm, NotificationState>(
   (ref) {
     return NotificationVm(
-      NotificationRepository(),
+      NotificationRepository.instance,
       ref,
       getLogger("NotificationVm"),
       NotificationState.initial,
