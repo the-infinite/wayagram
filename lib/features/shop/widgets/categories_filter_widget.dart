@@ -47,7 +47,7 @@ class _CategoriesFilterWidgetState
                   const Gap(6),
                   WayaButton(
                       callback: () {
-                        print("eveve");
+                        debugPrint("eveve");
                         notifier.selectAll();
                         //  widget.setCategory(['All']);
                       },

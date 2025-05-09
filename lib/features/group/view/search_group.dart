@@ -6,14 +6,12 @@ import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
-import 'package:wayagram/features/group/vm/group_vm.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/widget/group.dart';
 
 import '../../../core/components/waya_buttons.dart';
 import '../../../shared/features/group/notifier/default.dart';
 import '../../activity_logs/widget/activity_logs_empty_state.dart';
-import '../data/model/get_all_groups.dart';
 
 
 
@@ -52,7 +50,7 @@ class _SearchGroupState extends ConsumerState<SearchGroup> {
   @override
   Widget build(BuildContext context) {
     final query = searchController.text.trim();
-     final state = ref.watch(createGroupProvider);
+    //final state = ref.watch(createGroupProvider);
     final wayaTheme = Theme.of(context);
 
     // Filter ManagedGroups

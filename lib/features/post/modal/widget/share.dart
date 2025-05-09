@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,6 +47,7 @@ class _ShareReportButtonState extends ConsumerState<ShareRepostButton> {
             //? If the result is not null, then we are loading.
             if (result != null) {
               loadingController.value = true;
+              await notifier.sharePost(context, postId: widget.post.id);
             }
           },
           child: Column(

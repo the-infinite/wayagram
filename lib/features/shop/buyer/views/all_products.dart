@@ -124,7 +124,7 @@ class _AllProductsState extends ConsumerState<AllProducts> {
                   CategoriesFilterWidget(
                     setCategory: (value) => {
                       setState(() {
-                        print("wefewfwe $value");
+                        debugPrint("wefewfwe $value");
                         categories = value;
                       })
                     },
