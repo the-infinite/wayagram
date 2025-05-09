@@ -25,102 +25,28 @@ class TransactionHistory extends ConsumerStatefulWidget {
 }
 
 class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
-  int page = 1;
+/*   int page = 1;
   int limit = 10;
-  bool hasNextPage = true;
+  bool hasNextPage = true; */
   final ScrollController _scrollController = ScrollController();
-  bool isLoadingMore = false;
+/*   bool isLoadingMore = false;
   List<TransactionDetail> transactions = [];
-  bool isFirstLoad = true;
-  List<TransactionModelDocs> docs = [];
+  bool isFirstLoad = true; */
+  // List<TransactionModelDocs> docs = [];
 
   @override
   void initState() {
     super.initState();
     _scrollController.addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _loadInitialData();
+      ref.read(transactionVmProvider.notifier).loadInitialData();
     });
-  }
-
-  Future<void> _loadInitialData() async {
-    try {
-      await ref
-          .read(transactionVmProvider.notifier)
-          .getTransaction(limit: limit, page: page);
-
-      if (mounted) {
-        setState(() {
-          isFirstLoad = false;
-          // Update transactions with initial data
-          final viewModel = ref.read(transactionVmProvider);
-          if (viewModel.docs != null) {
-            docs = viewModel.docs!;
-            hasNextPage = viewModel.hasNextPage ?? false;
-          }
-        });
-      }
-    } catch (e) {
-      log('Error loading initial data: $e');
-      if (mounted) {
-        setState(() {
-          isFirstLoad = false;
-        });
-      }
-    }
   }
 
   void _scrollListener() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      _loadMoreData();
-    }
-  }
-
-  Future<void> _loadMoreData() async {
-    if (!hasNextPage || isLoadingMore) return;
-
-    setState(() {
-      isLoadingMore = true;
-    });
-
-    try {
-      page++;
-      await ref
-          .read(transactionVmProvider.notifier)
-          .getTransaction(limit: limit, page: page);
-
-      if (mounted) {
-        final viewModel = ref.read(transactionVmProvider);
-        final newTransactions = viewModel.docs ?? [];
-        //final newTransactions = viewModel.transactions ?? [];
-
-        if (newTransactions.isNotEmpty) {
-          // Filter out duplicates
-          final existingIds = docs.map((t) => t.id).toSet();
-          final uniqueNewTransactions = newTransactions
-              .where((transaction) => !existingIds.contains(transaction.id))
-              .toList();
-
-          setState(() {
-            docs.addAll(uniqueNewTransactions);
-            hasNextPage = uniqueNewTransactions.length >= limit;
-          });
-        } else {
-          setState(() {
-            hasNextPage = false;
-          });
-        }
-      }
-    } catch (e) {
-      log('Error loading more transactions: $e');
-      page--;
-    } finally {
-      if (mounted) {
-        setState(() {
-          isLoadingMore = false;
-        });
-      }
+      ref.read(transactionVmProvider.notifier).loadMoreData();
     }
   }
 
@@ -135,11 +61,13 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    if (isFirstLoad) {
+    final viewModel = ref.watch(transactionVmProvider);
+
+    if (viewModel.isFirstLoad!) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    if (docs.isEmpty) {
+    if (viewModel.docs!.isEmpty) {
       return const Center(child: EmptyTransaction());
     }
 
@@ -148,21 +76,23 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
         Expanded(
           child: ListView.builder(
             controller: _scrollController,
-            itemCount: docs.length,
+            itemCount: viewModel.docs!.length,
             itemBuilder: (_, index) {
-              String dateTimeString = "${docs[index].createdAt}";
+              String dateTimeString = "${viewModel.docs![index].createdAt}";
               DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-      return TransactionWidget(
-          onTap:() => WayaNav.toNamed(TransactionDetailsScreen.route,
-          arguments: docs[index].id), purpose: '${docs[index].purpose?.capitalizeFirst}',
-          transactionType: '${docs[index].type}',
-          amount: docs[index].amount.toString(),
-          date: '${ref.read(createPollVotingProvider.notifier).formatDt2(docs[index].updatedAt)},${DateFormat.jm().format(dateTime)}',
-      );
-    },
+              return TransactionWidget(
+                onTap: () => WayaNav.toNamed(TransactionDetailsScreen.route,
+                    arguments: viewModel.docs![index].id),
+                purpose: '${viewModel.docs![index].purpose?.capitalizeFirst}',
+                transactionType: '${viewModel.docs![index].type}',
+                amount: viewModel.docs![index].amount.toString(),
+                date:
+                    '${ref.read(createPollVotingProvider.notifier).formatDt2(viewModel.docs![index].updatedAt)},${DateFormat.jm().format(dateTime)}',
+              );
+            },
           ),
         ),
-        if (isLoadingMore)
+        if (viewModel.isFirstLoad!)
           Padding(
             padding: EdgeInsets.symmetric(vertical: 16.h),
             child: Center(
