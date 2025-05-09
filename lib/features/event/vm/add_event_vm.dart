@@ -61,6 +61,14 @@ class AddEventVm extends StateNotifier<AddEventState> {
     state = state.copyWith(endDateString: date, endDate: date);
   }
 
+  void selectTicketSalesStartDate({required String date, required String iso}) {
+    state = state.copyWith(ticketStartDate: date);
+  }
+
+  void selectTicketSalesEndDate({required String date, required String iso}) {
+    state = state.copyWith(ticketEndDate: date);
+  }
+
   void selectStartTime({required String time}) {
     state = state.copyWith(startTime: time);
   }
@@ -83,6 +91,7 @@ class AddEventVm extends StateNotifier<AddEventState> {
   }
 
   bool isStartDateAfterEndDate(String startDate, String endDate) {
+    if (startDate.isEmpty || endDate.isEmpty) return true;
     DateTime start = DateTime.parse(startDate);
     DateTime end = DateTime.parse(endDate);
 
@@ -116,6 +125,12 @@ class AddEventVm extends StateNotifier<AddEventState> {
       // validate time
       if (isStartTimeAfterEndTime(state.startTime, state.endTime)) {
         WayaSnackBar.showToast("Start time must be before the end time");
+        return false;
+      }
+
+      // validate ticket sale start date
+      if (isStartDateAfterEndDate(state.ticketStartDate, state.ticketEndDate)) {
+        WayaSnackBar.showToast("Sales Start date must be before the end date");
         return false;
       }
 
@@ -208,6 +223,12 @@ class AddEventVm extends StateNotifier<AddEventState> {
       privacyOption: event.privacyOption,
       startDate: event.startDate.toIso8601String().split('T')[0],
       endDate: event.endDate.toIso8601String().split('T')[0],
+      ticketEndDate: event.ticketSalesEndDate != null
+          ? event.ticketSalesEndDate?.toIso8601String().split('T')[0]
+          : '',
+      ticketStartDate: event.ticketSalesStartDate != null
+          ? event.ticketSalesStartDate?.toIso8601String().split('T')[0]
+          : '',
       startTime: event.startTime,
       eventId: event.id,
       endTime: event.endTime,

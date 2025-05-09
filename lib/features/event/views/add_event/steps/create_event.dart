@@ -340,7 +340,45 @@ class _CreateEventState extends ConsumerState<CreateEvent> {
                     ],
                   ),
                 ),
+
                 const Gap(25),
+                 Text(
+                  "Ticket Sales Date",
+                  style: wayaTheme.textTheme.hintStyle,
+                ),
+                  const Gap(25),
+                  SizedBox(
+                  width: double.infinity,
+                  child: Row(
+                    spacing: 6,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Expanded(
+                          child: EventDateWidget(
+                              uniqueKey: 'sales-start-date',
+                              date: viewModel.ticketStartDate,
+                              formErrorMessage: "Date is required",
+                              hintText: 'Select Start Date',
+                              label: 'Start Date',
+                              selectDate: ref
+                                  .read(addEventVmProvider.notifier)
+                                  .selectTicketSalesStartDate)),
+            
+                      Expanded(
+                          child: EventDateWidget(
+                              uniqueKey: 'sales-end-date',
+                              date: viewModel.ticketEndDate,
+                              formErrorMessage: "Date is required",
+                              hintText: 'Select End Date',
+                              label: 'End Date',
+                              selectDate: ref
+                                  .read(addEventVmProvider.notifier)
+                                  .selectTicketSalesEndDate)),
+                    ],
+                  ),
+                ),
+                  const Gap(25),
                 Text(
                   "Configure Ticket",
                   style: wayaTheme.textTheme.hintStyle,

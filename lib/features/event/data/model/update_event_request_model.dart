@@ -12,6 +12,8 @@ class UpdateEventRequestModel {
   final int? maxCapacity;
   final String privacyOption;
   final String image;
+  final String ticketSalesStartDate;
+  final String ticketSalesEndDate;
 
   UpdateEventRequestModel({
     this.description,
@@ -26,6 +28,8 @@ class UpdateEventRequestModel {
     required this.privacyOption,
     required this.image,
     required this.locationAddress,
+    required this.ticketSalesEndDate,
+    required this.ticketSalesStartDate,
     this.maxCapacity,
   });
 
@@ -45,6 +49,8 @@ class UpdateEventRequestModel {
       maxCapacity: json['maxCapacity'],
       privacyOption: json['privacyOption'],
       image: json['image'],
+            ticketSalesEndDate: json['ticketSalesEndDate'],
+      ticketSalesStartDate: json['ticketSalesStartDate']
     );
   }
 
@@ -62,6 +68,8 @@ class UpdateEventRequestModel {
       'fee': fee,
       'privacyOption': privacyOption,
       'image': image,
+        'ticketSalesStartDate': ticketSalesStartDate,
+      'ticketSalesEndDate': ticketSalesEndDate
     };
 
     if (description != null) json['description'] = description;

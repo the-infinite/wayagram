@@ -33,6 +33,8 @@ class _ChangePinPageState extends ConsumerState<ChangePinPage> {
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
         isLoading: ref.watch(loadingProvider),
+        isScrollable: true,
+
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.start,
