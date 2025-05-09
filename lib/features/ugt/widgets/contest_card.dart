@@ -216,13 +216,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                           radius: BorderRadius.circular(10),
                         )
 
-                      /*   Image.network(
-                          post.uploadCoverImages!,
-                          width: context.width,
-                          height: 200,
-                          fit: BoxFit
-                              .cover, // Ensures the image covers the area properly
-                        ) */
+                      
                       : Image.asset(
                           'assets/images/frameuni.png',
                           height: 200,
@@ -231,11 +225,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                         ),
                 ),
               ),
-              /*WayaImage(
-                imageUrl: "assets/images/frameuni.png",
-                height: 200,
-                radius: BorderRadius.circular(16),
-              ),*/
+           
               const Gap(20),
               Text(
                 widget.post.description ?? "Description",
@@ -259,12 +249,24 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                           title: "Start Date",
                           content: formatDate(widget.post.startDate)),
                       const Gap(30),
-                      if (widget.post.status?.toLowerCase() != "active")
+                      //? here using contestStatus as the important one, cause rejected and pending can
+                      //? can be assigned to it
+                      if (widget.post.contestStatus?.toLowerCase() !=
+                              "approved" ||
+                          widget.post.status?.toLowerCase() != "active")
                         StatusWidget(
                           title: "Application",
-                          content: widget.post.status ?? "Pending",
+                          content: (widget.post.contestStatus?.toLowerCase() ==
+                                      "pending" ||
+                                  widget.post.contestStatus?.toLowerCase() ==
+                                      "rejected")
+                              ? widget.post.contestStatus ?? ""
+                              : widget.post.status ?? "Pending",
                         ),
-                      if (widget.post.status?.toLowerCase() == "active")
+                        //? if this conditions are met, that when the green ongoing can be used
+                      if (widget.post.contestStatus?.toLowerCase() ==
+                              "approved" &&
+                          widget.post.status?.toLowerCase() == "active")
                         StatusOngoing(
                           title: "Application",
                           content: widget.post.status ?? "Pending",
@@ -344,7 +346,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                 children: [
                   PostActionType(
                     text:
-                        "${widget.post.likeCount} ${WayaValueHelper.getComment(widget.post.likeCount??0, WayaPostAction.likes)}",
+                        "${widget.post.likeCount} ${WayaValueHelper.getComment(widget.post.likeCount ?? 0, WayaPostAction.likes)}",
                     image: WayaAssets.images.pages.like2.path,
                     color: widget.post.hasLiked == true
                         ? wayaTheme.colorScheme.primary
@@ -360,48 +362,11 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     },
                   ),
 
-                  /*  GestureDetector(
-                    onTap: () {
-                      if (hasClickedLiked.value == false) {
-                        hasClickedLiked.value = true;
-                        widget.onLikePressed(widget.post.id!);
-                      }
-                      Future.delayed(Duration(seconds: 2), () {
-                        hasClickedLiked.value = false;
-                      });
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: wayaTheme.colorScheme.greyColor200),
-                          width: 35,
-                          height: 35,
-                          child: Center(
-                              child: Icon(
-                            widget.post.hasLiked == true
-                                ? Icons.thumb_up_alt
-                                : Icons.thumb_up_alt_outlined,
-                            color: widget.post.hasLiked == true
-                                ? wayaTheme.colorScheme.primary
-                                : wayaTheme.colorScheme.greyColor500,
-                          )),
-                        ),
-                        const Gap(3),
-                        Text(
-                          "${widget.post.likeCount} ${widget.post.likeCount! > 0 ? "Likes" : "Like"}",
-                          style: wayaTheme.textTheme.bodyMedium,
-                        )
-                      ],
-                    ),
-                  ), */
+                
                   const Gap(30),
                   PostActionType(
                     text:
-                        "${widget.post.shareCount} ${WayaValueHelper.getComment(widget.post.shareCount??0, WayaPostAction.share)}",
+                        "${widget.post.shareCount} ${WayaValueHelper.getComment(widget.post.shareCount ?? 0, WayaPostAction.share)}",
                     image: WayaAssets.images.pages.share2.path,
                     color: wayaTheme.colorScheme.primary,
                     onPressed: () async {
@@ -495,7 +460,7 @@ String getRealDateDiffBtwDate(String realStartDate, String realEndDate) {
       return "$weeks Weeks";
     }
   }
-  // int months = getMonthsDifference(startDate, endDate);
+
 }
 
 bool isCurrentDateBetween(

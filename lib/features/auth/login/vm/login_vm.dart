@@ -122,10 +122,10 @@ class LoginVm extends StateNotifier<LoginState> {
     //   accessToken: googleAuth.accessToken,
     // );
 
-    print(googleAuth.accessToken);
+    print(googleAuth.idToken);
     print("april fools -----------------wefwfwfwf wefw----------");
     // if (idToken != null) {
-    await oauthSignIn(authType: 'GOOGLE', token: googleAuth.accessToken ?? '');
+    await oauthSignIn(authType: 'GOOGLE', token: googleAuth.idToken ?? '');
   }
 
   Future<void> oauthSignIn(
@@ -145,7 +145,6 @@ class LoginVm extends StateNotifier<LoginState> {
         } else {
           throw "Error";
         }
-
       }
     } catch (error) {
       debugPrint(error.toString());

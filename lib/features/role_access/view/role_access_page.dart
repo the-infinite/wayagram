@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/role_access/vm/role_access_vm.dart';
 import 'package:wayagram/features/role_access/widget/manage_user_tab.dart';
 import 'package:wayagram/features/role_access/widget/role_management_tab.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 
 class RoleAccessPage extends StatefulHookConsumerWidget {
   static const route = '/role-access-page';
@@ -21,9 +26,10 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
   @override
   Widget build(BuildContext context) {
     //? get access to the theme
-    //final wayaTheme = Theme.of(context);
+    final wayaTheme = Theme.of(context);
     //? get access to the provider
     final rollAccessNotifier = ref.read(roleAccessVm.notifier);
+    final viewModel = ref.read(roleAccessVm);
 
     //  ConversationState.self.id
     // debugPrint("UGT HOME ${ConversationState.self.role?.name}");
@@ -31,10 +37,16 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
     //? init necessary data with useEffect
     useEffect(() {
       rollAccessNotifier.getRoles();
+
+      rollAccessNotifier.getContestRoles();
       rollAccessNotifier.getShops();
       //? delay once second to avoid UI problem
       Future.delayed(Duration(seconds: 1), () {
-        rollAccessNotifier.getAllMembers(true);
+        if (viewModel.selectedRole == TypeRole.shop) {
+          rollAccessNotifier.getAllMembers(true);
+        } else {
+          rollAccessNotifier.getAllContestMembers(true);
+        }
         rollAccessNotifier.getRoleManagementMemberList();
       });
       rollAccessNotifier.email.text = "";
@@ -50,6 +62,48 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
         return rollAccessNotifier.getRoleManagementMemberList();
       },
       title: "Roles & Access",
+      appBarTrailing: Row(
+        children: [
+          PopupMenuButton(
+              onSelected: (value) {},
+              position: PopupMenuPosition.under,
+              itemBuilder: (context) {
+                return [
+                  ...roleAccessFilterList.map((e) {
+                    return PopupMenuItem<int>(
+                      value: 1,
+                      child: _buildActionNav(
+                          context: context,
+                          onTap: () {
+                            WayaNav.goBack();
+                            /*   dashboardNotifier.fetchTotalEarnings(
+                                    model?.id ?? "", e.text.toLowerCase()); */
+                            if (e.text == "Shop") {
+                              rollAccessNotifier.getAllMembers(true);
+                              rollAccessNotifier.getRoleManagementMemberList();
+                              rollAccessNotifier.setTypeRole(TypeRole.shop);
+                            } else if (e.text == "Contest") {
+                              rollAccessNotifier.setTypeRole(TypeRole.contest);
+                              rollAccessNotifier.getAllContestMembers(true);
+                              print("I am fetching for Contest");
+                            }
+                            selectPresentTap(e);
+                          },
+                          asset: WayaAssets.icons.mComments.svg(
+                            color: wayaTheme.colorScheme.customBlack,
+                            height: 20,
+                          ),
+                          text: e.text,
+                          isActive: e.isActive,
+                          color: wayaTheme.colorScheme.customBlack),
+                    );
+                  })
+                ];
+              },
+              child: Icon(Icons.more_vert)),
+          Gap(15)
+        ],
+      ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,5 +150,58 @@ class _UgtHomeState extends ConsumerState<RoleAccessPage> {
                 )
               : null, */
     );
+  }
+
+  InkWell _buildActionNav(
+      {required BuildContext context,
+      required VoidCallback onTap,
+      required Widget asset,
+      required String text,
+      required bool isActive,
+      required Color color}) {
+    final wayaTheme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      splashFactory: NoSplash.splashFactory,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // asset,
+          //const Gap(4),
+          Text(
+            text,
+            style: WayaTextStyles.bodyMedium.copyWith(color: color),
+          ),
+          if (isActive)
+            Container(
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: wayaTheme
+                    .primaryColor, // Background color for the checkmark
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.check,
+                color: Colors.white,
+                size: 16,
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  void selectPresentTap(MyFilterModel e) {
+    var list = roleAccessFilterList.map((user) {
+      if (user == e) {
+        return MyFilterModel(
+            text: user.text, isActive: true); // Change isActive to false
+      }
+      return MyFilterModel(text: user.text, isActive: false);
+    }).toList();
+    setState(() {
+      roleAccessFilterList = list;
+    });
   }
 }

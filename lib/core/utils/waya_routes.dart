@@ -120,8 +120,6 @@ import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.d
 import 'package:wayagram/features/ugt/contest_setting/contest_setting_content.dart';
 import 'package:wayagram/features/ugt/create_contest/steps/edit_stage_preference.dart';
 import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.dart';
-import 'package:wayagram/features/ugt/manage_role/ugt_invite_user_page.dart';
-import 'package:wayagram/features/ugt/manage_role/ugt_manage_user_page.dart';
 import 'package:wayagram/features/ugt/my_contest_details/create_profile.dart';
 import 'package:wayagram/features/ugt/my_contest_details/admin_contest_details.dart';
 import 'package:wayagram/features/ugt/my_contest_details/edit_contestant_profile.dart';
@@ -167,7 +165,8 @@ class WayaAppRoutes {
     '/': () => SplashScreen(),
     LoginCoverPage.route: () => LoginCoverPage(),
     OnboardingView.route: () => OnboardingView(),
-    AccountCreation.route: () => AccountCreation(referral: WayaNav.search['referral'].toString()),
+    AccountCreation.route: () =>
+        AccountCreation(referral: WayaNav.search['referral'].toString()),
     ChangedPasswordSuccess.route: () => ChangedPasswordSuccess(),
     SetNotification.route: () => SetNotification(),
     SuccessfulSetup.route: () => SuccessfulSetup(),
@@ -178,7 +177,8 @@ class WayaAppRoutes {
     LoginPage.route: () => LoginPage(),
     WelcomeBackPage.route: () => WelcomeBackPage(),
     BottomView.route: () => BottomView(),
-    ProductDetail.route: () => ProductDetail(id: WayaNav.search['id'].toString()),
+    ProductDetail.route: () =>
+        ProductDetail(id: WayaNav.search['id'].toString()),
     OrderDetails.route: () => OrderDetails(),
     ConfirmOrderDelivery.route: () => ConfirmOrderDelivery(),
     CartView.route: () => CartView(),
@@ -244,8 +244,7 @@ class WayaAppRoutes {
     ManageApplicationContest.route: () => ManageApplicationContest(),
     ManageStateSingleContest.route: () => ManageStateSingleContest(),
     DashboardContestPage.route: () => DashboardContestPage(),
-    UgtManageUserPage.route: () => UgtManageUserPage(),
-    UgtInviteUserPage.route: () => UgtInviteUserPage(),
+  
     ManageLeaderboardContest.route: () => ManageLeaderboardContest(),
     AdminTransactionHistory.route: () => AdminTransactionHistory(),
     ContestSettingContent.route: () => ContestSettingContent(),
@@ -293,7 +292,8 @@ class WayaAppRoutes {
     GroupSuggestion.route: () => GroupSuggestion(),
     Promote.route: () => Promote(),
     PromotionDashboard.route: () => PromotionDashboard(),
-    PromotionDetail.route: () => PromotionDetail(id: WayaNav.search['id'].toString()),
+    PromotionDetail.route: () =>
+        PromotionDetail(id: WayaNav.search['id'].toString()),
     PublicPage.route: () => PublicPage(
           id: WayaNav.search['id'].toString(),
         ),
@@ -314,9 +314,12 @@ class WayaAppRoutes {
         ),
     FollowRelationshipsPage.route: () => FollowRelationshipsPage(),
     PublicGroup.route: () => PublicGroup(id: WayaNav.search['id'].toString()),
-    AddTeamMember.route: () => AddTeamMember(id: WayaNav.search['id'].toString()),
-    SingleChatScreen.route: () => SingleChatScreen(chatId: WayaNav.search['id'].toString()),
-    ChatProfilePage.route: () => ChatProfilePage(chatId: WayaNav.search['id'].toString()),
+    AddTeamMember.route: () =>
+        AddTeamMember(id: WayaNav.search['id'].toString()),
+    SingleChatScreen.route: () =>
+        SingleChatScreen(chatId: WayaNav.search['id'].toString()),
+    ChatProfilePage.route: () =>
+        ChatProfilePage(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route: () => DisplayFeed(),
     GroupSetting.route: () => GroupSetting(),
     AllUpcomingEvents.route: () => AllUpcomingEvents(),
@@ -335,7 +338,8 @@ class WayaAppRoutes {
           title: '',
           postId: '',
         ),
-    AddGroupMember.route: () => AddGroupMember(id: WayaNav.search['id'].toString()),
+    AddGroupMember.route: () =>
+        AddGroupMember(id: WayaNav.search['id'].toString()),
     SearchView.route: () => SearchView(),
     ArchivedChatsScreen.route: () => ArchivedChatsScreen(),
     Donations.route: () => Donations(),
@@ -350,7 +354,8 @@ class WayaAppRoutes {
     SupportDisputeScreen.route: () => SupportDisputeScreen(),
     SupportChatScreen.route: () => SupportChatScreen(),
     InitDispute.route: () => InitDispute(),
-    DisputeDetail.route: () => DisputeDetail(id: WayaNav.search['id'].toString()),
+    DisputeDetail.route: () =>
+        DisputeDetail(id: WayaNav.search['id'].toString()),
     ProductSearchResult.route: () => ProductSearchResult(),
     LogsAndAuditTrials.route: () => LogsAndAuditTrials(),
     AccountActivity.route: () => AccountActivity(),
@@ -390,19 +395,23 @@ class WayaAppRoutes {
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getSingleChatRoute(String id) => "${SingleChatScreen.route}?id=$id";
+  static String getSingleChatRoute(String id) =>
+      "${SingleChatScreen.route}?id=$id";
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getProfileRoute(String id, [String source = 'any']) => "${ProfilePage.route}?id=$id&source=$source";
+  static String getProfileRoute(String id, [String source = 'any']) =>
+      "${ProfilePage.route}?id=$id&source=$source";
 
   /// Helper function that is used to get the route to the details of a single
   /// dispute by its ID.
-  static String getDisputeDetailsRoute(String id) => "${DisputeDetail.route}?id=$id";
+  static String getDisputeDetailsRoute(String id) =>
+      "${DisputeDetail.route}?id=$id";
 
   /// Helper function that is used to get the route to the chat of a single
   /// dispute by its ID.
-  static String getDisputeChatsRoute(String id) => "${DisputeChat.route}?id=$id";
+  static String getDisputeChatsRoute(String id) =>
+      "${DisputeChat.route}?id=$id";
 
   /// Helper function that is used to navigate to the route that contains all
   /// the bids of sellers
@@ -410,12 +419,14 @@ class WayaAppRoutes {
 
   /// Helper function that is used to navigate to the route that contains all
   /// the bids of sellers
-  static String getSellerBidsRoute(String id, String requestId) => "${SeeSellerBids.route}?id=$id&requestId=$requestId";
+  static String getSellerBidsRoute(String id, String requestId) =>
+      "${SeeSellerBids.route}?id=$id&requestId=$requestId";
 
   /// Helper function used to generate the route that is supposed to navigate to
   /// all the followers, followings, and mutuals that one user has with another
   /// one.
-  static String getFollowersPage(String uid, [String tab = 'followers', String source = 'any']) =>
+  static String getFollowersPage(String uid,
+          [String tab = 'followers', String source = 'any']) =>
       "${MutualPage.route}?tab=$tab&source=$source&uid=$uid";
 
   /// Helper function used to generate the route that is supposed to take you a
@@ -428,15 +439,18 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single group's members by its ID.
-  static String getGroupMembersPage(String id) => "${MembersScreen.route}?id=$id";
+  static String getGroupMembersPage(String id) =>
+      "${MembersScreen.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single group's screen for adding new members by its ID.
-  static String getAddGroupMemberPage(String id) => "${AddGroupMember.route}?id=$id";
+  static String getAddGroupMemberPage(String id) =>
+      "${AddGroupMember.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single group's screen for adding new members by its ID.
-  static String getAddPageTeamMemberPage(String id) => "${AddTeamMember.route}?id=$id";
+  static String getAddPageTeamMemberPage(String id) =>
+      "${AddTeamMember.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed ot navigate to
   /// the chat profile of any given user.
@@ -444,19 +458,23 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed ot navigate to
   /// the screen for making a new post for a page.
-  static String getPagePostScreen(String id) => "${CreatePagePost.route}?id=$id";
+  static String getPagePostScreen(String id) =>
+      "${CreatePagePost.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed ot navigate to
   /// the screen for making a new post for a group.
-  static String getGroupPostScreen(String id) => "${CreateGroupPost.route}?id=$id";
+  static String getGroupPostScreen(String id) =>
+      "${CreateGroupPost.route}?id=$id";
 
   /// Helper function used to generate the route that takes a user to the screen
   /// for the details of a single event.
-  static String getEventDetailsScreen(String id) => "${EventDetail.route}?id=$id";
+  static String getEventDetailsScreen(String id) =>
+      "${EventDetail.route}?id=$id";
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
-  static String getContestDetailRoute(String id) => "${AdminContestDetails.route}?id=$id";
+  static String getContestDetailRoute(String id) =>
+      "${AdminContestDetails.route}?id=$id";
 
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
@@ -465,19 +483,23 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single poll by its ID.
-  static String getPollDetailsPage(String id) => "${PollAndVoting.route}?id=$id";
+  static String getPollDetailsPage(String id) =>
+      "${PollAndVoting.route}?id=$id";
 
   /// Helper function used to generate the route that takes a user to the screen
   /// for the details of a single product.
-  static String getProductDetailScreen(String id) => "${ProductDetail.route}?id=$id";
+  static String getProductDetailScreen(String id) =>
+      "${ProductDetail.route}?id=$id";
 
   /// Helper function used to generate the route that takes a user to the screen
   /// for the details of a account.
-  static String getAccountCreationScreen(String referral) => "${AccountCreation.route}?referral=$referral";
+  static String getAccountCreationScreen(String referral) =>
+      "${AccountCreation.route}?referral=$referral";
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single donation by its ID.
-  static String getDonationDetailsPage(String id) => "${Donations.route}?id=$id";
+  static String getDonationDetailsPage(String id) =>
+      "${Donations.route}?id=$id";
 
   /// Helper function used to generate the route that is supposed to take you a
   /// single bid's details screen.
@@ -495,11 +517,13 @@ class WayaAppRoutes {
 
   /// Helper function used to generate the route tha tis supposed to take you to
   /// a single order's details screen.
-  static String getQuotationOrderDetailsScreen(String id) => "${QuotationOrderDetails.route}?id=$id&requestId=$id";
+  static String getQuotationOrderDetailsScreen(String id) =>
+      "${QuotationOrderDetails.route}?id=$id&requestId=$id";
 
   /// Helper function used to generate the route that takes a user to the screen
   /// for the details of a single product.
-  static String getPromotionDetailScreen(String id) => "${PromotionDetail.route}?id=$id";
+  static String getPromotionDetailScreen(String id) =>
+      "${PromotionDetail.route}?id=$id";
 
   /// Helper function used to generate the route that takes a user to the screen
   /// to edit the profile of a single chat group.

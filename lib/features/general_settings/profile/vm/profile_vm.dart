@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
@@ -164,6 +165,9 @@ class ProfileVm extends StateNotifier<ProfileState> {
     _localDataSource.saveUserId("");
     await _secureDataSource.saveUserId("");
 
+    //?sign out and revoke access
+    await signOutGoogle();
+
     //? Reset all notifiers, providers, and caches.
     myFollowProvider.reset();
     myGroupNotifier.reset();
@@ -176,6 +180,25 @@ class ProfileVm extends StateNotifier<ProfileState> {
 
     //? Go all the wat to the last page.
     WayaNav.removeUntilNamed(LoginCoverPage.route);
+  }
+
+  //?sign out and revoke access
+  Future<void> signOutGoogle() async {
+    try {
+      //?init
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      //? check if user is signed in
+      bool isSignedIn = await googleSignIn.isSignedIn();
+
+      if (isSignedIn) {
+        //? revoke user access to the permissions
+        await googleSignIn.disconnect();
+        //? sign out of the account
+        await googleSignIn.signOut();
+      }
+    } catch (error) {
+      print('Error signing out: $error');
+    }
   }
 
   void updateProfilePicture() async {

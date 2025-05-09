@@ -12,7 +12,44 @@
           "package_name": "ng.wayagram"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "276195200870-bs3fcoebp4daf91fglcg59c28bigi0re.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ng.wayagram",
+            "certificate_hash": "437bd8e7d4586db9ae422afed08610d478f1d2fc"
+          }
+        },
+        {
+          "client_id": "276195200870-msukcgpn4ovddgd45fh4v55r9p0hlaaf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ng.wayagram",
+            "certificate_hash": "05df54f1e74727851119dae7e22f0f7ad5ab0c33"
+          }
+        },
+        {
+          "client_id": "276195200870-tbhadgcndg394p69vg5rpsldm1a1chd8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ng.wayagram",
+            "certificate_hash": "4fd5157a3db26477b973df7a286aaa3ae124704e"
+          }
+        },
+        {
+          "client_id": "276195200870-vum6dl74a5f9djvspbrutj1qkir7n19q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ng.wayagram",
+            "certificate_hash": "36eefb2aa6007d20afee81a37ca2c8a354816df6"
+          }
+        },
+        {
+          "client_id": "276195200870-53p412fgail6o6ddmh4ujn7ncc39fom4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyDblceeBZQZyjAoWlNEvW6-zD_8-oXWMos"
@@ -20,7 +57,20 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "276195200870-507sb6aqfhd95cof34kn8f4tn0j7aci5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "276195200870-rrjmutsp355m4hrok5sldeu2k238kbsf.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ng.wayagram",
+                "app_store_id": "6444311693"
+              }
+            }
+          ]
         }
       }
     }
