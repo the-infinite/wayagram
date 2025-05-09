@@ -27,7 +27,7 @@ class UserResource {
     //? Since this is here.
     if (found != null) {
       if (isFocused) {
-        _getFromNetwork(id);
+        return _getFromNetwork(id);
       }
 
       //? Return this as the case may be.

@@ -103,6 +103,7 @@ class PostModel extends BaseModel<PostModel> {
     PageModel? page,
     GroupModel? group,
     bool? isLiked,
+    PostModel? originalPost,
   }) {
     return PostModel(
       id: id ?? this.id,
@@ -128,6 +129,7 @@ class PostModel extends BaseModel<PostModel> {
       promotionExpiry: promotionExpiry ?? this.promotionExpiry,
       deletedAt: deletedAt ?? this.deletedAt,
       originalPostId: originalPostId ?? this.originalPostId,
+      originalPost: originalPost ?? this.originalPost,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       user: user ?? this.user,
@@ -139,6 +141,32 @@ class PostModel extends BaseModel<PostModel> {
 
   factory PostModel.fromJson(Map<String, dynamic> json) => _$PostModelFromJson(json);
   Map<String, dynamic> toJson() => _$PostModelToJson(this);
+
+  @override
+  Map<String, dynamic> toMap() => toJson();
+}
+
+@JsonSerializable()
+class BookmarkModel extends BaseModel<BookmarkModel> {
+  final String id;
+  final String userId;
+  final String postId;
+  final PostModel? post;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  BookmarkModel({
+    required this.id,
+    required this.userId,
+    required this.postId,
+    required this.post,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory BookmarkModel.fromJson(Map<String, dynamic> json) => _$BookmarkModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BookmarkModelToJson(this);
 
   @override
   Map<String, dynamic> toMap() => toJson();
