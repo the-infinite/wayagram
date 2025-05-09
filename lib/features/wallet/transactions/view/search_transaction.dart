@@ -55,9 +55,11 @@ class _SearchTransactionState extends ConsumerState<SearchTransaction> {
     final state = ref.watch(transactionVmProvider);
     final wayaTheme = Theme.of(context);
 
+
     // Filter Transaction
-    final List<TransactionModelDocs> filteredPosts =
+    final List<TransactionModelDocs> filteredTransaction =
     WayaUtils.strictSearch<TransactionModelDocs>(state.docs!, ['description', ], query);
+    print('filteredTransaction.length is ======>>>> ${filteredTransaction.length}');
 
     return WayaScaffold(
       //isLoading: viewModel.isLoading,
@@ -72,22 +74,22 @@ class _SearchTransactionState extends ConsumerState<SearchTransaction> {
         ),
       ),
 
-      body: filteredPosts.isEmpty ? ActivityLogsEmptyState(text: 'Nothing here') :
+      body: filteredTransaction.isEmpty ? ActivityLogsEmptyState(text: 'Nothing here') :
       ListView.builder(
         padding: EdgeInsets.only(bottom: 40),
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemCount: filteredPosts.length,
+        itemCount: filteredTransaction.length,
         itemBuilder: (_, index) {
-          String dateTimeString = "${docs[index].createdAt}";
+          String dateTimeString = "${filteredTransaction[index].createdAt}";
           DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
           return TransactionWidget(onTap:() {
             WayaNav.toNamed(TransactionDetailsScreen.route,
-                arguments: docs[index].id);
-          }, purpose: '${docs[index].purpose?.capitalizeFirst}',
-            transactionType: '${docs[index].type}',
-            amount: docs[index].amount.toString(),
-            date: '${ref.read(createPollVotingProvider.notifier).formatDt2(docs[index].updatedAt)},${DateFormat.jm().format(dateTime)}',
+                arguments: filteredTransaction[index].id);
+          }, purpose: '${filteredTransaction[index].purpose?.capitalizeFirst}',
+            transactionType: '${filteredTransaction[index].type}',
+            amount: filteredTransaction[index].amount.toString(),
+            date: '${ref.read(createPollVotingProvider.notifier).formatDt2(filteredTransaction[index].updatedAt)},${DateFormat.jm().format(dateTime)}',
           );
         }
       ),

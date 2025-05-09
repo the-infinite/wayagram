@@ -103,7 +103,7 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
           IconButton(
             icon: Icon(Icons.search, color: wayaTheme.colorScheme.customBlack),
             onPressed: () {
-              //WayaNav.toNamed('/searchTransaction');
+              WayaNav.toNamed('/searchTransaction');
             },
           ),
 
