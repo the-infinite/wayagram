@@ -6,6 +6,7 @@ import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/notifications/state/filter_notification.dart';
+import 'package:wayagram/features/notifications/vm/default.dart';
 import 'package:wayagram/features/notifications/widgets/filter_modal.dart';
 
 class NotificationFilterWidget<TItem> extends ConsumerStatefulWidget {
@@ -27,6 +28,7 @@ class NotificationFilterWidget<TItem> extends ConsumerStatefulWidget {
 
 class _FilterWidgetState extends ConsumerState<NotificationFilterWidget> {
   late final controller = FilterOverlayController(ref);
+  late final notifier = ref.read(notificationProvider.notifier);
   OverlayEntry? _entry;
 
   /// A really nice to have utility function that shows a popup containing all
@@ -105,6 +107,7 @@ class _FilterWidgetState extends ConsumerState<NotificationFilterWidget> {
                     fit: BoxFit.contain,
                   ),
                 ),
+                onChanged: (text) => notifier.setSearchQuery(text),
                 controller: widget.value.controller,
                 hintText: widget.hintText,
               ),

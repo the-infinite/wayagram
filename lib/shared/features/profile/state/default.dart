@@ -93,6 +93,7 @@ class SavedPostState {
   final bool hasNextPage;
   final bool hasPreviousPage;
   final List<PostModel> posts;
+  final List<BookmarkModel> bookmarks;
 
   // This is fine.
   SavedPostState({
@@ -106,10 +107,12 @@ class SavedPostState {
     required this.nextPage,
     required this.isLoading,
     required this.hasLoaded,
+    required this.bookmarks,
   });
 
   factory SavedPostState.fromJson(Map<String, dynamic> json) {
     return SavedPostState(
+      bookmarks: (json["docs"] as List).map((e) => BookmarkModel.fromJson(e)).toList(),
       totalSize: json["totalDocs"],
       limit: json["limit"],
       page: json["page"],
@@ -126,12 +129,13 @@ class SavedPostState {
   //? This is fine.
   static final initial = SavedPostState(
     totalSize: 0,
-    limit: 15,
+    limit: 1000,
     page: 0,
     totalPages: 0,
     hasNextPage: true,
     hasPreviousPage: false,
     posts: [],
+    bookmarks: [],
     nextPage: 1,
     isLoading: false,
     hasLoaded: false,
@@ -148,6 +152,7 @@ class SavedPostState {
     bool? hasNextPage,
     bool? hasPreviousPage,
     List<PostModel>? posts,
+    List<BookmarkModel>? bookmarks,
   }) {
     return SavedPostState(
       hasLoaded: hasLoaded ?? this.hasLoaded,
@@ -160,6 +165,15 @@ class SavedPostState {
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
       posts: posts ?? this.posts,
+      bookmarks: bookmarks ?? this.bookmarks,
     );
+  }
+
+  BookmarkModel? find(String id) {
+    return bookmarks.where((post) => post.postId == id).firstOrNull;
+  }
+
+  bool isSaved(String id) {
+    return bookmarks.any((post) => post.postId == id);
   }
 }

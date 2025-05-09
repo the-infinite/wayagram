@@ -50,4 +50,35 @@ class NotificationSettings {
     required this.showDebit,
     required this.showCredit,
   });
+
+  //
+  NotificationSettings copyWith({
+    bool? isLoading,
+    bool? showChat,
+    bool? showCall,
+    bool? showFollowRequest,
+    bool? showLikes,
+    bool? showComments,
+    bool? showShares,
+    bool? showViews,
+    bool? showEvents,
+    bool? showLivestream,
+    bool? showDebit,
+    bool? showCredit,
+  }) {
+    return NotificationSettings(
+      isLoading: isLoading ?? this.isLoading,
+      showChat: showChat ?? this.showChat,
+      showCall: showCall ?? this.showCall,
+      showFollowRequest: showFollowRequest ?? this.showFollowRequest,
+      showLikes: showLikes ?? this.showLikes,
+      showComments: showComments ?? this.showComments,
+      showShares: showShares ?? this.showShares,
+      showViews: showViews ?? this.showViews,
+      showEvents: showEvents ?? this.showEvents,
+      showLivestream: showLivestream ?? this.showLivestream,
+      showDebit: showDebit ?? this.showDebit,
+      showCredit: showCredit ?? this.showCredit,
+    );
+  }
 }

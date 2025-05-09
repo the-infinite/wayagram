@@ -93,7 +93,7 @@ class PageVm extends StateNotifier<PageState> {
 
   Future<void> unsavePost(BuildContext context, String postId) async {
     try {
-      final response = await _pageRepository.delete(postId);
+      final response = await _pageRepository.removeBookMark(postId);
 
       if (response.statusCode == 200) {
         await getSinglePost(postId);
@@ -459,12 +459,7 @@ class PageVm extends StateNotifier<PageState> {
   Future<PostModel?> repostPost(BuildContext context, PostModel post) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.createPost(
-        post.content,
-        post.media,
-        post.privacy,
-        post.id,
-      );
+      final response = await _pageRepository.repost(post.id);
       state = state.copyWith(isLoading: false);
 
       if (response.success) {
@@ -680,33 +675,6 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> repost(ctx, {required String postId}) async {
-    try {
-      state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.repost(postId);
-      state = state.copyWith(isLoading: false);
-      if (response.success && ctx.mounted) {
-        await getSinglePost(postId);
-        ScaffoldMessenger.of(ctx).showSnackBar(
-          const SnackBar(
-            content: Text('Post reposted successfully!'),
-            backgroundColor: WayaColors.primary,
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    } catch (e) {
-      WayaDebugConsoleController.instance.addException(
-        WayaDebugHelpers.getMessage(e),
-        e,
-        WayaDebugEventModule.pages,
-        WayaDebugHelpers.getStackTrace(e),
-      );
-    } finally {
-      state = state.copyWith(isLoading: false);
-    }
-  }
-
   Future<void> sharePost(ctx, {required String postId}) async {
     try {
       state = state.copyWith(isLoading: true);
@@ -727,7 +695,7 @@ class PageVm extends StateNotifier<PageState> {
     }
   }
 
-  Future<void> bookmarkPost(ctx, {required String postId}) async {
+  Future<bool> bookmarkPost(ctx, {required String postId}) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.bookMarkPost(postId);
@@ -736,6 +704,7 @@ class PageVm extends StateNotifier<PageState> {
         await getSinglePost(postId);
         WayaSnackBar.showToast('Post bookmarked successfully!');
       }
+      return response.success;
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
@@ -746,6 +715,7 @@ class PageVm extends StateNotifier<PageState> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
+    return false;
   }
 
   Future<bool> likePost(ctx, {required String postId, required String userId}) async {

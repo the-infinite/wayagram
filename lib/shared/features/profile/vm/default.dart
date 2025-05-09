@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/profile/repo/default.dart';
 import 'package:wayagram/shared/features/profile/state/default.dart';
+import 'package:wayagram/shared/features/user/resource/default.dart';
 
 class PostNotifier extends StateNotifier<PostState> {
   final repo = UserProfileRepository.instance;
@@ -128,8 +130,11 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
   /// An API used to fetch the list of all saved posts for a given user.
   Future<List<PostModel>> getSavedPostsForUser(String id) async {
     final result = <PostModel>[];
+    final bookmarks = <BookmarkModel>[];
 
     try {
+      state = state.copyWith(isLoading: true);
+
       // This is fine too.
       final response = await repo.getBookmarksForUser(id, state.nextPage ?? state.page, state.limit);
 
@@ -141,30 +146,45 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
         //? onto this place.
         if (state.hasNextPage) {
           result.addAll(state.posts);
+          bookmarks.addAll(state.bookmarks);
         }
 
-        //? Parse the posts as they are in the response object...
-        final docs = (data['docs'] as List).map((doc) => PostModel.fromJson(doc));
+        //? Parse the bookmarks as they are in the response object, and retrieve only their posts...
+        final docs = (data['docs'] as List).map((doc) => BookmarkModel.fromJson(doc)).where((doc) => doc.post != null);
+        final posts = <PostModel>[];
 
-        //? Now, add these ones.
-        wayaPostCache.cacheAll(docs);
+        for (final doc in docs) {
+          var post = doc.post!;
+          if (post.user == null) {
+            final data = await UserResource.getUserDetails(post.userId);
+            post = post.copyWith(user: data?.$1);
+          }
+          posts.add(post);
+        }
+
+        //? Now, cache these posts.
+        wayaPostCache.cacheAll(posts);
 
         //? Now, add these to what we have here which are not from groups or pages.
         //? This is a bit of a hacK, but it works.
-        result.addAll(docs.where((post) => post.pageId == null && post.groupId == null));
+        result.addAll(posts.where((post) => post.pageId == null && post.groupId == null));
+        bookmarks.addAll(docs);
 
         //? This is fine.
         state = state.copyWith(
           posts: result,
+          bookmarks: bookmarks,
           totalSize: data['totalDocs'],
           totalPages: int.tryParse(data['totalPages'].toString()) ?? 1,
           hasNextPage: data['hasNextPage'],
           page: int.tryParse(data['page'].toString()) ?? 1,
           nextPage: int.tryParse(data['nextPage'].toString()) ?? 1,
           hasLoaded: true,
+          isLoading: false,
         );
       }
     } catch (e) {
+      state = state.copyWith(isLoading: false);
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
         e,
@@ -175,6 +195,57 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
 
     // That's fine.
     return result;
+  }
+
+  /// An API used to bookmark a single post for a user.
+  Future<bool> bookmarkPost(String postId) async {
+    try {
+      final response = await repo.bookMarkPost(postId);
+
+      if (response.success) {
+        getSavedPostsForUser(ConversationState.self.id);
+      }
+
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.posts,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    return false;
+  }
+
+  /// An API used to delete a bookmarked post for a user.
+  Future<bool> removeBookmark(String postId) async {
+    try {
+      final bookmark = state.find(postId);
+
+      if (bookmark == null) {
+        return false;
+      }
+
+      //? Remove this one.
+      final response = await repo.removeBookMark(bookmark.id);
+
+      if (response.success) {
+        getSavedPostsForUser(ConversationState.self.id);
+      }
+
+      return response.success;
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.posts,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    return false;
   }
 
   /// Helper function used to reset the state of our entire post notifier.
