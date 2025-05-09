@@ -38,7 +38,6 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final viewModel = ref.read(pageProvider);
-    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
 
     //? Our component.
     return WayaScaffold(

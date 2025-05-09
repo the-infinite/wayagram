@@ -65,20 +65,29 @@ class PostNotifier extends StateNotifier<PostState> {
     return result;
   }
 
-  /// An API used to fetch the list of all saved posts for a given user.
-  Future<List<PostModel>> getSavedPostsForUser(String id) async {
+  /// Helper function used to reset the state of our entire post notifier.
+  void reset() {
+    state = PostState.initial;
+  }
+}
+
+class RepostedPostNotifier extends StateNotifier<PostState> {
+  final repo = UserProfileRepository.instance;
+  RepostedPostNotifier(super.state);
+
+  /// An API used to fetch all the posts for a given user.
+  Future<List<PostModel>> getPostsForUser(String id) async {
     final result = <PostModel>[];
 
     try {
       // This is fine too.
-      final response = await repo.getBookmarksForUser(id, state.nextPage ?? state.page, state.limit);
+      final response = await repo.getPostsForUser(id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
         final data = response.data["data"];
 
-        //? If the previous page had a next page, offload them
-        //? onto this place.
+        //? If the previous page had a next page, offload them onto this place.
         if (state.hasNextPage) {
           result.addAll(state.posts);
         }
@@ -104,6 +113,8 @@ class PostNotifier extends StateNotifier<PostState> {
           hasLoaded: true,
         );
       }
+
+      //? After getting these posts...
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),

@@ -9,13 +9,14 @@ class PostCache extends WayaCacheUtility<PostModel> {
   static final instance = PostCache._();
   factory PostCache() => instance;
 
-  void _putForMeasure(PostModel post) {
-    final found = getCachedData(post.id);
+  void _putForMeasure(PostModel usedPost) {
+    final found = getCachedData(usedPost.id);
 
+    //? If this was found.
     if (found != null) {
       putOrReplace(
-        post.id,
-        post.copyWith(
+        usedPost.id,
+        usedPost.copyWith(
           page: found.page,
           group: found.group,
           user: found.user,
@@ -27,7 +28,7 @@ class PostCache extends WayaCacheUtility<PostModel> {
     }
 
     //? Then just do what is regular.
-    putOrReplace(post.id, post);
+    putOrReplace(usedPost.id, usedPost);
   }
 
   @override

@@ -21,17 +21,17 @@ class NotificationSettings {
 
   // This is fine.
   static const initial = NotificationSettings(
-    isLoading: false,
+    isLoading: true,
     showChat: true,
     showCall: true,
     showFollowRequest: true,
     showLikes: true,
     showComments: true,
-    showShares: false,
-    showViews: false,
+    showShares: true,
+    showViews: true,
     showEvents: true,
-    showLivestream: false,
-    showDebit: false,
+    showLivestream: true,
+    showDebit: true,
     showCredit: true,
   );
 

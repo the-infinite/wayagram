@@ -96,7 +96,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
     //? Listening to the consumer here might have the downside of every post
     //? that is spawned using this listening for state changes by itself. Might
     //? present scaling issues in the future but that is left to be seen.
-    return ValueListenableBuilder(
+    final postBody = ValueListenableBuilder(
       valueListenable: wayaPostCache,
       builder: (context, redraws, _) {
         final postData = wayaPostCache.getCachedData(widget.data.id);
@@ -673,5 +673,57 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
         );
       },
     );
+
+    //? If this is a repost
+    if (widget.data.originalPostId != null) {
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Spacing before the first one.
+          if (widget.index != 0)
+            SizedBox(
+              height: 15.h,
+            ),
+
+          //? First, the row for user title.
+          Padding(
+            padding: widget.padded ? EdgeInsets.only(left: 15.w, right: 15.w, top: 15.w) : EdgeInsets.zero,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              spacing: 8.w,
+              children: [
+                //? First, the icon.
+                WayaAssets.icons.actionReposted.svg(
+                  height: 18.sp,
+                ),
+
+                //? Second the user's name.
+                Text(
+                  "${widget.data.user?.fullname ?? "WayaGram User"} reposted this",
+                  style: wayaTheme.textTheme.bodyBold.copyWith(
+                    color: wayaTheme.colorScheme.primary,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          //? Second, the post that was reposted.
+          WayaErrorWidget(
+            onError: (context, e) => const SizedBox(),
+            builder: (context) => WayaPostWidget(
+              data: widget.data.originalPost!,
+              index: 0,
+              padded: false,
+            ),
+          ),
+        ],
+      );
+    }
+
+    //? Return the post component itself.
+    return postBody;
   }
 }
