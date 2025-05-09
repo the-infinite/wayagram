@@ -57,7 +57,9 @@ class _GroupsState extends ConsumerState<Groups> with SingleTickerProviderStateM
       appBarTrailing: Row(
         spacing: 12,
         children: [
-          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+          InkWell(
+              onTap: ()=> WayaNav.toNamed('/searchGroup'),
+              child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           Gap(8),
         ],
       ),

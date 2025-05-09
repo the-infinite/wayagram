@@ -17,6 +17,7 @@ class PageState {
   final List<PostImage> images;
   final List<PostModel>? fetchAllPostData;
   final List<PostModel>? getAllPost;
+  final List<GetAllPostDocs>? getAllPagePost;
   final List<CommentModel>? comments;
   final num? postCount;
   final GetAllPost? allPostData;
@@ -59,6 +60,7 @@ class PageState {
     this.allPageModelDocs = const [],
     this.getPageMemberDocs = const [],
     this.recommendedPages = const [],
+    this.getAllPagePost = const [],
     this.data,
     this.allPostData,
     this.shareModelData,
@@ -75,6 +77,7 @@ class PageState {
     String? foundUserId,
     String? roleType,
     List<PostImage>? images,
+    List<GetAllPostDocs>? getAllPagePost,
     List<PostModel>? fetchAllPostData,
     List<PostModel>? getAllPost,
     List<PageModel>? recommendedPages,
@@ -95,6 +98,7 @@ class PageState {
     return PageState(
       roleType: roleType ?? this.roleType,
       username: username ?? this.username,
+      getAllPagePost: getAllPagePost ?? this.getAllPagePost,
       foundUserId: foundUserId ?? this.foundUserId,
       pageName: pageName ?? this.pageName,
       pageDescription: pageDescription ?? this.pageDescription,

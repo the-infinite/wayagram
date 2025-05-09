@@ -294,8 +294,8 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
           description: decription ?? "Wallet funding",
           email: user.email ?? "",
           fundOptionCode: fundOptionCode,
-          callbackUrl: "https://v2.staging.wayagram.ng"
-          //callbackUrl: WayaConstants.baseUrl
+          //callbackUrl: "https://staging.wayagram.ng"
+          callbackUrl: WayaConstants.webUrl
           ),
     );
 

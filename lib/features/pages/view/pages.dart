@@ -47,7 +47,10 @@ class _PagesState extends ConsumerState<Pages> with SingleTickerProviderStateMix
       title: 'Pages',
       appBarTrailing: Row(
         spacing: 12,
-        children: [WayaAssets.icons.genSet.search.svg(fit: BoxFit.none), Gap(8)],
+        children: [
+          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+          Gap(8)
+        ],
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
