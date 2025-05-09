@@ -14,15 +14,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "276195200870-bs3fcoebp4daf91fglcg59c28bigi0re.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ng.wayagram",
-            "certificate_hash": "437bd8e7d4586db9ae422afed08610d478f1d2fc"
-          }
-        },
-        {
-          "client_id": "276195200870-msukcgpn4ovddgd45fh4v55r9p0hlaaf.apps.googleusercontent.com",
+          "client_id": "276195200870-3bpe9spns25h5go0t9p1v47ovdtu626t.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "ng.wayagram",
@@ -30,15 +22,7 @@
           }
         },
         {
-          "client_id": "276195200870-tbhadgcndg394p69vg5rpsldm1a1chd8.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "ng.wayagram",
-            "certificate_hash": "4fd5157a3db26477b973df7a286aaa3ae124704e"
-          }
-        },
-        {
-          "client_id": "276195200870-vum6dl74a5f9djvspbrutj1qkir7n19q.apps.googleusercontent.com",
+          "client_id": "276195200870-ig943874k6q8rh86dbdlfrst8pqv5u8q.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "ng.wayagram",
@@ -46,7 +30,23 @@
           }
         },
         {
-          "client_id": "276195200870-53p412fgail6o6ddmh4ujn7ncc39fom4.apps.googleusercontent.com",
+          "client_id": "276195200870-m8larkp51qb1l4cpr1caur80daouf7r9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ng.wayagram",
+            "certificate_hash": "4fd5157a3db26477b973df7a286aaa3ae124704e"
+          }
+        },
+        {
+          "client_id": "276195200870-rtfd4m15164mi0pphnihdhgg79fjt5d5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ng.wayagram",
+            "certificate_hash": "437bd8e7d4586db9ae422afed08610d478f1d2fc"
+          }
+        },
+        {
+          "client_id": "276195200870-o5382ijj550evijhajp13p4itbc34dl6.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -59,16 +59,8 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "276195200870-507sb6aqfhd95cof34kn8f4tn0j7aci5.apps.googleusercontent.com",
+              "client_id": "276195200870-o5382ijj550evijhajp13p4itbc34dl6.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "276195200870-rrjmutsp355m4hrok5sldeu2k238kbsf.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "ng.wayagram",
-                "app_store_id": "6444311693"
-              }
             }
           ]
         }
