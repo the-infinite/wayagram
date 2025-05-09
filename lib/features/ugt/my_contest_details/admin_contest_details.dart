@@ -19,6 +19,7 @@ import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/features/ugt/widgets/admin_card.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
+import 'package:wayagram/features/ugt/widgets/status_widget.dart';
 
 class AdminContestDetails extends StatefulHookConsumerWidget {
   static const route = '/upcoming-manage-contest-details';
@@ -26,7 +27,8 @@ class AdminContestDetails extends StatefulHookConsumerWidget {
   const AdminContestDetails({required this.id, super.key});
 
   @override
-  ConsumerState<AdminContestDetails> createState() => _ManageContestDetailsState();
+  ConsumerState<AdminContestDetails> createState() =>
+      _ManageContestDetailsState();
 }
 
 class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
@@ -37,18 +39,27 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     final myContestId = useState("");
     //  debugPrint("COntest DI $myPassedContestId");
     useEffect(() {
-      String contestId = ref.read(selectedContestProvider.notifier).state?.id ?? myPassedContestId;
+      String contestId = ref.read(selectedContestProvider.notifier).state?.id ??
+          myPassedContestId;
       Future.delayed(Duration(seconds: 2), () {
         myContestId.value = contestId;
       });
 
       debugPrint("COntest DI  2 $contestId");
-      ref.read(postProvider.notifier).fetchSingleContest(contestId: contestId, ref: ref);
-      ref.read(votersContestNotifier.notifier).getContestantProfileVoteDetails(contestId);
+      ref
+          .read(postProvider.notifier)
+          .fetchSingleContest(contestId: contestId, ref: ref);
+      ref
+          .read(votersContestNotifier.notifier)
+          .getContestantProfileVoteDetails(contestId);
 
-      ref.read(votersContestNotifier.notifier).fetchAllContestUnApprovedPosts(contestId, hostApproved: false);
+      ref
+          .read(votersContestNotifier.notifier)
+          .fetchAllContestUnApprovedPosts(contestId, hostApproved: false);
       ref.read(votersContestNotifier.notifier).fetchAllContestPosts(contestId);
-      ref.read(votersContestNotifier.notifier).fetchAllContestApplicant(contestId);
+      ref
+          .read(votersContestNotifier.notifier)
+          .fetchAllContestApplicant(contestId);
       return null;
     }, []);
     var viewModel = ref.watch(votersContestNotifier);
@@ -73,10 +84,16 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 contestId: myContestId.value,
                 ref: ref,
               );
-          ref.read(votersContestNotifier.notifier).getContestantProfileVoteDetails(myContestId.value);
+          ref
+              .read(votersContestNotifier.notifier)
+              .getContestantProfileVoteDetails(myContestId.value);
 
-          ref.read(votersContestNotifier.notifier).fetchAllContestPosts(myContestId.value);
-          return ref.read(votersContestNotifier.notifier).fetchAllContestApplicant(myContestId.value);
+          ref
+              .read(votersContestNotifier.notifier)
+              .fetchAllContestPosts(myContestId.value);
+          return ref
+              .read(votersContestNotifier.notifier)
+              .fetchAllContestApplicant(myContestId.value);
         },
         title: "Contest Details",
         appBarTrailing: Row(
@@ -105,21 +122,26 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(model?.title ?? "Title", style: wayaTheme.textTheme.titleLarge),
+                    Text(model?.title ?? "Title",
+                        style: wayaTheme.textTheme.titleLarge),
                     if (model?.status == "ACTIVE")
                       Container(
                         decoration: BoxDecoration(
                           color: Color(0xffE7F6EC), // Background color
-                          borderRadius: BorderRadius.circular(20), // Rounded corners
+                          borderRadius:
+                              BorderRadius.circular(20), // Rounded corners
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 1),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 1),
                           child: Center(
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4, horizontal: 8),
                               child: Text(
                                 "Live",
-                                style: TextStyle(color: Color(0xff036B26), fontSize: 12.sp),
+                                style: TextStyle(
+                                    color: Color(0xff036B26), fontSize: 12.sp),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -130,58 +152,108 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                 ),
                 const Gap(15),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(16), // Adjust the radius as needed
+                  borderRadius:
+                      BorderRadius.circular(16), // Adjust the radius as needed
                   child: model?.uploadCoverImages == null
                       ? Image.asset(
                           'assets/images/frameuni.png',
                           height: 200,
-                          fit: BoxFit.cover, // Ensures the image covers the area properly
+                          fit: BoxFit
+                              .cover, // Ensures the image covers the area properly
                         )
                       : WayaImage(
                           imageUrl: model?.uploadCoverImages ?? "",
                           width: context.width,
                           height: 200,
-                          fit: BoxFit.cover, // Ensures the image covers the area properly
+                          fit: BoxFit
+                              .cover, // Ensures the image covers the area properly
                         ),
                 ),
                 const Gap(15),
-                Text("Contest Description", style: wayaTheme.textTheme.bodyMedium),
+                Text("Contest Description",
+                    style: wayaTheme.textTheme.bodyMedium),
                 const Gap(5),
                 Text(model?.description ?? "Description",
-                    style: WayaTextStyles.hintStyleBold
-                        .wayaCopyWith(color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
+                    style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                        color: WayaColors.greyColor500,
+                        fontWeight: FontWeight.w400)),
                 const Gap(20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    UpcomingWidgetAdmin(title: "Start Date", content: formatDate(model?.startDate)),
-                    const Gap(20),
-                    UpcomingWidgetAdmin(title: "End Date", content: formatDate(model?.endDate)),
-                    const Gap(20),
-                    UpcomingWidgetAdmin(title: "Entry Type", content: model?.entryType ?? ""),
-                    const Gap(20),
-                    UpcomingWidgetAdmin(
-                        title: "Duration",
-                        content: getRealDateDiffBtwDate(model?.startDate ?? "2025-03-03T07:21:39.036Z",
-                            model?.endDate ?? "2025-03-03T07:21:39.036Z")),
-                  ],
-                ),
-                const Gap(10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    UpcomingWidgetAdmin(title: "Multiple Stages", content: model?.multipleStages ?? ""),
-                    const Gap(20),
-                    UpcomingWidgetAdmin(title: "Category", content: model?.categoryName ?? ""),
-                    const Gap(20),
-                    UpcomingWidgetAdmin(
-                        title: "Prize", content: "₦${formatMoney(model?.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
-                    const Gap(20),
-                    UpcomingWidgetAdmin(title: "Host", content: "Host"),
-                  ],
-                ),
+                if (model?.contestStatus?.toLowerCase() == "rejected" ||
+                    model?.contestStatus?.toLowerCase() == "Pending")
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      StatusWidget(
+                        title: "Application",
+                        content: model?.contestStatus ?? "",
+                      ),
+                      const Gap(10),
+                      Text(
+                          model?.contestStatus?.toLowerCase() == "rejected"
+                              ? model?.rejectedReason ??
+                                  "Contest rejected, Please goto Admin Dashboard to edit and resubmit"
+                              : "Contest still in review by the Admin",
+                          style: WayaTextStyles.hintStyleBold.wayaCopyWith(
+                              color: WayaColors.greyColor500,
+                              fontWeight: FontWeight.w400)),
+                      const Gap(10),
+                    ],
+                  ),
+
+                //  const Gap(20),
+                if (model?.contestStatus?.toLowerCase() != "rejected" &&
+                    model?.contestStatus?.toLowerCase() != "pending")
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          UpcomingWidgetAdmin(
+                              title: "Start Date",
+                              content: formatDate(model?.startDate)),
+                          const Gap(20),
+                          UpcomingWidgetAdmin(
+                              title: "End Date",
+                              content: formatDate(model?.endDate)),
+                          const Gap(20),
+                          UpcomingWidgetAdmin(
+                              title: "Entry Type",
+                              content: model?.entryType ?? ""),
+                          const Gap(20),
+                          UpcomingWidgetAdmin(
+                              title: "Duration",
+                              content: getRealDateDiffBtwDate(
+                                  model?.startDate ??
+                                      "2025-03-03T07:21:39.036Z",
+                                  model?.endDate ??
+                                      "2025-03-03T07:21:39.036Z")),
+                        ],
+                      ),
+                      const Gap(10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          UpcomingWidgetAdmin(
+                              title: "Multiple Stages",
+                              content: model?.multipleStages ?? ""),
+                          const Gap(20),
+                          UpcomingWidgetAdmin(
+                              title: "Category",
+                              content: model?.categoryName ?? ""),
+                          const Gap(20),
+                          UpcomingWidgetAdmin(
+                              title: "Prize",
+                              content:
+                                  "₦${formatMoney(model?.winnerPrize?.replaceAll("\$", "") ?? "0")}"),
+                          const Gap(20),
+                          UpcomingWidgetAdmin(title: "Host", content: "Host"),
+                        ],
+                      ),
+                    ],
+                  ),
                 const Gap(20),
                 if (viewModelNotifier.getLoggedInUserId() == model?.profileId)
                   WayaButton(
@@ -197,7 +269,9 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                         ?.wayaCopyWith(color: wayaTheme.colorScheme.primary500)),
                 const Gap(15), */
                 const Gap(15),
-                Text("Top Contestants", style: wayaTheme.textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold)),
+                Text("Top Contestants",
+                    style: wayaTheme.textTheme.bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.bold)),
                 const Gap(15),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -207,17 +281,22 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            ref.read(selectedContestantProfile.notifier).state = viewModel.myContestList[1];
+                            ref.read(selectedContestantProfile.notifier).state =
+                                viewModel.myContestList[1];
                             viewModelNotifier.updateContestId(model?.id);
-                            ref.read(selectedContestProvider.notifier).state = model;
+                            ref.read(selectedContestProvider.notifier).state =
+                                model;
                             WayaNav.toNamed(
                               '/contest-profile-page',
                             );
                           },
                           child: AdminCard(
-                            imageUrl: viewModel.myContestList[1].profilePhoto ?? "", // Change to your image path
+                            imageUrl: viewModel.myContestList[1].profilePhoto ??
+                                "", // Change to your image path
                             rank: "2",
-                            name: viewModel.myContestList[1].contestApplicant?.fullName ?? "",
+                            name: viewModel.myContestList[1].contestApplicant
+                                    ?.fullName ??
+                                "",
                             votes: "${viewModel.myContestList[1].votes} Votes",
                           ),
                         ),
@@ -226,18 +305,23 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            ref.read(selectedContestantProfile.notifier).state = viewModel.myContestList[0];
-                            ref.read(selectedContestProvider.notifier).state = model;
+                            ref.read(selectedContestantProfile.notifier).state =
+                                viewModel.myContestList[0];
+                            ref.read(selectedContestProvider.notifier).state =
+                                model;
                             WayaNav.toNamed(
                               '/contest-profile-page',
                             );
                           },
                           child: AdminCard(
-                            imageUrl: viewModel.myContestList[0].profilePhoto ?? "", // Change to your image path
+                            imageUrl: viewModel.myContestList[0].profilePhoto ??
+                                "", // Change to your image path
                             rank: "1",
                             isCenter: true,
                             radius: 40,
-                            name: viewModel.myContestList[0].contestApplicant?.fullName ?? "",
+                            name: viewModel.myContestList[0].contestApplicant
+                                    ?.fullName ??
+                                "",
                             votes: "${viewModel.myContestList[0].votes} Votes",
                           ),
                         ),
@@ -246,16 +330,21 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            ref.read(selectedContestantProfile.notifier).state = viewModel.myContestList[2];
-                            ref.read(selectedContestProvider.notifier).state = model;
+                            ref.read(selectedContestantProfile.notifier).state =
+                                viewModel.myContestList[2];
+                            ref.read(selectedContestProvider.notifier).state =
+                                model;
                             WayaNav.toNamed(
                               '/contest-profile-page',
                             );
                           },
                           child: AdminCard(
-                            imageUrl: viewModel.myContestList[2].profilePhoto ?? "",
+                            imageUrl:
+                                viewModel.myContestList[2].profilePhoto ?? "",
                             rank: "3",
-                            name: viewModel.myContestList[2].contestApplicant?.fullName ?? "",
+                            name: viewModel.myContestList[2].contestApplicant
+                                    ?.fullName ??
+                                "",
                             votes: "${viewModel.myContestList[2].votes} Votes",
                           ),
                         ),
@@ -324,31 +413,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     );
   }
 
-  //  InkWell _buildActionNav(
-//       {required BuildContext context,
-//       required VoidCallback onTap,
-//       required Widget asset,
-//       required String text,
-//       required Color color}) {
-//     final wayaTheme = Theme.of(context);
-//     return InkWell(
-//       onTap: onTap,
-//       splashFactory: NoSplash.splashFactory,
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.start,
-//         crossAxisAlignment: CrossAxisAlignment.center,
-//         children: [
-//           asset,
-//           const Gap(4),
-//           Text(
-//             text,
-//             style: TextStyle().wayaCopyWith(
-//                 color: color, fontWeight: FontWeight.w500, fontSize: 12.sp),
-//           )
-//         ],
-//       ),
-//     );
-//   }
+
 
   Color getColor(bool isText, String text) {
     return isText ? Color(0xff9E0A05) : Color(0xffFEF6E7);
@@ -383,8 +448,8 @@ class UpcomingWidgetAdmin extends StatelessWidget {
         SizedBox(
           width: context.width * 0.18,
           child: Text(title,
-              style:
-                  WayaTextStyles.bodySmall.wayaCopyWith(color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
+              style: WayaTextStyles.bodySmall.wayaCopyWith(
+                  color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
         ),
         const Gap(5),
         if (!status)
@@ -392,7 +457,8 @@ class UpcomingWidgetAdmin extends StatelessWidget {
             width: context.width * 0.19,
             child: Text(content,
                 // overflow: TextOverflow.ellipsis,
-                style: wayaTheme.textTheme.bodySmall!.copyWith(fontWeight: FontWeight.w500)),
+                style: wayaTheme.textTheme.bodySmall!
+                    .copyWith(fontWeight: FontWeight.w500)),
           ),
         if (status)
           Container(

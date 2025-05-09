@@ -2,7 +2,7 @@ name: wayagram
 description: The codebase for the entire WayaGram application
 homepage: https://wayagram.ng
 publish_to: "none" # NEVER PUBLISH TO pub.dev!
-version: 1.91.27+177
+version: 1.91.29+179
 
 
 environment:
@@ -78,7 +78,7 @@ dependencies:
   infinite_scroll_pagination: ^4.1.0
   video_trimmer: ^3.0.1-LTS
   stack_trace: ^1.12.0
-  google_sign_in: ^6.1.6
+  google_sign_in: ^6.3.0
   firebase_auth: ^5.5.1
 
   #for deep link
