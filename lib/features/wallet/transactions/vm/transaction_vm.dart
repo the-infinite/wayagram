@@ -29,7 +29,12 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
 
       if (response.success) {
         TransactionModel responseModel = TransactionModel.fromJson(response.data);
-        state = state.copyWith(docs: responseModel.data?.docs);
+        state = state.copyWith(
+            docs: responseModel.data?.docs,
+            totalCreditTransaction: double.parse('${responseModel.data?.totalCreditTransaction}'),
+            totalDebitTransaction: double.parse('${responseModel.data?.totalDebitTransaction}'),
+            hasNextPage: responseModel.data?.hasNextPage
+        );
       }
     } catch (e) {
       debugPrint(e.toString());

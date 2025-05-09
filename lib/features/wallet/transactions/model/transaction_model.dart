@@ -1,4 +1,6 @@
 import 'dart:convert';
+
+import 'package:wayagram/shared/model/base_model.dart';
 TransactionModel transactionModelFromJson(String str) => TransactionModel.fromJson(json.decode(str));
 String transactionModelToJson(TransactionModel data) => json.encode(data.toJson());
 class TransactionModel {
@@ -220,7 +222,7 @@ AppliedFilters copyWith({  String? userId,
 
 TransactionModelDocs docsFromJson(String str) => TransactionModelDocs.fromJson(json.decode(str));
 String docsToJson(TransactionModelDocs data) => json.encode(data.toJson());
-class TransactionModelDocs {
+class TransactionModelDocs extends BaseModel<TransactionModelDocs> {
   TransactionModelDocs({
       this.id, 
       this.userId, 
@@ -338,5 +340,11 @@ class TransactionModelDocs {
     map['updatedAt'] = updatedAt;
     return map;
   }
+  @override
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    "purpose": purpose,
+    "description": description
+  };
 
 }
