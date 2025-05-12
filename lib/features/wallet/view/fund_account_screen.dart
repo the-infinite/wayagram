@@ -118,6 +118,20 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
           }
         }
         break;
+      case "9PSB":
+        WayaLoadingDialog.show(context);
+        final data = await ref
+            .read(walletFundingOptionsVmProvider.notifier)
+            .walletFunding(
+            amount: double.parse(amount), fundOptionCode: fundOptionCode);
+        if (mounted) {
+          WayaLoadingDialog.hide(context);
+          if (data != null) {
+            WayaNav.toNamed(BankTransferScreen.route,
+                arguments: {...data, "amount": amount, 'redirect': redirect});
+          }
+        }
+        break;
       default:
         log("Not Implemented Yet");
         break;

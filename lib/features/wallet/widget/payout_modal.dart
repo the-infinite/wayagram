@@ -16,7 +16,9 @@ import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class PayoutModal extends ConsumerStatefulWidget {
   final String name;
-  const PayoutModal({super.key, required this.name});
+  final String bankName;
+  final String bankCode;
+  const PayoutModal({super.key, required this.name, required this.bankName, required this.bankCode});
 
   @override
   ConsumerState<PayoutModal> createState() => _PayoutModalState();
@@ -59,10 +61,15 @@ class _PayoutModalState extends ConsumerState<PayoutModal> {
             SizedBox(height: 17.h),
             WayaButton(
               callback: () async {
-               await ref.watch(walletVmProvider.notifier).createPayoutMethod('${viewModel.acctNumber}',
-                   '${viewModel.acctNumber}',viewModel.bankName, 'code', context);
+                print('ACCOUNT NAME ${viewModel.acctName.text}');
+                print('Bank NAME ${widget.bankName}');
+                print('Bank CODE ${widget.bankCode}');
+                print('ACCOUNT Number ${viewModel.acctNumber.text}');
+               await ref.watch(walletVmProvider.notifier).createPayoutMethod(viewModel.acctNumber.text,
+                   widget.name, widget.bankName, widget.bankCode, context);
               },
               text: "Yes, Add Payout Method",
+              isLoading: viewModel.isLoading!,
             ),
             SizedBox(height: 17.h),
             WayaButton(
