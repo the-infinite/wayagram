@@ -207,7 +207,7 @@ class AccountDetailsCard extends StatelessWidget {
   }) {
     return Container(
       margin: index == 0 ? EdgeInsets.zero : EdgeInsets.only(left: 15.w),
-      padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 12.h, bottom: 12.h),
+      padding: EdgeInsets.only(left: 20.w, right: 20.w, top: 7.h, bottom: 12.h),
       decoration: BoxDecoration(
         color: wayaTheme.colorScheme.onPrimary,
         borderRadius: BorderRadius.circular(8.r),
