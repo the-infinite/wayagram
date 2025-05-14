@@ -85,6 +85,7 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
           .read(transactionVmProvider.notifier)
           .getTransaction(limit: limit, page: page);
 
+
       if (mounted) {
         final viewModel = ref.read(transactionVmProvider);
         final newTransactions = viewModel.docs ?? [];
