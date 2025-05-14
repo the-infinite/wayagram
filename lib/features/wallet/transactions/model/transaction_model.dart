@@ -92,7 +92,8 @@ class Data {
   num? page;
   num? totalPages;
   bool? hasNextPage;
-  num? nextPage;
+  int? nextPage;
+  //num? nextPage;
   bool? hasPrevPage;
   dynamic prevPage;
   num? pagingCounter;
@@ -105,7 +106,8 @@ Data copyWith({  List<TransactionModelDocs>? docs,
   num? page,
   num? totalPages,
   bool? hasNextPage,
-  num? nextPage,
+  //num? nextPage,
+  int? nextPage,
   bool? hasPrevPage,
   dynamic prevPage,
   num? pagingCounter,
