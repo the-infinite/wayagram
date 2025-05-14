@@ -14,13 +14,16 @@ class MyContests extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return UgtEmptyState(
         icon: Image.asset("assets/images/u-emptystate.png"),
-        desc:  ConversationState.self.accountType == UserAccountType.business
+        desc: ConversationState.self.accountType == UserAccountType.business
             ? "You don’t have any active contest here. Create a \n contest and have different participant"
             : "You don’t have any active contest here. Create a \n Business account to access more features",
         title: "No Contest Created",
         buttonText: "Host a Contest",
+       
         hideButton:
-            ConversationState.self.accountType == UserAccountType.business ? true : false,
+            ConversationState.self.accountType == UserAccountType.business
+                ? true
+                : false,
         onTap: () {
           invalidateUGTVm(ref);
           WayaNav.toNamed("/create-contest");

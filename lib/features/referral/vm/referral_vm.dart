@@ -38,7 +38,9 @@ class ReferralVm extends StateNotifier<ReferralState> {
     return _localDataSource.getUserId().toString();
   }
 
-  Future<void> getAllUserReferrals(bool isFirst) async {
+  Future<void> getAllUserReferrals(
+    bool isFirst,
+  ) async {
     /*  if (isFirst) {
       state = state.copyWith(page: 1);
     } */
@@ -51,7 +53,9 @@ class ReferralVm extends StateNotifier<ReferralState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _referralRepository.getUserReferral(
-          getLoggedInUserId() ?? "", isFirst ? 1 : state.page);
+          getLoggedInUserId() ?? "", isFirst ? 1 : state.page,
+          startDate: state.startDate ?? "1990-12-31",
+          endDate: state.endDate ?? "3021-12-31");
       state = state.copyWith(isLoading: false);
       if (response.success == true) {
         ReferralModelBase responseModel =
@@ -77,7 +81,12 @@ class ReferralVm extends StateNotifier<ReferralState> {
       debugPrint(e.toString());
     } finally {}
   }
+  void updateStartAndEndDate(String? startDate, String? endDate){
+   state = state.copyWith(startDate: startDate, endDate: endDate);
 }
+}
+
+
 
 final referralVm = StateNotifierProvider<ReferralVm, ReferralState>(
   (ref) {

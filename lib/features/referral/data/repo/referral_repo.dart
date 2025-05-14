@@ -14,8 +14,10 @@ class ReferralRepo extends BaseRepository {
     return get('$serviceUrl/client/referral/total-amount/$profileId');
   }
 
-  Future<WayaRequestResponse> getUserReferral(String profileId, int page) {
+  Future<WayaRequestResponse> getUserReferral(String profileId, int page,
+      {String startDate = "1990-12-31", String endDate = "3021-12-31"}) {
+    // /client/referral/users/:profileId?limit=&page=&startDate=&endDate=&isPaid=&isEligible=
     return get(
-        '$serviceUrl/client/referral/users/$profileId?limit=20&page=$page');
+        '$serviceUrl/client/referral/users/$profileId?limit=20&page=$page&startDate=$startDate&endDate=$endDate');
   }
 }

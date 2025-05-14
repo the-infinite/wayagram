@@ -27,8 +27,14 @@ class ContestRepo extends BaseRepository {
     return post('$serviceUrl2/application/', payLoad, formdata: false);
   }
 
-  Future<WayaRequestResponse> getContestForYou(int page) {
+  Future<WayaRequestResponse> getContestForYou(int page, String? filter) {
+    if(filter != null){
+
+    return get('$serviceUrl2/contests/contest-for-you?page=$page&state=$filter');
+    }else{
+
     return get('$serviceUrl2/contests/contest-for-you?page=$page');
+    }
   }
 
   Future<WayaRequestResponse> fetchHostedContest(String userId, int page) {

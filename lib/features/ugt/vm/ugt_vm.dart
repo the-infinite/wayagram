@@ -105,8 +105,13 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   //var contestSignUpRequirement = [];
 
-  Future<void> onSubmit(WidgetRef ref, BuildContext context, ValueNotifier<bool> isLoading,
-      List<NewRequirementModel> newRequirementList, List<StagePrefModel> stageList, bool isEditing) async {
+  Future<void> onSubmit(
+      WidgetRef ref,
+      BuildContext context,
+      ValueNotifier<bool> isLoading,
+      List<NewRequirementModel> newRequirementList,
+      List<StagePrefModel> stageList,
+      bool isEditing) async {
     //  debugPrint(' sss ${_localDataSource.getUserId().toString()}');
     //final userTypeProvider = ref.watch(localDataSourceProvider);
     /* 
@@ -136,12 +141,20 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
           "stageName": model.stageName,
           "entryType": model.entryType?.toUpperCase(),
           "entryAmount": model.entryAmount!.contains("NGN")
-              ? model.entryAmount!.split(".").first.substring(3).replaceAll(",", "")
+              ? model.entryAmount!
+                  .split(".")
+                  .first
+                  .substring(3)
+                  .replaceAll(",", "")
               : model.entryAmount,
           "voteCountToQualify": model.voteCountToQualify ?? "",
           "numberOfPostPerWeek": model.numPostPerWeek,
           "priceOfTheWinner": model.priceWinner!.contains("NGN")
-              ? int.parse(model.priceWinner!.split(".").first.substring(3).replaceAll(",", ""))
+              ? int.parse(model.priceWinner!
+                  .split(".")
+                  .first
+                  .substring(3)
+                  .replaceAll(",", ""))
               : int.parse(model.priceWinner ?? "0"),
           "startDate": _convertToISO(model.startDate!), // model.startDate,
           "endDate": _convertToISO(model.endDate!), // model.endDate,
@@ -178,14 +191,22 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "description": description.text,
         //  "voteCountToQualify": voteCountToQualify.text,
         "amount": state.amount.text.contains("NGN")
-            ? state.amount.text.split(".").first.substring(3).replaceAll(",", "")
+            ? state.amount.text
+                .split(".")
+                .first
+                .substring(3)
+                .replaceAll(",", "")
             : state.amount.text,
 
         //  "durationType": state.entrySelectType.toUpperCase(),
         // "numberOfDuration": state.numberOfDuration.text,
         "descriptionOfAwards": state.descriptionOfAwards.text,
         "amountPerVote": amountPerVote.text.contains("NGN")
-            ? amountPerVote.text.split(".").first.substring(3).replaceAll(",", "")
+            ? amountPerVote.text
+                .split(".")
+                .first
+                .substring(3)
+                .replaceAll(",", "")
             : amountPerVote.text,
         //   "type": state.contestFreePaid.toUpperCase(),
         "overallResult": state.overallResult == true ? "YES" : "NO",
@@ -194,20 +215,27 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         "status": "ACTIVE",
         "howItWorks": state.howItWorks.text,
         //  "numberOfWeeks": numberOfWeeks.text,
-        "currentStage": state.contestTimelineCurrentStage.trim().isEmpty ? "Nill" : state.contestTimelineCurrentStage,
+        "currentStage": state.contestTimelineCurrentStage.trim().isEmpty
+            ? "Nill"
+            : state.contestTimelineCurrentStage,
         "participationStartDate": _convertToISO(state.startDate),
+        "participationEndDate": _convertToISO(state.endDate),
         "startDate": _convertToISO(state.contestTimelineStartDate),
         "uploadCoverImages": profileImageUrl,
         "endDate": _convertToISO(state.contestTimelineEndDate),
 
         "entryType": state.entrySelectType.toUpperCase(),
 
-        "contestSettings": {"stages": mapStageList, "formRequirements": mapRequireList}
+        "contestSettings": {
+          "stages": mapStageList,
+          "formRequirements": mapRequireList
+        }
       };
       debugPrint(map.toString());
       WayaRequestResponse? response;
       if (isEditing) {
-        response = await _contestRepository.editContest(contestViewModel?.id ?? "", map);
+        response = await _contestRepository.editContest(
+            contestViewModel?.id ?? "", map);
       } else {
         response = await _contestRepository.createContest(map);
       }
@@ -229,7 +257,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
               onShareTap: () async {
                 await Share.share(
                   WayaValueHelper.getShareableUrl(
-                      WayaAppRoutes.getContestDetailRoute(response?.data["data"]["contest"]["id"] ?? "")),
+                      WayaAppRoutes.getContestDetailRoute(
+                          response?.data["data"]["contest"]["id"] ?? "")),
                   subject: "Share Contest",
 
                   /* Uri.parse(
@@ -242,7 +271,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
               }),
         );
       } else {
-        WayaSnackBar.showToast("Please try again later, unable to create contest");
+        WayaSnackBar.showToast(
+            "Please try again later, unable to create contest");
       }
     } catch (e) {
       _logger.e(e.toString());
@@ -262,8 +292,10 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     String expectationFromVoters,
   ) async {
     isLoading.value = true;
-    final imageUrl = await WayaFileRepository.instance.uploadFile(File(imagePath), "ugt-image-${Uuid().v4()}");
-    final videoUrl = await WayaFileRepository.instance.uploadFile(File(videoPath), "ugt-video-${Uuid().v4()}");
+    final imageUrl = await WayaFileRepository.instance
+        .uploadFile(File(imagePath), "ugt-image-${Uuid().v4()}");
+    final videoUrl = await WayaFileRepository.instance
+        .uploadFile(File(videoPath), "ugt-video-${Uuid().v4()}");
     var model = ref.read(selectedAppliedContestProvider.notifier).state;
     var map = {
       "profileId": _localDataSource.getUserId().toString(),
@@ -301,11 +333,13 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     String? videoUrl = oldVideoPath;
 
     if (pickAnotherImage) {
-      imageUrl = await WayaFileRepository.instance.uploadFile(File(imagePath), "ugt-image-${Uuid().v4()}");
+      imageUrl = await WayaFileRepository.instance
+          .uploadFile(File(imagePath), "ugt-image-${Uuid().v4()}");
     }
 
     if (pickAnotherVideo) {
-      videoUrl = await WayaFileRepository.instance.uploadFile(File(videoPath), "ugt-video-${Uuid().v4()}");
+      videoUrl = await WayaFileRepository.instance
+          .uploadFile(File(videoPath), "ugt-video-${Uuid().v4()}");
     }
 
     var model = ref.read(selectedAppliedContestProvider.notifier).state;
@@ -324,10 +358,16 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
     isLoading.value = false;
     if (response.success) {
-      ref.read(votersContestNotifier.notifier).getContestantProfileVoteDetails(model.contestId ?? "");
+      ref
+          .read(votersContestNotifier.notifier)
+          .getContestantProfileVoteDetails(model.contestId ?? "");
 
-      ref.read(votersContestNotifier.notifier).fetchAllContestPosts(model.contestId ?? "");
-      ref.read(votersContestNotifier.notifier).fetchAllContestApplicant(model.contestId ?? "");
+      ref
+          .read(votersContestNotifier.notifier)
+          .fetchAllContestPosts(model.contestId ?? "");
+      ref
+          .read(votersContestNotifier.notifier)
+          .fetchAllContestApplicant(model.contestId ?? "");
       WayaNav.removeUntilNamed(AdminContestDetails.route);
     }
   }
@@ -339,14 +379,30 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
         final dateIsoFormat = response.toIso8601String();
-        state = state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
+        state =
+            state.copyWith(startDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
       debugPrint(error.toString());
     }
   }
 
-  Future<DateTime?> pickerDialog(BuildContext context, {DateTime? firtDate, DateTime? lastDate}) async {
+  Future<void> showDatePickerDialog2(BuildContext context) async {
+    try {
+      final response = await pickerDialog(context);
+
+      if (response != null) {
+        final endDate = "${response.year}-${response.month}-${response.day}";
+        final dateIsoFormat = response.toIso8601String();
+        state = state.copyWith(endDate: endDate, dateIsoFormat: dateIsoFormat);
+      }
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+  }
+
+  Future<DateTime?> pickerDialog(BuildContext context,
+      {DateTime? firtDate, DateTime? lastDate}) async {
     try {
       final response = await showDatePicker(
           context: context,
@@ -370,40 +426,47 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   Future<void> showDatePickerDialogEndDate(BuildContext context) async {
     try {
       final response = await showDatePicker(
-          context: context, firstDate: DateTime.now(), lastDate: DateTime(2050), initialDate: DateTime.now());
+          context: context,
+          firstDate: DateTime.now(),
+          lastDate: DateTime(2050),
+          initialDate: DateTime.now());
       if (response != null) {
         final endDate = "${response.year}-${response.month}-${response.day}";
         final dateIsoFormat = response.toIso8601String();
-        state = state.copyWith(endDate: endDate, endDateIsoFormat: dateIsoFormat);
+        state =
+            state.copyWith(endDate: endDate, endDateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
       debugPrint(error.toString());
     }
   }
 
-
-
   List<Select> ugtCategory() {
     return state.category.asMap().entries.map((entries) {
-      return Select(value: entries.value.value.toString(), label: entries.value.label);
+      return Select(
+          value: entries.value.value.toString(), label: entries.value.label);
     }).toList();
   }
 
   List<Select> ugtStates() {
     return states.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.state);
+      return Select(
+          value: entries.value.id.toString(), label: entries.value.state);
     }).toList();
   }
 
   List<Select> ugtCategoryStat() {
     return ugtCategoryStates.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.ugtCategoryState);
+      return Select(
+          value: entries.value.id.toString(),
+          label: entries.value.ugtCategoryState);
     }).toList();
   }
 
   List<Select> ugtPaymentType() {
     return paymentTypes.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.paymentType);
+      return Select(
+          value: entries.value.id.toString(), label: entries.value.paymentType);
     }).toList();
   }
 
@@ -411,17 +474,23 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     debugPrint('were ${value.toJson()}');
     state = state.copyWith(categorys: value.label);
     state = state.copyWith(categoryId: value.value);
-    state = state.copyWith(selectedCategory: Select(label: value.label, value: value.value));
+    state = state.copyWith(
+        selectedCategory: Select(label: value.label, value: value.value));
     debugPrint('were ${state.categoryId}');
   }
 
   updateEdit(String value) {
-    var returnedState = state.category.asMap().entries.firstWhere((entries) => entries.value.label == value);
+    var returnedState = state.category
+        .asMap()
+        .entries
+        .firstWhere((entries) => entries.value.label == value);
 
     state = state.copyWith(categorys: returnedState.value.label);
     state = state.copyWith(categoryId: returnedState.value.value.toString());
     state = state.copyWith(
-        selectedCategory: Select(label: returnedState.value.value.toString(), value: returnedState.value.label));
+        selectedCategory: Select(
+            label: returnedState.value.value.toString(),
+            value: returnedState.value.label));
     /*    .map((entries) {
       return Select(
           value: entries.value.value.toString(), label: entries.value.label);
@@ -430,25 +499,32 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   List<Select> ugtDurationType() {
     return durationTypes.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.durationType);
+      return Select(
+          value: entries.value.id.toString(),
+          label: entries.value.durationType);
     }).toList();
   }
 
   List<Select> ugtWinnerPrize() {
     return winnerPrizes.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.winnerPrize);
+      return Select(
+          value: entries.value.id.toString(), label: entries.value.winnerPrize);
     }).toList();
   }
 
   List<Select> ugtMultipleStages() {
     return multipleStages.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.multipleStage);
+      return Select(
+          value: entries.value.id.toString(),
+          label: entries.value.multipleStage);
     }).toList();
   }
 
   List<Select> ugtCurrentStage() {
     return currentStages.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.currentStage);
+      return Select(
+          value: entries.value.id.toString(),
+          label: entries.value.currentStage);
     }).toList();
   }
 
@@ -465,7 +541,10 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   }
 
   selectStateEdit(String value) {
-    var selectedState = states.asMap().entries.firstWhere((entries) => entries.value.state == value);
+    var selectedState = states
+        .asMap()
+        .entries
+        .firstWhere((entries) => entries.value.state == value);
     state = state.copyWith(state: selectedState.value.state);
 
     /*  .map((entries) {
@@ -476,7 +555,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   List<Select> ugtRequirementType() {
     return requirementTypes.asMap().entries.map((entries) {
-      return Select(value: entries.value.id.toString(), label: entries.value.requirementType);
+      return Select(
+          value: entries.value.id.toString(),
+          label: entries.value.requirementType);
     }).toList();
   }
 
@@ -484,11 +565,13 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     try {
       final response = await _contestRepository.getCategory();
       if (response.success) {
-        ContestCategory2 responseModel = ContestCategory2.fromJson(response.data);
+        ContestCategory2 responseModel =
+            ContestCategory2.fromJson(response.data);
 
         final List<Select> allCategory = responseModel.data.map((val) {
           debugPrint('Error: ${val.id}');
-          return Select(label: val.name ?? "", value: val.id ?? "", image: val.id ?? "");
+          return Select(
+              label: val.name ?? "", value: val.id ?? "", image: val.id ?? "");
         }).toList();
         state = state.copyWith(category: allCategory);
       }
@@ -516,6 +599,10 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   void updateParticipationDate(String name) {
     state = state.copyWith(startDate: name);
+  }
+
+  void updateParticipationEndDate(String name) {
+    state = state.copyWith(endDate: name);
   }
 
   //Contest timeline
@@ -549,12 +636,14 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   Future<void> showDateContestStart(BuildContext context) async {
     try {
-      final response = await pickerDialog(context);
+      DateTime tomorrow = DateTime.now().add(Duration(days: 1));
+      final response = await pickerDialog(context, firtDate: tomorrow);
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
         final dateIsoFormat = response.toIso8601String();
-        state = state.copyWith(contestTimelineStartDate: startDate, dateIsoFormat: dateIsoFormat);
+        state = state.copyWith(
+            contestTimelineStartDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
       debugPrint(error.toString());
@@ -563,23 +652,29 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   Future<void> showDateContestEnd(BuildContext context) async {
     try {
-      final response = await pickerDialog(context,
-          firtDate: convertToUsableDate(
-              state.contestTimelineStartDate.trim().isEmpty ? "2050-1-1" : state.contestTimelineStartDate));
+      var date = convertToUsableDate(
+          state.contestTimelineStartDate.trim().isEmpty
+              ? "2050-1-1"
+              : state.contestTimelineStartDate);
+
+      final response = await pickerDialog(context, firtDate: date);
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
         final dateIsoFormat = response.toIso8601String();
-        state = state.copyWith(contestTimelineEndDate: startDate, dateIsoFormat: dateIsoFormat);
+        state = state.copyWith(
+            contestTimelineEndDate: startDate, dateIsoFormat: dateIsoFormat);
       }
     } catch (error) {
       debugPrint(error.toString());
     }
   }
 
-  Future<String?> showDatePickerMain(BuildContext context, {DateTime? firstDate, DateTime? lastDate}) async {
+  Future<String?> showDatePickerMain(BuildContext context,
+      {DateTime? firstDate, DateTime? lastDate}) async {
     try {
-      final response = await pickerDialog(context, firtDate: firstDate, lastDate: lastDate);
+      final response =
+          await pickerDialog(context, firtDate: firstDate, lastDate: lastDate);
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
@@ -602,7 +697,10 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   }
 
   void updateEditStagePrefList() {
-    state.copyWith(stagePrefModels: [...state.stagePrefModels ?? [], state.stagePrefModel!]);
+    state.copyWith(stagePrefModels: [
+      ...state.stagePrefModels ?? [],
+      state.stagePrefModel!
+    ]);
   }
 
   void updateEditStagePrefListValue(StagePrefModel model) {
@@ -622,10 +720,12 @@ final stateContactProvider = StateProvider<List<StagePrefModel>>((ref) => [
 
 final stateIsEditingContestProvider = StateProvider<bool>((ref) => false);
 
-final stateRequirementProvider = StateProvider<List<NewRequirementModel>>((ref) => []);
+final stateRequirementProvider =
+    StateProvider<List<NewRequirementModel>>((ref) => []);
 final categoryData = Provider((ref) => ContestResponse());
 //final loadingProvider = StateProvider<bool>((ref) => false);
-final contestNotifierProvider = StateNotifierProvider<CreateContestNotifier, ContestState>(
+final contestNotifierProvider =
+    StateNotifierProvider<CreateContestNotifier, ContestState>(
   (ref) {
     // final contestRepository = ref.watch(authRepositoryProvider);
     // final contestNotifierProvider2 = ref.watch(contestControllerProvider);

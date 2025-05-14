@@ -210,6 +210,7 @@ class ContestState {
       description: description ?? this.description,
       descriptionOfAwards: descriptionOfAwards ?? this.descriptionOfAwards,
       durationType: durationType ?? this.durationType,
+      
       endDate: endDate ?? this.endDate,
       entryType: entryType ?? this.entryType,
       howItWorks: howItWorks ?? this.howItWorks,
@@ -248,6 +249,7 @@ class ContestState {
       dateIsoFormat: dateIsoFormat ?? this.dateIsoFormat,
       endDateIsoFormat: endDateIsoFormat ?? this.endDateIsoFormat,
       startDate: startDate ?? this.startDate,
+     // en: startDate ?? this.startDate,
       status: status ?? this.status,
       state: state ?? this.state,
       numberOfPostPerWeek: numberOfDuration ?? this.numberOfPostPerWeek,

@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/route_manager.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/padding_extension.dart';
@@ -35,6 +37,9 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
+    final dynamic args = ModalRoute.of(context)?.settings.arguments;
+    final bool canViewDashboard =
+        args != null ? args["canViewDashboard"] ?? false : false;
     final String myPassedContestId = Get.parameters['id'] ?? 'Unknown';
     final myContestId = useState("");
     //  debugPrint("COntest DI $myPassedContestId");
@@ -98,6 +103,23 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
         title: "Contest Details",
         appBarTrailing: Row(
           children: [
+            GestureDetector(
+                onTap: () async {
+                  //  print(model?.id ?? id);
+                  await Share.share(
+                    WayaValueHelper.getShareableUrl(
+                        WayaAppRoutes.getContestDetailRoute(myContestId.value)),
+                    subject: "Share Contest",
+
+                    // https://staging.wayagram.ng/contest-profile-page?id=acabf193-dd12-48c5-9030-157efa4c012a&contestId=10c8c1b5-f720-4633-a14e-646313230192
+                  );
+                },
+                child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none)),
+            const Gap(20),
+          ],
+        ),
+        /*  Row(
+          children: [
             const Gap(20),
             ClipRRect(
               borderRadius: BorderRadius.circular(45),
@@ -111,7 +133,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
             ),
             const Gap(30),
           ],
-        ),
+        ), */
         body: Padding(
           padding: const EdgeInsets.all(0),
           child: SingleChildScrollView(
@@ -255,7 +277,8 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                     ],
                   ),
                 const Gap(20),
-                if (viewModelNotifier.getLoggedInUserId() == model?.profileId)
+                if (viewModelNotifier.getLoggedInUserId() == model?.profileId ||
+                    canViewDashboard)
                   WayaButton(
                     callback: () {
                       WayaNav.toNamed('/contest-mydashboard-profile-page');
@@ -381,7 +404,11 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                   ],
                 ),
                 const Gap(10),
-                if (selectedViewIndex.value == 0) UgtPostAllContestant(model),
+                if (selectedViewIndex.value == 0)
+                  UgtPostAllContestant(
+                    model,
+                    canViewDashboard: canViewDashboard,
+                  ),
                 if (selectedViewIndex.value == 1) UgtDetailsLeaderboard(model),
                 if (selectedViewIndex.value == 2) UgtDetailsContestants(model),
                 //  if (selectedViewIndex.value == 3) UgtDetailsGallery(model),
@@ -412,8 +439,6 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
       ),
     );
   }
-
-
 
   Color getColor(bool isText, String text) {
     return isText ? Color(0xff9E0A05) : Color(0xffFEF6E7);
