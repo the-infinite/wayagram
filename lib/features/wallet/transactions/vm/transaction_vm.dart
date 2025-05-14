@@ -17,7 +17,7 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
 
   TransactionVm(this._transactionRepository, this._walletRepository,
       this._localDataSource)
-      : super(TransactionHistoryState());
+      : super(TransactionHistoryState()); //
 
   Future<void> getTransaction(
       {int? page = 1,
@@ -37,11 +37,10 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
         TransactionModel responseModel =
             TransactionModel.fromJson(response.data);
         state = state.copyWith(
+            isLoading: false,
             docs: responseModel.data?.docs,
-            totalCreditTransaction:
-                double.parse('${responseModel.data?.totalCreditTransaction}'),
-            totalDebitTransaction:
-                double.parse('${responseModel.data?.totalDebitTransaction}'),
+            totalCreditTransaction: double.parse('${responseModel.data?.totalCreditTransaction}'),
+            totalDebitTransaction: double.parse('${responseModel.data?.totalDebitTransaction}'),
             hasNextPage: responseModel.data?.hasNextPage);
       }
     } catch (e) {
@@ -160,6 +159,7 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
       isLoadingMore = true;
     }); */
 
+
     try {
       state = state.copyWith(page: state.page! + 1);
       // page++;
@@ -180,12 +180,13 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
           state = state.copyWith(
               docs: [...state.docs!, ...uniqueNewTransactions],
               hasNextPage: uniqueNewTransactions.length >= 10);
+
           /*  setState(() {
             docs.addAll(uniqueNewTransactions);
             hasNextPage = uniqueNewTransactions.length >= limit;
           }); */
         } else {
-         // state = state.copyWith(hasNextPage: false);
+          state = state.copyWith(hasNextPage: false);
           /*  setState(() {
             hasNextPage = false;
           }); */

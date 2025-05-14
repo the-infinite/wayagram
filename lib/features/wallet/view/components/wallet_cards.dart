@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
+import 'package:wayagram/features/wallet/view/components/modal_content.dart';
 import 'package:wayagram/features/wallet/view/fund_wallet_options_screen.dart';
 import 'package:wayagram/features/wallet/view/request_payout.dart';
 import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
@@ -131,9 +132,17 @@ class _WalletBalanceCardState extends ConsumerState<WalletBalanceCard> {
               SizedBox(
                 width: 10,
               ),
-              Image.asset(
-                'assets/images/wallet/q.png',
-                height: 24,
+              InkWell(
+                onTap: (){
+                  WayaUtils.showModalSheet(
+                    context,
+                    child: LearnMoreInstructionsContent(),
+                  );
+                },
+                child: Image.asset(
+                  'assets/images/wallet/q.png',
+                  height: 24,
+                ),
               )
             ],
           ),
