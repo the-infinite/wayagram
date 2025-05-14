@@ -123,42 +123,45 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
                 ),
 
               ), */
-              MediaCard(
-                  ontap: (String url, MyFullMediaType type) {
-                    if (type == MyFullMediaType.image) {
-                      WayaNav.toNamed("/view-media-full-page", arguments: {
-                        "url": url,
-                        "title": widget.post.contestApplication?.fullName ?? "",
-                        "createdAt": widget.post.createdAt,
-                        "likeCount": widget.post.likes,
-                        "isLike": widget.post.hasLiked,
-                        "showDescription": true,
-                        "discription": widget.post.description,
-                        "shareCount": widget.post.shares,
-                        "type": MyFullMediaType.image
-                      });
-                    } else {
-                      WayaNav.toNamed("/view-media-full-page", arguments: {
-                        "url": url,
-                        "title": widget.post.contestApplication?.fullName ?? "",
-                        "createdAt": widget.post.createdAt,
-                        "likeCount": widget.post.likes,
-                        "isLike": widget.post.hasLiked,
-                        "showDescription": true,
-                        "discription": widget.post.description,
-                        "shareCount": widget.post.shares,
-                        "type": MyFullMediaType.video
-                      });
-                    }
-                  },
-                  mediaUrls: [
-                    ...widget.post.mediaContent!
-                        .where((e) =>
-                            e.type?.toLowerCase() == "video" ||
-                            e.type?.toLowerCase() == "image")
-                        .map((e) => CardMediaContent(
-                            type: e.type ?? "", url: e.url ?? ""))
-                  ]),
+               if (widget.post.mediaContent != null && widget.post.mediaContent!.isNotEmpty)
+                MediaCard(
+                    ontap: (String url, MyFullMediaType type) {
+                      if (type == MyFullMediaType.image) {
+                        WayaNav.toNamed("/view-media-full-page", arguments: {
+                          "url": url,
+                          "title":
+                              widget.post.contestApplication?.fullName ?? "",
+                          "createdAt": widget.post.createdAt,
+                          "likeCount": widget.post.likes,
+                          "isLike": widget.post.hasLiked,
+                          "showDescription": true,
+                          "discription": widget.post.description,
+                          "shareCount": widget.post.shares,
+                          "type": MyFullMediaType.image
+                        });
+                      } else {
+                        WayaNav.toNamed("/view-media-full-page", arguments: {
+                          "url": url,
+                          "title":
+                              widget.post.contestApplication?.fullName ?? "",
+                          "createdAt": widget.post.createdAt,
+                          "likeCount": widget.post.likes,
+                          "isLike": widget.post.hasLiked,
+                          "showDescription": true,
+                          "discription": widget.post.description,
+                          "shareCount": widget.post.shares,
+                          "type": MyFullMediaType.video
+                        });
+                      }
+                    },
+                    mediaUrls: [
+                      ...widget.post.mediaContent!
+                          .where((e) =>
+                              e.type?.toLowerCase() == "video" ||
+                              e.type?.toLowerCase() == "image")
+                          .map((e) => CardMediaContent(
+                              type: e.type ?? "", url: e.url ?? ""))
+                    ]),
               const Gap(20),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,

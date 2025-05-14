@@ -34,6 +34,7 @@ import '../../../core/utils/waya_navigation.dart';
 
 class ContestCard extends StatefulHookConsumerWidget {
   final Contest post;
+  final bool isFromHost;
   final void Function(String) onLikePressed;
   final void Function(String) onSharePressed;
   final void Function(String) onFollowPressed;
@@ -43,6 +44,7 @@ class ContestCard extends StatefulHookConsumerWidget {
     this.onLikePressed,
     this.onSharePressed,
     this.onFollowPressed, {
+    this.isFromHost = false,
     super.key,
   });
 
@@ -215,8 +217,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                           fit: BoxFit.cover,
                           radius: BorderRadius.circular(10),
                         )
-
-                      
                       : Image.asset(
                           'assets/images/frameuni.png',
                           height: 200,
@@ -225,7 +225,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                         ),
                 ),
               ),
-           
+
               const Gap(20),
               Text(
                 widget.post.description ?? "Description",
@@ -263,7 +263,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                               ? widget.post.contestStatus ?? ""
                               : widget.post.status ?? "Pending",
                         ),
-                        //? if this conditions are met, that when the green ongoing can be used
+                      //? if this conditions are met, that when the green ongoing can be used
                       if (widget.post.contestStatus?.toLowerCase() ==
                               "approved" &&
                           widget.post.status?.toLowerCase() == "active")
@@ -307,13 +307,23 @@ class _ContestCardState extends ConsumerState<ContestCard> {
 
               WayaButton(
                 callback: () {
-                  debugPrint("date date ID: ${widget.post.startDate ?? ""}");
+                  print(isTodayInRange(widget.post.participationStartDate ?? "",
+                      widget.post.participationStartDate ?? ""));
+                  if (widget.isFromHost) {
+                    print("i am here nw");
+                    WayaNav.toNamed("/upcoming-manage-contest-details",
+                        arguments: {"canViewDashboard": true});
+                    return;
+                  }
                   if (widget.post.status == "CLOSED") {
                     WayaNav.toNamed(EndedContestPage.route, arguments: {
                       'id': widget.post.id,
                     });
                     return;
                   }
+                  print("i am here 1111");
+                  print("i am here ${widget.post.profileId}");
+                  print("i am here ${voteNotifier.getLoggedInUserId()}");
                   if (widget.post.profileId ==
                       voteNotifier.getLoggedInUserId()) {
                     ref.read(selectedContestProvider.notifier).state =
@@ -321,7 +331,10 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                     WayaNav.toNamed('/upcoming-manage-contest-details');
                     return;
                   }
-                  if (!isInPast(widget.post.startDate ?? "")) {
+
+                  if (isTodayInRange(widget.post.participationStartDate ?? "",
+                      widget.post.participationStartDate ?? "")) {
+                    print("i am here");
                     ref.read(registerFormProvider.notifier).addDefault(
                         widget.post.contestSettings?.formRequirements ?? [],
                         widget.post);
@@ -330,6 +343,18 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                         widget.post;
                     WayaNav.toNamed("/upcoming-contest-details");
                   } else {
+                    /*   if (isDateInFuture(widget.post.endDate ?? "")) {
+                      ref.read(registerFormProvider.notifier).addDefault(
+                          widget.post.contestSettings?.formRequirements ?? [],
+                          widget.post);
+                      //  WayaNav.toNamed("/register-contest1");
+                      ref.read(selectedContestProvider.notifier).state =
+                          widget.post;
+                      WayaNav.toNamed("/upcoming-contest-details");
+                      return;
+                    }
+ */
+                    print("i am here 2222");
                     ref.read(selectedContestProvider.notifier).state =
                         widget.post;
                     WayaNav.toNamed('/upcoming-manage-contest-details');
@@ -361,8 +386,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                       });
                     },
                   ),
-
-                
                   const Gap(30),
                   PostActionType(
                     text:
@@ -460,7 +483,6 @@ String getRealDateDiffBtwDate(String realStartDate, String realEndDate) {
       return "$weeks Weeks";
     }
   }
-
 }
 
 bool isCurrentDateBetween(
@@ -475,4 +497,26 @@ bool isCurrentDateBetween(
     debugPrint("Invalid date format: $e");
     return false;
   }
+}
+
+bool isTodayInRange(String startDateStr, String endDateStr) {
+  // Parse input strings
+  DateTime startDate = DateTime.parse(startDateStr);
+  DateTime endDate = DateTime.parse(endDateStr);
+
+  // Get current date without time
+  DateTime today = DateTime.now();
+  today = DateTime(today.year, today.month, today.day);
+
+  // Optional: Normalize start and end to remove time (if needed)
+  startDate = DateTime(startDate.year, startDate.month, startDate.day);
+  endDate = DateTime(endDate.year, endDate.month, endDate.day);
+  print("kk my $today");
+  print("kk my $startDate");
+  print("kk my $endDate");
+
+  // Check if today is within range [start, end]
+  return today.isAtSameMomentAs(startDate) ||
+      today.isAtSameMomentAs(endDate) ||
+      (today.isAfter(startDate) && today.isBefore(endDate));
 }

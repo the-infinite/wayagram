@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
+import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/quotation/data/model/model.dart';
+import 'package:wayagram/features/ugt/contest_dashboard.dart/contest_dashboard.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
@@ -141,14 +147,133 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // const Gap(10),
           if (isAtTop)
             Column(
               children: [
-                GroupedWidgetHeader(
-                    onTap: null,
-                    subTitle:
-                        "See contests which are active for you to \n participate in",
-                    title: "Active Contests"),
+                Row(
+                  children: [
+                    Expanded(
+                      child: GroupedWidgetHeader(
+                          onTap: null,
+                          subTitle:
+                              "See contests which are active for you to participate in",
+                          title: "Active Contests"),
+                    ),
+                    Expanded(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: PopupMenuButton(
+                              onSelected: (value) {},
+                              position: PopupMenuPosition.under,
+                              itemBuilder: (context) {
+                                return [
+                                  ...myFilterList.map((e) {
+                                    return PopupMenuItem<int>(
+                                      value: 1,
+                                      child: _buildActionNav(
+                                          context: context,
+                                          onTap: () {
+                                            WayaNav.goBack();
+                                            if (e.text == "All States") {
+                                              postNotifier.updateFilter(null);
+                                            } else {
+                                              postNotifier.updateFilter(e.text);
+                                            }
+                                            /*   dashboardNotifier.fetchTotalEarnings(
+                                            model?.id ?? "", e.text.toLowerCase()); */
+
+                                            /*  if (e.text == "All") {
+                                      notifier.updateStartAndEndDate(
+                                          "1990-12-31", "3021-12-31");
+                                      notifier.getAllUserReferrals(true);
+                                    } else if (e.text == "Today") {
+                                      var list = todayDate();
+                                      notifier.updateStartAndEndDate(
+                                          list.first, list.last);
+                                      notifier.getAllUserReferrals(true);
+                                    } else if (e.text == "This Month") {
+                                      var list = thisMonthDate();
+                                      notifier.updateStartAndEndDate(
+                                          list.first, list.last);
+                                      notifier.getAllUserReferrals(true);
+                                    } else if (e.text == "This Year") {
+                                      var list = thisYearDate();
+                                      notifier.updateStartAndEndDate(
+                                          list.first, list.last);
+                                      notifier.getAllUserReferrals(true);
+                                    } */
+
+                                            selectPresentTap(e);
+                                          },
+                                          asset: WayaAssets.icons.mComments.svg(
+                                            color: wayaTheme
+                                                .colorScheme.customBlack,
+                                            height: 20,
+                                          ),
+                                          text: e.text,
+                                          isActive: e.isActive,
+                                          color: wayaTheme
+                                              .colorScheme.customBlack),
+                                    );
+                                  })
+                                ];
+                              },
+                              child: Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  //  margin: EdgeInsets.only(right: 20.w),
+                                  width: 130.w,
+                                  padding: REdgeInsets.symmetric(
+                                      vertical: 8.dg, horizontal: 12.dg),
+                                  decoration: BoxDecoration(
+                                    color: wayaTheme.colorScheme.greyColor100,
+                                    border: Border.all(
+                                      color: wayaTheme.colorScheme.greyColor300,
+                                      width: 1.5,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8.r),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      WayaAssets.icons.actionFilter.svg(
+                                        color:
+                                            wayaTheme.colorScheme.greyColor400,
+                                        //  color: wayaTheme.colorScheme.primary600,
+                                      ),
+                                      Gap(5),
+                                      Text(
+                                        'Filter By',
+                                        style: wayaTheme.textTheme.labelSmall
+                                            ?.wayaCopyWith(
+                                          color: wayaTheme
+                                              .colorScheme.greyColor400,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      Gap(5),
+                                      WayaAssets.icons.downArrow.svg(
+                                        color:
+                                            wayaTheme.colorScheme.greyColor400,
+                                        //color: wayaTheme.colorScheme.primary600,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
                 const Gap(10),
                 if (ConversationState.self.accountType ==
                     UserAccountType.business)
@@ -192,6 +317,69 @@ class _ForYouContestState extends ConsumerState<ForYouContest> {
               ),
             ),
           Gap(50)
+        ],
+      ),
+    );
+  }
+
+  var myFilterList = [
+    // MyFilterModel(text: 'All', isActive: true),
+    ...states.map((e) {
+      if (e.state == "All States") {
+        return MyFilterModel(text: e.state, isActive: true);
+      } else {
+        return MyFilterModel(text: e.state, isActive: false);
+      }
+    })
+  ];
+  void selectPresentTap(MyFilterModel e) {
+    var list = myFilterList.map((user) {
+      if (user == e) {
+        return MyFilterModel(
+            text: user.text, isActive: true); // Change isActive to false
+      }
+      return MyFilterModel(text: user.text, isActive: false);
+    }).toList();
+    setState(() {
+      myFilterList = list;
+    });
+  }
+
+  InkWell _buildActionNav(
+      {required BuildContext context,
+      required VoidCallback onTap,
+      required Widget asset,
+      required String text,
+      required bool isActive,
+      required Color color}) {
+    final wayaTheme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      splashFactory: NoSplash.splashFactory,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // asset,
+          //const Gap(4),
+          Text(
+            text,
+            style: WayaTextStyles.bodyMedium.copyWith(color: color),
+          ),
+          if (isActive)
+            Container(
+              padding: EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                color: wayaTheme
+                    .primaryColor, // Background color for the checkmark
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.check,
+                color: Colors.white,
+                size: 16,
+              ),
+            ),
         ],
       ),
     );
