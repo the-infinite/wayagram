@@ -4,10 +4,11 @@ import 'package:get/get.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/auth/interests/data/model/interests_response_model.dart';
 
 class SelectInterestWidget extends StatelessWidget {
   final List<String> selectedInterests;
-  final List<String> interestData;
+  final List<InterestCategory> interestData;
   final Function(String value) onTap;
   final String title;
   const SelectInterestWidget(
@@ -40,19 +41,19 @@ class SelectInterestWidget extends StatelessWidget {
                     const Gap(6),
                     WayaButton(
                       callback: () {
-                        onTap(firstSection[index]);
+                        onTap(firstSection[index].id);
                       },
                       border: Border.all(
-                          color: selectedInterests.contains(firstSection[index])
+                          color: selectedInterests.contains(firstSection[index].id)
                               ? wayaTheme.colorScheme.customPrimary
                               : wayaTheme.colorScheme.greyColor300),
                       horizontalPadding: 8,
-                      color: selectedInterests.contains(firstSection[index])
+                      color: selectedInterests.contains(firstSection[index].id)
                           ? wayaTheme.colorScheme.primaryBrown50
                           : wayaTheme.colorScheme.transparent,
                       radius: 10,
                       height: 35,
-                      centerWidget: Text(firstSection[index].capitalizeFirst!,
+                      centerWidget: Text(firstSection[index].name.capitalizeFirst!,
                           style: WayaTextStyles.hintStyle),
                     ),
                     const Gap(6),
@@ -72,19 +73,19 @@ class SelectInterestWidget extends StatelessWidget {
                     const Gap(6),
                     WayaButton(
                       callback: () {
-                        onTap(secondSection[index]);
+                        onTap(secondSection[index].id);
                       },
                       border: Border.all(
-                          color: selectedInterests.contains(secondSection[index])
+                          color: selectedInterests.contains(secondSection[index].id)
                               ? wayaTheme.colorScheme.customPrimary
                               : wayaTheme.colorScheme.greyColor300),
                       horizontalPadding: 8,
-                      color: selectedInterests.contains(secondSection[index])
+                      color: selectedInterests.contains(secondSection[index].id)
                           ? wayaTheme.colorScheme.primaryBrown50
                           : wayaTheme.colorScheme.transparent,
                       radius: 10,
                       height: 35,
-                      centerWidget: Text(secondSection[index].capitalizeFirst!,
+                      centerWidget: Text(secondSection[index].name.capitalizeFirst!,
                           style: WayaTextStyles.hintStyle),
                     ),
                     const Gap(6),

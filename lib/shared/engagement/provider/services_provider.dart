@@ -204,7 +204,7 @@ class ServicesProvider extends StateNotifier<States> {
         wayaPostCache.cacheAll(responseModel.data.docs);
 
         // Map user interests to categories and scores
-        Map<String, int> interestMap = {for (var interest in userInterests) interest.category: interest.score};
+        Map<String, int> interestMap = {for (var interest in userInterests) interest.interest.category: interest.interest.score};
 
         // Filter posts that match user interests, handling null categories
         List<PostModel> matchingPosts = allPosts
@@ -338,7 +338,7 @@ class ServicesProvider extends StateNotifier<States> {
         final userInterests = ref.watch(selectInterestProvider).userInterests;
 
         // Map user interests to categories and scores
-        Map<String, int> interestMap = {for (var interest in userInterests) interest.category: interest.score};
+        Map<String, int> interestMap = {for (var interest in userInterests) interest.interest.category: interest.interest.score};
 
         // Filter polls that match user interests, ignoring empty categories
         List<Docs> matchingPolls = allPolls

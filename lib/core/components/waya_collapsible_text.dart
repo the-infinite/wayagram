@@ -12,17 +12,17 @@ class WayaCollapsibleText extends StatefulWidget {
   final TextAlign textAlign;
   final TextStyle style;
   final int maxLines;
+  final Color? linkCustomColor;
 
-  const WayaCollapsibleText(
-    this.text, {
-    super.key,
-    required this.style,
-    this.maxLines = 10,
-    this.fontSize = 16,
-    this.textAlign = TextAlign.start,
-    this.textColor,
-    this.buttonColor,
-  });
+  const WayaCollapsibleText(this.text,
+      {super.key,
+      required this.style,
+      this.maxLines = 10,
+      this.fontSize = 16,
+      this.textAlign = TextAlign.start,
+      this.textColor,
+      this.buttonColor,
+      this.linkCustomColor});
 
   @override
   State<WayaCollapsibleText> createState() => _WayaCollapsibleTextState();
@@ -52,25 +52,30 @@ class _WayaCollapsibleTextState extends State<WayaCollapsibleText> {
       trimLines: widget.maxLines,
       annotations: [
         Annotation(
-          regExp: RegExp(r'((https?:\/\/)?([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(\/[^\s]*)?)'),
-          spanBuilder: ({required String text, TextStyle? textStyle}) => TextSpan(
+          regExp: RegExp(
+              r'((https?:\/\/)?([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(\/[^\s]*)?)'),
+          spanBuilder: ({required String text, TextStyle? textStyle}) =>
+              TextSpan(
             text: text,
             style: widget.style.copyWith(
               fontSize: widget.fontSize,
-              color: wayaTheme.colorScheme.primary500,
+              color: widget.linkCustomColor ?? wayaTheme.colorScheme.primary500,
               decoration: TextDecoration.underline,
-              decorationColor: wayaTheme.colorScheme.primary500,
+              decorationColor:
+                  widget.linkCustomColor ?? wayaTheme.colorScheme.primary500,
             ),
             recognizer: TapGestureRecognizer()
               ..onTap = () async {
-                final String fullUrl = text.startsWith('http') ? text : 'https://$text';
+                final String fullUrl =
+                    text.startsWith('http') ? text : 'https://$text';
                 _launchUrl(fullUrl);
               },
           ),
         ),
         Annotation(
           regExp: RegExp(r'#\w+'),
-          spanBuilder: ({required String text, TextStyle? textStyle}) => TextSpan(
+          spanBuilder: ({required String text, TextStyle? textStyle}) =>
+              TextSpan(
             text: text,
             style: widget.style.copyWith(
               fontSize: widget.fontSize,

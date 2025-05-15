@@ -7,13 +7,14 @@ import 'package:wayagram/features/chat/model/message.dart';
 class TextMessageWidget extends StatelessWidget {
   final MessageModel data;
   final Color textColor;
+  final bool isMyMessage;
 
   // Construct.
-  const TextMessageWidget({
-    super.key,
-    required this.data,
-    required this.textColor,
-  });
+  const TextMessageWidget(
+      {super.key,
+      required this.data,
+      required this.textColor,
+      this.isMyMessage = false});
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +22,7 @@ class TextMessageWidget extends StatelessWidget {
       data.content ?? '',
       textColor: textColor,
       buttonColor: textColor,
+      linkCustomColor: isMyMessage ? WayaColors.white : null,
       maxLines: 10,
       style: WayaTextStyles.bodyMedium.copyWith(
         fontSize: 15.sp,

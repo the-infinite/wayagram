@@ -1,8 +1,12 @@
+// Manually Serialized Response Model for Flutter
+
+import 'package:wayagram/features/auth/interests/data/model/interests_response_model.dart';
+
 class SelectedInterestsResponseModel {
   final String message;
   final bool status;
   final int statusCode;
-  final List<InterestData> data;
+  final List<UserInterest> data;
 
   SelectedInterestsResponseModel({
     required this.message,
@@ -11,63 +15,61 @@ class SelectedInterestsResponseModel {
     required this.data,
   });
 
-  factory SelectedInterestsResponseModel.fromJson(Map<String, dynamic> json) {
+  factory SelectedInterestsResponseModel.fromJson(
+    Map<String, dynamic> json,
+  ) {
     return SelectedInterestsResponseModel(
-      message: json['message'],
-      status: json['status'],
-      statusCode: json['statusCode'],
-      data: (json['data'] as List)
-          .map((item) => InterestData.fromJson(item))
-          .toList(),
-    );
+        message: json['message'],
+        status: json['status'],
+        statusCode: json['statusCode'],
+        data: (json['data'] as List)
+            .map((item) => UserInterest.fromJson(item))
+            .toList());
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      'message': message,
-      'status': status,
-      'statusCode': statusCode,
-      'data': data.map((item) => item.toJson()).toList(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        'message': message,
+        'status': status,
+        'statusCode': statusCode,
+        'data': data.map((item) => item.toJson()).toList(),
+      };
 }
 
-class InterestData {
+
+
+// Model for the User Interest Data Item
+class UserInterest {
   final String id;
   final String userId;
-  final String category;
-  final int score;
+  final String interestId;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final InterestCategory interest;
 
-  InterestData({
+  UserInterest({
     required this.id,
     required this.userId,
-    required this.category,
-    required this.score,
+    required this.interestId,
     required this.createdAt,
     required this.updatedAt,
+    required this.interest,
   });
 
-  factory InterestData.fromJson(Map<String, dynamic> json) {
-    return InterestData(
-      id: json['id'],
-      userId: json['userId'],
-      category: json['category'],
-      score: json['score'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
-    );
-  }
+  factory UserInterest.fromJson(Map<String, dynamic> json) => UserInterest(
+        id: json['id'],
+        userId: json['userId'],
+        interestId: json['interestId'],
+        createdAt: DateTime.parse(json['createdAt']),
+        updatedAt: DateTime.parse(json['updatedAt']),
+        interest: InterestCategory.fromJson(json['interest']),
+      );
 
-  Map<String, dynamic> toJson() {
-    return {
-      'id': id,
-      'userId': userId,
-      'category': category,
-      'score': score,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-    };
-  }
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'userId': userId,
+        'interestId': interestId,
+        'createdAt': createdAt.toIso8601String(),
+        'updatedAt': updatedAt.toIso8601String(),
+        'interest': interest.toJson(),
+      };
 }
