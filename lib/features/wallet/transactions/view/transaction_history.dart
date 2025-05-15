@@ -80,6 +80,7 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
       isLoadingMore = true;
     });
     try {
+
       page++;
       await ref
           .read(transactionVmProvider.notifier)
