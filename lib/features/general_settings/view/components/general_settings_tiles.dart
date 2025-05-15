@@ -10,6 +10,7 @@ import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 
@@ -26,30 +27,39 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
     final userState = ref.watch(profileVmProvider);
     //final user = ConversationState.self.
     return Container(
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(10), color: wayaTheme.colorScheme.cardBackgroudColor2),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: wayaTheme.colorScheme.cardBackgroudColor2),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           ListTile(
             onTap: () {
-              WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id));
+              WayaNav.toNamed(
+                  WayaAppRoutes.getProfileRoute(ConversationState.self.id));
             },
             visualDensity: VisualDensity(horizontal: -2.0),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.r)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.r)),
             leading: WayaDp(
               radius: 25,
             ),
-            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10).copyWith(bottom: 0),
+            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10)
+                .copyWith(bottom: 0),
             title: Text(
-              userState.userAccountModel?.data?.userdata?.profile?.displayName ?? 'n/a',
-              style: wayaTheme.textTheme.hintStyleSemiBold.wayaCopyWith(color: wayaTheme.colorScheme.black),
+              userState
+                      .userAccountModel?.data?.userdata?.profile?.displayName ??
+                  'n/a',
+              style: wayaTheme.textTheme.hintStyleSemiBold
+                  .wayaCopyWith(color: wayaTheme.colorScheme.black),
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  userState.userAccountModel?.data?.userdata?.profile?.username == null
+                  userState.userAccountModel?.data?.userdata?.profile
+                              ?.username ==
+                          null
                       ? 'n/a'
                       : "@${userState.userAccountModel?.data?.userdata?.profile?.username}",
                   style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
@@ -64,7 +74,9 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    userState.userAccountModel?.data?.userdata?.profile?.referenceCode ?? '',
+                    userState.userAccountModel?.data?.userdata?.profile
+                            ?.referenceCode ??
+                        '',
                     style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
                       color: wayaTheme.colorScheme.primary,
                     ),
@@ -74,16 +86,21 @@ class GeneralSettingsProfileTile extends ConsumerWidget {
             ),
             trailing: SvgPicture.asset("assets/icons/arrow_keyboard_right.svg"),
           ),
-          userState.userAccountModel?.data?.userdata?.user?.role?.toLowerCase() == 'personal'
+          userState.userAccountModel?.data?.userdata?.user?.role
+                      ?.toLowerCase() ==
+                  'personal'
               ? Row(
                   children: [
                     Padding(
                       padding: EdgeInsets.only(left: 15),
                       child: SizedBox(
                         child: WayaButton(
-                          textStyle: wayaTheme.textTheme.bodyBold.wayaCopyWith(color: wayaTheme.colorScheme.onPrimary),
+                          textStyle: wayaTheme.textTheme.bodyBold.wayaCopyWith(
+                              color: wayaTheme.colorScheme.onPrimary),
                           height: 32,
-                          callback: () {},
+                          callback: () {
+                            WayaNav.toNamed(UpgradeToBusiness.route);
+                          },
                           text: "Set up Business Account",
                           color: wayaTheme.colorScheme.primary500,
                         ),
@@ -111,8 +128,9 @@ class GeneralSettingsOptionTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     return Container(
-      decoration:
-          BoxDecoration(borderRadius: BorderRadius.circular(15), color: wayaTheme.colorScheme.cardBackgroudColor2),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: wayaTheme.colorScheme.cardBackgroudColor2),
       padding: EdgeInsets.symmetric(horizontal: 15, vertical: 4),
       child: Column(
         children: [
@@ -126,13 +144,17 @@ class GeneralSettingsOptionTile extends StatelessWidget {
                     SvgPicture.asset(
                       "assets/icons/gen_set/${option.iconPath}.svg",
                       fit: BoxFit.none,
-                      color: option.iconPath == 'logout' ? WayaColors.primary : null,
+                      color: option.iconPath == 'logout'
+                          ? WayaColors.primary
+                          : null,
                     ),
                     Gap(10),
                     Text(option.title,
-                        style: wayaTheme.textTheme.hintStyle.wayaCopyWith(color: wayaTheme.colorScheme.greyColor700)),
+                        style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
+                            color: wayaTheme.colorScheme.greyColor700)),
                     Spacer(),
-                    Icon(Icons.arrow_forward_ios, size: 13, color: wayaTheme.colorScheme.greyColor700),
+                    Icon(Icons.arrow_forward_ios,
+                        size: 13, color: wayaTheme.colorScheme.greyColor700),
                   ],
                 ),
               ),

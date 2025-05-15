@@ -36,12 +36,13 @@ class SetNotificationVm extends StateNotifier<States> {
       // Before moving forward, try to retrieve the user's notifications.
       notificationVm.getUserNotifications();
 
-      final accountTypeState = ref.watch(selectAccountProvider);
-      if (accountTypeState.selectedType!.type == "PERSONAL") {
-        WayaNav.toNamed('/account-setup-success');
-      } else {
-        WayaNav.toNamed('/add-business-account');
-      }
+      // final accountTypeState = ref.watch(selectAccountProvider);
+      // if (accountTypeState.selectedType!.type == "PERSONAL") {
+      //   WayaNav.toNamed('/account-setup-success');
+      // } else {
+      //   WayaNav.toNamed('/add-business-account');
+      // }
+       WayaNav.toNamed(SelectInterest.route);
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
