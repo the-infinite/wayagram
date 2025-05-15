@@ -10,7 +10,6 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/features/ugt/data/model/voter_user_list_model.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 
-
 class VotersListPage extends StatefulHookConsumerWidget {
   static const route = '/voters-list-Page';
   const VotersListPage({super.key});
@@ -31,6 +30,7 @@ class _ManageStateContestState extends ConsumerState<VotersListPage> {
     final notifier = ref.read(votersContestNotifier.notifier);
 
     useEffect(() {
+      notifier.fetchVotersList(model?.id ?? "", true);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _scrollController.addListener(() {
           double currentOffset = _scrollController.position.pixels;
@@ -43,7 +43,7 @@ class _ManageStateContestState extends ConsumerState<VotersListPage> {
           }
           _previousScrollOffset = currentOffset;
         });
-      //  notifier.fetchVotersList(model?.id ?? "", true);
+        //  notifier.fetchVotersList(model?.id ?? "", true);
       });
       return null;
     }, []);

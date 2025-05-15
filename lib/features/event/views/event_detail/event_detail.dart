@@ -190,9 +190,9 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                       width: context.width * 0.45,
                       child: WayaButton(
                         callback: () {
-                          WayaNavigationHelper.showComingSoonModal(false);
-                          // WayaNav.toNamed(AddEvent.route,
-                          //     arguments: viewModel.singleEvent);
+                       
+                          WayaNav.toNamed(AddEvent.route,
+                              arguments: viewModel.singleEvent);
                         },
                         text: 'Edit Event Detail',
                       ),
