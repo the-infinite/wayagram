@@ -825,7 +825,8 @@ class _VoteInsufficientModalState extends State<VoteInsufficientModal> {
               border: Border.all(color: WayaColors.greyColor300),
               color: Colors.white,
               callback: () async {
-                //WayaNav.toNamed("/poll-dashboard");
+                WayaNav.goBack();
+                WayaNav.toNamed("/poll-and-voting");
               },
               text: "Go Back to Polls",
               textColor: WayaColors.black,

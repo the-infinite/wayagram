@@ -222,7 +222,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                                             ),
                                             const Gap(10),
                                             Text(
-                                              'Add Image/Video',
+                                              'Add Image',
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .bodyMedium!

@@ -45,12 +45,28 @@ class _PayoutModalState extends ConsumerState<PayoutModal> {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 3.h),
-            Text(
-              "Are you sure you want to add ${widget.name}",
-              style: wayaTheme.textTheme.hintStyle,
-              textAlign: TextAlign.center,
+            RichText(
+              text: TextSpan(
+                text: 'Are you sure you want to add ',
+                style: wayaTheme.textTheme.hintStyle,
+                children: <TextSpan>[
+                   TextSpan(
+                      text: widget.name,
+                      style: Theme.of(context).textTheme
+                          .bodyMedium!
+                          .wayaCopyWith(fontSize: 16.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Theme.of(context).colorScheme.greyColor500),),
+
+                ],
+              ),
             ),
-            SizedBox(height: 5.h),
+            // Text(
+            //   "Are you sure you want to add ${widget.name}",
+            //   style: wayaTheme.textTheme.hintStyle,
+            //   textAlign: TextAlign.center,
+            // ),
+            //SizedBox(height: 5.h),
             Text('to your Payout Method list and be able to send payouts to this account?',
                 style: wayaTheme.textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
