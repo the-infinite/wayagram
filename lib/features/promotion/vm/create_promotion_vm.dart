@@ -59,15 +59,21 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
     }
   }
 
-  Future<void> fetchAndSetInitialState({required String contentType, required String contentId}) async {
+  Future<void> fetchAndSetInitialState(
+      {required String contentType, required String contentId}) async {
     try {
       state = state.copyWith(initialFetching: true);
       //> 1
-      final promoPlans = await ref.read(promoteVmProvider.notifier).getPlans(serviceType: contentType);
+      final promoPlans = await ref
+          .read(promoteVmProvider.notifier)
+          .getPlans(serviceType: contentType);
 
       if (promoPlans != null) {
         final selPlans = promoPlans.map((c) {
-          return Select(label: c.name, value: c.id, price: double.parse(c.basePrice).toInt());
+          return Select(
+              label: c.name,
+              value: c.id,
+              price: double.parse(c.basePrice).toInt());
         }).toList();
 
         state = state.copyWith(promotionPlans: selPlans);
@@ -80,10 +86,14 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
       state = state.copyWith(userId: ConversationState.self.id);
 
 //> 3
-      final allInterests = await ref.read(selectInterestProvider.notifier).getInterest();
+      final allInterests =
+          await ref.read(selectInterestProvider.notifier).getInterest();
 
       if (allInterests != null) {
-        final selInterests = allInterests.keys.map((key) => Select(value: key, label: key)).toList();
+        final selInterests = allInterests
+            .expand((key) => key.subcategory)
+            .map((el) => Select(label: el.name, value: el.id))
+            .toList();
 
         state = state.copyWith(interests: selInterests);
       }
@@ -95,7 +105,8 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
   }
 
   Future<void> getAllStates() async {
-    final response = await ref.read(upgradeToBusinessVmProvider.notifier).fetchStates();
+    final response =
+        await ref.read(upgradeToBusinessVmProvider.notifier).fetchStates();
 
     if (response != null) {
       state = state.copyWith(states: response);
@@ -104,7 +115,8 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
 
   Future<void> onSubmit({required BuildContext context}) async {
     try {
-      Select selectedPlan = state.promotionPlans.firstWhere((c) => c.value == state.planId);
+      Select selectedPlan =
+          state.promotionPlans.firstWhere((c) => c.value == state.planId);
       // set the budget price   planPrice x number of days
 
       // start date
@@ -117,7 +129,8 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
       int numberOfDays = end.difference(start).inDays;
 
       if (numberOfDays < 1) {
-        return WayaSnackBar.showToast("Start date must be greater than end date");
+        return WayaSnackBar.showToast(
+            "Start date must be greater than end date");
       }
 
       int budget = numberOfDays * selectedPlan.price;
@@ -129,7 +142,8 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
 
       // return;
 
-      await WayaUtils.showModalSheet(context, child: PayForPromotion(title: state.contentType, budget: budget));
+      await WayaUtils.showModalSheet(context,
+          child: PayForPromotion(title: state.contentType, budget: budget));
     } catch (error) {
       debugPrint(error.toString());
     }
@@ -142,7 +156,8 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
   Future<void> payForPromotion({required BuildContext context}) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _repository.createPromotion(state.createPromotionModel);
+      final response =
+          await _repository.createPromotion(state.createPromotionModel);
 
       if (response.success) {
         WayaNav.goBack();
@@ -169,6 +184,7 @@ class CreatePromotionVm extends StateNotifier<CreatePromotionState> {
   }
 }
 
-final promotionVmProvider = StateNotifierProvider<CreatePromotionVm, CreatePromotionState>((ref) {
+final promotionVmProvider =
+    StateNotifierProvider<CreatePromotionVm, CreatePromotionState>((ref) {
   return CreatePromotionVm(ref, PromotionRepository());
 });
