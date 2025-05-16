@@ -275,6 +275,40 @@ class GroupVm extends StateNotifier<GroupState> {
     }
   }
 
+  Future<void> updateGroupSetting(BuildContext ctx,bool isPrivate, String groupId,) async {
+
+    try {
+      //state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.updateGroupSetting(isPrivate, groupId);
+      state = state.copyWith(isLoading: false);
+      //? If this is fine...
+      if (response.success && ctx.mounted) {
+
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Group setting updated successfully!',
+              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            ),
+            backgroundColor: WayaColors.primary,
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+
+      //? If it failed...
+      else {
+        _logger.i('LOGGER  ==>>> ${response.data['error']}');
+        debugPrint('Update group');
+        _logger.i(response.data['data']);
+      }
+    } catch (e) {
+      _logger.e(e);
+    } finally {
+      state = state.copyWith(isLoading: false);
+    }
+  }
+
   void prefillFunc(GroupModel group) {
     state = state.copyWith(
       groupName: TextEditingController(text: group.name),

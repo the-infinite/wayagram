@@ -122,7 +122,7 @@ class GroupRepository extends BaseRepository {
 
   Future<WayaRequestResponse> reportGroup(String groupId, String reason) {
     final payload = {"groupId": groupId, "reason": reason};
-    return post("$serviceUrl/client/reports/create", payload);
+    return post("$serviceUrl/reports/create", payload);
   }
 
   Future<WayaRequestResponse> approveJoinRequest(String requestId) {
@@ -176,10 +176,10 @@ class GroupRepository extends BaseRepository {
 
   Future<WayaRequestResponse> updateGroupSetting(bool isPrivate, groupId) {
     final payload = { "isPrivate": isPrivate};
-    return patch("$serviceUrl/client/groups/update-setting/$groupId", payload);
+    return patch("$serviceUrl/groups/update-setting/$groupId", payload);
   }
 
   Future<WayaRequestResponse> checkJoinGroupRequest(groupId) {
-    return get("$serviceUrl/client/groups/check-join/$groupId");
+    return get("$serviceUrl/groups/check-join/$groupId");
   }
 }
