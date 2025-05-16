@@ -90,7 +90,7 @@ class UgtContestantCard extends ConsumerWidget {
                   return;
                 }
 
-                if (model.entryType?.toLowerCase() == "free") {
+                if (model.amountPerVote == 0) {
                   WayaUtils.showModalSheet(
                     context,
                     child: ConfirmVoteOptionModal(

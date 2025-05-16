@@ -53,8 +53,14 @@ class CandidatePostScreen extends StatelessWidget {
                 PopupMenuItem(
                     value: "download",
                     onTap: () async {
-                      bool hasSaved = await WayaFileHelper.saveNetworkImage(
-                          data["url"] ?? "");
+                      bool hasSaved = false;
+                      if (data["type"] == MyFullMediaType.image) {
+                        hasSaved = await WayaFileHelper.saveNetworkImage(
+                            data["url"] ?? "");
+                      } else {
+                        hasSaved = await WayaFileHelper.saveNetworkVideo(
+                            data["url"] ?? "");
+                      }
 
                       if (hasSaved) {
                         WayaSnackBar.showToast("image saved",
@@ -169,7 +175,7 @@ class CandidatePostScreen extends StatelessWidget {
                           const SizedBox(height: 8),
 
                           // Reactions Row
-                          Padding(
+                          /*  Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 12.0),
                             child: Row(
@@ -243,6 +249,7 @@ class CandidatePostScreen extends StatelessWidget {
                               ],
                             ),
                           ),
+                        */
                         ],
                       ),
                     ),

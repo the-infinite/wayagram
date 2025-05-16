@@ -365,10 +365,10 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                         return;
                       }
 
-                       var list = await getCurrentFee(widget.model,
-                          widget.model.contestSettings?.stages);
+                      var list = await getCurrentFee(
+                          widget.model, widget.model.contestSettings?.stages);
 
-                      if (list[0].toLowerCase() == "free") {
+                      if (widget.model.amountPerVote == 0) {
                         WayaUtils.showModalSheet(
                           context,
                           child: ConfirmVoteOptionModal(
@@ -397,12 +397,9 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                       WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(
-                          voteFee:
-                             list[1].toString() ?? "0",
+                          voteFee: list[1].toString() ?? "0",
                           isFree:
-                              list[0].toLowerCase() == "free"
-                                  ? true
-                                  : false,
+                              list[0].toLowerCase() == "free" ? true : false,
                           //   amountPaid: "89",
                           /* 
                            contestId: contestantData.contestId ?? "",
