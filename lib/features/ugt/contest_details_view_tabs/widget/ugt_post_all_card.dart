@@ -397,7 +397,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                       WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(
-                          voteFee: list[1].toString() ?? "0",
+                          voteFee: list[1].toString(),
                           isFree:
                               list[0].toLowerCase() == "free" ? true : false,
                           //   amountPaid: "89",

@@ -6,14 +6,10 @@ import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
-import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
-import 'package:wayagram/shared/features/profile/model/groups.dart';
-import 'package:wayagram/shared/features/profile/widget/group.dart';
 import 'package:wayagram/shared/features/profile/widget/page.dart';
 
 import '../../../core/components/waya_buttons.dart';
-import '../../../shared/features/group/notifier/default.dart';
 import '../../../shared/features/profile/model/pages.dart';
 import '../../activity_logs/widget/activity_logs_empty_state.dart';
 
