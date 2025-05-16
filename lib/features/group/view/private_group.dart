@@ -72,7 +72,9 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                   value: 0,
                   onTap: () {
                     WayaNav.goBack();
-                    WayaNav.toNamed('/groupSetting');
+                    WayaNav.toNamed('/groupSetting', arguments: {
+                      'groupId': widget.group.id
+                    });
                   },
                   child: WayaActionNav(
                     context: context,

@@ -37,9 +37,11 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
 
   @override
   Widget build(BuildContext context) {
+
     final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(createGroupProvider);
-
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
+    debugPrint('MY Seeting Group ID ==>> ${args['groupId']}');
     return WayaScaffold(
       backgroundColor: Theme.of(context).colorScheme.greyColor50,
       isLoading: viewModel.isLoading,
@@ -59,7 +61,13 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
           accessType(
               "Open to Everyone",
               "Allow anyone to join without restrictions for a more inclusive community", viewModel.openToEveryone,
-                  (value) => ref.read(createGroupProvider.notifier).updateOpenToEveryone(value)),
+                  //(value) => ref.read(createGroupProvider.notifier).updateOpenToEveryone(value)
+                  (value) {
+                    ref.read(createGroupProvider.notifier).updateOpenToEveryone(value);
+                    ref.read(createGroupProvider.notifier).updateGroupSetting(context, viewModel.openToEveryone, args['groupId']);
+                  }
+
+          ),
 
         /*  Gap(20),
           accessType(

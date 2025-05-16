@@ -110,7 +110,7 @@ class PageRepository extends BaseRepository {
 
   Future<WayaRequestResponse> reportPage(String pageId, String reason) {
     final payload = {"pageId": pageId, "reason": reason};
-    return post("$serviceUrl/client/reports/create", payload, showErrors: true);
+    return post("$serviceUrl/reports/create", payload, showErrors: true);
   }
 
   Future<WayaRequestResponse> reportPost(String postId, String reason) {
