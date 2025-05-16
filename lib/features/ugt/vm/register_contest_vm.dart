@@ -166,6 +166,8 @@ class RegisterFormNotifier extends StateNotifier<List<DynamicField>> {
       Future.delayed(Duration(seconds: 1), () {
         WayaNav.removeAllUntil(UgtHome(), "/ugt-home");
       });
+    } else {
+      WayaSnackBar.showToast(response.data["message"]);
     }
   }
 

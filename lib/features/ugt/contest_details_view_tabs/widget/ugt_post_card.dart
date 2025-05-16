@@ -286,7 +286,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                       var list = await getCurrentFee(contestModel2,
                           contestModel2?.contestSettings?.stages);
 
-                      if (list[0].toLowerCase() == "free") {
+                      if (contestModel2?.amountPerVote == 0) {
                         WayaUtils.showModalSheet(
                           context,
                           child: ConfirmVoteOptionModal(
@@ -401,10 +401,10 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
 
 Future<List<dynamic>> getCurrentFee(
     contest.Contest? contestModel, List<contest.Stage>? stages) async {
-  int amount = 0;
-  String type = "";
+  // int amount = 0;
+  //String type = "";
 
-  if (stages != null) {
+  /*  if (stages != null) {
     for (var model in stages) {
       if (model.isActive == true) {
         amount = int.parse(model.entryAmount);
@@ -413,7 +413,7 @@ Future<List<dynamic>> getCurrentFee(
         return [type, amount];
       }
     }
-  }
+  } */
 
   return [contestModel?.entryType, contestModel?.amountPerVote];
 }
