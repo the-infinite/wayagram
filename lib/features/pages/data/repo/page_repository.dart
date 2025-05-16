@@ -110,7 +110,7 @@ class PageRepository extends BaseRepository {
 
   Future<WayaRequestResponse> reportPage(String pageId, String reason) {
     final payload = {"pageId": pageId, "reason": reason};
-    return post("$serviceUrl/reports/create", payload, showErrors: true);
+    return post("$serviceUrl/client/reports/create", payload, showErrors: true);
   }
 
   Future<WayaRequestResponse> reportPost(String postId, String reason) {
@@ -271,4 +271,13 @@ class PageRepository extends BaseRepository {
   Future<WayaRequestResponse> getRecommendedPages() {
     return get("$serviceUrl/pages/recommended");
   }
+
+  Future<WayaRequestResponse> updatePageSetting(bool isPublic, bool everyoneCanComment, pageId) {
+    final payload = { "isPublic": isPublic,
+      "everyoneCanComment": everyoneCanComment};
+    return patch("$serviceUrl/client/pages/update-setting/$pageId", payload);
+  }
+
+  
+
 }

@@ -20,6 +20,20 @@ class GroupSetting extends ConsumerStatefulWidget {
 class _GroupSettingState extends ConsumerState<GroupSetting>
     with SingleTickerProviderStateMixin {
 
+  // @override
+  // void initState() {
+  //   WidgetsBinding.instance.addPostFrameCallback((_) {
+  //     myGroupNotifier.getCreatedGroups();
+  //   });
+  //   searchController = TextEditingController();
+  //   searchController.addListener(() {
+  //     setState(() {});
+  //   });
+  //
+  //   // That's fine.
+  //   super.initState();
+  // }
+
 
   @override
   Widget build(BuildContext context) {
@@ -47,11 +61,11 @@ class _GroupSettingState extends ConsumerState<GroupSetting>
               "Allow anyone to join without restrictions for a more inclusive community", viewModel.openToEveryone,
                   (value) => ref.read(createGroupProvider.notifier).updateOpenToEveryone(value)),
 
-          Gap(20),
+        /*  Gap(20),
           accessType(
               "Require Join Approval",
               "Manually approve requests to join and maintain control over access", viewModel.requireApproval,
-                  (value) => ref.read(createGroupProvider.notifier).updateRequireApproval(value)),
+                  (value) => ref.read(createGroupProvider.notifier).updateRequireApproval(value)),*/
 
 
         ],

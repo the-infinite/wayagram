@@ -22,6 +22,7 @@ class _ManagePagesState extends ConsumerState<ManagePages> with SingleTickerProv
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       myPageNotifier.getCreatedPages();
     });
+
   }
 
   @override
