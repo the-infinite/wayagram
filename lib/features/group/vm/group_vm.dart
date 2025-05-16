@@ -278,7 +278,7 @@ class GroupVm extends StateNotifier<GroupState> {
   Future<void> updateGroupSetting(BuildContext ctx,bool isPrivate, String groupId,) async {
 
     try {
-      state = state.copyWith(isLoading: true);
+      //state = state.copyWith(isLoading: true);
       final response = await _groupRepository.updateGroupSetting(isPrivate, groupId);
       state = state.copyWith(isLoading: false);
       //? If this is fine...
