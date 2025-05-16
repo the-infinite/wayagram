@@ -2,6 +2,13 @@ import 'package:wayagram/features/general_settings/notifications/dto/default.dar
 
 class NotificationSettingsController {
   final _settings = <String, NotificationSetting>{};
+  static final instance = NotificationSettingsController._();
+
+  NotificationSettingsController._();
+
+  factory NotificationSettingsController() {
+    return instance;
+  }
 
   void addSetting(String key, NotificationSetting setting) {
     if (!_settings.containsKey(key)) {

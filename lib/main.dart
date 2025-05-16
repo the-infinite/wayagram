@@ -29,6 +29,8 @@ import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/auth/login/view/login_cover_page.dart';
 import 'package:wayagram/features/bottom_view/bottom_view.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/notifications/controller/default.dart';
+import 'package:wayagram/features/general_settings/notifications/vm/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
@@ -156,6 +158,10 @@ class _WayagramState extends ConsumerState<Wayagram> {
       try {
         await Future.delayed(const Duration(milliseconds: 900));
         await PackageData.getAndLoad;
+
+        //? This is fine.
+        final notificationSettings = ref.read(notificationSettingsProvider.notifier);
+        await notificationSettings.getSettings(NotificationSettingsController.instance);
       } catch (_) {}
     });
     super.initState();

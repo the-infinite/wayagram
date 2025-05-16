@@ -172,6 +172,7 @@ class _MyBubbleWidget extends StatelessWidget {
                               MessageType.text => TextMessageWidget(
                                   data: data,
                                   textColor: WayaColors.white,
+                                  isMyMessage: true
                                 ),
                               MessageType.voiceNote => VoiceMessageWidget(
                                   data: data,

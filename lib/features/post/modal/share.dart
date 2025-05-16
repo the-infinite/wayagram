@@ -233,7 +233,7 @@ class SharePostModal extends StatelessWidget {
               //? Then, to share the post.
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 13),
-                child: ShareChatsWidget(),
+                child: ShareChatsWidget(url: post.url),
               ),
 
               //? One divider.

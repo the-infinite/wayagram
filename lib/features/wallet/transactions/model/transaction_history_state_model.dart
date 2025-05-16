@@ -25,7 +25,7 @@ class TransactionHistoryState {
     this.verified = false,
     this.isFirstLoad = false,
     this.isLoadingMore = false,
-    this.hasNextPage = false,
+    this.hasNextPage = true,
     this.docs = const [],
     this.transactions,
     this.transaction,

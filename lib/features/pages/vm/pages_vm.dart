@@ -459,7 +459,7 @@ class PageVm extends StateNotifier<PageState> {
   Future<PostModel?> repostPost(BuildContext context, PostModel post) async {
     try {
       state = state.copyWith(isLoading: true);
-      final response = await _pageRepository.repost(post.id);
+      final response = await _pageRepository.repost(post.originalPostId ?? post.id);
       state = state.copyWith(isLoading: false);
 
       if (response.success) {
@@ -606,7 +606,6 @@ class PageVm extends StateNotifier<PageState> {
           postCount: responseModel.data?.totalDocs,
           allPostData: responseModel,
           isLoading: false,
-
         );
       }
     } catch (e) {

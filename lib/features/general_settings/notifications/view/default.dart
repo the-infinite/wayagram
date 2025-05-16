@@ -26,7 +26,7 @@ class _NotificationSettingsScreenState extends ConsumerState<NotificationSetting
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback(
       (_) async {
-        await Future.delayed(const Duration(milliseconds: 500));
+        await Future.delayed(const Duration(milliseconds: 300));
         await notifier.getSettings(controller);
       },
     );

@@ -76,6 +76,8 @@ class EventDoc extends BaseModel<EventDoc> {
   final DateTime startDate;
   final DateTime endDate;
   final String startTime;
+  final DateTime? ticketSalesStartDate;
+  final DateTime? ticketSalesEndDate;
   final String endTime;
   final String payoutStatus;
   final String eventType;
@@ -90,60 +92,66 @@ class EventDoc extends BaseModel<EventDoc> {
   final String createdAt;
   final String updatedAt;
 
-  EventDoc({
-    required this.id,
-    required this.userId,
-    required this.image,
-    required this.title,
-    required this.organizerName,
-    this.description,
-    required this.location,
-    required this.locationAddress,
-    required this.startDate,
-    required this.endDate,
-    required this.startTime,
-    required this.endTime,
-    required this.payoutStatus,
-    required this.eventType,
-    required this.eventStatus,
-    required this.fee,
-    required this.totalRevenue,
-    this.maxCapacity,
-    required this.noOfAttendees,
-    required this.privacyOption,
-    required this.version,
-    required this.isDeleted,
-    required this.createdAt,
-    required this.updatedAt,
-  });
+  EventDoc(
+      {required this.id,
+      required this.userId,
+      required this.image,
+      required this.title,
+      required this.organizerName,
+      this.description,
+      required this.location,
+      required this.locationAddress,
+      required this.startDate,
+      required this.endDate,
+      required this.startTime,
+      required this.endTime,
+      required this.payoutStatus,
+      required this.eventType,
+      required this.eventStatus,
+      required this.fee,
+      required this.totalRevenue,
+      this.maxCapacity,
+      required this.noOfAttendees,
+      required this.privacyOption,
+      required this.version,
+      required this.isDeleted,
+      required this.createdAt,
+      required this.updatedAt,
+      this.ticketSalesEndDate,
+      this.ticketSalesStartDate});
 
   factory EventDoc.fromJson(Map<String, dynamic> json) {
     return EventDoc(
-      id: json["id"],
-      userId: json["userId"],
-      image: json["image"],
-      title: json["title"],
-      organizerName: json["organizerName"],
-      description: json["description"],
-      location: json["location"],
-      locationAddress: json["locationAddress"],
-      startDate: DateTime.parse(json["startDate"]),
-      endDate: DateTime.parse(json["endDate"]),
-      startTime: json["startTime"],
-      endTime: json["endTime"],
-      payoutStatus: json["payoutStatus"],
-      eventType: json["eventType"],
-      eventStatus: json["eventstatus"],
-      fee: json["fee"],
-      totalRevenue: json["totalRevenue"],
-      maxCapacity: json["maxCapacity"],
-      noOfAttendees: json["noOfAttendees"],
-      privacyOption: json["privacyOption"],
-      version: json["_v"],
-      isDeleted: json["isDeleted"],
-      createdAt: json["createdAt"],
-      updatedAt: json["updatedAt"],
-    );
+        id: json["id"],
+        userId: json["userId"],
+        image: json["image"],
+        title: json["title"],
+        organizerName: json["organizerName"],
+        description: json["description"],
+        location: json["location"],
+        locationAddress: json["locationAddress"],
+        startDate: DateTime.parse(json["startDate"]),
+        endDate: DateTime.parse(json["endDate"]),
+        startTime: json["startTime"],
+        endTime: json["endTime"],
+        payoutStatus: json["payoutStatus"],
+        eventType: json["eventType"],
+        eventStatus: json["eventstatus"],
+        fee: json["fee"],
+        totalRevenue: json["totalRevenue"],
+        maxCapacity: json["maxCapacity"],
+        noOfAttendees: json["noOfAttendees"],
+        privacyOption: json["privacyOption"],
+        version: json["_v"],
+        isDeleted: json["isDeleted"],
+        createdAt: json["createdAt"],
+        updatedAt: json["updatedAt"],
+        ticketSalesStartDate: json["ticketSalesStartDate"] != null
+            ? DateTime.parse(json["ticketSalesStartDate"])
+            : null,
+        ticketSalesEndDate: json["ticketSalesEndDate"] != null
+            ? DateTime.parse(json["ticketSalesEndDate"])
+            : null);
   }
 
   @override
