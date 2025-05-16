@@ -1,10 +1,11 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
+import 'package:wayagram/shared/model/base_model.dart';
 
 part 'pages.g.dart';
 
 @JsonSerializable()
-class PageModel {
+class PageModel extends BaseModel<PageModel>{
   final String id;
   final int followerCount;
   final String ownerId;
@@ -49,6 +50,8 @@ class PageModel {
   DateTime get updatedAt => aUpdatedAt ?? bUpdatedAt!;
 
   factory PageModel.fromJson(Map<String, dynamic> json) => _$PageModelFromJson(json);
-
   Map<String, dynamic> toJson() => _$PageModelToJson(this);
+
+  @override
+  Map<String, dynamic> toMap() => toJson();
 }
