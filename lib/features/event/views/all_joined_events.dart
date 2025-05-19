@@ -55,6 +55,7 @@ class _AllJoinedEventsState extends ConsumerState<AllJoinedEvents> {
             message: "You are yet to register for an event"),
         fetchData: ref.read(eventVmProvider.notifier).getJoinedEvents,
         result: (data, s) {
+          print("wefewfwefwefwe $data");
           final filteredEvents = WayaUtils.search<EventDoc>(
             data,
             ['title', 'organizerName', 'eventType', 'location'],
@@ -89,36 +90,4 @@ class _AllJoinedEventsState extends ConsumerState<AllJoinedEvents> {
   }
 }
 
-/**
- Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            FilterWidget(
-               hintText: 'Search Event by title, organizer, location, and type',
-              search: searchController,
-            ),
-            const Gap(25),
-           Expanded(child:  PaginatedDataView<EventDoc>(
-               
-                loadingState: SizedBox(
-                height: context.height * 0.4,
-                child: Center(
-                  child: CircularProgressIndicator(),
-                )),
-                fetchData: ref.read(eventVmProvider.notifier).getJoinedEvents,
-                result: (data,s) {
-                  final filteredJoinedEvents = WayaUtils.search<EventDoc>(
-                      data,
-                      ['title', 'organizerName', 'eventType', 'location'],
-                      searchController.text);
-                  return ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  shrinkWrap: true,
-                  itemCount: filteredJoinedEvents.length,
-                  itemBuilder: (context, index) {
-                    return EventWidget(event: filteredJoinedEvents[index]);
-                  });
-                }))
-          ],
-        )
- */
+

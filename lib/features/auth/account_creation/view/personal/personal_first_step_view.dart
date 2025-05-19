@@ -731,6 +731,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                                 : Icons.visibility_off_outlined),
                             color: wayaTheme.colorScheme.greyColor300,
                           ),
+                            helperText: "Password must be 8 or more character and contain at least 1 number and 1 special character",
                         ),
                       ),
                       if (formState.hasError && !viewModel.isPasswordFocused)

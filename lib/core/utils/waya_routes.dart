@@ -23,6 +23,7 @@ import 'package:wayagram/features/chat/view/chat.dart';
 import 'package:wayagram/features/explore/views/chat_and_social.dart';
 import 'package:wayagram/features/explore/views/display_feed.dart';
 import 'package:wayagram/features/follow/view/follow_page.dart';
+import 'package:wayagram/features/general_settings/account_security/account_security.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
 import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
@@ -389,6 +390,7 @@ class WayaAppRoutes {
     PayoutSuccessScreen.route: () => PayoutSuccessScreen(),
     EnterRequestAmountScreen.route: () => EnterRequestAmountScreen(),
     BlockedUserPage.route: () => BlockedUserPage(),
+    AccountSecurity.route: () => AccountSecurity(),
     EditChatGroupScreen.route: () => EditChatGroupScreen(
           groupId: WayaNav.search['id'].toString(),
           chatId: WayaNav.search['chatId'].toString(),

@@ -7,6 +7,7 @@ import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/bottom_sheets/share/social_share.dart';
+import 'package:wayagram/features/event/data/model/ee_model.dart';
 import 'package:wayagram/features/event/data/model/event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
@@ -151,19 +152,34 @@ class EventVm extends StateNotifier<EventState> {
 
   Future<PaginatedResult<EventDoc>?> getJoinedEvents(
       {required int page}) async {
-    print("fefwefe");
     try {
-      state = state.copyWith(isLoadingUserEvents: true);
-
+      // state = state.copyWith(isLoadingUserEvents: true);
+      print("fewfewfwef b4");
       final response = await _eventRepository.eventsJoined(
           userId: ConversationState.self.id, page: page);
       List<EventDoc> myEvents = [];
       bool hasNextPage = false;
-
+      print("fewfewfwef after b4 success");
       if (response.success) {
-        EventResponse eventResponse = EventResponse.fromJson(response.data);
-        myEvents = eventResponse.data.docs;
-        hasNextPage = eventResponse.data.hasNextPage;
+        // print("fewfewfwef after success ${response.data["data"]['docs']}");
+        //  final data = response.data["data"]['docs'];
+
+    //    print("vergergesdfsdfsfsdfsfd ${((response.data["data"]['docs'] as List).map((d) => d['eventDetails']).toList())}" );
+
+        // JoinedEventResponse eventResponse =
+        //     JoinedEventResponse.fromJson(response.data);
+//
+        final doeecs = (response.data["data"]['docs'] as List).map((d) => EventDoc.fromJson(d['eventDetails'])).toList();
+          print("dddd $doeecs");
+        //     .map((doc) => EventDoc.fromJson(doc));
+
+        // final docs =
+        //     eventResponse.data.docs.map((c) => c.eventDetails).toList();
+
+        // print("dddd $docs");
+       myEvents = doeecs;
+
+      hasNextPage = response.data["data"]['hasNextPage'];
       }
 
       return PaginatedResult(hasNextPage: hasNextPage, items: myEvents);
@@ -176,7 +192,7 @@ class EventVm extends StateNotifier<EventState> {
       );
       return null;
     } finally {
-      state = state.copyWith(isLoadingUserEvents: false);
+      // state = state.copyWith(isLoadingUserEvents: false);
     }
   }
 

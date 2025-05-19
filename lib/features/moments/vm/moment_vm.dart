@@ -309,11 +309,6 @@ class MomentVm extends StateNotifier<MomentState> {
     RenderRepaintBoundary boundary =
         previewKey.currentContext?.findRenderObject() as RenderRepaintBoundary;
 
-    if (boundary.debugNeedsPaint) {
-      await Future.delayed(Duration(milliseconds: 20));
-      return captureTextMomentPreview(previewKey);
-    }
-
     final image = await boundary.toImage(pixelRatio: 2.0);
     final byteData = await image.toByteData(format: ImageByteFormat.png);
     return byteData?.buffer.asUint8List();
@@ -350,23 +345,23 @@ class MomentVm extends StateNotifier<MomentState> {
       fontType = MomentHelper.textStyleToJson(textStyle);
       color = MomentHelper.colorToHex(backgroundColor);
 
-      if (previewKey != null) {
-        final previewBytes = await captureTextMomentPreview(previewKey);
-        if (previewBytes != null) {
-          final tempDir = await getTemporaryDirectory();
-          final fileName =
-              '${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}_text_preview.png';
-          final filePath = path.join(tempDir.path, fileName);
+      // if (previewKey != null) {
+      //   final previewBytes = await captureTextMomentPreview(previewKey);
+      //   if (previewBytes != null) {
+      //     final tempDir = await getTemporaryDirectory();
+      //     final fileName =
+      //         '${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}_text_preview.png';
+      //     final filePath = path.join(tempDir.path, fileName);
 
-          final textPreviewFile =
-              await File(filePath).writeAsBytes(previewBytes);
+      //     final textPreviewFile =
+      //         await File(filePath).writeAsBytes(previewBytes);
 
-          thumbnail = await WayaFileRepository.instance.uploadFile(
-            textPreviewFile,
-            "thumbnail-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(textPreviewFile.path)}}",
-          );
-        }
-      }
+      //     thumbnail = await WayaFileRepository.instance.uploadFile(
+      //       textPreviewFile,
+      //       "thumbnail-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(textPreviewFile.path)}}",
+      //     );
+      //   }
+      // }
     } else if (state.type == StatusType.media &&
         state.mediaType == MediaType.image) {
       contentType = 'image';
@@ -377,12 +372,12 @@ class MomentVm extends StateNotifier<MomentState> {
           "su-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(selectedAsset.path)}}",
         );
         //> get preview
-        final preview = await generateImagePreview(state.selectedFile!);
+        // final preview = await generateImagePreview(state.selectedFile!);
 
-        thumbnail = await WayaFileRepository.instance.uploadFile(
-          preview,
-          "thumbnail-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(preview.path)}}",
-        );
+        // thumbnail = await WayaFileRepository.instance.uploadFile(
+        //   preview,
+        //   "thumbnail-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(preview.path)}}",
+        // );
 
         if (publicUrl != null) {
           content = publicUrl;
@@ -402,13 +397,13 @@ class MomentVm extends StateNotifier<MomentState> {
           selectedAsset!,
           "su-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(selectedAsset.path)}}",
         );
-        //> get preview
-        final preview = await generateVideoPreview(publicUrl ?? '');
+        // //> get preview
+        // final preview = await generateVideoPreview(publicUrl ?? '');
 
-        thumbnail = await WayaFileRepository.instance.uploadFile(
-          preview!,
-          "thumbnail-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(preview.path)}}",
-        );
+        // thumbnail = await WayaFileRepository.instance.uploadFile(
+        //   preview!,
+        //   "thumbnail-${ConversationState.self.id}-${DateTime.now().millisecondsSinceEpoch}${WayaFileHelper.getFileExtension(preview.path)}}",
+        // );
 
         if (publicUrl != null) {
           content = publicUrl;
@@ -423,17 +418,12 @@ class MomentVm extends StateNotifier<MomentState> {
     }
 
     try {
-      final userId = await _secureDataSource.getUserId();
-
-      final userProfile =
-          ref.watch(profileVmProvider).userAccountModel?.data?.userdata?.user;
-
       final response = state.isEditingMode
           ? await _momentRepository.editMoment(
-              userId: userId!,
+              userId: ConversationState.self.id,
               name:
-                  "${userProfile?.firstName.capitalizeFirst ?? ''} ${userProfile?.lastName.capitalizeFirst ?? ''}",
-              image: userProfile?.profilePicture ?? '',
+                  "${ConversationState.self.firstName.capitalizeFirst ?? ''} ${ConversationState.self.lastName.capitalizeFirst ?? ''}",
+              image: ConversationState.self.profilePicture ?? '',
               content: content,
               caption: caption,
               color: color,
@@ -442,10 +432,10 @@ class MomentVm extends StateNotifier<MomentState> {
               thumbnail: thumbnail ?? '',
               contentType: contentType)
           : await _momentRepository.createMoment(
-              userId: userId!,
+              userId: ConversationState.self.id,
               name:
-                  "${userProfile?.firstName.capitalizeFirst ?? ''} ${userProfile?.lastName.capitalizeFirst ?? ''}",
-              image: userProfile?.profilePicture ?? '',
+                  "${ConversationState.self.firstName.capitalizeFirst ?? ''} ${ConversationState.self.lastName.capitalizeFirst ?? ''}",
+              image: ConversationState.self.profilePicture ?? '',
               content: content,
               caption: caption,
               color: color,

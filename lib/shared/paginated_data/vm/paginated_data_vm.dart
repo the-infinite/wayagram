@@ -42,13 +42,18 @@ class PaginatedDataVm<T> extends StateNotifier<PaginatedDataState<T>> {
   PaginatedDataVm(this.ref) : super(PaginatedDataState<T>());
 
   Future<void> initialize(
-      Future<PaginatedResult<T>?> Function({required int page}) fetchData) async {
+      Future<PaginatedResult<T>?> Function({required int page})
+          fetchData) async {
     try {
       state = state.copyWith(initialLoading: true);
+      print("wefwf ${state.currentPage}");
+
       if (state.currentPage > 1) {
         state = state.copyWith(currentPage: 1, data: []);
       }
+      print("fwefwefewf");
       final result = await fetchData(page: 1);
+      print("fewfwefw $result");
       if (result != null) {
         state =
             state.copyWith(hasNextPage: result.hasNextPage, data: result.items);
@@ -63,7 +68,8 @@ class PaginatedDataVm<T> extends StateNotifier<PaginatedDataState<T>> {
   }
 
   Future<void> loadMoreItems(
-      Future<PaginatedResult<T>?> Function({required int page}) fetchData) async {
+      Future<PaginatedResult<T>?> Function({required int page})
+          fetchData) async {
     debugPrint("testing");
     if (!state.hasNextPage || state.isLoading) return;
     state = state.copyWith(isLoading: true);
