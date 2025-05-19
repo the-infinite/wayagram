@@ -6,7 +6,10 @@ import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
+import 'package:wayagram/shared/cache/group.dart';
+import 'package:wayagram/shared/cache/page.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
+import 'package:wayagram/shared/features/profile/model/pages.dart';
 import 'package:wayagram/shared/features/profile/widget/group.dart';
 
 import '../../../core/components/waya_buttons.dart';
@@ -54,6 +57,11 @@ class _SearchGroupState extends ConsumerState<SearchGroup> {
     final List<GroupModel> filteredPosts =
     WayaUtils.strictSearch<GroupModel>(myGroupNotifier.createdGroups, ['description', 'name'], query);
 
+
+    Iterable<GroupModel> mySearch =  GroupsCache.instance.data.where((page){
+      return page.name.toLowerCase().contains(query.toLowerCase());
+    });
+
     return WayaScaffold(
       //isLoading: viewModel.isLoading,
       appBar: AppBar(
@@ -67,14 +75,16 @@ class _SearchGroupState extends ConsumerState<SearchGroup> {
         ),
       ),
 
-      body: filteredPosts.isEmpty ? ActivityLogsEmptyState(text: 'Nothing here') :
+      body: mySearch.isEmpty ? ActivityLogsEmptyState(text: 'Nothing here') :
       ListView.builder(
         padding: EdgeInsets.only(bottom: 40),
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemCount: filteredPosts.length,
+        itemCount: mySearch.length,
+        //filteredPosts.length,
         itemBuilder: (_, index) => SingleGroupWidget(
-          group: myGroupNotifier.createdGroups[index],
+          group: mySearch.elementAt(index),
+          //myGroupNotifier.createdGroups[index],
           index: index,
         ),
       ),
