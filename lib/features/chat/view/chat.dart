@@ -202,7 +202,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                             fontSize: 13.sp,
                                           ),
                                         )
-                                      else if (userStatus == ChatUserActivity.online)
+                                      else if (userStatus == ChatUserActivity.online && (chatUser?.canSeeOnlineStatus ?? true))
                                         Text(
                                           "Online",
                                           maxLines: 1,
