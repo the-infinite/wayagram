@@ -12,6 +12,7 @@ class PageModel extends BaseModel<PageModel>{
   final String name;
   final String description;
   final bool isPublic;
+  final bool everyoneCanComment;
   final String? coverImage;
   final List<String>? categories;
   final String? url;
@@ -34,6 +35,7 @@ class PageModel extends BaseModel<PageModel>{
     required this.name,
     required this.description,
     required this.isPublic,
+    required this.everyoneCanComment,
     required this.coverImage,
     required this.categories,
     required this.url,

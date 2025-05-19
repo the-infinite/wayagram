@@ -137,7 +137,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                               /*   if (viewModel.getLoggedInUserId() ==
                                   widget.post.contestantProfileId) */
                               if (viewModel.getLoggedInUserId() ==
-                                  widget.contestApplicant?.profileId)
+                                  widget.contestApplicant?.profileId && widget.post.shares == 0)
                                 PopupMenuItem<int>(
                                   value: 1,
                                   child: _buildActionNav(
