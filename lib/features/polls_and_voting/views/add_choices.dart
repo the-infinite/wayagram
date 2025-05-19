@@ -300,7 +300,7 @@ class _AddChoicesState extends ConsumerState<AddChoices> {
                       );
                     })),
             const Gap(15),
-            if(viewModel.choices.length < 5)
+            if(viewModel.choices.length < 30)
             GestureDetector(
               onTap: () =>
                   ref.read(createPollVotingProvider.notifier).addChoice(),
