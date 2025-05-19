@@ -319,7 +319,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                           isFree: list[0].toString().toLowerCase() == "free"
                               ? true
                               : false,
-                          voteFee: list[1].toString() ?? "0",
+                          voteFee: list[1].toString(),
                           model: ContestVoteModel(
                               contestId: widget.post.contestId ?? "",
                               contestantId:

@@ -6,7 +6,6 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
-import 'package:wayagram/features/shop/shop_dispute/data/repo/shop_dispute_repository.dart';
 import 'package:wayagram/features/support/state/dispute.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
@@ -26,10 +25,9 @@ class SupportDisputeNotifier extends StateNotifier<SupportDisputeState> {
   // Construct.
   //SupportDisputeNotifier(super.state);
 
-  SupportDisputeNotifier(this._roleShopRepository, this._uploadFileRepository)
-      : super(SupportDisputeState.initial) {
+  SupportDisputeNotifier(this._roleShopRepository, this._uploadFileRepository) : super(SupportDisputeState.initial) {
     email.text = ConversationState.self.email ?? "";
-    fullname.text = ConversationState.self.fullname ?? "";
+    fullname.text = ConversationState.self.fullname;
     phone.text = ConversationState.self.phoneNumber ?? "";
   }
 
@@ -76,8 +74,7 @@ class SupportDisputeNotifier extends StateNotifier<SupportDisputeState> {
       String? media;
       File? myFile = proof.value;
       if (myFile != null) {
-        media = await WayaUtils.uploadFile(
-            file: myFile, repository: _uploadFileRepository);
+        media = await WayaUtils.uploadFile(file: myFile, repository: _uploadFileRepository);
       }
 
       final response = await _roleShopRepository.postDisputeDetails({
@@ -107,8 +104,7 @@ class SupportDisputeNotifier extends StateNotifier<SupportDisputeState> {
   }
 }
 
-final supportDisputeProvider =
-    StateNotifierProvider<SupportDisputeNotifier, SupportDisputeState>(
+final supportDisputeProvider = StateNotifierProvider<SupportDisputeNotifier, SupportDisputeState>(
   (ref) {
     return SupportDisputeNotifier(ProfileRepo(), UploadFileRepository());
   },

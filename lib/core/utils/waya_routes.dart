@@ -60,6 +60,7 @@ import 'package:wayagram/features/pages/view/page_settings.dart';
 import 'package:wayagram/features/pages/view/pages.dart';
 import 'package:wayagram/features/pages/view/public_page.dart';
 import 'package:wayagram/features/pages/view/search_group_and_page.dart';
+import 'package:wayagram/features/pages/view/search_page.dart';
 import 'package:wayagram/features/pages/view/success_page.dart';
 import 'package:wayagram/features/pages/view/suggestion.dart';
 import 'package:wayagram/features/post/view/create_post.dart';
@@ -287,6 +288,7 @@ class WayaAppRoutes {
     SuccessPage.route: () => SuccessPage(),
     SuccessGroup.route: () => SuccessGroup(),
     Pages.route: () => Pages(),
+    SearchPage.route: () => SearchPage(),
     Groups.route: () => Groups(),
     Suggestion.route: () => Suggestion(),
     GroupSuggestion.route: () => GroupSuggestion(),

@@ -173,4 +173,13 @@ class GroupRepository extends BaseRepository {
   Future<WayaRequestResponse> deleteComment(String commentId) async {
     return delete("$serviceUrl/posts/$commentId/comment");
   }
+
+  Future<WayaRequestResponse> updateGroupSetting(bool isPrivate, groupId) {
+    final payload = { "isPrivate": isPrivate};
+    return patch("$serviceUrl/groups/update-setting/$groupId", payload);
+  }
+
+  Future<WayaRequestResponse> checkJoinGroupRequest(groupId) {
+    return get("$serviceUrl/groups/check-join/$groupId");
+  }
 }

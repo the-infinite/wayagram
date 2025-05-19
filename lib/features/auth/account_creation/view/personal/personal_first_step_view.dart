@@ -670,7 +670,7 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                       WayaSelectField<String>(
                         height: 0.2,
                         label: "Gender",
-                        value: viewModel.gender,
+                        value: viewModel.gender.capitalizeFirst,
                         uniqueKey: 'gender',
                         hintText: 'Select Gender',
                         items: genders,
