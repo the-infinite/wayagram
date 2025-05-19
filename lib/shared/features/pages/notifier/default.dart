@@ -96,6 +96,7 @@ class PageNotifier extends ValueNotifier<int> {
 
 
   Future<List<PageModel>> getManagedPages() async {
+
     final result = <PageModel>[];
 
     //? If there is nothing to see or get, leave.
