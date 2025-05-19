@@ -28,6 +28,7 @@ class _SuggestionState extends ConsumerState<Suggestion> with SingleTickerProvid
     });
   }
 
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
