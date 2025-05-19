@@ -220,6 +220,10 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/pages?page=$page&limit=$limit&ownerId=$ownerId&orderBy=createdAt&orderDirection=DESC");
   }
 
+  Future<WayaRequestResponse> getAllPagesSearch( [int page = 1, int limit = 500]) {
+    return get("$serviceUrl/pages?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
+  }
+
   Future<WayaRequestResponse> getSinglePage(String pageId) {
     return get("$serviceUrl/pages?id=$pageId");
   }

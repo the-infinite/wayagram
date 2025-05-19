@@ -1,19 +1,21 @@
 
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/cache/base.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/components/waya_text_form_field.dart';
+import 'package:wayagram/features/pages/vm/pages_vm.dart';
+import 'package:wayagram/shared/cache/page.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/widget/page.dart';
 
 import '../../../core/components/waya_buttons.dart';
 import '../../../shared/features/profile/model/pages.dart';
 import '../../activity_logs/widget/activity_logs_empty_state.dart';
-
-
 
 class SearchPage extends ConsumerStatefulWidget {
   static const route = '/searchPage';
@@ -31,6 +33,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       myPageNotifier.getCreatedPages();
+      myPageNotifier.getPagesUserFollows();
     });
     searchController = TextEditingController();
     searchController.addListener(() {
@@ -56,6 +59,22 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     final List<PageModel> filteredPosts =
     WayaUtils.strictSearch<PageModel>(myPageNotifier.createdPages, ['description', 'name'], query);
 
+
+    //? Following
+    final List<PageModel> filteredFollowing = WayaUtils.strictSearch<PageModel>(
+      myPageNotifier.followedPages,
+      ['name', 'description'],
+      query,
+    );
+
+
+
+     Iterable<PageModel> mySearch =  PagesCache.instance.data.where((page){
+      return page.name.toLowerCase().contains(query.toLowerCase());
+    });
+
+
+    /// _data.values.where(test).firstOrNull
     return WayaScaffold(
       //isLoading: viewModel.isLoading,
       appBar: AppBar(
@@ -69,14 +88,16 @@ class _SearchPageState extends ConsumerState<SearchPage> {
         ),
       ),
 
-      body: filteredPosts.isEmpty ? ActivityLogsEmptyState(text: 'Nothing here') :
+      body:  mySearch.isEmpty ? ActivityLogsEmptyState(text: 'Nothing here') :
       ListView.builder(
         padding: EdgeInsets.only(bottom: 40),
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
-        itemCount: filteredPosts.length,
+        itemCount: mySearch.length,
+        //itemCount: filteredPosts.length,
         itemBuilder: (_, index) => SinglePageWidget(
-          page: myPageNotifier.createdPages[index],
+          page: mySearch.elementAt(index),
+          //page:
           index: index,
         ),
       ),
