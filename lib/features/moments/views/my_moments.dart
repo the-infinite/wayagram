@@ -5,11 +5,14 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/widgets/my_moment_widget.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 
 class MyMoments extends ConsumerStatefulWidget {
   static const route = "/my-moments";
@@ -20,6 +23,7 @@ class MyMoments extends ConsumerStatefulWidget {
 }
 
 class _MyMomentState extends ConsumerState<MyMoments> {
+  late TextEditingController searchController;
   late final notifier = ref.read(momentVmProvider.notifier);
 
   @override
@@ -27,13 +31,29 @@ class _MyMomentState extends ConsumerState<MyMoments> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notifier.getUserMoments(1);
     });
+    searchController = TextEditingController();
+    searchController.addListener(() {
+      setState(() {});
+    });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    searchController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(momentVmProvider);
     final wayaTheme = Theme.of(context);
+
+    final filteredMoments = WayaUtils.search<MomentData>(
+      state.myMoments,
+      ['caption', 'content'],
+      searchController.text,
+    );
     return WayaScaffold(
       isLoading: state.isLoadingUserMoments,
       title: "My Moments",
@@ -42,19 +62,30 @@ class _MyMomentState extends ConsumerState<MyMoments> {
       body: Container(
         margin: EdgeInsets.fromLTRB(0, 12, 0, 0),
         padding: EdgeInsets.all(12),
-        decoration: BoxDecoration(color: wayaTheme.colorScheme.white, borderRadius: BorderRadius.circular(12)),
+        decoration: BoxDecoration(
+            color: wayaTheme.colorScheme.white,
+            borderRadius: BorderRadius.circular(12)),
         child: RefreshIndicator(
           child: ListView(
             children: [
+              WayaTextFormField(
+                controller: searchController,
+                hintText: "Search moments by caption, content",
+                prefixIcon: Icon(
+                  Icons.search,
+                  color: wayaTheme.colorScheme.greyColor400,
+                ),
+              ),
+              const Gap(10),
               addMoment(context: context, ref: ref),
               const Gap(10),
               ListView.builder(
-                itemCount: state.myMoments.length,
+                itemCount: filteredMoments.length,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) => MyMomentWidget(
-                  moment: state.myMoments[index],
-                  allMoments: state.myMoments,
+                  moment: filteredMoments[index],
+                  allMoments: filteredMoments,
                   index: index,
                 ),
               )
@@ -81,7 +112,10 @@ class _MyMomentState extends ConsumerState<MyMoments> {
           ),
           Text(
             "Add New Moment",
-            style: TextStyle(color: wayaTheme.colorScheme.customPrimary, fontSize: 14.sp, fontWeight: FontWeight.w500),
+            style: TextStyle(
+                color: wayaTheme.colorScheme.customPrimary,
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500),
           )
         ],
       ),

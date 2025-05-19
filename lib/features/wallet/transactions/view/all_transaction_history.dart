@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/wallet/transactions/components/export_transaction.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_history.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
@@ -79,8 +80,8 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
           "startDate=${DateFormat('yyyy-MM-dd').format(DateTime.now().subtract(const Duration(days: 365)))}&endDate=${DateFormat('yyyy-MM-dd').format(DateTime.now())}";
     }
     await ref.read(transactionVmProvider.notifier)
-        //.getUserTransactions(filters: appliedFilter);
         .getTransaction(filters: appliedFilter);
+    //.fetchTransactions(filters: appliedFilter);
   }
 
   @override
@@ -101,8 +102,11 @@ class _AllTransactionHistoryState extends ConsumerState<AllTransactionHistory> {
         actions: [
           IconButton(
             icon: Icon(Icons.search, color: wayaTheme.colorScheme.customBlack),
-            onPressed: () {},
+            onPressed: () {
+              WayaNav.toNamed('/searchTransaction');
+            },
           ),
+
           IconButton(
             icon: Icon(Icons.text_snippet_outlined,
                 color: wayaTheme.colorScheme.customBlack),

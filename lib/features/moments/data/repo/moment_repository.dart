@@ -16,6 +16,7 @@ class MomentRepository extends BaseRepository {
       required String name,
       required String image,
       required String content,
+      required String thumbnail,
       String? fontType,
       String? caption,
       String? color,
@@ -25,7 +26,8 @@ class MomentRepository extends BaseRepository {
       'name': name,
       'image': image,
       'content': content,
-      'contentType': contentType
+      'contentType': contentType,
+      'thumbnail': thumbnail,
     };
     if (caption != null) payload['caption'] = caption;
     if (color != null) payload['color'] = color;
@@ -71,6 +73,7 @@ class MomentRepository extends BaseRepository {
       required String image,
       required String content,
       required String momentId,
+      required String thumbnail,
       String? caption,
       String? color,
       String? fontType,
@@ -80,7 +83,8 @@ class MomentRepository extends BaseRepository {
       'name': name,
       'image': image,
       'content': content,
-      'contentType': contentType
+      'contentType': contentType,
+      'thumbnail': thumbnail
     };
     if (caption != null) payload['caption'] = caption;
     if (color != null) payload['color'] = color;
@@ -92,12 +96,9 @@ class MomentRepository extends BaseRepository {
   }
 
   ///moments/get
-   Future<WayaRequestResponse> getSingleMoment(
-      {required String id}) {
-    return get(
-        "$serviceUrl/moments/get?id=$id");
+  Future<WayaRequestResponse> getSingleMoment({required String id}) {
+    return get("$serviceUrl/moments/get?id=$id");
   }
-  
 
   ///moments/:momentId
   ///
@@ -107,9 +108,9 @@ class MomentRepository extends BaseRepository {
       required String momentId,
       required String reason,
       String? comment}) {
-    final payload = {"userId": userId, "momentId": momentId, "reason": reason};
+    final payload = {"momentId": momentId, "reason": reason};
     if (comment != null) payload['comment'] = comment;
-    return post("$serviceUrl/report-moments", payload);
+    return post("$serviceUrl/reports/create", payload);
   }
 
   Future<WayaRequestResponse> momentViewers(

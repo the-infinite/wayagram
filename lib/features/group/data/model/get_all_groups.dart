@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:wayagram/shared/features/profile/model/groups.dart';
+import 'package:wayagram/shared/model/base_model.dart';
 
 GetAllGroups getAllGroupsFromJson(String str) => GetAllGroups.fromJson(json.decode(str));
 String getAllGroupsToJson(GetAllGroups data) => json.encode(data.toJson());
@@ -136,7 +137,7 @@ class Data {
 GetAllGroupDocs docsFromJson(String str) => GetAllGroupDocs.fromJson(json.decode(str));
 String docsToJson(GetAllGroupDocs data) => json.encode(data.toJson());
 
-class GetAllGroupDocs {
+class GetAllGroupDocs extends BaseModel<GetAllGroupDocs> {
   GetAllGroupDocs({
     this.id,
     this.url,
@@ -227,4 +228,10 @@ class GetAllGroupDocs {
     map['updated_at'] = updatedAt;
     return map;
   }
+  @override
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    "description": description,
+    "name": name
+  };
 }

@@ -10,19 +10,24 @@ class PageRepository extends BaseRepository {
   factory PageRepository() => instance;
 
   Future<WayaRequestResponse> createPost(
-      String content, List<String> images, postType) {
+      String content, List<String> images, postType,
+      [String? originalPostId]) {
     final payload = {
       "content": content,
       "type": "generic",
       "media": images,
-      "privacy": postType
+      "privacy": postType,
     };
 
     return post("$serviceUrl/posts", payload);
   }
 
   Future<WayaRequestResponse> createPagePost(
-      String content, List<String> images, String postType, String pageId) {
+    String content,
+    List<String> images,
+    String postType,
+    String pageId,
+  ) {
     final payload = {
       "content": content,
       "pageId": pageId,
@@ -38,8 +43,11 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/signed-url/$image");
   }
 
-  Future<WayaRequestResponse> fetchSinglePagePost(String pageId,
-      [int page = 1, int limit = 15]) {
+  Future<WayaRequestResponse> fetchSinglePagePost(
+    String pageId, [
+    int page = 1,
+    int limit = 15,
+  ]) {
     return get(
         "$serviceUrl/posts?pageId=$pageId&status=active&page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
   }
@@ -228,6 +236,10 @@ class PageRepository extends BaseRepository {
         "$serviceUrl/pages?page=$page&limit=$limit&ownerId=$ownerId&orderBy=createdAt&orderDirection=DESC");
   }
 
+  Future<WayaRequestResponse> getAllPagesSearch( [int page = 1, int limit = 500]) {
+    return get("$serviceUrl/pages?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
+  }
+
   Future<WayaRequestResponse> getSinglePage(String pageId) {
     return get("$serviceUrl/pages?id=$pageId");
   }
@@ -283,5 +295,14 @@ class PageRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getRecommendedPages() {
     return get("$serviceUrl/pages/recommended");
+  }
+
+  Future<WayaRequestResponse> updatePageSetting(
+      bool isPublic, bool everyoneCanComment, pageId) {
+    final payload = {
+      "isPublic": isPublic,
+      "everyoneCanComment": everyoneCanComment
+    };
+    return patch("$serviceUrl/pages/update-setting/$pageId", payload);
   }
 }

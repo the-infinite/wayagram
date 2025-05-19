@@ -15,4 +15,8 @@ class Select {
   Map<String, dynamic> toJson() {
     return _$SelectToJson(this);
   }
+  @override
+  String toString() {
+    return "Select($label, $value, $image, $price)";
+  }
 }

@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/shared/features/profile/model/groups.dart';
 import 'package:wayagram/shared/features/profile/repo/default.dart';
 import 'package:wayagram/shared/features/profile/state/groups.dart';
@@ -43,7 +45,12 @@ class GroupsNotifier extends StateNotifier<GroupsState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     // That's fine.

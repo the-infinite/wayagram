@@ -103,7 +103,14 @@ class _PublicPageState extends ConsumerState<PublicPage>
       appBarTrailing: Row(
         spacing: 12,
         children: [
-          WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+          InkWell(
+              onTap: (){
+                WayaNav.toNamed('/searchGroupAndPage', arguments: {
+                  'pageId': widget.id,
+                  'name': 'page'
+                });
+              },
+              child: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none)),
           InkWell(
             onTap: () => Share.share(
               WayaValueHelper.getShareableUrl(

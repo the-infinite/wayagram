@@ -3,14 +3,18 @@ import 'package:wayagram/features/role_access/data/model/role_management_model.d
 import 'package:wayagram/features/role_access/data/model/role_member.dart';
 import 'package:wayagram/features/role_access/data/model/roles_model.dart';
 import 'package:wayagram/features/role_access/data/model/shop_model.dart';
+import 'package:wayagram/features/role_access/vm/role_access_vm.dart';
 
 class RoleAccessState {
   final int? revenueGenerated;
   final int page;
   final bool isLastPage;
   final bool? isLoading;
+  final TypeRole selectedRole;
   final List<RolesModel> listRoleModel;
   final List<Select> listSelect;
+
+  final List<Select> listContestSelect;
   final List<Select> listShop;
   final List<ShopModel> originalListShop;
   final List<ShopMember> listMember;
@@ -21,8 +25,10 @@ class RoleAccessState {
     this.page = 1,
     this.isLoading = false,
     this.isLastPage = false,
+    this.selectedRole = TypeRole.shop,
     this.listRoleModel = const [],
     this.listSelect = const [],
+    this.listContestSelect = const [],
     this.listShop = const [],
     this.originalListShop = const [],
     this.listMember = const [],
@@ -34,8 +40,10 @@ class RoleAccessState {
     int? page,
     bool? isLoading,
     bool? isLastPage,
+    TypeRole? selectedRole,
     List<RolesModel>? listRoleModel,
     List<Select>? listSelect,
+    List<Select>? listContestSelect,
     List<Select>? listShop,
     List<ShopModel>? originalListShop,
     List<ShopMember>? listMember,
@@ -45,6 +53,8 @@ class RoleAccessState {
         revenueGenerated: revenueGenerated ?? this.revenueGenerated,
         listRoleModel: listRoleModel ?? this.listRoleModel,
         listSelect: listSelect ?? this.listSelect,
+        selectedRole: selectedRole ?? this.selectedRole,
+        listContestSelect: listContestSelect ?? this.listContestSelect,
         listShop: listShop ?? this.listShop,
         originalListShop: originalListShop ?? this.originalListShop,
         listMember: listMember ?? this.listMember,

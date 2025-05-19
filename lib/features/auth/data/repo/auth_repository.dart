@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
@@ -31,6 +32,8 @@ class AuthRepository extends BaseRepository {
     if (email != null) payload['email'] = email;
     if (phone != null) payload['phoneNumber'] = phone;
 
+    debugPrint("$payload");
+
     return post('$serviceUrl/client/auth/resend-otp', payload);
   }
 
@@ -40,8 +43,8 @@ class AuthRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> phoneVerification(String code, String phone) {
-    return post('$serviceUrl/client/auth/verify-phoneNumber',
-        {"otp": code, "phoneNumber": phone},
+    return post('$serviceUrl/client/auth/verify-phone',
+        {"otp": code, "phoneNumber": phone, "purpose": 'REGISTER_USER'},
         showErrors: true);
   }
 
@@ -53,23 +56,16 @@ class AuthRepository extends BaseRepository {
         },
         showErrors: true);
   }
-   Future<WayaRequestResponse> verifyCAC(String cacNumber) {
-    return post(
-        '$serviceUrl/client/kyc/verify-cac-number',
-        {
-          "cacNumber": cacNumber,
-           "mode": "basic"
-        },
+
+  Future<WayaRequestResponse> verifyCAC(String cacNumber) {
+    return post('$serviceUrl/client/kyc/verify-cac-number',
+        {"cacNumber": cacNumber, "mode": "basic"},
         showErrors: true);
   }
 
-     Future<WayaRequestResponse> verifyBVN(String bvnNumber) {
-    return post(
-        '$serviceUrl/client/kyc/verify-bvn',
-        {
-          "bvn": bvnNumber,
-           "mode": "basic"
-        },
+  Future<WayaRequestResponse> verifyBVN(String bvnNumber) {
+    return post('$serviceUrl/client/kyc/verify-bvn',
+        {"bvn": bvnNumber, "mode": "basic"},
         showErrors: true);
   }
 
@@ -143,9 +139,10 @@ class AuthRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> selectInterest(dynamic data) {
-    return post(
-      '$graphServiceUrl/interests',
-      data,
+    
+    return patch(
+      '$graphServiceUrl/interests/toggle',
+      {"interests": data},
     );
   }
 
@@ -155,7 +152,7 @@ class AuthRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getInterestsCategories() async {
-    return get("$graphServiceUrl/interests/categories");
+    return get("$graphServiceUrl/interests");
   }
 
   Future<WayaRequestResponse> refreshToken({required String token}) async {

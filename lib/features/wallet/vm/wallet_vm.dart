@@ -8,6 +8,7 @@ import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.d
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/wallet/data/model/bank_model.dart';
+import 'package:wayagram/features/wallet/data/model/create_payout_model.dart';
 import 'package:wayagram/features/wallet/data/model/external_wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/get_request_model.dart';
 import 'package:wayagram/features/wallet/data/model/payout_method_model.dart';
@@ -16,13 +17,24 @@ import 'package:wayagram/features/wallet/data/model/single_request_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_model.dart';
 import 'package:wayagram/features/wallet/data/model/wallet_state_model.dart';
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
+import 'package:wayagram/features/wallet/view/request_payout.dart';
+
+import '../../../core/controller/debug_console.dart';
 
 class WalletVm extends StateNotifier<WalletState> {
   final _walletRepository = WalletRepository.instance;
-  WalletVm() : super(WalletState());
+  WalletVm() : super(WalletState()){
+    state = state.copyWith(acctName: TextEditingController(text: ''));
+    state = state.copyWith(acctNumber: TextEditingController(text: ''));
+  }
+
+  void reset() {
+    state = WalletState();
+  }
 
   void selectCategory(Select value) {
-    state = state.copyWith(bank: value.value);
+    print('BANK VALUEE==>> ${value}');
+    state = state.copyWith(bank: value);
   }
 
   Future<void> getUserWallet() async {
@@ -46,6 +58,7 @@ class WalletVm extends StateNotifier<WalletState> {
       state = state.copyWith(isLoading: false);
       WayaNav.goBack();
       if (response.success && ctx.mounted) {
+        getPayoutMethod();
         ScaffoldMessenger.of(ctx).showSnackBar(
           SnackBar(
             content: Text(
@@ -56,8 +69,30 @@ class WalletVm extends StateNotifier<WalletState> {
             duration: Duration(seconds: 2),
           ),
         );
-      } else {}
+        WayaNav.toNamed(RequestPayout.route);
+        reset();
+      }else {
+        CreatePayoutModel responseModel = CreatePayoutModel.fromJson(response.data);
+        ScaffoldMessenger.of(ctx).showSnackBar(
+          SnackBar(
+            content: Text(
+              '${responseModel.message}',
+              style: TextStyle(fontFamily: WayaConstants.fontFamily, fontSize: 12.sp),
+            ),
+            backgroundColor: WayaColors.error,
+            duration: Duration(seconds: 2),
+          ),
+        );
+        reset();
+        fetchBank();
+      }
     } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.polls,
+        WayaDebugHelpers.getStackTrace(e),
+      );
       // _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);
@@ -294,8 +329,8 @@ class WalletFundingOptionsVm extends StateNotifier<WalletFundingOptionState> {
           description: decription ?? "Wallet funding",
           email: user.email ?? "",
           fundOptionCode: fundOptionCode,
-          callbackUrl: "https://v2.staging.wayagram.ng"
-          //callbackUrl: WayaConstants.baseUrl
+          //callbackUrl: "https://staging.wayagram.ng"
+          callbackUrl: WayaConstants.webUrl
           ),
     );
 

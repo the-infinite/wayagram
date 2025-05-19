@@ -26,9 +26,7 @@ import 'package:wayagram/features/shop/widgets/products_grid.dart';
 import 'package:wayagram/shared/cache/chat.dart';
 import 'package:wayagram/shared/features/follow/model/default.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
-import 'package:wayagram/shared/features/follow/state/default.dart';
 import 'package:wayagram/shared/features/follow/vm/default.dart';
-import 'package:wayagram/shared/features/profile/state/default.dart';
 import 'package:wayagram/shared/features/profile/vm/donation.dart';
 import 'package:wayagram/shared/features/profile/vm/poll.dart';
 import 'package:wayagram/shared/features/profile/vm/product.dart';
@@ -59,23 +57,17 @@ class UsersProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<UsersProfilePage> {
-  late final userFollowProvider = FollowProvider(
-    (ref) => FollowNotifier(FollowState.initial.copyWith(
-      userId: widget.data.$1.id,
-    )),
-  );
-  late final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>((ref) {
-    return PostNotifier(PostState.initial);
-  });
-  late final postNotifier = ref.watch(userPostsProvider.notifier);
-  late final eventNotifier = ref.watch(userEventsProvider.notifier);
-  late final groupsNotifier = ref.watch(userGroupsProvider.notifier);
-  late final pagesNotifier = ref.watch(userPagesProvider.notifier);
-  late final followNotifier = ref.watch(userFollowProvider.notifier);
-  late final pollsNotifier = ref.watch(userPollsProvider.notifier);
-  late final donationsNotifier = ref.watch(userDonationsProvider.notifier);
-  late final productsNotifier = ref.watch(userProductsProvider.notifier);
-  late final conversationNotifier = ref.watch(conversationProvider.notifier);
+  late final userFollowProvider = userFollowersProvider(widget.data.$1.id);
+  late final userPostsProvider = otherUserPostsProvider(widget.data.$1.id);
+  late final postNotifier = ref.read(userPostsProvider.notifier);
+  late final eventNotifier = ref.read(userEventsProvider.notifier);
+  late final groupsNotifier = ref.read(userGroupsProvider.notifier);
+  late final pagesNotifier = ref.read(userPagesProvider.notifier);
+  late final followNotifier = ref.read(userFollowProvider.notifier);
+  late final pollsNotifier = ref.read(userPollsProvider.notifier);
+  late final donationsNotifier = ref.read(userDonationsProvider.notifier);
+  late final productsNotifier = ref.read(userProductsProvider(widget.data.$1.id).notifier);
+  late final conversationNotifier = ref.read(conversationProvider.notifier);
 
   final scrollHandler = WayaObservableScrollController();
   final _pageController = ValueNotifier(0);
@@ -209,7 +201,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
     final followState = ref.watch(userFollowProvider);
     final pollsState = ref.watch(userPollsProvider);
     final donationsState = ref.watch(userDonationsProvider);
-    final productsState = ref.watch(userProductsProvider);
+    final productsState = ref.watch(userProductsProvider(widget.data.$1.id));
     final conversationState = ref.watch(conversationProvider);
     final user = widget.data.$1;
     final profile = widget.data.$2;
@@ -226,12 +218,6 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
         appBarTrailing: Row(
           spacing: 6,
           children: [
-            //? Search
-            IconButton(
-              icon: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-              onPressed: () async {},
-            ),
-
             //? Chat only works when you have not blocked a user.
             if (!conversationState.isBlocked(user.id))
               IconButton(
@@ -413,7 +399,6 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
             pagesNotifier.reset();
             pollsNotifier.reset();
             donationsNotifier.reset();
-            productsNotifier.reset();
             if (widget.source != 'profile') followNotifier.reset();
           },
           child: ValueListenableBuilder(
@@ -826,7 +811,47 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                     Gap(5.w),
 
                     // Now our component.
-                    if (isEmpty) ...[
+                    if (!(widget.data.$2.isPublic ?? true) && _followStatus?.isUserFollowing == false) ...[
+                      Gap(100.h),
+
+                      //? Fair enough.
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 15.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            //? First, the lock icon.
+                            WayaAssets.icons.genSet.lock.svg(),
+
+                            // Some space.
+                            Gap(10.h),
+
+                            //? The private text.
+                            Text(
+                              'This account is private',
+                              style: wayaTheme.textTheme.titleLarge,
+                            ),
+
+                            // Some space.
+                            Gap(10.h),
+
+                            //?
+                            Text(
+                              'You must follow this user to see their posts and content',
+                              style: wayaTheme.textTheme.titleSmall?.copyWith(
+                                fontWeight: FontWeight.w400,
+                                fontFamily: WayaConstants.fontFamily,
+                                fontSize: 16.sp,
+                              ),
+                            ),
+
+                            // Some space.
+                            Gap(30.h),
+                          ],
+                        ),
+                      ),
+                    ] else if (isEmpty) ...[
                       //? First, space that scales with the screen size.
                       Gap(60.h),
 

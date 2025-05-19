@@ -22,6 +22,22 @@ class AddBusinessAccountView extends ConsumerStatefulWidget {
 
 class _AddBusinessAccountViewState
     extends ConsumerState<AddBusinessAccountView> {
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      final business =
+          await ref.read(addBusinessAccountProvider.notifier).getBusiness();
+
+      
+    });
+    super.initState();
+  }
+
+  /**
+ 
+          
+          */
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(addBusinessAccountProvider);
@@ -115,7 +131,7 @@ class _AddBusinessAccountViewState
                             onChanged: (value) {
                               if (value.trim().isNotEmpty) {
                                 if (
-                                   /*  value.length == 8 ||
+                                    /*  value.length == 8 ||
                                     value.length == 9 || */
                                     value.length == 10) {
                                   ref

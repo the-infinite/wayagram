@@ -33,6 +33,7 @@ class PostModel extends BaseModel<PostModel> {
   final String? originalPostId;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final PostModel? originalPost;
   final UserDetailsModel? user;
   final PageModel? page;
   final GroupModel? group;
@@ -52,7 +53,6 @@ class PostModel extends BaseModel<PostModel> {
     required this.sourceType,
     required this.linkedServiceId,
     required this.privacy,
-    this.url,
     required this.status,
     required this.likeCount,
     required this.commentCount,
@@ -60,15 +60,17 @@ class PostModel extends BaseModel<PostModel> {
     required this.popularityScore,
     required this.isPromoted,
     required this.isReposted,
-    this.promotionExpiry,
-    this.deletedAt,
-    this.originalPostId,
     required this.createdAt,
     required this.updatedAt,
+    required this.isLiked,
+    this.promotionExpiry,
+    this.url,
+    this.deletedAt,
+    this.originalPostId,
     this.user,
     this.page,
     this.group,
-    required this.isLiked,
+    this.originalPost,
   });
 
   PostModel copyWith({
@@ -101,6 +103,7 @@ class PostModel extends BaseModel<PostModel> {
     PageModel? page,
     GroupModel? group,
     bool? isLiked,
+    PostModel? originalPost,
   }) {
     return PostModel(
       id: id ?? this.id,
@@ -126,6 +129,7 @@ class PostModel extends BaseModel<PostModel> {
       promotionExpiry: promotionExpiry ?? this.promotionExpiry,
       deletedAt: deletedAt ?? this.deletedAt,
       originalPostId: originalPostId ?? this.originalPostId,
+      originalPost: originalPost ?? this.originalPost,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       user: user ?? this.user,
@@ -137,6 +141,32 @@ class PostModel extends BaseModel<PostModel> {
 
   factory PostModel.fromJson(Map<String, dynamic> json) => _$PostModelFromJson(json);
   Map<String, dynamic> toJson() => _$PostModelToJson(this);
+
+  @override
+  Map<String, dynamic> toMap() => toJson();
+}
+
+@JsonSerializable()
+class BookmarkModel extends BaseModel<BookmarkModel> {
+  final String id;
+  final String userId;
+  final String postId;
+  final PostModel? post;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+
+  BookmarkModel({
+    required this.id,
+    required this.userId,
+    required this.postId,
+    required this.post,
+    required this.createdAt,
+    required this.updatedAt,
+  });
+
+  factory BookmarkModel.fromJson(Map<String, dynamic> json) => _$BookmarkModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BookmarkModelToJson(this);
 
   @override
   Map<String, dynamic> toMap() => toJson();

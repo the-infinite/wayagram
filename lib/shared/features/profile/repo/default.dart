@@ -10,8 +10,26 @@ class UserProfileRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getPostsForUser(String userId, int page, int limit) async {
     return httpClient.getHttp(
-      "$serviceUri/posts/?userId=$userId&orderBy=createdAt&orderDirection=DESC&limit=$limit&page=$page",
+      "$serviceUri/posts/users/posts?userId=$userId&orderBy=createdAt&orderDirection=DESC&limit=$limit&page=$page",
     );
+  }
+
+  Future<WayaRequestResponse> getRepostsForUser(String userId, int page, int limit) async {
+    return httpClient
+        .getHttp("$serviceUri/posts/?isRepost=true&userId=$userId&orderBy=createdAt&orderDirection=DESC&limit=$limit&page=$page");
+  }
+
+  Future<WayaRequestResponse> getBookmarksForUser(String userId, int page, int limit) async {
+    return httpClient.getHttp("$serviceUri/posts/users/bookmarks?limit=$limit&page=$page");
+  }
+
+  Future<WayaRequestResponse> bookMarkPost(String postId) {
+    final payload = {};
+    return post("$serviceUri/posts/bookmarks/$postId", payload);
+  }
+
+  Future<WayaRequestResponse> removeBookMark(String bookmarkId) {
+    return delete("$serviceUri/posts/bookmarks/$bookmarkId");
   }
 
   Future<WayaRequestResponse> getEventsForUser(String userId, int page, int limit) async {

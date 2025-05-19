@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -13,6 +14,7 @@ import 'package:wayagram/features/auth/account_creation/data/model/business_acco
 import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:mime/mime.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 
 class DocType {
@@ -43,7 +45,7 @@ class AddBusinessAccountState {
   final List<DocType> uploadedDocuments;
 
   AddBusinessAccountState({
-    required this.selected,
+    this.selected = '',
     required this.businessName,
     required this.businessAddress,
     required this.cac,
@@ -100,7 +102,6 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
   AddBusinessAccountVm(this._authRepository, this.localDataSource,
       this._secureDataSource, this._profileRepo, this._setupVm, this.ref)
       : super(AddBusinessAccountState(
-          selected: localDataSource.getSelectedBusinessType().label,
           businessName: TextEditingController(),
           businessAddress: TextEditingController(),
           cac: TextEditingController(),
@@ -131,6 +132,51 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
     );
   }
 
+  Future<String?> getBusiness() async {
+    BusinessAccountData? businessData;
+
+    final businessProfile = await _profileRepo.getBusinessDataRepo(
+        userId: ConversationState.self.id);
+
+    if (businessProfile.success) {
+      businessData = BusinessAccountData.fromJson(businessProfile.data['data']);
+      final biz = await fetchBusinessTypes();
+      Select? nnn =
+          biz?.firstWhere((d) => d.value == businessData?.businessTypeId);
+      state = state.copyWith(selected: nnn?.label);
+
+      return businessData.id;
+    } else {
+      return "";
+    }
+  }
+
+  Future<List<Select>?> fetchBusinessTypes() async {
+    try {
+      //  state = state.copyWith(isLoadingBusinessType: true);
+      final response = await _authRepository.getBusinessTypes();
+      _logger.d(response.data);
+      List<Select> biz = [];
+      final businesses = response.data['data']['docs'] as List;
+      final businessTypes = businesses
+          .map((item) => Select(
+                label: item['name'],
+                value: item['id'],
+              ))
+          .toList();
+
+      biz = businessTypes;
+
+      //  state = state.copyWith(businessTypes: businessTypes);
+
+      return biz;
+    } catch (e) {
+      return [];
+    } finally {
+      // state = state.copyWith(isLoadingBusinessType: false);
+    }
+  }
+
   void validateInputs() {
     bool isButtonEnabled;
     if (state.selected == 'CAC') {
@@ -145,12 +191,12 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
   }
 
   Future<bool> verifyBVN() async {
-     //? change the state for loading and BVN verification
+    //? change the state for loading and BVN verification
     state = state.copyWith(isLoading: true, isBVNVerify: true);
     try {
       final response = await _authRepository.verifyBVN(state.bvn.text);
 
-  //? check for is successful response
+      //? check for is successful response
       if (response.data["statusCode"] == 200) {
         state = state.copyWith(
           isValidBVN: true,
@@ -158,15 +204,15 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
         );
         return true;
       }
-        //? Tell that isValidCAC is false not verifying BVN again
+      //? Tell that isValidCAC is false not verifying BVN again
       state = state.copyWith(isValidBVN: false);
       return false;
     } catch (e) {
-       //? Tell that isValidCAC is false not verifying BVN again
+      //? Tell that isValidCAC is false not verifying BVN again
       state = state.copyWith(isValidBVN: false);
       _logger.e(e);
     } finally {
-        //? close off all on the verification of BVN
+      //? close off all on the verification of BVN
       state = state.copyWith(isLoading: false, isBVNVerify: false);
     }
 
@@ -220,7 +266,7 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
     //? check if CAC has been validated to continue
     if (state.cac.text.trim().isNotEmpty) {
       if (!state.isValidCAC) {
-         //?Display an error message
+        //?Display an error message
         WayaSnackBar.showToast("Please Enter a valid CAC number ");
 
         return;
@@ -237,8 +283,15 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
       );
     }
 
-    final businessId = await _secureDataSource.getBusinessId();
-    debugPrint("feefer $businessId");
+    BusinessAccountData? businessData;
+
+    final businessProfile = await _profileRepo.getBusinessDataRepo(
+        userId: ConversationState.self.id);
+    if (businessProfile.success) {
+      businessData = BusinessAccountData.fromJson(businessProfile.data['data']);
+    }
+    // final businessId = await _secureDataSource.getBusinessId();
+    debugPrint("feefer  ${state.bvn.text} ${state.selected}");
     final formdata = state.selected == 'CAC'
         ? {
             'nin': await formattedImage(state.uploadedDocuments
@@ -253,7 +306,7 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
             'passport': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'passport')
                 .file!),
-            'businessId': businessId,
+            'businessId': businessData?.id,
             'cacNumber': state.cac.text,
             "bvn": state.bvn.text,
           }
@@ -267,7 +320,8 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
             'passport': await formattedImage(state.uploadedDocuments
                 .firstWhere((element) => element.type == 'passport')
                 .file!),
-            'businessId': businessId,
+            'businessId': businessData?.id,
+            "bvn": state.bvn.text,
           };
 
     try {
@@ -292,8 +346,11 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
               icon: Image.asset('assets/images/auth/doc-success.png'),
               buttonText: 'Go To HomePage');
         }
+      } else {
+        throw response.data;
       }
     } catch (e) {
+      WayaSnackBar.showToast(e is String ? e : (e as dynamic)['message']);
       _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);

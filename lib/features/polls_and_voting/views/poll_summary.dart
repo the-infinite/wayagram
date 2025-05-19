@@ -55,6 +55,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
             callback: !viewModel.isLoading
                 ? () async {
               debugPrint('DIALA POLL');
+
               if (viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.personal) {
 
                 WidgetsBinding.instance.addPostFrameCallback((_) {

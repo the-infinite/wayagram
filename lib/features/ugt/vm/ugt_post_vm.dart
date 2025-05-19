@@ -31,8 +31,8 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
     } catch (e) {}
 
     try {
-      final response =
-          await _contestRepository.getContestForYou(isFirst ? 1 : state.page);
+      final response = await _contestRepository.getContestForYou(
+          isFirst ? 1 : state.page, state.filter);
       //  List<Contest> contestList = [];
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);
@@ -59,6 +59,11 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
     } finally {}
   }
 
+  void updateFilter(String? filter) {
+    state = state.copyWith(filter: filter);
+    fetchContestForYou(true);
+  }
+
   Future<Contest?> fetchSingleContest(
       {required String contestId, WidgetRef? ref}) async {
     try {
@@ -70,7 +75,6 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
         if (ref != null) {
           ref.read(selectedContestProvider.notifier).state = contest;
         }
-        
       }
       return contest;
     } catch (error) {

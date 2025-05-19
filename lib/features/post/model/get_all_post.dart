@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:wayagram/shared/features/profile/model/post.dart';
+import 'package:wayagram/shared/model/base_model.dart';
 
 GetAllPost getAllPostFromJson(String str) => GetAllPost.fromJson(json.decode(str));
 String getAllPostToJson(GetAllPost data) => json.encode(data.toJson());
@@ -130,7 +131,7 @@ class GetAllPostData {
 GetAllPostDocs docsFromJson(String str) => GetAllPostDocs.fromJson(json.decode(str));
 String docsToJson(GetAllPostDocs data) => json.encode(data.toJson());
 
-class GetAllPostDocs {
+class GetAllPostDocs extends BaseModel<GetAllPostDocs>{
   GetAllPostDocs({
     this.id,
     this.userId,
@@ -314,6 +315,12 @@ class GetAllPostDocs {
     }
     return map;
   }
+  @override
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    "hashtags": hashtags,
+    "content": content
+  };
 }
 
 User userFromJson(String str) => User.fromJson(json.decode(str));

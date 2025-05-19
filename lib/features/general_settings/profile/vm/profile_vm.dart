@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/controller/preloader.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
@@ -11,6 +12,7 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_state_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
+import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/shared/cache/comment.dart';
 import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/cache/page.dart';
@@ -42,8 +44,10 @@ class ProfileVm extends StateNotifier<ProfileState> {
           userId: userId, dob: dob, address: address);
       if (response.success) {
         WayaSnackBar.showToast('Account Updated Successfully');
-        Future.delayed(Duration(seconds: 2), () {
-          WayaNav.offNamed('/general-settings');
+
+        Future.delayed(Duration(seconds: 1), () {
+          WayaNav.replaceWithNamedAndRemoveScreens(EditProfilePage.route,
+              removeCount: 2);
         });
       }
       state = ProfileState(isLoading: false);
@@ -86,12 +90,11 @@ class ProfileVm extends StateNotifier<ProfileState> {
       final cannotUpdateDisplayName =
           DateTime.now().difference(lastDisplayNameUpdate).inDays <= 7;
       if (cannotUpdateDisplayName) {
-          WayaSnackBar.showToast(
-              'You can only update your display name once every 7 days.');
+        WayaSnackBar.showToast(
+            'You can only update your display name once every 7 days.');
         return cannotUpdateDisplayName;
       }
     }
-
 
     try {
       state = state.copyWith(isLoading: load);
@@ -106,9 +109,9 @@ class ProfileVm extends StateNotifier<ProfileState> {
         WayaSnackBar.showToast('Profile Updated Successfully');
         isPublic != null
             ? null
-            : Future.delayed(Duration(seconds: 2), () {
-                WayaNav.removeUntilNamed(BottomView.route);
-                WayaNav.offNamed(GeneralSettingsPage.route);
+            : Future.delayed(Duration(seconds: 1), () {
+                WayaNav.replaceWithNamedAndRemoveScreens(EditProfilePage.route,
+                    removeCount: 2);
               });
         refetchUserData();
         state = state.copyWith(
@@ -162,6 +165,9 @@ class ProfileVm extends StateNotifier<ProfileState> {
     _localDataSource.saveUserId("");
     await _secureDataSource.saveUserId("");
 
+    //?sign out and revoke access
+    await signOutGoogle();
+
     //? Reset all notifiers, providers, and caches.
     myFollowProvider.reset();
     myGroupNotifier.reset();
@@ -174,6 +180,25 @@ class ProfileVm extends StateNotifier<ProfileState> {
 
     //? Go all the wat to the last page.
     WayaNav.removeUntilNamed(LoginCoverPage.route);
+  }
+
+  //?sign out and revoke access
+  Future<void> signOutGoogle() async {
+    try {
+      //?init
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      //? check if user is signed in
+      bool isSignedIn = await googleSignIn.isSignedIn();
+
+      if (isSignedIn) {
+        //? revoke user access to the permissions
+        await googleSignIn.disconnect();
+        //? sign out of the account
+        await googleSignIn.signOut();
+      }
+    } catch (error) {
+      print('Error signing out: $error');
+    }
   }
 
   void updateProfilePicture() async {

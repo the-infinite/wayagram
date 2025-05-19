@@ -82,7 +82,7 @@ class MyMomentWidget extends ConsumerWidget {
                           ),
                           child: Center(
                             child: WayaDp(
-                              image: moment.image,
+                              image: moment.thumbnail ?? '',
                               radius: 20,
                             ),
                           ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
@@ -12,28 +14,32 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/support/modal/request.dart';
 import 'package:wayagram/features/support/vm/request.dart';
 
-class SupportRequestScreen extends ConsumerStatefulWidget {
+class SupportRequestScreen extends StatefulHookConsumerWidget {
   static const route = "/support/request";
   const SupportRequestScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SupportChatScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SupportChatScreenState();
 }
 
 class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
   late final notifier = ref.read(supportRequestProvider.notifier);
   final _formKey = GlobalKey<FormState>();
-  final loadingNotifier = ValueNotifier(false);
+  //final loadingNotifier = ValueNotifier(false);
 
   @override
   void dispose() {
-    loadingNotifier.dispose();
+    // loadingNotifier.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+
+    //? is loading state
+    final isLoading = useState(false);
 
     //? Our support request form.
     return WayaScaffold(
@@ -97,7 +103,9 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                     controller: notifier.fullname,
                     hintText: 'Rufai Maleek',
                     borderColor:
-                        formState.hasError && notifier.fullname.text.isEmpty ? theme.colorScheme.error : null,
+                        formState.hasError && notifier.fullname.text.isEmpty
+                            ? theme.colorScheme.error
+                            : null,
                     label: 'Fullname',
                   ),
 
@@ -143,7 +151,10 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                     keyboardType: TextInputType.emailAddress,
                     controller: notifier.email,
                     hintText: 'example@gmail.com',
-                    borderColor: formState.hasError && notifier.email.text.isEmpty ? theme.colorScheme.error : null,
+                    borderColor:
+                        formState.hasError && notifier.email.text.isEmpty
+                            ? theme.colorScheme.error
+                            : null,
                     label: 'Email Address',
                   ),
 
@@ -202,7 +213,9 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                           width: 90,
                           padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            border: Border.all(color: theme.colorScheme.greyColor300, width: 1),
+                            border: Border.all(
+                                color: theme.colorScheme.greyColor300,
+                                width: 1),
                             borderRadius: BorderRadius.all(
                               Radius.circular(6.0),
                             ),
@@ -235,7 +248,8 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                             keyboardType: TextInputType.phone,
                             controller: notifier.phone,
                             hintText: '000-000-000',
-                            borderColor: formState.hasError && notifier.phone.text.isEmpty
+                            borderColor: formState.hasError &&
+                                    notifier.phone.text.isEmpty
                                 ? theme.colorScheme.error
                                 : null,
                           ),
@@ -286,13 +300,15 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                           label: "Support Topic",
                           hintText: 'Select Topic',
                           items: notifier.supportTopics,
-                          onSelected: (value) => notifier.topicNotifier.value = value.first,
+                          onSelected: (value) =>
+                              notifier.topicNotifier.value = value.first,
                         );
                       },
                     ),
 
                     //? If this has failed.
-                    if (formState.hasError && notifier.topicNotifier.value == null)
+                    if (formState.hasError &&
+                        notifier.topicNotifier.value == null)
                       Padding(
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
@@ -329,7 +345,9 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                     controller: notifier.details,
                     hintText: 'Write a brief description of the issue',
                     borderColor:
-                        formState.hasError && notifier.details.text.isEmpty ? theme.colorScheme.error : null,
+                        formState.hasError && notifier.details.text.isEmpty
+                            ? theme.colorScheme.error
+                            : null,
                     line: 6,
                     maxLength: 450,
                     padding: const EdgeInsets.all(12),
@@ -361,7 +379,8 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                 if (!_formKey.currentState!.validate()) return;
 
                 //? Since we sent this support request ticket.
-                if (await notifier.sendRequestTicket()) {
+                //?isLoading to control the state of the loading in the Notifier
+                if (await notifier.sendRequestTicket(isLoading)) {
                   //? Leave this screen if the action was successful
                   WayaNav.goBack();
 
@@ -372,7 +391,7 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
                   );
                 }
               },
-              notifier: loadingNotifier,
+              notifier: isLoading,
               text: "Submit",
             )
           ],

@@ -1,4 +1,6 @@
 import 'dart:convert';
+
+import 'package:wayagram/shared/model/base_model.dart';
 TransactionModel transactionModelFromJson(String str) => TransactionModel.fromJson(json.decode(str));
 String transactionModelToJson(TransactionModel data) => json.encode(data.toJson());
 class TransactionModel {
@@ -90,7 +92,8 @@ class Data {
   num? page;
   num? totalPages;
   bool? hasNextPage;
-  num? nextPage;
+  int? nextPage;
+  //num? nextPage;
   bool? hasPrevPage;
   dynamic prevPage;
   num? pagingCounter;
@@ -103,7 +106,8 @@ Data copyWith({  List<TransactionModelDocs>? docs,
   num? page,
   num? totalPages,
   bool? hasNextPage,
-  num? nextPage,
+  //num? nextPage,
+  int? nextPage,
   bool? hasPrevPage,
   dynamic prevPage,
   num? pagingCounter,
@@ -220,7 +224,7 @@ AppliedFilters copyWith({  String? userId,
 
 TransactionModelDocs docsFromJson(String str) => TransactionModelDocs.fromJson(json.decode(str));
 String docsToJson(TransactionModelDocs data) => json.encode(data.toJson());
-class TransactionModelDocs {
+class TransactionModelDocs extends BaseModel<TransactionModelDocs> {
   TransactionModelDocs({
       this.id, 
       this.userId, 
@@ -338,5 +342,11 @@ class TransactionModelDocs {
     map['updatedAt'] = updatedAt;
     return map;
   }
+  @override
+  Map<String, dynamic> toMap() => {
+    'id': id,
+    "purpose": purpose,
+    "description": description
+  };
 
 }

@@ -16,6 +16,7 @@ import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
+import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_post_card.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_all_post_contest_model.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
@@ -127,7 +128,22 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                                 value: 1,
                                 child: _buildActionNav(
                                     context: context,
-                                    onTap: () {},
+                                    onTap: () async {
+                                      print(widget.post.contestantProfile?.id ??
+                                          "");
+                                      await Share.share(
+                                        WayaValueHelper.getShareableUrl(
+                                            WayaAppRoutes
+                                                .getContestantProfileRoute(
+                                          widget.post.contestantProfile?.id ??
+                                              "",
+                                          widget.post.contestId ?? "",
+                                        )),
+                                        subject: "Share Contestant Profile",
+
+                                        // https://staging.wayagram.ng/contest-profile-page?id=acabf193-dd12-48c5-9030-157efa4c012a&contestId=10c8c1b5-f720-4633-a14e-646313230192
+                                      );
+                                    },
                                     asset: WayaAssets.icons.genSet.share
                                         .svg(fit: BoxFit.none),
                                     text: "Share Post Link",
@@ -137,7 +153,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                                   widget.post.contestantProfileId) */
                               // https://services.staging.wayagram.ng/school-contest/api/v1/gallery/f3c0f686-85fd-4125-8e3f-5a83e7910f32/gallery
                               if (viewModel.getLoggedInUserId() ==
-                                  widget.model.profileId)
+                                  widget.model.profileId && widget.post.shares == 0)
                                 PopupMenuItem<int>(
                                   value: 1,
                                   child: _buildActionNav(
@@ -196,42 +212,46 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                 ),
 
               ), */
-              MediaCard(
-                  ontap: (String url, MyFullMediaType type) {
-                    if (type == MyFullMediaType.image) {
-                      WayaNav.toNamed("/view-media-full-page", arguments: {
-                        "url": url,
-                        "title": widget.post.contestApplication?.fullName ?? "",
-                        "createdAt": widget.post.createdAt,
-                        "likeCount": widget.post.likes,
-                        "isLike": widget.post.hasLiked,
-                        "showDescription": true,
-                        "discription": widget.post.description,
-                        "shareCount": widget.post.shares,
-                        "type": MyFullMediaType.image
-                      });
-                    } else {
-                      WayaNav.toNamed("/view-media-full-page", arguments: {
-                        "url": url,
-                        "title": widget.post.contestApplication?.fullName ?? "",
-                        "createdAt": widget.post.createdAt,
-                        "likeCount": widget.post.likes,
-                        "isLike": widget.post.hasLiked,
-                        "showDescription": true,
-                        "discription": widget.post.description,
-                        "shareCount": widget.post.shares,
-                        "type": MyFullMediaType.video
-                      });
-                    }
-                  },
-                  mediaUrls: [
-                    ...widget.post.mediaContent!
-                        .where((e) =>
-                            e.type?.toLowerCase() == "video" ||
-                            e.type?.toLowerCase() == "image")
-                        .map((e) => CardMediaContent(
-                            type: e.type ?? "", url: e.url ?? ""))
-                  ]),
+              if (widget.post.mediaContent != null &&
+                  widget.post.mediaContent!.isNotEmpty)
+                MediaCard(
+                    ontap: (String url, MyFullMediaType type) {
+                      if (type == MyFullMediaType.image) {
+                        WayaNav.toNamed("/view-media-full-page", arguments: {
+                          "url": url,
+                          "title":
+                              widget.post.contestApplication?.fullName ?? "",
+                          "createdAt": widget.post.createdAt,
+                          "likeCount": widget.post.likes,
+                          "isLike": widget.post.hasLiked,
+                          "showDescription": true,
+                          "discription": widget.post.description,
+                          "shareCount": widget.post.shares,
+                          "type": MyFullMediaType.image
+                        });
+                      } else {
+                        WayaNav.toNamed("/view-media-full-page", arguments: {
+                          "url": url,
+                          "title":
+                              widget.post.contestApplication?.fullName ?? "",
+                          "createdAt": widget.post.createdAt,
+                          "likeCount": widget.post.likes,
+                          "isLike": widget.post.hasLiked,
+                          "showDescription": true,
+                          "discription": widget.post.description,
+                          "shareCount": widget.post.shares,
+                          "type": MyFullMediaType.video
+                        });
+                      }
+                    },
+                    mediaUrls: [
+                      ...widget.post.mediaContent!
+                          .where((e) =>
+                              e.type?.toLowerCase() == "video" ||
+                              e.type?.toLowerCase() == "image")
+                          .map((e) => CardMediaContent(
+                              type: e.type ?? "", url: e.url ?? ""))
+                    ]),
               const Gap(20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -338,14 +358,17 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                   WayaButton(
                     fontSize: 12.sp,
                     height: 40,
-                    callback: () {
+                    callback: () async {
                       //  debugPrint(widget.model.endDate ?? "");
                       if (isPresentIsPast(widget.model.endDate ?? "")) {
                         WayaSnackBar.showToast("Contest has ended");
                         return;
                       }
 
-                      if (widget.model.entryType?.toLowerCase() == "free") {
+                      var list = await getCurrentFee(
+                          widget.model, widget.model.contestSettings?.stages);
+
+                      if (widget.model.amountPerVote == 0) {
                         WayaUtils.showModalSheet(
                           context,
                           child: ConfirmVoteOptionModal(
@@ -374,12 +397,9 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                       WayaUtils.showModalSheet(
                         context,
                         child: VoteOptionModal(
-                          voteFee:
-                              widget.model.amountPerVote?.toString() ?? "0",
+                          voteFee: list[1].toString(),
                           isFree:
-                              widget.model.entryType?.toLowerCase() == "free"
-                                  ? true
-                                  : false,
+                              list[0].toLowerCase() == "free" ? true : false,
                           //   amountPaid: "89",
                           /* 
                            contestId: contestantData.contestId ?? "",
@@ -396,7 +416,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                               amount: "0",
                               numberOfVotes: "0",
                               profileId: "",
-                              type: widget.model.entryType?.toLowerCase()),
+                              type: list[0].toLowerCase()),
 
                           candidateName:
                               widget.post.contestApplication?.fullName ??

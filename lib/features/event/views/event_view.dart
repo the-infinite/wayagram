@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/event/views/all_events.dart';
+import 'package:wayagram/features/event/views/all_joined_events.dart';
 import 'package:wayagram/features/event/views/my_events.dart';
 
 class EventView extends ConsumerStatefulWidget {
@@ -37,11 +38,17 @@ class _EventViewState extends ConsumerState<EventView>
                   text: 'My Events',
                   onTap: () => setState(() => _selectedIndex = 1),
                 ),
+                  WayaTabButton(
+                  isSelected: _selectedIndex == 2,
+                  text: 'Joined Events',
+                  onTap: () => setState(() => _selectedIndex = 2),
+                ),
               ],
             ),
             const Gap(10),
             if (_selectedIndex == 0) AllEvents(),
             if (_selectedIndex == 1) MyEvents(),
+            if (_selectedIndex == 2) AllJoinedEvents()
           ],
         ));
   }

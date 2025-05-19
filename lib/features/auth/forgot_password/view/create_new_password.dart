@@ -76,6 +76,7 @@ class _CreateNewPasswordState extends ConsumerState<CreateNewPassword> {
                               : Icons.visibility_off_outlined),
                           color: wayaTheme.colorScheme.greyColor300,
                         ),
+                          helperText: "Password must be 8 or more character and contain at least 1 number and 1 special character",
                       ),
                       if (formState.hasError && viewModel.password.text.isEmpty)
                         Padding(

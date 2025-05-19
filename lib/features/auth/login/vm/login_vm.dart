@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:developer';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
@@ -15,6 +16,8 @@ import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dar
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/auth/login/model/user_model.dart';
 import 'package:wayagram/features/auth/verify_email/verify_email.dart';
+import 'package:wayagram/features/general_settings/notifications/controller/default.dart';
+import 'package:wayagram/features/general_settings/notifications/vm/default.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/user_account_model.dart';
 import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/features/notifications/vm/default.dart';
@@ -55,8 +58,7 @@ class LoginState {
         userData: userData ?? this.userData,
         emailController: emailController ?? this.emailController,
         passwordController: passwordController ?? this.passwordController,
-        businessAcctController:
-            businessAcctController ?? this.businessAcctController);
+        businessAcctController: businessAcctController ?? this.businessAcctController);
   }
 }
 
@@ -69,11 +71,11 @@ class LoginVm extends StateNotifier<LoginState> {
   final _logger = getLogger("LoginVm");
   final Ref ref;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
-    scopes: ['email'],
+    scopes: ['email', 'profile'],
   );
 
-  LoginVm(this.ref, this._authRepository, this._localDataSource,
-      this._secureDataSource, this._setupVm, this._profileRepo)
+  LoginVm(
+      this.ref, this._authRepository, this._localDataSource, this._secureDataSource, this._setupVm, this._profileRepo)
       : super(LoginState(
             emailController: TextEditingController(),
             passwordController: TextEditingController(),
@@ -114,22 +116,20 @@ class LoginVm extends StateNotifier<LoginState> {
       return;
     }
 
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
     // final OAuthCredential credential = GoogleAuthProvider.credential(
     //   idToken: googleAuth.idToken,
     //   accessToken: googleAuth.accessToken,
     // );
 
-    print(googleAuth.accessToken);
+    log(googleAuth.idToken ?? "");
     print("april fools -----------------wefwfwfwf wefw----------");
     // if (idToken != null) {
-    await oauthSignIn(authType: 'GOOGLE', token: googleAuth.accessToken ?? '');
+    await oauthSignIn(authType: 'GOOGLE', token: googleAuth.idToken ?? '');
   }
 
-  Future<void> oauthSignIn(
-      {required String token, required String authType}) async {
+  Future<void> oauthSignIn({required String token, required String authType}) async {
     try {
       //? Show the preloader.
       WayaPreloaderController.instance.show();
@@ -145,7 +145,6 @@ class LoginVm extends StateNotifier<LoginState> {
         } else {
           throw "Error";
         }
-
       }
     } catch (error) {
       debugPrint(error.toString());
@@ -155,8 +154,7 @@ class LoginVm extends StateNotifier<LoginState> {
     }
   }
 
-  Future<void> onSubmit(WidgetRef ref,
-      {String? email, bool? isBusinessLogin}) async {
+  Future<void> onSubmit(WidgetRef ref, {String? email, bool? isBusinessLogin}) async {
     try {
       //? Show the preloader.
       WayaPreloaderController.instance.show();
@@ -174,11 +172,9 @@ class LoginVm extends StateNotifier<LoginState> {
         if (response.data['responseCode'] == 625) {
           await ref
               .read(verifyAccountProvider.notifier)
-              .resendOtpForRegisteredButNotVerifiedUser(
-                  email: state.emailController.text);
+              .resendOtpForRegisteredButNotVerifiedUser(email: state.emailController.text);
 
-          WayaNav.toNamed(VerifyEmail.route,
-              arguments: state.emailController.text);
+          WayaNav.toNamed(VerifyEmail.route, arguments: state.emailController.text);
         }
       }
     } catch (e) {
@@ -195,14 +191,10 @@ class LoginVm extends StateNotifier<LoginState> {
     final remoteUserData = UserModel.fromJson(data);
     state = state.copyWith(userData: remoteUserData);
 
-    _localDataSource
-        .saveUserId(remoteUserData.data?.userdata?.user?.id as String);
-    await _secureDataSource
-        .saveUserId(remoteUserData.data?.userdata?.user?.id as String);
-    await _secureDataSource
-        .saveToken(remoteUserData.data?.token?.token as String);
-    await _secureDataSource
-        .saveRefreshToken(remoteUserData.data?.token?.refreshToken as String);
+    _localDataSource.saveUserId(remoteUserData.data?.userdata?.user?.id as String);
+    await _secureDataSource.saveUserId(remoteUserData.data?.userdata?.user?.id as String);
+    await _secureDataSource.saveToken(remoteUserData.data?.token?.token as String);
+    await _secureDataSource.saveRefreshToken(remoteUserData.data?.token?.refreshToken as String);
 
     //
     if (remoteUserData.data != null) {
@@ -239,22 +231,17 @@ class LoginVm extends StateNotifier<LoginState> {
       }
 
       //? Now we do the unnecessPary part of things.
-      final response = await _profileRepo.getUserDataRepo(
-          userId: remoteUserData.data?.userdata?.user?.id as String);
+      final response = await _profileRepo.getUserDataRepo(userId: remoteUserData.data?.userdata?.user?.id as String);
 
       if (response.success) {
-        UserAccountModel userAccountModel =
-            UserAccountModel.fromJson(response.data);
+        UserAccountModel userAccountModel = UserAccountModel.fromJson(response.data);
 
-        _setupVm.state =
-            _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
+        _setupVm.state = _setupVm.state.copyWith(user: userAccountModel.data?.userdata);
 
-        if (userAccountModel.data != null &&
-            userAccountModel.data!.userdata!.user!.role != "PERSONAL") {
-          final bizResponse = await _profileRepo.getBusinessDataRepo(
-              userId: remoteUserData.data?.userdata?.user?.id as String);
-          BusinessAccountData bizData =
-              BusinessAccountData.fromJson(bizResponse.data["data"]);
+        if (userAccountModel.data != null && userAccountModel.data!.userdata!.user!.role != "PERSONAL") {
+          final bizResponse =
+              await _profileRepo.getBusinessDataRepo(userId: remoteUserData.data?.userdata?.user?.id as String);
+          BusinessAccountData bizData = BusinessAccountData.fromJson(bizResponse.data["data"]);
 
           _setupVm.state = _setupVm.state.copyWith(business: bizData);
 
@@ -265,6 +252,7 @@ class LoginVm extends StateNotifier<LoginState> {
 
     //? This is fine.
     final notificationVm = ref.read(notificationProvider.notifier);
+    final notificationSettings = ref.read(notificationSettingsProvider.notifier);
 
     try {
       //? If this has not yet generated any device tokens, send them across.
@@ -276,7 +264,8 @@ class LoginVm extends StateNotifier<LoginState> {
       }
 
       // Before moving forward, try to retrieve the user's notifications.
-      notificationVm.getUserNotifications();
+      await notificationSettings.getSettings(NotificationSettingsController.instance);
+      await notificationVm.getUserNotifications();
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
@@ -293,6 +282,6 @@ class LoginVm extends StateNotifier<LoginState> {
 
 final loginVmProvider = StateNotifierProvider<LoginVm, LoginState>((ref) {
   final successfulSetupVm = ref.read(successfulSetupVmProvider.notifier);
-  return LoginVm(ref, AuthRepository(), WayaLocalDataSource(),
-      WayaSecureDataSource(), successfulSetupVm, ProfileRepo());
+  return LoginVm(
+      ref, AuthRepository(), WayaLocalDataSource(), WayaSecureDataSource(), successfulSetupVm, ProfileRepo());
 });

@@ -11,6 +11,7 @@ import 'package:wayagram/features/auth/account_creation/vm/successful_setup_vm.d
 import 'package:wayagram/features/auth/add_business_account/data/model/upgrading_response_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/data/model/upgrade_to_business_state.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 
 class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
   final AuthRepository _authRepository;
@@ -22,11 +23,12 @@ class UpgradeToBusinessVm extends StateNotifier<UpgradeToBusinessState> {
   UpgradeToBusinessVm(this._authRepository, this._localDataSource,
       this._secureDataSource, this.ref)
       : super(UpgradeToBusinessState()) {
-    final user = ref.watch(successfulSetupVmProvider).user!.user;
-    state =
-        state.copyWith(contactEmail: TextEditingController(text: user?.email!));
     state = state.copyWith(
-        contactPhone: TextEditingController(text: user?.phoneNumber));
+        contactEmail:
+            TextEditingController(text: ConversationState.self.email));
+    state = state.copyWith(
+        contactPhone:
+            TextEditingController(text: ConversationState.self.phoneNumber));
 
     // state = state.copyWith(city: user?.city);
     // state = state.copyWith(state: user?.state);

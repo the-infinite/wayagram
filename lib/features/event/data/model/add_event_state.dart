@@ -21,6 +21,10 @@ class AddEventState {
   final String endTime;
   final String startDateString;
   final String endDateString;
+  final String ticketStartDateString;
+  final String ticketEndDateString;
+  final String ticketEndDate;
+  final String ticketStartDate;
   final List<DocType> eventImage;
   final String? image;
   final String userId;
@@ -47,6 +51,10 @@ class AddEventState {
       this.image,
       this.eventImage = const [],
       this.startDateString = '',
+      this.ticketStartDate= '',
+      this.ticketEndDate = '',
+      this.ticketStartDateString = '',
+      this.ticketEndDateString = '',
       this.userId = '',
       this.isEditingMode = false,
       this.imageUrl = '',
@@ -83,7 +91,15 @@ class AddEventState {
       bool? isEditingMode,
       String? imageUrl,
       String? eventId,
-      String? endDateString}) {
+      String? endDateString,
+      String? ticketStartDateString,
+      String? ticketEndDateString,
+      String? ticketStartDate,
+      String? ticketEndDate,
+
+      
+      
+      }) {
     return AddEventState(
         isLoading: isLoading ?? this.isLoading,
         title: title ?? this.title,
@@ -107,7 +123,12 @@ class AddEventState {
         isEditingMode: isEditingMode ?? this.isEditingMode,
         imageUrl: imageUrl ?? this.imageUrl,
         eventId: eventId ?? this.eventId,
-        endDateString: endDateString ?? this.endDateString);
+        endDateString: endDateString ?? this.endDateString,
+        ticketEndDate: ticketEndDate ?? this.ticketEndDate,
+        ticketStartDate: ticketStartDate ?? this.ticketStartDate,
+        ticketStartDateString: ticketStartDateString ?? this.ticketStartDateString,
+        ticketEndDateString: ticketEndDateString ?? this.ticketEndDateString
+        );
   }
 
   Map<String, dynamic> toJson() {
@@ -131,7 +152,9 @@ class AddEventState {
       'userId': userId,
       'isEditingMode': isEditingMode,
       'imageUrl': imageUrl,
-      'eventId': eventId
+      'eventId': eventId,
+      'ticketStartDate': ticketStartDate,
+      'ticketEndDate': ticketEndDate
     };
   }
 
@@ -169,6 +192,8 @@ class AddEventState {
         startDate: startDate,
         endDate: endDate,
         description: description.text,
+        ticketSalesEndDate: ticketEndDate,
+        ticketSalesStartDate: ticketStartDate,
         endTime: endTime,
         startTime: startTime,
         eventType: eventType.toLowerCase(),
@@ -192,6 +217,8 @@ class AddEventState {
       location: location.toLowerCase(),
       startDate: startDate,
       endDate: endDate,
+      ticketSalesEndDate: ticketEndDate,
+        ticketSalesStartDate: ticketStartDate,
       description: description.text,
       endTime: endTime,
       startTime: startTime,

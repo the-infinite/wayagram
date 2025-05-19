@@ -191,6 +191,10 @@ class WayaSocketController {
 
   /// Our utility function used to connect to the chat socket for this client.
   Future<void> connect(WidgetRef ref) async {
+    if (_socket != null) {
+      return;
+    }
+
     //? This is fine too.
     this.ref = ref;
 
@@ -255,6 +259,10 @@ class WayaSocketController {
   /// Our utility function that is used to start listening for socket events.
   Future<void> listen() async {
     final socket = _socket!;
+
+    if (socket.hasListeners("messageRead")) {
+      return;
+    }
 
     //? On any event.
     socket.onAny(

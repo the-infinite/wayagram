@@ -9,12 +9,12 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/service/repos/transactions/transaction_history_model.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
-import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_model.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
+import 'package:wayagram/features/wallet/widget/transaction_widget.dart';
 
 class TransactionHistory extends ConsumerStatefulWidget {
   const TransactionHistory({super.key});
@@ -24,6 +24,7 @@ class TransactionHistory extends ConsumerStatefulWidget {
 }
 
 class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
+
   int page = 1;
   int limit = 10;
   bool hasNextPage = true;
@@ -32,7 +33,6 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
   List<TransactionDetail> transactions = [];
   bool isFirstLoad = true;
   List<TransactionModelDocs> docs = [];
-
   @override
   void initState() {
     super.initState();
@@ -41,13 +41,11 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
       _loadInitialData();
     });
   }
-
   Future<void> _loadInitialData() async {
     try {
       await ref
           .read(transactionVmProvider.notifier)
           .getTransaction(limit: limit, page: page);
-          //.getUserTransactions(limit: limit, page: page);
 
       if (mounted) {
         setState(() {
@@ -69,40 +67,35 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
       }
     }
   }
-
   void _scrollListener() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       _loadMoreData();
     }
   }
-
   Future<void> _loadMoreData() async {
     if (!hasNextPage || isLoadingMore) return;
-
     setState(() {
       isLoadingMore = true;
     });
-
     try {
+
       page++;
       await ref
           .read(transactionVmProvider.notifier)
-          //.getUserTransactions(limit: limit, page: page);
           .getTransaction(limit: limit, page: page);
+
 
       if (mounted) {
         final viewModel = ref.read(transactionVmProvider);
         final newTransactions = viewModel.docs ?? [];
         //final newTransactions = viewModel.transactions ?? [];
-
         if (newTransactions.isNotEmpty) {
           // Filter out duplicates
           final existingIds = docs.map((t) => t.id).toSet();
           final uniqueNewTransactions = newTransactions
               .where((transaction) => !existingIds.contains(transaction.id))
               .toList();
-
           setState(() {
             docs.addAll(uniqueNewTransactions);
             hasNextPage = uniqueNewTransactions.length >= limit;
@@ -124,7 +117,6 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
       }
     }
   }
-
   @override
   void dispose() {
     _scrollController.removeListener(_scrollListener);
@@ -136,13 +128,11 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
+    final viewModel = ref.watch(transactionVmProvider);
+
     if (isFirstLoad) {
       return const Center(child: CircularProgressIndicator());
     }
-
-    // if (transactions.isEmpty) {
-    //   return const Center(child: EmptyTransaction());
-    // }
 
     if (docs.isEmpty) {
       return const Center(child: EmptyTransaction());
@@ -153,121 +143,20 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
         Expanded(
           child: ListView.builder(
             controller: _scrollController,
-            itemCount: docs.length,
-            //itemCount: transactions.length,
+            itemCount: viewModel.docs!.length,
             itemBuilder: (_, index) {
-              String dateTimeString = "${docs[index].createdAt}";
+              final trans = viewModel.docs![index];
+              String dateTimeString = "${trans.createdAt}";
               DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
-      return Container(
-        margin: EdgeInsets.only(bottom: 10),
-        padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-        decoration: BoxDecoration(
-          color: wayaTheme.colorScheme.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Theme.of(context).colorScheme.greyColor100),
-        ),
-        child: ListTile(
-
-          onTap: () {
-            WayaNav.toNamed(TransactionDetailsScreen.route,
-                arguments: docs[index].id);
-          },
-          tileColor: wayaTheme.colorScheme.cardBackgroudColor,
-          leading: Container(
-            height: 40.h,
-            width: 40.w,
-            decoration: BoxDecoration(
-              color: wayaTheme.colorScheme.primary50,
-              shape: BoxShape.circle,
-            ),
-            child: WayaAssets.icons.wallet.wallet.svg(fit: BoxFit.none),
-          ),
-          title: Row(
-            children: [
-              Text('${docs[index].purpose?.capitalizeFirst}',
-                  //transactions[index].description,
-                  style: wayaTheme.textTheme.bodyLarge?.copyWith(
-                      fontWeight: FontWeight.w500,
-                      fontFamily: WayaConstants.fontFamily,
-                      fontSize: 14.sp,
-                      color: wayaTheme.colorScheme.greyColor700
-                  )),
-              const Spacer(),
-              docs[index].type == 'FUNDING' || docs[index].type == 'REFUND'?
-              Text(
-                "+₦${docs[index].amount.toString()}",
-                style: wayaTheme.textTheme.bodyMedium!
-                    .copyWith(color: wayaTheme.colorScheme.success,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: WayaConstants.fontFamily,
-                  fontSize: 12.sp,),
-              ):
-              Text(
-                "-₦${docs[index].amount.toString()}",
-                style: wayaTheme.textTheme.bodyMedium!
-                    .copyWith(color: WayaColors.error,
-                //wayaTheme.colorScheme.error,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: WayaConstants.fontFamily,
-                  fontSize: 12.sp,),
-              )
-            ],
-          ),
-          subtitle: Row(
-            children: [
-              docs[index].type == 'FUNDING' || docs[index].type == 'REFUND'?
-              Container(
-                //padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.success50,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                alignment: Alignment.center,
-                 height: 17.h,
-                 width: 48.w,
-                child: Text('Credit',
-                  //transactions[index].type,
-                  style: wayaTheme.textTheme.labelSmall!
-                      .copyWith(color: wayaTheme.colorScheme.success,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: WayaConstants.fontFamily,
-                    fontSize: 12.sp,
-                  ),
-                ),
-              ):
-              Container(
-                //padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.error50,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                alignment: Alignment.center,
-                height: 17.h,
-                width: 48.w,
-                child: Text('Debit',
-                  //transactions[index].type,
-                  style: wayaTheme.textTheme.labelSmall!
-                      .copyWith(color: wayaTheme.colorScheme.error,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: WayaConstants.fontFamily,
-                    fontSize: 12.sp,
-                  ),
-                ),
-              ),
-              const Spacer(),
-              Text('${ref.read(createPollVotingProvider.notifier).formatDt2(docs[index].updatedAt)},${DateFormat.jm().format(dateTime)}',
-                //DateFormat('MMM dd, hh:mm a').format(docs[index].updatedAt.toLocal()),
-                //DateFormat('MMM dd, hh:mm a').format(transactions[index].updatedAt.toLocal()),
-                style: TextStyle(color: wayaTheme.colorScheme.greyColor500,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: WayaConstants.fontFamily,
-                  fontSize: 12.sp,),
-              )
-            ],
-          ),
-        ),
-      );
-    },
+              return TransactionWidget(
+                onTap: () => WayaNav.toNamed(TransactionDetailsScreen.route,
+                    arguments: trans.id),
+                purpose: '${trans.purpose?.capitalizeFirst}',
+                transactionType: '${trans.type}',
+                amount: trans.amount.toString(),
+                date: '${ref.read(createPollVotingProvider.notifier).formatDt2(trans.updatedAt)},${DateFormat.jm().format(dateTime)}',
+              );
+            },
           ),
         ),
         if (isLoadingMore)
@@ -279,6 +168,7 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
               ),
             ),
           ),
+
       ],
     );
   }

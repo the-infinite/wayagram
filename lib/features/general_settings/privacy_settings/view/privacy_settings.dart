@@ -8,6 +8,7 @@ import 'package:wayagram/core/components/waya_buttons.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/components/waya_select_field.dart';
 import 'package:wayagram/core/data/model/model.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/chat/dto/default.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
@@ -62,7 +63,7 @@ class _UgtHomeState extends ConsumerState<PrivacySettingsPage> {
       isLoading: false,
       isScrollable: true,
       title: "Privacy Settings",
-      backgroundColor: Colors.white,
+      backgroundColor: WayaColors.scaffoldColor,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: Text("Privacy Settings"),

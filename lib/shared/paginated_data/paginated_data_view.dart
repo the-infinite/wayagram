@@ -23,7 +23,8 @@ class PaginatedDataView<T> extends ConsumerStatefulWidget {
       required this.result});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _PaginatedDataViewState<T>();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PaginatedDataViewState<T>();
 }
 
 class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
@@ -33,14 +34,20 @@ class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
   void initState() {
     _scrollController.addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(paginatedDataVmProvider(widget.uniqueKey).notifier).initialize(widget.fetchData);
+
+      ref
+          .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
+          .initialize(widget.fetchData);
     });
     super.initState();
   }
 
   void _scrollListener() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 100) {
-      ref.read(paginatedDataVmProvider(widget.uniqueKey).notifier).loadMoreItems(widget.fetchData);
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 100) {
+      ref
+          .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
+          .loadMoreItems(widget.fetchData);
     }
   }
 
@@ -65,10 +72,14 @@ class _PaginatedDataViewState<T> extends ConsumerState<PaginatedDataView<T>> {
       controller: _scrollController,
       physics: AlwaysScrollableScrollPhysics(),
       children: [
-        if (widget.trailingWidget != null) ...[widget.trailingWidget ?? SizedBox.shrink()],
+        if (widget.trailingWidget != null) ...[
+          widget.trailingWidget ?? SizedBox.shrink()
+        ],
         RefreshIndicator(
           onRefresh: () async {
-            ref.read(paginatedDataVmProvider(widget.uniqueKey).notifier).initialize(widget.fetchData);
+            ref
+                .read(paginatedDataVmProvider(widget.uniqueKey).notifier)
+                .initialize(widget.fetchData);
           },
           child: widget.result(state.data.cast<T>(), _scrollController),
         ),

@@ -591,7 +591,7 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
                           "contestId": widget.model.contestId ?? "",
                           "contestantId": widget.model.contestantId ?? "",
                           // "hostUserId": widget.model.hostUserId ?? "",
-                          // "amount": "0",
+                         "amount": "0",
                           "numberOfVotes": "1",
                           // "profileId": widget.model.profileId ?? "",
                           //"type": "FREE"

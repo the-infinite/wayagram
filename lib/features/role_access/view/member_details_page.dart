@@ -52,15 +52,19 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
     final isLoading = useState(false);
     final viewModel = ref.watch(selectedRoleMemberProvider);
     final notifier = ref.read(roleAccessVm.notifier);
+    final viewModel2 = ref.watch(roleAccessVm);
     final wayaTheme = Theme.of(context);
 
     useEffect(() {
+      notifier.fetchHostedContest();
       userManagementField.clear();
-      if (viewModel?.roles?.first.permissionsWithActions?.length != 0) {
-        List<Action>? list =
-            viewModel?.roles?.first.permissionsWithActions?[0].actions ?? [];
-        for (var model in list) {
-          userManagementField[model.actionName ?? ""] = true;
+      if (viewModel!.roles!.isNotEmpty) {
+        if (viewModel.roles?.first.permissionsWithActions?.length != 0) {
+          List<Action>? list =
+              viewModel.roles?.first.permissionsWithActions?[0].actions ?? [];
+          for (var model in list) {
+            userManagementField[model.actionName ?? ""] = true;
+          }
         }
       }
 
@@ -76,11 +80,17 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
         children: [
           WayaButton(
             callback: () {
-              notifier.activateDeactivateShopMember(
-                  isLoading, viewModel?.id ?? "", viewModel?.isActive ?? false,
-                  () {
-                WayaNav.goBack();
-              });
+              if (viewModel2.selectedRole == TypeRole.shop) {
+                notifier.activateDeactivateShopMember(isLoading,
+                    viewModel?.id ?? "", viewModel?.isActive ?? false, () {
+                  WayaNav.goBack();
+                });
+              } else {
+                notifier.activateDeactivateContestMember(isLoading,
+                    viewModel?.id ?? "", viewModel?.isActive ?? false, () {
+                  WayaNav.goBack();
+                });
+              }
             },
             color: wayaTheme.colorScheme.primary50,
             text: "   Deactivate Role   ",
@@ -116,19 +126,28 @@ class _UgtHomeState extends ConsumerState<MemberDetailsPage> {
           // _buildInfoTile(context, "Full Name", viewModel?.email??""),
           _buildInfoTile(context, "Email Address", viewModel?.email ?? ""),
           _buildInfoTile(
-              context, "Role", viewModel?.roles?.first.roleName ?? ""),
+              context,
+              "Role",
+              viewModel!.roles!.isNotEmpty
+                  ? viewModel.roles?.first.roleName ?? ""
+                  : "No Role"),
           _buildInfoTile(
-              context, "Last Active", formatDate(viewModel?.updatedAt ?? "")),
+              context, "Last Active", formatDate(viewModel.updatedAt ?? "")),
           _buildStatusTile(
-              "Status", viewModel?.isActive == true ? "Active" : "Deactivated"),
+              "Status", viewModel.isActive == true ? "Active" : "Deactivated"),
           Gap(20),
           Text("User Permissions",
               style: WayaTextStyles.hintStyleBold
                   .wayaCopyWith(color: wayaTheme.colorScheme.greyColor700)),
           // Gap(20),
 
-          _buildPermissionTile(context, viewModel?.roles?.first.roleName ?? "",
-              userManagement, (val) {}),
+          _buildPermissionTile(
+              context,
+              viewModel.roles!.isNotEmpty
+                  ? viewModel.roles?.first.roleName ?? ""
+                  : "No Role",
+              userManagement,
+              (val) {}),
           _buildPermissionOptions(context, userManagementField),
         ],
       ),

@@ -71,7 +71,7 @@ class ChatProfilePicture extends StatelessWidget {
                   }
                 : null,
         child: Padding(
-          padding: const EdgeInsets.all(5),
+          padding: EdgeInsets.zero,
           child: Stack(
             children: [
               // First, the image itself.

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:get/get_utils/get_utils.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -11,7 +10,6 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
-import 'package:wayagram/features/donation/widget/manage_donation_widget.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/follow/view/follow_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
@@ -20,14 +18,10 @@ import 'package:wayagram/features/shop/widgets/products_grid.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
 import 'package:wayagram/shared/features/group/notifier/default.dart';
 import 'package:wayagram/shared/features/pages/notifier/default.dart';
-import 'package:wayagram/shared/features/profile/state/default.dart';
-import 'package:wayagram/shared/features/profile/vm/donation.dart';
 import 'package:wayagram/shared/features/profile/vm/poll.dart';
 import 'package:wayagram/shared/features/profile/vm/product.dart';
-import 'package:wayagram/shared/features/profile/widget/group.dart';
 import 'package:wayagram/shared/features/profile/vm/default.dart';
 import 'package:wayagram/shared/features/profile/vm/event.dart';
-import 'package:wayagram/shared/features/profile/widget/page.dart';
 import 'package:wayagram/shared/features/profile/widget/poll.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
 import 'package:wayagram/shared/features/user/resource/default.dart';
@@ -49,16 +43,11 @@ class MyProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<MyProfilePage> {
-  late final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>(
-    (ref) => PostNotifier(PostState.initial),
-  );
   late final postNotifier = ref.read(userPostsProvider.notifier);
+  late final savedPostNotifier = ref.read(userSavedPostsProvider.notifier);
   late final eventNotifier = ref.read(userEventsProvider.notifier);
-  late final groupsNotifier = myGroupNotifier;
-  late final pagesNotifier = myPageNotifier;
   late final pollsNotifier = ref.read(userPollsProvider.notifier);
-  late final donationsNotifier = ref.read(userDonationsProvider.notifier);
-  late final productsNotifier = ref.read(userProductsProvider.notifier);
+  late final productsNotifier = ref.read(userProductsProvider(widget.data.$1.id).notifier);
   late final conversationNotifier = ref.read(conversationProvider.notifier);
   final followNotifier = myFollowProvider;
   final scrollHandler = WayaObservableScrollController();
@@ -82,10 +71,10 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
   @override
   void reassemble() {
     postNotifier.reset();
+    savedPostNotifier.reset();
     eventNotifier.reset();
     followNotifier.reset();
     pollsNotifier.reset();
-    donationsNotifier.reset();
 
     // This is fine.
     WidgetsBinding.instance.addPostFrameCallback(
@@ -110,24 +99,24 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
       await postNotifier.getPostsForUser(widget.data.$1.id);
     }
 
-    //? If this is for polls.
+    //? If this is for likes
     if (_pageController.value == 2) {
-      await pollsNotifier.getPollsByUser(widget.data.$1.id);
+      //await donationsNotifier.getDonationsByUser(widget.data.$1.id);
     }
 
-    //? If this is for donations.
+    //? If this is for comments
     if (_pageController.value == 3) {
-      await donationsNotifier.getDonationsByUser(widget.data.$1.id);
+      //await donationsNotifier.getDonationsByUser(widget.data.$1.id);
     }
 
-    //? If this is for groups.
+    //? If this is for bookmarks
     if (_pageController.value == 4) {
-      await groupsNotifier.getCreatedGroups();
+      await savedPostNotifier.getSavedPostsForUser(widget.data.$1.id);
     }
 
-    //? If this is for pages.
+    //? If this is for polls.
     if (_pageController.value == 5) {
-      await pagesNotifier.getCreatedPages();
+      await pollsNotifier.getPollsByUser(widget.data.$1.id);
     }
 
     //? If this is for events..
@@ -159,8 +148,8 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
     final postState = ref.watch(userPostsProvider);
     final eventState = ref.watch(userEventsProvider);
     final pollsState = ref.watch(userPollsProvider);
-    final donationsState = ref.watch(userDonationsProvider);
-    final productsState = ref.watch(userProductsProvider);
+    final savedPostsState = ref.watch(userSavedPostsProvider);
+    final productsState = ref.watch(userProductsProvider(widget.data.$1.id));
     final user = widget.data.$1;
     final profile = widget.data.$2;
 
@@ -178,10 +167,10 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
               spacing: 12,
               children: [
                 //? Search
-                IconButton(
-                  icon: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-                  onPressed: () async {},
-                ),
+                // IconButton(
+                //   icon: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+                //   onPressed: () async {},
+                // ),
 
                 //? Share
                 IconButton(
@@ -236,12 +225,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                 if (!isPopping) return;
                 postNotifier.reset();
                 eventNotifier.reset();
-                groupsNotifier.reset();
-                pagesNotifier.reset();
                 pollsNotifier.reset();
-                donationsNotifier.reset();
-                productsNotifier.reset();
-                if (widget.source != 'profile') followNotifier.reset();
               },
               child: ValueListenableBuilder(
                 valueListenable: _pageController,
@@ -249,10 +233,10 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                   //? Is this empty?
                   final isEmpty = switch (selectedPage) {
                     0 => postState.posts.isEmpty && postState.hasLoaded,
-                    2 => pollsState.polls.isEmpty && pollsState.hasLoaded,
-                    3 => donationsState.donations.isEmpty && donationsState.hasLoaded,
-                    4 => myGroupNotifier.createdGroups.isEmpty && !myGroupNotifier.hasMoreCreatedGroups,
-                    5 => myPageNotifier.createdPages.isEmpty && !myPageNotifier.hasMoreCreatedPages,
+                    // 2 => donationsState.donations.isEmpty && donationsState.hasLoaded,
+                    // 3 => myGroupNotifier.createdGroups.isEmpty && !myGroupNotifier.hasMoreCreatedGroups,
+                    4 => savedPostsState.posts.isEmpty && savedPostsState.hasLoaded,
+                    5 => pollsState.polls.isEmpty && pollsState.hasLoaded,
                     6 => eventState.events.isEmpty && eventState.hasLoaded,
                     7 => productsState.products.isEmpty && productsState.hasLoaded,
                     _ => true,
@@ -261,10 +245,10 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                   //? Are we at end.
                   final isAtEnd = switch (selectedPage) {
                     0 => !postState.hasNextPage,
-                    2 => !pollsState.hasNextPage,
-                    3 => !donationsState.hasNextPage,
-                    4 => !myGroupNotifier.hasMoreCreatedGroups,
-                    5 => !myPageNotifier.hasMoreCreatedPages,
+                    // 2 => !donationsState.hasNextPage,
+                    // 3 => !myGroupNotifier.hasMoreCreatedGroups,
+                    4 => !savedPostsState.hasNextPage,
+                    5 => !pollsState.hasNextPage,
                     6 => !eventState.hasNextPage,
                     7 => !productsState.hasNextPage,
                     _ => true,
@@ -273,10 +257,10 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                   //? Should we fetch.
                   final shouldFetch = switch (selectedPage) {
                     0 => !postState.isLoading,
-                    2 => !pollsState.isLoading,
-                    3 => !donationsState.isLoading,
-                    4 => !myGroupNotifier.isLoading,
-                    5 => !myPageNotifier.isLoading,
+                    // 2 => !donationsState.isLoading,
+                    // 3 => !myGroupNotifier.isLoading,
+                    4 => !savedPostsState.isLoading,
+                    5 => !pollsState.isLoading,
                     6 => !eventState.isLoading,
                     7 => !productsState.isLoading,
                     _ => true,
@@ -287,9 +271,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                     handler: scrollHandler,
                     shouldFetch: shouldFetch,
                     isAtEnd: isAtEnd,
-                    onReachEnd: () async {
-                      await _fetchMore();
-                    },
+                    onReachEnd: () async => await _fetchMore(),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -517,7 +499,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                             //?
                             WayaTabButton(
                               isSelected: selectedPage == 2,
-                              text: 'Polls',
+                              text: 'Likes',
                               onTap: () {
                                 if (_pageController.value == 2) return;
                                 _pageController.value = 2;
@@ -536,7 +518,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                                 //? For donations
                                 WayaExpandedTab(
                                   isSelected: selectedPage == 3,
-                                  text: 'Donations',
+                                  text: 'Comments',
                                   onTap: () {
                                     if (_pageController.value == 3) return;
                                     _pageController.value = 3;
@@ -548,7 +530,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                                 // For groups.
                                 WayaExpandedTab(
                                   isSelected: selectedPage == 4,
-                                  text: "Groups",
+                                  text: "Bookmarks",
                                   onTap: () {
                                     if (_pageController.value == 4) return;
                                     _pageController.value = 4;
@@ -559,7 +541,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                                 // For pages.
                                 WayaExpandedTab(
                                   isSelected: selectedPage == 5,
-                                  text: "Pages",
+                                  text: "Polls",
                                   onTap: () {
                                     if (_pageController.value == 5) return;
                                     _pageController.value = 5;
@@ -621,80 +603,25 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                             ),
                           )
                         else if (selectedPage == 2)
+                          ...[] // Likes
+                        else if (selectedPage == 3)
+                          ...[] // Comments
+                        else if (selectedPage == 4)
+                          ...List.generate(
+                            savedPostsState.posts.length,
+                            (index) => WayaPostWidget(
+                              data: savedPostsState.posts[index],
+                              index: index,
+                              padded: true,
+                            ),
+                          ) // Bookmarks
+                        else if (selectedPage == 5)
                           ...List.generate(
                             pollsState.polls.length,
                             (index) => SinglePollWidget(
                               poll: pollsState.polls[index],
                               user: user,
                               padded: true,
-                            ),
-                          )
-                        else if (selectedPage == 3)
-                          ...List.generate(
-                            donationsState.donations.length,
-                            (index) {
-                              final donation = donationsState.donations[index];
-                              int daysLeft = donation.expirationDate.difference(donation.startDate).inDays;
-                              int amountRaised = double.parse(donation.amountRaised!).toInt();
-                              int targetedAmount = double.parse(donation.targetAmount!).toInt();
-                              double ratioLeft = amountRaised / targetedAmount;
-
-                              return Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5.w),
-                                child: ManageDonationWidget(
-                                  text: "Donate",
-                                  amountRaised: WayaHelpers.formatPrice(
-                                      int.parse('${donation.amountRaised?.replaceAll('.00', '')}')),
-                                  targetAmount: WayaHelpers.formatPrice(
-                                      int.parse('${donation.targetAmount?.replaceAll('.00', '')}')),
-                                  title: donation.title.capitalizeFirst,
-                                  image: donation.imageURL,
-                                  dayLeft: daysLeft < 0 ? '0' : '$daysLeft',
-                                  donationCount: donation.donationCount,
-                                  rangeRatio: ratioLeft,
-                                  onTap: () {
-                                    WayaNav.toNamed('/donationDetails', arguments: {
-                                      'title': '${donation.title.capitalizeFirst}',
-                                      'image': '${donation.imageURL}',
-                                      'amountRaised': '${donation.amountRaised?.replaceAll('.00', '')}',
-                                      'targetAmount': '${donation.targetAmount?.replaceAll('.00', '')}',
-                                      'desc': donation.description,
-                                      'solution': donation.solution,
-                                      'impact': donation.impact,
-                                      'url': '${donation.url}',
-                                      'minimumDonationAmount': '${donation.minimumDonationAmount}',
-                                      'daysLeft': '$daysLeft',
-                                      'privacy': '${donation.privacy}',
-                                      'id': donation.id,
-                                      'donationCount': '${donation.donationCount}',
-                                       "donation": donation
-                                    });
-                                  },
-                                  buttonWidth: 60.0,
-                                ),
-                              );
-                            },
-                          )
-                        else if (selectedPage == 4)
-                          ...List.generate(
-                            myGroupNotifier.createdGroups.length,
-                            (index) => Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                              child: SingleGroupWidget(
-                                group: myGroupNotifier.createdGroups[index],
-                                index: index,
-                              ),
-                            ),
-                          )
-                        else if (selectedPage == 5)
-                          ...List.generate(
-                            myPageNotifier.createdPages.length,
-                            (index) => Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 5.w),
-                              child: SinglePageWidget(
-                                page: myPageNotifier.createdPages[index],
-                                index: index,
-                              ),
                             ),
                           )
                         else if (selectedPage == 6)

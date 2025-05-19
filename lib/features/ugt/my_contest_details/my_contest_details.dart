@@ -221,13 +221,16 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                                     .read(selectedContestProvider.notifier)
                                     .state = post;
                                 WayaNav.toNamed(
-                                    '/upcoming-manage-contest-details');
+                                    "/upcoming-manage-contest-details",
+                                    arguments: {"canViewDashboard": true});
                               },
                               child: ContestCard(
-                                  post,
-                                  hostNotifier.toggleLike,
-                                  hostNotifier.toggleShare,
-                                  hostNotifier.doFollow),
+                                post,
+                                hostNotifier.toggleLike,
+                                hostNotifier.toggleShare,
+                                hostNotifier.doFollow,
+                                isFromHost: true,
+                              ),
                             );
                           },
                         ),

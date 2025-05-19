@@ -151,6 +151,7 @@ class Contest {
     required this.amount,
     required this.numberOfDuration,
     required this.participationStartDate,
+    required this.participationEndDate,
     required this.descriptionOfAwards,
     required this.startDate,
     required this.endDate,
@@ -182,6 +183,7 @@ class Contest {
   final int? amount;
   final String? numberOfDuration;
   final String? participationStartDate;
+  final String? participationEndDate;
   final String? descriptionOfAwards;
   final String? startDate;
   final String? endDate;
@@ -301,6 +303,7 @@ post.Contest mergeContest(AppliedContestModel model) {
       applicantCount: 0,
       // numberOfDuration: model.contest?.numberOfDuration,
       participationStartDate: model.contest?.participationStartDate,
+      participationEndDate: model.contest?.participationEndDate,
       descriptionOfAwards: model.contest?.descriptionOfAwards,
       startDate: model.contest?.startDate,
       endDate: model.contest?.endDate,

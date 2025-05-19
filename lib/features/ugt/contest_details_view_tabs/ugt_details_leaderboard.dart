@@ -12,7 +12,8 @@ class UgtDetailsLeaderboard extends ConsumerStatefulWidget {
   const UgtDetailsLeaderboard(this.model, {super.key});
 
   @override
-  ConsumerState<UgtDetailsLeaderboard> createState() => _UgtDetailsLeaderboardState();
+  ConsumerState<UgtDetailsLeaderboard> createState() =>
+      _UgtDetailsLeaderboardState();
 }
 
 class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
@@ -54,7 +55,10 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
                   '/contest-profile-page',
                 );
               },
-              child: UgtLeaderboardCard(model: widget.model!, position: index + 1, contestantData: post),
+              child: UgtLeaderboardCard(
+                  model: widget.model!,
+                  position: index + 1,
+                  contestantData: post),
             );
           },
         ),
@@ -93,8 +97,9 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
     return UgtEmptyState(
       icon: Image.asset("assets/images/u-emptystate.png"),
       desc: "There is no Contestant for this contest yet",
-      title: "No Post Created",
+      title: "No Contestant",
       buttonText: "",
+      showButtonBusiness: false,
       hideButton: false,
       onTap: () {},
     );

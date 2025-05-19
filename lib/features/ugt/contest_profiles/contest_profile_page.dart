@@ -70,7 +70,6 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     useEffect(() {
       ref.read(postProvider.notifier).fetchSingleContestantDetails(
           ref, model?.contestId ?? contestId, model?.id ?? id);
-     
 
       if (viewModel.getLoggedInUserId() == model?.contestApplicant?.userId) {
         model?.stages?.forEach((element) {
@@ -155,6 +154,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
         children: [
           GestureDetector(
               onTap: () async {
+              //  print(model?.id ?? id);
                 await Share.share(
                   WayaValueHelper.getShareableUrl(
                       WayaAppRoutes.getContestantProfileRoute(
@@ -192,7 +192,6 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                           "showDescription": false,
                           "discription": "",
                           "shareCount": "",
-                          
                         });
                       },
                       child: VideoThumbnail(

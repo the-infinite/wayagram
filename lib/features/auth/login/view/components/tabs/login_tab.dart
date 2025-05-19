@@ -153,6 +153,7 @@ class _PersonalAccountViewState extends ConsumerState<PersonalAccountView> {
                                 : Icons.visibility_off_outlined),
                             color: wayaTheme.colorScheme.greyColor300,
                           ),
+                          helperText: "Password must be 8 or more character and contain at least 1 number and 1 special character",
                         ),
                       ),
                       if (formState.hasError && !viewModel.isPasswordFocused)
@@ -238,7 +239,9 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
         Platform.isAndroid ?
         WayaButton(
           color: wayaTheme.colorScheme.secondaryColor,
-          callback: () {},
+          callback: () {
+            ref.watch(loginVmProvider.notifier).signinWithGoogle();
+          },
           leadingIcon: SvgPicture.asset('assets/icons/google.svg'),
           text: "Continue with Google",
           textColor: wayaTheme.colorScheme.black,
@@ -354,6 +357,7 @@ class _BusinessAccountViewState extends ConsumerState<BusinessAccountView> {
                                 : Icons.visibility_off_outlined),
                             color: wayaTheme.colorScheme.greyColor300,
                           ),
+                            helperText: "Password must be 8 or more character and contain at least 1 number and 1 special character",
                         ),
                       ),
                       if (formState.hasError && !viewModel.isPasswordFocused)

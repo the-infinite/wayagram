@@ -40,7 +40,7 @@ class RoleAccessCard extends StatelessWidget {
                   backgroundColor: wayaTheme.colorScheme.pending50,
                   radius: 20,
                   child: Text(
-                    getInitials(user.email ?? ""),
+                    getInitials(user.email ?? "none"),
                     style: TextStyle(
                         fontWeight: FontWeight.bold, color: Colors.black),
                   ),
@@ -82,7 +82,9 @@ class RoleAccessCard extends StatelessWidget {
                     )
                   else
                     Text(
-                      user.roles?.first.roleName ?? "",
+                      user.roles!.isEmpty
+                          ? ""
+                          : user.roles?.first.roleName ?? "",
                       style: WayaTextStyles.hintStyleBold.wayaCopyWith(
                           color: wayaTheme.colorScheme.greyColor700),
                     ),
@@ -118,10 +120,8 @@ class RoleAccessCard extends StatelessWidget {
   }
 
   String getInitials(String name) {
-    List<String> names = name.split(" ");
-    String initials = names.length > 1
-        ? names[0][0] + names[1][0] // First letter of first & last name
-        : names[0][0]; // Only first letter if single name
-    return initials.toUpperCase();
+    // List<String> names = name.split(" ");
+
+    return name.substring(0, 1).toUpperCase();
   }
 }
