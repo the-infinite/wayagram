@@ -47,7 +47,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
   late final savedPostNotifier = ref.read(userSavedPostsProvider.notifier);
   late final eventNotifier = ref.read(userEventsProvider.notifier);
   late final pollsNotifier = ref.read(userPollsProvider.notifier);
-  late final productsNotifier = ref.read(userProductsProvider.notifier);
+  late final productsNotifier = ref.read(userProductsProvider(widget.data.$1.id).notifier);
   late final conversationNotifier = ref.read(conversationProvider.notifier);
   final followNotifier = myFollowProvider;
   final scrollHandler = WayaObservableScrollController();
@@ -149,7 +149,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
     final eventState = ref.watch(userEventsProvider);
     final pollsState = ref.watch(userPollsProvider);
     final savedPostsState = ref.watch(userSavedPostsProvider);
-    final productsState = ref.watch(userProductsProvider);
+    final productsState = ref.watch(userProductsProvider(widget.data.$1.id));
     final user = widget.data.$1;
     final profile = widget.data.$2;
 
@@ -167,10 +167,10 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
               spacing: 12,
               children: [
                 //? Search
-                IconButton(
-                  icon: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-                  onPressed: () async {},
-                ),
+                // IconButton(
+                //   icon: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
+                //   onPressed: () async {},
+                // ),
 
                 //? Share
                 IconButton(
@@ -226,8 +226,6 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                 postNotifier.reset();
                 eventNotifier.reset();
                 pollsNotifier.reset();
-                productsNotifier.reset();
-                if (widget.source != 'profile') followNotifier.reset();
               },
               child: ValueListenableBuilder(
                 valueListenable: _pageController,

@@ -151,3 +151,10 @@ class FollowNotifier extends StateNotifier<FollowState> {
 
 typedef FollowProvider = StateNotifierProvider<FollowNotifier, FollowState>;
 
+final userFollowersProvider = StateNotifierProvider.family<FollowNotifier, FollowState, String>(
+  (ref, id) => FollowNotifier(
+    FollowState.initial.copyWith(
+      userId: id,
+    ),
+  ),
+);

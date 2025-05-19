@@ -30,6 +30,7 @@ bool _isMediaFile(MessageModel data) {
 class _MyBubbleWidget extends StatelessWidget {
   final MessageModel data;
   final ChatInputController controller;
+  final ChatModel chat;
   final bool interactive;
 
   // Construct.
@@ -37,6 +38,7 @@ class _MyBubbleWidget extends StatelessWidget {
     required this.data,
     required this.controller,
     required this.interactive,
+    required this.chat,
   });
 
   @override
@@ -163,17 +165,15 @@ class _MyBubbleWidget extends StatelessWidget {
                                 child: ChatReplyToWidget(
                                   controller: controller,
                                   message: data.originalMessage!,
+                                  chat: chat,
                                   interactive: false,
                                 ),
                               ),
 
                             //? Second below.
                             switch (data.messageType) {
-                              MessageType.text => TextMessageWidget(
-                                  data: data,
-                                  textColor: WayaColors.white,
-                                  isMyMessage: true
-                                ),
+                              MessageType.text =>
+                                TextMessageWidget(data: data, textColor: WayaColors.white, isMyMessage: true),
                               MessageType.voiceNote => VoiceMessageWidget(
                                   data: data,
                                   isSender: true,
@@ -393,6 +393,7 @@ class _YourBubbleWidget extends StatelessWidget {
                                 child: ChatReplyToWidget(
                                   controller: controller,
                                   message: data.originalMessage!,
+                                  chat: chat,
                                   interactive: false,
                                 ),
                               ),
@@ -1048,6 +1049,7 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                         valueListenable: messageController,
                         builder: (context, redraws, _) => _MyBubbleWidget(
                           data: messageController.data,
+                          chat: widget.chat!,
                           controller: widget.controller,
                           interactive: widget.interactive,
                         ),
