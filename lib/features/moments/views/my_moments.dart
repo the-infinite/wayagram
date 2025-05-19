@@ -54,6 +54,7 @@ class _MyMomentState extends ConsumerState<MyMoments> {
       ['caption', 'content'],
       searchController.text,
     );
+    
     return WayaScaffold(
       isLoading: state.isLoadingUserMoments,
       title: "My Moments",
