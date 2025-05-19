@@ -202,9 +202,20 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                                             fontSize: 13.sp,
                                           ),
                                         )
+                                      else if (userStatus == ChatUserActivity.online)
+                                        Text(
+                                          "Online",
+                                          maxLines: 1,
+                                          style: WayaTextStyles.titleMedium.copyWith(
+                                            fontWeight: FontWeight.normal,
+                                            overflow: TextOverflow.ellipsis,
+                                            color: WayaColors.greyColor500,
+                                            fontSize: 13.sp,
+                                          ),
+                                        )
                                       else if (lastSeenText != null)
                                         Text(
-                                          userStatus == ChatUserActivity.online ? "Online" : lastSeenText,
+                                          lastSeenText,
                                           maxLines: 1,
                                           style: WayaTextStyles.titleMedium.copyWith(
                                             fontWeight: FontWeight.normal,
