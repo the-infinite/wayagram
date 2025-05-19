@@ -271,4 +271,13 @@ class PageRepository extends BaseRepository {
   Future<WayaRequestResponse> getRecommendedPages() {
     return get("$serviceUrl/pages/recommended");
   }
+
+  Future<WayaRequestResponse> updatePageSetting(bool isPublic, bool everyoneCanComment, pageId) {
+    final payload = { "isPublic": isPublic,
+      "everyoneCanComment": everyoneCanComment};
+    return patch("$serviceUrl/client/pages/update-setting/$pageId", payload);
+  }
+
+  
+
 }

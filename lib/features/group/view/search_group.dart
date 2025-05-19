@@ -13,8 +13,6 @@ import '../../../core/components/waya_buttons.dart';
 import '../../../shared/features/group/notifier/default.dart';
 import '../../activity_logs/widget/activity_logs_empty_state.dart';
 
-
-
 class SearchGroup extends ConsumerStatefulWidget {
   static const route = '/searchGroup';
   const SearchGroup({super.key,});
@@ -50,7 +48,6 @@ class _SearchGroupState extends ConsumerState<SearchGroup> {
   @override
   Widget build(BuildContext context) {
     final query = searchController.text.trim();
-    //final state = ref.watch(createGroupProvider);
     final wayaTheme = Theme.of(context);
 
     // Filter ManagedGroups
@@ -76,7 +73,6 @@ class _SearchGroupState extends ConsumerState<SearchGroup> {
         physics: const NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         itemCount: filteredPosts.length,
-        //myGroupNotifier.createdGroups.length,
         itemBuilder: (_, index) => SingleGroupWidget(
           group: myGroupNotifier.createdGroups[index],
           index: index,

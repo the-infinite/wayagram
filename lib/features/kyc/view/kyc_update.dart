@@ -138,7 +138,8 @@ class _KycUpdateState extends ConsumerState<KycUpdate> {
             border:
             Border.all(width: 1, color: wayaTheme.colorScheme.greyColor300),
             callback: () {
-              WayaNav.goBack();
+
+              //WayaNav.goBack();
             },
             textStyle: WayaTextStyles.bodySmall.copyWith(
                 fontSize: 16.sp,

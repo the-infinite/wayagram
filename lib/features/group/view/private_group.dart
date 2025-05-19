@@ -60,12 +60,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
               WayaValueHelper.getShareableUrl(WayaAppRoutes.getGroupDetailsPage(widget.group.id)),
               subject: 'Share ${widget.group.name}',
             ),
-            child: InkWell(
-                onTap: ()=> WayaNav.toNamed('/searchGroupAndPage',
-                    arguments: {
-                      'groupId': widget.group.id
-                    },),
-                child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none)),
+            child: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
           ),
           PopupMenuButton(
             onSelected: (value) {},
@@ -77,7 +72,9 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                   value: 0,
                   onTap: () {
                     WayaNav.goBack();
-                    WayaNav.toNamed('/groupSetting');
+                    WayaNav.toNamed('/groupSetting', arguments: {
+                      'groupId': widget.group.id
+                    });
                   },
                   child: WayaActionNav(
                     context: context,

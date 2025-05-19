@@ -74,6 +74,11 @@ class _CreateUltimateState extends ConsumerState<CreateUltimate> {
           notifier.winnerPrize.text = contestViewModel?.winnerPrize ?? "";
           notifier.amountPerVote.text =
               contestViewModel?.amountPerVote?.toString() ?? "";
+          if (int.parse(notifier.amountPerVote.text) == 0) {
+            isFree.value = "Free";
+          } else {
+            isFree.value = "Paid";
+          }
           /* notifier.voteCountToQualify.text =
               contestViewModel?.voteCountToQualify ?? ""; */
 

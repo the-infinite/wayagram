@@ -226,12 +226,6 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
         appBarTrailing: Row(
           spacing: 6,
           children: [
-            //? Search
-            IconButton(
-              icon: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-              onPressed: () async {},
-            ),
-
             //? Chat only works when you have not blocked a user.
             if (!conversationState.isBlocked(user.id))
               IconButton(
