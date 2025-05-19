@@ -370,7 +370,7 @@ class _ContestSignupRequirementState
                 LoadingState(loading: isLoading.value, text: 'Submit'),
             callback: !isLoading.value
                 ? () {
-                    if (ref
+                  /*   if (ref
                         .read(stateRequirementProvider.notifier)
                         .state
                         .isEmpty) {
@@ -393,7 +393,7 @@ class _ContestSignupRequirementState
                           return;
                         }
                       }
-                    }
+                    } */
                     ref.read(contestNotifierProvider.notifier).onSubmit(
                         ref,
                         context,

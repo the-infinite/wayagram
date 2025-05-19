@@ -14,7 +14,8 @@ class UgtPostAllContestant extends ConsumerStatefulWidget {
   //final  MyContestContestantModel? contestApplicant;
   final Contest? model;
   final canViewDashboard;
-  const UgtPostAllContestant(this.model, {this.canViewDashboard=false,super.key});
+  const UgtPostAllContestant(this.model,
+      {this.canViewDashboard = false, super.key});
 
   @override
   ConsumerState<UgtPostAllContestant> createState() => _UgtDetailsPostState();
@@ -42,7 +43,8 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
       children: [
         // UgtPostCard(),
         //  UgtPostCard(),
-        if (viewModelNotifier.getLoggedInUserId() == widget.model?.profileId|| widget.canViewDashboard)
+        if (viewModelNotifier.getLoggedInUserId() == widget.model?.profileId ||
+            widget.canViewDashboard)
           //? button to switch between approved contest
           Column(
             children: [
@@ -159,6 +161,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtPostAllContestant> {
         desc: "There is no Post for this contest yet",
         title: "No Post Created",
         buttonText: "",
+        showButtonBusiness: false,
         hideButton: false,
         onTap: () {});
   }

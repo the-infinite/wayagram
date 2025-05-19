@@ -153,7 +153,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                                   widget.post.contestantProfileId) */
                               // https://services.staging.wayagram.ng/school-contest/api/v1/gallery/f3c0f686-85fd-4125-8e3f-5a83e7910f32/gallery
                               if (viewModel.getLoggedInUserId() ==
-                                  widget.model.profileId)
+                                  widget.model.profileId && widget.post.shares == 0)
                                 PopupMenuItem<int>(
                                   value: 1,
                                   child: _buildActionNav(

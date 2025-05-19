@@ -13,6 +13,7 @@ class UgtEmptyState extends StatelessWidget {
   final String title;
   final String desc;
   final bool hideButton;
+  final bool showButtonBusiness;
 
   final Widget? leadingButtonIcon;
   final VoidCallback onTap;
@@ -23,6 +24,7 @@ class UgtEmptyState extends StatelessWidget {
       required this.desc,
       required this.title,
       this.hideButton = false,
+      this.showButtonBusiness = true,
       required this.buttonText,
       required this.onTap,
       this.leadingButtonIcon});
@@ -76,7 +78,7 @@ class UgtEmptyState extends StatelessWidget {
               ),
             ),
 
-          if (ConversationState.self.accountType != UserAccountType.business)
+          if (ConversationState.self.accountType != UserAccountType.business &&showButtonBusiness)
             WayaButton(
               callback: () {
                 WayaNav.toNamed(UpgradeToBusiness.route);
