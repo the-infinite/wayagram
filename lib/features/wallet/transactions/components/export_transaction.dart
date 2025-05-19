@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
+import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/core/utils/utils.dart';
 
 class ExportTransaction extends StatefulWidget {
   const ExportTransaction({super.key});
@@ -122,6 +124,15 @@ class _ExportTransactionState extends State<ExportTransaction> {
               onPressed: () {
                 // Handle export logic here
                 debugPrint('Exporting transactions from $startDate to $endDate');
+                WayaNav.goBack();
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Transaction was exported successfully!'),
+        backgroundColor: WayaColors.primary,
+        duration: Duration(seconds: 2),
+      ),
+    );
+
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.deepOrange,
