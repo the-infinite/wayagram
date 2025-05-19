@@ -264,7 +264,7 @@ class _YourBubbleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = chat.allOthers.firstWhere((member) => member.userId == data.senderId).combined;
+    final user = chat.chatMembers.firstWhere((member) => member.userId == data.senderId).combined;
 
     // This is fine.
     return Padding(
