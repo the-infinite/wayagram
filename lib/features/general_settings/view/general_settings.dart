@@ -8,6 +8,7 @@ import 'package:wayagram/core/helpers/package.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/account_security/account_security.dart';
 import 'package:wayagram/features/general_settings/donation/donation_settings_page.dart';
 import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
 import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
@@ -139,7 +140,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Account Security',
                 iconPath: 'shield_star',
-                onTap: () => WayaNavigationHelper.showComingSoonModal(false),
+                onTap: () => WayaNav.toNamed(AccountSecurity.route),
               ),
             ],
           ),
