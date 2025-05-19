@@ -95,6 +95,7 @@ class _ChangePasswordGenSettingsState
                       hintText: 'Enter your new password',
                       label: 'New Password',
                       isPassword: true,
+                        helperText: "Password must be 8 or more character and contain at least 1 number and 1 special character",
                     ),
                   ),
                   if (formState.hasError && !isNewPasswordFocused)

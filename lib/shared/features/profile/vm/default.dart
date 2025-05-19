@@ -37,7 +37,7 @@ class PostNotifier extends StateNotifier<PostState> {
 
         //? Now, add these to what we have here which are not from groups or pages.
         //? This is a bit of a hacK, but it works.
-        result.addAll(docs.where((post) => post.pageId == null && post.groupId == null));
+        result.addAll(docs);
 
         //? This is fine.
         state = state.copyWith(
@@ -264,6 +264,10 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
     state = SavedPostState.initial;
   }
 }
+
+final otherUserPostsProvider = StateNotifierProvider.family<PostNotifier, PostState, String>((ref, id) {
+  return PostNotifier(PostState.initial);
+});
 
 final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>(
   (ref) => PostNotifier(PostState.initial),

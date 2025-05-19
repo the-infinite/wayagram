@@ -142,7 +142,9 @@ class GeneralSettingsOptionTile extends StatelessWidget {
                 child: Row(
                   children: [
                     SvgPicture.asset(
-                      "assets/icons/gen_set/${option.iconPath}.svg",
+                      option.isRealPath
+                          ? option.iconPath
+                          : "assets/icons/gen_set/${option.iconPath}.svg",
                       fit: BoxFit.none,
                       color: option.iconPath == 'logout'
                           ? WayaColors.primary

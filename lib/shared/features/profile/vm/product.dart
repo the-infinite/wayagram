@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/shared/features/profile/repo/product.dart';
 import 'package:wayagram/shared/features/profile/state/product.dart';
@@ -43,8 +45,12 @@ class UserProductsNotifier extends StateNotifier<ProductsState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
-      rethrow;
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.shops,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     // That's fine.
@@ -89,8 +95,15 @@ class UserProductsNotifier extends StateNotifier<ProductsState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
-      rethrow;
+      state = state.copyWith(
+        hasLoaded: true,
+      );
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.shops,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     // That's fine.
@@ -102,6 +115,6 @@ class UserProductsNotifier extends StateNotifier<ProductsState> {
   }
 }
 
-final userProductsProvider = StateNotifierProvider<UserProductsNotifier, ProductsState>((ref) {
+final userProductsProvider = StateNotifierProvider.family<UserProductsNotifier, ProductsState, String>((ref, userId) {
   return UserProductsNotifier();
 });

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/controller/message.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
@@ -132,7 +133,11 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
     //? Since it failed.
     else {
-      // TODO: Proper error handling.
+      WayaDebugConsoleController.instance.addException(
+        response.responseCodeError ?? "An unknown error occurred",
+        response,
+        WayaDebugEventModule.chats,
+      );
     }
 
     //? Return null.

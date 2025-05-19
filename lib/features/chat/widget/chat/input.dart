@@ -631,6 +631,7 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                       return ChatReplyToWidget(
                         message: message,
                         controller: widget.controller,
+                        chat: chat!,
                       );
                     },
                   ),
