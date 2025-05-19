@@ -7,6 +7,7 @@ import 'package:wayagram/features/shop/seller/data/model/category_response_model
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/review_repsonse_model.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_metrics_response_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/shop_setting_response.dart';
 
 class ShopVm extends StateNotifier<ShopState> {
   final ShopRepository _repository;
@@ -183,6 +184,81 @@ class ShopVm extends StateNotifier<ShopState> {
 
       return product.wayagramDeal == null;
     }).toList();
+  }
+
+  Future<bool?> updateShopSettings(
+      {bool notifyFriendsAboutProductPosts = false,
+      bool makeProductPostsPublic = false}) async {
+    try {
+      // debugPrint(productId);
+
+      state = state.copyWith(isReviewing: true);
+      final response = await _repository.updateShopSettings(
+          notifyFriendsAboutProductPosts, makeProductPostsPublic);
+
+      bool isSuccess = false;
+      if (response.success) {
+        debugPrint(response.data.toString());
+        isSuccess = true;
+      } else {
+        isSuccess = false;
+      }
+
+      return isSuccess;
+    } catch (error) {
+      debugPrint(error.toString());
+      return null;
+    } finally {
+      state = state.copyWith(isReviewing: false);
+    }
+  }
+
+  Future<bool?> updateQuotationSettings({
+    bool? receiveQuotationRequests,
+    bool? makeRequestsPublic,
+    bool? displayQuotationRequestsInFeed,
+  }) async {
+    try {
+      // debugPrint(productId);
+
+      state = state.copyWith(isReviewing: true);
+      final response = await _repository.updateQuotationSettings(
+          receiveQuotationRequests!,
+          makeRequestsPublic!,
+          displayQuotationRequestsInFeed!);
+
+      bool isSuccess = false;
+      if (response.success) {
+        debugPrint(response.data.toString());
+        isSuccess = true;
+      } else {
+        isSuccess = false;
+      }
+
+      return isSuccess;
+    } catch (error) {
+      debugPrint(error.toString());
+      return null;
+    } finally {
+      state = state.copyWith(isReviewing: false);
+    }
+  }
+
+  Future<ShopSettingsModel?> getShopSettings() async {
+    try {
+      final response = await _repository.getShopSettings();
+
+      if (response.success) {
+        ShopSettingsModel shopMetricResponse =
+            ShopSettingsModel.fromJson(response.data);
+
+        debugPrint(response.data.toString());
+        return shopMetricResponse;
+      }
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+    return null;
   }
 
   // List<Product> get filteredWayagramDealProducts {

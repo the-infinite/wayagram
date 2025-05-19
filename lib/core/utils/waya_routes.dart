@@ -26,7 +26,9 @@ import 'package:wayagram/features/follow/view/follow_page.dart';
 import 'package:wayagram/features/general_settings/account_security/account_security.dart';
 import 'package:wayagram/features/general_settings/change_password_gen_set/view/change_password_gen_set.dart';
 import 'package:wayagram/features/general_settings/change_pin/change_pin_page.dart';
+import 'package:wayagram/features/general_settings/donation/donation_settings_page.dart';
 import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
+import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/blocked_user_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
@@ -34,8 +36,10 @@ import 'package:wayagram/features/general_settings/notifications/view/default.da
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/general_settings/profile/view/profile_page.dart';
+import 'package:wayagram/features/general_settings/quotation/quotation_settings_page.dart';
 import 'package:wayagram/features/general_settings/reset_pin_page/reset_pin.dart';
 import 'package:wayagram/features/general_settings/reset_pin_page/verify_your_identity_page.dart';
+import 'package:wayagram/features/general_settings/shop/shop_setting_page.dart';
 import 'package:wayagram/features/group/view/add_group_member.dart';
 import 'package:wayagram/features/group/view/confirm_group_details.dart';
 import 'package:wayagram/features/group/view/create_group.dart';
@@ -365,6 +369,10 @@ class WayaAppRoutes {
     ActivityLog.route: () => ActivityLog(),
     QuotationSellerOrders.route: () => QuotationSellerOrders(),
     VisitedPage.route: () => VisitedPage(),
+    DonationSettingsPage.route: () => DonationSettingsPage(),
+    QuotationSettingsPage.route: () => QuotationSettingsPage(),
+    ShopSettingPage.route: () => ShopSettingPage(),
+    EventSettingsPage.route: () => EventSettingsPage(),
     UserAction.route: () => UserAction(),
     CmsClicks.route: () => CmsClicks(),
     UserInteraction.route: () => UserInteraction(),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/helpers/package.dart';
@@ -8,13 +9,17 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/general_settings/account_security/account_security.dart';
+import 'package:wayagram/features/general_settings/donation/donation_settings_page.dart';
 import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
+import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/modals/logout.dart';
 import 'package:wayagram/features/general_settings/notifications/view/default.dart';
 
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
+import 'package:wayagram/features/general_settings/quotation/quotation_settings_page.dart';
+import 'package:wayagram/features/general_settings/shop/shop_setting_page.dart';
 import 'package:wayagram/features/referral/view/referral_page.dart';
 import 'package:wayagram/features/role_access/view/role_access_page.dart';
 import 'package:wayagram/features/support/views/chat.dart';
@@ -30,7 +35,8 @@ class GeneralSettingsPage extends ConsumerStatefulWidget {
   static const route = '/general-settings';
   const GeneralSettingsPage({super.key});
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _GeneralSettingsPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _GeneralSettingsPageState();
 }
 
 class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
@@ -86,7 +92,8 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               GeneralSettingsOptionModel(
                 title: 'Edit Profile',
                 iconPath: 'edit',
-                onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
+                onTap: () => WayaNav.toNamed(
+                    WayaAppRoutes.getProfileRoute(ConversationState.self.id)),
               ),
 
               //
@@ -101,7 +108,7 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
-                 GeneralSettingsOptionModel(
+              GeneralSettingsOptionModel(
                 title: 'Interests',
                 iconPath: 'edit',
                 onTap: () => WayaNav.toNamed(EditInterest.route),
@@ -160,10 +167,34 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 iconPath: 'users_group',
                 onTap: () => WayaNav.toNamed(FriendFollowerPage.route),
               ),
+              GeneralSettingsOptionModel(
+                title: 'Donation Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mDonation.path,
+                onTap: () => WayaNav.toNamed(DonationSettingsPage.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Quotation Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mQuotation.path,
+                onTap: () => WayaNav.toNamed(QuotationSettingsPage.route),
+              ),
             ],
           ),
           GeneralSettingsOptionTile(
             genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Shop Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mShop.path,
+                onTap: () => WayaNav.toNamed(ShopSettingPage.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Event Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mEvents.path,
+                onTap: () => WayaNav.toNamed(EventSettingsPage.route),
+              ),
               GeneralSettingsOptionModel(
                 title: 'Account Sync Settings',
                 iconPath: 'bell',

@@ -45,6 +45,12 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       debugPrint(map.toString());
       return await voteContestant(isLoading, map);
     } else {
+      if (response.data["message"] == null) {
+        WayaSnackBar.showToast(
+          "An error occurred",
+        );
+        return false;
+      }
       WayaSnackBar.showToast(
         response.data["message"],
       );
@@ -65,6 +71,9 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       // map[] =  _localDataSource.getUserId().toString();
       return await payForPaidContest(isLoading, map);
     } else {
+      WayaSnackBar.showToast(
+        response.data["message"],
+      );
       isLoading.value = false;
       return false;
     }
@@ -80,6 +89,15 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       // map[] =  _localDataSource.getUserId().toString();
       return await payForPaidStageContest(isLoading, map);
     } else {
+      if (response.data["message"] == null) {
+        WayaSnackBar.showToast(
+          "An error occurred",
+        );
+        return false;
+      }
+      WayaSnackBar.showToast(
+        response.data["message"],
+      );
       isLoading.value = false;
       return false;
     }
@@ -94,6 +112,12 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     if (response.success) {
       return true;
     } else {
+      if (response.data["message"] == null) {
+        WayaSnackBar.showToast(
+          "An error occurred",
+        );
+        return false;
+      }
       WayaSnackBar.showToast(
         response.data["message"],
       );
@@ -109,6 +133,12 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     if (response.success) {
       return true;
     } else {
+      if (response.data["message"] == null) {
+        WayaSnackBar.showToast(
+          "An error occurred",
+        );
+        return false;
+      }
       WayaSnackBar.showToast(
         response.data["message"],
       );

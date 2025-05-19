@@ -3,7 +3,7 @@ import 'package:wayagram/core/service/repos/base_repository.dart';
 import 'package:wayagram/core/utils/utils.dart';
 
 class ProductsRepository extends BaseRepository {
-  final serviceUrl = WayaServiceUri.product;
+  final serviceUrl = WayaServiceUri.shop;
   static final instance = ProductsRepository._();
   ProductsRepository._();
   Future<WayaRequestResponse> getShopProducts(String id, int page, [int limit = 15]) {

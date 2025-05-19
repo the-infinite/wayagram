@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/donation/data/repo/donation_repository.dart';
 import 'package:wayagram/shared/features/profile/model/donation.dart';
 import 'package:wayagram/shared/features/profile/state/donation.dart';
@@ -43,8 +45,12 @@ class UserDonationsNotifier extends StateNotifier<DonationsState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
-      rethrow;
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.donations,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     // That's fine.
