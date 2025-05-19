@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/controller/debug_console.dart';
-import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/controller/message.dart';
 import 'package:wayagram/features/chat/controller/socket.dart';
 import 'package:wayagram/features/chat/dto/chat.dart';
@@ -10,9 +9,10 @@ import 'package:wayagram/features/chat/repo/message.dart';
 import 'package:wayagram/features/chat/state/chat.dart';
 import 'package:wayagram/features/shop/shop_dispute/data/repo/shop_dispute_repository.dart';
 
+final _controllers = <String, MessageController>{};
+
 class ChatNotifier extends StateNotifier<ChatState> {
   final repo = MessageRepository();
-  final controllers = <String, MessageController>{};
   final shopDisputeRepo = ShopDisputeRepository();
 
   ChatNotifier(super.state);
@@ -21,12 +21,12 @@ class ChatNotifier extends StateNotifier<ChatState> {
   /// a chat using the ID of the chat.
   MessageController getController(MessageModel message) {
     final id = message.id;
-    var found = controllers[id];
+    var found = _controllers[id];
 
     if (found == null) {
       found = MessageController(id);
       found.updateData(message);
-      controllers[id] = found;
+      _controllers[id] = found;
     }
 
     // Do it like this.
@@ -152,7 +152,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
   /// A helper function used to send a message to a given chat. The multipart
   /// file specification
   Future<MessageModel?> sendMessage(SendMessageDto message, [String? originalId]) async {
-    final messageId = originalId ?? WayaValueHelper.createUid();
+    final messageId = originalId ?? message.id;
 
     //? If this is not an attempt to resend...
     if (originalId == null) {
@@ -166,7 +166,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     //? Else, we just flag this message as something that is not an error.
     else {
       final conversation = state.messages;
-      final found = conversation.lastIndexWhere((message) => message.id == messageId);
+      final found = conversation.lastIndexWhere((bubble) => bubble.id == messageId);
 
       //? Now, replace this.
       if (found != -1) {
@@ -185,14 +185,15 @@ class ChatNotifier extends StateNotifier<ChatState> {
       //? If this went well...
       if (response.success) {
         final result = MessageModel.fromJson(response.data['data']);
-        final found = state.messages.lastIndexWhere((message) => message.id == messageId);
+        final found = state.messages.lastIndexWhere((bubble) => bubble.id == messageId);
 
         //? Now, replace this.
         if (found != -1) {
           final controller = getController(state.messages[found]);
           controller.updateData(result.copyWith(false, message.originalMessage), result.id);
-          controllers[result.id] = controller;
-          controllers.remove(messageId);
+          _controllers[result.id] = controller;
+          _controllers.remove(messageId);
+          state.messages[found] = result;
         }
 
         // Notify everyone of it.
@@ -204,7 +205,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
 
       //? Turn this into an error.
       else {
-        final found = state.messages.lastIndexWhere((message) => message.id == messageId);
+        final found = state.messages.lastIndexWhere((bubble) => bubble.id == messageId);
 
         //? Now, replace this.
         if (found != -1) {
@@ -217,7 +218,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
         // state = state.copyWith(messages: [...conversation], isLoading: false);
       }
     } catch (_) {
-      final found = state.messages.lastIndexWhere((message) => message.id == messageId);
+      final found = state.messages.lastIndexWhere((bubble) => bubble.id == messageId);
 
       //? Now, replace this.
       if (found != -1) {
@@ -370,7 +371,7 @@ class ChatNotifier extends StateNotifier<ChatState> {
     }
 
     // Clear the controllers and then update the chat we are listening to.
-    controllers.clear();
+    _controllers.clear();
     state = state.copyWith(
       chat: chat,
     );
