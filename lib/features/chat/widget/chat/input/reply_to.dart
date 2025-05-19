@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/theme.dart';
+import 'package:wayagram/features/chat/model/default.dart';
 import 'package:wayagram/features/chat/model/message.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';
@@ -11,12 +12,14 @@ class ChatReplyToWidget extends StatefulWidget {
   final MessageModel message;
   final ChatInputController controller;
   final bool interactive;
+  final ChatModel chat;
 
   // Construct.
   const ChatReplyToWidget({
     super.key,
     required this.message,
     required this.controller,
+    required this.chat,
     this.interactive = true,
   });
 
@@ -49,6 +52,8 @@ class _ChatReplyToWidgetState extends State<ChatReplyToWidget> with SingleTicker
   @override
   Widget build(BuildContext context) {
     final user = ConversationState.self;
+    final other = widget.chat.allOthers.firstWhere((member) => member.userId == widget.message.senderId);
+
     final composite = IntrinsicHeight(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -87,8 +92,8 @@ class _ChatReplyToWidgetState extends State<ChatReplyToWidget> with SingleTicker
                             ? "Edit message"
                             : widget.message.senderId == user.id
                                 ? "You"
-                                : widget.controller.chat.other.userData?.fullname ??
-                                    widget.controller.chat.other.chatUser?.displayName ??
+                                : other.userData?.fullname ??
+                                    other.chatUser?.displayName ??
                                     "WayaGram User",
                         style: WayaTextStyles.titleMedium.copyWith(
                           color: widget.message.senderId == user.id ? WayaColors.primary : WayaColors.primary600,

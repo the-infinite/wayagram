@@ -17,7 +17,6 @@ class Select {
   }
   @override
   String toString() {
-    // TODO: implement toString
     return "Select($label, $value, $image, $price)";
   }
 }

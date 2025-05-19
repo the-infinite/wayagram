@@ -392,7 +392,7 @@ class DioHttpClient implements WayaHttpClientInterface {
       if (e.response != null) {
         var message = 'An unknown error occurred';
 
-        if (e.response?.data['statusCode'] == 401 || e.response?.statusCode == 401) {
+        if (e.response?.statusCode == 401 || (e.response?.data is Map && e.response?.data['statusCode'] == 401)) {
           //> use refresh token to generate a new auth token
           bool success = await refreshToken();
 
