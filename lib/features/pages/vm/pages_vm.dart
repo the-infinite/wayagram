@@ -892,6 +892,7 @@ class PageVm extends StateNotifier<PageState> {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.updateTeamMember(role, pageId, memberId);
       state = state.copyWith(isLoading: false);
+      getPageMember(pageId);
       return response.success;
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
