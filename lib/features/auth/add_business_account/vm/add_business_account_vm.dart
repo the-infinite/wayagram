@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:wayagram/core/components/waya_snackbar.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/service/logger_service.dart';
@@ -145,12 +146,12 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
   }
 
   Future<bool> verifyBVN() async {
-     //? change the state for loading and BVN verification
+    //? change the state for loading and BVN verification
     state = state.copyWith(isLoading: true, isBVNVerify: true);
     try {
       final response = await _authRepository.verifyBVN(state.bvn.text);
 
-  //? check for is successful response
+      //? check for is successful response
       if (response.data["statusCode"] == 200) {
         state = state.copyWith(
           isValidBVN: true,
@@ -158,15 +159,15 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
         );
         return true;
       }
-        //? Tell that isValidCAC is false not verifying BVN again
+      //? Tell that isValidCAC is false not verifying BVN again
       state = state.copyWith(isValidBVN: false);
       return false;
     } catch (e) {
-       //? Tell that isValidCAC is false not verifying BVN again
+      //? Tell that isValidCAC is false not verifying BVN again
       state = state.copyWith(isValidBVN: false);
       _logger.e(e);
     } finally {
-        //? close off all on the verification of BVN
+      //? close off all on the verification of BVN
       state = state.copyWith(isLoading: false, isBVNVerify: false);
     }
 
@@ -220,7 +221,7 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
     //? check if CAC has been validated to continue
     if (state.cac.text.trim().isNotEmpty) {
       if (!state.isValidCAC) {
-         //?Display an error message
+        //?Display an error message
         WayaSnackBar.showToast("Please Enter a valid CAC number ");
 
         return;
@@ -292,8 +293,11 @@ class AddBusinessAccountVm extends StateNotifier<AddBusinessAccountState> {
               icon: Image.asset('assets/images/auth/doc-success.png'),
               buttonText: 'Go To HomePage');
         }
+      } else {
+        throw response.data;
       }
     } catch (e) {
+      WayaSnackBar.showToast(e is String ? e : (e as dynamic)['message']);
       _logger.e(e);
     } finally {
       state = state.copyWith(isLoading: false);

@@ -55,6 +55,9 @@ class _ParticipantDetailsState extends ConsumerState<ParticipantDetails> {
           ref.read(contestNotifierProvider.notifier).updateParticipationDate(
               contestViewModel?.participationStartDate?.split("T").first ?? "");
 
+          ref.read(contestNotifierProvider.notifier).updateParticipationEndDate(
+              contestViewModel?.participationEndDate?.split("T").first ?? "");
+
           viewModel2.descriptionOfAwards.text =
               contestViewModel?.descriptionOfAwards ?? "";
         });

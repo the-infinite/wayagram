@@ -142,7 +142,7 @@ class VerifyYourIdentityPage extends ConsumerWidget {
                 //
                 // }, code);
 
-                WayaNav.toNamed('/reset-pin-page', arguments: {
+                WayaNav.replaceNamed('/reset-pin-page', arguments: {
                   'code': code
                 });
             }

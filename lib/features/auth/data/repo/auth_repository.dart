@@ -43,7 +43,7 @@ class AuthRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> phoneVerification(String code, String phone) {
-    return post('$serviceUrl/client/auth/verify-phoneNumber',
+    return post('$serviceUrl/client/auth/verify-phone',
         {"otp": code, "phoneNumber": phone, "purpose": 'REGISTER_USER'},
         showErrors: true);
   }

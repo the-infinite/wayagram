@@ -17,7 +17,7 @@ class SupportRequestNotifier extends StateNotifier<SupportRequestState> {
   SupportRequestNotifier(this._roleProfileRepository)
       : super(SupportRequestState.initial) {
     email.text = ConversationState.self.email ?? "";
-    fullname.text = ConversationState.self.fullname ?? "";
+    fullname.text = ConversationState.self.fullname;
     phone.text = ConversationState.self.phoneNumber ?? "";
   }
 

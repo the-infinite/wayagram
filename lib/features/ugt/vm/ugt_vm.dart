@@ -36,7 +36,7 @@ String _convertToISO(String dateString) {
   DateTime futureDate = dateTime.add(Duration(days: 1));
 
   // Convert to UTC ISO 8601 format
-  return "${futureDate.toUtc().toIso8601String().split('.')[0]}Z";
+  return "${futureDate.toUtc().toIso8601String().split('.')[0].replaceAll("T23", "T00")}Z";
 }
 
 class CreateContestNotifier extends StateNotifier<ContestState> {
@@ -137,6 +137,11 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         .toList();
     List<Map<String, dynamic>> mapStageList = stageList.map(
       (model) {
+        String stageEndDate =
+            _convertToISO(model.endDate!) == _convertToISO(model.startDate!)
+                ? _convertToISO(model.endDate!).replaceAll("T00:00:00", "T23:59:59")
+                : _convertToISO(model.endDate!);
+
         return <String, dynamic>{
           "stageName": model.stageName,
           "entryType": model.entryType?.toUpperCase(),
@@ -157,7 +162,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
                   .replaceAll(",", ""))
               : int.parse(model.priceWinner ?? "0"),
           "startDate": _convertToISO(model.startDate!), // model.startDate,
-          "endDate": _convertToISO(model.endDate!), // model.endDate,
+          "endDate": stageEndDate, // model.endDate,
           "approveBeforeLive": model.reviewApprovePost
         };
       },
@@ -177,6 +182,17 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     //NGN8.00
     try {
       //  debugPrint("wwwww ${amountPerVote.text}");
+      String participationEndDate =
+          _convertToISO(state.endDate) == _convertToISO(state.startDate)
+              ? _convertToISO(state.endDate).replaceAll("T00:00:00", "T23:59:59")
+              : _convertToISO(state.endDate);
+
+      String contestTimeLineEndDate =
+          _convertToISO(state.contestTimelineEndDate) ==
+                  _convertToISO(state.contestTimelineStartDate)
+              ? _convertToISO(state.contestTimelineEndDate)
+                  .replaceAll("T00", "T23")
+              : _convertToISO(state.contestTimelineEndDate);
 
       var map = {
         "title": title.text,
@@ -219,10 +235,12 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
             ? "Nill"
             : state.contestTimelineCurrentStage,
         "participationStartDate": _convertToISO(state.startDate),
-        "participationEndDate": _convertToISO(state.endDate),
+        "participationEndDate": participationEndDate,
+
         "startDate": _convertToISO(state.contestTimelineStartDate),
         "uploadCoverImages": profileImageUrl,
-        "endDate": _convertToISO(state.contestTimelineEndDate),
+        "endDate":
+            contestTimeLineEndDate, //_convertToISO(state.contestTimelineEndDate),
 
         "entryType": state.entrySelectType.toUpperCase(),
 
