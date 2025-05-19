@@ -33,9 +33,9 @@ class EventRepository extends BaseRepository {
 
   Future<WayaRequestResponse> reportEvent(
       {required String userId, required String eventId, required String reason, String? comment}) {
-    final payload = {"userId": userId, "eventId": eventId, "reason": reason};
+    final payload = { "eventId": eventId, "reason": reason};
     if (comment != null) payload['comment'] = comment;
-    return post("$serviceUrl/report-events", payload, showErrors: true);
+    return post("$serviceUrl/reports/create", payload, showErrors: true);
   }
 
   Future<WayaRequestResponse> joinedUsers({required String id, int? page = 100, int? limit = 10}) {

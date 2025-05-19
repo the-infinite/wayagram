@@ -143,7 +143,8 @@ class _PersonalFirstStepViewState extends ConsumerState<PersonalFirstStepView> {
                               ),
                           ],
                         );
-                      }),
+                      }
+                      ),
                     )
                   ],
                 ),
