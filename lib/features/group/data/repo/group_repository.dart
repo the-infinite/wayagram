@@ -142,6 +142,7 @@ class GroupRepository extends BaseRepository {
     return post("$serviceUrl/groups/invitations/$groupId", payload, showErrors: true);
   }
 
+
   // recommended groups
   Future<WayaRequestResponse> recommendedGroup() {
     return get("$serviceUrl/groups/recommended");
