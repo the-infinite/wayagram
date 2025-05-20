@@ -78,15 +78,28 @@ class _EventDetailState extends ConsumerState<EventDetail> {
     }
 
     bool isTicketSalesActive(EventDoc? event) {
-      if (event!.ticketSalesStartDate == null ||
-          event.ticketSalesEndDate == null) {
-        return false;
-      }
+  if (event?.ticketSalesStartDate == null || event?.ticketSalesEndDate == null) {
+    return false;
+  }
 
-      final now = DateTime.now();
-      return now.isAfter(event.ticketSalesStartDate!) &&
-          now.isBefore(event.ticketSalesEndDate!);
-    }
+  final now = DateTime.now();
+  final today = DateTime(now.year, now.month, now.day);
+
+  final start = DateTime(
+    event!.ticketSalesStartDate!.year,
+    event.ticketSalesStartDate!.month,
+    event.ticketSalesStartDate!.day,
+  );
+
+  final end = DateTime(
+    event.ticketSalesEndDate!.year,
+    event.ticketSalesEndDate!.month,
+    event.ticketSalesEndDate!.day,
+  );
+
+  return (today.isAtSameMomentAs(start) || today.isAfter(start)) &&
+         (today.isAtSameMomentAs(end) || today.isBefore(end));
+}
 
     bool cannotJoin(EventDoc? event) {
       bool maxAttendeehasJoined =

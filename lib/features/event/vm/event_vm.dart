@@ -15,6 +15,7 @@ import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
 import 'package:wayagram/features/event/data/model/event_attendee_response_model.dart';
 import 'package:wayagram/features/event/data/model/single_event_response_model.dart';
+import 'package:wayagram/shared/components/pin_entry_bottom_sheet.dart';
 import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
 
 class EventVm extends StateNotifier<EventState> {
@@ -71,13 +72,12 @@ class EventVm extends StateNotifier<EventState> {
       List<EventDoc> upcoming = [];
       bool hasNextPage = false;
       if (response.success) {
-        final now = DateTime.now();
+        // final now = DateTime.now();
         EventResponse eventResponse = EventResponse.fromJson(response.data);
         upcoming = eventResponse.data.docs
             .where((event) =>
                 event.privacyOption == 'public' &&
-                event.eventStatus != 'paused' &&
-                !event.endDate.isBefore(now))
+                event.eventStatus != 'paused')
             .toList();
         hasNextPage = eventResponse.data.hasNextPage;
         state = state.copyWith(upcomingEvents: upcoming);
@@ -164,22 +164,24 @@ class EventVm extends StateNotifier<EventState> {
         // print("fewfewfwef after success ${response.data["data"]['docs']}");
         //  final data = response.data["data"]['docs'];
 
-    //    print("vergergesdfsdfsfsdfsfd ${((response.data["data"]['docs'] as List).map((d) => d['eventDetails']).toList())}" );
+        //    print("vergergesdfsdfsfsdfsfd ${((response.data["data"]['docs'] as List).map((d) => d['eventDetails']).toList())}" );
 
         // JoinedEventResponse eventResponse =
         //     JoinedEventResponse.fromJson(response.data);
 //
-        final doeecs = (response.data["data"]['docs'] as List).map((d) => EventDoc.fromJson(d['eventDetails'])).toList();
-          print("dddd $doeecs");
+        final doeecs = (response.data["data"]['docs'] as List)
+            .map((d) => EventDoc.fromJson(d['eventDetails']))
+            .toList();
+        print("dddd $doeecs");
         //     .map((doc) => EventDoc.fromJson(doc));
 
         // final docs =
         //     eventResponse.data.docs.map((c) => c.eventDetails).toList();
 
         // print("dddd $docs");
-       myEvents = doeecs;
+        myEvents = doeecs;
 
-      hasNextPage = response.data["data"]['hasNextPage'];
+        hasNextPage = response.data["data"]['hasNextPage'];
       }
 
       return PaginatedResult(hasNextPage: hasNextPage, items: myEvents);
@@ -203,7 +205,16 @@ class EventVm extends StateNotifier<EventState> {
     try {
       state = state.copyWith(isJoiningEvent: true);
       final userId = await _secureDataSource.getUserId();
-      final response =
+      
+
+      //package:wayagram/shared/components/pin_entry_bottom_sheet.dart
+      //
+      if (context.mounted) {
+        final result = await WayaUtils.showModalSheet(context,
+            child: PinEntryBottomSheet());
+
+        if (result == true && context.mounted) {
+          final response =
           await _eventRepository.joinEvent(userId: userId!, eventId: eventId);
 
       final provider = ref.read(eventEngagementProvider.notifier);
@@ -236,6 +247,12 @@ class EventVm extends StateNotifier<EventState> {
         WayaSnackBar.showToast(
             message ?? 'Something is wrong. Try again later');
       }
+        } else {
+          return;
+        }
+    }
+
+      
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),

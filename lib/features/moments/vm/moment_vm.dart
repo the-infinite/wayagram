@@ -597,33 +597,46 @@ class MomentVm extends StateNotifier<MomentState> {
     }
   }
 
-  Future<void> reportMoment(
-      {required String momentId,
-      required String reason,
-      String? comment,
-      required BuildContext context}) async {
+  Future<bool> reportMoment({
+    required String momentId,
+    required String reason,
+    String? comment,
+  }) async {
     try {
       state = state.copyWith(isReportingMoment: true);
       final userId = await _secureDataSource.getUserId();
       final response = await _momentRepository.reportMoment(
           userId: userId!, momentId: momentId, reason: reason);
-      if (response.success && context.mounted) {
-        // show success modal
-        WayaNav.goBack();
-        await WayaUtils.showNotice(
-            context: context,
-            title: "Report Submitted Successfully",
-            onPress: () {
-              WayaNav.goBack();
-            },
-            icon: Image.asset(
-              WayaAssets.images.eCheckEvent.path,
-              scale: 1.5,
-            ),
-            message: 'Thank you for reporting. We take your feedback seriously',
-            buttonText: 'Dismiss');
-        debugPrint(response.data.toString());
+      bool isSuccess = false;
+      if (response.success) {
+       
+        isSuccess = true;
+      } else {
+        
+        isSuccess = false;
       }
+
+      // if (response.success && context.mounted) {
+      // show success modal
+    //  WayaNav.goBack();
+      //
+      // await WayaUtils.showNotice(
+      //     context: context,
+      //     title: "Report Submitted Successfully",
+      //     onPress: () {
+      //       WayaNav.goBack();
+      //     },
+      //     icon: Image.asset(
+      //       WayaAssets.images.eCheckEvent.path,
+      //       scale: 1.5,
+      //     ),
+      //     message: 'Thank you for reporting. We take your feedback seriously',
+      //     buttonText: 'Dismiss');
+       print("fwfewfwef $isSuccess");
+      debugPrint(response.data.toString());
+      return isSuccess;
+
+      // }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
@@ -631,6 +644,7 @@ class MomentVm extends StateNotifier<MomentState> {
         WayaDebugEventModule.moments,
         WayaDebugHelpers.getStackTrace(e),
       );
+      return false;
     } finally {
       state = state.copyWith(isReportingMoment: false);
     }
