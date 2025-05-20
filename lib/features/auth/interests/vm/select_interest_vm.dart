@@ -28,11 +28,13 @@ class States {
   final List<RestructuredCategory> interests;
   final List<String> selected;
   final List<UserInterest> userInterests;
+  final List<String> prevSelected;
 
   States(
       {this.isLoading = false,
       this.interests = const [],
       this.selected = const [],
+      this.prevSelected = const [],
       this.userInterests = const [],
       this.isPostingInterest = false});
 
@@ -41,12 +43,14 @@ class States {
       List<RestructuredCategory>? interests,
       bool? isPostingInterest,
       List<UserInterest>? userInterests,
+      List<String>? prevSelected,
       List<String>? selected}) {
     return States(
         isLoading: isLoading ?? this.isLoading,
         userInterests: userInterests ?? this.userInterests,
         selected: selected ?? this.selected,
         isPostingInterest: isPostingInterest ?? this.isPostingInterest,
+        prevSelected: prevSelected ?? this.prevSelected,
         interests: interests ?? this.interests);
   }
 }
@@ -93,7 +97,9 @@ class SelectInterestVm extends StateNotifier<States> {
             SelectedInterestsResponseModel.fromJson(response.data);
         state = state.copyWith(userInterests: responseModel.data);
         state = state.copyWith(
-            selected: responseModel.data.map((el) => el.interest.id).toList());
+            prevSelected:
+                responseModel.data.map((el) => el.interest.id).toList(), selected: responseModel.data.map((el) => el.interest.id).toList());
+            
         debugPrint(response.data.toString());
       }
     } catch (error) {
@@ -104,7 +110,18 @@ class SelectInterestVm extends StateNotifier<States> {
   Future<void> addInterest({bool? isSettingsScreen}) async {
     try {
       state = state.copyWith(isPostingInterest: true);
-      final response = await _repository.selectInterest(state.selected);
+      List<String> interests = [];
+
+      
+
+    if (state.prevSelected.isNotEmpty) {
+      interests = List.from(state.prevSelected);
+    }
+
+   
+    final combinedInterests = {...state.selected, ...interests}.toList();
+      final response =
+          await _repository.selectInterest(combinedInterests);
       if (response.success) {
         if (isSettingsScreen == true) {
           return WayaSnackBar.showToast("Interests updated successfully");
