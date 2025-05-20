@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
@@ -12,7 +13,9 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
+import 'package:wayagram/features/explore/widgets/moments_widget.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
+import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/moments/widgets/my_moment_widget.dart';
 import 'package:wayagram/features/explore/search/model/user_detail.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
@@ -34,6 +37,7 @@ class _SearchState extends ConsumerState<SearchView> {
   final storage = WayaLocalDataSource.instance;
   List<EventDoc> events = [];
   List<MomentData> moments = [];
+  final Set<String> seenIds = {};
   // Tracks selected services
   Set<String> selectedServices = {};
 
@@ -41,7 +45,7 @@ class _SearchState extends ConsumerState<SearchView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-       ref.read(servicesProvider.notifier).getAllUsers();
+      ref.read(servicesProvider.notifier).getAllUsers();
       //> fetch upcoming events
       final upcomingEvents = await ref
           .read(eventVmProvider.notifier)
@@ -70,7 +74,6 @@ class _SearchState extends ConsumerState<SearchView> {
     });
   }
 
- 
   @override
   void dispose() {
     searchController.dispose();
@@ -86,7 +89,15 @@ class _SearchState extends ConsumerState<SearchView> {
 
     //? Aggregating moments.
     for (final userMoments in otherUserMoments.moments) {
-      moments = [...userMoments.moments];
+      moments.addAll(
+        userMoments.moments.where((moment) {
+          final isNew = !seenIds.contains(moment.id);
+          if (isNew) {
+            seenIds.add(moment.id);
+          }
+          return isNew;
+        }),
+      );
     }
 
     //? Searching posts.
@@ -97,9 +108,11 @@ class _SearchState extends ConsumerState<SearchView> {
     //? Moments
     final List<MomentData> filteredMoments = WayaUtils.strictSearch<MomentData>(
       moments,
-      ['caption'],
+      ['caption', 'content'],
       query,
     );
+
+  
 
     //? Searching user data.
     final List<UserDetails> filteredAccounts =
@@ -300,18 +313,21 @@ class _SearchState extends ConsumerState<SearchView> {
   Widget _buildServiceWidget(String service, dynamic data, ThemeData theme) {
     if (service == 'Moment' && data is List<MomentData>) {
       return SizedBox(
-        height: 80,
+        height: 120,
         child: ListView.builder(
             itemCount: data.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (context, index) {
               return Row(
                 children: [
-                  MyMomentWidget(
+                  SearchedMoment(
+                    onTap: () {
+                      WayaNav.to(
+                          transition: Transition.downToUp,
+                          duration: const Duration(milliseconds: 600),
+                          ViewMoment(moments: [data[index]], isMine: false));
+                    },
                     moment: data[index],
-                    allMoments: [data[index]],
-                    isMine: false,
-                    index: 0,
                   ),
                   const Gap(6),
                 ],

@@ -16,7 +16,8 @@ class TransactionPinView extends ConsumerStatefulWidget {
   const TransactionPinView({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _TransactionPinViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _TransactionPinViewState();
 }
 
 class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
@@ -28,6 +29,8 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
     final loading = ref.watch(loadingProvider);
     final viewModel = ref.read(transactionPinProvider.notifier);
     final wayaTheme = Theme.of(context);
+
+    final dynamic args = ModalRoute.of(context)!.settings.arguments;
     return WayaScaffold(
         isLoading: loading,
         body: Column(
@@ -40,9 +43,11 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text("Set Up Your Transaction Pin", style: WayaTextStyles.titleLarge),
+                Text("Set Up Your Transaction Pin",
+                    style: WayaTextStyles.titleLarge),
                 const Gap(5),
-                Text("For added security, please create a 4-digit PIN \n to confirm your transactions",
+                Text(
+                    "For added security, please create a 4-digit PIN \n to confirm your transactions",
                     style: WayaTextStyles.hintStyle),
                 const Gap(30),
                 PinInputField(
@@ -64,7 +69,8 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
                 ),
                 const Gap(10),
                 Visibility(
-                    visible: pin.isNotEmpty && confirmPin.isNotEmpty && !isInValid,
+                    visible:
+                        pin.isNotEmpty && confirmPin.isNotEmpty && !isInValid,
                     child: Text("The PINs don't match. Pls try again",
                         style: TextStyle().wayaCopyWith(
                           fontWeight: FontWeight.w400,
@@ -81,9 +87,10 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
                     // height: context.height * 0.40,
                     child: PinKeyboard(
                         onKeyTap: viewModel.handleKeyPress,
-                        onSubmit: viewModel.submitPins,
+                        onSubmit: () => viewModel.submitPins(type: args),
                         onBackspace: viewModel.handleBackspace)),
                 const Gap(20),
+             if (args != "account-setting")
                 Align(
                     child: GestureDetector(
                   onTap: () {
@@ -92,7 +99,9 @@ class _TransactionPinViewState extends ConsumerState<TransactionPinView> {
                   child: Text(
                     "Skip for now",
                     style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary, fontSize: 14.sp, fontWeight: FontWeight.w600),
+                        color: wayaTheme.colorScheme.customPrimary,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w600),
                   ),
                 )),
                 const Gap(20),

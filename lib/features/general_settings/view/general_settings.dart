@@ -118,6 +118,12 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 iconPath: 'password',
                 onTap: () => WayaNav.toNamed('/change-pin-page'),
               ),
+              GeneralSettingsOptionModel(
+                title: 'Set Transaction PIN',
+                iconPath: 'password',
+                onTap: () => WayaNav.toNamed(TransactionPinView.route,
+                    arguments: "account-setting"),
+              ),
               /*   GeneralSettingsOptionModel(
                 title: 'Privacy Settings',
                 iconPath: 'shield_plus',
