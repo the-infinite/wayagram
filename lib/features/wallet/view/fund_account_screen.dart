@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/components/waya_scaffold.dart';
 import 'package:wayagram/core/components/waya_webview.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/shared/components/loading_dialog.dart';
 import 'package:wayagram/features/wallet/view/bank_transfer_screen.dart';
@@ -63,6 +64,13 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
     double numericAmount = double.tryParse(amount) ?? 0;
 
     // Validate amount
+    // if (num.parse(amount) < num.parse("50.00") ) {
+    //   setState(() {
+    //     errorMessage = "Please amount cannot be less than N50";
+    //   });
+    //   return;
+    // }
+    
     if (amount == "0.00" || amount == "0" || amount.startsWith("00")) {
       setState(() {
         errorMessage = "Please enter a valid amount";
