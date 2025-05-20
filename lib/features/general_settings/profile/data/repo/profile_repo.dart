@@ -26,6 +26,24 @@ class ProfileRepo extends BaseRepository {
     return patch('$serviceUrl/client/users/$userId/update', payload);
   }
 
+  Future<WayaRequestResponse> updateEmailOrPhone(
+      {required String userId,
+      required String purpose,
+      required String otp,
+      String? email,
+      String? phone}) {
+    final payload = {"purpose": purpose, "otp": otp};
+
+    if (email != null) payload['newEmail'] = email;
+    if (phone != null) payload['newPhoneNumber'] = phone;
+
+    print(payload);
+
+    return patch(
+        '$serviceUrl/client/users/$userId/email-or-phone/update', payload,
+        showErrors: true);
+  }
+
   Future<WayaRequestResponse> updateProfileRepo(
       {required String userId,
       String? username,
@@ -57,21 +75,24 @@ class ProfileRepo extends BaseRepository {
   Future<WayaRequestResponse> getUserDataRepo({required String userId}) async {
     return get("$serviceUrl/client/users/$userId");
   }
-    Future<WayaRequestResponse> postSupportDetails(payload) async {
-    return post("$serviceUrl2/client/support",  payload, formdata: false);
+
+  Future<WayaRequestResponse> postSupportDetails(payload) async {
+    return post("$serviceUrl2/client/support", payload, formdata: false);
   }
 
-      Future<WayaRequestResponse> postDisputeDetails(payload) async {
-    return post("$serviceUrl2/client/dispute",  payload, formdata: false);
-    
+  Future<WayaRequestResponse> postDisputeDetails(payload) async {
+    return post("$serviceUrl2/client/dispute", payload, formdata: false);
   }
 
-  Future<WayaRequestResponse> getUserProfileRepo({required String userId}) async {
+  Future<WayaRequestResponse> getUserProfileRepo(
+      {required String userId}) async {
     return get("$serviceUrl/client/users/$userId/profile");
   }
 
   Future<WayaRequestResponse> updateProfileImageRepo(
-      {required String userId, required Uint8List image, required String fileName}) async {
+      {required String userId,
+      required Uint8List image,
+      required String fileName}) async {
     waya.MultipartFile pictureImage = waya.MultipartFile.fromBytes(
       image,
       filename: fileName,
@@ -79,10 +100,12 @@ class ProfileRepo extends BaseRepository {
     );
     final payload = {'profilePicture': pictureImage};
 
-    return patch('$serviceUrl/client/users/$userId/update-pfp', payload, formdata: true);
+    return patch('$serviceUrl/client/users/$userId/update-pfp', payload,
+        formdata: true);
   }
 
-  Future<WayaRequestResponse> getBusinessDataRepo({required String userId}) async {
+  Future<WayaRequestResponse> getBusinessDataRepo(
+      {required String userId}) async {
     return get("$serviceUrl/client/businesses/user-business/$userId");
   }
 }

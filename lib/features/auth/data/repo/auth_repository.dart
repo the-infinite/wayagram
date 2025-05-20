@@ -57,6 +57,19 @@ class AuthRepository extends BaseRepository {
         showErrors: true);
   }
 
+  Future<WayaRequestResponse> getOtp(
+      {required String purpose, String? email, String? phone}) {
+    final payload = {"purpose": purpose};
+
+    if (email != null) payload['email'] = email;
+      if (phone != null) payload['phoneNumber'] = phone;
+
+    return post(
+        '$serviceUrl/client/auth/resend-otp',
+        payload,
+        showErrors: true);
+  }
+
   Future<WayaRequestResponse> verifyCAC(String cacNumber) {
     return post('$serviceUrl/client/kyc/verify-cac-number',
         {"cacNumber": cacNumber, "mode": "basic"},
@@ -74,6 +87,8 @@ class AuthRepository extends BaseRepository {
         '$serviceUrl/client/auth/password/new-password', payload.toJson(),
         showErrors: true);
   }
+
+  ///client/users/:userId/email-or-phone/update
 
   Future<WayaRequestResponse> login(
       {required String password,
@@ -139,7 +154,6 @@ class AuthRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> selectInterest(dynamic data) {
-    
     return patch(
       '$graphServiceUrl/interests/toggle',
       {"interests": data},

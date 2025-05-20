@@ -45,7 +45,6 @@ class _MyBubbleWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final timeString =
         "${data.readAt != null ? 'Read' : data.deliveredAt != null ? 'Delivered' : 'Sent'} ${WayaDateHelper.getTimestamp(data.readAt ?? data.deliveredAt ?? data.updatedAt)}";
-
     //? The time string.
     return SizedBox(
       width: double.infinity,
@@ -264,7 +263,7 @@ class _YourBubbleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final user = chat.allOthers.firstWhere((member) => member.userId == data.senderId).combined;
+    final user = chat.chatMembers.firstWhere((member) => member.userId == data.senderId).combined;
 
     // This is fine.
     return Padding(
@@ -521,6 +520,7 @@ class ChatBubbleWidget extends ConsumerStatefulWidget {
 class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
   OverlayEntry? _entry;
   late final notifier = ref.watch(chatProvider(widget.chat?.id ?? widget.data.chatId).notifier);
+  late final messageController = notifier.getController(widget.data);
 
   /// This is the message we are replying to.
   void _replyTo() {
@@ -984,7 +984,6 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
   @override
   Widget build(BuildContext context) {
     final user = ConversationState.self;
-    final messageController = notifier.getController(widget.data);
 
     //? Our other option.
     return PopScope(
@@ -1047,12 +1046,18 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                 child: widget.data.senderId == user.id
                     ? ValueListenableBuilder(
                         valueListenable: messageController,
-                        builder: (context, redraws, _) => _MyBubbleWidget(
-                          data: messageController.data,
-                          chat: widget.chat!,
-                          controller: widget.controller,
-                          interactive: widget.interactive,
-                        ),
+                        builder: (context, redraws, _) {
+                          final data = messageController.data;
+                          final messageHash = data.hashCode.toRadixString(16).padLeft(8, '0');
+                          final controllerHash = messageController.hashCode.toRadixString(16).padLeft(8, '0');
+                          debugPrint("Chat-IS: {$controllerHash}::$messageHash,${data.id}");
+                          return _MyBubbleWidget(
+                            data: data,
+                            chat: widget.chat!,
+                            controller: widget.controller,
+                            interactive: widget.interactive,
+                          );
+                        },
                       )
                     : ValueListenableBuilder(
                         valueListenable: messageController,

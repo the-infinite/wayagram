@@ -140,6 +140,7 @@ class _ReplyMomentWidgetState extends ConsumerState<ReplyMomentWidget> {
                     //? This is fine too.
                     final message = await chatNotifier.sendMessage(
                       SendMessageDto(
+                        id: WayaValueHelper.createUid(),
                         chatId: chat.id,
                         type: MessageType.text,
                         originalMessage: null,
