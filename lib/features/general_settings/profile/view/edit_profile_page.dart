@@ -12,6 +12,7 @@ import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_edit_type_model.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
+import 'package:wayagram/features/general_settings/reset_pin_page/verify_your_identity_page.dart';
 
 class EditProfilePage extends ConsumerStatefulWidget {
   static const route = '/edit-profile-page';
@@ -186,7 +187,16 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                   value: userState.userAccountModel?.data?.userdata?.user?.email
                           .toString() ??
                       "N/A",
-                  onTap: () {},
+                  onTap: () {
+                    WayaNav.toNamed(
+                      VerifyYourIdentityPage.route,
+                      arguments: {
+                        "type": ProfileEditType.email,
+                        "initial": userState
+                            .userAccountModel?.data?.userdata?.user?.email
+                      },
+                    );
+                  },
                 ),
                 Gap(10),
                 ProfileTile(
@@ -195,7 +205,17 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                           .userAccountModel?.data?.userdata?.user?.phoneNumber
                           .toString() ??
                       "N/A",
-                  onTap: () {},
+                  onTap: () {
+                    WayaNav.toNamed(
+                      VerifyYourIdentityPage.route,
+                      arguments: {
+                        "type": ProfileEditType.phone,
+                        "initial": userState
+                            .userAccountModel?.data?.userdata?.user?.phoneNumber
+                            ?.substring(3),
+                      },
+                    );
+                  },
                 ),
                 Gap(12),
                 Row(

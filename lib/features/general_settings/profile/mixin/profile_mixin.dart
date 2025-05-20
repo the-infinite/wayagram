@@ -13,6 +13,13 @@ mixin ProfileMixin {
         return ProfileEditOperationModel(
             hintText: 'Aug 10 2021', title: 'Edit Date of Birth', label: 'Date of Birth', onSave: () async {});
 
+    case ProfileEditType.email:
+        return ProfileEditOperationModel(
+            hintText: 'user@example.com', title: 'Edit Email', label: 'Email', onSave: () async {});
+             case ProfileEditType.phone:
+        return ProfileEditOperationModel(
+            hintText: '7136789012', title: 'Edit Phone', label: 'Phone Number', onSave: () async {});
+
       case ProfileEditType.bio:
         return ProfileEditOperationModel(
             hintText:
