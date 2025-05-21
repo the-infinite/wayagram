@@ -6,6 +6,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
+import 'package:wayagram/core/utils/waya_validators.dart';
 import 'package:wayagram/features/general_settings/profile/data/model/profile_edit_type_model.dart';
 import 'package:wayagram/features/general_settings/profile/mixin/profile_mixin.dart';
 import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
@@ -24,7 +25,8 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    final ProfileEditArguments? arg = ModalRoute.of(context)?.settings.arguments as ProfileEditArguments?;
+    final ProfileEditArguments? arg =
+        ModalRoute.of(context)?.settings.arguments as ProfileEditArguments?;
     if (arg != null) {
       nameController.text = arg.initialValue!;
     }
@@ -39,12 +41,15 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
   @override
   Widget build(BuildContext context) {
     final profileState = ref.watch(profileVmProvider);
-    final ProfileEditArguments? arg = ModalRoute.of(context)?.settings.arguments as ProfileEditArguments?;
+    final ProfileEditArguments? arg =
+        ModalRoute.of(context)?.settings.arguments as ProfileEditArguments?;
     final wayaTheme = Theme.of(context);
     return WayaScaffold(
       isLoading: profileState.isLoading,
       backgroundColor: wayaTheme.colorScheme.scaffoldColor,
-      title: getEditOperation(editType: arg!.editType, ref: ref, value: nameController.text).title,
+      title: getEditOperation(
+              editType: arg!.editType, ref: ref, value: nameController.text)
+          .title,
       appBarTrailing: Row(
         children: [
           WayaButton(
@@ -53,9 +58,37 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
             horizontalPadding: 10,
             callback: arg.editType == ProfileEditType.dob
                 ? () {
-                    ref.read(profileVmProvider.notifier).updateAccount(dob: dateIsoFormat);
+                    ref
+                        .read(profileVmProvider.notifier)
+                        .updateAccount(dob: dateIsoFormat);
                   }
-                : getEditOperation(editType: arg.editType, ref: ref, value: nameController.text).onSave,
+                : arg.editType == ProfileEditType.phone
+                    ? () {
+                        ref.read(profileVmProvider.notifier).updateUniqueFields(
+                            phone: "234${nameController.text}",
+                            purpose: "CHANGE_OF_PHONE",
+                            code: arg.code ?? '');
+                      }
+                    : arg.editType == ProfileEditType.email
+                        ? () {
+                            String? valid = WayaValidators.isValidEmail(
+                                nameController.text);
+                            if (valid != null) {
+                              WayaSnackBar.showToast(valid);
+                              return;
+                            }
+                            ref
+                                .read(profileVmProvider.notifier)
+                                .updateUniqueFields(
+                                    email: nameController.text,
+                                    purpose: "CHANGE_OF_EMAIL",
+                                    code: arg.code ?? '');
+                          }
+                        : getEditOperation(
+                                editType: arg.editType,
+                                ref: ref,
+                                value: nameController.text)
+                            .onSave,
             text: 'Save',
           ),
           Gap(15)
@@ -65,7 +98,14 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
         children: [
           Gap(20),
           WayaTextFormField(
-            inputFormatters: arg.editType == ProfileEditType.name ? [CapitalizeWordsFormatter()] : [],
+            keyboardType: arg.editType == ProfileEditType.phone
+                ? TextInputType.phone
+                : arg.editType == ProfileEditType.email
+                    ? TextInputType.emailAddress
+                    : TextInputType.text,
+            inputFormatters: arg.editType == ProfileEditType.name
+                ? [CapitalizeWordsFormatter()]
+                : [],
             isReadOnly: arg.editType == ProfileEditType.dob,
             onTap: arg.editType == ProfileEditType.dob
                 ? () async {
@@ -76,7 +116,8 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
                         initialDate: DateTime.now());
 
                     if (response != null) {
-                      String dateOfBirth = "${response.year}-${response.month}-${response.day}";
+                      String dateOfBirth =
+                          "${response.year}-${response.month}-${response.day}";
                       nameController.text = dateOfBirth;
                       dateIsoFormat = response.toIso8601String();
                     }
@@ -85,14 +126,24 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
             padding: EdgeInsets.all(10),
             fillColor: wayaTheme.colorScheme.white,
             line: arg.editType == ProfileEditType.bio ? 4 : 1,
-            label: getEditOperation(editType: arg.editType, ref: ref, value: nameController.text).label,
+            label: getEditOperation(
+                    editType: arg.editType,
+                    ref: ref,
+                    value: nameController.text)
+                .label,
             onChanged: (data) {
               setState(() {});
-              arg.editType == ProfileEditType.name || arg.editType == ProfileEditType.username
+              arg.editType == ProfileEditType.name ||
+                      arg.editType == ProfileEditType.username
                   ? WayaHelpers.countFormCharacters(nameController, 60)
-                  : null;
+                  : arg.editType == ProfileEditType.phone
+                      ? WayaHelpers.countFormCharacters(nameController, 10)
+                      : null;
             },
-            suffixIcon: arg.editType != ProfileEditType.name || arg.editType != ProfileEditType.username
+            suffixIcon: arg.editType != ProfileEditType.name ||
+                    arg.editType != ProfileEditType.username ||
+                    arg.editType == ProfileEditType.phone ||
+                    arg.editType == ProfileEditType.email
                 ? null
                 : Padding(
                     padding: EdgeInsets.only(top: 13.0, right: 5, left: 5),
@@ -102,14 +153,24 @@ class _EditNamePageState extends ConsumerState<EditNamePage> with ProfileMixin {
                     ),
                   ),
             controller: nameController,
-            hintText: getEditOperation(editType: arg.editType, ref: ref, value: nameController.text).hintText,
+            hintText: getEditOperation(
+                    editType: arg.editType,
+                    ref: ref,
+                    value: nameController.text)
+                .hintText,
           ),
           Gap(10),
           Align(
             alignment: Alignment.centerLeft,
             child: Text(
-              getEditOperation(editType: arg.editType, ref: ref, value: nameController.text).description ?? '',
-              style: wayaTheme.textTheme.bodyXtraMedium.wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
+              getEditOperation(
+                          editType: arg.editType,
+                          ref: ref,
+                          value: nameController.text)
+                      .description ??
+                  '',
+              style: wayaTheme.textTheme.bodyXtraMedium
+                  .wayaCopyWith(color: wayaTheme.colorScheme.greyColor500),
             ),
           )
         ],

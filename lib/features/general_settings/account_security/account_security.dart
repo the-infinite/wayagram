@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
-import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/general_settings/profile/data/repo/profile_repo.dart';
 import 'package:wayagram/features/kyc/view/kyc_update.dart';
 import 'package:wayagram/features/kyc/vm/kyc_vm.dart';
 

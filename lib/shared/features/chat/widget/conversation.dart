@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/features/chat/vm/chat.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/chat/widget/chat/input.dart';

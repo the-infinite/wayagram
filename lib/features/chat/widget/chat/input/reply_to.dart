@@ -52,7 +52,7 @@ class _ChatReplyToWidgetState extends State<ChatReplyToWidget> with SingleTicker
   @override
   Widget build(BuildContext context) {
     final user = ConversationState.self;
-    final other = widget.chat.allOthers.firstWhere((member) => member.userId == widget.message.senderId);
+    final other = widget.chat.chatMembers.firstWhere((member) => member.userId == widget.message.senderId);
 
     final composite = IntrinsicHeight(
       child: Row(

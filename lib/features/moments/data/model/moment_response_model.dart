@@ -226,5 +226,5 @@ class MomentData extends BaseModel<MomentData> {
   }
 
   @override
-  Map<String, dynamic> toMap() => {'caption': caption};
+  Map<String, dynamic> toMap() => {'caption': caption, 'content': content};
 }

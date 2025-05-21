@@ -134,6 +134,7 @@ class _AddTeamMemberState extends ConsumerState<AddTeamMember> {
                     onResult: (user) {
                       notifier.setAddedUser(user?.id);
                     },
+                    hintText: 'Search with email',
                     backgroundColor: wayaTheme.colorScheme.primary50,
                     searchController: viewModel.username,
                     buttonTextStyle: wayaTheme.textTheme.bodyBold.copyWith(

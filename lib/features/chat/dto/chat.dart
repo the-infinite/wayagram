@@ -12,6 +12,7 @@ part 'chat.g.dart';
 
 @JsonSerializable()
 class SendMessageDto {
+  final String id;
   final MessageType type;
   final String chatId;
   final String? originalMessageId;
@@ -22,6 +23,7 @@ class SendMessageDto {
   final List<String>? contacts;
 
   SendMessageDto({
+    required this.id,
     required this.chatId,
     required this.type,
     required this.originalMessageId,
@@ -148,6 +150,7 @@ class SendMessageDto {
 
     //? This is fine.
     return SendMessageDto(
+      id: id,
       chatId: chatId,
       type: usedType,
       momentId: momentId,
@@ -169,6 +172,7 @@ class SendMessageDto {
 
       // This is fine.
       result.add(SendMessageDto(
+        id: id,
         chatId: chatId,
         type: type,
         originalMessageId: i != 0 ? null : originalMessageId,

@@ -8,11 +8,14 @@ import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/vm/add_business_account_vm.dart';
+import 'package:wayagram/features/auth/upgrade_to_business/views/upgrade_to_business.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/add_event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/shared/components/radio_select.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
 class AddEventVm extends StateNotifier<AddEventState> {
@@ -144,6 +147,21 @@ class AddEventVm extends StateNotifier<AddEventState> {
         state = state.copyWith(eventFee: TextEditingController(text: '0'));
       }
 
+      if (state.eventType == "Paid" &&
+          ConversationState.self.accountType == UserAccountType.personal) {
+        WayaUtils.showNotice(
+            context: context,
+            title: "You don't have a Business Account",
+            message:
+                'Please upgrade to a business account to create a paid poll',
+            onPress: () => WayaNav.toNamed(UpgradeToBusiness.route),
+            buttonText: 'Upgrade to Business',
+            secondButtonText: 'Cancel',
+            icon: Image.asset('assets/images/cp-shop.png'));
+
+        return false;
+      }
+
       if (state.privacyOption.isEmpty) {
         WayaSnackBar.showToast("Choose a privacy option");
         return false;
@@ -169,19 +187,16 @@ class AddEventVm extends StateNotifier<AddEventState> {
             context: context,
             title: state.isEditingMode
                 ? "Your Event has been updated successfully"
-                : "Your Event has been created successfully",
+                : "Your Event has been created successfully.",
             message:
-                "Your event is now live. Share it with your audience and start engaging with attendees today!",
+                "Your event is now live. Share it with your audience and start engaging with attendees today!. ${state.eventType == "Paid" ? "Waya will take a commission from the payment and the rest of the money will be paid into your account" : ""}",
             onPress: () {
               WayaNav.goBack();
               reset();
             },
             buttonText: 'Go To Event Home Page',
-            secondButtonText: 'Share Event Link',
+            secondButtonText: 'Go Back',
             onCancel: () async {
-              await ref
-                  .read(eventVmProvider.notifier)
-                  .shareEvent(context: context, shareUrl: "shareUrl");
               WayaNav.goBack();
               reset();
             },

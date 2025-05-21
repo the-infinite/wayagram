@@ -5,14 +5,12 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/views/moment.dart';
 import 'package:wayagram/features/moments/vm/moment_vm.dart';
 import 'package:wayagram/features/moments/widgets/my_moment_widget.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 
 class MyMoments extends ConsumerStatefulWidget {
   static const route = "/my-moments";
@@ -54,6 +52,7 @@ class _MyMomentState extends ConsumerState<MyMoments> {
       ['caption', 'content'],
       searchController.text,
     );
+    
     return WayaScaffold(
       isLoading: state.isLoadingUserMoments,
       title: "My Moments",

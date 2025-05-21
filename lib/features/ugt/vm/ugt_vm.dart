@@ -137,10 +137,10 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         .toList();
     List<Map<String, dynamic>> mapStageList = stageList.map(
       (model) {
-        String stageEndDate =
-            _convertToISO(model.endDate!) == _convertToISO(model.startDate!)
-                ? _convertToISO(model.endDate!).replaceAll("T00:00:00", "T23:59:59")
-                : _convertToISO(model.endDate!);
+        String stageEndDate = _convertToISO(model.endDate!) ==
+                _convertToISO(model.startDate!)
+            ? _convertToISO(model.endDate!).replaceAll("T00:00:00", "T23:59:59")
+            : _convertToISO(model.endDate!);
 
         return <String, dynamic>{
           "stageName": model.stageName,
@@ -182,10 +182,10 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     //NGN8.00
     try {
       //  debugPrint("wwwww ${amountPerVote.text}");
-      String participationEndDate =
-          _convertToISO(state.endDate) == _convertToISO(state.startDate)
-              ? _convertToISO(state.endDate).replaceAll("T00:00:00", "T23:59:59")
-              : _convertToISO(state.endDate);
+      String participationEndDate = _convertToISO(state.endDate) ==
+              _convertToISO(state.startDate)
+          ? _convertToISO(state.endDate).replaceAll("T00:00:00", "T23:59:59")
+          : _convertToISO(state.endDate);
 
       String contestTimeLineEndDate =
           _convertToISO(state.contestTimelineEndDate) ==
@@ -424,9 +424,27 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     try {
       final response = await showDatePicker(
           context: context,
-          firstDate: firtDate ??  DateTime(1800),
+          firstDate: firtDate ?? DateTime(1800),
           lastDate: lastDate ?? DateTime(2050),
           initialDate: firtDate ?? DateTime.now());
+
+      if (response != null) {
+        return response;
+      }
+    } catch (error) {
+      debugPrint(error.toString());
+    }
+    return null;
+  }
+
+  Future<DateTime?> pickerDialog2(BuildContext context,
+      {DateTime? firtDate, DateTime? lastDate}) async {
+    try {
+      final response = await showDatePicker(
+          context: context,
+          firstDate: firtDate ?? DateTime(1800),
+          lastDate: lastDate ?? DateTime(2050),
+          initialDate: lastDate ?? DateTime.now());
 
       if (response != null) {
         return response;

@@ -12,6 +12,8 @@ import 'package:wayagram/features/general_settings/account_security/account_secu
 import 'package:wayagram/features/general_settings/donation/donation_settings_page.dart';
 import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
 import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
+import 'package:wayagram/features/general_settings/group/group_setting_page.dart';
+import 'package:wayagram/features/general_settings/page/page_general_setting_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/modals/logout.dart';
@@ -118,6 +120,12 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
                 iconPath: 'password',
                 onTap: () => WayaNav.toNamed('/change-pin-page'),
               ),
+              GeneralSettingsOptionModel(
+                title: 'Set Transaction PIN',
+                iconPath: 'password',
+                onTap: () => WayaNav.toNamed(TransactionPinView.route,
+                    arguments: "account-setting"),
+              ),
               /*   GeneralSettingsOptionModel(
                 title: 'Privacy Settings',
                 iconPath: 'shield_plus',
@@ -202,6 +210,23 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               ),
             ],
           ),
+          /*  GeneralSettingsOptionTile(
+            genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Page Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mPages.path,
+                onTap: () => WayaNav.toNamed(PageGeneralSetting.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Group Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mGroup.path,
+                onTap: () => WayaNav.toNamed(GroupSettingPage.route),
+              ),
+             
+            ],
+          ), */
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(

@@ -44,10 +44,15 @@ class MyProfilePage extends ConsumerStatefulWidget {
 
 class _ProfilePageState extends ConsumerState<MyProfilePage> {
   late final postNotifier = ref.read(userPostsProvider.notifier);
+  late final commentedpostNotifier =
+      ref.read(userCommentedPostsProvider.notifier);
+  late final likedpostNotifier = ref.read(userLikedPostsProvider.notifier);
+  late final repostpostNotifier = ref.read(userRepostsProvider.notifier);
   late final savedPostNotifier = ref.read(userSavedPostsProvider.notifier);
   late final eventNotifier = ref.read(userEventsProvider.notifier);
   late final pollsNotifier = ref.read(userPollsProvider.notifier);
-  late final productsNotifier = ref.read(userProductsProvider(widget.data.$1.id).notifier);
+  late final productsNotifier =
+      ref.read(userProductsProvider(widget.data.$1.id).notifier);
   late final conversationNotifier = ref.read(conversationProvider.notifier);
   final followNotifier = myFollowProvider;
   final scrollHandler = WayaObservableScrollController();
@@ -71,6 +76,9 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
   @override
   void reassemble() {
     postNotifier.reset();
+    commentedpostNotifier.reset();
+    likedpostNotifier.reset();
+    repostpostNotifier.reset();
     savedPostNotifier.reset();
     eventNotifier.reset();
     followNotifier.reset();
@@ -98,15 +106,18 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
     if (_pageController.value == 0) {
       await postNotifier.getPostsForUser(widget.data.$1.id);
     }
-
+    //? If this is for repost
+    if (_pageController.value == 1) {
+      await repostpostNotifier.getRepostedPosts();
+    }
     //? If this is for likes
     if (_pageController.value == 2) {
-      //await donationsNotifier.getDonationsByUser(widget.data.$1.id);
+      await likedpostNotifier.getLikedPost();
     }
 
     //? If this is for comments
     if (_pageController.value == 3) {
-      //await donationsNotifier.getDonationsByUser(widget.data.$1.id);
+      await commentedpostNotifier.getCommentedPost();
     }
 
     //? If this is for bookmarks
@@ -133,7 +144,8 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
   void _shareProfile() async {
     //? Share the post.
     final result = await Share.share(
-      WayaValueHelper.getShareableUrl(WayaAppRoutes.getProfileRoute(widget.data.$1.id)),
+      WayaValueHelper.getShareableUrl(
+          WayaAppRoutes.getProfileRoute(widget.data.$1.id)),
       subject: 'Share Profile',
     );
 
@@ -146,6 +158,9 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
     final wayaTheme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
     final postState = ref.watch(userPostsProvider);
+    final likedpostState = ref.watch(userLikedPostsProvider);
+    final commentedpostState = ref.watch(userCommentedPostsProvider);
+    final repostedpostState = ref.watch(userRepostsProvider);
     final eventState = ref.watch(userEventsProvider);
     final pollsState = ref.watch(userPollsProvider);
     final savedPostsState = ref.watch(userSavedPostsProvider);
@@ -206,7 +221,8 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                       onTap: _shareProfile,
                       child: WayaActionNav(
                         context: context,
-                        asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                        asset:
+                            WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
                         text: "Share profile",
                         color: wayaTheme.colorScheme.customBlack,
                       ),
@@ -233,18 +249,29 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                   //? Is this empty?
                   final isEmpty = switch (selectedPage) {
                     0 => postState.posts.isEmpty && postState.hasLoaded,
+                    1 => repostedpostState.posts.isEmpty &&
+                        repostedpostState.hasLoaded,
+                    2 =>
+                      likedpostState.posts.isEmpty && likedpostState.hasLoaded,
+                    3 => commentedpostState.posts.isEmpty &&
+                        commentedpostState.hasLoaded,
                     // 2 => donationsState.donations.isEmpty && donationsState.hasLoaded,
                     // 3 => myGroupNotifier.createdGroups.isEmpty && !myGroupNotifier.hasMoreCreatedGroups,
-                    4 => savedPostsState.posts.isEmpty && savedPostsState.hasLoaded,
+                    4 => savedPostsState.posts.isEmpty &&
+                        savedPostsState.hasLoaded,
                     5 => pollsState.polls.isEmpty && pollsState.hasLoaded,
                     6 => eventState.events.isEmpty && eventState.hasLoaded,
-                    7 => productsState.products.isEmpty && productsState.hasLoaded,
+                    7 =>
+                      productsState.products.isEmpty && productsState.hasLoaded,
                     _ => true,
                   };
 
                   //? Are we at end.
                   final isAtEnd = switch (selectedPage) {
                     0 => !postState.hasNextPage,
+                    1 => !repostedpostState.hasNextPage,
+                    2 => !likedpostState.hasNextPage,
+                    3 => !commentedpostState.hasNextPage,
                     // 2 => !donationsState.hasNextPage,
                     // 3 => !myGroupNotifier.hasMoreCreatedGroups,
                     4 => !savedPostsState.hasNextPage,
@@ -257,6 +284,9 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                   //? Should we fetch.
                   final shouldFetch = switch (selectedPage) {
                     0 => !postState.isLoading,
+                    1 => !repostedpostState.isLoading,
+                    2 => !likedpostState.isLoading,
+                    3 => !commentedpostState.isLoading,
                     // 2 => !donationsState.isLoading,
                     // 3 => !myGroupNotifier.isLoading,
                     4 => !savedPostsState.isLoading,
@@ -294,10 +324,12 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
 
                                 //? How we go to the edit profile page.
                                 GestureDetector(
-                                  onTap: () => WayaNav.toNamed(EditProfilePage.route),
+                                  onTap: () =>
+                                      WayaNav.toNamed(EditProfilePage.route),
                                   child: Container(
                                     margin: EdgeInsets.only(right: 20.w),
-                                    padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
+                                    padding: REdgeInsets.symmetric(
+                                        vertical: 5.dg, horizontal: 10.dg),
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: wayaTheme.colorScheme.primary600,
@@ -308,7 +340,8 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                                     ),
                                     child: Text(
                                       'Edit Profile',
-                                      style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                      style: wayaTheme.textTheme.labelSmall
+                                          ?.wayaCopyWith(
                                         color: wayaTheme.colorScheme.primary600,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -337,7 +370,8 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
 
                         //? Second, the profile set.
                         Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0, vertical: 0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -357,7 +391,8 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                               if (profile.username != null) ...[
                                 Text(
                                   '@${profile.username}',
-                                  style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                  style: wayaTheme.textTheme.labelSmall
+                                      ?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.greyColor500,
                                     fontSize: 13.sp,
                                   ),
@@ -371,7 +406,8 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                               if (profile.bio != null) ...[
                                 Text(
                                   profile.bio!,
-                                  style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                  style: wayaTheme.textTheme.labelSmall
+                                      ?.wayaCopyWith(
                                     color: wayaTheme.colorScheme.greyColor700,
                                   ),
                                 ),
@@ -383,25 +419,34 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                               //? Fourth the profile overview.
                               InkWell(
                                 customBorder: const StadiumBorder(),
-                                onTap: () => WayaNav.toNamed(FollowRelationshipsPage.route),
+                                onTap: () => WayaNav.toNamed(
+                                    FollowRelationshipsPage.route),
                                 borderRadius: BorderRadius.circular(12.r),
-                                splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
-                                focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
-                                highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
+                                splashColor:
+                                    wayaTheme.colorScheme.primary.withAlpha(30),
+                                focusColor:
+                                    const Color.fromARGB(255, 179, 173, 170)
+                                        .withAlpha(30),
+                                highlightColor:
+                                    wayaTheme.colorScheme.primary.withAlpha(30),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   spacing: 10.w,
                                   children: [
                                     //? Users following.
                                     WayaRichText(
-                                      title1: WayaValueHelper.formatNumber(state.followingTotalSize),
+                                      title1: WayaValueHelper.formatNumber(
+                                          state.followingTotalSize),
                                       title2: ' Following',
-                                      style1: wayaTheme.textTheme.bodySmall?.copyWith(
+                                      style1: wayaTheme.textTheme.bodySmall
+                                          ?.copyWith(
                                         color: wayaTheme.colorScheme.black,
                                         fontSize: 12.sp,
                                       ),
-                                      style2: wayaTheme.textTheme.bodySmall?.copyWith(
-                                        color: wayaTheme.colorScheme.greyColor500,
+                                      style2: wayaTheme.textTheme.bodySmall
+                                          ?.copyWith(
+                                        color:
+                                            wayaTheme.colorScheme.greyColor500,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 12.sp,
                                       ),
@@ -409,14 +454,18 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
 
                                     //? Followers.
                                     WayaRichText(
-                                      title1: WayaValueHelper.formatNumber(state.followersTotalSize),
+                                      title1: WayaValueHelper.formatNumber(
+                                          state.followersTotalSize),
                                       title2: ' Followers',
-                                      style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                      style1: wayaTheme.textTheme.bodySmall
+                                          ?.wayaCopyWith(
                                         color: wayaTheme.colorScheme.black,
                                         fontSize: 12.sp,
                                       ),
-                                      style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                        color: wayaTheme.colorScheme.greyColor500,
+                                      style2: wayaTheme.textTheme.bodySmall
+                                          ?.wayaCopyWith(
+                                        color:
+                                            wayaTheme.colorScheme.greyColor500,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 12.sp,
                                       ),
@@ -424,14 +473,18 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
 
                                     //? Posts.
                                     WayaRichText(
-                                      title1: WayaValueHelper.formatNumber(postState.totalSize),
+                                      title1: WayaValueHelper.formatNumber(
+                                          postState.totalSize),
                                       title2: ' Posts',
-                                      style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                      style1: wayaTheme.textTheme.bodySmall
+                                          ?.wayaCopyWith(
                                         color: wayaTheme.colorScheme.black,
                                         fontSize: 12.sp,
                                       ),
-                                      style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                        color: wayaTheme.colorScheme.greyColor500,
+                                      style2: wayaTheme.textTheme.bodySmall
+                                          ?.wayaCopyWith(
+                                        color:
+                                            wayaTheme.colorScheme.greyColor500,
                                         fontWeight: FontWeight.w500,
                                         fontSize: 12.sp,
                                       ),
@@ -447,12 +500,15 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                               //if (isSelf)
                               WayaRichText(
                                 title1: 'Joined: ',
-                                title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
-                                style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                title2: WayaDateHelper.getMonthlyTimestamp(
+                                    user.createdAt ?? DateTime.now()),
+                                style1:
+                                    wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                   color: wayaTheme.colorScheme.black,
                                   fontSize: 12.sp,
                                 ),
-                                style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                style2:
+                                    wayaTheme.textTheme.bodySmall?.wayaCopyWith(
                                   color: wayaTheme.colorScheme.greyColor500,
                                   fontWeight: FontWeight.w500,
                                   fontSize: 12.sp,
@@ -602,10 +658,39 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                               padded: true,
                             ),
                           )
+                          else if (selectedPage == 1)
+                          ...[
+                            ...List.generate(
+                            repostedpostState.posts.length,
+                            (index) => WayaPostWidget(
+                              data: repostedpostState.posts[index],
+                              index: index,
+                              padded: true,
+                            ),
+                          )
+                          ] 
                         else if (selectedPage == 2)
-                          ...[] // Likes
+                          ...[
+                            ...List.generate(
+                            likedpostState.posts.length,
+                            (index) => WayaPostWidget(
+                              data: likedpostState.posts[index],
+                              index: index,
+                              padded: true,
+                            ),
+                          )
+                          ] // Likes
                         else if (selectedPage == 3)
-                          ...[] // Comments
+                          ...[
+                            ...List.generate(
+                            commentedpostState.posts.length,
+                            (index) => WayaPostWidget(
+                              data: commentedpostState.posts[index],
+                              index: index,
+                              padded: true,
+                            ),
+                          )
+                          ] // Comments
                         else if (selectedPage == 4)
                           ...List.generate(
                             savedPostsState.posts.length,

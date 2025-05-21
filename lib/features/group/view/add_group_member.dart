@@ -126,6 +126,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
                     onResult: (user) {
                       notifier.setAddedUser(user?.id);
                     },
+                    hintText: 'Search with email',
                     backgroundColor: wayaTheme.colorScheme.primary50,
                     searchController: viewModel.username,
                     buttonTextStyle: wayaTheme.textTheme.bodyBold.copyWith(
@@ -299,7 +300,7 @@ class _AddGroupMemberState extends ConsumerState<AddGroupMember> {
           child: Padding(
             padding: EdgeInsets.only(left: 10, bottom: 16),
             child: SizedBox(
-              height: 120,
+              height: 126,
               width: size.width,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(14),

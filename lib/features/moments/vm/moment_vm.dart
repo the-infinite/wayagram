@@ -9,7 +9,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/modals/error.dart';
@@ -18,7 +17,6 @@ import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/features/chat/state/default.dart';
-import 'package:wayagram/features/general_settings/profile/vm/profile_vm.dart';
 import 'package:wayagram/features/moments/data/moment_helper/moment_helper_funcs.dart';
 import 'package:wayagram/features/moments/data/repo/moment_repository.dart';
 import 'package:wayagram/features/moments/views/my_moments.dart';
@@ -30,7 +28,6 @@ import '../views/media_moment.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:image/image.dart' as img;
-import 'package:path/path.dart' as path;
 import 'dart:io';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/shop/data/model/shop_state.dart';
@@ -597,33 +594,46 @@ class MomentVm extends StateNotifier<MomentState> {
     }
   }
 
-  Future<void> reportMoment(
-      {required String momentId,
-      required String reason,
-      String? comment,
-      required BuildContext context}) async {
+  Future<bool> reportMoment({
+    required String momentId,
+    required String reason,
+    String? comment,
+  }) async {
     try {
       state = state.copyWith(isReportingMoment: true);
       final userId = await _secureDataSource.getUserId();
       final response = await _momentRepository.reportMoment(
           userId: userId!, momentId: momentId, reason: reason);
-      if (response.success && context.mounted) {
-        // show success modal
-        WayaNav.goBack();
-        await WayaUtils.showNotice(
-            context: context,
-            title: "Report Submitted Successfully",
-            onPress: () {
-              WayaNav.goBack();
-            },
-            icon: Image.asset(
-              WayaAssets.images.eCheckEvent.path,
-              scale: 1.5,
-            ),
-            message: 'Thank you for reporting. We take your feedback seriously',
-            buttonText: 'Dismiss');
-        debugPrint(response.data.toString());
+      bool isSuccess = false;
+      if (response.success) {
+       
+        isSuccess = true;
+      } else {
+        
+        isSuccess = false;
       }
+
+      // if (response.success && context.mounted) {
+      // show success modal
+    //  WayaNav.goBack();
+      //
+      // await WayaUtils.showNotice(
+      //     context: context,
+      //     title: "Report Submitted Successfully",
+      //     onPress: () {
+      //       WayaNav.goBack();
+      //     },
+      //     icon: Image.asset(
+      //       WayaAssets.images.eCheckEvent.path,
+      //       scale: 1.5,
+      //     ),
+      //     message: 'Thank you for reporting. We take your feedback seriously',
+      //     buttonText: 'Dismiss');
+       print("fwfewfwef $isSuccess");
+      debugPrint(response.data.toString());
+      return isSuccess;
+
+      // }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
@@ -631,6 +641,7 @@ class MomentVm extends StateNotifier<MomentState> {
         WayaDebugEventModule.moments,
         WayaDebugHelpers.getStackTrace(e),
       );
+      return false;
     } finally {
       state = state.copyWith(isReportingMoment: false);
     }
