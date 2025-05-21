@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/data/model/model.dart';
@@ -12,15 +14,17 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/add_business_account/widget/add_document_widget.dart';
+import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
 import 'package:wayagram/features/support/modal/dispute.dart';
 import 'package:wayagram/features/support/vm/dispute.dart';
 
-class SupportDisputeScreen extends ConsumerStatefulWidget {
+class SupportDisputeScreen extends StatefulHookConsumerWidget {
   static const route = "/support/dispute";
   const SupportDisputeScreen({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _SupportChatScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SupportChatScreenState();
 }
 
 class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
@@ -37,6 +41,7 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final typeSelected = useState("");
 
     // Now, build the component.
     return WayaScaffold(
@@ -99,7 +104,10 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                     keyboardType: TextInputType.name,
                     controller: notifier.fullname,
                     hintText: 'Rufai Maleek',
-                    borderColor: formState.hasError && notifier.fullname.text.isEmpty ? theme.colorScheme.error : null,
+                    borderColor:
+                        formState.hasError && notifier.fullname.text.isEmpty
+                            ? theme.colorScheme.error
+                            : null,
                     label: 'Fullname',
                   ),
 
@@ -145,7 +153,10 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                     keyboardType: TextInputType.emailAddress,
                     controller: notifier.email,
                     hintText: 'example@gmail.com',
-                    borderColor: formState.hasError && notifier.email.text.isEmpty ? theme.colorScheme.error : null,
+                    borderColor:
+                        formState.hasError && notifier.email.text.isEmpty
+                            ? theme.colorScheme.error
+                            : null,
                     label: 'Email Address',
                   ),
 
@@ -204,7 +215,9 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                           width: 90,
                           padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            border: Border.all(color: theme.colorScheme.greyColor300, width: 1),
+                            border: Border.all(
+                                color: theme.colorScheme.greyColor300,
+                                width: 1),
                             borderRadius: BorderRadius.all(
                               Radius.circular(6.0),
                             ),
@@ -237,8 +250,10 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                             keyboardType: TextInputType.phone,
                             controller: notifier.phone,
                             hintText: '000-000-000',
-                            borderColor:
-                                formState.hasError && notifier.phone.text.isEmpty ? theme.colorScheme.error : null,
+                            borderColor: formState.hasError &&
+                                    notifier.phone.text.isEmpty
+                                ? theme.colorScheme.error
+                                : null,
                           ),
                         )
                       ],
@@ -287,13 +302,17 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                           label: "Dispute Type",
                           hintText: 'Select Type',
                           items: notifier.disputeType,
-                          onSelected: (value) => notifier.typeNotifier.value = value.first,
+                          onSelected: (value) {
+                            typeSelected.value = value.first.label;
+                            return notifier.typeNotifier.value = value.first;
+                          },
                         );
                       },
                     ),
 
                     //? If this has failed.
-                    if (formState.hasError && notifier.typeNotifier.value == null)
+                    if (formState.hasError &&
+                        notifier.typeNotifier.value == null)
                       Padding(
                         padding: const EdgeInsets.only(top: 5),
                         child: Text(
@@ -329,7 +348,10 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                     keyboardType: TextInputType.multiline,
                     controller: notifier.details,
                     hintText: 'Write a brief description of the issue',
-                    borderColor: formState.hasError && notifier.details.text.isEmpty ? theme.colorScheme.error : null,
+                    borderColor:
+                        formState.hasError && notifier.details.text.isEmpty
+                            ? theme.colorScheme.error
+                            : null,
                     line: 6,
                     maxLength: 450,
                     padding: const EdgeInsets.all(12),
@@ -356,124 +378,138 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
             const Gap(20),
 
             //? Sixth, the merchant's name.
-            FormField<String>(
-              validator: (value) {
-                if (notifier.merchantName.text.isEmpty) {
-                  return 'Merchant name is required';
-                }
-
-                // This has no errors.
-                return null;
-              },
-              builder: (formState) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+            if (typeSelected.value == "Shop")
+              Column(
                 children: [
-                  WayaTextFormField(
-                    keyboardType: TextInputType.name,
-                    controller: notifier.merchantName,
-                    hintText: 'Some Shop',
-                    borderColor:
-                        formState.hasError && notifier.merchantName.text.isEmpty ? theme.colorScheme.error : null,
-                    label: 'Merchant Name',
+                  FormField<String>(
+                    validator: (value) {
+                      if (notifier.merchantName.text.isEmpty) {
+                        return 'Merchant name is required';
+                      }
+
+                      // This has no errors.
+                      return null;
+                    },
+                    builder: (formState) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          keyboardType: TextInputType.name,
+                          controller: notifier.merchantName,
+                          hintText: 'Some Shop',
+                          borderColor: formState.hasError &&
+                                  notifier.merchantName.text.isEmpty
+                              ? theme.colorScheme.error
+                              : null,
+                          label: 'Merchant Name',
+                        ),
+
+                        //? If this has any errors or anything of the sort.
+                        if (formState.hasError &&
+                            notifier.fullname.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.error,
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
 
-                  //? If this has any errors or anything of the sort.
-                  if (formState.hasError && notifier.fullname.text.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Text(
-                        formState.errorText!,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.error,
-                          fontSize: 12.sp,
+                  // Some space.
+                  const Gap(10),
+
+                  //? Seventh, the merchant's URL.
+                  FormField<String>(
+                    validator: (value) {
+                      if (notifier.merchantLink.text.isEmpty) {
+                        return 'Merchant\'s unique ID  is required';
+                      }
+
+                      // This has no errors.
+                      return null;
+                    },
+                    builder: (formState) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          keyboardType: TextInputType.url,
+                          controller: notifier.merchantLink,
+                          hintText: 'https://wayagram.ng/shop/some-shop',
+                          borderColor: formState.hasError &&
+                                  notifier.merchantLink.text.isEmpty
+                              ? theme.colorScheme.error
+                              : null,
+                          label: 'Merchant ID',
                         ),
-                      ),
+
+                        //? If this has any errors or anything of the sort.
+                        if (formState.hasError &&
+                            notifier.merchantLink.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.error,
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
-                ],
-              ),
-            ),
-
-            // Some space.
-            const Gap(10),
-
-            //? Seventh, the merchant's URL.
-            FormField<String>(
-              validator: (value) {
-                if (notifier.merchantLink.text.isEmpty) {
-                  return 'Merchant\'s unique link  is required';
-                }
-
-                // This has no errors.
-                return null;
-              },
-              builder: (formState) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  WayaTextFormField(
-                    keyboardType: TextInputType.url,
-                    controller: notifier.merchantLink,
-                    hintText: 'https://wayagram.ng/shop/some-shop',
-                    borderColor:
-                        formState.hasError && notifier.merchantLink.text.isEmpty ? theme.colorScheme.error : null,
-                    label: 'Merchant Link',
                   ),
 
-                  //? If this has any errors or anything of the sort.
-                  if (formState.hasError && notifier.merchantLink.text.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Text(
-                        formState.errorText!,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.error,
-                          fontSize: 12.sp,
+                  // Some space.
+                  const Gap(10),
+
+                  //? Eighth, the product's URL.
+                  FormField<String>(
+                    validator: (value) {
+                      if (notifier.merchantLink.text.isEmpty) {
+                        return 'The Order\'s unique ID  is required';
+                      }
+
+                      // This has no errors.
+                      return null;
+                    },
+                    builder: (formState) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          keyboardType: TextInputType.url,
+                          controller: notifier.productLink,
+                          hintText: 'https://wayagram.ng/product/a-banana',
+                          borderColor: formState.hasError &&
+                                  notifier.productLink.text.isEmpty
+                              ? theme.colorScheme.error
+                              : null,
+                          label: 'Order ID',
                         ),
-                      ),
+
+                        //? If this has any errors or anything of the sort.
+                        if (formState.hasError &&
+                            notifier.productLink.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.error,
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
-                ],
-              ),
-            ),
-
-            // Some space.
-            const Gap(10),
-
-            //? Eighth, the product's URL.
-            FormField<String>(
-              validator: (value) {
-                if (notifier.merchantLink.text.isEmpty) {
-                  return 'The product\'s unique link  is required';
-                }
-
-                // This has no errors.
-                return null;
-              },
-              builder: (formState) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  WayaTextFormField(
-                    keyboardType: TextInputType.url,
-                    controller: notifier.productLink,
-                    hintText: 'https://wayagram.ng/product/a-banana',
-                    borderColor:
-                        formState.hasError && notifier.productLink.text.isEmpty ? theme.colorScheme.error : null,
-                    label: 'Product Link',
                   ),
-
-                  //? If this has any errors or anything of the sort.
-                  if (formState.hasError && notifier.productLink.text.isEmpty)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5),
-                      child: Text(
-                        formState.errorText!,
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: theme.colorScheme.error,
-                          fontSize: 12.sp,
-                        ),
-                      ),
-                    ),
                 ],
               ),
-            ),
 
             // Some space.
             const Gap(15),
@@ -501,7 +537,8 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                         removeFile: () {
                           notifier.proof.value = null;
                         },
-                        title: selectedProof?.uri.pathSegments.last ?? "Upload your document",
+                        title: selectedProof?.uri.pathSegments.last ??
+                            "Upload your document",
                         isUploaded: selectedProof != null,
                         description: "PDF format ・ Max. 5MB",
                       );
@@ -533,10 +570,12 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                 if (!_formKey.currentState!.validate()) return;
 
                 //? Since we sent this support request ticket.
-                if (await notifier.sendDisputeTicket()) {
+                if (await notifier
+                    .sendDisputeTicket(typeSelected.value == "Shop")) {
                   //? Leave this screen if the action was successful
                   WayaNav.goBack();
-
+                  //? update dispute list
+                  ref.read(disputeVmProvider.notifier).getDisputes();
                   //? Show the popup on the previous screen.
                   await WayaUtils.showModalSheet(
                     Get.context!,

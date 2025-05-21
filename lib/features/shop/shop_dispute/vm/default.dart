@@ -11,13 +11,15 @@ import 'package:wayagram/features/shop/shop_dispute/data/model/dispute_response_
 import 'package:wayagram/features/shop/shop_dispute/data/repo/shop_dispute_repository.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
 
-final sellerDisputeChatProvider = StateNotifierProvider<ChatNotifier, ChatState>(
+final sellerDisputeChatProvider =
+    StateNotifierProvider<ChatNotifier, ChatState>(
   (ref) => ChatNotifier(ChatState.initial),
 );
 
 class States {
   final bool isLoading;
   final List<DisputeModel> disputes;
+  final List<DisputeModel> disputesCopy;
   final DisputeModel? dispute;
   final int totalSize;
   final int totalPages;
@@ -29,6 +31,7 @@ class States {
   States(
       {this.isLoading = false,
       this.disputes = const [],
+      this.disputesCopy = const [],
       this.dispute,
       this.hasLoaded = false,
       this.page = 0,
@@ -40,6 +43,7 @@ class States {
   States copyWith(
       {bool? isLoading,
       List<DisputeModel>? disputes,
+      List<DisputeModel>? disputesCopy,
       int? totalSize,
       int? totalPages,
       bool? hasNextPage,
@@ -50,6 +54,7 @@ class States {
     return States(
         isLoading: isLoading ?? this.isLoading,
         dispute: dispute ?? this.dispute,
+        disputesCopy: disputesCopy ?? this.disputesCopy,
         nextPage: nextPage ?? this.nextPage,
         page: page ?? this.page,
         hasLoaded: hasLoaded ?? this.hasLoaded,
@@ -71,9 +76,11 @@ class DisputeVm extends StateNotifier<States> {
       final response = await repo.getUserDisputes();
 
       if (response.success) {
-        DisputeResponseModel responseModel = DisputeResponseModel.fromJson(response.data);
+        DisputeResponseModel responseModel =
+            DisputeResponseModel.fromJson(response.data);
         state = state.copyWith(
           disputes: responseModel.data.docs,
+          disputesCopy: responseModel.data.docs,
         );
         debugPrint(response.data.toString());
       }
@@ -114,7 +121,10 @@ class DisputeVm extends StateNotifier<States> {
 
   /// A helper function to open a shop dispute ticket
   Future<Map<String, String>?> openTicket(
-      {required String reason, Order? orderedItem, String? sellerId, required String reference}) async {
+      {required String reason,
+      Order? orderedItem,
+      String? sellerId,
+      required String reference}) async {
     try {
       final response = await repo.openTicket(
           reasonCategory: reason,
@@ -153,7 +163,8 @@ class DisputeVm extends StateNotifier<States> {
       state = state.copyWith(isLoading: true);
       String? media;
       if (mediaDoc != null) {
-        media = await WayaUtils.uploadFile(file: mediaDoc.file!, repository: _uploadFileRepository);
+        media = await WayaUtils.uploadFile(
+            file: mediaDoc.file!, repository: _uploadFileRepository);
       }
       final response = await repo.updateTicket(
           reasonCategory: reason,
@@ -201,6 +212,25 @@ class DisputeVm extends StateNotifier<States> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  void filterList(String filterString) {
+    if (filterString.trim().isEmpty) {
+      state = state.copyWith(disputes: [...state.disputesCopy]);
+      return;
+    }
+    var list = state.disputesCopy.where((dispute) {
+      String ref = dispute.reference ?? "";
+      if (dispute.disputeType.contains(filterString) ||
+          dispute.ticketBody.details.contains(filterString) ||
+          dispute.id.contains(filterString) ||
+          dispute.status.contains(filterString) ||
+          ref.contains(filterString)) {
+        return true;
+      }
+      return false;
+    }).toList();
+    state = state.copyWith(disputes: [...list]);
   }
 }
 
