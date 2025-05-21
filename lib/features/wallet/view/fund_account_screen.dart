@@ -62,18 +62,17 @@ class _FundBankAccountScreenState extends ConsumerState<FundAccountScreen> {
   void _handleSubmit() async {
     // Convert amount string to double for comparison
     double numericAmount = double.tryParse(amount) ?? 0;
-
-    // Validate amount
-    // if (num.parse(amount) < num.parse("50.00") ) {
-    //   setState(() {
-    //     errorMessage = "Please amount cannot be less than N50";
-    //   });
-    //   return;
-    // }
     
     if (amount == "0.00" || amount == "0" || amount.startsWith("00")) {
       setState(() {
         errorMessage = "Please enter a valid amount";
+      });
+      return;
+    }
+
+    if (numericAmount <= 50) {
+      setState(() {
+        errorMessage = "Amount must be greater than 50 NGN";
       });
       return;
     }

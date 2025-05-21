@@ -18,8 +18,15 @@ import 'package:wayagram/features/explore/search/model/user_detail.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/features/explore/search/widgets/user_widget.dart';
 import 'package:wayagram/shared/features/moments/notifier/default.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
+import 'package:wayagram/shared/features/profile/widget/group.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
+
+import '../../../shared/features/group/notifier/default.dart';
+import '../../../shared/features/profile/model/groups.dart';
+import '../../../shared/features/profile/model/pages.dart';
+import '../../../shared/features/profile/widget/page.dart';
 
 class SearchView extends ConsumerStatefulWidget {
   static const route = "/search";
@@ -116,11 +123,28 @@ class _SearchState extends ConsumerState<SearchView> {
       query,
     );
 
+    //? Groups
+    final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
+      myGroupNotifier.createdGroups,
+      ['name', 'description'],
+      query,
+    );
+
+    //? Pages
+    final List<PageModel> filteredPages = WayaUtils.strictSearch<PageModel>(
+      myPageNotifier.createdPages,
+      ['name', 'description'],
+      query,
+    );
+
+
     final serviceData = {
       'Post': filteredPosts,
       'Account': filteredAccounts,
       'Moment': filteredMoments,
-      'Event': filteredEvents
+      'Event': filteredEvents,
+      'Group': filteredGroups,
+      'Page': filteredPages
     };
     final matchingServices = serviceData.entries
         .where((entry) => (entry.value as List).isNotEmpty)
@@ -348,6 +372,29 @@ class _SearchState extends ConsumerState<SearchView> {
           (index) => EventCard(
             event: data[index],
             userId: ConversationState.self.id,
+          ),
+        ),
+      );
+    } else if (service == 'Group' && data is List<GroupModel>) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(
+          data.length,
+              (index) => SingleGroupWidget(
+                group: myGroupNotifier.createdGroups[index],
+                index: index,
+              ),
+        ),
+      );
+    }
+    else if (service == 'Page' && data is List<PageModel>) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(
+          data.length,
+              (index) => SinglePageWidget(
+            page: myPageNotifier.createdPages[index],
+            index: index,
           ),
         ),
       );
