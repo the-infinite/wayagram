@@ -3,6 +3,7 @@ import 'package:wayagram/core/controller/debug_console.dart';
 import 'package:wayagram/core/data/secure_data_source.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/data/repo/explore_repository.dart';
+import 'package:wayagram/features/pages/data/repo/page_repository.dart';
 import 'package:wayagram/features/ugt/data/model/ugt_model.dart';
 import 'package:wayagram/shared/cache/post.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
@@ -49,9 +50,12 @@ class ExploreState {
 
 class ExploreVm extends StateNotifier<ExploreState> {
   final Ref ref;
-  final ExploreRepository _exploreRepository;
+  final  _exploreRepository = ExploreRepository.instance;
   final WayaSecureDataSource _secureDataSource;
-  ExploreVm(this._secureDataSource, this._exploreRepository, this.ref) : super(ExploreState.initial) {
+  final PageRepository _pageRepository;
+  ExploreVm(this._secureDataSource,
+      this._pageRepository, this.ref)
+      : super(ExploreState.initial) {
     initialize();
   }
 
@@ -70,6 +74,18 @@ class ExploreVm extends StateNotifier<ExploreState> {
     )
   ];
 
+  Future<dynamic> getSinglePosts({required String postId}) async {
+    final response = await _pageRepository.fetchAPost(postId);
+    if (response.success) {
+      final data = response.data['data'];
+      dynamic result = data;
+      result['originalPost'] = null;
+      return result;
+    } else {
+      return null;
+    }
+  }
+
   Future<void> getUserFeeds() async {
     //? If this has no more...
     if (!state.hasMore) {
@@ -84,8 +100,18 @@ class ExploreVm extends StateNotifier<ExploreState> {
 
       if (response.success) {
         final data = response.data['data'];
+        //originalPostId
         final posts = data['docs'] as List;
-        final recent = posts.map((e) => PostModel.fromJson(e));
+        final recent = await Future.wait(posts.map((e) async {
+          if (e["originalPostId"] != null) {
+            final originalPost =
+                await getSinglePosts(postId: e["originalPostId"]);
+           
+
+            e['originalPost'] = originalPost;
+          }
+          return PostModel.fromJson(e);
+        }));
 
         //? Fetch the posts.
         final result = [...state.posts];
@@ -119,5 +145,6 @@ class ExploreVm extends StateNotifier<ExploreState> {
 }
 
 final exploreVmProvider = StateNotifierProvider<ExploreVm, ExploreState>((ref) {
-  return ExploreVm(WayaSecureDataSource(), ExploreRepository(), ref);
+  return ExploreVm(
+      WayaSecureDataSource(), PageRepository(), ref);
 });
