@@ -63,7 +63,7 @@ class MomentRepository extends BaseRepository {
   }
 
 // /
-  Future<WayaRequestResponse> getAllMoments({int? limit = 1000}) async {
+  Future<WayaRequestResponse> getAllMoments({int? limit = 100}) async {
     return get("$serviceUrl/moments/get-active?limit=$limit");
   }
 
