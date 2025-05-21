@@ -34,6 +34,33 @@ class ProfileVm extends StateNotifier<ProfileState> {
     getUserData();
   }
 
+  void updateUniqueFields(
+      {required String code,
+      required String purpose,
+      String? email,
+      String? phone}) async {
+    //final userId = _localDataSource.getUserId();
+
+    try {
+      state = ProfileState(isLoading: true);
+
+      final response = await _profileRepo.updateEmailOrPhone(
+          userId: ConversationState.self.id,
+          phone: phone,
+          email: email,
+          otp: code,
+          purpose: purpose);
+      if (response.success) {
+        WayaSnackBar.showToast('Account Updated Successfully');
+
+        await logOutUser();
+      }
+      state = ProfileState(isLoading: false);
+    } catch (e) {
+      state = ProfileState(isLoading: false);
+    }
+  }
+
   void updateAccount({String? dob, String? address}) async {
     final userId = _localDataSource.getUserId();
 

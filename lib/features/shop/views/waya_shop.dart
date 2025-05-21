@@ -21,12 +21,12 @@ class WayaShop extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _WayaShopState();
 }
 
-class _WayaShopState extends ConsumerState<WayaShop> with SingleTickerProviderStateMixin {
+class _WayaShopState extends ConsumerState<WayaShop>
+    with SingleTickerProviderStateMixin {
   int _selectedIndex = 0;
 
   @override
   void initState() {
-    
     _selectedIndex = widget.currentIndex;
     super.initState();
   }
@@ -39,7 +39,8 @@ class _WayaShopState extends ConsumerState<WayaShop> with SingleTickerProviderSt
       isLoading: ref.watch(createShopVmProvider).isLoading,
       isScrollable: false,
       progressIndicator: loadingState(context: context),
-      onTapBackButton: () => WayaNav.toNamed(BottomView.route, arguments: 0, preventDuplicates: false),
+      onTapBackButton: () => WayaNav.toNamed(BottomView.route,
+          arguments: 0, preventDuplicates: false),
       title: 'Shop',
       appBarTrailing: WayaCartIcon(),
       body: Column(
@@ -71,12 +72,14 @@ class _WayaShopState extends ConsumerState<WayaShop> with SingleTickerProviderSt
         ],
       ),
       floatingActionButton: Visibility(
-        visible: ConversationState.self.role != 'PERSONAL' && _selectedIndex == 2,
+        visible:
+            ConversationState.self.role != 'PERSONAL' && _selectedIndex == 2,
         child: SizedBox(
           height: 50,
           width: 50,
           child: WayaButton(
-            callback: () => WayaNav.toNamed(CreateShop.route, arguments: CreateShopArg(uniqueKey: 'create-shop')),
+            callback: () => WayaNav.toNamed(CreateShop.route,
+                arguments: CreateShopArg(uniqueKey: 'create-shop')),
             height: 50,
             centerWidget: Center(
               child: Icon(

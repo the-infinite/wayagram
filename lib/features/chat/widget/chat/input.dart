@@ -359,6 +359,7 @@ class ChatInputController {
   SendMessageDto get buildMessage {
     // This is fine.
     return SendMessageDto(
+      id: WayaValueHelper.createUid(),
       chatId: chat.id,
       type: _currentType.value,
       momentId: _momentId,
@@ -631,6 +632,7 @@ class _ChatInputWidgetState extends State<ChatInputWidget> {
                       return ChatReplyToWidget(
                         message: message,
                         controller: widget.controller,
+                        chat: chat!,
                       );
                     },
                   ),

@@ -316,8 +316,6 @@ class _DonationPinEntryBottomSheetState extends ConsumerState<DonationPinEntryBo
 
   void _submitPin() async {
     if (_pin.length == _pinLength) {
-      // TODO: Submit PIN
-      // log('PIN submitted: $_pin');
       var isPass = await ref.read(donationVmProvider.notifier).verifyWalletPin(_pin, context);
 
       if (isPass) {

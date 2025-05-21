@@ -94,6 +94,63 @@ class PageNotifier extends ValueNotifier<int> {
     return result;
   }
 
+
+  Future<List<PageModel>> getManagedPages() async {
+
+    final result = <PageModel>[];
+
+    //? If there is nothing to see or get, leave.
+    if (!hasMoreCreatedPages) return createdPages;
+
+    //? If is now loading.
+    isLoading = true;
+
+    //? Refresh.
+    refresh();
+
+    //? Now, try actually fetching the groups.
+    try {
+      final response = await repo.getAllManagedPages( createdPage, limit);
+
+      //? If this was successful.
+      if (!response.success) return createdPages;
+
+      //? Then continue onward.
+      final responseModel = PagesUsersFollowModel.fromJson(response.data);
+
+      //? If there were older pages to this thing...
+      if (createdPage > 1) {
+        result.addAll(createdPages);
+      }
+
+      //? This is good.
+      totalCreatedPages = responseModel.data?.totalDocs?.toInt() ?? 0;
+      createdPage = responseModel.data?.nextPage?.toInt() ?? 1;
+      hasMoreCreatedPages = responseModel.data?.hasNextPage ?? true;
+
+      //? Now add the newly fetched groups.
+      result.addAll(responseModel.data?.docs ?? []);
+      wayaPageCache.cacheAll(responseModel.data?.docs ?? []);
+
+      //? Now, update our value.
+      createdPages = result;
+      isLoading = false;
+
+      //? Now, refresh.
+      refresh();
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.pages,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Return the result.
+    return result;
+  }
+
   /// Retrieves a list of pages that the current user follows.
   ///
   /// Makes an asynchronous request to fetch all the pages that the authenticated

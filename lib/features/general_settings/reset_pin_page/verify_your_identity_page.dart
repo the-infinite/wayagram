@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
@@ -8,8 +10,11 @@ import 'package:flutter_verification_code/flutter_verification_code.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/auth/account_creation/vm/verify_account_vm.dart';
+import 'package:wayagram/features/chat/state/default.dart';
+import 'package:wayagram/features/general_settings/profile/data/model/profile_edit_type_model.dart';
+import 'package:wayagram/features/general_settings/profile/view/edit_name.dart';
 
-class VerifyYourIdentityPage extends ConsumerWidget {
+class VerifyYourIdentityPage extends ConsumerStatefulWidget {
   static const route = '/verify-your-identity';
 
   const VerifyYourIdentityPage({
@@ -17,10 +22,72 @@ class VerifyYourIdentityPage extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _VerifyIdentityPageState();
+}
+
+class _VerifyIdentityPageState extends ConsumerState<VerifyYourIdentityPage> {
+  int countDown = 60;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final dynamic args = ModalRoute.of(context)!.settings.arguments;
+
+      if (args != null) {
+        ProfileEditType type = args['type'] as ProfileEditType;
+        if (type == ProfileEditType.email) {
+          ref
+              .read(verifyAccountProvider.notifier)
+              .requestOtp(purpose: "CHANGE_OF_EMAIL", email: args['initial']);
+        } else {
+          ref.read(verifyAccountProvider.notifier).requestOtp(
+              purpose: "CHANGE_OF_PHONE", phone: "234${args['initial']}");
+        }
+      }
+
+      startCountdown();
+    });
+    super.initState();
+  }
+
+  void startCountdown() {
+    _timer?.cancel();
+    _timer = Timer.periodic(
+      Duration(seconds: 1),
+      (timer) {
+        if (countDown > 0) {
+          setState(() {
+            countDown = countDown - 1;
+          });
+        } else {
+          _timer?.cancel();
+        }
+      },
+    );
+  }
+
+  void cancelTimer() {
+    _timer?.cancel();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    cancelTimer();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final viewModelState = ref.watch(verifyAccountProvider);
     final viewModel = ref.watch(verifyAccountProvider.notifier);
     final wayaTheme = Theme.of(context);
+
+    // for editing email or phone
+    final dynamic args = ModalRoute.of(context)!.settings.arguments;
 
     return WayaScaffold(
       body: Column(
@@ -80,51 +147,73 @@ class VerifyYourIdentityPage extends ConsumerWidget {
             alignment: Alignment.center,
             child: viewModelState.isResend
 
-            //? What to show when the user can resend this.
+                //? What to show when the user can resend this.
                 ? GestureDetector(
-              onTap: () {
-                if (!viewModelState.isLoading) {
-                  viewModel.resendOtp();
-                }
-              },
-              child: Container(
-                width: 110,
-                alignment: Alignment.center,
-                padding: EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                    color: wayaTheme.colorScheme.primary75, borderRadius: BorderRadius.all(Radius.circular(8))),
-                child: Text(
-                  "Resend OTP",
-                  style: WayaTextStyles.smallActiveLinkStyle,
-                ),
-              ),
-            )
+                    onTap: () {
+                      if (!viewModelState.isLoading) {
+                        setState(() {
+                          countDown = 60;
+                        });
+                        startCountdown();
+                        if (args != null) {
+                          ProfileEditType type =
+                              args['type'] as ProfileEditType;
+                          if (type == ProfileEditType.email) {
+                            ref.read(verifyAccountProvider.notifier).requestOtp(
+                                purpose: "CHANGE_OF_EMAIL",
+                                email: args['initial']);
+                          } else {
+                            ref.read(verifyAccountProvider.notifier).requestOtp(
+                                purpose: "CHANGE_OF_PHONE",
+                                 phone: "234${args['initial']}");
+                          }
+                        } else {
+                          ref
+                              .read(verifyAccountProvider.notifier)
+                              .requestEmailOtp();
+                        }
+                        // viewModel.resendOtp();
+                      }
+                    },
+                    child: Container(
+                      width: 110,
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                          color: wayaTheme.colorScheme.primary75,
+                          borderRadius: BorderRadius.all(Radius.circular(8))),
+                      child: Text(
+                        "Resend OTP",
+                        style: WayaTextStyles.smallActiveLinkStyle,
+                      ),
+                    ),
+                  )
                 : Container(
-              width: 200,
-              alignment: Alignment.center,
-              padding: EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.primary75,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(8),
-                ),
-              ),
-              child: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: "Didn't get any code? ",
-                      style: WayaTextStyles.bodySmall,
+                    width: 200,
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: wayaTheme.colorScheme.primary75,
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8),
+                      ),
                     ),
-                    TextSpan(
-                      text:
-                      "Resend ${viewModelState.countdown ~/ 60}:${(viewModelState.countdown % 60).toString().padLeft(2, '0')}",
-                      style: WayaTextStyles.smallActiveLinkStyle,
+                    child: RichText(
+                      text: TextSpan(
+                        children: [
+                          TextSpan(
+                            text: "Didn't get any code? ",
+                            style: WayaTextStyles.bodySmall,
+                          ),
+                          TextSpan(
+                            text:
+                                "Resend ${countDown ~/ 60}:${(countDown % 60).toString().padLeft(2, '0')}",
+                            style: WayaTextStyles.smallActiveLinkStyle,
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
           ),
 
           // Some space.
@@ -134,18 +223,37 @@ class VerifyYourIdentityPage extends ConsumerWidget {
           WayaButton(
             callback: !viewModelState.isLoading
                 ? () {
-                final code = ref.watch(verifyAccountProvider).inputCode;
-                debugPrint('DARLINGTON Code ==> $code');
+                    final code = ref.watch(verifyAccountProvider).inputCode;
+                    debugPrint('DARLINGTON Code ==> $code');
 
-                //viewModel.verifyYourIdentity(() => WayaNav.to(const ResetPinPage()), code);
-                // viewModel.verifyYourIdentity((){
-                //
-                // }, code);
+                    //viewModel.verifyYourIdentity(() => WayaNav.to(const ResetPinPage()), code);
+                    // viewModel.verifyYourIdentity((){
+                    //
+                    // }, code);
+                    if (args != null) {
+                      ProfileEditType type = args['type'] as ProfileEditType;
+                      if (type == ProfileEditType.email) {
+                        WayaNav.replaceNamed(
+                          EditNamePage.route,
+                          arguments: ProfileEditArguments(
+                              editType: ProfileEditType.email,
+                              initialValue: args['initial'],
+                              code: code),
+                        );
+                      } else {
+                        WayaNav.replaceNamed(EditNamePage.route,
+                            arguments: ProfileEditArguments(
+                                editType: ProfileEditType.phone,
+                                initialValue: args['initial'],
+                                code: code));
+                      }
 
-                WayaNav.replaceNamed('/reset-pin-page', arguments: {
-                  'code': code
-                });
-            }
+                      return;
+                    }
+
+                    WayaNav.replaceNamed('/reset-pin-page',
+                        arguments: {'code': code});
+                  }
                 : null,
             centerWidget: LoadingState(
               loading: viewModelState.isLoading,

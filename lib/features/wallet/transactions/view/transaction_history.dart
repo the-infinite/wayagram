@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/features/wallet/transactions/model/transaction_history_model.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_model.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
@@ -30,9 +31,9 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
   bool hasNextPage = true;
   final ScrollController _scrollController = ScrollController();
   bool isLoadingMore = false;
-  List<TransactionDetail> transactions = [];
+  //List<TransactionDetail> transactions = [];
   bool isFirstLoad = true;
-  List<TransactionModelDocs> docs = [];
+  List<TransactionHistoryModelDocs> docs = [];
   @override
   void initState() {
     super.initState();

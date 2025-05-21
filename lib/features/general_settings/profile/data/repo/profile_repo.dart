@@ -26,6 +26,24 @@ class ProfileRepo extends BaseRepository {
     return patch('$serviceUrl/client/users/$userId/update', payload);
   }
 
+  Future<WayaRequestResponse> updateEmailOrPhone(
+      {required String userId,
+      required String purpose,
+      required String otp,
+      String? email,
+      String? phone}) {
+    final payload = {"purpose": purpose, "otp": otp};
+
+    if (email != null) payload['newEmail'] = email;
+    if (phone != null) payload['newPhoneNumber'] = phone;
+
+    print(payload);
+
+    return patch(
+        '$serviceUrl/client/users/$userId/email-or-phone/update', payload,
+        showErrors: true);
+  }
+
   Future<WayaRequestResponse> updateProfileRepo(
       {required String userId,
       String? username,
@@ -63,7 +81,7 @@ class ProfileRepo extends BaseRepository {
   }
 
   Future<WayaRequestResponse> postDisputeDetails(payload) async {
-    print(payload);
+
     return post("$serviceUrl2/client/dispute", payload, formdata: false);
   }
 

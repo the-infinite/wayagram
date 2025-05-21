@@ -108,6 +108,11 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/posts?id=$postId");
   }
 
+    Future<WayaRequestResponse> fetchAPost(postId) {
+    return get("$serviceUrl/posts/$postId");
+  }
+
+
   Future<WayaRequestResponse> commentOnPost(
       String postId, String content, String? parentCommentId) {
     final payload = {
@@ -122,8 +127,8 @@ class PageRepository extends BaseRepository {
     return post("$serviceUrl/reports/create", payload, showErrors: true);
   }
 
-  Future<WayaRequestResponse> reportPost(String postId, String reason) {
-    final payload = {"postId": postId, "reason": reason};
+  Future<WayaRequestResponse> reportPost(String postId, String reason, String? comment) {
+    final payload = {"postId": postId, "reason": reason, "comment": comment};
     // return post("$serviceUrl/posts/report", payload, showErrors: true);
     return post("$serviceUrl/reports/create", payload, showErrors: true);
   }
@@ -234,6 +239,14 @@ class PageRepository extends BaseRepository {
       [int page = 1, int limit = 500]) {
     return get(
         "$serviceUrl/pages?page=$page&limit=$limit&ownerId=$ownerId&orderBy=createdAt&orderDirection=DESC");
+  }
+
+  Future<WayaRequestResponse> getAllManagedPages( [int page = 1, int limit = 500]) {
+    return get("$serviceUrl/pages/my-managed-pages?limit=$limit&page=1&orderBy=createdAt&orderDirection=DESC");
+  }
+
+  Future<WayaRequestResponse> getAllPagesSearch( [int page = 1, int limit = 500]) {
+    return get("$serviceUrl/pages?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
   }
 
   Future<WayaRequestResponse> getSinglePage(String pageId) {

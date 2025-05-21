@@ -10,6 +10,7 @@ import 'package:wayagram/features/polls_and_voting/data/model/get_my_poll.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/get_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/single_dashboard_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/single_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/vote_url_model.dart';
 
 class CreatePollVotingState {
@@ -29,6 +30,7 @@ class CreatePollVotingState {
   final VoteUrlData? voteUrlData;
   final List<PollDashboardModelDocs> pollDashboardModelDocs;
   final List<PollDashboardChoices> pollDashboardChoices;
+  List<SinglePollModelDocs> singlePollDocs;
 
   final String moneyGenerated;
   final String voteCount;
@@ -51,6 +53,7 @@ class CreatePollVotingState {
   List<GetAllPollData> getAllPollModel;
   List<PollData> getMyPollModel;
   List<CastVoteData> castVoteModel;
+  List<SinglePollModelDocs> singlePollModelDocs;
 
   CreatePollVotingState({
     TextEditingController? pollTitle,
@@ -87,6 +90,8 @@ class CreatePollVotingState {
     this.votes = const [],
     this.castVoteModel = const [],
     this.pollTypes = const [],
+    this.singlePollModelDocs = const [],
+    this.singlePollDocs = const [],
     this.feedPolls = const [],
     this.uploadedDocuments = const [],
     this.isPersonalNotUpgradedToBusiness = false,
@@ -140,6 +145,7 @@ class CreatePollVotingState {
     List<Select>? pollTypes,
     List<Docs>? feedPolls,
     List<PollDashboardChoices>? pollDashboardChoices,
+    List<SinglePollModelDocs>? singlePollModelDocs,
   }) {
     return CreatePollVotingState(
         isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ??
@@ -184,8 +190,9 @@ class CreatePollVotingState {
         feedPolls: feedPolls ?? this.feedPolls,
         numberOfPeopleVoted: numberOfPeopleVoted ?? this.numberOfPeopleVoted,
         moneyGenerated: moneyGenerated ?? this.moneyGenerated,
-        pollDashboardChoices:
-            pollDashboardChoices ?? this.pollDashboardChoices);
+        pollDashboardChoices: pollDashboardChoices ?? this.pollDashboardChoices,
+        singlePollModelDocs: singlePollModelDocs ?? this.singlePollModelDocs
+    );
   }
 }
 

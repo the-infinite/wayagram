@@ -95,6 +95,61 @@ class GroupNotifier extends ValueNotifier<int> {
     return result;
   }
 
+  Future<List<GroupModel>> getMyGroups() async {
+    final result = <GroupModel>[];
+
+    //? If there is nothing to see or get, leave.
+    if (!hasMoreCreatedGroups) return createdGroups;
+
+    //? This is loading.
+    isLoading = true;
+
+    //? Then refresh.
+    refresh();
+
+    //? Now, try actually fetching the groups.
+    try {
+      final response = await repo.getMyGroups(createdGroupPage, limit);
+
+      //? If this was successful.
+      if (!response.success) return createdGroups;
+
+      //? Then continue onward.
+      final responseModel = GetAllGroups.fromJson(response.data);
+
+      //? If there were older pages to this thing...
+      if (createdGroupPage > 1) {
+        result.addAll(createdGroups);
+      }
+
+      //? This is good.
+      totalCreatedGroups = responseModel.data?.totalDocs?.toInt() ?? 0;
+      createdGroupPage = responseModel.data?.nextPage?.toInt() ?? 1;
+      hasMoreCreatedGroups = responseModel.data?.hasNextPage ?? true;
+
+      //? Now add the newly fetched groups.
+      result.addAll(responseModel.data?.docs ?? []);
+      wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
+
+      //? Now, update our value.
+      createdGroups = result;
+      isLoading = false;
+
+      //? Now, refresh.
+      refresh();
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    }
+
+    //? Return the result.
+    return result;
+  }
+
   /// Retrieves a list of groups that the current user has joined.
   ///
   /// Makes an asynchronous request to fetch all groups where the current user
