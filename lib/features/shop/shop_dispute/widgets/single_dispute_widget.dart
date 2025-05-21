@@ -25,7 +25,7 @@ class SingleDisputeWidget extends ConsumerWidget {
     void toDispute() async {
       conversationNotifier.dismissOverlay();
       notifier.setChat(
-          (await conversationNotifier.getChatDetails(dispute.chatId))!);
+          (await conversationNotifier.getChatDetails(dispute.chatId??""))!);
       notifier.markAllAsRead().then((result) {
         if (!result) return;
         conversationNotifier.getChats(true);
