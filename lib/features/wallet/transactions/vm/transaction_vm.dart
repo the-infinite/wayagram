@@ -7,6 +7,7 @@ import 'package:wayagram/core/service/repos/transactions/transaction_history_mod
 import 'package:wayagram/core/service/repos/transactions/transaction_repository.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
+import 'package:wayagram/features/wallet/transactions/model/transaction_history_model.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_state_model.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_model.dart';
 
@@ -34,13 +35,13 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
       debugPrint('Status Code: ${response.statusCode}');
 
       if (response.success) {
-        TransactionModel responseModel =
-            TransactionModel.fromJson(response.data);
+        TransactionHistoryModel responseModel = TransactionHistoryModel.fromJson(response.data);
+      debugPrint('DIALA TRANSACTION HISTORY ===>>> ${responseModel.data?.docs.toString()}');
         state = state.copyWith(
             isLoading: false,
             docs: responseModel.data?.docs,
-            totalCreditTransaction: double.parse('${responseModel.data?.totalCreditTransaction}'),
-            totalDebitTransaction: double.parse('${responseModel.data?.totalDebitTransaction}'),
+            totalCreditTransaction: responseModel.data?.totalCreditTransaction== null ? 0:  double.parse('${responseModel.data?.totalCreditTransaction}') ,
+            totalDebitTransaction: responseModel.data?.totalDebitTransaction == null ? 0 : double.parse('${responseModel.data?.totalDebitTransaction}'),
             hasNextPage: responseModel.data?.hasNextPage);
       }
     } catch (e) {

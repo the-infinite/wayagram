@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import '../../../shared/features/pages/notifier/default.dart';
 import 'edit_page_info.dart';
 import 'page_post.dart';
 import 'team_page.dart';

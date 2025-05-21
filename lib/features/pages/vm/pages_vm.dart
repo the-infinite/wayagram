@@ -682,6 +682,7 @@ class PageVm extends StateNotifier<PageState> {
       final response = await _pageRepository.deletePage(pageId);
       if (response.success) {
         wayaPostCache.deleteItem(pageId);
+        myPageNotifier.getManagedPages();
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Page deleted successfully!'),
@@ -689,6 +690,7 @@ class PageVm extends StateNotifier<PageState> {
             duration: Duration(seconds: 2),
           ),
         );
+        myPageNotifier.getManagedPages();
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
