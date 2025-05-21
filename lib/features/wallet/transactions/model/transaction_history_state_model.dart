@@ -9,6 +9,7 @@ class TransactionHistoryState {
   final bool? verified;
   final bool? isFirstLoad;
 
+
   final bool? hasNextPage;
   final bool? isLoadingMore;
   final List<TransactionDetail>? transactions;
