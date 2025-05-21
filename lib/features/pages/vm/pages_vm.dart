@@ -318,7 +318,8 @@ class PageVm extends StateNotifier<PageState> {
   }) async {
     try {
       state = state.copyWith(isReportingPost: true);
-      final response = await _pageRepository.reportPost(postId, reason);
+      final response =
+          await _pageRepository.reportPost(postId, reason, comment);
 
       if (response.success) {
         wayaPostCache.deleteItem(postId);
@@ -335,7 +336,7 @@ class PageVm extends StateNotifier<PageState> {
           ),
           message:
               'Your report has been submitted. Our team will review the issue and take appropriate action.',
-          buttonText: 'Go to Page Dashboard',
+          buttonText: 'Go Back',
         );
 
         // This is fine.
@@ -361,7 +362,8 @@ class PageVm extends StateNotifier<PageState> {
   }) async {
     try {
       state = state.copyWith(isReportingPost: true);
-      final response = await _pageRepository.reportPost(postId, reason);
+      final response =
+          await _pageRepository.reportPost(postId, reason, comment);
 
       if (response.success) {
         wayaPostCache.deleteItem(postId);
@@ -794,11 +796,14 @@ class PageVm extends StateNotifier<PageState> {
     return false;
   }
 
-  Future<void> editPost(
-      ctx, content, postType, List<XFile> images, postId) async {
+  Future<void> editPost(ctx, content, postType, List<XFile> images, postId,
+      List<String>? prevouslySelectedMedia) async {
     List<UploadedImage> urls = [];
     List<String> publicUrl = [];
     // get url
+
+    state = state.copyWith(isLoading: true);
+
     for (XFile image in images) {
       final uploadImageResponse =
           await _pageRepository.getUploadImage(image.name);
@@ -817,6 +822,7 @@ class PageVm extends StateNotifier<PageState> {
       final putImageResponse = await _pageRepository.putImage(url.url, file);
       //? This is fine.
       if (!(putImageResponse.success && ctx.mounted)) {
+        state = state.copyWith(isLoading: false);
         ScaffoldMessenger.of(ctx).showSnackBar(
           const SnackBar(
             content: Text('Failed to create post'),
@@ -828,8 +834,13 @@ class PageVm extends StateNotifier<PageState> {
       }
     }
 
+    // if there is prev selected
+    if (prevouslySelectedMedia != null) {
+      publicUrl.addAll([...prevouslySelectedMedia]);
+    }
+
     try {
-      state = state.copyWith(isLoading: true);
+      // state = state.copyWith(isLoading: true);
       final response =
           await _pageRepository.editPost(content, publicUrl, postType, postId);
       state = state.copyWith(isLoading: false);

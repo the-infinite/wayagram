@@ -112,7 +112,8 @@ class SavedPostState {
 
   factory SavedPostState.fromJson(Map<String, dynamic> json) {
     return SavedPostState(
-      bookmarks: (json["docs"] as List).map((e) => BookmarkModel.fromJson(e)).toList(),
+      bookmarks:
+          (json["docs"] as List).map((e) => BookmarkModel.fromJson(e)).toList(),
       totalSize: json["totalDocs"],
       limit: json["limit"],
       page: json["page"],
@@ -177,3 +178,4 @@ class SavedPostState {
     return bookmarks.any((post) => post.postId == id);
   }
 }
+

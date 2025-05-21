@@ -341,10 +341,12 @@ class WayaAppRoutes {
           id: WayaNav.search['id'].toString(),
         ),
     EditPost.route: () => EditPost(
-          initialContent: '',
-          initialImageUrl: '',
-          title: '',
-          postId: '',
+       
+          initialContent: WayaNav.search['initialContent'].toString(),
+          initialMedia:  WayaNav.search['initialMedia'].toString(),
+     
+          postId: WayaNav.search['postId'].toString(),
+          privacy: WayaNav.search['privacy'].toString(),
         ),
     AddGroupMember.route: () =>
         AddGroupMember(id: WayaNav.search['id'].toString()),
@@ -542,6 +544,10 @@ class WayaAppRoutes {
   /// to edit the profile of a single chat group.
   static String getEditChatGroupProfileScreen(String id, String chatId) =>
       "${EditChatGroupScreen.route}?id=$id&chatId=$chatId";
+
+
+    static String getEditPostScreen(String postId, String content, String privacy, String media) =>
+      "${EditPost.route}?postId=$postId&privacy=$privacy&initialContent=$content&initialMedia=$media";   
 
   /// This is fine.
   static List<GetPage> get getPages {
