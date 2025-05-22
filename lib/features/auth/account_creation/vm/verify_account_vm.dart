@@ -8,6 +8,7 @@ import 'package:wayagram/features/auth/account_creation/vm/personal_first_step_v
 import 'package:wayagram/features/auth/data/model/auth_model.dart';
 import 'package:wayagram/features/auth/data/repo/auth_repository.dart';
 import 'package:wayagram/core/service/snackbar_service.dart';
+import 'package:wayagram/features/chat/state/default.dart';
 
 class VerifyAccountState {
   bool isEditing;
@@ -19,7 +20,7 @@ class VerifyAccountState {
   VerifyAccountState({
     this.inputCode = '',
     this.isEditing = false,
-    this.countdown = 900,
+    this.countdown = 60,
     this.isResend = false,
     this.isLoading = false,
   });
@@ -80,6 +81,8 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
     state = state.copyWith(isEditing: value);
   }
 
+  void reset() {}
+
   Future<void> verifyPhone(
       {required VoidCallback onSuccess, required String code}) async {
     final personalPhone = ref.watch(personalFirstStepProvider).phoneNumber.text;
@@ -112,6 +115,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
             variant: SnackbarType.success,
             message: "OTP has been resend to 234$personalPhone");
         state = state.copyWith(isResend: false);
+
         //? Start the countdown since our attempt to resend the OTP was successful.
         startCountdown();
       }
@@ -208,6 +212,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
             variant: SnackbarType.success,
             message: "OTP has been resend to $email");
         state = state.copyWith(isResend: false);
+
         //? Start the countdown since our attempt to resend the OTP was successful.
         startCountdown();
       }
@@ -226,6 +231,7 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
             variant: SnackbarType.success,
             message: "OTP has been resend to $email");
         state = state.copyWith(isResend: false);
+
         //? Start the countdown since our attempt to resend the OTP was successful.
         startCountdown();
       }
@@ -258,6 +264,17 @@ class VerifyAccountVm extends Notifier<VerifyAccountState> {
 
   void cancelTimer() {
     _timer?.cancel();
+  }
+
+  Future<void> requestOtp(
+      {required String purpose, String? email, String? phone}) async {
+    final response = await _authRepository.getOtp(
+        email: email, purpose: purpose, phone: phone);
+  }
+
+  Future<void> requestEmailOtp() async {
+    final response = await _authRepository.resendOtp(
+        email: ConversationState.self.email, purpose: "Reset_PIN");
   }
 }
 

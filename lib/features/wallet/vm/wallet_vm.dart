@@ -33,7 +33,7 @@ class WalletVm extends StateNotifier<WalletState> {
   }
 
   void selectCategory(Select value) {
-    print('BANK VALUEE==>> ${value}');
+    print('BANK VALUEE==>> $value');
     state = state.copyWith(bank: value);
   }
 

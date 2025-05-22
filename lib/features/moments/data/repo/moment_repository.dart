@@ -63,7 +63,7 @@ class MomentRepository extends BaseRepository {
   }
 
 // /
-  Future<WayaRequestResponse> getAllMoments({int? limit = 1000}) async {
+  Future<WayaRequestResponse> getAllMoments({int? limit = 100}) async {
     return get("$serviceUrl/moments/get-active?limit=$limit");
   }
 
@@ -96,12 +96,9 @@ class MomentRepository extends BaseRepository {
   }
 
   ///moments/get
-   Future<WayaRequestResponse> getSingleMoment(
-      {required String id}) {
-    return get(
-        "$serviceUrl/moments/get?id=$id");
+  Future<WayaRequestResponse> getSingleMoment({required String id}) {
+    return get("$serviceUrl/moments/get?id=$id");
   }
-  
 
   ///moments/:momentId
   ///
@@ -111,9 +108,9 @@ class MomentRepository extends BaseRepository {
       required String momentId,
       required String reason,
       String? comment}) {
-    final payload = {"userId": userId, "momentId": momentId, "reason": reason};
+    final payload = {"momentId": momentId, "reason": reason};
     if (comment != null) payload['comment'] = comment;
-    return post("$serviceUrl/report-moments", payload);
+    return post("$serviceUrl/reports/create", payload);
   }
 
   Future<WayaRequestResponse> momentViewers(

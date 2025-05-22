@@ -1,6 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -378,7 +380,6 @@ class _TextMoment extends StatefulWidget {
   final int index;
   final void Function(Duration) setDuration;
 
-  // Construct.
   const _TextMoment({
     required this.ref,
     required this.moment,
@@ -399,15 +400,9 @@ class __TextMomentState extends State<_TextMoment> {
 
   @override
   void initState() {
-    //? Then go on.
     widget.setDuration(const Duration(seconds: 7));
-
-    //? This is fine.
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      //? Continue the animation.
       widget.resume();
-
-      //? Mark this as viewed.
       notifier.postSingleUserMoment(
           momentId: widget.moment.id, userId: widget.moment.userId);
     });
@@ -420,25 +415,74 @@ class __TextMomentState extends State<_TextMoment> {
     super.dispose();
   }
 
+  //? Helper function to parse text and detect URLs
+  List<TextSpan> _parseText(String text, TextStyle? baseStyle) {
+    final urlRegExp = RegExp(
+        r'((https?:\/\/)?([a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(\/[^\s]*)?)',
+        caseSensitive: false);
+    final matches = urlRegExp.allMatches(text);
+    final List<TextSpan> spans = [];
+    int currentIndex = 0;
+
+    for (final match in matches) {
+      //? Add text before the URL
+      if (match.start > currentIndex) {
+        spans.add(TextSpan(
+          text: text.substring(currentIndex, match.start),
+          style: baseStyle,
+        ));
+      }
+
+      //? Add the URL
+      final url = text.substring(match.start, match.end);
+      spans.add(TextSpan(
+        text: url,
+        style: (baseStyle ?? const TextStyle()).copyWith(
+          decoration: TextDecoration.underline,
+          backgroundColor: Colors.white.withOpacity(0.5),
+        ),
+        recognizer: TapGestureRecognizer()
+          ..onTap = () {
+            // Handle URL tap
+            final uri = Uri.tryParse(url.startsWith('http') ? url : 'https://$url');
+            if (uri != null) {
+              launchUrl(uri);
+            }
+          },
+      ));
+
+      currentIndex = match.end;
+    }
+
+    // Add remaining text
+    if (currentIndex < text.length) {
+      spans.add(TextSpan(
+        text: text.substring(currentIndex),
+        style: baseStyle,
+      ));
+    }
+
+    return spans;
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Keep this safe.
+    final baseStyle = widget.moment.fontType == null
+        ? null
+        : MomentHelper.textStyleFromJson(widget.moment.fontType!);
+
     return Container(
       padding: const EdgeInsets.all(24.0),
       alignment: Alignment.center,
-      child: Text(
-        widget.moment.content,
+      child: RichText(
         textAlign: TextAlign.center,
-        style: widget.moment.fontType == null
-            ? null
-            : MomentHelper.textStyleFromJson(
-                widget.moment.fontType!,
-              ),
+        text: TextSpan(
+          children: _parseText(widget.moment.content, baseStyle),
+        ),
       ),
     );
   }
 }
-
 class _MediaMomentWidget extends StatefulWidget {
   final WidgetRef ref;
   final MomentData moment;

@@ -20,6 +20,7 @@ import 'package:wayagram/features/polls_and_voting/data/model/create_poll_respon
 import 'package:wayagram/features/polls_and_voting/data/model/poll_dashboard.dart';
 
 import 'package:wayagram/features/polls_and_voting/data/model/single_dashboard_model.dart';
+import 'package:wayagram/features/polls_and_voting/data/model/single_poll_model.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/vote_url_model.dart';
 import 'package:wayagram/features/polls_and_voting/state/create_poll_state.dart';
 import 'package:wayagram/features/polls_and_voting/data/model/fetch_all_polls.dart';
@@ -927,10 +928,10 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     final response = await _pollAndVotingRepository.getAllPollsById(pollId);
     state = state.copyWith(isLoading: false);
     if (response.statusCode == 200) {
-      GetAllPollModel responseModel = GetAllPollModel.fromJson(response.data);
+      SinglePollModel responseModel = SinglePollModel.fromJson(response.data);
       _logger.i('GENERATED ${responseModel.data}');
 
-      state = state.copyWith(getAllPollModel: responseModel.data);
+      state = state.copyWith(singlePollModelDocs: responseModel.data?.docs);
     } else {
       state = state.copyWith(isLoading: false);
     }

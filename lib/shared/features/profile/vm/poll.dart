@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/controller/debug_console.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/polls_and_voting/data/repo/poll_and_voting_repository.dart';
 import 'package:wayagram/shared/features/profile/model/poll.dart';
 import 'package:wayagram/shared/features/profile/state/poll.dart';
@@ -43,8 +45,12 @@ class UserPollsNotifier extends StateNotifier<PollsState> {
 
       //? After getting these posts...
     } catch (e) {
-      // TODO: Actual error handling.
-      rethrow;
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.polls,
+        WayaDebugHelpers.getStackTrace(e),
+      );
     }
 
     // That's fine.
