@@ -39,12 +39,12 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
   Future<bool> verifyWalletPin(ValueNotifier<bool> isLoading, String pin,
       Map<String, String> map) async {
     //?check if balance is Zero and return insufficient balance
-    if (int.parse(state.data?.balance ?? "0") == 0) {
+    /*  if (int.parse(state.data?.balance ?? "0") == 0) {
       WayaSnackBar.showToast(
         "Insufficient Balance!!!",
       );
       return false;
-    }
+    } */
     isLoading.value = true;
 
     final response = await _walletRepository!.confirmWalletPin(ConfirmWalletPin(

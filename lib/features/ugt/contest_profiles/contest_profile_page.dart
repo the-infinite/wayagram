@@ -15,11 +15,14 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
+import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_post_card.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_stages_section.dart';
 import 'package:wayagram/features/ugt/create_contest_post/video_thumbnail_ugt.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
+import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_video_view.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_details_stage_modal.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -63,11 +66,16 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     final wayaTheme = Theme.of(context);
     //var model = ref.watch(selectedContestProvider.notifier).state;
     final String id = Get.parameters['id'] ?? 'Unknown';
-    final String contestId = Get.parameters['contest'] ?? 'Unknown';
     var model = ref.watch(selectedContestantProfile);
+    final String contestId =
+        Get.parameters['contest'] ?? model?.contestId ?? "";
     var viewModel = ref.watch(votersContestNotifier.notifier);
 
     useEffect(() {
+      ref
+          .read(postProvider.notifier)
+          .fetchSingleContest(contestId: contestId, ref: ref);
+
       ref.read(postProvider.notifier).fetchSingleContestantDetails(
           ref, model?.contestId ?? contestId, model?.id ?? id);
 
@@ -154,7 +162,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
         children: [
           GestureDetector(
               onTap: () async {
-              //  print(model?.id ?? id);
+                //  print(model?.id ?? id);
                 await Share.share(
                   WayaValueHelper.getShareableUrl(
                       WayaAppRoutes.getContestantProfileRoute(
@@ -279,6 +287,61 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                 style: WayaTextStyles.hintStyleBold.wayaCopyWith(
                     color: WayaColors.greyColor500,
                     fontWeight: FontWeight.w400)),
+            const Gap(20),
+            WayaButton(
+              fontSize: 12.sp,
+              callback: () async {
+                final contestModel =
+                    ref.read(selectedContestProvider.notifier).state;
+                var list = await getCurrentFee(
+                    contestModel, contestModel?.contestSettings?.stages);
+
+                if (contestModel?.amountPerVote == 0) {
+                  WayaUtils.showModalSheet(
+                    context,
+                    child: ConfirmVoteOptionModal(
+                      amount: "1",
+                      voteFee: "0",
+                      isFree: true,
+                      model: ContestVoteModel(
+                          contestId: contestId ?? "",
+                          contestantId: model?.contestApplicant?.userId ?? "",
+                          hostUserId: model?.contestApplicant?.userId ?? "",
+                          amount: "0",
+                          numberOfVotes: "0",
+                          profileId: "",
+                          type: list[0].toString().toLowerCase()),
+                      candidateName:
+                          model?.contestApplicant?.fullName ?? "Name",
+                      votingLink: "votingLink",
+                    ),
+                  );
+
+                  return;
+                }
+
+                WayaUtils.showModalSheet(
+                  context,
+                  child: VoteOptionModal(
+                    isFree: list[0].toString().toLowerCase() == "free"
+                        ? true
+                        : false,
+                    voteFee: list[1].toString(),
+                    model: ContestVoteModel(
+                        contestId: contestId ?? "",
+                        contestantId: model?.contestApplicant?.userId ?? "",
+                        hostUserId: model?.contestApplicant?.userId ?? "",
+                        amount: "0",
+                        numberOfVotes: "0",
+                        profileId: "",
+                        type: "PAID"),
+                    candidateName: model?.contestApplicant?.fullName ?? "Name",
+                    votingLink: "votingLink",
+                  ),
+                );
+              },
+              text: "Vote Candidate",
+            ),
             const Gap(20),
             Text("what you expect from the voters",
                 style: wayaTheme.textTheme.bodyMedium),

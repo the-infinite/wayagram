@@ -58,7 +58,7 @@ class ShareChatsWidget extends ConsumerWidget {
 
     //? This is fine.
     return SizedBox(
-      height: 100.h,
+      height: 102.h,
       child: ListView.builder(
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
