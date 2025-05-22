@@ -111,6 +111,7 @@ class _ForYouContestState extends ConsumerState<ManageUserTab> {
         desc: "No Member added yet",
         title: "Role & Access",
         buttonText: "",
+        showButtonBusiness: false,
         hideButton: false,
         onTap: () {});
   }

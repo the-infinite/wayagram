@@ -90,10 +90,14 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
       // List<Contest> contestList = [];
       if (response.success) {
         ContestResponse responseModel = ContestResponse.fromJson(response.data);
-        // contestList = responseModel.data?.docs ?? [];
+        final contestList = responseModel.data?.docs ?? [];
+        final list = contestList.where((e) {
+          return e.contestStatus?.toLowerCase() != "rejected";
+          //  return e;
+          // }
+        }).toList();
 
-        state = state.copyWith(
-            listShop: getContestsSelect(responseModel.data?.docs ?? []));
+        state = state.copyWith(listShop: getContestsSelect(list));
       }
     } catch (e) {
       debugPrint(e.toString());
@@ -160,8 +164,7 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
       onTap();
       if (isEditing) {
         WayaSnackBar.showToast("Team Member updated", showSuccess: true);
-      }else{
-
+      } else {
         WayaSnackBar.showToast("Team Member added", showSuccess: true);
       }
       if (state.selectedRole == TypeRole.shop) {
@@ -294,11 +297,11 @@ class RoleAccessVm extends StateNotifier<RoleAccessState> {
     }).toList();
   }
 
-  List<Select> getContestsSelect(List<Contest> list) {
+  List<Select> getContestsSelect(List<Contest?> list) {
     return list.asMap().entries.map((entries) {
       return Select(
-          value: entries.value.id.toString(),
-          label: entries.value.title ?? "id");
+          value: entries.value?.id.toString() ?? "",
+          label: entries.value?.title ?? "id");
     }).toList();
   }
 
