@@ -25,7 +25,8 @@ class SupportDisputeNotifier extends StateNotifier<SupportDisputeState> {
   // Construct.
   //SupportDisputeNotifier(super.state);
 
-  SupportDisputeNotifier(this._roleShopRepository, this._uploadFileRepository) : super(SupportDisputeState.initial) {
+  SupportDisputeNotifier(this._roleShopRepository, this._uploadFileRepository)
+      : super(SupportDisputeState.initial) {
     email.text = ConversationState.self.email ?? "";
     fullname.text = ConversationState.self.fullname;
     phone.text = ConversationState.self.phoneNumber ?? "";
@@ -36,20 +37,30 @@ class SupportDisputeNotifier extends StateNotifier<SupportDisputeState> {
     return [
       // This is fine too.
       Select(
-        label: "Missing Item(s)",
-        value: "missing-item",
+        label: "Shop",
+        value: "Shop",
       ),
 
-      // This is fine.
+      // This is fine too.
       Select(
-        label: "Damaged Item(s)",
-        value: "damaged-item",
+        label: "Quotation",
+        value: "Quotation",
+      ),
+      // This is fine too.
+      Select(
+        label: "Transaction",
+        value: "Transaction",
+      ),
+      // This is fine too.
+      Select(
+        label: "Support",
+        value: "Support",
       ),
 
-      // This is fine.
+      // This is fine too.
       Select(
-        label: "Incorrect Item(s)",
-        value: "damaged-item",
+        label: "General",
+        value: "General",
       ),
     ];
   }
@@ -69,28 +80,30 @@ class SupportDisputeNotifier extends StateNotifier<SupportDisputeState> {
 
   /// Controller function used to send the request to the server for posting this
   /// support ticket.
-  Future<bool> sendDisputeTicket() async {
+  Future<bool> sendDisputeTicket(bool isShopSelected) async {
     try {
       String? media;
       File? myFile = proof.value;
       if (myFile != null) {
-        media = await WayaUtils.uploadFile(file: myFile, repository: _uploadFileRepository);
+        media = await WayaUtils.uploadFile(
+            file: myFile, repository: _uploadFileRepository);
       }
 
       final response = await _roleShopRepository.postDisputeDetails({
         "details": details.text,
-        //  orderedItem: orderedItem,
+        "reasonCategory": details.text,
         "userId": ConversationState.self.id,
         "metadata": {
-          "merchantName": merchantName.text,
-          "merchantLink": merchantLink.text,
-          "productLink": productLink.text,
+          if (isShopSelected) "merchantName": merchantName.text,
+          if (isShopSelected) "merchantID": merchantLink.text,
+          if (isShopSelected) "productId": productLink.text,
           "fullname": fullname.text,
           "email": email.text,
           "phone": phone.text,
-          "type": typeNotifier.value,
+          //  "type": typeNotifier.value?.label.toLowerCase() ?? "general",
         }, //optiona
-        disputeType: "general",
+        ""
+            "disputeType": typeNotifier.value?.label.toLowerCase() ?? "general",
 
         "media": media
       });
@@ -104,7 +117,8 @@ class SupportDisputeNotifier extends StateNotifier<SupportDisputeState> {
   }
 }
 
-final supportDisputeProvider = StateNotifierProvider<SupportDisputeNotifier, SupportDisputeState>(
+final supportDisputeProvider =
+    StateNotifierProvider<SupportDisputeNotifier, SupportDisputeState>(
   (ref) {
     return SupportDisputeNotifier(ProfileRepo(), UploadFileRepository());
   },

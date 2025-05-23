@@ -58,8 +58,8 @@ class DisputeModel  extends BaseModel<DisputeModel>{
   final String disputeType;
   final String? reference;
   final String? escalatedBy;
-  final String sellerId;
-  final String chatId;
+  final String? sellerId;
+  final String? chatId;
   final DateTime createdAt;
   final DateTime updatedAt;
   final TicketBodyModel ticketBody;

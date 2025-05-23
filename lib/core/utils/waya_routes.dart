@@ -29,6 +29,8 @@ import 'package:wayagram/features/general_settings/change_pin/change_pin_page.da
 import 'package:wayagram/features/general_settings/donation/donation_settings_page.dart';
 import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
 import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
+import 'package:wayagram/features/general_settings/group/group_setting_page.dart';
+import 'package:wayagram/features/general_settings/page/page_general_setting_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/blocked_user_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
@@ -341,10 +343,12 @@ class WayaAppRoutes {
           id: WayaNav.search['id'].toString(),
         ),
     EditPost.route: () => EditPost(
-          initialContent: '',
-          initialImageUrl: '',
-          title: '',
-          postId: '',
+       
+          initialContent: WayaNav.search['initialContent'].toString(),
+          initialMedia:  WayaNav.search['initialMedia'].toString(),
+     
+          postId: WayaNav.search['postId'].toString(),
+          privacy: WayaNav.search['privacy'].toString(),
         ),
     AddGroupMember.route: () =>
         AddGroupMember(id: WayaNav.search['id'].toString()),
@@ -374,6 +378,8 @@ class WayaAppRoutes {
     DonationSettingsPage.route: () => DonationSettingsPage(),
     QuotationSettingsPage.route: () => QuotationSettingsPage(),
     ShopSettingPage.route: () => ShopSettingPage(),
+    PageGeneralSetting.route: () => PageGeneralSetting(),
+    GroupSettingPage.route: () => GroupSettingPage(),
     EventSettingsPage.route: () => EventSettingsPage(),
     UserAction.route: () => UserAction(),
     CmsClicks.route: () => CmsClicks(),
@@ -542,6 +548,10 @@ class WayaAppRoutes {
   /// to edit the profile of a single chat group.
   static String getEditChatGroupProfileScreen(String id, String chatId) =>
       "${EditChatGroupScreen.route}?id=$id&chatId=$chatId";
+
+
+    static String getEditPostScreen(String postId, String content, String privacy, String media) =>
+      "${EditPost.route}?postId=$postId&privacy=$privacy&initialContent=$content&initialMedia=$media";   
 
   /// This is fine.
   static List<GetPage> get getPages {

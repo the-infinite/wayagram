@@ -108,6 +108,11 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/posts?id=$postId");
   }
 
+    Future<WayaRequestResponse> fetchAPost(postId) {
+    return get("$serviceUrl/posts/$postId");
+  }
+
+
   Future<WayaRequestResponse> commentOnPost(
       String postId, String content, String? parentCommentId) {
     final payload = {
@@ -122,8 +127,8 @@ class PageRepository extends BaseRepository {
     return post("$serviceUrl/reports/create", payload, showErrors: true);
   }
 
-  Future<WayaRequestResponse> reportPost(String postId, String reason) {
-    final payload = {"postId": postId, "reason": reason};
+  Future<WayaRequestResponse> reportPost(String postId, String reason, String? comment) {
+    final payload = {"postId": postId, "reason": reason, "comment": comment};
     // return post("$serviceUrl/posts/report", payload, showErrors: true);
     return post("$serviceUrl/reports/create", payload, showErrors: true);
   }

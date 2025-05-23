@@ -208,6 +208,23 @@ class _GeneralSettingsPageState extends ConsumerState<GeneralSettingsPage> {
               ),
             ],
           ),
+          /*  GeneralSettingsOptionTile(
+            genSettingsOption: [
+              GeneralSettingsOptionModel(
+                title: 'Page Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mPages.path,
+                onTap: () => WayaNav.toNamed(PageGeneralSetting.route),
+              ),
+              GeneralSettingsOptionModel(
+                title: 'Group Settings',
+                isRealPath: true,
+                iconPath: WayaAssets.icons.mGroup.path,
+                onTap: () => WayaNav.toNamed(GroupSettingPage.route),
+              ),
+             
+            ],
+          ), */
           GeneralSettingsOptionTile(
             genSettingsOption: [
               GeneralSettingsOptionModel(

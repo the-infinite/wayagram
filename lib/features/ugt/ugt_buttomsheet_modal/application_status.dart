@@ -230,6 +230,10 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                       return;
                     }
 
+
+                    //? if balance is Zero , dont allow to move forward
+                    
+
                     //? move on to pay for a contest
                     WayaNav.goBack();
                     WayaUtils.showModalSheet(

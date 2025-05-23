@@ -112,12 +112,11 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
                           ),
                     );
 
-                    if (response)
-
-
-                 // }
+                    if (response) {
+                      // }
 
                   widget.continues();
+                    }
                 },
                 child: SvgPicture.asset(
                   WayaAssets.icons.mThreeDots.path,

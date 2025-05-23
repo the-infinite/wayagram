@@ -9,7 +9,6 @@ import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.d
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_model.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_state_model.dart';
-import 'package:wayagram/features/wallet/transactions/model/transaction_model.dart';
 
 class TransactionVm extends StateNotifier<TransactionHistoryState> {
   final TransactionRepository _transactionRepository;
