@@ -1,15 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:svg_flutter/svg.dart';
-import 'package:wayagram/assetsgen/assets.gen.dart';
-import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
-import 'package:wayagram/core/theme/extension/colors_extension.dart';
-import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
-import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/views/my_events.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/widgets/event_widget.dart';
@@ -47,7 +40,7 @@ class _AllEventsState extends ConsumerState<AllEvents> {
 
   @override
   Widget build(BuildContext context) {
-    final wayaTheme = Theme.of(context);
+    //final wayaTheme = Theme.of(context);
     final viewModel = ref.watch(eventVmProvider);
 
     if (viewModel.isLoadingEventWithStatus) {

@@ -13,7 +13,6 @@ import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/add_event_state.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/repo/event_repository.dart';
-import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/shared/components/radio_select.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 import 'package:wayagram/shared/repo/upload_file_repository.dart';
