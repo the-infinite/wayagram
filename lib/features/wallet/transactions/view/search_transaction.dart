@@ -54,14 +54,11 @@ class _SearchTransactionState extends ConsumerState<SearchTransaction> {
     final state = ref.watch(transactionVmProvider);
     final wayaTheme = Theme.of(context);
 
-
     // Filter Transaction
     final List<TransactionHistoryModelDocs> filteredTransaction =
     WayaUtils.strictSearch<TransactionHistoryModelDocs>(state.docs!, ['description', ], query);
-    print('filteredTransaction.length is ======>>>> ${filteredTransaction.length}');
 
     return WayaScaffold(
-      //isLoading: viewModel.isLoading,
       appBar: AppBar(
         leading: WayaBackButton(onTap: () => WayaNav.goBack()),
         title: WayaTextFormField(
