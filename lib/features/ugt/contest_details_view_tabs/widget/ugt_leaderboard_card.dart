@@ -79,7 +79,7 @@ class UgtLeaderboardCard extends ConsumerWidget {
                     ),
                 Gap(10),
                 SizedBox(
-                  width: context.width * 0.40,
+                  width: context.width * 0.30,
                   child: Text(
                     contestantData.contestApplicant?.fullName ?? "",
                     overflow: TextOverflow.ellipsis,
@@ -101,7 +101,7 @@ class UgtLeaderboardCard extends ConsumerWidget {
                           ? Colors.white
                           : wayaTheme.colorScheme.greyColor400),
                 ),
-               if (contestantData.votes != 0)  Gap(10),
+                if (contestantData.votes != 0) Gap(10),
                 if (contestantData.votes != 0)
                   WayaButton(
                     callback: () {

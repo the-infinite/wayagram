@@ -221,7 +221,9 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                               rollAccessNotifier.fetchHostedContest();
                               //  rollAccessNotifier.ge
                             } else {
+                              print("i am in role selected");
                               rollAccessNotifier.getRoles();
+                              rollAccessNotifier.getShops();
                             }
                             return modulePicker.value = value.first.value;
                           }),

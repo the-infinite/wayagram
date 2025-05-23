@@ -126,7 +126,7 @@ class ContestApplication {
   final String? id;
   final String? contestId;
   final String? userId;
-  final String? fullName;
+  String? fullName;
   final String? email;
   final String? phoneNumber;
   final String? state;

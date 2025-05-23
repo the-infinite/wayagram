@@ -29,7 +29,8 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Gap(10),
-        if (viewModel.isLoading == true) Center(child: CircularProgressIndicator()),
+        if (viewModel.isLoading == true)
+          Center(child: CircularProgressIndicator()),
         if (viewModel.listRoleManagement.isEmpty) emptyWidget(),
         ListView.builder(
           shrinkWrap: true,
@@ -56,6 +57,7 @@ class _ForYouContestState extends ConsumerState<RoleManagementTab> {
         desc: "No Member added yet",
         title: "Role & Access",
         buttonText: "",
+        showButtonBusiness: false,
         hideButton: false,
         onTap: () {});
   }

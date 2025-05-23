@@ -47,7 +47,10 @@ class _UgtDetailsPostState extends ConsumerState<UgtDetailsPost> {
               }
  */
               final post = posts[index];
-              return GestureDetector(onTap: () {}, child: UgtPostCard(post, widget.contestApplicant, contestModel!));
+              return GestureDetector(
+                  onTap: () {},
+                  child: UgtPostCard(
+                      post, widget.contestApplicant, contestModel!));
             },
           ),
       ],
@@ -59,6 +62,7 @@ class _UgtDetailsPostState extends ConsumerState<UgtDetailsPost> {
         icon: Image.asset("assets/images/u-emptystate.png"),
         desc: "",
         title: "No Contest Post Created",
+        showButtonBusiness: false,
         buttonText: "Contest",
         onTap: () {
           //  ivalidateUGTVM(ref);
