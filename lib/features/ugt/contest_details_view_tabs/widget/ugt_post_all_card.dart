@@ -308,12 +308,24 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                           if (hasClickedShared.value == false) {
                             hasClickedShared.value = true;
                             //?do the sharing stuff
-                            final result = await Share.share(
+
+                            final result =   await Share.share(
+                  WayaValueHelper.getShareableUrl(
+                      WayaAppRoutes.getContestantProfileRoute(
+                   widget.post.contestantProfileId??"",
+                   widget.post.contestId ?? ""
+                  )),
+                  subject: "Share Contestant Profile",
+                  );
+
+
+
+                          /*   final result = await Share.share(
                               WayaValueHelper.getShareableUrl(
                                   WayaAppRoutes.getContestDetailRoute(
                                       widget.post.contestId ?? "")),
                               subject: "Share Post",
-                            );
+                            ); */
                             //?if shared increase the count
                             if (result.status == ShareResultStatus.success) {
                               viewModel.toggleShare(widget.post.contestId ?? "",

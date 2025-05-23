@@ -314,7 +314,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
         ContestContestantModelMean responseModel =
             ContestContestantModelMean.fromJson(response.data);
-        contestList = responseModel.data ?? [];
+        contestList = responseModel.data?.docs ?? [];
 
         MyContestContestantModel? model;
 
@@ -329,10 +329,13 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         }
 
         // createPostId = ;
+        final myContestantList = contestList.where((e) {
+         return e.status?.toLowerCase() == "active";
+        }).toList();
 
         state = state.copyWith(
-            myContestList: contestList,
-            myContestListCopy: contestList,
+            myContestList: myContestantList,
+            myContestListCopy: myContestantList,
             createPostId: model?.id ?? "");
         // _page++;
         //isLoading = false;
@@ -356,6 +359,13 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         contestList = responseModel.data?.docs ?? [];
 
         state = state.copyWith(myPostList: contestList);
+        for (var model in contestList) {
+          var data = await UserResource.getUserDetails(
+              model.contestantProfileId ?? "");
+          var userModel = data?.$1;
+          model.contestApplication?.fullName = userModel?.fullname ?? "";
+        }
+
         if (state.isActive == false && !hostApproved) {
           state = state.copyWith(pendingPostCount: contestList.length);
         }
