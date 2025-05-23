@@ -52,8 +52,9 @@ class _ConfirmPageDetailsState extends ConsumerState<ConfirmPageDetails> {
                 viewModel.pageName.text,
                 viewModel.pageDescription.text,
                 args['type'] == 'Public Page' ? true : false,
-                (args['coverImage'] as File).path,
                 (args['image'] as File).path,
+                (args['coverImage'] as File).path,
+
               );
               viewModel2.reset();
               WayaNav.goBack();

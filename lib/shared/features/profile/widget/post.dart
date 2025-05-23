@@ -17,7 +17,6 @@ import 'package:wayagram/features/group/view/report_group_post.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
 import 'package:wayagram/features/post/view/comment.dart';
-import 'package:wayagram/features/post/view/edit_post.dart';
 import 'package:wayagram/features/promotion/data/models/promotion_service_type.dart';
 import 'package:wayagram/features/promotion/views/promote.dart';
 import 'package:wayagram/shared/cache/post.dart';
