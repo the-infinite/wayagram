@@ -470,7 +470,6 @@ class _TransactionDetailsScreenState
                     ),
                   ),
 
-
                   if (state.transaction?.status.toLowerCase() == "pending") ...[
                     const SizedBox(height: 16),
                     Padding(
