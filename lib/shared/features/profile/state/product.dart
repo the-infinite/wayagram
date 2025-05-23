@@ -1,4 +1,3 @@
-
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
 
 class ProductsState {
@@ -11,7 +10,8 @@ class ProductsState {
   final int totalPages;
   final bool hasNextPage;
   final bool hasPreviousPage;
-  final List<Product> products;
+  final String? search;
+  final List<Product> docs;
 
   // Construct.
   ProductsState({
@@ -24,7 +24,8 @@ class ProductsState {
     required this.totalPages,
     required this.hasNextPage,
     required this.hasPreviousPage,
-    required this.products,
+    required this.docs,
+    required this.search,
   });
 
   ProductsState copyWith({
@@ -37,7 +38,8 @@ class ProductsState {
     int? totalPages,
     bool? hasNextPage,
     bool? hasPreviousPage,
-    List<Product>? products,
+    String? search,
+    List<Product>? docs,
   }) {
     return ProductsState(
       hasLoaded: hasLoaded ?? this.hasLoaded,
@@ -49,8 +51,22 @@ class ProductsState {
       totalPages: totalPages ?? this.totalPages,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
-      products: products ?? this.products,
+      docs: docs ?? this.docs,
+      search: search ?? this.search,
     );
+  }
+
+  List<Product> get products {
+    //? If there is searching enabled...
+    if (search != null) {
+      return docs
+          .where((product) =>
+              product.name.toLowerCase().contains(search!) || product.description.toLowerCase().contains(search!))
+          .toList();
+    }
+
+    //? Return what we already have.
+    return docs;
   }
 
   static final initial = ProductsState(
@@ -63,6 +79,7 @@ class ProductsState {
     totalPages: 0,
     hasNextPage: true,
     hasPreviousPage: false,
-    products: [],
+    search: null,
+    docs: [],
   );
 }

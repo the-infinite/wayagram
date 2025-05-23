@@ -10,7 +10,8 @@ class PollsState {
   final int totalPages;
   final bool hasNextPage;
   final bool hasPreviousPage;
-  final List<PollModel> polls;
+  final String? search;
+  final List<PollModel> docs;
 
   // Construct.
   PollsState({
@@ -22,8 +23,9 @@ class PollsState {
     required this.nextPage,
     required this.totalPages,
     required this.hasNextPage,
+    required this.search,
     required this.hasPreviousPage,
-    required this.polls,
+    required this.docs,
   });
 
   PollsState copyWith({
@@ -36,7 +38,8 @@ class PollsState {
     int? totalPages,
     bool? hasNextPage,
     bool? hasPreviousPage,
-    List<PollModel>? polls,
+    String? search,
+    List<PollModel>? docs,
   }) {
     return PollsState(
       hasLoaded: hasLoaded ?? this.hasLoaded,
@@ -46,10 +49,25 @@ class PollsState {
       page: page ?? this.page,
       nextPage: nextPage ?? this.nextPage,
       totalPages: totalPages ?? this.totalPages,
+      search: search ?? this.search,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
-      polls: polls ?? this.polls,
+      docs: docs ?? this.docs,
     );
+  }
+
+  List<PollModel> get polls {
+    //? If there is searching enabled...
+    if (search != null) {
+      return docs
+          .where((poll) =>
+              poll.question.toLowerCase().contains(search!) ||
+              (poll.choices?.any((choice) => choice.description.toString().toLowerCase().contains(search!)) ?? false))
+          .toList();
+    }
+
+    //? Return what we already have.
+    return docs;
   }
 
   static final initial = PollsState(
@@ -60,8 +78,9 @@ class PollsState {
     page: 0,
     nextPage: 1,
     totalPages: 0,
+    search: null,
     hasNextPage: true,
     hasPreviousPage: false,
-    polls: [],
+    docs: [],
   );
 }

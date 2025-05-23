@@ -21,7 +21,7 @@ class ExploreRepository extends BaseRepository {
         "$serviceUrl/posts/users/feed?isLiked=true&page=$page&limit=$limit");
   }
 
-   Future<WayaRequestResponse> fetchreposts(int page, [int limit = 20]) {
+   Future<WayaRequestResponse> fetchReposts(int page, [int limit = 20]) {
     return get(
         "$serviceUrl/posts/users/feed?isReposted=true&page=$page&limit=$limit");
   }

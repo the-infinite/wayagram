@@ -10,7 +10,8 @@ class EventState {
   final int totalPages;
   final bool hasNextPage;
   final bool hasPreviousPage;
-  final List<EventDoc> events;
+  final String? search;
+  final List<EventDoc> docs;
 
   // This is fine.
   EventState({
@@ -20,10 +21,11 @@ class EventState {
     required this.totalPages,
     required this.hasNextPage,
     required this.hasPreviousPage,
-    required this.events,
+    required this.docs,
     required this.nextPage,
     required this.isLoading,
     required this.hasLoaded,
+    required this.search,
   });
 
   factory EventState.fromJson(Map<String, dynamic> json) {
@@ -35,9 +37,10 @@ class EventState {
       hasNextPage: json["hasNextPage"],
       hasPreviousPage: json["hasPrevPage"],
       nextPage: json["nextPage"],
-      events: (json["docs"] as List).map((e) => EventDoc.fromJson(e)).toList(),
+      docs: (json["docs"] as List).map((e) => EventDoc.fromJson(e)).toList(),
       isLoading: false,
       hasLoaded: true,
+      search: null,
     );
   }
 
@@ -49,11 +52,26 @@ class EventState {
     totalPages: 0,
     hasNextPage: true,
     hasPreviousPage: false,
-    events: [],
+    docs: [],
+    search: null,
     nextPage: 1,
     isLoading: false,
     hasLoaded: false,
   );
+
+  List<EventDoc> get events {
+    //? If there is searching enabled...
+    if (search != null) {
+      return docs
+          .where((event) =>
+              event.title.toLowerCase().contains(search!) ||
+              event.description.toString().toLowerCase().contains(search!))
+          .toList();
+    }
+
+    //? Return what we already have.
+    return docs;
+  }
 
   EventState copyWith({
     bool? hasLoaded,
@@ -65,7 +83,8 @@ class EventState {
     int? totalPages,
     bool? hasNextPage,
     bool? hasPreviousPage,
-    List<EventDoc>? events,
+    String? search,
+    List<EventDoc>? docs,
   }) {
     return EventState(
       hasLoaded: hasLoaded ?? this.hasLoaded,
@@ -77,7 +96,8 @@ class EventState {
       totalPages: totalPages ?? this.totalPages,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
-      events: events ?? this.events,
+      docs: docs ?? this.docs,
+      search: search ?? this.search,
     );
   }
 }
