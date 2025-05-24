@@ -1,6 +1,7 @@
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/data/model/event_attendee_response_model.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 class EventState {
   final bool isLoading;
@@ -19,6 +20,7 @@ class EventState {
   final bool isUserEvent;
   final List<Doc> attendees;
   final String userId;
+  final List<UserDetailsModel> invitees;
 
   EventState({
     this.isLoading = false,
@@ -37,11 +39,13 @@ class EventState {
     this.joinedEvents = const [],
     this.userId = '',
     this.isLoadingUserEvents = false,
+    this.invitees = const []
   });
 
   bool isAttending(String eventId) {
-    return attendees
-        .any((attendance) => attendance.userId == ConversationState.self.id && attendance.eventId == eventId);
+    return attendees.any((attendance) =>
+        attendance.userId == ConversationState.self.id &&
+        attendance.eventId == eventId);
   }
 
   EventState copyWith(
@@ -60,6 +64,7 @@ class EventState {
       bool? isJoiningEvent,
       bool? isReportingEvent,
       List<Doc>? attendees,
+      List<UserDetailsModel>? invitees,
       bool? isLoadingUserEvents}) {
     return EventState(
       isLoading: isLoading ?? this.isLoading,
@@ -76,8 +81,10 @@ class EventState {
       userId: userId ?? this.userId,
       isReportingEvent: isReportingEvent ?? this.isReportingEvent,
       joinedEvents: joinedEvents ?? this.joinedEvents,
-      isLoadingEventWithStatus: isLoadingEventWithStatus ?? this.isLoadingEventWithStatus,
+      isLoadingEventWithStatus:
+          isLoadingEventWithStatus ?? this.isLoadingEventWithStatus,
       isLoadingUserEvents: isLoadingUserEvents ?? this.isLoadingUserEvents,
+      invitees : invitees ?? this.invitees
     );
   }
 }

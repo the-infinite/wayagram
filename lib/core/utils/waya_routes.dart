@@ -18,6 +18,7 @@ import 'package:wayagram/features/donation/view/see_all_pending_donation.dart';
 import 'package:wayagram/features/donation/view/see_all_rejected_donation.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
+import 'package:wayagram/features/event/views/event_invite.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/chat/view/chat.dart';
 import 'package:wayagram/features/explore/views/chat_and_social.dart';
@@ -405,6 +406,7 @@ class WayaAppRoutes {
           groupId: WayaNav.search['id'].toString(),
           chatId: WayaNav.search['chatId'].toString(),
         ),
+    EventInvite.route: () =>     EventInvite()
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and

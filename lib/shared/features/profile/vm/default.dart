@@ -240,12 +240,12 @@ class RepostedPostNotifier extends StateNotifier<PostState> {
   RepostedPostNotifier(super.state);
 
   /// An API used to fetch all the posts for a given user.
-  Future<List<PostModel>> getRepostedPosts() async {
+  Future<List<PostModel>> getRepostedPosts(String id) async {
     final result = <PostModel>[];
 
     try {
       // This is fine too.
-      final response = await exploreRepo.fetchreposts(
+      final response = await exploreRepo.fetchreposts(id,
           state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
