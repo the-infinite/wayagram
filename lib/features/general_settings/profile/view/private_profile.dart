@@ -108,7 +108,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
     }
     //? If this is for repost
     if (_pageController.value == 1) {
-      await repostpostNotifier.getRepostedPosts();
+      await repostpostNotifier.getRepostedPosts(widget.data.$1.id);
     }
     //? If this is for likes
     if (_pageController.value == 2) {
