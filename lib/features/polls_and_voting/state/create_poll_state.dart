@@ -51,6 +51,7 @@ class CreatePollVotingState {
   List<GetAllPollData> getAllPollModel;
   List<PollData> getMyPollModel;
   List<CastVoteData> castVoteModel;
+  List<Docs> activePolls;
 
   CreatePollVotingState({
     TextEditingController? pollTitle,
@@ -89,6 +90,7 @@ class CreatePollVotingState {
     this.pollTypes = const [],
     this.feedPolls = const [],
     this.uploadedDocuments = const [],
+    this.activePolls = const [],
     this.isPersonalNotUpgradedToBusiness = false,
   })  : pollTitle = pollTitle ?? TextEditingController(),
         pollDescription = pollDescription ?? TextEditingController(),
@@ -130,6 +132,7 @@ class CreatePollVotingState {
     bool? isLoading,
     bool? isLoadingPollWithStatus,
     List<Docs>? fetchAllPols,
+    List<Docs>? activePolls,
     List<GetPollData>? getPollModel,
     List<GetAllPollData>? getAllPollModel,
     List<PollDashboardModelDocs>? pollDashboardModelDocs,
@@ -142,8 +145,9 @@ class CreatePollVotingState {
     List<PollDashboardChoices>? pollDashboardChoices,
   }) {
     return CreatePollVotingState(
-        isPersonalNotUpgradedToBusiness: isPersonalNotUpgradedToBusiness ??
-            isPersonalNotUpgradedToBusiness,
+        activePolls: activePolls ?? this.activePolls,
+        isPersonalNotUpgradedToBusiness:
+            isPersonalNotUpgradedToBusiness ?? isPersonalNotUpgradedToBusiness,
         pollTitle: pollTitle ?? this.pollTitle,
         pollDescription: pollDescription ?? this.pollDescription,
         pollCompanyDescription:
