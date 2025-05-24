@@ -22,7 +22,6 @@ import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
 
-
 class DashboardContestPage extends StatefulHookConsumerWidget {
   static const route = '/contest-mydashboard-profile-page';
   const DashboardContestPage({super.key});
@@ -84,12 +83,12 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
-      onRefresh: (){
-          ref
-              .read(votersContestNotifier.notifier)
-              .fetchAllContestApplicant(model?.id??"");
-         dashboardNotifier.fetchTotalContestant(model?.id ?? "");
-     return dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
+      onRefresh: () {
+        ref
+            .read(votersContestNotifier.notifier)
+            .fetchAllContestApplicant(model?.id ?? "");
+        dashboardNotifier.fetchTotalContestant(model?.id ?? "");
+        return dashboardNotifier.fetchTotalEarnings(model?.id ?? "", "all");
       },
       title: "",
       backgroundColor: Colors.white,
@@ -197,11 +196,11 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                         height: 42,
                         text: "Edit contest details",
                         callback: () async {
-                          invalidateUGTVm(ref);
+                          // invalidateUGTVm(ref);
                           ref
                               .read(stateIsEditingContestProvider.notifier)
                               .state = true;
-                          ref.watch(selectedContestProvider.notifier).state =
+                          ref.read(selectedContestProvider.notifier).state =
                               model;
                           WayaNav.toNamed('/create-contest');
                         }),

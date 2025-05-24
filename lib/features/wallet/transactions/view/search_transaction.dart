@@ -9,6 +9,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/activity_logs/widget/activity_logs_empty_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/features/wallet/transactions/model/transaction_history_model.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_model.dart';
 import 'package:wayagram/features/wallet/transactions/view/transaction_details.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
@@ -53,14 +54,11 @@ class _SearchTransactionState extends ConsumerState<SearchTransaction> {
     final state = ref.watch(transactionVmProvider);
     final wayaTheme = Theme.of(context);
 
-
     // Filter Transaction
-    final List<TransactionModelDocs> filteredTransaction =
-    WayaUtils.strictSearch<TransactionModelDocs>(state.docs!, ['description', ], query);
-    print('filteredTransaction.length is ======>>>> ${filteredTransaction.length}');
+    final List<TransactionHistoryModelDocs> filteredTransaction =
+    WayaUtils.strictSearch<TransactionHistoryModelDocs>(state.docs!, ['description', ], query);
 
     return WayaScaffold(
-      //isLoading: viewModel.isLoading,
       appBar: AppBar(
         leading: WayaBackButton(onTap: () => WayaNav.goBack()),
         title: WayaTextFormField(

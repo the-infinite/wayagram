@@ -4,11 +4,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:gap/gap.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/waya_navigation.dart';
 // import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/shop/shop_dispute/vm/default.dart';
 import 'package:wayagram/features/shop/shop_dispute/widgets/single_dispute_widget.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/filter_widget.dart';
+import 'package:wayagram/features/support/views/dispute.dart';
 
 class SellerDispute extends ConsumerStatefulWidget {
   static const route = '/seller-dispute';
@@ -33,7 +36,11 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
   // This is fine.
   @override
   Widget build(BuildContext context) {
+    //?themes
+    final wayaTheme = Theme.of(context);
+    //?controllers
     final state = ref.watch(disputeVmProvider);
+    final notifier = ref.read(disputeVmProvider.notifier);
     // final filteredDispute = WayaUtils.search(state.disputes, ["status"], searchController.text);
 
     //? Return this.
@@ -46,12 +53,20 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
         isAtEnd: true,
         handler: handler,
         onReachEnd: () async {
-          await ref.read(disputeVmProvider.notifier).getDisputes();
+          await notifier.getDisputes();
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            FilterWidget(
+              search: searchController,
+              hintText: 'Search Dispute by status (pending, resolved)',
+              onTextChanged: (value) {
+                // TODO: Filter this.
+                notifier.filterList(searchController.text);
+              },
+            ),
             if (state.disputes.isEmpty && !state.isLoading) ...[
               Center(
                 child: EmptyState(
@@ -64,13 +79,6 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
               Gap(20.h),
 
               //? How search through our list of disputes...
-              FilterWidget(
-                search: searchController,
-                hintText: 'Search Dispute by status (pending, resolved)',
-                onTextChanged: (value) {
-                  // TODO: Filter this.
-                },
-              ),
 
               // Some space.
               Gap(20.h),
@@ -87,6 +95,23 @@ class _SellerDisputeState extends ConsumerState<SellerDispute> {
               )
             ]
           ],
+        ),
+      ),
+      floatingActionButton: SizedBox(
+        height: 50,
+        width: 50,
+        child: WayaButton(
+          callback: () {
+            WayaNav.toNamed(SupportDisputeScreen.route);
+          },
+          height: 50,
+          centerWidget: Center(
+            child: Icon(
+              Icons.add,
+              color: wayaTheme.colorScheme.white,
+              size: 40,
+            ),
+          ),
         ),
       ),
     );

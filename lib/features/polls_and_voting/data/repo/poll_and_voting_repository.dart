@@ -73,7 +73,7 @@ class PollAndVotingRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getAllPollsById(String id) {
-    return get("$serviceUrl/client/polls/$id");
+    return get("$serviceUrl/client/polls?id=$id");
   }
 
   Future<WayaRequestResponse> confirmWalletPin(ConfirmWalletPin payload) {

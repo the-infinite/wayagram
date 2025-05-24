@@ -285,7 +285,8 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
                     hintText: "Date of Birth here",
                     label: "Date of Birth ",
                     onTap: () async {
-                      var date = await notifier2.pickerDialog(context);
+                      var date = await notifier2.pickerDialog2(context,
+                          lastDate: DateTime(2011, 9, 7, 17, 30));
                       if (date != null) {
                         String stringDate =
                             DateFormat('yyyy-MM-dd').format(date);
@@ -313,8 +314,7 @@ class _RegisterContestState extends ConsumerState<RegisterContest> {
             }),
 
             const Gap(20),
-            Text("University Information",
-                style: wayaTheme.textTheme.hintStyle),
+            Text("Information", style: wayaTheme.textTheme.hintStyle),
             //  const Gap(20),
             FormField<String>(validator: (value) {
               if (selectedState.value.isEmpty) {

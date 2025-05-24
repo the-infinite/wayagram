@@ -17,7 +17,6 @@ import 'package:wayagram/features/explore/widgets/moments_widget.dart';
 import 'package:wayagram/features/explore/widgets/polls_card.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
-import 'package:wayagram/features/moments/widgets/my_moment_widget.dart';
 import 'package:wayagram/features/explore/search/model/user_detail.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
@@ -36,6 +35,8 @@ import 'package:wayagram/shared/features/user/resource/default.dart';
 import '../../group/vm/group_vm.dart';
 import '../../pages/vm/pages_vm.dart';
 import '../../polls_and_voting/data/model/fetch_all_polls.dart';
+
+
 
 class SearchView extends ConsumerStatefulWidget {
   static const route = "/search";
@@ -455,7 +456,8 @@ class _SearchState extends ConsumerState<SearchView> {
           ),
         ),
       );
-    }
+    } 
+
     return SizedBox.shrink();
   }
 }

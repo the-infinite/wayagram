@@ -128,7 +128,19 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                                 value: 1,
                                 child: _buildActionNav(
                                     context: context,
-                                    onTap: () {},
+                                    onTap: () async {
+                                      await Share.share(
+                                        WayaValueHelper.getShareableUrl(
+                                            WayaAppRoutes
+                                                .getContestantProfileRoute(
+                                                    widget.post
+                                                            .contestantProfileId ??
+                                                        "",
+                                                    widget.post.contestId ??
+                                                        "")),
+                                        subject: "Share Contestant Profile",
+                                      );
+                                    },
                                     asset: WayaAssets.icons.genSet.share
                                         .svg(fit: BoxFit.none),
                                     text: "Share Post Link",
@@ -137,7 +149,8 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                               /*   if (viewModel.getLoggedInUserId() ==
                                   widget.post.contestantProfileId) */
                               if (viewModel.getLoggedInUserId() ==
-                                  widget.contestApplicant?.profileId && widget.post.shares == 0)
+                                      widget.contestApplicant?.profileId &&
+                                  widget.post.shares == 0)
                                 PopupMenuItem<int>(
                                   value: 1,
                                   child: _buildActionNav(

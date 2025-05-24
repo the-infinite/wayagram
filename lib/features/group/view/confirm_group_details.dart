@@ -52,8 +52,8 @@ class _ConfirmGroupDetailsState extends ConsumerState<ConfirmGroupDetails> {
                 viewModel.groupName.text,
                 viewModel.groupDescription.text,
                 args['type'] == 'Public Group' ? false : true,
-                (args['coverImage'] as File).path,
                 (args['image'] as File).path,
+                (args['coverImage'] as File).path,
               );
               notifier.reset();
               WayaNav.goBack();

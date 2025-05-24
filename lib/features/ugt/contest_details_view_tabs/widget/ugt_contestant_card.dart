@@ -27,6 +27,7 @@ class UgtContestantCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final wayaTheme = Theme.of(context);
+        final viewModelNotifier = ref.watch(votersContestNotifier.notifier);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -89,8 +90,17 @@ class UgtContestantCard extends ConsumerWidget {
                   WayaSnackBar.showToast("Contest has ended");
                   return;
                 }
-
-                if (model.amountPerVote == 0) {
+                //? go to  the contestant page instead of voting directly
+                 ref.read(selectedContestantProfile.notifier).state =
+                              contestantData;
+                            viewModelNotifier.updateContestId(model.id);
+                            ref.read(selectedContestProvider.notifier).state =
+                                model;
+                            WayaNav.toNamed(
+                              '/contest-profile-page',
+                            );
+                          
+              /*   if (model.amountPerVote == 0) {
                   WayaUtils.showModalSheet(
                     context,
                     child: ConfirmVoteOptionModal(
@@ -136,7 +146,7 @@ class UgtContestantCard extends ConsumerWidget {
                     votingLink: "votingLink",
                   ),
                 );
-              },
+             */  },
               text: "Vote",
             ),
           ),

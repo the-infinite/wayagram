@@ -192,7 +192,7 @@ class ShopVm extends StateNotifier<ShopState> {
     try {
       // debugPrint(productId);
 
-      state = state.copyWith(isReviewing: true);
+    //  state = state.copyWith(isReviewing: true);
       final response = await _repository.updateShopSettings(
           notifyFriendsAboutProductPosts, makeProductPostsPublic);
 
@@ -209,7 +209,7 @@ class ShopVm extends StateNotifier<ShopState> {
       debugPrint(error.toString());
       return null;
     } finally {
-      state = state.copyWith(isReviewing: false);
+     // state = state.copyWith(isReviewing: false);
     }
   }
 
@@ -221,7 +221,7 @@ class ShopVm extends StateNotifier<ShopState> {
     try {
       // debugPrint(productId);
 
-      state = state.copyWith(isReviewing: true);
+    //  state = state.copyWith(isReviewing: true);
       final response = await _repository.updateQuotationSettings(
           receiveQuotationRequests!,
           makeRequestsPublic!,
@@ -240,7 +240,7 @@ class ShopVm extends StateNotifier<ShopState> {
       debugPrint(error.toString());
       return null;
     } finally {
-      state = state.copyWith(isReviewing: false);
+     // state = state.copyWith(isReviewing: false);
     }
   }
 

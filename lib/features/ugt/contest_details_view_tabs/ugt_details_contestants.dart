@@ -47,7 +47,7 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
             notifier.searchList(value);
           },
           controller: searchController,
-          hintText: "search by name, univerisity , stage, category",
+          hintText: "search by name",
         ),
         Gap(10),
 
@@ -73,6 +73,8 @@ class _UgtDetailsContestantsState extends ConsumerState<UgtDetailsContestants> {
             );
           },
         ),
+
+        Gap(50)
       ],
     );
   }
