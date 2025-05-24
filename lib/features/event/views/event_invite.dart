@@ -6,6 +6,7 @@ import 'package:svg_flutter/svg.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/widgets/search_event_invitee.dart';
@@ -90,7 +91,9 @@ class _EventInviteState extends ConsumerState<EventInvite> {
                   child: Padding(
                     padding: EdgeInsets.symmetric(vertical: 12.h),
                     child: WayaButton(
-                      callback: () {},
+                      callback: () {
+                        WayaNav.goBack();
+                      },
                       text: "Invite",
                     ),
                   ),
