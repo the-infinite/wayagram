@@ -46,6 +46,11 @@ class _UgtHomeState extends ConsumerState<UgtHome> {
       isLoading: false,
       isScrollable: true,
       onRefresh: () {
+        ref.read(appliedContestProvider.notifier).fetchAppliedContest(true);
+        ref.read(contestDetailProvider.notifier).fetchHostedContest();
+        ref.read(followedContestProvider.notifier).fetchFollowedPosts();
+
+        ref.read(contestNotifierProvider.notifier).allCategories();
         return ref.read(postProvider.notifier).fetchContestForYou(true);
       },
       title: "University Got Talent",
