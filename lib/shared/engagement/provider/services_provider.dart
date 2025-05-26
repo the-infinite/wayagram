@@ -220,61 +220,61 @@ class ServicesProvider extends StateNotifier<States> {
       if (response.success) {
         PostResponseModel responseModel =
             PostResponseModel.fromJson(response.data);
-        final userInterests = ref.watch(selectInterestProvider).userInterests;
+        // final userInterests = ref.watch(selectInterestProvider).userInterests;
         final List<PostModel> allPosts = responseModel.data.docs;
 
         wayaPostCache.cacheAll(responseModel.data.docs);
 
-        // Map user interests to categories and scores
-        Map<String, int> interestMap = {
-          for (var interest in userInterests)
-            interest.interest.category: interest.interest.score
-        };
+        // // Map user interests to categories and scores
+        // Map<String, int> interestMap = {
+        //   for (var interest in userInterests)
+        //     interest.interest.category: interest.interest.score
+        // };
 
-        // Filter posts that match user interests, handling null categories
-        List<PostModel> matchingPosts = allPosts
-            .where((post) =>
-                (post.categories?.isNotEmpty ?? false) &&
-                post.categories!
-                    .any((category) => interestMap.containsKey(category)))
-            .toList();
+        // // Filter posts that match user interests, handling null categories
+        // List<PostModel> matchingPosts = allPosts
+        //     .where((post) =>
+        //         (post.categories?.isNotEmpty ?? false) &&
+        //         post.categories!
+        //             .any((category) => interestMap.containsKey(category)))
+        //     .toList();
 
-        // Sort posts by highest matching interest score
-        matchingPosts.sort((a, b) {
-          int aMaxScore = (a.categories ?? [])
-              .map((c) => interestMap[c] ?? 0)
-              .fold(0, (prev, score) => score > prev ? score : prev);
-          int bMaxScore = (b.categories ?? [])
-              .map((c) => interestMap[c] ?? 0)
-              .fold(0, (prev, score) => score > prev ? score : prev);
-          return bMaxScore.compareTo(aMaxScore); // Higher scores first
-        });
+        // // Sort posts by highest matching interest score
+        // matchingPosts.sort((a, b) {
+        //   int aMaxScore = (a.categories ?? [])
+        //       .map((c) => interestMap[c] ?? 0)
+        //       .fold(0, (prev, score) => score > prev ? score : prev);
+        //   int bMaxScore = (b.categories ?? [])
+        //       .map((c) => interestMap[c] ?? 0)
+        //       .fold(0, (prev, score) => score > prev ? score : prev);
+        //   return bMaxScore.compareTo(aMaxScore); // Higher scores first
+        // });
 
-        // Get score distribution and select top posts
-        List<int> scoreDistribution =
-            _getScoreDistribution(userInterests.length, 5);
-        List<PostModel> topPosts = [];
-        int index = 0;
+        // // Get score distribution and select top posts
+        // List<int> scoreDistribution =
+        //     _getScoreDistribution(userInterests.length, 5);
+        // List<PostModel> topPosts = [];
+        // int index = 0;
 
-        for (int slots in scoreDistribution) {
-          for (int i = 0; i < slots && index < matchingPosts.length; i++) {
-            topPosts.add(matchingPosts[index++]);
-          }
-        }
+        // for (int slots in scoreDistribution) {
+        //   for (int i = 0; i < slots && index < matchingPosts.length; i++) {
+        //     topPosts.add(matchingPosts[index++]);
+        //   }
+        // }
 
-        // If fewer than 5 posts, add random non-matching posts
-        if (topPosts.length < 5) {
-          final remainingPosts = allPosts
-              .where((post) =>
-                  !topPosts.contains(post) &&
-                  (post.categories?.isNotEmpty ?? false))
-              .toList();
-          remainingPosts.shuffle();
-          topPosts.addAll(remainingPosts.take(5 - topPosts.length));
-        }
+        // // If fewer than 5 posts, add random non-matching posts
+        // if (topPosts.length < 5) {
+        //   final remainingPosts = allPosts
+        //       .where((post) =>
+        //           !topPosts.contains(post) &&
+        //           (post.categories?.isNotEmpty ?? false))
+        //       .toList();
+        //   remainingPosts.shuffle();
+        //   topPosts.addAll(remainingPosts.take(5 - topPosts.length));
+        // }
 
         // Update state
-        state = state.copyWith(topPosts: topPosts);
+        state = state.copyWith(topPosts: allPosts);
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
