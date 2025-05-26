@@ -14,13 +14,13 @@ class ContestContestantModelMean {
   final String? message;
   final bool? status;
   final int? statusCode;
-  final List<MyContestContestantModel>? data;
+  final Data? data;
 
   ContestContestantModelMean copyWith({
     String? message,
     bool? status,
     int? statusCode,
-    List<MyContestContestantModel>? data,
+    Data? data,
   }) {
     return ContestContestantModelMean(
       message: message ?? this.message,
@@ -30,10 +30,70 @@ class ContestContestantModelMean {
     );
   }
 
-  factory ContestContestantModelMean.fromJson(Map<String, dynamic> json) =>
-      _$ContestContestantModelMeanFromJson(json);
+  factory ContestContestantModelMean.fromJson(Map<String, dynamic> json) => _$ContestContestantModelMeanFromJson(json);
 
   Map<String, dynamic> toJson() => _$ContestContestantModelMeanToJson(this);
+}
+
+@JsonSerializable()
+class Data {
+  Data({
+    required this.docs,
+    required this.totalDocs,
+    required this.limit,
+    required this.page,
+    required this.totalPages,
+    required this.hasNextPage,
+    required this.nextPage,
+    required this.hasPrevPage,
+    required this.prevPage,
+    required this.pagingCounter,
+    required this.metadata,
+  });
+
+  final List<MyContestContestantModel>? docs;
+  final int? totalDocs;
+  final int? limit;
+  final int? page;
+  final int? totalPages;
+  final bool? hasNextPage;
+  final dynamic nextPage;
+  final bool? hasPrevPage;
+  final dynamic prevPage;
+  final int? pagingCounter;
+  final Metadata? metadata;
+
+  Data copyWith({
+    List<MyContestContestantModel>? docs,
+    int? totalDocs,
+    int? limit,
+    int? page,
+    int? totalPages,
+    bool? hasNextPage,
+    dynamic nextPage,
+    bool? hasPrevPage,
+    dynamic prevPage,
+    int? pagingCounter,
+    Metadata? metadata,
+  }) {
+    return Data(
+      docs: docs ?? this.docs,
+      totalDocs: totalDocs ?? this.totalDocs,
+      limit: limit ?? this.limit,
+      page: page ?? this.page,
+      totalPages: totalPages ?? this.totalPages,
+      hasNextPage: hasNextPage ?? this.hasNextPage,
+      nextPage: nextPage ?? this.nextPage,
+      hasPrevPage: hasPrevPage ?? this.hasPrevPage,
+      prevPage: prevPage ?? this.prevPage,
+      pagingCounter: pagingCounter ?? this.pagingCounter,
+      metadata: metadata ?? this.metadata,
+    );
+  }
+
+  factory Data.fromJson(Map<String, dynamic> json) => _$DataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$DataToJson(this);
 }
 
 @JsonSerializable()
@@ -71,7 +131,6 @@ class MyContestContestantModel {
   final String? updatedAt;
   final ContestApplicant? contestApplicant;
   final int? votes;
-  
 
   MyContestContestantModel copyWith({
     String? id,
@@ -97,8 +156,7 @@ class MyContestContestantModel {
       contestId: contestId ?? this.contestId,
       profilePhoto: profilePhoto ?? this.profilePhoto,
       bio: bio ?? this.bio,
-      expectationFromVoters:
-          expectationFromVoters ?? this.expectationFromVoters,
+      expectationFromVoters: expectationFromVoters ?? this.expectationFromVoters,
       introVideo: introVideo ?? this.introVideo,
       hasPaid: hasPaid ?? this.hasPaid,
       status: status ?? this.status,
@@ -110,8 +168,7 @@ class MyContestContestantModel {
     );
   }
 
-  factory MyContestContestantModel.fromJson(Map<String, dynamic> json) =>
-      _$MyContestContestantModelFromJson(json);
+  factory MyContestContestantModel.fromJson(Map<String, dynamic> json) => _$MyContestContestantModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$MyContestContestantModelToJson(this);
 }
@@ -123,6 +180,7 @@ class ContestApplicant {
     required this.contestId,
     required this.userId,
     required this.fullName,
+    required this.age,
     required this.email,
     required this.phoneNumber,
     required this.state,
@@ -138,13 +196,14 @@ class ContestApplicant {
   final String? contestId;
   final String? userId;
   final String? fullName;
+  final String? age;
   final String? email;
   final String? phoneNumber;
-  final String? state;
+  final dynamic state;
   final String? address;
-  final Map<String, dynamic>? applicationData;
+  final dynamic applicationData;
   final String? status;
-  final String? rejectionReason;
+  final dynamic rejectionReason;
   final String? createdAt;
   final String? updatedAt;
 
@@ -153,13 +212,14 @@ class ContestApplicant {
     String? contestId,
     String? userId,
     String? fullName,
+    String? age,
     String? email,
     String? phoneNumber,
-    String? state,
+    dynamic state,
     String? address,
-    Map<String, dynamic>? applicationData,
+    dynamic applicationData,
     String? status,
-    String? rejectionReason,
+    dynamic rejectionReason,
     String? createdAt,
     String? updatedAt,
   }) {
@@ -168,6 +228,7 @@ class ContestApplicant {
       contestId: contestId ?? this.contestId,
       userId: userId ?? this.userId,
       fullName: fullName ?? this.fullName,
+      age: age ?? this.age,
       email: email ?? this.email,
       phoneNumber: phoneNumber ?? this.phoneNumber,
       state: state ?? this.state,
@@ -180,33 +241,10 @@ class ContestApplicant {
     );
   }
 
-  factory ContestApplicant.fromJson(Map<String, dynamic> json) =>
-      _$ContestApplicantFromJson(json);
+  factory ContestApplicant.fromJson(Map<String, dynamic> json) => _$ContestApplicantFromJson(json);
 
   Map<String, dynamic> toJson() => _$ContestApplicantToJson(this);
 }
-
-/* @JsonSerializable()
-class ApplicationData {
-  ApplicationData({
-    required this.ggggggg,
-  });
-
-  final String? ggggggg;
-
-  ApplicationData copyWith({
-    String? ggggggg,
-  }) {
-    return ApplicationData(
-      ggggggg: ggggggg ?? this.ggggggg,
-    );
-  }
-
-  factory ApplicationData.fromJson(Map<String, dynamic> json) =>
-      _$ApplicationDataFromJson(json);
-
-  Map<String, dynamic> toJson() => _$ApplicationDataToJson(this);
-} */
 
 @JsonSerializable()
 class Stage {
@@ -230,9 +268,9 @@ class Stage {
 
   final String? stageName;
   final String? entryType;
-  final dynamic entryAmount;
-  final dynamic voteCountToQualify;
-  final dynamic numberOfPostPerWeek;
+  final String? entryAmount;
+  final String? voteCountToQualify;
+  final String? numberOfPostPerWeek;
   final int? priceOfTheWinner;
   final String? startDate;
   final String? endDate;
@@ -247,9 +285,9 @@ class Stage {
   Stage copyWith({
     String? stageName,
     String? entryType,
-    dynamic entryAmount,
-    dynamic voteCountToQualify,
-    dynamic numberOfPostPerWeek,
+    String? entryAmount,
+    String? voteCountToQualify,
+    String? numberOfPostPerWeek,
     int? priceOfTheWinner,
     String? startDate,
     String? endDate,
@@ -270,10 +308,10 @@ class Stage {
       priceOfTheWinner: priceOfTheWinner ?? this.priceOfTheWinner,
       startDate: startDate ?? this.startDate,
       endDate: endDate ?? this.endDate,
-      hasAccepted: hasAccepted ?? this.hasAccepted,
       approveBeforeLive: approveBeforeLive ?? this.approveBeforeLive,
       isActive: isActive ?? this.isActive,
       hasPaid: hasPaid ?? this.hasPaid,
+      hasAccepted: hasAccepted ?? this.hasAccepted,
       noOfVotes: noOfVotes ?? this.noOfVotes,
       amountEarned: amountEarned ?? this.amountEarned,
       position: position ?? this.position,
@@ -283,4 +321,58 @@ class Stage {
   factory Stage.fromJson(Map<String, dynamic> json) => _$StageFromJson(json);
 
   Map<String, dynamic> toJson() => _$StageToJson(this);
+}
+
+@JsonSerializable()
+class Metadata {
+  Metadata({
+    required this.offset,
+    required this.searchApplied,
+    required this.searchFields,
+    required this.appliedFilters,
+  });
+
+  final int? offset;
+  final bool? searchApplied;
+  final List<String>? searchFields;
+  final AppliedFilters? appliedFilters;
+
+  Metadata copyWith({
+    int? offset,
+    bool? searchApplied,
+    List<String>? searchFields,
+    AppliedFilters? appliedFilters,
+  }) {
+    return Metadata(
+      offset: offset ?? this.offset,
+      searchApplied: searchApplied ?? this.searchApplied,
+      searchFields: searchFields ?? this.searchFields,
+      appliedFilters: appliedFilters ?? this.appliedFilters,
+    );
+  }
+
+  factory Metadata.fromJson(Map<String, dynamic> json) => _$MetadataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$MetadataToJson(this);
+}
+
+@JsonSerializable()
+class AppliedFilters {
+  AppliedFilters({
+    required this.contestId,
+  });
+
+  final String? contestId;
+
+  AppliedFilters copyWith({
+    String? contestId,
+  }) {
+    return AppliedFilters(
+      contestId: contestId ?? this.contestId,
+    );
+  }
+
+  factory AppliedFilters.fromJson(Map<String, dynamic> json) => _$AppliedFiltersFromJson(json);
+
+  Map<String, dynamic> toJson() => _$AppliedFiltersToJson(this);
 }

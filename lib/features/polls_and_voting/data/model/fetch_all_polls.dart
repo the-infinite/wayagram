@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import '../../../../shared/model/base_model.dart';
+
 FetchAllPolls fetchAllPollsFromJson(String str) =>
     FetchAllPolls.fromJson(json.decode(str));
 String fetchAllPollsToJson(FetchAllPolls data) => json.encode(data.toJson());
@@ -141,7 +143,7 @@ class Data {
 Docs docsFromJson(String str) => Docs.fromJson(json.decode(str));
 String docsToJson(Docs data) => json.encode(data.toJson());
 
-class Docs {
+class Docs  extends BaseModel<Docs>{
   Docs({
     this.id,
     this.creatorId,
@@ -279,6 +281,14 @@ class Docs {
     }
     return map;
   }
+
+  @override
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        
+        "question": question,
+        "description": description
+      };
 }
 
 UserData userDataFromJson(String str) => UserData.fromJson(json.decode(str));
