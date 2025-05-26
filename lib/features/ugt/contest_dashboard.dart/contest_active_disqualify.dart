@@ -19,19 +19,60 @@ class ContestActiveDisqualify extends StatefulHookConsumerWidget {
   const ContestActiveDisqualify({super.key});
 
   @override
-  ConsumerState<ContestActiveDisqualify> createState() => _ManageStateContestState();
+  ConsumerState<ContestActiveDisqualify> createState() =>
+      _ManageStateContestState();
 }
 
 class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
   final List<Map<String, String>> data = [
-    {"name": "Ademola Lookman", "state": "Ogun", "votes": "25", "status": "Inactive"},
-    {"name": "Ademola Lookman", "state": "Osun", "votes": "25", "status": "Active"},
-    {"name": "Ademola Lookman", "state": "Oyo", "votes": "25", "status": "Active"},
-    {"name": "Ademola Lookman", "state": "Ondo", "votes": "25", "status": "Inactive"},
-    {"name": "Ademola Lookman", "state": "Lagos", "votes": "25", "status": "Active"},
-    {"name": "Ademola Lookman", "state": "Lagos", "votes": "25", "status": "Active"},
-    {"name": "Ademola Lookman", "state": "Lagos", "votes": "25", "status": "Active"},
-    {"name": "Ademola Lookman", "state": "Lagos", "votes": "25", "status": "Active"},
+    {
+      "name": "Ademola Lookman",
+      "state": "Ogun",
+      "votes": "25",
+      "status": "Inactive"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Osun",
+      "votes": "25",
+      "status": "Active"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Oyo",
+      "votes": "25",
+      "status": "Active"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Ondo",
+      "votes": "25",
+      "status": "Inactive"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Lagos",
+      "votes": "25",
+      "status": "Active"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Lagos",
+      "votes": "25",
+      "status": "Active"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Lagos",
+      "votes": "25",
+      "status": "Active"
+    },
+    {
+      "name": "Ademola Lookman",
+      "state": "Lagos",
+      "votes": "25",
+      "status": "Active"
+    },
   ];
 
   @override
@@ -49,29 +90,43 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        child: viewModel.myContestList.isEmpty
+        child: viewModel.myFullContestantList.isEmpty
             ? emptyWidget()
             : DataTable(
                 columnSpacing: 20.0,
                 dividerThickness: 0.2,
-                headingRowColor: WidgetStateColor.resolveWith((states) => Colors.white),
+                headingRowColor:
+                    WidgetStateColor.resolveWith((states) => Colors.white),
                 columns: [
-                  DataColumn(label: Text("Name", style: TextStyle(fontWeight: FontWeight.bold))),
-                  DataColumn(label: Text("No.", style: TextStyle(fontWeight: FontWeight.bold))),
-                  DataColumn(label: Text("No of Votes", style: TextStyle(fontWeight: FontWeight.bold))),
-                  DataColumn(label: Text("Status", style: TextStyle(fontWeight: FontWeight.bold))),
-                  DataColumn(label: Text("Action", style: TextStyle(fontWeight: FontWeight.bold))),
+                  DataColumn(
+                      label: Text("Name",
+                          style: TextStyle(fontWeight: FontWeight.bold))),
+                  DataColumn(
+                      label: Text("No.",
+                          style: TextStyle(fontWeight: FontWeight.bold))),
+                  DataColumn(
+                      label: Text("No of Votes",
+                          style: TextStyle(fontWeight: FontWeight.bold))),
+                  DataColumn(
+                      label: Text("Status",
+                          style: TextStyle(fontWeight: FontWeight.bold))),
+                  DataColumn(
+                      label: Text("Action",
+                          style: TextStyle(fontWeight: FontWeight.bold))),
                 ],
-                rows: viewModel.myContestList.map((item) {
+                rows: viewModel.myFullContestantList.map((item) {
                   return DataRow(cells: [
                     DataCell(Text(item.contestApplicant?.fullName ?? "")),
                     DataCell(Text(item.contestApplicant?.phoneNumber ?? "")),
                     DataCell(Text(item.votes.toString())),
                     DataCell(
                       Container(
-                        padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: item.status?.toLowerCase() == "active" ? Colors.green[100] : Colors.red[100],
+                          color: item.status?.toLowerCase() == "active"
+                              ? Colors.green[100]
+                              : Colors.red[100],
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
@@ -97,7 +152,8 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                                   context: context,
                                   onTap: () {
                                     WayaNav.goBack();
-                                    WayaNav.toNamed('/contest-mydashboard-profile-page');
+                                    WayaNav.toNamed(
+                                        '/contest-mydashboard-profile-page');
                                   },
                                   asset: WayaAssets.icons.cProfileUser.svg(
                                     color: wayaTheme.colorScheme.customBlack,
@@ -112,8 +168,13 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                                   context: context,
                                   onTap: () {
                                     WayaNav.goBack();
-                                    ref.read(selectedContestantProfile.notifier).state = item;
-                                    ref.read(selectedContestProvider.notifier).state = model;
+                                    ref
+                                        .read(
+                                            selectedContestantProfile.notifier)
+                                        .state = item;
+                                    ref
+                                        .read(selectedContestProvider.notifier)
+                                        .state = model;
                                     WayaNav.toNamed(
                                       '/contest-profile-page',
                                     );
@@ -132,19 +193,26 @@ class _ManageStateContestState extends ConsumerState<ContestActiveDisqualify> {
                                   onTap: () {
                                     WayaNav.goBack();
                                     // WayaNav.toNamed('/pages');
-                                    notifier.qualifyDisqualify(model?.id ?? "", {
+                                    notifier
+                                        .qualifyDisqualify(model?.id ?? "", {
                                       "contestId": model?.id ?? "",
                                       "profileId": item.profileId ?? "",
-                                      "status": item.status?.toLowerCase() == "active" ? "DISQUALIFIED" : "ACTIVE",
+                                      "status":
+                                          item.status?.toLowerCase() == "active"
+                                              ? "DISQUALIFIED"
+                                              : "ACTIVE",
                                     });
                                   },
                                   asset: WayaAssets.images.pages.flag.svg(
-                                    color: item.status?.toLowerCase() == "active"
-                                        ? wayaTheme.colorScheme.primary
-                                        : wayaTheme.colorScheme.error500,
+                                    color:
+                                        item.status?.toLowerCase() == "active"
+                                            ? wayaTheme.colorScheme.primary
+                                            : wayaTheme.colorScheme.error500,
                                     height: 20,
                                   ),
-                                  text: item.status?.toLowerCase() == "active" ? "Disqualify" : "Activate",
+                                  text: item.status?.toLowerCase() == "active"
+                                      ? "Disqualify"
+                                      : "Activate",
                                   color: item.status?.toLowerCase() == "active"
                                       ? wayaTheme.colorScheme.primary
                                       : wayaTheme.colorScheme.error500),
@@ -191,7 +259,8 @@ InkWell _buildActionNav({
         const Gap(4),
         Text(
           text,
-          style: TextStyle().wayaCopyWith(color: color, fontWeight: FontWeight.w500, fontSize: 12.sp),
+          style: TextStyle().wayaCopyWith(
+              color: color, fontWeight: FontWeight.w500, fontSize: 12.sp),
         )
       ],
     ),

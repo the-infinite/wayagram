@@ -16,10 +16,12 @@ class ContestProfileStagesSection extends StatefulHookConsumerWidget {
   const ContestProfileStagesSection(this.stages, {super.key});
 
   @override
-  ConsumerState<ContestProfileStagesSection> createState() => _ContestProfileStagesSectionState();
+  ConsumerState<ContestProfileStagesSection> createState() =>
+      _ContestProfileStagesSectionState();
 }
 
-class _ContestProfileStagesSectionState extends ConsumerState<ContestProfileStagesSection> {
+class _ContestProfileStagesSectionState
+    extends ConsumerState<ContestProfileStagesSection> {
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -74,7 +76,9 @@ class _ContestProfileStagesSectionState extends ConsumerState<ContestProfileStag
                 AboutUgtWidget(
                     // isFromDetailsPage: true,
                     title: "Position",
-                    content: model.position?.toString() == "0" ? "No Position" : model.position?.toString() ?? ""),
+                    content: model.position?.toString() == "0"
+                        ? "No Position"
+                        : model.position?.toString() ?? ""),
               ],
             ),
             //  const Gap(20),
@@ -127,6 +131,7 @@ class _ContestProfileStagesSectionState extends ConsumerState<ContestProfileStag
         desc: "",
         title: "No Contest Stage yet",
         buttonText: "Contest",
+        showButtonBusiness: false,
         onTap: () {
           //  ivalidateUGTVM(ref);
           //  WayaNav.toNamed("/create-contest");

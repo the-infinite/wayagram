@@ -336,6 +336,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
         state = state.copyWith(
             myContestList: myContestantList,
             myContestListCopy: myContestantList,
+            myFullContestantList: contestList,
             createPostId: model?.id ?? "");
         // _page++;
         //isLoading = false;
