@@ -179,21 +179,7 @@ class _MyContestDetailsState extends ConsumerState<MyContestDetails> {
                         },
                       ),
                       const Gap(10),
-                      /*   ListView.builder(
-                        // controller: _hostedScrollController,
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: host.length,
-                        itemBuilder: (context, index) {
-                          /*  if (hostNotifier.isLoading) {
-                            return Center(child: CircularProgressIndicator());
-                          } */
-
-                          final post = host[index];
-                          return ContestCard(post, hostNotifier.toggleLike,
-                              hostNotifier.toggleShare, hostNotifier.doFollow);
-                        },
-                      ), */
+                    
                       const Gap(200),
                     ],
                   ),

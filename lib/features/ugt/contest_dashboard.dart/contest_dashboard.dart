@@ -378,36 +378,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
 
             SizedBox(height: 20),
 
-            /*   // Manage States
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-              decoration: BoxDecoration(
-                // color: Colors.orange[100],
-                border: Border.all(
-                  color: Colors.green[100]!, // Border color
-                  width: 1.0, // Border width
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                children: [
-                  GestureDetector(
-                      onTap: () {
-                        WayaNav.toNamed('/manage-contest-stage');
-                      },
-                      child: _buildSectionTitle("Manage states")),
-                  Gap(10),
-                  _buildStateItem(context, "Lagos state", "241 contestants"),
-                  Gap(10),
-                  _buildStateItem(context, "Oyo state", "241 contestants"),
-                  Gap(10),
-                  _buildStateItem(context, "Ogun state", "241 contestants"),
-                ],
-              ),
-            ),
-
-            SizedBox(height: 20), */
-
+          
             // Manage Contestants
             Container(
               padding: EdgeInsets.symmetric(horizontal: 10, vertical: 20),
@@ -574,23 +545,7 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
       ),
     );
   }
-/*      Widget _buildStageItemStages(Stages stage, bool isActive) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(stage.stageName??"", style: TextStyle(fontWeight: FontWeight.bold)),
-        Switch(value: isActive, onChanged: (bool value) {
 
-           notifier.startStageContest(e.stageName ?? "", {
-                          "contestId": model.id ?? "",
-                          "stageName": e.stageName ?? ""
-                        });
-
-         
-        }),
-      ],
-    );
-  } */
 
   Widget _buildStatCard(BuildContext context, String title, String value) {
     final wayaTheme = Theme.of(context);

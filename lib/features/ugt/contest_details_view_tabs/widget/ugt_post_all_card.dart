@@ -338,33 +338,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                           });
                         },
                       ),
-                      /*  GestureDetector(
-                        onTap: () async {
-                        
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: wayaTheme.colorScheme.greyColor200),
-                              width: 35,
-                              height: 35,
-                              child: Center(
-                                  child: SvgPicture.asset(
-                                      "assets/icons/u-share.svg")),
-                            ),
-                            const Gap(3),
-                            Text(
-                              "${widget.post.shares ?? 0} Shares",
-                              style: wayaTheme.textTheme.bodySmall,
-                            )
-                          ],
-                        ),
-                      ),
-                   */
+                     
                     ],
                   ),
                   WayaButton(
