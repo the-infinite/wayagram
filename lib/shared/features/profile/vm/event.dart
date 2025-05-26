@@ -9,8 +9,6 @@ class EventNotifier extends StateNotifier<EventState> {
   final repo = UserProfileRepository.instance;
   EventNotifier(super.state);
 
-  String? get query => state.search;
-
   /// An API used to fetch all the posts for a given user.
   Future<List<EventDoc>> getEventsForUser(String id) async {
     final result = <EventDoc>[];
@@ -58,10 +56,6 @@ class EventNotifier extends StateNotifier<EventState> {
 
     // That's fine.
     return result;
-  }
-
-  void setQuery(String? query) {
-    state = state.copyWith(search: query);
   }
 
   /// Helper function used to reset the state of our entire post notifier.

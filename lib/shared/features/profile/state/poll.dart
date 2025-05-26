@@ -10,7 +10,6 @@ class PollsState {
   final int totalPages;
   final bool hasNextPage;
   final bool hasPreviousPage;
-  final String? search;
   final List<PollModel> docs;
 
   // Construct.
@@ -23,7 +22,6 @@ class PollsState {
     required this.nextPage,
     required this.totalPages,
     required this.hasNextPage,
-    required this.search,
     required this.hasPreviousPage,
     required this.docs,
   });
@@ -38,7 +36,6 @@ class PollsState {
     int? totalPages,
     bool? hasNextPage,
     bool? hasPreviousPage,
-    String? search,
     List<PollModel>? docs,
   }) {
     return PollsState(
@@ -49,20 +46,19 @@ class PollsState {
       page: page ?? this.page,
       nextPage: nextPage ?? this.nextPage,
       totalPages: totalPages ?? this.totalPages,
-      search: search ?? this.search,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
       docs: docs ?? this.docs,
     );
   }
 
-  List<PollModel> get polls {
+  List<PollModel> polls(String? search) {
     //? If there is searching enabled...
-    if (search != null) {
+    if (search?.isNotEmpty ?? false) {
       return docs
           .where((poll) =>
               poll.question.toLowerCase().contains(search!) ||
-              (poll.choices?.any((choice) => choice.description.toString().toLowerCase().contains(search!)) ?? false))
+              (poll.choices?.any((choice) => choice.description.toString().toLowerCase().contains(search)) ?? false))
           .toList();
     }
 
@@ -78,7 +74,6 @@ class PollsState {
     page: 0,
     nextPage: 1,
     totalPages: 0,
-    search: null,
     hasNextPage: true,
     hasPreviousPage: false,
     docs: [],

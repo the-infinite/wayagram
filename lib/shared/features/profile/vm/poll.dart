@@ -9,8 +9,6 @@ class UserPollsNotifier extends StateNotifier<PollsState> {
   final repo = PollAndVotingRepository();
   UserPollsNotifier() : super(PollsState.initial);
 
-  String? get query => state.search;
-
   Future<List<PollModel>> getPollsByUser(String id) async {
     final result = <PollModel>[];
 
@@ -57,10 +55,6 @@ class UserPollsNotifier extends StateNotifier<PollsState> {
 
     // That's fine.
     return result;
-  }
-
-  void setQuery(String? query) {
-    state = state.copyWith(search: query);
   }
 
   void reset() {

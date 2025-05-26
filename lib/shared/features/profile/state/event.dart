@@ -10,7 +10,6 @@ class EventState {
   final int totalPages;
   final bool hasNextPage;
   final bool hasPreviousPage;
-  final String? search;
   final List<EventDoc> docs;
 
   // This is fine.
@@ -25,7 +24,6 @@ class EventState {
     required this.nextPage,
     required this.isLoading,
     required this.hasLoaded,
-    required this.search,
   });
 
   factory EventState.fromJson(Map<String, dynamic> json) {
@@ -40,7 +38,6 @@ class EventState {
       docs: (json["docs"] as List).map((e) => EventDoc.fromJson(e)).toList(),
       isLoading: false,
       hasLoaded: true,
-      search: null,
     );
   }
 
@@ -53,19 +50,18 @@ class EventState {
     hasNextPage: true,
     hasPreviousPage: false,
     docs: [],
-    search: null,
     nextPage: 1,
     isLoading: false,
     hasLoaded: false,
   );
 
-  List<EventDoc> get events {
+  List<EventDoc> events(String? search) {
     //? If there is searching enabled...
-    if (search != null) {
+    if (search?.isNotEmpty ?? false) {
       return docs
           .where((event) =>
               event.title.toLowerCase().contains(search!) ||
-              event.description.toString().toLowerCase().contains(search!))
+              event.description.toString().toLowerCase().contains(search))
           .toList();
     }
 
@@ -83,7 +79,6 @@ class EventState {
     int? totalPages,
     bool? hasNextPage,
     bool? hasPreviousPage,
-    String? search,
     List<EventDoc>? docs,
   }) {
     return EventState(
@@ -97,7 +92,6 @@ class EventState {
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
       docs: docs ?? this.docs,
-      search: search ?? this.search,
     );
   }
 }
