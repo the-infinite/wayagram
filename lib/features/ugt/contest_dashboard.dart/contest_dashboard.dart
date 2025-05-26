@@ -431,15 +431,15 @@ class _DashboardContestPageState extends ConsumerState<DashboardContestPage> {
                     // controller: _scrollController,
                     physics: BouncingScrollPhysics(),
                     shrinkWrap: true,
-                    itemCount: viewModel.myContestList.length > 6
+                    itemCount: viewModel.myFullContestantList.length > 6
                         ? 6
-                        : viewModel.myContestList.length,
+                        : viewModel.myFullContestantList.length,
                     itemBuilder: (context, index) {
                       if (viewModel.isLoading!) {
                         return Center(child: CircularProgressIndicator());
                       }
 
-                      final post = viewModel.myContestList[index];
+                      final post = viewModel.myFullContestantList[index];
                       return GestureDetector(
                         onTap: () {
                           WayaNav.toNamed('/contest-active-disqualify');

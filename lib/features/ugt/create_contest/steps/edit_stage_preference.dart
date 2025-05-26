@@ -227,12 +227,14 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           DateTime? firstDate;
                           DateTime? lastDate;
 
+                          //? if is the first stage, then the start date is the contest start date
                           if (_contestController.selectedIndex == 0) {
                             firstDate = convertToUsableDate(
                                 viewModel.contestTimelineStartDate);
                             lastDate = convertToUsableDate(
                                 viewModel.contestTimelineEndDate);
                           } else {
+                            //? if not the first stage, then the start date is the end date of the previous stage
                             int newIndex = _contestController.selectedIndex - 1;
                             StagePrefModel model = ref
                                 .read(stateContactProvider.notifier)
@@ -301,12 +303,13 @@ class _EditStagePreferenceState extends ConsumerState<EditStagePreference> {
                           }
                           DateTime? firstDate;
                           DateTime? lastDate;
-
+                          //? if is the first stage, then the start date is the contest start date
                           if (_contestController.selectedIndex == 0) {
                             firstDate = convertToUsableDate(startDate.value);
                             lastDate = convertToUsableDate(
                                 viewModel.contestTimelineEndDate);
                           } else {
+                            //? if not the first stage, then the start date is the end date of the previous stage
                             int newIndex = _contestController.selectedIndex - 1;
                             StagePrefModel model = ref
                                 .read(stateContactProvider.notifier)
