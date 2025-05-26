@@ -8,9 +8,10 @@ class PostState {
   final int page;
   final int? nextPage;
   final int totalPages;
+  final String? search;
   final bool hasNextPage;
   final bool hasPreviousPage;
-  final List<PostModel> posts;
+  final List<PostModel> docs;
 
   // This is fine.
   PostState({
@@ -20,8 +21,9 @@ class PostState {
     required this.totalPages,
     required this.hasNextPage,
     required this.hasPreviousPage,
-    required this.posts,
+    required this.docs,
     required this.nextPage,
+    required this.search,
     required this.isLoading,
     required this.hasLoaded,
   });
@@ -31,11 +33,12 @@ class PostState {
       totalSize: json["totalDocs"],
       limit: json["limit"],
       page: json["page"],
+      search: json['search'],
       totalPages: json["totalPages"],
       hasNextPage: json["hasNextPage"],
       hasPreviousPage: json["hasPrevPage"],
       nextPage: json["nextPage"],
-      posts: (json["docs"] as List).map((e) => PostModel.fromJson(e)).toList(),
+      docs: (json["docs"] as List).map((e) => PostModel.fromJson(e)).toList(),
       isLoading: false,
       hasLoaded: true,
     );
@@ -49,11 +52,26 @@ class PostState {
     totalPages: 0,
     hasNextPage: true,
     hasPreviousPage: false,
-    posts: [],
+    docs: [],
+    search: null,
     nextPage: 1,
     isLoading: false,
     hasLoaded: false,
   );
+
+  List<PostModel> get posts {
+    //? If there is searching enabled...
+    if (search != null) {
+      return docs
+          .where((post) =>
+              post.content.toLowerCase().contains(search!) ||
+              post.hashtags.any((tag) => tag.toLowerCase().contains(search!)))
+          .toList();
+    }
+
+    //? Return what we already have.
+    return docs;
+  }
 
   PostState copyWith({
     bool? hasLoaded,
@@ -63,9 +81,10 @@ class PostState {
     int? page,
     int? nextPage,
     int? totalPages,
+    String? search,
     bool? hasNextPage,
     bool? hasPreviousPage,
-    List<PostModel>? posts,
+    List<PostModel>? docs,
   }) {
     return PostState(
       hasLoaded: hasLoaded ?? this.hasLoaded,
@@ -73,11 +92,12 @@ class PostState {
       totalSize: totalSize ?? this.totalSize,
       limit: limit ?? this.limit,
       page: page ?? this.page,
+      search: search ?? this.search,
       nextPage: nextPage ?? this.nextPage,
       totalPages: totalPages ?? this.totalPages,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
-      posts: posts ?? this.posts,
+      docs: docs ?? this.docs,
     );
   }
 }
@@ -92,7 +112,8 @@ class SavedPostState {
   final int totalPages;
   final bool hasNextPage;
   final bool hasPreviousPage;
-  final List<PostModel> posts;
+  final String? search;
+  final List<PostModel> docs;
   final List<BookmarkModel> bookmarks;
 
   // This is fine.
@@ -103,7 +124,8 @@ class SavedPostState {
     required this.totalPages,
     required this.hasNextPage,
     required this.hasPreviousPage,
-    required this.posts,
+    required this.docs,
+    required this.search,
     required this.nextPage,
     required this.isLoading,
     required this.hasLoaded,
@@ -112,19 +134,33 @@ class SavedPostState {
 
   factory SavedPostState.fromJson(Map<String, dynamic> json) {
     return SavedPostState(
-      bookmarks:
-          (json["docs"] as List).map((e) => BookmarkModel.fromJson(e)).toList(),
+      bookmarks: (json["docs"] as List).map((e) => BookmarkModel.fromJson(e)).toList(),
       totalSize: json["totalDocs"],
       limit: json["limit"],
       page: json["page"],
+      search: json['search'],
       totalPages: json["totalPages"],
       hasNextPage: json["hasNextPage"],
       hasPreviousPage: json["hasPrevPage"],
       nextPage: json["nextPage"],
-      posts: (json["docs"] as List).map((e) => PostModel.fromJson(e)).toList(),
+      docs: (json["docs"] as List).map((e) => PostModel.fromJson(e)).toList(),
       isLoading: false,
       hasLoaded: true,
     );
+  }
+
+  List<PostModel> get posts {
+    //? If there is searching enabled...
+    if (search != null) {
+      return docs
+          .where((post) =>
+              post.content.toLowerCase().contains(search!) ||
+              post.hashtags.any((tag) => tag.toLowerCase().contains(search!)))
+          .toList();
+    }
+
+    //? Return what we already have.
+    return docs;
   }
 
   //? This is fine.
@@ -135,7 +171,8 @@ class SavedPostState {
     totalPages: 0,
     hasNextPage: true,
     hasPreviousPage: false,
-    posts: [],
+    docs: [],
+    search: null,
     bookmarks: [],
     nextPage: 1,
     isLoading: false,
@@ -152,7 +189,8 @@ class SavedPostState {
     int? totalPages,
     bool? hasNextPage,
     bool? hasPreviousPage,
-    List<PostModel>? posts,
+    String? search,
+    List<PostModel>? docs,
     List<BookmarkModel>? bookmarks,
   }) {
     return SavedPostState(
@@ -165,7 +203,8 @@ class SavedPostState {
       totalPages: totalPages ?? this.totalPages,
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
-      posts: posts ?? this.posts,
+      docs: docs ?? this.docs,
+      search: search ?? this.search,
       bookmarks: bookmarks ?? this.bookmarks,
     );
   }
@@ -178,4 +217,3 @@ class SavedPostState {
     return bookmarks.any((post) => post.postId == id);
   }
 }
-

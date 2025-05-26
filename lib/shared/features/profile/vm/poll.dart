@@ -9,6 +9,8 @@ class UserPollsNotifier extends StateNotifier<PollsState> {
   final repo = PollAndVotingRepository();
   UserPollsNotifier() : super(PollsState.initial);
 
+  String? get query => state.search;
+
   Future<List<PollModel>> getPollsByUser(String id) async {
     final result = <PollModel>[];
 
@@ -28,12 +30,12 @@ class UserPollsNotifier extends StateNotifier<PollsState> {
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.hasNextPage) {
-          result.addAll(state.polls);
+          result.addAll(state.docs);
         }
 
         //? This is fine.
         state = state.copyWith(
-          polls: result,
+          docs: result,
           totalSize: data['totalDocs'],
           totalPages: int.tryParse(data['totalPages'].toString()) ?? 1,
           hasNextPage: data['hasNextPage'],
@@ -55,6 +57,10 @@ class UserPollsNotifier extends StateNotifier<PollsState> {
 
     // That's fine.
     return result;
+  }
+
+  void setQuery(String? query) {
+    state = state.copyWith(search: query);
   }
 
   void reset() {

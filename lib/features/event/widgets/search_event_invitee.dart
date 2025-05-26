@@ -6,9 +6,6 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
-import 'package:wayagram/features/chat/model/default.dart';
-import 'package:wayagram/features/chat/vm/chat.dart';
-import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/shared/features/follow/notifier/self.dart';
 import 'package:wayagram/shared/features/user/models/default.dart';
@@ -39,14 +36,12 @@ class _SearchEventInviteeState extends ConsumerState<SearchEventInvitee> {
       child: SizedBox(
         width: size.width,
         child: Consumer(builder: (context, ref, _) {
-          final notifier = ref.read(conversationProvider.notifier);
+          //final notifier = ref.read(conversationProvider.notifier);
 
           //? This is fine.
           return Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: _peer != null
-                ? CrossAxisAlignment.center
-                : CrossAxisAlignment.stretch,
+            crossAxisAlignment: _peer != null ? CrossAxisAlignment.center : CrossAxisAlignment.stretch,
             mainAxisSize: _peer != null ? MainAxisSize.min : MainAxisSize.max,
             children: [
               //? First, the title of the popup.
@@ -139,11 +134,9 @@ class _SearchEventInviteeState extends ConsumerState<SearchEventInvitee> {
                             : InkWell(
                                 onTap: () async {
                                   //? This is fine.
-                                  eventNotifier.updateSelectedInvitee(
-                                      invitee: data.$1);
+                                  eventNotifier.updateSelectedInvitee(invitee: data.$1);
 
-                                  await Future.delayed(
-                                      const Duration(milliseconds: 800));
+                                  await Future.delayed(const Duration(milliseconds: 800));
 
                                   WayaNav.goBack();
 
@@ -153,16 +146,11 @@ class _SearchEventInviteeState extends ConsumerState<SearchEventInvitee> {
                                   });
                                 },
                                 borderRadius: BorderRadius.circular(10),
-                                splashColor:
-                                    theme.colorScheme.primary.withAlpha(30),
-                                focusColor:
-                                    theme.colorScheme.primary.withAlpha(30),
-                                highlightColor:
-                                    theme.colorScheme.primary.withAlpha(30),
+                                splashColor: theme.colorScheme.primary.withAlpha(30),
+                                focusColor: theme.colorScheme.primary.withAlpha(30),
+                                highlightColor: theme.colorScheme.primary.withAlpha(30),
                                 child: Container(
-                                  margin: index == 0
-                                      ? EdgeInsets.zero
-                                      : EdgeInsets.only(top: 5.h),
+                                  margin: index == 0 ? EdgeInsets.zero : EdgeInsets.only(top: 5.h),
                                   decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                   ),
