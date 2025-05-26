@@ -723,7 +723,7 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
 
           //? First, the row for user title.
           Padding(
-            padding: widget.padded ? EdgeInsets.only(left: 15.w, right: 15.w, top: 15.w) : EdgeInsets.zero,
+            padding: widget.padded ? EdgeInsets.only(left: 15.w, right: 15.w) : EdgeInsets.zero,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               spacing: 8.w,
@@ -745,14 +745,20 @@ class _WayaPostWidgetState extends State<WayaPostWidget> {
             ),
           ),
 
+          // Some space.
+          SizedBox(height: 15.h),
+
           //? Second, the post that was reposted.
-          WayaErrorWidget(
-            onError: (context, e) => const SizedBox(),
-            builder: (context) => WayaPostWidget(
-              data: widget.data.originalPost!,
-              index: 0,
-              padded: widget.padded,
-              sourceType: 'repost',
+          Padding(
+            padding: widget.padded ? EdgeInsets.only(left: 15.w, right: 15.w) : EdgeInsets.zero,
+            child: WayaErrorWidget(
+              onError: (context, e) => const SizedBox(),
+              builder: (context) => WayaPostWidget(
+                data: widget.data.originalPost!,
+                index: 0,
+                padded: false,
+                sourceType: 'repost',
+              ),
             ),
           ),
         ],
