@@ -9,8 +9,6 @@ class UserProductsNotifier extends StateNotifier<ProductsState> {
   final repo = ProductsRepository.instance;
   UserProductsNotifier() : super(ProductsState.initial);
 
-  String? get query => state.search;
-
   Future<List<Product>> getProductsByShop(String id) async {
     final result = <Product>[];
 
@@ -30,7 +28,7 @@ class UserProductsNotifier extends StateNotifier<ProductsState> {
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.hasNextPage) {
-          result.addAll(state.products);
+          result.addAll(state.docs);
         }
 
         //? This is fine.
@@ -79,7 +77,7 @@ class UserProductsNotifier extends StateNotifier<ProductsState> {
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.hasNextPage) {
-          result.addAll(state.products);
+          result.addAll(state.docs);
         }
 
         //? This is fine.
@@ -110,10 +108,6 @@ class UserProductsNotifier extends StateNotifier<ProductsState> {
 
     // That's fine.
     return result;
-  }
-
-  void setQuery(String? query) {
-    state = state.copyWith(search: query);
   }
 
   void reset() {

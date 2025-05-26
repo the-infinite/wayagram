@@ -10,7 +10,6 @@ class ProductsState {
   final int totalPages;
   final bool hasNextPage;
   final bool hasPreviousPage;
-  final String? search;
   final List<Product> docs;
 
   // Construct.
@@ -25,7 +24,6 @@ class ProductsState {
     required this.hasNextPage,
     required this.hasPreviousPage,
     required this.docs,
-    required this.search,
   });
 
   ProductsState copyWith({
@@ -38,7 +36,6 @@ class ProductsState {
     int? totalPages,
     bool? hasNextPage,
     bool? hasPreviousPage,
-    String? search,
     List<Product>? docs,
   }) {
     return ProductsState(
@@ -52,16 +49,15 @@ class ProductsState {
       hasNextPage: hasNextPage ?? this.hasNextPage,
       hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
       docs: docs ?? this.docs,
-      search: search ?? this.search,
     );
   }
 
-  List<Product> get products {
+  List<Product> products(String? search) {
     //? If there is searching enabled...
-    if (search != null) {
+    if (search?.isNotEmpty ?? false) {
       return docs
           .where((product) =>
-              product.name.toLowerCase().contains(search!) || product.description.toLowerCase().contains(search!))
+              product.name.toLowerCase().contains(search!) || product.description.toLowerCase().contains(search))
           .toList();
     }
 
@@ -79,7 +75,6 @@ class ProductsState {
     totalPages: 0,
     hasNextPage: true,
     hasPreviousPage: false,
-    search: null,
     docs: [],
   );
 }

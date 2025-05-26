@@ -16,12 +16,6 @@ class PostNotifier extends StateNotifier<PostState> {
 
   PostNotifier(super.state);
 
-  void setQuery(String? query) {
-    state = state.copyWith(search: query);
-  }
-
-  String? get query => state.search;
-
   /// An API used to fetch all the posts for a given user.
   Future<List<PostModel>> getPostsForUser(String id) async {
     final result = <PostModel>[];
@@ -104,8 +98,6 @@ class CommentedPostNotifier extends StateNotifier<PostState> {
 
   CommentedPostNotifier(super.state);
 
-  String? get query => state.search;
-
   /// An API used to fetch all the posts for a given user.
   Future<List<PostModel>> getCommentedPost() async {
     final result = <PostModel>[];
@@ -161,10 +153,6 @@ class CommentedPostNotifier extends StateNotifier<PostState> {
     return result;
   }
 
-  void setQuery(String? query) {
-    state = state.copyWith(search: query);
-  }
-
   /// Helper function used to reset the state of our entire post notifier.
   void reset() {
     state = PostState.initial;
@@ -175,8 +163,6 @@ class LikedPostNotifier extends StateNotifier<PostState> {
   final exploreRepo = ExploreRepository.instance;
 
   LikedPostNotifier(super.state);
-
-  String? get query => state.search;
 
   /// An API used to fetch all the posts for a given user.
   Future<List<PostModel>> getLikedPost() async {
@@ -233,10 +219,6 @@ class LikedPostNotifier extends StateNotifier<PostState> {
     return result;
   }
 
-  void setQuery(String? query) {
-    state = state.copyWith(search: query);
-  }
-
   /// Helper function used to reset the state of our entire post notifier.
   void reset() {
     state = PostState.initial;
@@ -248,12 +230,6 @@ class RepostedPostNotifier extends StateNotifier<PostState> {
   final pageRepo = PageRepository.instance;
 
   RepostedPostNotifier(super.state);
-
-  String? get query => state.search;
-
-  void setQuery(String? query) {
-    state = state.copyWith(search: query);
-  }
 
   /// An API used to fetch all the posts for a given user.
   Future<List<PostModel>> getRepostedPosts(String id) async {
@@ -336,12 +312,6 @@ class RepostedPostNotifier extends StateNotifier<PostState> {
 class SavedPostNotifier extends StateNotifier<SavedPostState> {
   final repo = UserProfileRepository.instance;
   SavedPostNotifier(super.state);
-
-  String? get query => state.search;
-
-  void setQuery(String? query) {
-    state = state.copyWith(search: query);
-  }
 
   /// An API used to fetch the list of all saved posts for a given user.
   Future<List<PostModel>> getSavedPostsForUser(String id) async {
