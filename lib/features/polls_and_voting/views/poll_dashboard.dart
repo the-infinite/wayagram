@@ -12,6 +12,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class PollDashboard extends ConsumerStatefulWidget {
@@ -35,7 +36,7 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
   }
 
   void _startCountdown(context) {
-    final dynamic args  = ModalRoute.of(context)?.settings.arguments ;
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
     countdownTimer?.cancel(); // Cancel existing timer if any
     final pollEndTime = DateTime.parse('${args['endDate']}').toLocal();
     setState(() {
@@ -77,6 +78,8 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
   @override
   Widget build(BuildContext context) {
     final viewModel = ref.watch(createPollVotingProvider);
+    final dynamic args  = ModalRoute.of(context)?.settings.arguments;
+
     return WayaScaffold(
         isLoading: viewModel.isLoading,
         isScrollable: true,
@@ -202,8 +205,22 @@ class _PollDashboardState extends ConsumerState<PollDashboard>  {
 
                 }),
             const Gap(10),
+
         ],),
         ),
+            const Gap(20),
+            DateTime.now().isAfter(DateTime.parse("${args['endDate']}")) ?
+            WayaButton(
+              callback: !viewModel.isLoading
+                  ? ()  async{
+                await ref.read(createPollVotingProvider.notifier).
+                requestSettlement(context, args['id']);
+              }
+                  : null,
+              centerWidget: LoadingState(
+                  loading: viewModel.isLoading, text: 'Request Settlement'),
+            ):
+            Container(),
           ],
         ) );
   }
