@@ -796,6 +796,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
       if (response.success) {
         FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
         state = state.copyWith(fetchAllPols: responseModel.data?.docs);
+        state = state.copyWith(activePolls: responseModel.data?.docs);
       } else {}
     } catch (e) {
       debugPrint(e.toString());

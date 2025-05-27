@@ -306,6 +306,8 @@ class _ContestCardState extends ConsumerState<ContestCard> {
 
               WayaButton(
                 callback: () {
+                  ref.read(selectedContestProvider.notifier).state =
+                      widget.post;
                   print(isTodayInRange(widget.post.participationStartDate ?? "",
                       widget.post.participationStartDate ?? ""));
                   if (widget.isFromHost) {
@@ -325,8 +327,6 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   print("i am here ${voteNotifier.getLoggedInUserId()}");
                   if (widget.post.profileId ==
                       voteNotifier.getLoggedInUserId()) {
-                    ref.read(selectedContestProvider.notifier).state =
-                        widget.post;
                     WayaNav.toNamed('/upcoming-manage-contest-details');
                     return;
                   }

@@ -93,7 +93,7 @@ class PollAndVotingRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getAllFeedPolls() {
     return get(
-        "$serviceUrl/client/polls?limit=10&page=1&orderBy=createdAt&orderDirection=DESC");
+        "$serviceUrl/client/polls?limit=100&page=1&orderBy=createdAt&orderDirection=DESC");
   }
 
   //

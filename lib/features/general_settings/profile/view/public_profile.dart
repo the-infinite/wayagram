@@ -404,15 +404,21 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
           child: ValueListenableBuilder(
             valueListenable: _pageController,
             builder: (context, selectedPage, _) {
+              //? Get the filtered data for each type.
+              final filteredPosts = postState.posts(null);
+              final filteredPolls = pollsState.polls(null);
+              final filteredEvents = eventState.events(null);
+              final filteredProducts = productsState.products(null);
+
               //? Is this empty?
               final isEmpty = switch (selectedPage) {
-                0 => postState.posts.isEmpty && postState.hasLoaded,
-                2 => pollsState.polls.isEmpty && pollsState.hasLoaded,
+                0 => filteredPosts.isEmpty && postState.hasLoaded,
+                2 => filteredPolls.isEmpty && pollsState.hasLoaded,
                 3 => donationsState.donations.isEmpty && donationsState.hasLoaded,
                 4 => groupsState.groups.isEmpty && groupsState.hasLoaded,
                 5 => pagesState.pages.isEmpty && pagesState.hasLoaded,
-                6 => eventState.events.isEmpty && eventState.hasLoaded,
-                7 => productsState.products.isEmpty && productsState.hasLoaded,
+                6 => filteredEvents.isEmpty && eventState.hasLoaded,
+                7 => filteredProducts.isEmpty && productsState.hasLoaded,
                 _ => true,
               };
 
@@ -867,18 +873,18 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                       Gap(60.h),
                     ] else if (selectedPage == 0)
                       ...List.generate(
-                        postState.posts.length,
+                        filteredPosts.length,
                         (index) => WayaPostWidget(
-                          data: postState.posts[index],
+                          data: filteredPosts[index],
                           index: index,
                           padded: true,
                         ),
                       )
                     else if (selectedPage == 2)
                       ...List.generate(
-                        pollsState.polls.length,
+                        filteredPolls.length,
                         (index) => SinglePollWidget(
-                          poll: pollsState.polls[index],
+                          poll: filteredPolls[index],
                           user: user,
                           padded: true,
                         ),
@@ -953,9 +959,9 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                       )
                     else if (selectedPage == 6)
                       ...List.generate(
-                        eventState.events.length,
+                        filteredEvents.length,
                         (index) => EventCard(
-                          event: eventState.events[index],
+                          event: filteredEvents[index],
                           userId: widget.data.$1.id,
                         ),
                       )
@@ -963,7 +969,7 @@ class _ProfilePageState extends ConsumerState<UsersProfilePage> {
                       Padding(
                         padding: EdgeInsets.symmetric(horizontal: 5.w),
                         child: ProductsGrid(
-                          products: productsState.products,
+                          products: filteredProducts,
                         ),
                       ),
                   ],

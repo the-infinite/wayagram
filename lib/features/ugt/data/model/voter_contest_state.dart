@@ -20,6 +20,7 @@ class VoterDetailState {
   final String? contestId;
   final Wallet? data;
   final List<contestant.MyContestContestantModel> myContestList;
+  final List<contestant.MyContestContestantModel> myFullContestantList;
   final List<Stage> stageList;
   final List<ApplicantContestModel> myContestApplicantList;
   final List<ApplicantContestModel> myFilteredContestApplicantList;
@@ -42,6 +43,7 @@ class VoterDetailState {
     this.myPostList = const [],
     this.myApprovePostList = const [],
     this.myContestApplicantList = const [],
+    this.myFullContestantList = const [],
     this.myFilteredContestApplicantList = const [],
     this.stageList = const [],
     this.userVotersList = const [],
@@ -73,6 +75,7 @@ class VoterDetailState {
     List<VoterListModel>? userVotersList,
     List<contestant.MyContestContestantModel>? myContestList,
     List<contestant.MyContestContestantModel>? myContestListCopy,
+    List<contestant.MyContestContestantModel>? myFullContestantList,
   }) =>
       VoterDetailState(
         isLoading: isLoading ?? this.isLoading,
@@ -94,6 +97,7 @@ class VoterDetailState {
         contestId: contestId ?? this.contestId,
         myContestList: myContestList ?? this.myContestList,
         myContestListCopy: myContestListCopy ?? this.myContestListCopy,
+        myFullContestantList: myFullContestantList ?? this.myFullContestantList,
         externalWallets: externalWallets ?? this.externalWallets,
       );
 }

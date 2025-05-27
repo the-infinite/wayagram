@@ -379,14 +379,15 @@ class _SupportChatScreenState extends ConsumerState<SupportRequestScreen> {
 
                 //? Since we sent this support request ticket.
                 //?isLoading to control the state of the loading in the Notifier
-                if (await notifier.sendRequestTicket(isLoading)) {
+                String? ticketID = await notifier.sendRequestTicket(isLoading);
+                if (ticketID != null) {
                   //? Leave this screen if the action was successful
                   WayaNav.goBack();
 
                   //? Show the popup on the previous screen.
                   await WayaUtils.showModalSheet(
                     Get.context!,
-                    child: SuccessfulSupportRequestDialog(id: "XXXXXXX"),
+                    child: SuccessfulSupportRequestDialog(id: ticketID),
                   );
                 }
               },

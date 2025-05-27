@@ -15,11 +15,14 @@ import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/theme/waya_textstyles.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/ugt/contest_details_view_tabs/ugt_details_post.dart';
+import 'package:wayagram/features/ugt/contest_details_view_tabs/widget/ugt_post_card.dart';
 import 'package:wayagram/features/ugt/contest_profiles/contest_profile_stages_section.dart';
 import 'package:wayagram/features/ugt/create_contest_post/video_thumbnail_ugt.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
+import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_video_view.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_details_stage_modal.dart';
+import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
@@ -29,8 +32,7 @@ class ContestProfilePage extends StatefulHookConsumerWidget {
   static const route = '/contest-profile-page';
   final String id;
   final String contest;
-  const ContestProfilePage(
-      {required this.id, required this.contest, super.key});
+  const ContestProfilePage({required this.id, required this.contest, super.key});
 
   @override
   ConsumerState<ContestProfilePage> createState() => _ContestProfilePageState();
@@ -63,73 +65,73 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
     final wayaTheme = Theme.of(context);
     //var model = ref.watch(selectedContestProvider.notifier).state;
     final String id = Get.parameters['id'] ?? 'Unknown';
-    final String contestId = Get.parameters['contest'] ?? 'Unknown';
     var model = ref.watch(selectedContestantProfile);
+    final String contestId = Get.parameters['contest'] ?? model?.contestId ?? "";
     var viewModel = ref.watch(votersContestNotifier.notifier);
 
     useEffect(() {
-      ref.read(postProvider.notifier).fetchSingleContestantDetails(
-          ref, model?.contestId ?? contestId, model?.id ?? id);
+      ref.read(postProvider.notifier).fetchSingleContest(contestId: contestId, ref: ref);
 
-      if (viewModel.getLoggedInUserId() == model?.contestApplicant?.userId) {
-        model?.stages?.forEach((element) {
-          //  debugPrint("i am looping");
-          if (element.entryType?.toLowerCase() != "free" &&
-              element.isActive == true &&
-              element.hasPaid != true) {
-            //  debugPrint("looping and have picked one");
+      ref.read(postProvider.notifier).fetchSingleContestantDetails(ref, model?.contestId ?? contestId, model?.id ?? id);
 
-            selectedStage = element;
-            Future.delayed(Duration(seconds: 2), () {
-              WayaUtils.showModalSheetUgt(
-                context,
-                child: SuccessfulModal(
-                    title: "You’re Moving On to the Next Stage! ",
-                    subtitle:
-                        "Your talent is shining! Get ready for the next round. Complete the next steps to continue.",
-                    showCopyLink: false,
-                    buttonText: "Continue",
-                    onTap: (_, __) {
-                      WayaUtils.showModalSheetUgt(
-                        context,
-                        child: ContestDetailsStageModal(
-                          post: element,
-                          model: model,
-                        ),
-                      );
-                      //  WayaNav.removeUntilNamed("/ugt-home");
-                    }),
-              );
-            });
+      //? check if contestant is active before going on to active a page
 
-            return;
-          }
-          //?if contest is free but you have not accepted the stage
-          if (element.entryType?.toLowerCase() == "free" &&
-              element.hasAccepted == false) {
-            SuccessfulModal(
-                title: "You’re Moving On to the Next Stage! ",
-                subtitle:
-                    "Your talent is shining! Get ready for the next round. Complete the next steps to continue.",
-                showCopyLink: false,
-                buttonText: "Continue",
-                onTap: (_, __) {
-                  WayaUtils.showModalSheetUgt(
-                    context,
-                    child: ContestDetailsStageModal(
-                      post: element,
-                      model: model,
-                    ),
-                  );
-                  //  WayaNav.removeUntilNamed("/ugt-home");
-                });
-          }
-        });
+      if (model?.status?.toLowerCase() == "active") {
+        //? check if viewer is the owner of the contest
+        if (viewModel.getLoggedInUserId() == model?.contestApplicant?.userId) {
+          model?.stages?.forEach((element) {
+            //  debugPrint("i am looping");
+            if (element.entryType?.toLowerCase() != "free" && element.isActive == true && element.hasPaid != true) {
+              //  debugPrint("looping and have picked one");
+
+              selectedStage = element;
+              Future.delayed(Duration(seconds: 2), () {
+                WayaUtils.showModalSheetUgt(
+                  context,
+                  child: SuccessfulModal(
+                      title: "You’re Moving On to the Next Stage! ",
+                      subtitle:
+                          "Your talent is shining! Get ready for the next round. Complete the next steps to continue.",
+                      showCopyLink: false,
+                      buttonText: "Continue",
+                      onTap: (_, __) {
+                        WayaUtils.showModalSheetUgt(
+                          context,
+                          child: ContestDetailsStageModal(
+                            post: element,
+                            model: model,
+                          ),
+                        );
+                        //  WayaNav.removeUntilNamed("/ugt-home");
+                      }),
+                );
+              });
+
+              return;
+            }
+            //?if contest is free but you have not accepted the stage
+            if (element.entryType?.toLowerCase() == "free" && element.hasAccepted == false) {
+              SuccessfulModal(
+                  title: "You’re Moving On to the Next Stage! ",
+                  subtitle:
+                      "Your talent is shining! Get ready for the next round. Complete the next steps to continue.",
+                  showCopyLink: false,
+                  buttonText: "Continue",
+                  onTap: (_, __) {
+                    WayaUtils.showModalSheetUgt(
+                      context,
+                      child: ContestDetailsStageModal(
+                        post: element,
+                        model: model,
+                      ),
+                    );
+                    //  WayaNav.removeUntilNamed("/ugt-home");
+                  });
+            }
+          });
+        }
       }
-
-      ref
-          .watch(ugtContestantProfileVm.notifier)
-          .fetchSingleContestantPosts(model?.id ?? id);
+      ref.watch(ugtContestantProfileVm.notifier).fetchSingleContestantPosts(model?.id ?? id);
 
       /*  getImageUrl(model.introVideo ?? "").then((value) {
         imageUrl.value = value;
@@ -141,11 +143,10 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
       isLoading: false,
       isScrollable: true,
       onRefresh: () {
-        ref
-            .watch(ugtContestantProfileVm.notifier)
-            .fetchSingleContestantPosts(model?.id ?? id);
-        return ref.read(postProvider.notifier).fetchSingleContestantDetails(
-            ref, model?.contestId ?? contestId, model?.id ?? id);
+        ref.watch(ugtContestantProfileVm.notifier).fetchSingleContestantPosts(model?.id ?? id);
+        return ref
+            .read(postProvider.notifier)
+            .fetchSingleContestantDetails(ref, model?.contestId ?? contestId, model?.id ?? id);
       },
       title: model?.profileId == viewModel.getLoggedInUserId()
           ? "My Profile"
@@ -154,10 +155,9 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
         children: [
           GestureDetector(
               onTap: () async {
-              //  print(model?.id ?? id);
+                //  print(model?.id ?? id);
                 await Share.share(
-                  WayaValueHelper.getShareableUrl(
-                      WayaAppRoutes.getContestantProfileRoute(
+                  WayaValueHelper.getShareableUrl(WayaAppRoutes.getContestantProfileRoute(
                     model?.id ?? id,
                     model?.contestId ?? contestId,
                   )),
@@ -204,8 +204,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                     if (model?.profileId == viewModel.getLoggedInUserId())
                       Container(
                         margin: EdgeInsets.only(right: 20.w),
-                        padding: REdgeInsets.symmetric(
-                            vertical: 8.dg, horizontal: 12.dg),
+                        padding: REdgeInsets.symmetric(vertical: 8.dg, horizontal: 12.dg),
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: wayaTheme.colorScheme.primary600,
@@ -234,18 +233,25 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                   //   bo: -10,
                   bottom: -15,
                   left: 20,
-                  child: Container(
-                    padding: const EdgeInsets.all(0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 4),
-                    ),
-                    child: CircleAvatar(
-                      radius: 35,
-                      backgroundColor:
-                          Colors.pink[100], // Background color behind image
-                      backgroundImage: NetworkImage(model?.profilePhoto ?? ""),
+                  child: GestureDetector(
+                    onTap: () async {
+                      await WayaNavigationHelper.toImageDetailsScreen(
+                        null,
+                        [model?.profilePhoto ?? ""],
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.all(0),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 4),
+                      ),
+                      child: CircleAvatar(
+                        radius: 35,
+                        backgroundColor: Colors.pink[100], // Background color behind image
+                        backgroundImage: NetworkImage(model?.profilePhoto ?? ""),
+                      ),
                     ),
                   ),
                 ),
@@ -257,16 +263,14 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                 debugPrint("Edit Profile");
                 WayaNav.toNamed('/edit-profile-contest');
               },
-              child: Text(model?.contestApplicant?.fullName ?? "",
-                  style: wayaTheme.textTheme.bodyMedium),
+              child: Text(model?.contestApplicant?.fullName ?? "", style: wayaTheme.textTheme.bodyMedium),
             ),
             const Gap(5),
             Row(
               children: [
                 Text("Total Votes:",
-                    style: WayaTextStyles.hintStyleBold.wayaCopyWith(
-                        color: WayaColors.greyColor500,
-                        fontWeight: FontWeight.w400)),
+                    style: WayaTextStyles.hintStyleBold
+                        .wayaCopyWith(color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
                 const Gap(2),
                 Text("${model?.votes ?? ""}",
                     style: wayaTheme.textTheme.hintStyle.wayaCopyWith(
@@ -274,18 +278,66 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                     )),
               ],
             ),
-            Text("Your Bio", style: wayaTheme.textTheme.bodyMedium),
+            Text("Bio", style: wayaTheme.textTheme.bodyMedium),
             Text(model?.bio ?? "",
-                style: WayaTextStyles.hintStyleBold.wayaCopyWith(
-                    color: WayaColors.greyColor500,
-                    fontWeight: FontWeight.w400)),
+                style: WayaTextStyles.hintStyleBold
+                    .wayaCopyWith(color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
             const Gap(20),
-            Text("what you expect from the voters",
-                style: wayaTheme.textTheme.bodyMedium),
+            if (model?.status?.toLowerCase() == "active")
+              WayaButton(
+                fontSize: 12.sp,
+                callback: () async {
+                  final contestModel = ref.read(selectedContestProvider.notifier).state;
+                  var list = await getCurrentFee(contestModel, contestModel?.contestSettings?.stages);
+
+                  if (contestModel?.amountPerVote == 0) {
+                    WayaUtils.showModalSheet(
+                      context,
+                      child: ConfirmVoteOptionModal(
+                        amount: "1",
+                        voteFee: "0",
+                        isFree: true,
+                        model: ContestVoteModel(
+                            contestId: contestId,
+                            contestantId: model?.contestApplicant?.userId ?? "",
+                            hostUserId: model?.contestApplicant?.userId ?? "",
+                            amount: "0",
+                            numberOfVotes: "0",
+                            profileId: "",
+                            type: list[0].toString().toLowerCase()),
+                        candidateName: model?.contestApplicant?.fullName ?? "Name",
+                        votingLink: "votingLink",
+                      ),
+                    );
+
+                    return;
+                  }
+
+                  WayaUtils.showModalSheet(
+                    context,
+                    child: VoteOptionModal(
+                      isFree: list[0].toString().toLowerCase() == "free" ? true : false,
+                      voteFee: list[1].toString(),
+                      model: ContestVoteModel(
+                          contestId: contestId,
+                          contestantId: model?.contestApplicant?.userId ?? "",
+                          hostUserId: model?.contestApplicant?.userId ?? "",
+                          amount: "0",
+                          numberOfVotes: "0",
+                          profileId: "",
+                          type: "PAID"),
+                      candidateName: model?.contestApplicant?.fullName ?? "Name",
+                      votingLink: "votingLink",
+                    ),
+                  );
+                },
+                text: "Vote Candidate",
+              ),
+            const Gap(20),
+            Text("What you expect from the voters", style: wayaTheme.textTheme.bodyMedium),
             Text(model?.expectationFromVoters ?? "",
-                style: WayaTextStyles.hintStyleBold.wayaCopyWith(
-                    color: WayaColors.greyColor500,
-                    fontWeight: FontWeight.w400)),
+                style: WayaTextStyles.hintStyleBold
+                    .wayaCopyWith(color: WayaColors.greyColor500, fontWeight: FontWeight.w400)),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -303,8 +355,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
             ),
             const Gap(10),
             if (selectedViewIndex.value == 0) UgtDetailsPost(model),
-            if (selectedViewIndex.value == 1)
-              ContestProfileStagesSection(model?.stages),
+            if (selectedViewIndex.value == 1) ContestProfileStagesSection(model?.stages),
           ],
         ),
       ),

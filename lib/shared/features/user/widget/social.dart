@@ -81,7 +81,7 @@ class SocialUserWidget extends StatelessWidget {
 class SocialUserSelectionWidget extends StatelessWidget {
   final UserDetailsModel user;
   final bool isSelected;
-  final FutureOr<void> Function(UserDetailsModel, SocialProfileModel) onSelect;
+  final FutureOr<void> Function(UserDetailsModel) onSelect;
 
   const SocialUserSelectionWidget({
     super.key,
@@ -115,35 +115,47 @@ class SocialUserSelectionWidget extends StatelessWidget {
 
             //* For the displayed content.
             Expanded(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  //* For the user's name.
-                  Text(
-                    profile?.displayName ?? '',
-                    maxLines: 1,
-                    style: WayaTextStyles.titleMedium.copyWith(
-                      fontWeight: FontWeight.w600,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-
-                  //? For the user's description.
-                  if (profile?.username != null)
+                child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //* For the user's name.
                     Text(
-                      "@${profile!.username!}",
+                      profile?.displayName ?? '',
                       maxLines: 1,
                       style: WayaTextStyles.titleMedium.copyWith(
-                        fontWeight: FontWeight.normal,
+                        fontWeight: FontWeight.w600,
                         overflow: TextOverflow.ellipsis,
-                        color: WayaColors.greyColor500,
-                        fontSize: 14.sp,
                       ),
                     ),
-                ],
-              ),
-            ),
+
+                    //? For the user's description.
+                    if (profile?.username != null)
+                      Text(
+                        "@${profile!.username!}",
+                        maxLines: 1,
+                        style: WayaTextStyles.titleMedium.copyWith(
+                          fontWeight: FontWeight.normal,
+                          overflow: TextOverflow.ellipsis,
+                          color: WayaColors.greyColor500,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                  ],
+                ),
+                if (isSelected)
+                  TextButton(
+                      onPressed: () async {
+                       await  onSelect(user);
+                      },
+                      child: Text(
+                        "Remove",
+                      ))
+              ],
+            )),
           ],
         );
       },

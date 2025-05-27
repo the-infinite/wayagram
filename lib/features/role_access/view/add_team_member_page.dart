@@ -221,7 +221,9 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                               rollAccessNotifier.fetchHostedContest();
                               //  rollAccessNotifier.ge
                             } else {
+                              print("i am in role selected");
                               rollAccessNotifier.getRoles();
+                              rollAccessNotifier.getShops();
                             }
                             return modulePicker.value = value.first.value;
                           }),
@@ -318,120 +320,7 @@ class _UgtHomeState extends ConsumerState<AddTeamMemberPage> {
                   );
                 }),
                 const Gap(10),
-                /*   FormField<String>(validator: (value) {
-                  return WayaValidators.passwordValidator(
-                      rollAccessNotifier.password.text);
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Focus(
-                        onFocusChange: (hasFocus) {
-                          ref
-                              .read(personalFirstStepProvider.notifier)
-                              .setPasswordFocus(hasFocus);
-                        },
-                        child: WayaTextFormField(
-                          keyboardType: TextInputType.visiblePassword,
-                          controller: rollAccessNotifier.password,
-                          borderColor: formState.hasError &&
-                                  rollAccessNotifier.password.text.isEmpty
-                              ? wayaTheme.colorScheme.error
-                              : null,
-                          hintText: 'Enter Your Password',
-                          label: 'Password',
-                          obscureText: !isPasswordVisible.value,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              isPasswordVisible.value = !isPasswordVisible.value;
-                              /*     ref
-                                  .read(personalFirstStepProvider.notifier)
-                                  .togglePasswordVisibility(); */
-                            },
-                            autofocus: false,
-                            icon: Icon(isPasswordVisible.value
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined),
-                            color: wayaTheme.colorScheme.greyColor300,
-                          ),
-                        ),
-                      ),
-                      if (formState.hasError && !isPasswordFocused.value)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error, fontSize: 12),
-                          ),
-                        ),
-                    ],
-                  );
-                }),
-                const Gap(10),
-                FormField<String>(validator: (value) {
-                  if (rollAccessNotifier.confirmPassword.text.isEmpty) {
-                    return 'Password is required';
-                  }
-                  if (rollAccessNotifier.confirmPassword.text.length < 8) {
-                    return 'Password must be at least 8';
-                  }
-                  if (rollAccessNotifier.password.text !=
-                      rollAccessNotifier.confirmPassword.text) {
-                    return 'Password does not match';
-                  }
-          
-                  return null;
-                }, builder: (formState) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Focus(
-                        onFocusChange: (hasFocus) {
-                          /*  ref
-                              .read(personalFirstStepProvider.notifier)
-                              .setConfirmPasswordFocus(hasFocus); */
-                        },
-                        child: WayaTextFormField(
-                          keyboardType: TextInputType.visiblePassword,
-                          controller: rollAccessNotifier.confirmPassword,
-                          borderColor: formState.hasError &&
-                                  rollAccessNotifier.confirmPassword.text.isEmpty
-                              ? wayaTheme.colorScheme.error
-                              : null,
-                          hintText: 'Enter your Password',
-                          label: 'Confirm Password',
-                          obscureText: !isConfirmPasswordVisible.value,
-                          suffixIcon: IconButton(
-                            onPressed: () {
-                              isConfirmPasswordVisible.value =
-                                  !isConfirmPasswordVisible.value;
-                              /*  ref
-                                  .read(personalFirstStepProvider.notifier)
-                                  .toggleConfirmPasswordVisibility(); */
-                            },
-                            autofocus: false,
-                            icon: Icon(isConfirmPasswordVisible.value
-                                ? Icons.visibility_outlined
-                                : Icons.visibility_off_outlined),
-                            color: wayaTheme.colorScheme.greyColor300,
-                          ),
-                        ),
-                      ),
-                      if (formState.hasError && !isConfirmPasswordFocused.value)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            formState.errorText!,
-                            style: TextStyle(
-                                color: wayaTheme.colorScheme.error, fontSize: 12),
-                          ),
-                        ),
-                    ],
-                  );
-                }),
-                const Gap(10), */
-              ],
+                 ],
             ),
           ),
         ],

@@ -402,6 +402,13 @@ class ExpandedTabController {
   WayaExpandedTabButton? _widget;
   OverlayEntry? _current;
 
+  void dispose() {
+    close();
+    try {
+      _selected.dispose();
+    } catch (_) {}
+  }
+
   void away() {
     _selected.value = _widget?.text ?? "";
   }

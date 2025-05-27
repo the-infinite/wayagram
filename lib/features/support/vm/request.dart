@@ -48,7 +48,7 @@ class SupportRequestNotifier extends StateNotifier<SupportRequestState> {
 
   /// Controller function used to send the request to the server for posting this
   /// support ticket.
-  Future<bool> sendRequestTicket(
+  Future<String?> sendRequestTicket(
     ValueNotifier<bool> isLoading,
   ) async {
     isLoading.value = true;
@@ -71,9 +71,9 @@ class SupportRequestNotifier extends StateNotifier<SupportRequestState> {
     });
     isLoading.value = false;
     if (response.success) {
-      return true;
+      return response.data?['data']['ticketId'] ?? "ticketID";
     } else {
-      return false;
+      return null;
     }
   }
 }

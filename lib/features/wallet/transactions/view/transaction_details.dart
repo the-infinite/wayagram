@@ -1,12 +1,8 @@
-
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -27,26 +23,20 @@ class TransactionDetailsScreen extends ConsumerStatefulWidget {
   const TransactionDetailsScreen({super.key});
 
   @override
-  ConsumerState<TransactionDetailsScreen> createState() =>
-      _TransactionDetailsScreenState();
+  ConsumerState<TransactionDetailsScreen> createState() => _TransactionDetailsScreenState();
 }
 
-class _TransactionDetailsScreenState
-    extends ConsumerState<TransactionDetailsScreen> with WalletMixin {
+class _TransactionDetailsScreenState extends ConsumerState<TransactionDetailsScreen> with WalletMixin {
   final screenshotController = ScreenshotController();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final transactionId =
-          ModalRoute.of(context)!.settings.arguments as String;
-      ref
-          .read(transactionVmProvider.notifier)
-          .getSingleTransactions(transactionId);
+      final transactionId = ModalRoute.of(context)!.settings.arguments as String;
+      ref.read(transactionVmProvider.notifier).getSingleTransactions(transactionId);
     });
   }
-
 
   String shortenReference(String reference) {
     if (reference.length >= 12) {
@@ -115,25 +105,25 @@ class _TransactionDetailsScreenState
               ),
               // Table rows for each transaction
               ...transactions.map((transaction) => pw.TableRow(
-                children: [
-                  pw.Padding(
-                    padding: pw.EdgeInsets.all(8),
-                    child: pw.Text('${transaction.id}'),
-                  ),
-                  pw.Padding(
-                    padding: pw.EdgeInsets.all(8),
-                    child: pw.Text('${transaction.updatedAt}'),
-                  ),
-                  pw.Padding(
-                    padding: pw.EdgeInsets.all(8),
-                    child: pw.Text('\$${transaction.amount}'),
-                  ),
-                  pw.Padding(
-                    padding: pw.EdgeInsets.all(8),
-                    child: pw.Text('${transaction.description}'),
-                  ),
-                ],
-              )),
+                    children: [
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(8),
+                        child: pw.Text('${transaction.id}'),
+                      ),
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(8),
+                        child: pw.Text('${transaction.updatedAt}'),
+                      ),
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(8),
+                        child: pw.Text('\$${transaction.amount}'),
+                      ),
+                      pw.Padding(
+                        padding: pw.EdgeInsets.all(8),
+                        child: pw.Text('${transaction.description}'),
+                      ),
+                    ],
+                  )),
             ],
           ),
         ],
@@ -166,12 +156,12 @@ class _TransactionDetailsScreenState
                   ],
                 ),
                 ...transactions.map((transaction) => pw.TableRow(
-                  children: [
-                    pw.Text('${transaction.updatedAt}'),
-                    pw.Text(transaction.amount.toString()),
-                    pw.Text('${transaction.description}'),
-                  ],
-                )),
+                      children: [
+                        pw.Text('${transaction.updatedAt}'),
+                        pw.Text(transaction.amount.toString()),
+                        pw.Text('${transaction.description}'),
+                      ],
+                    )),
               ],
             ),
           ],
@@ -188,7 +178,6 @@ class _TransactionDetailsScreenState
     // or save it to the device's storage
   }
 
-
   // Sample transaction data
   /*final List<Transaction> transactions = [
     Transaction(id: 'TXN123456789012', date: '2025-05-22', amount: 100.50, description: 'Grocery Purchase'),
@@ -198,8 +187,7 @@ class _TransactionDetailsScreenState
 
   final List<TransactionHistoryModelDocs> transactions = [];
 
-  Widget _buildDetailRow(String label, String value,
-      {Color? valueColor, Widget? trailing}) {
+  Widget _buildDetailRow(String label, String value, {Color? valueColor, Widget? trailing}) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
@@ -207,7 +195,7 @@ class _TransactionDetailsScreenState
         children: [
           Text(
             label,
-            style:  TextStyle(
+            style: TextStyle(
               fontSize: 14.sp,
               color: Colors.black87,
             ),
@@ -232,8 +220,6 @@ class _TransactionDetailsScreenState
       ),
     );
   }
-
-
 
   Widget _buildReceiptContent() {
     final state = ref.read(transactionVmProvider);
@@ -283,19 +269,16 @@ class _TransactionDetailsScreenState
           ),
           _buildDetailRow(
             'Date',
-            WayaHelpers.formatDateString(
-                state.transaction?.updatedAt.toString() ?? ""),
+            WayaHelpers.formatDateString(state.transaction?.updatedAt.toString() ?? ""),
           ),
           _buildDetailRow(
             'Time',
-            DateFormat.jm()
-                .format(state.transaction?.updatedAt ?? DateTime.now()),
+            DateFormat.jm().format(state.transaction?.updatedAt ?? DateTime.now()),
           ),
           _buildDetailRow(
-            'Reference Number',
-            //state.transaction?.referenceId ?? "",
-            shortenReference(state.transaction?.referenceId ?? "")
-          ),
+              'Reference Number',
+              //state.transaction?.referenceId ?? "",
+              shortenReference(state.transaction?.referenceId ?? "")),
           _buildDetailRow(
             'Transaction Status',
             state.transaction?.status ?? "",
@@ -319,7 +302,7 @@ class _TransactionDetailsScreenState
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => WayaNav.goBack(),
         ),
-        title:  Text(
+        title: Text(
           'Transaction Details',
           style: TextStyle(
             color: Colors.black,
@@ -340,7 +323,7 @@ class _TransactionDetailsScreenState
                     width: double.infinity,
                     child: Column(
                       children: [
-                         Text(
+                        Text(
                           'Transaction Amount',
                           style: TextStyle(
                             fontSize: 14.sp,
@@ -380,7 +363,7 @@ class _TransactionDetailsScreenState
                           ),
                           _buildDetailRow(
                             'Description',
-                           shortenDescription(state.transaction?.description ?? ""),
+                            shortenDescription(state.transaction?.description ?? ""),
                           ),
                           _buildDetailRow(
                             'Transaction Type',
@@ -389,19 +372,17 @@ class _TransactionDetailsScreenState
                           ),
                           _buildDetailRow(
                             'Date',
-                            WayaHelpers.formatDateString(
-                                state.transaction?.updatedAt.toString() ?? ""),
+                            WayaHelpers.formatDateString(state.transaction?.updatedAt.toString() ?? ""),
                           ),
                           _buildDetailRow(
                             'Time',
-                            DateFormat.jm().format(
-                                state.transaction?.updatedAt ?? DateTime.now()),
+                            DateFormat.jm().format(state.transaction?.updatedAt ?? DateTime.now()),
                           ),
                           _buildDetailRow(
                             'Reference Number',
-                           shortenReference(state.transaction?.referenceId ?? ""),
+                            shortenReference(state.transaction?.referenceId ?? ""),
                             trailing: InkWell(
-                              onTap: (){
+                              onTap: () {
                                 Clipboard.setData(ClipboardData(text: '${state.transaction?.referenceId}'));
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -446,8 +427,7 @@ class _TransactionDetailsScreenState
                     padding: EdgeInsets.symmetric(horizontal: 16),
                     child: ElevatedButton(
                       onPressed: () {
-                        shareReceipt(
-                            screenshotController, _buildReceiptContent());
+                        shareReceipt(screenshotController, _buildReceiptContent());
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: wayaTheme.primaryColor,
@@ -458,7 +438,7 @@ class _TransactionDetailsScreenState
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children:  [
+                        children: [
                           Icon(Icons.share, size: 20, color: Colors.white),
                           SizedBox(width: 8),
                           Text(
@@ -469,7 +449,6 @@ class _TransactionDetailsScreenState
                       ),
                     ),
                   ),
-
                   if (state.transaction?.status.toLowerCase() == "pending") ...[
                     const SizedBox(height: 16),
                     Padding(
@@ -478,17 +457,11 @@ class _TransactionDetailsScreenState
                         onPressed: () async {
                           await ref
                               .read(transactionVmProvider.notifier)
-                              .verifyTransaction(
-                                  state.transaction!.transactionId,
-                                  state.transaction!.paymentMethod);
+                              .verifyTransaction(state.transaction!.transactionId, state.transaction!.paymentMethod);
                           WayaLoadingDialog.show(context);
                           if (state.verified!) {
-                            await ref
-                                .read(transactionVmProvider.notifier)
-                                .getSingleTransactions(state.transaction!.id);
-                            await ref
-                                .read(walletVmProvider.notifier)
-                                .getUserWallet();
+                            await ref.read(transactionVmProvider.notifier).getSingleTransactions(state.transaction!.id);
+                            await ref.read(walletVmProvider.notifier).getUserWallet();
                           }
                           WayaLoadingDialog.hide(context);
                         },
@@ -501,7 +474,7 @@ class _TransactionDetailsScreenState
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children:  [
+                          children: [
                             Icon(Icons.check, size: 20),
                             SizedBox(width: 8),
                             Text(
@@ -532,7 +505,7 @@ class _TransactionDetailsScreenState
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      subtitle:  Text(
+                      subtitle: Text(
                         'If you have any issue with this transaction\nYou can reach out to our Support Center',
                         style: TextStyle(fontSize: 12.sp),
                       ),

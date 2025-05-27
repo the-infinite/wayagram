@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:wayagram/core/components/waya_snackbar.dart';
 import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
@@ -80,7 +81,7 @@ class SupportDisputeNotifier extends StateNotifier<SupportDisputeState> {
 
   /// Controller function used to send the request to the server for posting this
   /// support ticket.
-  Future<bool> sendDisputeTicket(bool isShopSelected) async {
+  Future<String?> sendDisputeTicket(bool isShopSelected) async {
     try {
       String? media;
       File? myFile = proof.value;
@@ -102,18 +103,26 @@ class SupportDisputeNotifier extends StateNotifier<SupportDisputeState> {
           "phone": phone.text,
           //  "type": typeNotifier.value?.label.toLowerCase() ?? "general",
         }, //optiona
-        ""
-            "disputeType": typeNotifier.value?.label.toLowerCase() ?? "general",
 
+        "disputeType": typeNotifier.value?.label.toLowerCase() ?? "general",
+        if ((isShopSelected ||
+                typeNotifier.value?.label.toLowerCase() == "quotation") &&
+            merchantLink.text.trim().isEmpty)
+          "sellerId": merchantLink.text,
         "media": media
       });
 
-      if (response.success) {}
+      if (response.success) {
+        return response.data?['data']['ticketBody']['ticketId'] ?? "ticketID";
+      } else {
+        WayaSnackBar.showToast(response.data["message"]);
+        return null;
+      }
     } catch (error) {
       debugPrint(error.toString());
       //  return null;
     }
-    return true;
+    return null;
   }
 }
 
