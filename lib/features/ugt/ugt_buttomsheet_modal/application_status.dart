@@ -224,15 +224,15 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                     WayaNav.toNamed("/create-profile-contest1");
                   } else {
                     //? User has already paid for a contest
+                    ref.read(selectedAppliedContestProvider.notifier).state =
+                        widget.post;
                     if (hasPaid.value) {
                       WayaNav.goBack();
                       WayaNav.toNamed("/create-profile-contest1");
                       return;
                     }
 
-
                     //? if balance is Zero , dont allow to move forward
-                    
 
                     //? move on to pay for a contest
                     WayaNav.goBack();
@@ -267,7 +267,10 @@ class _ApplicationStatusState extends ConsumerState<ApplicationStatus> {
                       //? if it free and has profile details
                       : hasProfile.value
                           ? "View Contest Details"
-                          : "Pay ₦${formatMoney(widget.post?.contest?.amount?.toString() ?? "0")} to continue"
+                          //?checking if user has paid for the contest
+                          : hasPaid.value
+                              ? "Continue"
+                              : "Pay ₦${formatMoney(widget.post?.contest?.amount?.toString() ?? "0")} to continue"
                   : "View Contest Details",
             ),
             const Gap(10),
