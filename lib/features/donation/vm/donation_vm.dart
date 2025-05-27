@@ -375,6 +375,7 @@ class DonationVm extends StateNotifier<DonationState> {
           category);
 
       if (response.success) {
+        reset();
         debugPrint('CREATE DONATION ${response.data}');
         if (context.mounted) {
           CreateDonationResponse createDonationResponse =

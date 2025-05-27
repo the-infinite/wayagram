@@ -128,7 +128,7 @@ class _ReviewDonationState extends ConsumerState<ReviewDonation> {
                 viewModel.category,
                 context: context);
 
-            donation.reset();
+            //donation.reset();
           }
               : null,
           centerWidget: LoadingState(

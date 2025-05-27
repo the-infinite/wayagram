@@ -74,6 +74,15 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
     //     ? state.pendingDonations
     //     : state.pendingDonations!.sublist(0, min(state.pendingDonations!.length, 1));
 
+    // Filter the myDonations
+    final filteredMyDonations = WayaUtils.search<MyDonationDocs>(
+      viewModel.myDonationDocs!,
+      [
+        'title',
+      ],
+      searchController.text,
+    );
+
     return SizedBox(
       height: 560,
       child: ListView(
@@ -156,8 +165,6 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
               padding: EdgeInsets.only(bottom: 20),
                 shrinkWrap: true,
                 itemCount: viewModel.approvedDonations?.length,
-                //viewModel.myDonationDocs?.length,
-                //filteredMyDonations.length,
                 itemBuilder: (context, index) {
                   //final donation = filteredMyDonations[index];
                   final donation = viewModel.approvedDonations?[index];
@@ -206,15 +213,15 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
               subTitle: 'See and manage all your pending donations',
               title: 'Pending Donations'),
           const Gap(10),
-          viewModel.pendingDonations!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have pending donations yet',):
+          viewModel.myDonationDocs!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have pending donations yet',):
           SizedBox(
             height: Platform.isAndroid ? 300 : 460,
             child: ListView.builder(
+              //physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: viewModel.pendingDonations?.length,
+                itemCount: filteredMyDonations.length,
                 itemBuilder: (context, index) {
-                  final donation = viewModel.pendingDonations![index];
-                  //final donation = filteredMyDonations[index];
+                  final donation = filteredMyDonations[index];
                   int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
 
                   int amountRaised = double.parse('${donation.amountRaised}').toInt();
@@ -271,12 +278,9 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
           viewModel.rejectedDonations!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have rejected donations yet',):
           SizedBox(
             height: Platform.isAndroid ? 300 : 460,
-            //height: Platform.isAndroid ? 560 : 460,
             child: ListView.builder(
-              //physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: myDonations?.length,
-                //filteredMyDonations.length,
                 itemBuilder: (context, index) {
                   final donation = myDonations![index];
                   //final donation = filteredMyDonations[index];

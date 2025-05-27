@@ -32,25 +32,17 @@ class PollSummary extends ConsumerStatefulWidget {
 class _PollSummaryState extends ConsumerState<PollSummary>  {
 
   @override
-  void initState() {
-    debugPrint("userNAME ==>> ${ConversationState.self.accountType}");
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
 
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
     final setUp = ref.watch(successfulSetupVmProvider);
-    debugPrint('MY POLL TYPE ${viewModel.pollType}');
     String startDate = viewModel.startDate;
     String endDate = viewModel.endDate;
     DateFormat format = DateFormat("yyyy-M-d");
     DateTime parsedDate = format.parse(startDate);
     DateTime parsedDate2 = format.parse(endDate);
     num daysLeft = parsedDate2.difference(parsedDate).inDays;
-    debugPrint('POLL DESCRIPTION ${viewModel.pollDescription.text}');
     return WayaScaffold(
         title: "Polls Summary",
         isLoading: viewModel.isLoading,

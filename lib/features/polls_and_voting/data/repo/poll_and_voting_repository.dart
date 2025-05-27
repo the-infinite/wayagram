@@ -10,6 +10,11 @@ class PollAndVotingRepository extends BaseRepository {
         formdata: true, showErrors: true);
   }
 
+  Future<WayaRequestResponse> requestSettlement(String pollId) {
+    final payload = {};
+    return post('$serviceUrl/client/polls/$pollId/settle', payload, showErrors: true);
+  }
+
   Future<WayaRequestResponse> castVote(
       dynamic amountPaid, String qty, String choiceId, String pollId) {
     final payload = {
@@ -96,8 +101,6 @@ class PollAndVotingRepository extends BaseRepository {
         "$serviceUrl/client/polls?limit=100&page=1&orderBy=createdAt&orderDirection=DESC");
   }
 
-  //
-  ///
   Future<WayaRequestResponse> getSinglePollById({required String id}) {
     return get("$serviceUrl/client/polls/$id");
   }
