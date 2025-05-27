@@ -70,9 +70,9 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
         ? state.approvedDonations
         : state.approvedDonations!.sublist(0, min(state.approvedDonations!.length, 1));
 
-    List<MyDonationDocs>? pendingDonation = widget.isExpanded
-        ? state.pendingDonations
-        : state.pendingDonations!.sublist(0, min(state.pendingDonations!.length, 1));
+    // List<MyDonationDocs>? pendingDonation = widget.isExpanded
+    //     ? state.pendingDonations
+    //     : state.pendingDonations!.sublist(0, min(state.pendingDonations!.length, 1));
 
     return SizedBox(
       height: 560,
