@@ -90,7 +90,9 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
                   value: 1,
                   onTap: () async {
                     await myPageNotifier.deletePage(widget.page.id);
-                    WayaNav.goBack();
+
+                    WayaNav.goBack(closeOverlays: true);
+
                   },
                   child: WayaActionNav(
                     context: context,

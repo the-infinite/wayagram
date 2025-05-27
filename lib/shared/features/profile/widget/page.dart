@@ -55,29 +55,31 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    //? If this is in vertical orientation.
-    if (widget.vertical) {
-      return InkWell(
-        splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
-        focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
-        highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
-        borderRadius: BorderRadius.circular(12.r),
-        onTap: _toPage,
-        child: Container(
-          margin: widget.index == 0 ? EdgeInsets.zero : EdgeInsets.only(left: 10),
-          width: 150.w,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: wayaTheme.colorScheme.greyColor200),
-          ),
-          child: ValueListenableBuilder(
-            valueListenable: wayaPageCache,
-            builder: (context, redraws, _) {
-              //? The page we shall be using.
-              final page = wayaPageCache.getCachedData(widget.page.id) ?? widget.page;
-
-              //? Return the widget.
-              return Column(
+    return ValueListenableBuilder(
+      valueListenable: wayaPageCache,
+      builder: (context, redraws, _) {
+        final page = wayaPageCache.getCachedData(widget.page.id);
+        if(page == null ){
+          return SizedBox();
+        }
+        //? If this is in vertical orientation.
+        if (widget.vertical) {
+          return InkWell(
+            splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
+            focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+            highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
+            borderRadius: BorderRadius.circular(12.r),
+            onTap: _toPage,
+            child: Container(
+              margin: widget.index == 0
+                  ? EdgeInsets.zero
+                  : EdgeInsets.only(left: 10),
+              width: 150.w,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: wayaTheme.colorScheme.greyColor200),
+              ),
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -100,7 +102,6 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
                       color: wayaTheme.colorScheme.black,
-                      
                     ),
                   ),
 
@@ -128,9 +129,12 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
                         child: WayaProgressiveButton(
                           notifier: loadingController,
                           callback: _followPage,
-                          text: myPageNotifier.isMemberOf(page.id) ? "Unfollow" : "Follow",
+                          text: myPageNotifier.isMemberOf(page.id)
+                              ? "Unfollow"
+                              : "Follow",
                           height: 30.h,
-                          textStyle: wayaTheme.textTheme.titleMedium?.copyWith(
+                          textStyle:
+                              wayaTheme.textTheme.titleMedium?.copyWith(
                             color: wayaTheme.colorScheme.white,
                             fontSize: 12.sp,
                             fontWeight: FontWeight.w500,
@@ -139,37 +143,28 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
                       ),
                     ),
                 ],
-              );
-            },
-          ),
-        ),
-      );
-    }
+              ),
+            ),
+          );
+        }
 
-    // Build and return our component.
-    return InkWell(
-      splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
-      focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
-      highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
-      borderRadius: BorderRadius.circular(12.r),
-      onTap: _toPage,
-      child: Container(
-        margin: EdgeInsets.only(bottom: 15),
-        padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: wayaTheme.colorScheme.greyColor200,
-          ),
-        ),
-        child: ValueListenableBuilder(
-          valueListenable: wayaPageCache,
-          builder: (context, redraws, _) {
-            //? The page we shall be using.
-            final page = wayaPageCache.getCachedData(widget.page.id) ?? widget.page;
-
-            //? Return the component.
-            return Column(
+        // Build and return our component.
+        return InkWell(
+          splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
+          focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+          highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
+          borderRadius: BorderRadius.circular(12.r),
+          onTap: _toPage,
+          child: Container(
+            margin: EdgeInsets.only(bottom: 15),
+            padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: wayaTheme.colorScheme.greyColor200,
+              ),
+            ),
+            child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               spacing: 5.h,
@@ -186,14 +181,14 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
                       SizedBox(
                         width: 100.sp,
                         child: Text(
-                        page.name,
-                        overflow: TextOverflow.ellipsis,
-                        style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w600,
-                          color: wayaTheme.colorScheme.black,
+                          page.name,
+                          overflow: TextOverflow.ellipsis,
+                          style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                            fontSize: 14.sp,
+                            fontWeight: FontWeight.w600,
+                            color: wayaTheme.colorScheme.black,
+                          ),
                         ),
-                      ),
                       )
                     ],
                   ),
@@ -213,9 +208,12 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
                             child: WayaProgressiveButton(
                               notifier: loadingController,
                               callback: _followPage,
-                              text: myPageNotifier.isMemberOf(page.id) ? "Unfollow" : "Follow",
+                              text: myPageNotifier.isMemberOf(page.id)
+                                  ? "Unfollow"
+                                  : "Follow",
                               height: 30.h,
-                              textStyle: wayaTheme.textTheme.titleMedium?.copyWith(
+                              textStyle:
+                                  wayaTheme.textTheme.titleMedium?.copyWith(
                                 color: wayaTheme.colorScheme.white,
                                 fontSize: 12.sp,
                                 fontWeight: FontWeight.w500,
@@ -240,10 +238,10 @@ class _SinglePageWidgetState extends State<SinglePageWidget> {
                   ),
                 ),
               ],
-            );
-          },
-        ),
-      ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -19,6 +19,7 @@ import 'package:wayagram/features/moments/data/model/moment_response_model.dart'
 import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/explore/search/model/user_detail.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/features/explore/search/widgets/user_widget.dart';
 import 'package:wayagram/shared/features/moments/notifier/default.dart';
@@ -163,11 +164,15 @@ class _SearchState extends ConsumerState<SearchView> {
     );
 
      //? Group
-    final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
-      groupState.recommendedGroupDocs ?? [],
-      ['question', 'description'],
-      query,
-    );
+    final filteredGroups = GroupsCache.instance.data.where((group) {
+      return group.name.toLowerCase().contains(query.trim().toLowerCase());
+    }).toList();
+
+    // final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
+    //   groupState.recommendedGroupDocs ?? [],
+    //   ['question', 'description'],
+    //   query,
+    // );
 
     final serviceData = {
       'Post': filteredPosts,
