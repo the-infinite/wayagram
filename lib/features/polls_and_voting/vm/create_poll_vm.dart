@@ -912,7 +912,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     try {
       // API call
       state = state.copyWith(isLoading: true);
-      final response = await _pollAndVotingRepository.getAllPendingPolls(page);
+      final response = await _pollAndVotingRepository.getAllPendingPolls(page, ConversationState.self.id);
       state = state.copyWith(isLoading: false);
       debugPrint('API Response: ${response.data}');
       debugPrint('Status Code: ${response.statusCode}');
