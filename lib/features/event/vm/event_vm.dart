@@ -145,10 +145,7 @@ class EventVm extends StateNotifier<EventState> {
       final now = DateTime.now();
       if (response.success) {
         EventResponse eventResponse = EventResponse.fromJson(response.data);
-        myEvents = [
-          ...eventResponse.data.docs
-              .where((event) => !event.endDate.isBefore(now))
-        ];
+        myEvents = [...eventResponse.data.docs];
         hasNextPage = eventResponse.data.hasNextPage;
         state = state.copyWith(myEvents: myEvents);
       }
