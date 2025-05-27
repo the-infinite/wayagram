@@ -282,8 +282,8 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/pages/user/followings?page=$page&limit=$limit");
   }
 
-  Future<WayaRequestResponse> getRecommendedPages() {
-    return get("$serviceUrl/pages/recommended");
+  Future<WayaRequestResponse> getRecommendedPages([int page = 1, int limit = 15]) {
+    return get("$serviceUrl/pages/recommended?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> updatePageSetting(bool isPublic, bool everyoneCanComment, pageId) {

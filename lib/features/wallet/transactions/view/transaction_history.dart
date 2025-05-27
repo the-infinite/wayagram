@@ -29,7 +29,6 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
   bool hasNextPage = true;
   final ScrollController _scrollController = ScrollController();
   bool isLoadingMore = false;
-  //List<TransactionDetail> transactions = [];
   bool isFirstLoad = true;
   List<TransactionHistoryModelDocs> docs = [];
   @override

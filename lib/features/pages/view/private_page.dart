@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'edit_page_info.dart';
 import 'page_post.dart';
 import 'team_page.dart';
@@ -93,8 +94,8 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                 PopupMenuItem<int>(
                   value: 1,
                   onTap: () async {
-                    await notifier.deletePage(context, pageId: widget.page.id);
-                    WayaNav.goBack();
+                    await myPageNotifier.deletePage(widget.page.id);
+                    WayaNav.goBack(closeOverlays: true);
                   },
                   child: WayaActionNav(
                     context: context,
