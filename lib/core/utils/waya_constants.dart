@@ -8,7 +8,6 @@ class WayaConstants {
   static const shopLogo = "https://res.cloudinary.com/dkdrbjfdt/image/upload/v1742170216/m-shop_jcpp32.svg";
 }
 
-
 class WayaServiceUri {
   WayaServiceUri._();
   static const wallet = "wayagram-wallet/api/v2";
