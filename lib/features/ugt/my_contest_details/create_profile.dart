@@ -15,6 +15,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/auth/account_creation/view/loading_state.dart';
+import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/widgets/contest_card.dart';
 
@@ -132,7 +133,8 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
   @override
   Widget build(BuildContext context) {
     // final viewModel = ref.watch(createC);
-    // final viewModel = ref.watch(contestNotifierProvider);
+    var model = ref.watch(selectedContestProvider);
+
     final notifier = ref.watch(contestNotifierProvider.notifier);
     final wayaTheme = Theme.of(context);
     final isLoading = useState(false);
@@ -312,7 +314,9 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
                 Row(
                   children: [
                     GestureDetector(
-                      onTap: _pickImage,
+                      onTap: () {
+                        _pickVideo();
+                      },
                       child: Column(
                         children: [
                           if (_videoFile != null)
@@ -364,8 +368,10 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
                           WayaButton(
                               horizontalPadding: 15,
                               text: "Upload",
-                              callback:
-                                  _pickVideo /*  () {
+                              callback: () {
+                                _pickVideo();
+                              }
+                              /*  () {
                             
                           /*   if (_selectedImage != null) {
                               WayaSnackBar.showToast(
@@ -415,7 +421,8 @@ class _CreateProfileState extends ConsumerState<CreateProfile> {
                           _imgFile?.path ?? "",
                           _videoFile?.path ?? "",
                           bioController.text,
-                          whatExpectVoterController.text);
+                          whatExpectVoterController.text,
+                          model?.id ?? "");
                     }
 
                     // WayaNav.goBack();

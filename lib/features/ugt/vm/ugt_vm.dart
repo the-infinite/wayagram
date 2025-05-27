@@ -307,7 +307,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     String videoPath,
     String bio,
     String expectationFromVoters,
+    String contestID,
   ) async {
+    print("Here heeee");
     isLoading.value = true;
     final imageUrl = await WayaFileRepository.instance
         .uploadFile(File(imagePath), "ugt-image-${Uuid().v4()}");
@@ -316,14 +318,16 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     var model = ref.read(selectedAppliedContestProvider.notifier).state;
     var map = {
       "profileId": _localDataSource.getUserId().toString(),
-      "contestId": model!.contestId,
+      "contestId": contestID,
       "bio": bio,
       "expectationFromVoters": expectationFromVoters,
-      "contestApplicationId": model.id,
+      if (model!.id!.trim().isNotEmpty) "contestApplicationId": model.id ?? "",
       "introVideo": videoUrl,
       "profilePhoto": imageUrl
     };
-
+    print("Here");
+    print(map.toString());
+    print("here2");
     final response = await _contestRepository.createProfile(map);
     isLoading.value = false;
     if (response.success) {
