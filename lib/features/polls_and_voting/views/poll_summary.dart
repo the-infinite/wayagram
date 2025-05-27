@@ -32,6 +32,12 @@ class PollSummary extends ConsumerStatefulWidget {
 class _PollSummaryState extends ConsumerState<PollSummary>  {
 
   @override
+  void initState() {
+    debugPrint("userNAME ==>> ${ConversationState.self.accountType}");
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     final viewModel = ref.watch(createPollVotingProvider);
@@ -54,7 +60,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-              debugPrint('DIALA POLL');
+              debugPrint('DIALA POLL ==>> ${ConversationState.self.accountType}');
 
               if (viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.personal) {
 

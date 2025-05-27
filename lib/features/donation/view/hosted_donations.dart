@@ -70,6 +70,10 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
         ? state.approvedDonations
         : state.approvedDonations!.sublist(0, min(state.approvedDonations!.length, 1));
 
+    List<MyDonationDocs>? pendingDonation = widget.isExpanded
+        ? state.pendingDonations
+        : state.pendingDonations!.sublist(0, min(state.pendingDonations!.length, 1));
+
     return SizedBox(
       height: 560,
       child: ListView(
@@ -202,16 +206,14 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
               subTitle: 'See and manage all your pending donations',
               title: 'Pending Donations'),
           const Gap(10),
-          myDonations!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have pending donations yet',):
+          viewModel.pendingDonations!.isEmpty ? ActivityLogsEmptyState(text: 'You don\'t have pending donations yet',):
           SizedBox(
             height: Platform.isAndroid ? 300 : 460,
-            //height: Platform.isAndroid ? 560 : 460,
             child: ListView.builder(
                 shrinkWrap: true,
-                itemCount: myDonations.length,
-                //filteredMyDonations.length,
+                itemCount: viewModel.pendingDonations?.length,
                 itemBuilder: (context, index) {
-                  final donation = myDonations[index];
+                  final donation = viewModel.pendingDonations![index];
                   //final donation = filteredMyDonations[index];
                   int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
 
@@ -273,10 +275,10 @@ class _HostedDonationsState extends ConsumerState<HostedDonations> {
             child: ListView.builder(
               //physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: myDonations.length,
+                itemCount: myDonations?.length,
                 //filteredMyDonations.length,
                 itemBuilder: (context, index) {
-                  final donation = myDonations[index];
+                  final donation = myDonations![index];
                   //final donation = filteredMyDonations[index];
                   int daysLeft = DateTime.parse('${donation.expirationDate}').difference(DateTime.parse('${donation.startDate}')).inDays;
 
