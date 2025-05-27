@@ -768,7 +768,7 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
         );
 
         _logger.i(response.data['data']);
-      } else if (response.data['error'] == 'Insufficient wallet balance') {
+      } else if (response.data['responseCode'] == 1644) {
         WayaUtils.showModalSheet(ctx, child: VoteInsufficientModal());
       }
     } catch (e) {
@@ -906,6 +906,24 @@ class CreatePollVotingVm extends StateNotifier<CreatePollVotingState> {
     } finally {
       state = state.copyWith(isLoading: false);
     }
+  }
+
+  Future<void> getAllPendingPolls(int page) async {
+    try {
+      // API call
+      state = state.copyWith(isLoading: true);
+      final response = await _pollAndVotingRepository.getAllPendingPolls(page, ConversationState.self.id);
+      state = state.copyWith(isLoading: false);
+      debugPrint('API Response: ${response.data}');
+      debugPrint('Status Code: ${response.statusCode}');
+
+      if (response.success) {
+        FetchAllPolls responseModel = FetchAllPolls.fromJson(response.data);
+        state = state.copyWith(fetchAllPols: responseModel.data?.docs);
+      } else {}
+    } catch (e) {
+      debugPrint(e.toString());
+    } finally {}
   }
 
   Future<void> getPollsByUrl(String pollUrl) async {
