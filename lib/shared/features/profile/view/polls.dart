@@ -28,6 +28,7 @@ class _PollsFeedWidget extends ConsumerState<PollsFeedWidget> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(servicesProvider.notifier).getFeedPolls();
       ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
+      ref.read(createPollVotingProvider.notifier).getActivePolls(1);
     });
     super.initState();
   }
@@ -60,7 +61,7 @@ class _PollsFeedWidget extends ConsumerState<PollsFeedWidget> {
           ),
         ],
 
-        if (pollState.fetchAllPols.isNotEmpty && widget.isExplore) ...[
+        if (pollState.activePolls.isNotEmpty && widget.isExplore) ...[
           Text(
             "My Polls",
             style: wayaTheme.textTheme.bodyMedium,
@@ -90,7 +91,7 @@ class _PollsFeedWidget extends ConsumerState<PollsFeedWidget> {
                     );
             },
           ),
-        ]
+        ],
       ],
     );
   }

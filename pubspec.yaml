@@ -2,7 +2,7 @@ name: wayagram
 description: The codebase for the entire WayaGram application
 homepage: https://wayagram.ng
 publish_to: "none" # NEVER PUBLISH TO pub.dev!
-version: 1.91.33+183
+version: 1.91.34+184
 
 environment:
   sdk: ^3.6.0
@@ -80,6 +80,7 @@ dependencies:
   google_sign_in: ^6.3.0
   firebase_auth: ^5.5.1
 
+
   #for deep link
   app_links: ^6.4.0
   firebase_analytics: ^11.4.4
@@ -94,6 +95,7 @@ dependencies:
   pdf: ^3.11.3
   avatar_glow: ^3.0.1
   sign_in_with_apple: ^7.0.1
+  printing: ^5.14.2
 
 dev_dependencies:
   flutter_test:

@@ -289,8 +289,7 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
               }),
         );
       } else {
-        WayaSnackBar.showToast(
-            "Please try again later, unable to create contest");
+        WayaSnackBar.showToast(response.data["message"]);
       }
     } catch (e) {
       _logger.e(e.toString());
@@ -308,7 +307,9 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     String videoPath,
     String bio,
     String expectationFromVoters,
+    String contestID,
   ) async {
+    print("Here heeee");
     isLoading.value = true;
     final imageUrl = await WayaFileRepository.instance
         .uploadFile(File(imagePath), "ugt-image-${Uuid().v4()}");
@@ -317,18 +318,22 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     var model = ref.read(selectedAppliedContestProvider.notifier).state;
     var map = {
       "profileId": _localDataSource.getUserId().toString(),
-      "contestId": model!.contestId,
+      "contestId": contestID,
       "bio": bio,
       "expectationFromVoters": expectationFromVoters,
-      "contestApplicationId": model.id,
+      if (model!.id!.trim().isNotEmpty) "contestApplicationId": model.id ?? "",
       "introVideo": videoUrl,
       "profilePhoto": imageUrl
     };
-
+    print("Here");
+    print(map.toString());
+    print("here2");
     final response = await _contestRepository.createProfile(map);
     isLoading.value = false;
     if (response.success) {
       WayaNav.goBack();
+    } else {
+      WayaSnackBar.showToast(response.data["message"]);
     }
   }
 
@@ -387,12 +392,14 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
           .read(votersContestNotifier.notifier)
           .fetchAllContestApplicant(model.contestId ?? "");
       WayaNav.removeUntilNamed(AdminContestDetails.route);
+    } else {
+      WayaSnackBar.showToast(response.data["message"]);
     }
   }
 
   Future<void> showDatePickerDialog(BuildContext context) async {
     try {
-      final response = await pickerDialog(context);
+      final response = await pickerDialog(context, firtDate: DateTime.now());
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";
@@ -672,8 +679,8 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
 
   Future<void> showDateContestStart(BuildContext context) async {
     try {
-      DateTime tomorrow = DateTime.now().add(Duration(days: 1));
-      final response = await pickerDialog(context, firtDate: tomorrow);
+      DateTime now = DateTime.now();
+      final response = await pickerDialog(context, firtDate: now);
 
       if (response != null) {
         final startDate = "${response.year}-${response.month}-${response.day}";

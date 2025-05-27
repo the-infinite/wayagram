@@ -308,12 +308,24 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                           if (hasClickedShared.value == false) {
                             hasClickedShared.value = true;
                             //?do the sharing stuff
-                            final result = await Share.share(
+
+                            final result =   await Share.share(
+                  WayaValueHelper.getShareableUrl(
+                      WayaAppRoutes.getContestantProfileRoute(
+                   widget.post.contestantProfileId??"",
+                   widget.post.contestId ?? ""
+                  )),
+                  subject: "Share Contestant Profile",
+                  );
+
+
+
+                          /*   final result = await Share.share(
                               WayaValueHelper.getShareableUrl(
                                   WayaAppRoutes.getContestDetailRoute(
                                       widget.post.contestId ?? "")),
                               subject: "Share Post",
-                            );
+                            ); */
                             //?if shared increase the count
                             if (result.status == ShareResultStatus.success) {
                               viewModel.toggleShare(widget.post.contestId ?? "",
@@ -326,33 +338,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                           });
                         },
                       ),
-                      /*  GestureDetector(
-                        onTap: () async {
-                        
-                        },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: wayaTheme.colorScheme.greyColor200),
-                              width: 35,
-                              height: 35,
-                              child: Center(
-                                  child: SvgPicture.asset(
-                                      "assets/icons/u-share.svg")),
-                            ),
-                            const Gap(3),
-                            Text(
-                              "${widget.post.shares ?? 0} Shares",
-                              style: wayaTheme.textTheme.bodySmall,
-                            )
-                          ],
-                        ),
-                      ),
-                   */
+                     
                     ],
                   ),
                   WayaButton(

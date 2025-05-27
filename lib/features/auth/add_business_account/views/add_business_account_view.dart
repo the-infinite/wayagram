@@ -16,13 +16,17 @@ class AddBusinessAccountView extends ConsumerStatefulWidget {
   const AddBusinessAccountView({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _AddBusinessAccountViewState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _AddBusinessAccountViewState();
 }
 
-class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView> {
+class _AddBusinessAccountViewState
+    extends ConsumerState<AddBusinessAccountView> {
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {});
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await ref.read(addBusinessAccountProvider.notifier).getBusiness();
+    });
     super.initState();
   }
 
@@ -40,10 +44,12 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
           children: [
             Text("Add Business Account", style: WayaTextStyles.titleLarge),
             const Gap(5),
-            Text("Provide us with information for your business \n account to get you started",
+            Text(
+                "Provide us with information for your business \n account to get you started",
                 style: WayaTextStyles.hintStyle),
             const Gap(30),
-            Text("Select Business Account Type", style: WayaTextStyles.labelMedium),
+            Text("Select Business Account Type",
+                style: WayaTextStyles.labelMedium),
             const Gap(6),
             GridView.count(
               crossAxisCount: 2,
@@ -80,7 +86,8 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
                   //   label: 'Business Name',
                   // ),
                   Visibility(
-                      visible: viewModel.selected.isEmpty || viewModel.selected == 'CAC',
+                      visible: viewModel.selected.isEmpty ||
+                          viewModel.selected == 'CAC',
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,7 +98,8 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
                             hintText: 'E.g ERC44444232',
                             counterText: "",
                             maxLength: 10,
-                            suffixIcon: viewModel.isLoading && viewModel.isCACVerify
+                            suffixIcon: viewModel.isLoading &&
+                                    viewModel.isCACVerify
                                 ? Padding(
                                     padding: const EdgeInsets.all(10.0),
                                     child: SizedBox(
@@ -107,7 +115,10 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
                                     width: 10,
                                     child: Padding(
                                       padding: const EdgeInsets.all(8.0),
-                                      child: viewModel.isValidCAC ? WayaAssets.images.eCheckEvent.image() : null,
+                                      child: viewModel.isValidCAC
+                                          ? WayaAssets.images.eCheckEvent
+                                              .image()
+                                          : null,
                                     )),
                             onChanged: (value) {
                               if (value.trim().isNotEmpty) {
@@ -115,7 +126,9 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
                                     /*  value.length == 8 ||
                                     value.length == 9 || */
                                     value.length == 10) {
-                                  ref.read(addBusinessAccountProvider.notifier).verifyCAC();
+                                  ref
+                                      .read(addBusinessAccountProvider.notifier)
+                                      .verifyCAC();
                                 }
                               }
                             },
@@ -126,7 +139,9 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
                               padding: const EdgeInsets.only(top: 5),
                               child: Text(
                                 "CAC Number not valid",
-                                style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                                style: TextStyle(
+                                    color: wayaTheme.colorScheme.error,
+                                    fontSize: 12.sp),
                               ),
                             ),
                         ],
@@ -165,13 +180,16 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
                                     width: 10,
                                     child: Padding(
                                       padding: const EdgeInsets.all(10.0),
-                                      child: WayaAssets.images.eCheckEvent.image(),
+                                      child:
+                                          WayaAssets.images.eCheckEvent.image(),
                                     ))
                                 : null,
                         onChanged: (value) {
                           if (value.trim().isNotEmpty) {
                             if (value.length == 11) {
-                              ref.read(addBusinessAccountProvider.notifier).verifyBVN();
+                              ref
+                                  .read(addBusinessAccountProvider.notifier)
+                                  .verifyBVN();
                             }
                           }
                         },
@@ -182,7 +200,9 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
                           padding: const EdgeInsets.only(top: 5),
                           child: Text(
                             "BVN Number not valid",
-                            style: TextStyle(color: wayaTheme.colorScheme.error, fontSize: 12.sp),
+                            style: TextStyle(
+                                color: wayaTheme.colorScheme.error,
+                                fontSize: 12.sp),
                           ),
                         ),
                     ],
@@ -192,31 +212,47 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
                   const Gap(30),
                   AddDocumentWidget(
                       addFile: (file) {
-                        ref.read(addBusinessAccountProvider.notifier).addFile(file, 'passport');
+                        ref
+                            .read(addBusinessAccountProvider.notifier)
+                            .addFile(file, 'passport');
                       },
                       removeFile: () {
-                        ref.read(addBusinessAccountProvider.notifier).removeFile('passport');
+                        ref
+                            .read(addBusinessAccountProvider.notifier)
+                            .removeFile('passport');
                       },
                       isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
-                          viewModel.uploadedDocuments.any((doc) => doc.type == 'passport'),
+                          viewModel.uploadedDocuments
+                              .any((doc) => doc.type == 'passport'),
                       title: viewModel.uploadedDocuments.isNotEmpty &&
-                              viewModel.uploadedDocuments.any((doc) => doc.type == 'passport')
-                          ? viewModel.uploadedDocuments.firstWhere((doc) => doc.type == 'passport').name
+                              viewModel.uploadedDocuments
+                                  .any((doc) => doc.type == 'passport')
+                          ? viewModel.uploadedDocuments
+                              .firstWhere((doc) => doc.type == 'passport')
+                              .name
                           : 'Upload your passport image',
                       description: 'PDF, JPG, and IMG format',
                       type: "document"),
                   AddDocumentWidget(
                       addFile: (file) {
-                        ref.read(addBusinessAccountProvider.notifier).addFile(file, 'nin');
+                        ref
+                            .read(addBusinessAccountProvider.notifier)
+                            .addFile(file, 'nin');
                       },
                       removeFile: () {
-                        ref.read(addBusinessAccountProvider.notifier).removeFile('nin');
+                        ref
+                            .read(addBusinessAccountProvider.notifier)
+                            .removeFile('nin');
                       },
                       isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
-                          viewModel.uploadedDocuments.any((doc) => doc.type == 'nin'),
+                          viewModel.uploadedDocuments
+                              .any((doc) => doc.type == 'nin'),
                       title: viewModel.uploadedDocuments.isNotEmpty &&
-                              viewModel.uploadedDocuments.any((doc) => doc.type == 'nin')
-                          ? viewModel.uploadedDocuments.firstWhere((doc) => doc.type == 'nin').name
+                              viewModel.uploadedDocuments
+                                  .any((doc) => doc.type == 'nin')
+                          ? viewModel.uploadedDocuments
+                              .firstWhere((doc) => doc.type == 'nin')
+                              .name
                           : 'Upload your NIN Slip',
                       description: 'PDF, JPG, and IMG format',
                       type: "document"),
@@ -224,32 +260,48 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
                     visible: viewModel.selected == 'CAC',
                     child: AddDocumentWidget(
                         addFile: (file) {
-                          ref.read(addBusinessAccountProvider.notifier).addFile(file, 'cac');
+                          ref
+                              .read(addBusinessAccountProvider.notifier)
+                              .addFile(file, 'cac');
                         },
                         removeFile: () {
-                          ref.read(addBusinessAccountProvider.notifier).removeFile('cac');
+                          ref
+                              .read(addBusinessAccountProvider.notifier)
+                              .removeFile('cac');
                         },
                         isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
-                            viewModel.uploadedDocuments.any((doc) => doc.type == 'cac'),
+                            viewModel.uploadedDocuments
+                                .any((doc) => doc.type == 'cac'),
                         title: viewModel.uploadedDocuments.isNotEmpty &&
-                                viewModel.uploadedDocuments.any((doc) => doc.type == 'cac')
-                            ? viewModel.uploadedDocuments.firstWhere((doc) => doc.type == 'cac').name
+                                viewModel.uploadedDocuments
+                                    .any((doc) => doc.type == 'cac')
+                            ? viewModel.uploadedDocuments
+                                .firstWhere((doc) => doc.type == 'cac')
+                                .name
                             : 'Upload CAC Document',
                         description: 'PDF, JPG, and IMG format',
                         type: "document"),
                   ),
                   AddDocumentWidget(
                       addFile: (file) {
-                        ref.read(addBusinessAccountProvider.notifier).addFile(file, 'bill');
+                        ref
+                            .read(addBusinessAccountProvider.notifier)
+                            .addFile(file, 'bill');
                       },
                       removeFile: () {
-                        ref.read(addBusinessAccountProvider.notifier).removeFile('bill');
+                        ref
+                            .read(addBusinessAccountProvider.notifier)
+                            .removeFile('bill');
                       },
                       isUploaded: viewModel.uploadedDocuments.isNotEmpty &&
-                          viewModel.uploadedDocuments.any((doc) => doc.type == 'bill'),
+                          viewModel.uploadedDocuments
+                              .any((doc) => doc.type == 'bill'),
                       title: viewModel.uploadedDocuments.isNotEmpty &&
-                              viewModel.uploadedDocuments.any((doc) => doc.type == 'bill')
-                          ? viewModel.uploadedDocuments.firstWhere((doc) => doc.type == 'bill').name
+                              viewModel.uploadedDocuments
+                                  .any((doc) => doc.type == 'bill')
+                          ? viewModel.uploadedDocuments
+                              .firstWhere((doc) => doc.type == 'bill')
+                              .name
                           : 'Upload Utility Bill',
                       description: 'PDF, JPG, and IMG format',
                       type: "document"),
@@ -260,7 +312,9 @@ class _AddBusinessAccountViewState extends ConsumerState<AddBusinessAccountView>
             WayaButton(
               callback: !viewModel.isLoading
                   ? () {
-                      ref.read(addBusinessAccountProvider.notifier).submit(context);
+                      ref
+                          .read(addBusinessAccountProvider.notifier)
+                          .submit(context);
                     }
                   : null,
               centerWidget: LoadingState(

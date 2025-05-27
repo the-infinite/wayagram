@@ -12,8 +12,6 @@ import 'package:wayagram/features/general_settings/account_security/account_secu
 import 'package:wayagram/features/general_settings/donation/donation_settings_page.dart';
 import 'package:wayagram/features/general_settings/edit_interest/edit_interest.dart';
 import 'package:wayagram/features/general_settings/event/event_settings_page.dart';
-import 'package:wayagram/features/general_settings/group/group_setting_page.dart';
-import 'package:wayagram/features/general_settings/page/page_general_setting_page.dart';
 import 'package:wayagram/features/general_settings/privacy_settings/view/privacy_settings.dart';
 import 'package:wayagram/features/general_settings/friend_follower/view/friend_follower_page.dart';
 import 'package:wayagram/features/general_settings/modals/logout.dart';

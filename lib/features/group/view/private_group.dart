@@ -112,7 +112,7 @@ class _PrivateGroupState extends ConsumerState<PrivateGroup> with SingleTickerPr
                   value: 3,
                   onTap: () async {
                     await myGroupNotifier.deleteGroup(widget.group.id);
-                    WayaNav.goBack();
+                    WayaNav.goBack(closeOverlays: true);
                   },
                   child: WayaActionNav(
                     context: context,

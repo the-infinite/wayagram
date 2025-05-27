@@ -55,5 +55,8 @@ class PageModel extends BaseModel<PageModel>{
   Map<String, dynamic> toJson() => _$PageModelToJson(this);
 
   @override
-  Map<String, dynamic> toMap() => toJson();
+  Map<String, dynamic> toMap() => {
+    "name": name,
+    "description": description
+  };
 }

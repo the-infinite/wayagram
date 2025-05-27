@@ -35,6 +35,7 @@ class DonationState{
     List<AppliedDonationDocs>? appliedDonationDocs;
     List<MyDonationDocs>? myDonationDocs;
     List<MyDonationDocs>? approvedDonations;
+    List<MyDonationDocs>? pendingDonations;
     List<MyDonationDocs>? rejectedDonations;
     final List<Select> categories;
 
@@ -52,6 +53,7 @@ class DonationState{
     TextEditingController? minimumDonationAmount,
     TextEditingController? details,
       this.allDonationDocs = const [],
+      this.pendingDonations = const [],
       this.appliedDonationDocs = const [],
       this.myDonationDocs = const [],
       this.selectedCategoryId = const [],
@@ -93,6 +95,7 @@ class DonationState{
     TextEditingController? targetAmount,
     TextEditingController? minimumDonationAmount,
     TextEditingController? details,
+      List<MyDonationDocs>? pendingDonations,
       List<Select>? categories,
       List<String>? selectedCategoryId,
       List<String>? selected,
@@ -147,6 +150,7 @@ class DonationState{
       showAmountRaised: showAmountRaised ?? this.showAmountRaised,
       showNumberOfDonors: showNumberOfDonors ?? this.showNumberOfDonors,
       allDonationDocs: allDonationDocs ?? this.allDonationDocs,
+      pendingDonations: pendingDonations ?? this.pendingDonations,
       appliedDonationDocs: appliedDonationDocs ?? this.appliedDonationDocs,
       myDonationDocs: myDonationDocs ?? this.myDonationDocs,
       approvedDonations: approvedDonations ?? this.approvedDonations,

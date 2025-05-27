@@ -28,12 +28,12 @@ class UserPollsNotifier extends StateNotifier<PollsState> {
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.hasNextPage) {
-          result.addAll(state.polls);
+          result.addAll(state.docs);
         }
 
         //? This is fine.
         state = state.copyWith(
-          polls: result,
+          docs: result,
           totalSize: data['totalDocs'],
           totalPages: int.tryParse(data['totalPages'].toString()) ?? 1,
           hasNextPage: data['hasNextPage'],

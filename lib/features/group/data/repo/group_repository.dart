@@ -144,8 +144,8 @@ class GroupRepository extends BaseRepository {
 
 
   // recommended groups
-  Future<WayaRequestResponse> recommendedGroup() {
-    return get("$serviceUrl/groups/recommended");
+  Future<WayaRequestResponse> recommendedGroup({int? page = 1, int? limit = 10}) {
+    return get("$serviceUrl/groups/recommended?page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> followUser(String followingId) {

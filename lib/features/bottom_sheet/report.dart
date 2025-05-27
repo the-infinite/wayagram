@@ -148,9 +148,12 @@ class _ReportEventState extends ConsumerState<Report> {
                     const Gap(24),
                     WayaButton(
                         callback: () async {
+                          if (selectedStatus.isEmpty)
+                            return WayaSnackBar.showToast("Reason is required");
+
                           setState(() => isLoading = true);
 
-                        final resp =   await ref
+                          final resp = await ref
                               .read(momentVmProvider.notifier)
                               .reportMoment(
                                   momentId: widget.momentId,
@@ -159,8 +162,11 @@ class _ReportEventState extends ConsumerState<Report> {
                           setState(() {
                             isLoading = false;
                           });
-                       if (resp)   WayaSnackBar.showToast("Reported Successfully");
-                          WayaNav.goBack();
+
+
+                          return WayaNav.goBack(result: resp);
+
+                         
                         },
                         centerWidget: LoadingState(
                             loading: isLoading, text: "Submit Report")),

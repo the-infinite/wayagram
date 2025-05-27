@@ -28,12 +28,11 @@ class ContestRepo extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getContestForYou(int page, String? filter) {
-    if(filter != null){
-
-    return get('$serviceUrl2/contests/contest-for-you?page=$page&state=$filter');
-    }else{
-
-    return get('$serviceUrl2/contests/contest-for-you?page=$page');
+    if (filter != null) {
+      return get(
+          '$serviceUrl2/contests/contest-for-you?page=$page&state=$filter');
+    } else {
+      return get('$serviceUrl2/contests/contest-for-you?page=$page');
     }
   }
 
@@ -158,7 +157,7 @@ class ContestRepo extends BaseRepository {
   Future<WayaRequestResponse> fetchSingleContestantDetails(
       String contestId, String contestantProfileId) {
     return get(
-        '$serviceUrl2/admin/profile/votes/$contestId?profileId=$contestantProfileId');
+        '$serviceUrl2/profile/votes/$contestId?profileId=$contestantProfileId');
   }
 
   Future<WayaRequestResponse> fetchSingleContest(String contestId) {

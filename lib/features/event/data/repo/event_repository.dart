@@ -20,7 +20,8 @@ class EventRepository extends BaseRepository {
   }
 
   Future<WayaRequestResponse> getEventWithStatus({required String status, required int page, required int  limit}) {
-    return get("$serviceUrl/events/get-event?eventstatus=$status&page=$page&limit=$limit");
+  
+    return get("$serviceUrl/events/get-event?eventstatus=$status&status=active&page=$page&limit=$limit");
   }
 
   Future<WayaRequestResponse> editEvent(UpdateEventRequestModel payload, String id) {

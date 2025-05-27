@@ -16,6 +16,7 @@ import 'package:wayagram/features/event/data/model/event_attendee_response_model
 import 'package:wayagram/features/event/data/model/single_event_response_model.dart';
 import 'package:wayagram/shared/components/pin_entry_bottom_sheet.dart';
 import 'package:wayagram/shared/engagement/provider/event_engagement_monitor.dart';
+import 'package:wayagram/shared/features/user/models/default.dart';
 
 class EventVm extends StateNotifier<EventState> {
   final Ref ref;
@@ -96,6 +97,23 @@ class EventVm extends StateNotifier<EventState> {
     }
   }
 
+  void clearSelectedInvitee() {
+    state = state.copyWith(invitees: []);
+  }
+
+  void updateSelectedInvitee({required UserDetailsModel invitee}) {
+    List<UserDetailsModel> users = List.from(state.invitees);
+
+    final selectedIndex = users.indexWhere((i) => i.id == invitee.id);
+
+    if (selectedIndex != -1) {
+      users.removeAt(selectedIndex);
+    } else {
+      users.add(invitee);
+    }
+    state = state.copyWith(invitees: users);
+  }
+
   Future<EventDoc?> getSingleEvent(String id) async {
     final event = await fetchSingleEvent(id);
 
@@ -127,10 +145,7 @@ class EventVm extends StateNotifier<EventState> {
       final now = DateTime.now();
       if (response.success) {
         EventResponse eventResponse = EventResponse.fromJson(response.data);
-        myEvents = [
-          ...eventResponse.data.docs
-              .where((event) => !event.endDate.isBefore(now))
-        ];
+        myEvents = [...eventResponse.data.docs];
         hasNextPage = eventResponse.data.hasNextPage;
         state = state.copyWith(myEvents: myEvents);
       }
@@ -204,7 +219,6 @@ class EventVm extends StateNotifier<EventState> {
     try {
       state = state.copyWith(isJoiningEvent: true);
       final userId = await _secureDataSource.getUserId();
-      
 
       //package:wayagram/shared/components/pin_entry_bottom_sheet.dart
       //
@@ -213,45 +227,43 @@ class EventVm extends StateNotifier<EventState> {
             child: PinEntryBottomSheet());
 
         if (result == true && context.mounted) {
-          final response =
-          await _eventRepository.joinEvent(userId: userId!, eventId: eventId);
+          final response = await _eventRepository.joinEvent(
+              userId: userId!, eventId: eventId);
 
-      final provider = ref.read(eventEngagementProvider.notifier);
+          final provider = ref.read(eventEngagementProvider.notifier);
 
-      if (response.success && context.mounted) {
-        provider.addLocation(event.location, EventPoint.joinEvent.value);
-        provider.addEventType(event.eventType, EventPoint.joinEvent.value);
-        await getAttendees(page: 1);
-        WayaNav.goBack();
+          if (response.success && context.mounted) {
+            provider.addLocation(event.location, EventPoint.joinEvent.value);
+            provider.addEventType(event.eventType, EventPoint.joinEvent.value);
+            await getAttendees(page: 1);
+            WayaNav.goBack();
 
-        if (context.mounted) {
-          WayaUtils.showNotice(
-            context: context,
-            secondButtonText: 'Explore more events',
-            icon: Image.asset(
-              WayaAssets.images.createEventSuccess.path,
-              scale: 1.5,
-            ),
-            onPress: () => WayaNav.goBack(),
-            buttonText: 'View Event Details',
-            title: "You've successfully joined the event",
-            message:
-                'Your spot is confirmed. Stay tuned for updates and get ready for an amazing experience',
-            onCancel: () => WayaNav.toNamed(EventView.route),
-          );
-        }
-      } else {
-        WayaNav.goBack();
-        String? message = response.data['message'];
-        WayaSnackBar.showToast(
-            message ?? 'Something is wrong. Try again later');
-      }
+            if (context.mounted) {
+              WayaUtils.showNotice(
+                context: context,
+                secondButtonText: 'Explore more events',
+                icon: Image.asset(
+                  WayaAssets.images.createEventSuccess.path,
+                  scale: 1.5,
+                ),
+                onPress: () => WayaNav.goBack(),
+                buttonText: 'View Event Details',
+                title: "You've successfully joined the event",
+                message:
+                    'Your spot is confirmed. Stay tuned for updates and get ready for an amazing experience',
+                onCancel: () => WayaNav.toNamed(EventView.route),
+              );
+            }
+          } else {
+            WayaNav.goBack();
+            String? message = response.data['message'];
+            WayaSnackBar.showToast(
+                message ?? 'Something is wrong. Try again later');
+          }
         } else {
           return;
         }
-    }
-
-      
+      }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
         WayaDebugHelpers.getMessage(e),
