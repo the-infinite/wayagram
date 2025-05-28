@@ -1,9 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
+import 'package:wayagram/core/components/waya_image.dart';
+import 'package:wayagram/core/theme/waya_colors.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/explore/widgets/grouped_widget_header.dart';
 import 'package:wayagram/features/shop/data/model/product_detail_type.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
+import 'package:wayagram/features/shop/seller/data/model/shop_banner_response.dart';
 import 'package:wayagram/features/shop/seller/vm/add_product_vm.dart';
 import 'package:wayagram/features/shop/views/products_view_page.dart';
 import 'package:wayagram/features/shop/vm/shop_vm.dart';
@@ -12,6 +19,7 @@ import 'package:wayagram/features/shop/widgets/filter_widget.dart';
 import 'package:gap/gap.dart';
 import 'package:wayagram/features/shop/widgets/product_card.dart';
 import 'package:wayagram/features/shop/widgets/products_grid.dart';
+import 'package:flutter_screenutil/src/size_extension.dart';
 
 class AllProducts extends ConsumerStatefulWidget {
   const AllProducts({super.key});
@@ -22,7 +30,14 @@ class AllProducts extends ConsumerStatefulWidget {
 
 class _AllProductsState extends ConsumerState<AllProducts> {
   late TextEditingController searchController;
+  List<BannerDoc>? bannerLists;
   List<String> categories = [];
+  int currentPage = 0;
+  late Timer timer;
+
+  PageController pageController = PageController(
+    initialPage: 0,
+  );
 
   @override
   void initState() {
@@ -32,10 +47,31 @@ class _AllProductsState extends ConsumerState<AllProducts> {
           .read(shopVmProvider.notifier)
           .getAllWayaDealProducts(page: 1, limit: 20);
       await ref.read(addProductProvider('filter').notifier).getAllDiscounts(1);
+
+      final banners = await ref.read(shopVmProvider.notifier).getShopBanner();
+      if (banners != null) {
+        setState(() {
+          bannerLists = banners;
+        });
+      }
     });
     searchController = TextEditingController();
     searchController.addListener(() {
       setState(() {}); // Rebuild when search text changes
+    });
+    timer = Timer.periodic(const Duration(seconds: 5), (Timer timer) {
+      if (currentPage < 2) {
+        currentPage++;
+      } else {
+        currentPage = 0;
+      }
+      if (pageController.hasClients) {
+        pageController.animateToPage(
+          currentPage,
+          duration: const Duration(milliseconds: 1500),
+          curve: Curves.easeIn,
+        );
+      }
     });
   }
 
@@ -109,6 +145,14 @@ class _AllProductsState extends ConsumerState<AllProducts> {
               await ref
                   .read(shopVmProvider.notifier)
                   .getAllWayaDealProducts(page: 1, limit: 20);
+
+              final banners =
+                  await ref.read(shopVmProvider.notifier).getShopBanner();
+              if (banners != null) {
+                setState(() {
+                  bannerLists = banners;
+                });
+              }
             },
             child: SingleChildScrollView(
               child: Column(
@@ -124,13 +168,52 @@ class _AllProductsState extends ConsumerState<AllProducts> {
                   CategoriesFilterWidget(
                     setCategory: (value) => {
                       setState(() {
-                        debugPrint("wefewfwe $value");
                         categories = value;
                       })
                     },
                     uniqueKey: 'all-product',
                   ),
                   const Gap(20),
+                  if (bannerLists?.isNotEmpty == true) ...[
+                    //? This is for the ads.
+                    Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      height: 180.h,
+                      child: PageView(
+                        controller: pageController,
+                        children: [
+                          ...List.generate(bannerLists!.length, (index) {
+                            return ClipRRect(
+                                borderRadius: BorderRadius.circular(15),
+                                child: WayaImage(
+                                    imageUrl: bannerLists?[index].image ?? '',
+                                    height: 180.h));
+                          }),
+                        ],
+                      ),
+                    ),
+                    //? This one is there too.
+                    Padding(
+                      padding: EdgeInsets.only(
+                          top: 20.h, left: 20.w, right: 20.w, bottom: 30.h),
+                      child: Center(
+                        child: SmoothPageIndicator(
+                          effect: ExpandingDotsEffect(
+                            dotWidth: 16,
+                            dotHeight: 6,
+                            spacing: 4,
+                            dotColor: WayaColors.greyColor200,
+                            activeDotColor: WayaColors.primary,
+                          ),
+                          controller: pageController,
+                          count: 3,
+                        ),
+                      ),
+                    ),
+                    const Gap(20),
+                  ],
                   GroupedWidgetHeader(
                     onTap: () {
                       WayaNav.toNamed(ProductsViewPage.route,

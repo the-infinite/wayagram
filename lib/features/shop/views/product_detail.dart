@@ -104,31 +104,30 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                   ),
                 ),
                 if (viewModel.isProductOwner)
-                InkWell(
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    WayaNav.toNamed(Promote.route, arguments: {
-                      "contentId": viewModel.product?.id,
-                      "contentType": PromotionServiceType.product.name,
-                      "data": viewModel.product
-                    });
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: wayaTheme.colorScheme.secondaryColor2,
-                      shape: BoxShape.circle,
-                    ),
-                    padding: EdgeInsets.all(7),
-                    child: SvgPicture.asset(
-                      WayaAssets.icons.mFire.path,
-                      fit: BoxFit.none,
-                      width: 24,
-                      height: 24,
-                      
-                      color: wayaTheme.colorScheme.customPrimary,
+                  InkWell(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      WayaNav.toNamed(Promote.route, arguments: {
+                        "contentId": viewModel.product?.id,
+                        "contentType": PromotionServiceType.product.name,
+                        "data": viewModel.product
+                      });
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: wayaTheme.colorScheme.secondaryColor2,
+                        shape: BoxShape.circle,
+                      ),
+                      padding: EdgeInsets.all(7),
+                      child: SvgPicture.asset(
+                        WayaAssets.icons.mFire.path,
+                        fit: BoxFit.none,
+                        width: 24,
+                        height: 24,
+                        color: wayaTheme.colorScheme.customPrimary,
+                      ),
                     ),
                   ),
-                ),
                 InkWell(
                   onTap: () {
                     HapticFeedback.lightImpact();
@@ -235,56 +234,62 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
             // ),
             //  const Gap(25),
             //  ----------- vendor details ---------
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                  color: wayaTheme.colorScheme.scaffoldColor,
-                  borderRadius: BorderRadius.circular(12)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Vendor Details",
-                        style: wayaTheme.textTheme.hintStyle,
-                      ),
-                      const Gap(5),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          WayaDp(
-                            radius: 18,
-                            image: viewModel.product?.shopLogo ??
-                                WayaConstants.shopLogo,
-                          ),
-                          const Gap(6),
-                          Text(
-                            viewModel.product!.shopName.capitalizeFirst!,
-                            style: wayaTheme.textTheme.labelMedium,
-                          )
-                        ],
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      RatingStars(rating: viewModel.product?.shopRating ?? 0),
-                      const Gap(2),
-                      Text(
-                        "${viewModel.product?.shopRating ?? 0}",
-                        style: wayaTheme.textTheme.hintStyle,
-                      )
-                    ],
-                  )
-                ],
+            GestureDetector(
+              onTap: () => WayaNav.toNamed(
+                  WayaAppRoutes.getSellerShopDetailScreen(
+                      viewModel.product?.vendorId ?? '',
+                      viewModel.product?.shopId ?? '')),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    color: wayaTheme.colorScheme.scaffoldColor,
+                    borderRadius: BorderRadius.circular(12)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Vendor Details",
+                          style: wayaTheme.textTheme.hintStyle,
+                        ),
+                        const Gap(5),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            WayaDp(
+                              radius: 18,
+                              image: viewModel.product?.shopLogo ??
+                                  WayaConstants.shopLogo,
+                            ),
+                            const Gap(6),
+                            Text(
+                              viewModel.product!.shopName.capitalizeFirst!,
+                              style: wayaTheme.textTheme.labelMedium,
+                            )
+                          ],
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        RatingStars(rating: viewModel.product?.shopRating ?? 0),
+                        const Gap(2),
+                        Text(
+                          "${viewModel.product?.shopRating ?? 0}",
+                          style: wayaTheme.textTheme.hintStyle,
+                        )
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
             const Gap(25),

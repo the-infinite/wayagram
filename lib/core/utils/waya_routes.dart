@@ -116,6 +116,7 @@ import 'package:wayagram/features/shop/seller/views/waya_deals/application_produ
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
 import 'package:wayagram/features/shop/views/products_view_page.dart';
+import 'package:wayagram/features/shop/views/seller_shop_products.dart';
 import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
 import 'package:wayagram/features/support/views/request.dart';
@@ -412,6 +413,10 @@ class WayaAppRoutes {
           groupId: WayaNav.search['id'].toString(),
           chatId: WayaNav.search['chatId'].toString(),
         ),
+       SellerShopProducts.route: () => SellerShopProducts(
+          vendorId: WayaNav.search['id'].toString(),
+          shopId: WayaNav.search['shopId'].toString(),
+        ),   
     EventInvite.route: () =>     EventInvite()
   };
 
@@ -493,6 +498,8 @@ class WayaAppRoutes {
   static String getEventDetailsScreen(String id) =>
       "${EventDetail.route}?id=$id";
 
+
+
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
   static String getContestDetailRoute(String id) =>
@@ -554,6 +561,9 @@ class WayaAppRoutes {
 
     static String getEditPostScreen(String postId, String content, String privacy, String media) =>
       "${EditPost.route}?postId=$postId&privacy=$privacy&initialContent=$content&initialMedia=$media";   
+
+      static String getSellerShopDetailScreen(String vendorId, String shopId) =>
+      "${SellerShopProducts.route}?id=$vendorId&shopId=$shopId";  
 
   /// This is fine.
   static List<GetPage> get getPages {
