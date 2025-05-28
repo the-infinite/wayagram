@@ -28,24 +28,25 @@ class FollowUserWidget extends ConsumerStatefulWidget {
 class _UserWidgetState extends ConsumerState<FollowUserWidget> {
   late final userFollowProvider = userFollowersProvider(widget.userId);
   late final followNotifier = ref.watch(userFollowProvider.notifier);
-  FollowStatusModel? _followStatus;
+   FollowStatusModel? _followStatus;
+  bool _isLoading = false;
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timestamp) {
-      _getFollowState();
-    });
     super.initState();
+    _getFollowState();
   }
 
   Future<void> _getFollowState() async {
-    if (widget.userId == ConversationState.self.id) return;
+   // if (_isLoading) return;
+    
+    _isLoading = true;
     final result = await followNotifier.getFollowStatus(widget.userId);
-
-    //? Update this value if it works fine.
+    
     if (mounted) {
       setState(() {
         _followStatus = result;
+        _isLoading = false;
       });
     }
   }
@@ -57,9 +58,9 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
     return VisibilityDetector(
         key: Key('follow_user_widget_${widget.userId}'),
         onVisibilityChanged: (info) {
-          if (info.visibleFraction > 0.5) {
-            _getFollowState();
-          }
+          if (info.visibleFraction >= 1) {
+          _getFollowState();
+        }
         },
         child: WayaFutureSubscriber(
           future: UserResource.getUserDetails(widget.userId),
@@ -69,15 +70,18 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
               : Padding(
                   padding: const EdgeInsets.only(bottom: 10),
                   child: InkWell(
-                    onTap: () => WayaNav.toNamed(WayaAppRoutes.getProfileRoute(data.$1.id, 'profile')),
+                    onTap: () => WayaNav.toNamed(
+                        WayaAppRoutes.getProfileRoute(data.$1.id, 'profile')),
                     borderRadius: BorderRadius.circular(12.r),
                     splashColor: theme.colorScheme.primary.withAlpha(30),
-                    focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+                    focusColor:
+                        const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
                     highlightColor: theme.colorScheme.primary.withAlpha(30),
                     child: Card(
                       elevation: 0,
                       child: Container(
-                        padding: EdgeInsets.only(left: 10, right: 10, bottom: 15),
+                        padding:
+                            EdgeInsets.only(left: 10, right: 10, bottom: 15),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12.r),
@@ -87,7 +91,8 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             ListTile(
-                              contentPadding: EdgeInsets.only(left: 0, right: 0),
+                              contentPadding:
+                                  EdgeInsets.only(left: 0, right: 0),
                               leading: ChatProfilePicture(
                                 user: data.$1,
                                 radius: 20.h,
@@ -107,19 +112,23 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
 
                                   //? Only show this when the user in question is not
                                   //? the current user.
-                                  if (widget.userId != ConversationState.self.id)
+                                  if (widget.userId !=
+                                      ConversationState.self.id)
                                     GestureDetector(
                                       onTap: _followStatus == null
                                           ? null
                                           : () async {
                                               //? If this user is following this one.
-                                              if (_followStatus!.isUserFollowing) {
-                                                await myFollowProvider.unfollowUser(data.$1.id);
+                                              if (_followStatus!
+                                                  .isUserFollowing) {
+                                                await myFollowProvider
+                                                    .unfollowUser(data.$1.id);
                                               }
 
                                               //? Since I am not yet following this user...
                                               else {
-                                                await myFollowProvider.followUser(data.$1.id);
+                                                await myFollowProvider
+                                                    .followUser(data.$1.id);
                                               }
 
                                               //? Update this.
@@ -127,11 +136,15 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                                             },
                                       child: Container(
                                         margin: EdgeInsets.only(right: 20.w),
-                                        padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
+                                        padding: REdgeInsets.symmetric(
+                                            vertical: 5.dg, horizontal: 10.dg),
                                         decoration: BoxDecoration(
-                                          border: _followStatus?.isUserFollowing == true
+                                          border: _followStatus
+                                                      ?.isUserFollowing ==
+                                                  true
                                               ? Border.all(
-                                                  color: theme.colorScheme.primary,
+                                                  color:
+                                                      theme.colorScheme.primary,
                                                   width: 1.5,
                                                 )
                                               : null,
@@ -140,7 +153,8 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                                               : _followStatus!.isUserFollowing
                                                   ? theme.colorScheme.white
                                                   : theme.colorScheme.primary,
-                                          borderRadius: BorderRadius.circular(7.r),
+                                          borderRadius:
+                                              BorderRadius.circular(7.r),
                                         ),
                                         child: Text(
                                           _followStatus == null
@@ -148,7 +162,8 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                                               : _followStatus!.isUserFollowing
                                                   ? "Following"
                                                   : "Follow",
-                                          style: theme.textTheme.labelSmall?.copyWith(
+                                          style: theme.textTheme.labelSmall
+                                              ?.copyWith(
                                             color: _followStatus == null
                                                 ? theme.colorScheme.greyColor500
                                                 : _followStatus!.isUserFollowing
@@ -162,7 +177,9 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
                                 ],
                               ),
                               subtitle: Text(
-                                data.$2.username != null ? '@${data.$2.username}' : 'ID: ${data.$1.id}',
+                                data.$2.username != null
+                                    ? '@${data.$2.username}'
+                                    : 'ID: ${data.$1.id}',
                                 style: theme.textTheme.bodySmall!.copyWith(
                                   fontSize: 12.sp,
                                   fontWeight: FontWeight.w400,

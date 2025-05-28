@@ -208,7 +208,7 @@ class _AllProductsState extends ConsumerState<AllProducts> {
                             activeDotColor: WayaColors.primary,
                           ),
                           controller: pageController,
-                          count: 3,
+                          count: bannerLists!.length,
                         ),
                       ),
                     ),

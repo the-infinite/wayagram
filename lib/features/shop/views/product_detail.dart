@@ -84,7 +84,32 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
         title: "Product Details",
         isScrollable: true,
         isLoading: false,
-        appBarTrailing: WayaCartIcon(),
+        appBarTrailing: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 3,
+            children: [
+              InkWell(
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  //
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: wayaTheme.colorScheme.customPrimary,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: EdgeInsets.all(6),
+                  child: SvgPicture.asset(
+                    WayaAssets.icons.mSmallHeart.path,
+                    fit: BoxFit.cover,
+                    width: 18,
+                    height: 18,
+                    color: wayaTheme.colorScheme.white,
+                  ),
+                ),
+              ),
+              WayaCartIcon(),
+            ]),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -146,9 +171,9 @@ class _ProductDetailState extends ConsumerState<ProductDetail> {
                       isLiked
                           ? WayaAssets.icons.mSmallHeart.path
                           : WayaAssets.icons.heart.path,
-                      fit: BoxFit.none,
-                      width: 24,
-                      height: 24,
+                      fit: BoxFit.cover,
+                      width: 20,
+                      height: 20,
                     ),
                   ),
                 ),

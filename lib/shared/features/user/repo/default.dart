@@ -30,7 +30,7 @@ class UserRepository extends BaseRepository {
     return patch("$serviceUrl/client/users/${ConversationState.self.id}/profile/update", data.toJson());
   }
 
-  Future<WayaRequestResponse> getAllUsers({int? limit = 500}) {
+  Future<WayaRequestResponse> getAllUsers({int? limit = 50000}) {
     return get("$serviceUrl/client/users?limit=$limit");
   }
 
