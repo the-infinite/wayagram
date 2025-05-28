@@ -142,7 +142,7 @@ class EventVm extends StateNotifier<EventState> {
           await _eventRepository.getUserEvents(userId: userId!, page: page);
       List<EventDoc> myEvents = [];
       bool hasNextPage = false;
-      final now = DateTime.now();
+
       if (response.success) {
         EventResponse eventResponse = EventResponse.fromJson(response.data);
         myEvents = [...eventResponse.data.docs];

@@ -37,8 +37,6 @@ import '../../group/vm/group_vm.dart';
 import '../../pages/vm/pages_vm.dart';
 import '../../polls_and_voting/data/model/fetch_all_polls.dart';
 
-
-
 class SearchView extends ConsumerStatefulWidget {
   static const route = "/search";
   const SearchView({super.key});
@@ -108,7 +106,7 @@ class _SearchState extends ConsumerState<SearchView> {
     final state = ref.watch(servicesProvider);
     final pageState = ref.watch(createPageProvider);
     final pollState = ref.watch(createPollVotingProvider);
-     final groupState = ref.read(createGroupProvider);
+    final groupState = ref.read(createGroupProvider);
 
     final query = searchController.text.trim();
 
@@ -392,8 +390,7 @@ class _SearchState extends ConsumerState<SearchView> {
           ),
         ),
       );
-    }
-    else if (service == 'Group' && data is List<GroupModel>) {
+    } else if (service == 'Group' && data is List<GroupModel>) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: List.generate(
@@ -404,8 +401,7 @@ class _SearchState extends ConsumerState<SearchView> {
           ),
         ),
       );
-    }
-     else if (service == 'Page' && data is List<PageModel>) {
+    } else if (service == 'Page' && data is List<PageModel>) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: List.generate(
@@ -439,16 +435,19 @@ class _SearchState extends ConsumerState<SearchView> {
         }),
       );
     } else if (service == 'Account' && data is List<UserDetails>) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: data
-            .map((account) => SizedBox(
-                  child: FollowUserWidget(
-                    userId: account.id!,
-                  ),
-                ))
-            .toList(),
-      );
+
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        ListView.builder(
+          itemCount: data.length,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+          return SizedBox(
+            child: FollowUserWidget(
+              userId: data[index].id!,
+            ),
+          );
+        }),
+      ]);
     } else if (service == 'Event' && data is List<EventDoc>) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -460,7 +459,7 @@ class _SearchState extends ConsumerState<SearchView> {
           ),
         ),
       );
-    } 
+    }
 
     return SizedBox.shrink();
   }

@@ -19,6 +19,7 @@ class AboutProduct extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
+      
       children: [
         //? Section title.
         Text(
