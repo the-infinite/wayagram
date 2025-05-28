@@ -583,6 +583,35 @@ class GroupVm extends StateNotifier<GroupState> {
     } finally {}
   }
 
+ /* Future<void> getAllGroups({int? page = 1,
+    int? limit = 10,
+    bool? hasNextPage,
+  }) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.getAllGroups();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        RecommendedGroupModel responseModel = RecommendedGroupModel.fromJson(response.data);
+        wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
+        state = state.copyWith(
+            isLoading: false,
+            recommendedGroupDocs: responseModel.data?.docs,
+            hasNextPage: responseModel.data?.hasNextPage
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+  }*/
+
+
+
   Future<void> getEvent() async {
     try {
       state = state.copyWith(isLoading: true);

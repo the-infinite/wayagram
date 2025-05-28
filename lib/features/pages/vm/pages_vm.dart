@@ -901,6 +901,26 @@ class PageVm extends StateNotifier<PageState> {
     } finally {}
   }
 
+  Future<void> getAllPages() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.getAllPagesSearch();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PagesUsersFollowModel responseModel = PagesUsersFollowModel.fromJson(response.data);
+        wayaPageCache.cacheAll(responseModel.data?.docs ?? []);
+        state = state.copyWith(recommendedPages: responseModel.data?.docs);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.pages,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+  }
+
   Future<bool> updateTeamMember(BuildContext ctx, String role, String pageId, String memberId) async {
     try {
       state = state.copyWith(isLoading: true);

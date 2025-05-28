@@ -212,10 +212,16 @@ class _PrivatePageState extends ConsumerState<PrivatePage> with SingleTickerProv
                 //? Our followers.
                 Row(
                   children: [
-                    actionType(
+                    InkWell(
+                      onTap: ()=>
+                          //WayaNav.toNamed('/follow/relationships'),
+                          WayaNav.toNamed(WayaAppRoutes.getFollowersPage(widget.page.id, 'mutual', 'profile')),
+                    child:  actionType(
                       WayaValueHelper.formatNumber(widget.page.followerCount),
                       'Followers',
                     ),
+                    ),
+
 
                     //? This is fine.
                     const Gap(10),

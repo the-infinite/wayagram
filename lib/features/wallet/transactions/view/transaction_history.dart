@@ -126,7 +126,7 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
 
-    final viewModel = ref.watch(transactionVmProvider);
+    //final viewModel = ref.watch(transactionVmProvider);
 
     if (isFirstLoad) {
       return const Center(child: CircularProgressIndicator());
@@ -141,9 +141,9 @@ class _TransactionHistoryState extends ConsumerState<TransactionHistory> {
         Expanded(
           child: ListView.builder(
             controller: _scrollController,
-            itemCount: viewModel.docs!.length,
+            itemCount: docs.length,
             itemBuilder: (_, index) {
-              final trans = viewModel.docs![index];
+              final trans = docs[index];
               String dateTimeString = "${trans.createdAt}";
               DateTime dateTime = DateTime.parse(dateTimeString).toLocal();
               return TransactionWidget(

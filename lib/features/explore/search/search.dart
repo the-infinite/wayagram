@@ -52,7 +52,7 @@ class _SearchState extends ConsumerState<SearchView> {
   final storage = WayaLocalDataSource.instance;
   List<EventDoc> events = [];
   List<MomentData> moments = [];
-  List<PageModel> pages = [];
+  //List<PageModel> pages = [];
   final Set<String> seenIds = {};
   // Tracks selected services
   Set<String> selectedServices = {};
@@ -62,8 +62,11 @@ class _SearchState extends ConsumerState<SearchView> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(servicesProvider.notifier).getAllUsers();
-      ref.read(createPageProvider.notifier).getRecommendedPages();
+      //ref.read(createPageProvider.notifier).getRecommendedPages();
+      //ref.read(createGroupProvider.notifier).getRecommendedGroups();
+      ref.read(createPageProvider.notifier).getAllPages();
       ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
+      ref.read(createGroupProvider.notifier).getAllGroups();
        ref.read(createGroupProvider.notifier).getRecommendedGroups();
       //> fetch upcoming events
       final upcomingEvents = await ref
@@ -163,16 +166,12 @@ class _SearchState extends ConsumerState<SearchView> {
       query,
     );
 
-     //? Group
-    final filteredGroups = GroupsCache.instance.data.where((group) {
-      return group.name.toLowerCase().contains(query.trim().toLowerCase());
-    }).toList();
-
-    // final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
-    //   groupState.recommendedGroupDocs ?? [],
-    //   ['question', 'description'],
-    //   query,
-    // );
+    //? Group
+    final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
+      groupState.getAllGroups ?? [],
+      ['name', 'description'],
+      query,
+    );
 
     final serviceData = {
       'Post': filteredPosts,
