@@ -99,7 +99,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                             SizedBox(
                               width: context.width * 0.4,
                               child: Text(
-                                widget.post.contestApplication?.fullName ?? "",
+                                widget.post.fullName ?? "",
                                 overflow: TextOverflow.ellipsis,
                                 style: wayaTheme.textTheme.bodyMedium,
                               ),
@@ -153,7 +153,8 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                                   widget.post.contestantProfileId) */
                               // https://services.staging.wayagram.ng/school-contest/api/v1/gallery/f3c0f686-85fd-4125-8e3f-5a83e7910f32/gallery
                               if (viewModel.getLoggedInUserId() ==
-                                  widget.model.profileId && widget.post.shares == 0)
+                                      widget.model.profileId &&
+                                  widget.post.shares == 0)
                                 PopupMenuItem<int>(
                                   value: 1,
                                   child: _buildActionNav(
@@ -309,18 +310,15 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                             hasClickedShared.value = true;
                             //?do the sharing stuff
 
-                            final result =   await Share.share(
-                  WayaValueHelper.getShareableUrl(
-                      WayaAppRoutes.getContestantProfileRoute(
-                   widget.post.contestantProfileId??"",
-                   widget.post.contestId ?? ""
-                  )),
-                  subject: "Share Contestant Profile",
-                  );
+                            final result = await Share.share(
+                              WayaValueHelper.getShareableUrl(
+                                  WayaAppRoutes.getContestantProfileRoute(
+                                      widget.post.contestantProfileId ?? "",
+                                      widget.post.contestId ?? "")),
+                              subject: "Share Contestant Profile",
+                            );
 
-
-
-                          /*   final result = await Share.share(
+                            /*   final result = await Share.share(
                               WayaValueHelper.getShareableUrl(
                                   WayaAppRoutes.getContestDetailRoute(
                                       widget.post.contestId ?? "")),
@@ -338,7 +336,6 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                           });
                         },
                       ),
-                     
                     ],
                   ),
                   WayaButton(

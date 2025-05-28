@@ -27,6 +27,7 @@ import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dar
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
+import 'package:wayagram/shared/features/media/video.dart';
 
 class ContestProfilePage extends StatefulHookConsumerWidget {
   static const route = '/contest-profile-page';
@@ -195,7 +196,14 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        WayaNav.toNamed(FullVideoView.route, arguments: {
+                        WayaNav.to(
+                          transition: Transition.circularReveal,
+                          WayaVideoDetailScreen(
+                            file: null,
+                            videoUrl: model?.introVideo ?? "",
+                          ),
+                        );
+                        /*   WayaNav.toNamed(FullVideoView.route, arguments: {
                           "url": model?.introVideo ?? "",
                           "title": "",
                           "createdAt": "",
@@ -204,7 +212,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                           "showDescription": false,
                           "discription": "",
                           "shareCount": "",
-                        });
+                        }); */
                       },
                       child: VideoThumbnail(
                         model?.introVideo ?? "",
@@ -319,7 +327,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                         isFree: true,
                         model: ContestVoteModel(
                             contestId: contestId ?? "",
-                            contestantId: model?.contestApplicant?.userId ?? "",
+                            contestantId: model?.id ?? "",
                             hostUserId: model?.contestApplicant?.userId ?? "",
                             amount: "0",
                             numberOfVotes: "0",
@@ -343,7 +351,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                       voteFee: list[1].toString(),
                       model: ContestVoteModel(
                           contestId: contestId ?? "",
-                          contestantId: model?.contestApplicant?.userId ?? "",
+                          contestantId: model?.id ?? "",
                           hostUserId: model?.contestApplicant?.userId ?? "",
                           amount: "0",
                           numberOfVotes: "0",

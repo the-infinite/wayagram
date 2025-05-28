@@ -42,8 +42,11 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
         args != null ? args["canViewDashboard"] ?? false : false;
     final String myPassedContestId = Get.parameters['id'] ?? 'Unknown';
     final myContestId = useState("");
+    var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
     //  debugPrint("COntest DI $myPassedContestId");
     useEffect(() {
+      //? to change the active post seen on the post page
+     // viewModelNotifier.changeActive(true);
       String contestId = ref.read(selectedContestProvider.notifier).state?.id ??
           myPassedContestId;
       Future.delayed(Duration(seconds: 2), () {
@@ -68,7 +71,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
       return null;
     }, []);
     var viewModel = ref.watch(votersContestNotifier);
-    var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
+    // var viewModelNotifier = ref.watch(votersContestNotifier.notifier);
     var model = ref.watch(selectedContestProvider.notifier).state;
     final selectedViewIndex = useState(0);
     //? check if app is open with link

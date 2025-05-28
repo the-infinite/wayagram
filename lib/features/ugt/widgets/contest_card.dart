@@ -332,7 +332,7 @@ class _ContestCardState extends ConsumerState<ContestCard> {
                   }
 
                   if (isTodayInRange(widget.post.participationStartDate ?? "",
-                      widget.post.participationStartDate ?? "")) {
+                      widget.post.participationEndDate ?? "")) {
                     print("i am here");
                     ref.read(registerFormProvider.notifier).addDefault(
                         widget.post.contestSettings?.formRequirements ?? [],
