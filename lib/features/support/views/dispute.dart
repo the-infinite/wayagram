@@ -374,7 +374,54 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
             ),
 
             // Some space.
-            const Gap(20),
+            const Gap(10),
+            if (typeSelected.value == "Shop" ||
+                typeSelected.value == "Quotation")
+              Column(
+                children: [
+                  //? Seventh, the merchant's URL.
+                  FormField<String>(
+                    validator: (value) {
+                      if (notifier.merchantLink.text.isEmpty) {
+                        return 'Merchant\'s unique ID  is required';
+                      }
+
+                      // This has no errors.
+                      return null;
+                    },
+                    builder: (formState) => Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        WayaTextFormField(
+                          keyboardType: TextInputType.url,
+                          controller: notifier.merchantLink,
+                          hintText: 'https://wayagram.ng/shop/some-shop',
+                          borderColor: formState.hasError &&
+                                  notifier.merchantLink.text.isEmpty
+                              ? theme.colorScheme.error
+                              : null,
+                          label: 'Merchant ID',
+                        ),
+
+                        //? If this has any errors or anything of the sort.
+                        if (formState.hasError &&
+                            notifier.merchantLink.text.isEmpty)
+                          Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              formState.errorText!,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: theme.colorScheme.error,
+                                fontSize: 12.sp,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                  const Gap(10),
+                ],
+              ),
 
             //? Sixth, the merchant's name.
             if (typeSelected.value == "Shop")
@@ -421,48 +468,6 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                   ),
 
                   // Some space.
-                  const Gap(10),
-
-                  //? Seventh, the merchant's URL.
-                  FormField<String>(
-                    validator: (value) {
-                      if (notifier.merchantLink.text.isEmpty) {
-                        return 'Merchant\'s unique ID  is required';
-                      }
-
-                      // This has no errors.
-                      return null;
-                    },
-                    builder: (formState) => Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        WayaTextFormField(
-                          keyboardType: TextInputType.url,
-                          controller: notifier.merchantLink,
-                          hintText: 'https://wayagram.ng/shop/some-shop',
-                          borderColor: formState.hasError &&
-                                  notifier.merchantLink.text.isEmpty
-                              ? theme.colorScheme.error
-                              : null,
-                          label: 'Merchant ID',
-                        ),
-
-                        //? If this has any errors or anything of the sort.
-                        if (formState.hasError &&
-                            notifier.merchantLink.text.isEmpty)
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5),
-                            child: Text(
-                              formState.errorText!,
-                              style: theme.textTheme.bodyMedium?.copyWith(
-                                color: theme.colorScheme.error,
-                                fontSize: 12.sp,
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
 
                   // Some space.
                   const Gap(10),
@@ -569,8 +574,9 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                 if (!_formKey.currentState!.validate()) return;
 
                 //? Since we sent this support request ticket.
-                if (await notifier
-                    .sendDisputeTicket(typeSelected.value == "Shop")) {
+                String? ticketId = await notifier
+                    .sendDisputeTicket(typeSelected.value == "Shop");
+                if (ticketId != null) {
                   //? Leave this screen if the action was successful
                   WayaNav.goBack();
                   //? update dispute list
@@ -578,7 +584,7 @@ class _SupportChatScreenState extends ConsumerState<SupportDisputeScreen> {
                   //? Show the popup on the previous screen.
                   await WayaUtils.showModalSheet(
                     Get.context!,
-                    child: SuccessfulSupportDisputeDialog(id: "XXXXXXX"),
+                    child: SuccessfulSupportDisputeDialog(id: ticketId),
                   );
                 }
               },

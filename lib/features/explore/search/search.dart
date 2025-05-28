@@ -19,6 +19,7 @@ import 'package:wayagram/features/moments/data/model/moment_response_model.dart'
 import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/explore/search/model/user_detail.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/features/explore/search/widgets/user_widget.dart';
 import 'package:wayagram/shared/features/moments/notifier/default.dart';
@@ -49,7 +50,7 @@ class _SearchState extends ConsumerState<SearchView> {
   final storage = WayaLocalDataSource.instance;
   List<EventDoc> events = [];
   List<MomentData> moments = [];
-  List<PageModel> pages = [];
+  //List<PageModel> pages = [];
   final Set<String> seenIds = {};
   // Tracks selected services
   Set<String> selectedServices = {};
@@ -59,9 +60,12 @@ class _SearchState extends ConsumerState<SearchView> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(servicesProvider.notifier).getAllUsers();
-      ref.read(createPageProvider.notifier).getRecommendedPages();
+      //ref.read(createPageProvider.notifier).getRecommendedPages();
+      //ref.read(createGroupProvider.notifier).getRecommendedGroups();
+      ref.read(createPageProvider.notifier).getAllPages();
       ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
-      ref.read(createGroupProvider.notifier).getRecommendedGroups();
+      ref.read(createGroupProvider.notifier).getAllGroups();
+       ref.read(createGroupProvider.notifier).getRecommendedGroups();
       //> fetch upcoming events
       final upcomingEvents = await ref
           .read(eventVmProvider.notifier)
@@ -162,8 +166,8 @@ class _SearchState extends ConsumerState<SearchView> {
 
     //? Group
     final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
-      groupState.recommendedGroupDocs ?? [],
-      ['question', 'description'],
+      groupState.getAllGroups ?? [],
+      ['name', 'description'],
       query,
     );
 

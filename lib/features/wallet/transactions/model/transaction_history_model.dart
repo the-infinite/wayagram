@@ -352,7 +352,10 @@ class TransactionHistoryModelDocs extends BaseModel<TransactionHistoryModelDocs>
   Map<String, dynamic> toMap() => {
     'id': id,
     "purpose": purpose,
-    "description": description
+    "description": description,
+    "amount": amount,
+    "transactionId": transactionId,
+    "status": status,
   };
 
   @override

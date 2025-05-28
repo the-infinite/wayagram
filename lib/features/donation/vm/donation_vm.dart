@@ -375,6 +375,8 @@ class DonationVm extends StateNotifier<DonationState> {
           category);
 
       if (response.success) {
+        reset();
+        debugPrint('CREATE DONATION ${response.data}');
         if (context.mounted) {
           CreateDonationResponse createDonationResponse =
               CreateDonationResponse.fromJson(response.data);
@@ -465,7 +467,8 @@ class DonationVm extends StateNotifier<DonationState> {
 
       if (response.success) {
         MyDonationModel responseModel = MyDonationModel.fromJson(response.data);
-        state = state.copyWith(myDonationDocs: responseModel.data?.docs);
+        state = state.copyWith(myDonationDocs: responseModel.data?.docs,
+        pendingDonations: responseModel.data?.docs);
       } else {}
     } catch (e) {
       debugPrint(e.toString());

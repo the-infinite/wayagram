@@ -37,14 +37,12 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
     final viewModel = ref.watch(createPollVotingProvider);
     final wayaTheme = Theme.of(context);
     final setUp = ref.watch(successfulSetupVmProvider);
-    debugPrint('MY POLL TYPE ${viewModel.pollType}');
     String startDate = viewModel.startDate;
     String endDate = viewModel.endDate;
     DateFormat format = DateFormat("yyyy-M-d");
     DateTime parsedDate = format.parse(startDate);
     DateTime parsedDate2 = format.parse(endDate);
     num daysLeft = parsedDate2.difference(parsedDate).inDays;
-    debugPrint('POLL DESCRIPTION ${viewModel.pollDescription.text}');
     return WayaScaffold(
         title: "Polls Summary",
         isLoading: viewModel.isLoading,
@@ -54,7 +52,7 @@ class _PollSummaryState extends ConsumerState<PollSummary>  {
           child: WayaButton(
             callback: !viewModel.isLoading
                 ? () async {
-              debugPrint('DIALA POLL');
+              debugPrint('DIALA POLL ==>> ${ConversationState.self.accountType}');
 
               if (viewModel.pollType == 'paid' &&  ConversationState.self.accountType == UserAccountType.personal) {
 

@@ -12,6 +12,7 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/vm/default.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/follow/view/follow_page.dart';
+import 'package:wayagram/features/general_settings/profile/modals/search.dart';
 import 'package:wayagram/features/general_settings/profile/view/edit_profile_page.dart';
 import 'package:wayagram/features/shop/widgets/empty_state.dart';
 import 'package:wayagram/features/shop/widgets/products_grid.dart';
@@ -44,20 +45,20 @@ class MyProfilePage extends ConsumerStatefulWidget {
 
 class _ProfilePageState extends ConsumerState<MyProfilePage> {
   late final postNotifier = ref.read(userPostsProvider.notifier);
-  late final commentedpostNotifier =
-      ref.read(userCommentedPostsProvider.notifier);
-  late final likedpostNotifier = ref.read(userLikedPostsProvider.notifier);
-  late final repostpostNotifier = ref.read(userRepostsProvider.notifier);
+  late final commentedPostNotifier = ref.read(userCommentedPostsProvider.notifier);
+  late final likedPostNotifier = ref.read(userLikedPostsProvider.notifier);
+  late final repostPostNotifier = ref.read(userRepostsProvider.notifier);
   late final savedPostNotifier = ref.read(userSavedPostsProvider.notifier);
   late final eventNotifier = ref.read(userEventsProvider.notifier);
   late final pollsNotifier = ref.read(userPollsProvider.notifier);
-  late final productsNotifier =
-      ref.read(userProductsProvider(widget.data.$1.id).notifier);
+  late final productsNotifier = ref.read(userProductsProvider(widget.data.$1.id).notifier);
   late final conversationNotifier = ref.read(conversationProvider.notifier);
+  final searchManager = ValueNotifier<String?>(null);
   final followNotifier = myFollowProvider;
   final scrollHandler = WayaObservableScrollController();
   final _pageController = ValueNotifier(0);
   final _tabController = ExpandedTabController();
+  final searchController = TextEditingController();
 
   @override
   void initState() {
@@ -76,9 +77,9 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
   @override
   void reassemble() {
     postNotifier.reset();
-    commentedpostNotifier.reset();
-    likedpostNotifier.reset();
-    repostpostNotifier.reset();
+    commentedPostNotifier.reset();
+    likedPostNotifier.reset();
+    repostPostNotifier.reset();
     savedPostNotifier.reset();
     eventNotifier.reset();
     followNotifier.reset();
@@ -98,6 +99,9 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
   @override
   void dispose() {
     _pageController.dispose();
+    _tabController.dispose();
+    searchController.dispose();
+    searchManager.dispose();
     super.dispose();
   }
 
@@ -106,18 +110,20 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
     if (_pageController.value == 0) {
       await postNotifier.getPostsForUser(widget.data.$1.id);
     }
+
     //? If this is for repost
     if (_pageController.value == 1) {
-      await repostpostNotifier.getRepostedPosts(widget.data.$1.id);
+      await repostPostNotifier.getRepostedPosts(widget.data.$1.id);
     }
+
     //? If this is for likes
     if (_pageController.value == 2) {
-      await likedpostNotifier.getLikedPost();
+      await likedPostNotifier.getLikedPost();
     }
 
     //? If this is for comments
     if (_pageController.value == 3) {
-      await commentedpostNotifier.getCommentedPost();
+      await commentedPostNotifier.getCommentedPost();
     }
 
     //? If this is for bookmarks
@@ -144,8 +150,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
   void _shareProfile() async {
     //? Share the post.
     final result = await Share.share(
-      WayaValueHelper.getShareableUrl(
-          WayaAppRoutes.getProfileRoute(widget.data.$1.id)),
+      WayaValueHelper.getShareableUrl(WayaAppRoutes.getProfileRoute(widget.data.$1.id)),
       subject: 'Share Profile',
     );
 
@@ -153,14 +158,30 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
     if (result.status == ShareResultStatus.success) return;
   }
 
+  void _triggerSearch() async {
+    final result = await WayaUtils.showModalSheet(
+      context,
+      isDismissible: false,
+      child: SearchProfileModal(
+        searchManager: searchManager,
+        searchController: searchController,
+      ),
+    );
+
+    // Okay.
+    if (result != null) {
+      return;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final size = MediaQuery.sizeOf(context);
     final postState = ref.watch(userPostsProvider);
-    final likedpostState = ref.watch(userLikedPostsProvider);
-    final commentedpostState = ref.watch(userCommentedPostsProvider);
-    final repostedpostState = ref.watch(userRepostsProvider);
+    final likedPostState = ref.watch(userLikedPostsProvider);
+    final commentedPostState = ref.watch(userCommentedPostsProvider);
+    final repostedPostState = ref.watch(userRepostsProvider);
     final eventState = ref.watch(userEventsProvider);
     final pollsState = ref.watch(userPollsProvider);
     final savedPostsState = ref.watch(userSavedPostsProvider);
@@ -182,10 +203,12 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
               spacing: 12,
               children: [
                 //? Search
-                // IconButton(
-                //   icon: WayaAssets.icons.genSet.search.svg(fit: BoxFit.none),
-                //   onPressed: () async {},
-                // ),
+                IconButton(
+                  icon: WayaAssets.icons.genSet.search.svg(
+                    fit: BoxFit.none,
+                  ),
+                  onPressed: _triggerSearch,
+                ),
 
                 //? Share
                 IconButton(
@@ -221,8 +244,7 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
                       onTap: _shareProfile,
                       child: WayaActionNav(
                         context: context,
-                        asset:
-                            WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
+                        asset: WayaAssets.icons.genSet.share.svg(fit: BoxFit.none),
                         text: "Share profile",
                         color: wayaTheme.colorScheme.customBlack,
                       ),
@@ -239,495 +261,466 @@ class _ProfilePageState extends ConsumerState<MyProfilePage> {
             body: PopScope(
               onPopInvokedWithResult: (isPopping, _) {
                 if (!isPopping) return;
-                postNotifier.reset();
-                eventNotifier.reset();
-                pollsNotifier.reset();
+                //? Clear all search queries in each of these ones.
+                try {
+                  searchController.clear();
+                  searchManager.value = null;
+                } catch (_) {}
               },
               child: ValueListenableBuilder(
-                valueListenable: _pageController,
-                builder: (context, selectedPage, _) {
-                  //? Is this empty?
-                  final isEmpty = switch (selectedPage) {
-                    0 => postState.posts.isEmpty && postState.hasLoaded,
-                    1 => repostedpostState.posts.isEmpty &&
-                        repostedpostState.hasLoaded,
-                    2 =>
-                      likedpostState.posts.isEmpty && likedpostState.hasLoaded,
-                    3 => commentedpostState.posts.isEmpty &&
-                        commentedpostState.hasLoaded,
-                    // 2 => donationsState.donations.isEmpty && donationsState.hasLoaded,
-                    // 3 => myGroupNotifier.createdGroups.isEmpty && !myGroupNotifier.hasMoreCreatedGroups,
-                    4 => savedPostsState.posts.isEmpty &&
-                        savedPostsState.hasLoaded,
-                    5 => pollsState.polls.isEmpty && pollsState.hasLoaded,
-                    6 => eventState.events.isEmpty && eventState.hasLoaded,
-                    7 =>
-                      productsState.products.isEmpty && productsState.hasLoaded,
-                    _ => true,
-                  };
+                valueListenable: searchManager,
+                builder: (context, search, _) => ValueListenableBuilder(
+                  valueListenable: _pageController,
+                  builder: (context, selectedPage, _) {
+                    //? Get the filtered data for each type.
+                    final filteredPosts = postState.posts(search);
+                    final filteredRepostedPosts = repostedPostState.posts(search);
+                    final filteredLikedPosts = likedPostState.posts(search);
+                    final filteredCommentedPosts = commentedPostState.posts(search);
+                    final filteredSavedPosts = savedPostsState.posts(search);
+                    final filteredPolls = pollsState.polls(search);
+                    final filteredEvents = eventState.events(search);
+                    final filteredProducts = productsState.products(search);
 
-                  //? Are we at end.
-                  final isAtEnd = switch (selectedPage) {
-                    0 => !postState.hasNextPage,
-                    1 => !repostedpostState.hasNextPage,
-                    2 => !likedpostState.hasNextPage,
-                    3 => !commentedpostState.hasNextPage,
-                    // 2 => !donationsState.hasNextPage,
-                    // 3 => !myGroupNotifier.hasMoreCreatedGroups,
-                    4 => !savedPostsState.hasNextPage,
-                    5 => !pollsState.hasNextPage,
-                    6 => !eventState.hasNextPage,
-                    7 => !productsState.hasNextPage,
-                    _ => true,
-                  };
+                    //? Is this empty?
+                    final isEmpty = switch (selectedPage) {
+                      0 => filteredPosts.isEmpty && postState.hasLoaded,
+                      1 => filteredRepostedPosts.isEmpty && repostedPostState.hasLoaded,
+                      2 => filteredLikedPosts.isEmpty && likedPostState.hasLoaded,
+                      3 => filteredCommentedPosts.isEmpty && commentedPostState.hasLoaded,
+                      4 => filteredSavedPosts.isEmpty && savedPostsState.hasLoaded,
+                      5 => filteredPolls.isEmpty && pollsState.hasLoaded,
+                      6 => filteredEvents.isEmpty && eventState.hasLoaded,
+                      7 => filteredProducts.isEmpty && productsState.hasLoaded,
+                      _ => true,
+                    };
 
-                  //? Should we fetch.
-                  final shouldFetch = switch (selectedPage) {
-                    0 => !postState.isLoading,
-                    1 => !repostedpostState.isLoading,
-                    2 => !likedpostState.isLoading,
-                    3 => !commentedpostState.isLoading,
-                    // 2 => !donationsState.isLoading,
-                    // 3 => !myGroupNotifier.isLoading,
-                    4 => !savedPostsState.isLoading,
-                    5 => !pollsState.isLoading,
-                    6 => !eventState.isLoading,
-                    7 => !productsState.isLoading,
-                    _ => true,
-                  };
+                    //? Are we at end.
+                    final isAtEnd = switch (selectedPage) {
+                      0 => !postState.hasNextPage,
+                      1 => !repostedPostState.hasNextPage,
+                      2 => !likedPostState.hasNextPage,
+                      3 => !commentedPostState.hasNextPage,
+                      4 => !savedPostsState.hasNextPage,
+                      5 => !pollsState.hasNextPage,
+                      6 => !eventState.hasNextPage,
+                      7 => !productsState.hasNextPage,
+                      _ => true,
+                    };
 
-                  //? Our component.
-                  return WayaObservableScrollView(
-                    handler: scrollHandler,
-                    shouldFetch: shouldFetch,
-                    isAtEnd: isAtEnd,
-                    onReachEnd: () async => await _fetchMore(),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //? First, the picture set.
-                        Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            //? The
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                //? FIrst, the background image.
-                                WayaImage2(
-                                  height: size.height * 0.2,
-                                  imageUrl: profile.coverImage,
-                                ),
+                    //? Should we fetch.
+                    final shouldFetch = switch (selectedPage) {
+                      0 => !postState.isLoading,
+                      1 => !repostedPostState.isLoading,
+                      2 => !likedPostState.isLoading,
+                      3 => !commentedPostState.isLoading,
+                      4 => !savedPostsState.isLoading,
+                      5 => !pollsState.isLoading,
+                      6 => !eventState.isLoading,
+                      7 => !productsState.isLoading,
+                      _ => true,
+                    };
 
-                                // Space.
-                                const Gap(15),
+                    //? Our component.
+                    return WayaObservableScrollView(
+                      handler: scrollHandler,
+                      shouldFetch: shouldFetch,
+                      isAtEnd: isAtEnd,
+                      onReachEnd: () async => await _fetchMore(),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          //? First, the picture set.
+                          Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              //? The
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: [
+                                  //? FIrst, the background image.
+                                  WayaImage2(
+                                    height: size.height * 0.2,
+                                    imageUrl: profile.coverImage,
+                                  ),
 
-                                //? How we go to the edit profile page.
-                                GestureDetector(
-                                  onTap: () =>
-                                      WayaNav.toNamed(EditProfilePage.route),
-                                  child: Container(
-                                    margin: EdgeInsets.only(right: 20.w),
-                                    padding: REdgeInsets.symmetric(
-                                        vertical: 5.dg, horizontal: 10.dg),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: wayaTheme.colorScheme.primary600,
-                                        width: 1.5,
+                                  // Space.
+                                  const Gap(15),
+
+                                  //? How we go to the edit profile page.
+                                  GestureDetector(
+                                    onTap: () => WayaNav.toNamed(EditProfilePage.route),
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 20.w),
+                                      padding: REdgeInsets.symmetric(vertical: 5.dg, horizontal: 10.dg),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: wayaTheme.colorScheme.primary600,
+                                          width: 1.5,
+                                        ),
+                                        color: wayaTheme.colorScheme.white,
+                                        borderRadius: BorderRadius.circular(7.r),
                                       ),
-                                      color: wayaTheme.colorScheme.white,
-                                      borderRadius: BorderRadius.circular(7.r),
-                                    ),
-                                    child: Text(
-                                      'Edit Profile',
-                                      style: wayaTheme.textTheme.labelSmall
-                                          ?.wayaCopyWith(
-                                        color: wayaTheme.colorScheme.primary600,
-                                        fontWeight: FontWeight.w600,
+                                      child: Text(
+                                        'Edit Profile',
+                                        style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                          color: wayaTheme.colorScheme.primary600,
+                                          fontWeight: FontWeight.w600,
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
-                            ),
-
-                            //? The user's profile picture.
-                            Positioned(
-                              left: 16.w,
-                              bottom: 10.h,
-                              child: ChatProfilePicture(
-                                user: user,
-                                canMove: true,
-                                radius: 28.r,
-                                showActive: false,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        // Some.
-                        const Gap(2),
-
-                        //? Second, the profile set.
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12.0, vertical: 0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              //? First, the name of the user in question.
-                              Text(
-                                profile.displayName ?? '',
-                                style: wayaTheme.textTheme.bodyMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  color: wayaTheme.colorScheme.black,
-                                ),
+                                ],
                               ),
 
-                              // Some space.
-                              const Gap(5),
+                              //? The user's profile picture.
+                              Positioned(
+                                left: 16.w,
+                                bottom: 10.h,
+                                child: ChatProfilePicture(
+                                  user: user,
+                                  canMove: true,
+                                  radius: 28.r,
+                                  showActive: false,
+                                ),
+                              ),
+                            ],
+                          ),
 
-                              //? Second, the username of this user in question.
-                              if (profile.username != null) ...[
+                          // Some.
+                          const Gap(2),
+
+                          //? Second, the profile set.
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                //? First, the name of the user in question.
                                 Text(
-                                  '@${profile.username}',
-                                  style: wayaTheme.textTheme.labelSmall
-                                      ?.wayaCopyWith(
-                                    color: wayaTheme.colorScheme.greyColor500,
-                                    fontSize: 13.sp,
+                                  profile.displayName ?? '',
+                                  style: wayaTheme.textTheme.bodyMedium?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: wayaTheme.colorScheme.black,
                                   ),
                                 ),
 
                                 // Some space.
                                 const Gap(5),
-                              ],
 
-                              //? Third, the user's bio.
-                              if (profile.bio != null) ...[
-                                Text(
-                                  profile.bio!,
-                                  style: wayaTheme.textTheme.labelSmall
-                                      ?.wayaCopyWith(
-                                    color: wayaTheme.colorScheme.greyColor700,
+                                //? Second, the username of this user in question.
+                                if (profile.username != null) ...[
+                                  Text(
+                                    '@${profile.username}',
+                                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                      color: wayaTheme.colorScheme.greyColor500,
+                                      fontSize: 13.sp,
+                                    ),
+                                  ),
+
+                                  // Some space.
+                                  const Gap(5),
+                                ],
+
+                                //? Third, the user's bio.
+                                if (profile.bio != null) ...[
+                                  Text(
+                                    profile.bio!,
+                                    style: wayaTheme.textTheme.labelSmall?.wayaCopyWith(
+                                      color: wayaTheme.colorScheme.greyColor700,
+                                    ),
+                                  ),
+
+                                  // This is fine.
+                                  const Gap(5),
+                                ],
+
+                                //? Fourth the profile overview.
+                                InkWell(
+                                  customBorder: const StadiumBorder(),
+                                  onTap: () => WayaNav.toNamed(FollowRelationshipsPage.route),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                  splashColor: wayaTheme.colorScheme.primary.withAlpha(30),
+                                  focusColor: const Color.fromARGB(255, 179, 173, 170).withAlpha(30),
+                                  highlightColor: wayaTheme.colorScheme.primary.withAlpha(30),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    spacing: 10.w,
+                                    children: [
+                                      //? Users following.
+                                      WayaRichText(
+                                        title1: WayaValueHelper.formatNumber(state.followingTotalSize),
+                                        title2: ' Following',
+                                        style1: wayaTheme.textTheme.bodySmall?.copyWith(
+                                          color: wayaTheme.colorScheme.black,
+                                          fontSize: 12.sp,
+                                        ),
+                                        style2: wayaTheme.textTheme.bodySmall?.copyWith(
+                                          color: wayaTheme.colorScheme.greyColor500,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+
+                                      //? Followers.
+                                      WayaRichText(
+                                        title1: WayaValueHelper.formatNumber(state.followersTotalSize),
+                                        title2: ' Followers',
+                                        style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                          color: wayaTheme.colorScheme.black,
+                                          fontSize: 12.sp,
+                                        ),
+                                        style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                          color: wayaTheme.colorScheme.greyColor500,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+
+                                      //? Posts.
+                                      WayaRichText(
+                                        title1: WayaValueHelper.formatNumber(postState.totalSize),
+                                        title2: ' Posts',
+                                        style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                          color: wayaTheme.colorScheme.black,
+                                          fontSize: 12.sp,
+                                        ),
+                                        style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                          color: wayaTheme.colorScheme.greyColor500,
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 12.sp,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
 
                                 // This is fine.
-                                const Gap(5),
-                              ],
+                                Gap(5.w),
 
-                              //? Fourth the profile overview.
-                              InkWell(
-                                customBorder: const StadiumBorder(),
-                                onTap: () => WayaNav.toNamed(
-                                    FollowRelationshipsPage.route),
-                                borderRadius: BorderRadius.circular(12.r),
-                                splashColor:
-                                    wayaTheme.colorScheme.primary.withAlpha(30),
-                                focusColor:
-                                    const Color.fromARGB(255, 179, 173, 170)
-                                        .withAlpha(30),
-                                highlightColor:
-                                    wayaTheme.colorScheme.primary.withAlpha(30),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  spacing: 10.w,
-                                  children: [
-                                    //? Users following.
-                                    WayaRichText(
-                                      title1: WayaValueHelper.formatNumber(
-                                          state.followingTotalSize),
-                                      title2: ' Following',
-                                      style1: wayaTheme.textTheme.bodySmall
-                                          ?.copyWith(
-                                        color: wayaTheme.colorScheme.black,
-                                        fontSize: 12.sp,
-                                      ),
-                                      style2: wayaTheme.textTheme.bodySmall
-                                          ?.copyWith(
-                                        color:
-                                            wayaTheme.colorScheme.greyColor500,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12.sp,
-                                      ),
-                                    ),
-
-                                    //? Followers.
-                                    WayaRichText(
-                                      title1: WayaValueHelper.formatNumber(
-                                          state.followersTotalSize),
-                                      title2: ' Followers',
-                                      style1: wayaTheme.textTheme.bodySmall
-                                          ?.wayaCopyWith(
-                                        color: wayaTheme.colorScheme.black,
-                                        fontSize: 12.sp,
-                                      ),
-                                      style2: wayaTheme.textTheme.bodySmall
-                                          ?.wayaCopyWith(
-                                        color:
-                                            wayaTheme.colorScheme.greyColor500,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12.sp,
-                                      ),
-                                    ),
-
-                                    //? Posts.
-                                    WayaRichText(
-                                      title1: WayaValueHelper.formatNumber(
-                                          postState.totalSize),
-                                      title2: ' Posts',
-                                      style1: wayaTheme.textTheme.bodySmall
-                                          ?.wayaCopyWith(
-                                        color: wayaTheme.colorScheme.black,
-                                        fontSize: 12.sp,
-                                      ),
-                                      style2: wayaTheme.textTheme.bodySmall
-                                          ?.wayaCopyWith(
-                                        color:
-                                            wayaTheme.colorScheme.greyColor500,
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 12.sp,
-                                      ),
-                                    ),
-                                  ],
+                                //? Some more space.
+                                WayaRichText(
+                                  title1: 'Joined: ',
+                                  title2: WayaDateHelper.getMonthlyTimestamp(user.createdAt ?? DateTime.now()),
+                                  style1: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                    color: wayaTheme.colorScheme.black,
+                                    fontSize: 12.sp,
+                                  ),
+                                  style2: wayaTheme.textTheme.bodySmall?.wayaCopyWith(
+                                    color: wayaTheme.colorScheme.greyColor500,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 12.sp,
+                                  ),
                                 ),
+                              ],
+                            ),
+                          ),
+
+                          // Some space.
+                          const Gap(10),
+
+                          //? The tab selector goes here.
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              //?
+                              WayaTabButton(
+                                isSelected: selectedPage == 0,
+                                text: 'Posts',
+                                onTap: () {
+                                  if (_pageController.value == 0) return;
+                                  _pageController.value = 0;
+                                  _tabController.close();
+                                  _tabController.away();
+                                  _fetchMore();
+                                },
                               ),
 
-                              // This is fine.
-                              Gap(5.w),
+                              // ?
+                              WayaTabButton(
+                                isSelected: selectedPage == 1,
+                                text: 'Reposts',
+                                onTap: () {
+                                  if (_pageController.value == 1) return;
+                                  _pageController.value = 1;
+                                  _tabController.close();
+                                  _tabController.away();
+                                  _fetchMore();
+                                },
+                              ),
 
-                              //? Some more space.
-                              //if (isSelf)
-                              WayaRichText(
-                                title1: 'Joined: ',
-                                title2: WayaDateHelper.getMonthlyTimestamp(
-                                    user.createdAt ?? DateTime.now()),
-                                style1:
-                                    wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                  color: wayaTheme.colorScheme.black,
-                                  fontSize: 12.sp,
-                                ),
-                                style2:
-                                    wayaTheme.textTheme.bodySmall?.wayaCopyWith(
-                                  color: wayaTheme.colorScheme.greyColor500,
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 12.sp,
-                                ),
+                              //?
+                              WayaTabButton(
+                                isSelected: selectedPage == 2,
+                                text: 'Likes',
+                                onTap: () {
+                                  if (_pageController.value == 2) return;
+                                  _pageController.value = 2;
+                                  _tabController.close();
+                                  _tabController.away();
+                                  _fetchMore();
+                                },
+                              ),
+
+                              //? The rest
+                              WayaExpandedTabButton(
+                                isSelected: selectedPage > 2,
+                                text: 'More',
+                                controller: _tabController,
+                                tabs: [
+                                  //? For donations
+                                  WayaExpandedTab(
+                                    isSelected: selectedPage == 3,
+                                    text: 'Comments',
+                                    onTap: () {
+                                      if (_pageController.value == 3) return;
+                                      _pageController.value = 3;
+                                      _tabController.close();
+                                      _fetchMore();
+                                    },
+                                  ),
+
+                                  // For groups.
+                                  WayaExpandedTab(
+                                    isSelected: selectedPage == 4,
+                                    text: "Bookmarks",
+                                    onTap: () {
+                                      if (_pageController.value == 4) return;
+                                      _pageController.value = 4;
+                                      _fetchMore();
+                                    },
+                                  ),
+
+                                  // For pages.
+                                  WayaExpandedTab(
+                                    isSelected: selectedPage == 5,
+                                    text: "Polls",
+                                    onTap: () {
+                                      if (_pageController.value == 5) return;
+                                      _pageController.value = 5;
+                                      _fetchMore();
+                                    },
+                                  ),
+
+                                  // For pages.
+                                  WayaExpandedTab(
+                                    isSelected: selectedPage == 6,
+                                    text: "Events",
+                                    onTap: () {
+                                      if (_pageController.value == 6) return;
+                                      _pageController.value = 6;
+                                      _fetchMore();
+                                    },
+                                  ),
+
+                                  // For pages.
+                                  WayaExpandedTab(
+                                    isSelected: selectedPage == 7,
+                                    text: "Products",
+                                    onTap: () {
+                                      if (_pageController.value == 7) return;
+                                      _pageController.value = 7;
+                                      _fetchMore();
+                                    },
+                                  ),
+                                ],
                               ),
                             ],
                           ),
-                        ),
 
-                        // Some space.
-                        const Gap(10),
+                          // Some space.
+                          Gap(5.w),
 
-                        //? The tab selector goes here.
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            //?
-                            WayaTabButton(
-                              isSelected: selectedPage == 0,
-                              text: 'Posts',
-                              onTap: () {
-                                if (_pageController.value == 0) return;
-                                _pageController.value = 0;
-                                _tabController.close();
-                                _tabController.away();
-                                _fetchMore();
-                              },
+                          // Now our component.
+                          if (isEmpty) ...[
+                            //? First, space that scales with the screen size.
+                            Gap(60.h),
+
+                            //? Second the actual component itself.
+                            Center(
+                              child: EmptyState(
+                                assetImage: WayaAssets.icons.emptyState.svg(),
+                                message: "Nothing to show yet",
+                              ),
                             ),
 
-                            // ?
-                            WayaTabButton(
-                              isSelected: selectedPage == 1,
-                              text: 'Reposts',
-                              onTap: () {
-                                if (_pageController.value == 1) return;
-                                _pageController.value = 1;
-                                _tabController.close();
-                                _tabController.away();
-                                _fetchMore();
-                              },
-                            ),
-
-                            //?
-                            WayaTabButton(
-                              isSelected: selectedPage == 2,
-                              text: 'Likes',
-                              onTap: () {
-                                if (_pageController.value == 2) return;
-                                _pageController.value = 2;
-                                _tabController.close();
-                                _tabController.away();
-                                _fetchMore();
-                              },
-                            ),
-
-                            //? The rest
-                            WayaExpandedTabButton(
-                              isSelected: selectedPage > 2,
-                              text: 'More',
-                              controller: _tabController,
-                              tabs: [
-                                //? For donations
-                                WayaExpandedTab(
-                                  isSelected: selectedPage == 3,
-                                  text: 'Comments',
-                                  onTap: () {
-                                    if (_pageController.value == 3) return;
-                                    _pageController.value = 3;
-                                    _tabController.close();
-                                    _fetchMore();
-                                  },
-                                ),
-
-                                // For groups.
-                                WayaExpandedTab(
-                                  isSelected: selectedPage == 4,
-                                  text: "Bookmarks",
-                                  onTap: () {
-                                    if (_pageController.value == 4) return;
-                                    _pageController.value = 4;
-                                    _fetchMore();
-                                  },
-                                ),
-
-                                // For pages.
-                                WayaExpandedTab(
-                                  isSelected: selectedPage == 5,
-                                  text: "Polls",
-                                  onTap: () {
-                                    if (_pageController.value == 5) return;
-                                    _pageController.value = 5;
-                                    _fetchMore();
-                                  },
-                                ),
-
-                                // For pages.
-                                WayaExpandedTab(
-                                  isSelected: selectedPage == 6,
-                                  text: "Events",
-                                  onTap: () {
-                                    if (_pageController.value == 6) return;
-                                    _pageController.value = 6;
-                                    _fetchMore();
-                                  },
-                                ),
-
-                                // For pages.
-                                WayaExpandedTab(
-                                  isSelected: selectedPage == 7,
-                                  text: "Products",
-                                  onTap: () {
-                                    if (_pageController.value == 7) return;
-                                    _pageController.value = 7;
-                                    _fetchMore();
-                                  },
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-
-                        // Some space.
-                        Gap(5.w),
-
-                        // Now our component.
-                        if (isEmpty) ...[
-                          //? First, space that scales with the screen size.
-                          Gap(60.h),
-
-                          //? Second the actual component itself.
-                          Center(
-                            child: EmptyState(
-                              assetImage: WayaAssets.icons.emptyState.svg(),
-                              message: "Nothing to show yet",
-                            ),
-                          ),
-
-                          //? Finally, space that scales with the screen size.
-                          Gap(60.h),
-                        ] else if (selectedPage == 0)
-                          ...List.generate(
-                            postState.posts.length,
-                            (index) => WayaPostWidget(
-                              data: postState.posts[index],
-                              index: index,
-                              padded: true,
-                            ),
-                          )
+                            //? Finally, space that scales with the screen size.
+                            Gap(60.h),
+                          ] else if (selectedPage == 0)
+                            ...List.generate(
+                              filteredPosts.length,
+                              (index) => WayaPostWidget(
+                                data: filteredPosts[index],
+                                index: index,
+                                padded: true,
+                              ),
+                            )
                           else if (selectedPage == 1)
-                          ...[
                             ...List.generate(
-                            repostedpostState.posts.length,
-                            (index) => WayaPostWidget(
-                              data: repostedpostState.posts[index],
-                              index: index,
-                              padded: true,
-                            ),
-                          )
-                          ] 
-                        else if (selectedPage == 2)
-                          ...[
+                              filteredRepostedPosts.length,
+                              (index) => WayaPostWidget(
+                                data: filteredRepostedPosts[index],
+                                index: index,
+                                padded: true,
+                              ),
+                            )
+                          else if (selectedPage == 2)
                             ...List.generate(
-                            likedpostState.posts.length,
-                            (index) => WayaPostWidget(
-                              data: likedpostState.posts[index],
-                              index: index,
-                              padded: true,
-                            ),
-                          )
-                          ] // Likes
-                        else if (selectedPage == 3)
-                          ...[
+                              filteredLikedPosts.length,
+                              (index) => WayaPostWidget(
+                                data: filteredLikedPosts[index],
+                                index: index,
+                                padded: true,
+                              ),
+                            )
+                          else if (selectedPage == 3)
                             ...List.generate(
-                            commentedpostState.posts.length,
-                            (index) => WayaPostWidget(
-                              data: commentedpostState.posts[index],
-                              index: index,
-                              padded: true,
+                              filteredCommentedPosts.length,
+                              (index) => WayaPostWidget(
+                                data: filteredCommentedPosts[index],
+                                index: index,
+                                padded: true,
+                              ),
+                            )
+                          else if (selectedPage == 4)
+                            ...List.generate(
+                              filteredSavedPosts.length,
+                              (index) => WayaPostWidget(
+                                data: filteredSavedPosts[index],
+                                index: index,
+                                padded: true,
+                              ),
+                            )
+                          else if (selectedPage == 5)
+                            ...List.generate(
+                              filteredPolls.length,
+                              (index) => SinglePollWidget(
+                                poll: filteredPolls[index],
+                                user: user,
+                                padded: true,
+                              ),
+                            )
+                          else if (selectedPage == 6)
+                            ...List.generate(
+                              filteredEvents.length,
+                              (index) => EventCard(
+                                event: filteredEvents[index],
+                                userId: widget.data.$1.id,
+                              ),
+                            )
+                          else if (selectedPage == 7)
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 5.w),
+                              child: ProductsGrid(
+                                products: filteredProducts,
+                              ),
                             ),
-                          )
-                          ] // Comments
-                        else if (selectedPage == 4)
-                          ...List.generate(
-                            savedPostsState.posts.length,
-                            (index) => WayaPostWidget(
-                              data: savedPostsState.posts[index],
-                              index: index,
-                              padded: true,
-                            ),
-                          ) // Bookmarks
-                        else if (selectedPage == 5)
-                          ...List.generate(
-                            pollsState.polls.length,
-                            (index) => SinglePollWidget(
-                              poll: pollsState.polls[index],
-                              user: user,
-                              padded: true,
-                            ),
-                          )
-                        else if (selectedPage == 6)
-                          ...List.generate(
-                            eventState.events.length,
-                            (index) => EventCard(
-                              event: eventState.events[index],
-                              userId: widget.data.$1.id,
-                            ),
-                          )
-                        else if (selectedPage == 7)
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 5.w),
-                            child: ProductsGrid(
-                              products: productsState.products,
-                            ),
-                          ),
-                      ],
-                    ),
-                  );
-                },
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),

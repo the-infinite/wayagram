@@ -29,12 +29,12 @@ class EventNotifier extends StateNotifier<EventState> {
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.hasNextPage) {
-          result.addAll(state.events);
+          result.addAll(state.docs);
         }
 
         //? This is fine.
         state = state.copyWith(
-          events: result,
+          docs: result,
           totalSize: data['totalDocs'],
           totalPages: int.tryParse(data['totalPages'].toString()) ?? 1,
           hasNextPage: data['hasNextPage'],

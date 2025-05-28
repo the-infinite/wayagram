@@ -9,9 +9,7 @@ class PageRepository extends BaseRepository {
 
   factory PageRepository() => instance;
 
-  Future<WayaRequestResponse> createPost(
-      String content, List<String> images, postType,
-      [String? originalPostId]) {
+  Future<WayaRequestResponse> createPost(String content, List<String> images, postType, [String? originalPostId]) {
     final payload = {
       "content": content,
       "type": "generic",
@@ -28,13 +26,7 @@ class PageRepository extends BaseRepository {
     String postType,
     String pageId,
   ) {
-    final payload = {
-      "content": content,
-      "pageId": pageId,
-      "type": "generic",
-      "media": images,
-      "privacy": postType
-    };
+    final payload = {"content": content, "pageId": pageId, "type": "generic", "media": images, "privacy": postType};
 
     return post("$serviceUrl/posts", payload);
   }
@@ -108,13 +100,11 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/posts?id=$postId");
   }
 
-    Future<WayaRequestResponse> fetchAPost(postId) {
+  Future<WayaRequestResponse> fetchAPost(postId) {
     return get("$serviceUrl/posts/$postId");
   }
 
-
-  Future<WayaRequestResponse> commentOnPost(
-      String postId, String content, String? parentCommentId) {
+  Future<WayaRequestResponse> commentOnPost(String postId, String content, String? parentCommentId) {
     final payload = {
       "content": content,
       if (parentCommentId != null) "parentCommentId": parentCommentId,
@@ -141,8 +131,7 @@ class PageRepository extends BaseRepository {
     return delete("$serviceUrl/posts/$id/comment");
   }
 
-  Future<WayaRequestResponse> editPost(
-      String content, List<String> images, postType, String postId) {
+  Future<WayaRequestResponse> editPost(String content, List<String> images, postType, String postId) {
     final payload = {"content": content, "media": images, "privacy": postType};
 
     return patch("$serviceUrl/posts/$postId", payload);
@@ -152,8 +141,7 @@ class PageRepository extends BaseRepository {
     return post("$serviceUrl/posts/$postId/like", postId);
   }
 
-  Future<WayaRequestResponse> removeReaction(
-      String postId, String? reactionId) async {
+  Future<WayaRequestResponse> removeReaction(String postId, String? reactionId) async {
     return delete("$serviceUrl/posts/$postId/like");
     // return getBooleanResponse(response);
   }
@@ -169,8 +157,7 @@ class PageRepository extends BaseRepository {
     );
   }
 
-  Future<WayaRequestResponse> getSingleComment(
-      String postId, String commentId) {
+  Future<WayaRequestResponse> getSingleComment(String postId, String commentId) {
     return get(
       "$serviceUrl/posts/comments/$postId?id=$commentId",
     );
@@ -188,8 +175,7 @@ class PageRepository extends BaseRepository {
     return delete("$serviceUrl/posts/comments/likes/$commentId");
   }
 
-  Future<WayaRequestResponse> editComment(
-      String commentId, String content) async {
+  Future<WayaRequestResponse> editComment(String commentId, String content) async {
     return patch("$serviceUrl/posts/comments/$commentId", {"content": content});
   }
 
@@ -211,8 +197,7 @@ class PageRepository extends BaseRepository {
     final payload = {
       "name": pageName,
       "description": pageDesc,
-      "isPublic":
-          pageType, //Optional field, if you leave it blank it defaults to false
+      "isPublic": pageType, //Optional field, if you leave it blank it defaults to false
       "coverImage": coverImage,
       "profileImage": profileImage
     };
@@ -222,7 +207,8 @@ class PageRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getAllPosts({int? limit = 200}) async {
     return get(
-        "$serviceUrl/posts/?status=active&&orderBy=popularityScore&orderDirection=DESC&privacy=public&limit=$limit");
+      "$serviceUrl/posts/?status=active&orderBy=popularityScore&orderDirection=DESC&privacy=public&limit=$limit",
+    );
   }
 
   Future<WayaRequestResponse> fetchPopularPost() {
@@ -232,20 +218,19 @@ class PageRepository extends BaseRepository {
   Future<WayaRequestResponse> getAllPostsWithCategory(
       {required String category, required int page, int? limit = 5}) async {
     return get(
-        "$serviceUrl/posts/?status=active&&orderBy=popularityScore&orderDirection=DESC&privacy=public&categories=$category&page=$page&limit=$limit");
+      "$serviceUrl/posts/?status=active&orderBy=popularityScore&orderDirection=DESC&privacy=public&categories=$category&page=$page&limit=$limit",
+    );
   }
 
-  Future<WayaRequestResponse> getAllPages(String ownerId,
-      [int page = 1, int limit = 500]) {
-    return get(
-        "$serviceUrl/pages?page=$page&limit=$limit&ownerId=$ownerId&orderBy=createdAt&orderDirection=DESC");
+  Future<WayaRequestResponse> getAllPages(String ownerId, [int page = 1, int limit = 500]) {
+    return get("$serviceUrl/pages?page=$page&limit=$limit&ownerId=$ownerId&orderBy=createdAt&orderDirection=DESC");
   }
 
-  Future<WayaRequestResponse> getAllManagedPages( [int page = 1, int limit = 500]) {
+  Future<WayaRequestResponse> getAllManagedPages([int page = 1, int limit = 500]) {
     return get("$serviceUrl/pages/my-managed-pages?limit=$limit&page=1&orderBy=createdAt&orderDirection=DESC");
   }
 
-  Future<WayaRequestResponse> getAllPagesSearch( [int page = 1, int limit = 500]) {
+  Future<WayaRequestResponse> getAllPagesSearch([int page = 1, int limit = 500]) {
     return get("$serviceUrl/pages?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
   }
 
@@ -261,16 +246,14 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/pages/team-members/$pageId");
   }
 
-  Future<WayaRequestResponse> updateTeamMember(
-      String role, String pageId, String memberId) {
+  Future<WayaRequestResponse> updateTeamMember(String role, String pageId, String memberId) {
     final payload = {"role": role};
 
-    return put("$serviceUrl/pages/$pageId/team-members/$memberId", payload,
-        showErrors: true);
+    return put("$serviceUrl/pages/$pageId/team-members/$memberId", payload, showErrors: true);
   }
 
-  Future<WayaRequestResponse> editPage(String name, String desc, bool pageType,
-      String coverImage, String profileImage, String pageId) {
+  Future<WayaRequestResponse> editPage(
+      String name, String desc, bool pageType, String coverImage, String profileImage, String pageId) {
     final payload = {
       "name": name,
       "description": desc,
@@ -282,10 +265,8 @@ class PageRepository extends BaseRepository {
     return put("$serviceUrl/pages/$pageId", payload, showErrors: true);
   }
 
-  Future<WayaRequestResponse> removePageTeamMember(
-      String pageId, String memberId) async {
-    return delete("$serviceUrl/pages/$pageId/team-members/$memberId",
-        showErrors: true);
+  Future<WayaRequestResponse> removePageTeamMember(String pageId, String memberId) async {
+    return delete("$serviceUrl/pages/$pageId/team-members/$memberId", showErrors: true);
   }
 
   Future<WayaRequestResponse> followPage(String pageId) async {
@@ -297,21 +278,16 @@ class PageRepository extends BaseRepository {
     return delete("$serviceUrl/pages/follow/$pageId");
   }
 
-  Future<WayaRequestResponse> getPagesAUserFollows(
-      [int page = 1, int limit = 15]) {
+  Future<WayaRequestResponse> getPagesAUserFollows([int page = 1, int limit = 15]) {
     return get("$serviceUrl/pages/user/followings?page=$page&limit=$limit");
   }
 
-  Future<WayaRequestResponse> getRecommendedPages() {
-    return get("$serviceUrl/pages/recommended");
+  Future<WayaRequestResponse> getRecommendedPages([int page = 1, int limit = 1500]) {
+    return get("$serviceUrl/pages/recommended?page=$page&limit=$limit");
   }
 
-  Future<WayaRequestResponse> updatePageSetting(
-      bool isPublic, bool everyoneCanComment, pageId) {
-    final payload = {
-      "isPublic": isPublic,
-      "everyoneCanComment": everyoneCanComment
-    };
+  Future<WayaRequestResponse> updatePageSetting(bool isPublic, bool everyoneCanComment, pageId) {
+    final payload = {"isPublic": isPublic, "everyoneCanComment": everyoneCanComment};
     return patch("$serviceUrl/pages/update-setting/$pageId", payload);
   }
 }

@@ -22,8 +22,7 @@ class PostNotifier extends StateNotifier<PostState> {
 
     try {
       // This is fine too.
-      final response = await repo.getPostsForUser(
-          id, state.nextPage ?? state.page, state.limit);
+      final response = await repo.getPostsForUser(id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -31,15 +30,13 @@ class PostNotifier extends StateNotifier<PostState> {
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.hasNextPage) {
-          result.addAll(state.posts);
+          result.addAll(state.docs);
         }
 
         //? Parse the posts as they are in the response object...
         final docs = await Future.wait((data['docs'] as List).map((doc) async {
-          if (doc["originalPostId"] != null) {
-            final originalPost =
-                await getSinglePosts(postId: doc["originalPostId"]);
-
+          if (doc["originalPostId"] != null && doc['originalPost'] == null) {
+            final originalPost = await getSinglePosts(postId: doc["originalPostId"]);
             doc['originalPost'] = originalPost;
           }
           return PostModel.fromJson(doc);
@@ -54,7 +51,7 @@ class PostNotifier extends StateNotifier<PostState> {
 
         //? This is fine.
         state = state.copyWith(
-          posts: result,
+          docs: result,
           totalSize: data['totalDocs'],
           totalPages: int.tryParse(data['totalPages'].toString()) ?? 1,
           hasNextPage: data['hasNextPage'],
@@ -78,8 +75,7 @@ class PostNotifier extends StateNotifier<PostState> {
     return result;
   }
 
-
-/// Helper function used to reset the state of our entire post notifier.
+  /// Helper function used to reset the state of our entire post notifier.
   void reset() {
     state = PostState.initial;
   }
@@ -108,8 +104,7 @@ class CommentedPostNotifier extends StateNotifier<PostState> {
 
     try {
       // This is fine too.
-      final response = await exploreRepo.fetchCommentedPost(
-          state.nextPage ?? state.page, state.limit);
+      final response = await exploreRepo.fetchCommentedPost(state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -117,7 +112,7 @@ class CommentedPostNotifier extends StateNotifier<PostState> {
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.hasNextPage) {
-          result.addAll(state.posts);
+          result.addAll(state.docs);
         }
 
         //? Parse the posts as they are in the response object...
@@ -134,7 +129,7 @@ class CommentedPostNotifier extends StateNotifier<PostState> {
 
         //? This is fine.
         state = state.copyWith(
-          posts: result,
+          docs: result,
           totalSize: data['totalDocs'],
           totalPages: int.tryParse(data['totalPages'].toString()) ?? 1,
           hasNextPage: data['hasNextPage'],
@@ -175,8 +170,7 @@ class LikedPostNotifier extends StateNotifier<PostState> {
 
     try {
       // This is fine too.
-      final response = await exploreRepo.fetchLikedPosts(
-          state.nextPage ?? state.page, state.limit);
+      final response = await exploreRepo.fetchLikedPosts(state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -184,7 +178,7 @@ class LikedPostNotifier extends StateNotifier<PostState> {
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.hasNextPage) {
-          result.addAll(state.posts);
+          result.addAll(state.docs);
         }
 
         //? Parse the posts as they are in the response object...
@@ -201,7 +195,7 @@ class LikedPostNotifier extends StateNotifier<PostState> {
 
         //? This is fine.
         state = state.copyWith(
-          posts: result,
+          docs: result,
           totalSize: data['totalDocs'],
           totalPages: int.tryParse(data['totalPages'].toString()) ?? 1,
           hasNextPage: data['hasNextPage'],
@@ -231,11 +225,9 @@ class LikedPostNotifier extends StateNotifier<PostState> {
   }
 }
 
-//fetchreposts
-
 class RepostedPostNotifier extends StateNotifier<PostState> {
   final exploreRepo = ExploreRepository.instance;
-    final pageRepo = PageRepository.instance;
+  final pageRepo = PageRepository.instance;
 
   RepostedPostNotifier(super.state);
 
@@ -245,8 +237,7 @@ class RepostedPostNotifier extends StateNotifier<PostState> {
 
     try {
       // This is fine too.
-      final response = await exploreRepo.fetchreposts(id,
-          state.nextPage ?? state.page, state.limit);
+      final response = await exploreRepo.fetchReposts(id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -254,14 +245,13 @@ class RepostedPostNotifier extends StateNotifier<PostState> {
 
         //? If the previous page had a next page, offload them onto this place.
         if (state.hasNextPage) {
-          result.addAll(state.posts);
+          result.addAll(state.docs);
         }
 
-           //? Parse the posts as they are in the response object...
+        //? Parse the posts as they are in the response object...
         final docs = await Future.wait((data['docs'] as List).map((doc) async {
           if (doc["originalPostId"] != null) {
-            final originalPost =
-                await getSinglePosts(postId: doc["originalPostId"]);
+            final originalPost = await getSinglePosts(postId: doc["originalPostId"]);
 
             doc['originalPost'] = originalPost;
           }
@@ -277,7 +267,7 @@ class RepostedPostNotifier extends StateNotifier<PostState> {
 
         //? This is fine.
         state = state.copyWith(
-          posts: result,
+          docs: result,
           totalSize: data['totalDocs'],
           totalPages: int.tryParse(data['totalPages'].toString()) ?? 1,
           hasNextPage: data['hasNextPage'],
@@ -306,8 +296,7 @@ class RepostedPostNotifier extends StateNotifier<PostState> {
     state = PostState.initial;
   }
 
-
-    Future<dynamic> getSinglePosts({required String postId}) async {
+  Future<dynamic> getSinglePosts({required String postId}) async {
     final response = await pageRepo.fetchAPost(postId);
     if (response.success) {
       final data = response.data['data'];
@@ -333,8 +322,7 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
       state = state.copyWith(isLoading: true);
 
       // This is fine too.
-      final response = await repo.getBookmarksForUser(
-          id, state.nextPage ?? state.page, state.limit);
+      final response = await repo.getBookmarksForUser(id, state.nextPage ?? state.page, state.limit);
 
       // If this was fine...
       if (response.success) {
@@ -343,14 +331,12 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
         //? If the previous page had a next page, offload them
         //? onto this place.
         if (state.hasNextPage) {
-          result.addAll(state.posts);
+          result.addAll(state.docs);
           bookmarks.addAll(state.bookmarks);
         }
 
         //? Parse the bookmarks as they are in the response object, and retrieve only their posts...
-        final docs = (data['docs'] as List)
-            .map((doc) => BookmarkModel.fromJson(doc))
-            .where((doc) => doc.post != null);
+        final docs = (data['docs'] as List).map((doc) => BookmarkModel.fromJson(doc)).where((doc) => doc.post != null);
         final posts = <PostModel>[];
 
         for (final doc in docs) {
@@ -367,13 +353,12 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
 
         //? Now, add these to what we have here which are not from groups or pages.
         //? This is a bit of a hacK, but it works.
-        result.addAll(
-            posts.where((post) => post.pageId == null && post.groupId == null));
+        result.addAll(posts.where((post) => post.pageId == null && post.groupId == null));
         bookmarks.addAll(docs);
 
         //? This is fine.
         state = state.copyWith(
-          posts: result,
+          docs: result,
           bookmarks: bookmarks,
           totalSize: data['totalDocs'],
           totalPages: int.tryParse(data['totalPages'].toString()) ?? 1,
@@ -455,8 +440,7 @@ class SavedPostNotifier extends StateNotifier<SavedPostState> {
   }
 }
 
-final otherUserPostsProvider =
-    StateNotifierProvider.family<PostNotifier, PostState, String>((ref, id) {
+final otherUserPostsProvider = StateNotifierProvider.family<PostNotifier, PostState, String>((ref, id) {
   return PostNotifier(PostState.initial);
 });
 
@@ -464,22 +448,18 @@ final userPostsProvider = StateNotifierProvider<PostNotifier, PostState>(
   (ref) => PostNotifier(PostState.initial),
 );
 
-final userLikedPostsProvider =
-    StateNotifierProvider<LikedPostNotifier, PostState>(
+final userLikedPostsProvider = StateNotifierProvider<LikedPostNotifier, PostState>(
   (ref) => LikedPostNotifier(PostState.initial),
 );
 
-final userCommentedPostsProvider =
-    StateNotifierProvider<CommentedPostNotifier, PostState>(
+final userCommentedPostsProvider = StateNotifierProvider<CommentedPostNotifier, PostState>(
   (ref) => CommentedPostNotifier(PostState.initial),
 );
 
-final userRepostsProvider =
-    StateNotifierProvider<RepostedPostNotifier, PostState>(
+final userRepostsProvider = StateNotifierProvider<RepostedPostNotifier, PostState>(
   (ref) => RepostedPostNotifier(PostState.initial),
 );
 
-final userSavedPostsProvider =
-    StateNotifierProvider<SavedPostNotifier, SavedPostState>(
+final userSavedPostsProvider = StateNotifierProvider<SavedPostNotifier, SavedPostState>(
   (ref) => SavedPostNotifier(SavedPostState.initial),
 );

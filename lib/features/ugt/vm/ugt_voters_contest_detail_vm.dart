@@ -330,12 +330,17 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
         // createPostId = ;
         final myContestantList = contestList.where((e) {
-         return e.status?.toLowerCase() == "active";
+          return e.status?.toLowerCase() == "active" &&
+              e.contestApplicant != null;
+        }).toList();
+        final myContestantList2 = contestList.where((e) {
+          return e.contestApplicant != null;
         }).toList();
 
         state = state.copyWith(
             myContestList: myContestantList,
             myContestListCopy: myContestantList,
+            myFullContestantList: myContestantList2,
             createPostId: model?.id ?? "");
         // _page++;
         //isLoading = false;

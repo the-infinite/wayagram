@@ -105,22 +105,24 @@ class _CreatePostState extends ConsumerState<CreatePost>
               padding: const EdgeInsets.only(right: 20),
               child: SizedBox(
                 width: context.width * 0.15,
-                child: !isTyping
-                    ? WayaButton(
-                        callback: viewModel.isLoading
-                            ? () async {
-                                if (_formKey.currentState!.validate()) {}
-                              }
-                            : null,
-                        height: 30,
-                        text: 'Post',
-                        isLoading: viewModel.isLoading,
-                        textStyle: WayaTextStyles.bodySmall.copyWith(
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context).colorScheme.white),
-                      )
-                    : WayaButton(
+                child:
+                // !isTyping
+                //     ? WayaButton(
+                //         callback: viewModel.isLoading
+                //             ? () async {
+                //                 if (_formKey.currentState!.validate()) {}
+                //               }
+                //             : null,
+                //         height: 30,
+                //         text: 'Post',
+                //         isLoading: viewModel.isLoading,
+                //         textStyle: WayaTextStyles.bodySmall.copyWith(
+                //             fontSize: 12.sp,
+                //             fontWeight: FontWeight.w600,
+                //             color: Theme.of(context).colorScheme.white),
+                //       )
+                   // :
+                  WayaButton(
                         callback: !viewModel.isLoading
                             ? () async {
                                 if (_formKey.currentState!.validate()) {
@@ -188,9 +190,9 @@ class _CreatePostState extends ConsumerState<CreatePost>
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   FormField<String>(validator: (value) {
-                                    if (viewModel.content.text.isEmpty) {
-                                      return 'Post content is required';
-                                    }
+                                    // if (viewModel.content.text.isEmpty) {
+                                    //   return 'Post content is required';
+                                    // }
 
                                     return null;
                                   }, builder: (formState) {

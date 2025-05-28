@@ -9,7 +9,8 @@ class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
   final ContestRepo _contestRepository;
   final WayaLocalDataSource _localDataSource;
 
-  AppliedContestNotifier(this._contestRepository, this._localDataSource) : super(AppliedContestState());
+  AppliedContestNotifier(this._contestRepository, this._localDataSource)
+      : super(AppliedContestState());
 
   //int _page = 1; // Pagination tracking
   bool isLoading = false;
@@ -40,25 +41,33 @@ class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
       try {
         state = state.copyWith(isLoading: true);
       } catch (_) {}
-      final response =
-          await _contestRepository.fetchAppliedContest(_localDataSource.getUserId().toString(), state.page);
+      final response = await _contestRepository.fetchAppliedContest(
+          _localDataSource.getUserId().toString(), isFirst ? 1 : state.page);
       state = state.copyWith(isLoading: false);
       //  List<AppliedContestModel> contestList = [];
-
+     
       //?on success
       if (response.success) {
+       
         AppliedContest responseModel = AppliedContest.fromJson(response.data);
         //  contestList = responseModel.data?.docs??[];
         //? get wether page is last page or not
-        state = state.copyWith(isLastPage: responseModel.data?.hasNextPage == true ? false : true);
+        state = state.copyWith(
+            isLastPage: responseModel.data?.hasNextPage == true ? false : true);
         //?to differentiate if it is first page or not
         if (isFirst) {
-          state = state.copyWith(listAppliedContest: responseModel.data?.docs ?? [], page: 1);
+         
+          state = state.copyWith(
+              listAppliedContest: responseModel.data?.docs ?? [], page: 1);
         } else {
-          state = state.copyWith(listAppliedContest: [...state.listAppliedContest, ...responseModel.data?.docs ?? []]);
+          state = state.copyWith(listAppliedContest: [
+            ...state.listAppliedContest,
+            ...responseModel.data?.docs ?? []
+          ]);
         }
-        //? increase the pae either way
+        //? increase the page either way
         state = state.copyWith(page: state.page + 1);
+      
       }
 
       // return contestList;
@@ -73,7 +82,8 @@ class AppliedContestNotifier extends StateNotifier<AppliedContestState> {
 }
 
 //? My notifier
-final selectedAppliedContestProvider = StateProvider<AppliedContestModel?>((ref) {
+final selectedAppliedContestProvider =
+    StateProvider<AppliedContestModel?>((ref) {
   return AppliedContestModel(
       id: "",
       contestId: "",
@@ -97,6 +107,7 @@ final selectedAppliedContestProvider = StateProvider<AppliedContestModel?>((ref)
       categoryName: "");
 });
 // Provider
-final appliedContestProvider = StateNotifierProvider<AppliedContestNotifier, AppliedContestState>((ref) {
+final appliedContestProvider =
+    StateNotifierProvider<AppliedContestNotifier, AppliedContestState>((ref) {
   return AppliedContestNotifier(ContestRepo(), WayaLocalDataSource());
 });
