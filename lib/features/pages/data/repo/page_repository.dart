@@ -282,7 +282,7 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/pages/user/followings?page=$page&limit=$limit");
   }
 
-  Future<WayaRequestResponse> getRecommendedPages([int page = 1, int limit = 15]) {
+  Future<WayaRequestResponse> getRecommendedPages([int page = 1, int limit = 1500]) {
     return get("$serviceUrl/pages/recommended?page=$page&limit=$limit");
   }
 
