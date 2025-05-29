@@ -12,6 +12,7 @@ class ChatState {
   final int totalCount;
   final int totalPages;
   final bool typing;
+  final bool isActive;
 
   // This is fine.
   const ChatState({
@@ -25,6 +26,7 @@ class ChatState {
     required this.hasNextPage,
     required this.page,
     required this.typing,
+    required this.isActive,
   });
 
   // This is fine.
@@ -38,6 +40,7 @@ class ChatState {
     totalPages: 0,
     hasNextPage: true,
     page: 1,
+    isActive: false,
     typing: false,
   );
 
@@ -53,6 +56,7 @@ class ChatState {
     int? totalCount,
     int? totalPages,
     bool? typing,
+    bool? isActive,
   }) {
     return ChatState(
       hasLoaded: hasLoaded ?? this.hasLoaded,
@@ -65,6 +69,7 @@ class ChatState {
       hasNextPage: hasNextPage ?? this.hasNextPage,
       page: page ?? this.page,
       typing: typing ?? this.typing,
+      isActive: isActive ?? this.isActive,
     );
   }
 }
