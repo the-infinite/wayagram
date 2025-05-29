@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/helpers/navigation.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:gap/gap.dart';
@@ -14,6 +15,7 @@ import 'package:wayagram/features/ugt/data/model/ugt_post_model.dart';
 import 'package:wayagram/features/ugt/media_card.dart';
 import 'package:wayagram/features/ugt/my_contest_details/full_media_view.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
+import 'package:wayagram/shared/features/media/video.dart';
 
 class UptPostApproveCard extends StatefulHookConsumerWidget {
   final UgtAllPostContestModel post;
@@ -60,8 +62,7 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            /*   ref.read(selectedContestantProfile.notifier).state =
-                              viewModel.myContestList[0]; */
+                          
 
                             WayaNav.toNamed(
                               '/contest-profile-page',
@@ -112,47 +113,27 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
               Text(widget.post.description ?? "",
                   style: wayaTheme.textTheme.bodySmall),
               const Gap(20),
-              /*  ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(16), // Adjust the radius as needed
-                child: WayaImage(
-                  imageUrl: post.mediaContent?[0].url ?? "",
-                  height: 200,
-                  width: context.width,
-                  fit: BoxFit.cover, // Ensur
-                ),
-
-              ), */
+              
               if (widget.post.mediaContent != null &&
                   widget.post.mediaContent!.isNotEmpty)
                 MediaCard(
                     ontap: (String url, MyFullMediaType type) {
                       if (type == MyFullMediaType.image) {
-                        WayaNav.toNamed("/view-media-full-page", arguments: {
-                          "url": url,
-                          "title":
-                              widget.post.contestApplication?.fullName ?? "",
-                          "createdAt": widget.post.createdAt,
-                          "likeCount": widget.post.likes,
-                          "isLike": widget.post.hasLiked,
-                          "showDescription": true,
-                          "discription": widget.post.description,
-                          "shareCount": widget.post.shares,
-                          "type": MyFullMediaType.image
-                        });
+                        WayaNavigationHelper.toImageDetailsScreen(
+                          null,
+                          [url],
+                        );
+
+                        
                       } else {
-                        WayaNav.toNamed("/view-media-full-page", arguments: {
-                          "url": url,
-                          "title":
-                              widget.post.contestApplication?.fullName ?? "",
-                          "createdAt": widget.post.createdAt,
-                          "likeCount": widget.post.likes,
-                          "isLike": widget.post.hasLiked,
-                          "showDescription": true,
-                          "discription": widget.post.description,
-                          "shareCount": widget.post.shares,
-                          "type": MyFullMediaType.video
-                        });
+                        WayaNav.to(
+                          transition: Transition.circularReveal,
+                          WayaVideoDetailScreen(
+                            file: null,
+                            videoUrl: url,
+                          ),
+                        );
+                      
                       }
                     },
                     mediaUrls: [
