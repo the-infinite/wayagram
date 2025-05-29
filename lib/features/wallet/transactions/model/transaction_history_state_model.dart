@@ -8,6 +8,8 @@ class TransactionHistoryState {
   final bool? isVerifying;
   final bool? verified;
   final bool? isFirstLoad;
+  final String? error;
+  final String? filePath;
 
 
   final bool? hasNextPage;
@@ -21,6 +23,8 @@ class TransactionHistoryState {
   TransactionHistoryState({
     this.page = 1,
     this.isLoading = false,
+    this.error = '',
+    this.filePath = '',
     this.isLoadingSingle = false,
     this.isVerifying = false,
     this.verified = false,
@@ -40,6 +44,8 @@ class TransactionHistoryState {
       bool? isFirstLoad,
       bool? verified,
       bool? isLoadingMore,
+      String? error,
+      String? filePath,
       int? page,
       bool? isLoadingSingle,
       bool? hasNextPage,
@@ -53,6 +59,8 @@ class TransactionHistoryState {
         isLoading: isLoading ?? this.isLoading,
         isVerifying: isVerifying ?? this.isVerifying,
         isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+        error: error ?? this.error,
+        filePath: filePath ?? this.filePath,
        
         isLoadingSingle: isLoadingSingle ?? this.isLoadingSingle,
         verified: verified ?? this.verified,

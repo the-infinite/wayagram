@@ -314,9 +314,9 @@ class _PublicPageState extends ConsumerState<PublicPage>
                       children: [
                         //? This is fine too.
                         InkWell(
-                          onTap: () => WayaNav.toNamed('/follow/relationships',
+                          onTap: () => WayaNav.toNamed(
+                              '/pageFollowerScreen',
                           arguments: widget.id),
-                              //WayaNav.toNamed(WayaAppRoutes.getFollowersPage(widget.id, 'mutual', 'profile')),
                           child: actionType2(
                             WayaValueHelper.formatNumber(page.followerCount),
                             'Followers',
