@@ -47,7 +47,7 @@ class _FilterWidgetState extends ConsumerState<FilterWidget> {
           //? If this is a popup filter.
           SizedBox(
             width:
-                widget.isPopFilter ? context.width * 0.66 : context.width * 0.9,
+                widget.isPopFilter ? context.width * 0.75 : context.width * 0.9,
             child: WayaTextFormField(
               padding: EdgeInsets.all(1),
               prefixIcon: Icon(

@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:svg_flutter/svg.dart';
+import 'package:uuid/uuid.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
@@ -11,7 +12,9 @@ import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
+import 'package:wayagram/features/shop/seller/data/model/add_product_state.dart';
 import 'package:wayagram/features/shop/seller/data/model/manage_shop_state.dart';
+import 'package:wayagram/features/shop/seller/views/add_product/add_product.dart';
 import 'package:wayagram/features/shop/seller/views/delivery_request/delivery_request.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/inventory_widget.dart';
 import 'package:wayagram/features/shop/seller/views/manage_shop/widgets/quick_action_widget.dart';
@@ -75,8 +78,10 @@ class _ManageShopState extends ConsumerState<ManageShop> {
 
       // waya deals
       totalWayaDealProducts =
-          (shopState.sellerMetrics!.productMetrics.wayagramDealApprove  ?? 0)+
-              (shopState.sellerMetrics!.productMetrics.wayagramDealNotApproved ?? 0);
+          (shopState.sellerMetrics!.productMetrics.wayagramDealApprove ?? 0) +
+              (shopState
+                      .sellerMetrics!.productMetrics.wayagramDealNotApproved ??
+                  0);
 
       int totalProducts = // products
           shopState.sellerMetrics!.productMetrics.totalProducts;
@@ -100,179 +105,198 @@ class _ManageShopState extends ConsumerState<ManageShop> {
     }
 
     return WayaScaffold(
-        title: viewModel.singleShop?.name.capitalizeFirst ?? '',
-        isLoading: viewModel.isLoadingOrder,
-        isScrollable: true,
-        onRefresh: () async {
-          ref.read(manageShopVmProvider.notifier).fetchData(shopId: shopId);
-        },
-        body: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
+      title: viewModel.singleShop?.name.capitalizeFirst ?? '',
+      isLoading: viewModel.isLoadingOrder,
+      isScrollable: true,
+      onRefresh: () async {
+        ref.read(manageShopVmProvider.notifier).fetchData(shopId: shopId);
+      },
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(viewModel.singleShop!.name.capitalizeFirst!,
+                      style: wayaTheme.textTheme.titleLarge),
+                  const Gap(3),
+                  Text(
+                    'Manage your shop activity',
+                    style: wayaTheme.textTheme.hintStyle,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const Gap(30),
+          WayaButton(
+            callback: () {
+              WayaNav.toNamed(
+                SellerProducts.route,
+                arguments: viewModel.singleShop!.id,
+              );
+            },
+            color: wayaTheme.colorScheme.primary50,
+            centerWidget: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(viewModel.singleShop!.name.capitalizeFirst!,
-                        style: wayaTheme.textTheme.titleLarge),
-                    const Gap(3),
-                    Text(
-                      'Manage your shop activity',
-                      style: wayaTheme.textTheme.hintStyle,
-                    ),
-                  ],
+                SvgPicture.asset(
+                  WayaAssets.icons.buttonIcon.path,
+                  colorFilter: ColorFilter.mode(
+                      wayaTheme.colorScheme.customPrimary, BlendMode.srcIn),
+                ),
+                const Gap(6),
+                Text(
+                  "View My Products",
+                  style: TextStyle().wayaCopyWith(
+                      color: wayaTheme.colorScheme.customPrimary,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500),
+                )
+              ],
+            ),
+          ),
+          const Gap(15),
+          GridView.builder(
+              itemCount: 3,
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: sales.length,
+                  mainAxisSpacing: 0,
+                  childAspectRatio: 1.2,
+                  crossAxisSpacing: 8),
+              itemBuilder: (context, index) {
+                return InventoryWidget(
+                    metrics: sales[index].metrics,
+                    color: sales[index].color!,
+                    title: sales[index].title);
+              }),
+          const Gap(15),
+          Text("Quick Action",
+              style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w600,
+                  color: wayaTheme.colorScheme.customBlack)),
+          const Gap(15),
+          Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: wayaTheme.colorScheme.scaffoldColor,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: GridView(
+              shrinkWrap: true,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  mainAxisSpacing: 0,
+                  childAspectRatio: 3 / 4,
+                  crossAxisSpacing: 8),
+              children: [
+                QuickActionWidget(
+                  title: "Orders",
+                  icon: SvgPicture.asset(WayaAssets.icons.orders.path),
+                  color: Color(0xffE7F6EC),
+                  onTap: () {
+                    WayaNav.toNamed(AllSellerOrders.route,
+                        arguments: viewModel.singleShop!.id);
+                  },
+                  metric: totalOrders,
+                  isStacked: true,
+                ),
+                QuickActionWidget(
+                  title: "Wayagram Deals",
+                  icon: SvgPicture.asset(WayaAssets.icons.dealIcon.path),
+                  color: Color(0xffFFF0EB),
+                  metric: totalWayaDealProducts,
+                  isStacked: true,
+                  onTap: () {
+                    if (totalWayaDealProducts > 0) {
+                      WayaNav.toNamed(WayaGramDeals.route);
+                    } else {
+                      WayaNav.toNamed(WayaDealAd.route);
+                    }
+                  },
+                ),
+                QuickActionWidget(
+                  title: "Disputes",
+                  icon: SvgPicture.asset(
+                    WayaAssets.icons.buttonIcon.path,
+                    width: 28,
+                    height: 28,
+                    colorFilter:
+                        ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
+                  ),
+                  color: Color(0xffFBEAE9),
+                  onTap: () {
+                    WayaNav.toNamed(SellerDispute.route);
+                  },
+                ),
+                QuickActionWidget(
+                  title: "Requests",
+                  icon: SvgPicture.asset(WayaAssets.icons.requestIcon.path),
+                  color: Color(0xffFBEAE9),
+                  onTap: () {
+                    WayaNav.toNamed(DeliveryRequest.route);
+                  },
+                  metric: viewModel.numberOfRequests,
+                  isStacked: true,
                 ),
               ],
             ),
-            const Gap(30),
-            WayaButton(
-              callback: () {
-                WayaNav.toNamed(
-                  SellerProducts.route,
-                  arguments: viewModel.singleShop!.id,
-                );
-              },
-              color: wayaTheme.colorScheme.primary50,
-              centerWidget: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    WayaAssets.icons.buttonIcon.path,
-                    colorFilter: ColorFilter.mode(
-                        wayaTheme.colorScheme.customPrimary, BlendMode.srcIn),
-                  ),
-                  const Gap(6),
-                  Text(
-                    "View My Products",
-                    style: TextStyle().wayaCopyWith(
-                        color: wayaTheme.colorScheme.customPrimary,
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500),
-                  )
-                ],
-              ),
+          ),
+          const Gap(15),
+          Text("Recent Orders",
+              style: TextStyle().wayaCopyWith(
+                  fontSize: 15.sp,
+                  fontWeight: FontWeight.w600,
+                  color: wayaTheme.colorScheme.customBlack)),
+          const Gap(15),
+          viewModel.orders.isEmpty
+              ? Center(
+                  child: EmptyState(
+                      assetImage:
+                          WayaAssets.images.wallet.searchDocu.image(scale: 1.5),
+                      message: 'No Recent Order'),
+                )
+              : ListView.builder(
+                  itemCount: viewModel.orders.length,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return SingleOrderWidget(
+                      isSeller: true,
+                      order: viewModel.orders[index],
+                      fromRecent: true,
+                    );
+                  })
+        ],
+      ),
+      floatingActionButton: SizedBox(
+        height: 50,
+        width: 50,
+        child: WayaButton(
+          callback: () {
+            WayaNav.toNamed(AddProduct.route,
+                arguments: AddProductArg(uniqueKey: Uuid().v4()));
+          },
+          height: 50,
+          centerWidget: Center(
+            child: Icon(
+              Icons.add,
+              color: wayaTheme.colorScheme.white,
+              size: 40,
             ),
-            const Gap(15),
-            GridView.builder(
-                itemCount: 3,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: sales.length,
-                    mainAxisSpacing: 0,
-                    childAspectRatio: 1.2,
-                    crossAxisSpacing: 8),
-                itemBuilder: (context, index) {
-                  return InventoryWidget(
-                      metrics: sales[index].metrics,
-                      color: sales[index].color!,
-                      title: sales[index].title);
-                }),
-            const Gap(15),
-            Text("Quick Action",
-                style: wayaTheme.textTheme.bodySemiBold.wayaCopyWith(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w600,
-                    color: wayaTheme.colorScheme.customBlack)),
-            const Gap(15),
-            Container(
-              width: double.infinity,
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: wayaTheme.colorScheme.scaffoldColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: GridView(
-                shrinkWrap: true,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    mainAxisSpacing: 0,
-                    childAspectRatio: 3 / 4,
-                    crossAxisSpacing: 8),
-                children: [
-                  QuickActionWidget(
-                    title: "Orders",
-                    icon: SvgPicture.asset(WayaAssets.icons.orders.path),
-                    color: Color(0xffE7F6EC),
-                    onTap: () {
-                      WayaNav.toNamed(AllSellerOrders.route,
-                          arguments: viewModel.singleShop!.id);
-                    },
-                    metric: totalOrders,
-                    isStacked: true,
-                  ),
-                  QuickActionWidget(
-                    title: "Wayagram Deals",
-                    icon: SvgPicture.asset(WayaAssets.icons.dealIcon.path),
-                    color: Color(0xffFFF0EB),
-                    metric: totalWayaDealProducts,
-                    isStacked: true,
-                    onTap: () {
-                      if (totalWayaDealProducts > 0) {
-                        WayaNav.toNamed(WayaGramDeals.route);
-                      } else {
-                        WayaNav.toNamed(WayaDealAd.route);
-                      }
-                    },
-                  ),
-                  QuickActionWidget(
-                    title: "Disputes",
-                    icon: SvgPicture.asset(
-                      WayaAssets.icons.buttonIcon.path,
-                      width: 28,
-                      height: 28,
-                      colorFilter:
-                          ColorFilter.mode(Color(0xffD42620), BlendMode.srcIn),
-                    ),
-                    color: Color(0xffFBEAE9),
-                    onTap: () {
-                      WayaNav.toNamed(SellerDispute.route);
-                    },
-                  ),
-                  QuickActionWidget(
-                    title: "Requests",
-                    icon: SvgPicture.asset(WayaAssets.icons.requestIcon.path),
-                    color: Color(0xffFBEAE9),
-                    onTap: () {
-                      WayaNav.toNamed(DeliveryRequest.route);
-                    },
-                    metric: viewModel.numberOfRequests,
-                    isStacked: true,
-                  ),
-                ],
-              ),
-            ),
-            const Gap(15),
-            Text("Recent Orders",
-                style: TextStyle().wayaCopyWith(
-                    fontSize: 15.sp,
-                    fontWeight: FontWeight.w600,
-                    color: wayaTheme.colorScheme.customBlack)),
-            const Gap(15),
-            viewModel.orders.isEmpty
-                ? Center(
-                    child: EmptyState(
-                        assetImage: WayaAssets.images.wallet.searchDocu
-                            .image(scale: 1.5),
-                        message: 'No Recent Order'),
-                  )
-                : ListView.builder(
-                    itemCount: viewModel.orders.length,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return SingleOrderWidget(
-                        isSeller: true,
-                        order: viewModel.orders[index],
-                        fromRecent: true,
-                      );
-                    })
-          ],
-        ));
+          ),
+        ),
+      ),
+    );
   }
 }

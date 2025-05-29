@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:svg_flutter/svg.dart';
+import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
@@ -42,7 +45,32 @@ class _WayaShopState extends ConsumerState<WayaShop>
       onTapBackButton: () => WayaNav.toNamed(BottomView.route,
           arguments: 0, preventDuplicates: false),
       title: 'Shop',
-      appBarTrailing: WayaCartIcon(),
+      appBarTrailing: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 3,
+            children: [
+              InkWell(
+                onTap: () {
+                  HapticFeedback.lightImpact();
+                  //
+                },
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: wayaTheme.colorScheme.customPrimary,
+                    shape: BoxShape.circle,
+                  ),
+                  padding: EdgeInsets.all(6),
+                  child: SvgPicture.asset(
+                    WayaAssets.icons.mSmallHeart.path,
+                    fit: BoxFit.cover,
+                    width: 18,
+                    height: 18,
+                    color: wayaTheme.colorScheme.white,
+                  ),
+                ),
+              ),
+              WayaCartIcon(),
+            ]),
       body: Column(
         children: [
           const Gap(10),
