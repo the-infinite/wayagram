@@ -365,6 +365,15 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                 },
                 text: "Vote Candidate",
               ),
+            if (model?.status?.toLowerCase() != "active")
+              WayaButton(
+                callback: () {
+                  // WayaNav.toNamed('/contest-mydashboard-profile-page');
+                },
+                color: wayaTheme.colorScheme.primary50,
+                text: "Contestant Disqualified",
+                textColor: wayaTheme.colorScheme.customPrimary,
+              ),
             const Gap(20),
             Text("What you expect from the voters",
                 style: wayaTheme.textTheme.bodyMedium),

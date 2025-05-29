@@ -46,7 +46,7 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
     //  debugPrint("COntest DI $myPassedContestId");
     useEffect(() {
       //? to change the active post seen on the post page
-     // viewModelNotifier.changeActive(true);
+      // viewModelNotifier.changeActive(true);
       String contestId = ref.read(selectedContestProvider.notifier).state?.id ??
           myPassedContestId;
       Future.delayed(Duration(seconds: 2), () {
@@ -289,6 +289,30 @@ class _ManageContestDetailsState extends ConsumerState<AdminContestDetails> {
                     },
                     color: wayaTheme.colorScheme.primary50,
                     text: "View Contest Dashboard",
+                    textColor: wayaTheme.colorScheme.customPrimary,
+                  ),
+
+                //? view users Profile if user has registered for the contest
+
+                if (viewModel.createPostId.trim().isNotEmpty)
+                  WayaButton(
+                    callback: () {
+                      try {
+                        /* var  contestTantModel =  viewModel.myContestList.firstWhere(
+              (e) => e.profileId == viewModel.createPostId.trim());
+                      ref.read(selectedContestantProfile.notifier).state =
+                                contestTantModel; */
+                        ref.read(selectedContestProvider.notifier).state =
+                            model;
+                        WayaNav.toNamed(
+                          '/contest-profile-page',
+                        );
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
+                    color: wayaTheme.colorScheme.primary50,
+                    text: "View Profile",
                     textColor: wayaTheme.colorScheme.customPrimary,
                   ),
                 /*  Text("View Full Details",
