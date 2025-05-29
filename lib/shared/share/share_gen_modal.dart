@@ -8,9 +8,7 @@ import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/pages/vm/pages_vm.dart';
-import 'package:wayagram/features/post/modal/widget/share.dart';
 import 'package:wayagram/shared/features/chat/widget/conversation.dart';
-import 'package:wayagram/shared/features/profile/model/post.dart';
 
 class ShareGenModal extends StatelessWidget {
   final String link;

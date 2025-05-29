@@ -222,12 +222,12 @@ class _AllDonationsState extends ConsumerState<AllDonations> {
                         },
                         border: Border.all(
                             color:
-                            viewModel.selected.contains(viewModel.categories[index].value)
+                            viewModel.selected.contains(viewModel.categories[0].value)
                             ? wayaTheme.colorScheme.primary50 :
                             wayaTheme.colorScheme.greyColor300),
                         horizontalPadding: 8,
                         color:
-                         viewModel.selected.contains(viewModel.categories[index].value)
+                         viewModel.selected.contains(viewModel.categories[0].value)
                          ? wayaTheme.colorScheme.primary50 :
                         wayaTheme.colorScheme.transparent,
                         radius: 10,
