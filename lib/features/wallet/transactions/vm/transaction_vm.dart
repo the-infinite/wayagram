@@ -1,7 +1,10 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/core/service/repos/transactions/transaction_history_model.dart';
 import 'package:wayagram/core/service/repos/transactions/transaction_repository.dart';
@@ -86,6 +89,58 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
       state = state.copyWith(isLoadingSingle: true);
       final response =
           await _transactionRepository.getSingleTransactions(transactionId);
+      if (response.success) {
+        final transaction = TransactionDetail.fromJson(response.data["data"]);
+        log("$transaction");
+        state =
+            state.copyWith(isLoadingSingle: false, transaction: transaction);
+      } else {
+        state = state.copyWith(isLoadingSingle: false);
+      }
+    } catch (e) {
+      state = state.copyWith(isLoadingSingle: false);
+    }
+  }
+
+  Future<void> downloadPdf(String fileName) async {
+    state = state.copyWith(isLoadingSingle: true);
+
+    try {
+      //? Request storage permission
+      if (Platform.isAndroid) {
+        final status = await Permission.storage.request();
+        if (!status.isGranted) {
+          state = state.copyWith(error: 'Storage permission denied');
+          return;
+        }
+      }
+
+      //? Make GET request
+      final response = await _transactionRepository.getTransactionForExport();
+
+      if (response.statusCode == 200) {
+        //? Get directory to save the file
+        final directory = await getExternalStorageDirectory(); // Or getApplicationDocumentsDirectory()
+        final filePath = '${directory!.path}/$fileName.pdf';
+        final file = File(filePath);
+
+        //? Write PDF bytes to file
+        await file.writeAsBytes(response.data);
+
+        state = state.copyWith(filePath: filePath);
+      } else {
+        state = state.copyWith(error: 'Failed to download PDF: ${response.statusCode}');
+      }
+    } catch (e) {
+      state = state.copyWith(error: 'Error: $e');
+    }
+  }
+
+  Future<void> getTransactionForExport() async {
+    try {
+      state = state.copyWith(isLoadingSingle: true);
+      final response =
+      await _transactionRepository.getTransactionForExport();
       if (response.success) {
         final transaction = TransactionDetail.fromJson(response.data["data"]);
         log("$transaction");

@@ -183,8 +183,8 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/follow/following");
   }
 
-  Future<WayaRequestResponse> getFollowers() {
-    return get("$serviceUrl/follow/followers");
+  Future<WayaRequestResponse> getFollowers(String pageId) {
+    return get("$serviceUrl/pages/followers/$pageId");
   }
 
   Future<WayaRequestResponse> createPage(
