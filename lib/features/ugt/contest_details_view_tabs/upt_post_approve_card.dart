@@ -86,7 +86,7 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
                             SizedBox(
                               width: context.width * 0.4,
                               child: Text(
-                                widget.post.contestApplication?.fullName ?? "",
+                                widget.post.fullName ?? "",
                                 overflow: TextOverflow.ellipsis,
                                 style: wayaTheme.textTheme.bodyMedium,
                               ),
@@ -123,7 +123,8 @@ class _UgtPostAllCardState extends ConsumerState<UptPostApproveCard> {
                 ),
 
               ), */
-               if (widget.post.mediaContent != null && widget.post.mediaContent!.isNotEmpty)
+              if (widget.post.mediaContent != null &&
+                  widget.post.mediaContent!.isNotEmpty)
                 MediaCard(
                     ontap: (String url, MyFullMediaType type) {
                       if (type == MyFullMediaType.image) {

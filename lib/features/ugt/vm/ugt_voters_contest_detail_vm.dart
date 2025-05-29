@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.dart';
 import 'package:wayagram/features/ugt/create_contest_post/create_contest_post.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
@@ -246,6 +247,23 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
     }
   }
 
+  Future<bool> acceptPaidStageContest(
+      String contestId, Map<String, String> map) async {
+    final response = await _contestRepository.acceptPaidStageContest(map);
+    // isLoading.value = false;
+    if (response.success) {
+      fetchAllContestApplicant(contestId);
+      getContestantProfileVoteDetails(contestId);
+
+      return true;
+    } else {
+      WayaSnackBar.showToast(
+        response.data["message"],
+      );
+      return false;
+    }
+  }
+
   Future<bool> acceptRejectContestant(
       ValueNotifier<bool> isLoading,
       String contestApplicationId,
@@ -363,13 +381,22 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
             UgtAllPostContestModelBase.fromJson(response.data);
         contestList = responseModel.data?.docs ?? [];
 
-        state = state.copyWith(myPostList: contestList);
+        List<UgtAllPostContestModel> contestList2 = [];
         for (var model in contestList) {
+          // print('Hello name one ${model.profileId}');
           var data = await UserResource.getUserDetails(
-              model.contestantProfileId ?? "");
-          var userModel = data?.$1;
-          model.contestApplication?.fullName = userModel?.fullname ?? "";
+              model.contestantProfile?.profileId ?? "");
+          var userModel = data?.$2;
+          var userModel1 = data?.$1;
+          print('Hello name one');
+
+          print('Hello ${userModel?.toJson()}');
+          print('Hello 2 ${userModel1?.toJson()}');
+          print('Hello name one ${userModel?.displayName ?? ""}');
+          model.fullName = userModel?.displayName ?? "";
+          contestList2.add(model);
         }
+        state = state.copyWith(myPostList: contestList2);
 
         if (state.isActive == false && !hostApproved) {
           state = state.copyWith(pendingPostCount: contestList.length);
@@ -505,6 +532,7 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
       String text,
       List<MyMediaType> selectedImages,
       File? videoFile,
+      String fileExtention,
       String s,
       String contestId,
       VoidCallback onBackPressed) async {
@@ -514,14 +542,22 @@ class VotersContestNotifier extends StateNotifier<VoterDetailState> {
 
     for (var model in selectedImages) {
       if (!model.type) {
-        final imageUrl = await WayaFileRepository.instance
-            .uploadFile(File(model.path), "ugt-image-${Uuid().v4()}");
+        String mimeType = WayaHelpers.getContentTypeFromPath(model.path) ?? "";
+      
+        final imageUrl = await WayaFileRepository.instance.uploadFile(
+            File(model.path),
+            "ugt-image-${Uuid().v4()}.${mimeType.split("/").last}");
         imageUrls.add(imageUrl ?? "");
       }
     }
     if (videoFile != null) {
-      videoUrl = await WayaFileRepository.instance
-          .uploadFile(File(videoFile.path), "ugt-video-${Uuid().v4()}");
+      String mimeType =
+          WayaHelpers.getContentTypeFromPath(videoFile.path) ?? "";
+     
+
+      videoUrl = await WayaFileRepository.instance.uploadFile(
+          File(videoFile.path),
+          "ugt-video-${Uuid().v4()}.${mimeType.split("/").last}");
     }
 
     List<Map<String, dynamic>> listMap = [];
