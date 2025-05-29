@@ -58,7 +58,10 @@ class ShopRepository extends BaseRepository {
     return get('$serviceUrl/products/get?id=$id');
   }
 
-  ///products/:productId/shop/:shopId
+ //
+Future<WayaRequestResponse> getBanner() {
+    return get("$serviceUrl/banners/all");
+  }
 
   Future<WayaRequestResponse> deleteProductRequest(
       {required String shopId, required String productId}) {
@@ -72,7 +75,7 @@ class ShopRepository extends BaseRepository {
 
   Future<WayaRequestResponse> getSellerProducts(
       {required String shopId, required int page}) {
-    return get('$serviceUrl/products/get?shopId=$shopId&page=$page');
+    return get('$serviceUrl/products/get?shopId=$shopId&page=$page&limit=100');
   }
 
   Future<WayaRequestResponse> getSellerListedWayaDealProducts(

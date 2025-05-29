@@ -29,23 +29,24 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
   late final userFollowProvider = userFollowersProvider(widget.userId);
   late final followNotifier = ref.watch(userFollowProvider.notifier);
   FollowStatusModel? _followStatus;
+  bool _isLoading = false;
 
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timestamp) {
-      _getFollowState();
-    });
     super.initState();
+    _getFollowState();
   }
 
   Future<void> _getFollowState() async {
-    if (widget.userId == ConversationState.self.id) return;
+    if (_isLoading) {}
+
+    _isLoading = true;
     final result = await followNotifier.getFollowStatus(widget.userId);
 
-    //? Update this value if it works fine.
     if (mounted) {
       setState(() {
         _followStatus = result;
+        _isLoading = false;
       });
     }
   }
@@ -57,7 +58,7 @@ class _UserWidgetState extends ConsumerState<FollowUserWidget> {
     return VisibilityDetector(
         key: Key('follow_user_widget_${widget.userId}'),
         onVisibilityChanged: (info) {
-          if (info.visibleFraction > 0.5) {
+          if (info.visibleFraction >= 1) {
             _getFollowState();
           }
         },

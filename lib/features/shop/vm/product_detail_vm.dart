@@ -12,6 +12,7 @@ class ProductDetailState {
   final Product? product;
   final bool isProductOwner;
   final List<Product>? similarProduct;
+ 
   final bool isLoading;
 
   ProductDetailState(

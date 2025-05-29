@@ -94,8 +94,8 @@ class GroupRepository extends BaseRepository {
     return get("$serviceUrl/groups/user-groups?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
   }
 
-  Future<WayaRequestResponse> getAllGroups() {
-    return get("$serviceUrl/groups?limit=500");
+  Future<WayaRequestResponse> getAllGroups([int page = 1, int limit = 500]) {
+    return get("$serviceUrl/groups?page=$page&limit=$limit&orderBy=createdAt&orderDirection=DESC");
   }
 
   Future<WayaRequestResponse> getGroupPost(String groupId, [int page = 1, int limit = 15]) {

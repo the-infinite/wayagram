@@ -85,8 +85,14 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
               stream: WayaFileRepository.instance.downloadFile(
                 widget.message!.media!.first.mediaUrl,
                 widget.image,
-                (result) {
+                (result) async {
                   if (result) {
+                    //! DO NOT REMOVE THIS LINE. It is us giving the operating
+                    //! system enough time to flush the file to storage. Some
+                    //! times the file might be lingering in memory as opposed
+                    //! to storage.
+                    await Future.delayed(const Duration(seconds: 4));
+                    if (!mounted) return;
                     setState(() {
                       downloaded = true;
                     });
@@ -181,14 +187,30 @@ class _ImageFileWidgetState extends State<ImageFileWidget> {
                   width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
                   height: !widget.interactive && widget.totalSize < 3 ? null : 100,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, e, _) {
-                    return CachedNetworkImage(
-                      imageUrl: widget.message?.media?.first.mediaUrl ?? "",
-                      width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
-                      height: !widget.interactive && widget.totalSize < 3 ? null : 100,
-                      fit: BoxFit.cover,
+                  frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+                    //? If this is synchronously loaded, return the child.
+                    if (wasSynchronouslyLoaded) return child;
+
+                    //? If this has been loaded, then return the child as is.
+                    if (frame != null) return child;
+
+                    //? Otherwise, return a placeholder.
+                    return AspectRatio(
+                      aspectRatio: 1,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: WayaColors.primary50,
+                          borderRadius: BorderRadius.circular(16.r),
+                        ),
+                      ),
                     );
                   },
+                  errorBuilder: (context, e, _) => CachedNetworkImage(
+                    imageUrl: widget.message?.media?.first.mediaUrl ?? "",
+                    width: !widget.interactive && widget.totalSize < 3 ? size.width / widget.totalSize : 100,
+                    height: !widget.interactive && widget.totalSize < 3 ? null : 100,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),

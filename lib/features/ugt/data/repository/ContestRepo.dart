@@ -135,6 +135,11 @@ class ContestRepo extends BaseRepository {
     return patch('$serviceUrl2/profile/accept-stage', payLoad, formdata: false);
   }
 
+    Future<WayaRequestResponse> acceptPaidStageContest(payLoad) {
+    return patch('$serviceUrl2/profile/pay-for-satge', payLoad, formdata: false);
+  }
+ 
+
   Future<WayaRequestResponse> fetchAllTotalEarningContest(
       String contestId, String filter) {
     return get(

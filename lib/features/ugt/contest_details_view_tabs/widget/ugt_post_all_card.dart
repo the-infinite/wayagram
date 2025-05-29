@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/helpers/navigation.dart';
 import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
@@ -26,6 +27,7 @@ import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.d
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/delete_post_modal.dart';
 import 'package:wayagram/features/ugt/vm/ugt_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
+import 'package:wayagram/shared/features/media/video.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 
 class UgtPostAllCard extends StatefulHookConsumerWidget {
@@ -99,7 +101,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                             SizedBox(
                               width: context.width * 0.4,
                               child: Text(
-                                widget.post.contestApplication?.fullName ?? "",
+                                widget.post.fullName ?? "",
                                 overflow: TextOverflow.ellipsis,
                                 style: wayaTheme.textTheme.bodyMedium,
                               ),
@@ -116,8 +118,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                         Gap(
                           context.width * 0.15,
                         ),
-                        //  post.isFollowing!
-                        //  Image.asset("assets/images/vector.png"),
+                       
 
                         PopupMenuButton(
                           onSelected: (value) {},
@@ -153,7 +154,8 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                                   widget.post.contestantProfileId) */
                               // https://services.staging.wayagram.ng/school-contest/api/v1/gallery/f3c0f686-85fd-4125-8e3f-5a83e7910f32/gallery
                               if (viewModel.getLoggedInUserId() ==
-                                  widget.model.profileId && widget.post.shares == 0)
+                                      widget.model.profileId &&
+                                  widget.post.shares == 0)
                                 PopupMenuItem<int>(
                                   value: 1,
                                   child: _buildActionNav(
@@ -201,47 +203,27 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
               Text(widget.post.description ?? "",
                   style: wayaTheme.textTheme.bodySmall),
               const Gap(20),
-              /*  ClipRRect(
-                borderRadius:
-                    BorderRadius.circular(16), // Adjust the radius as needed
-                child: WayaImage(
-                  imageUrl: post.mediaContent?[0].url ?? "",
-                  height: 200,
-                  width: context.width,
-                  fit: BoxFit.cover, // Ensur
-                ),
-
-              ), */
+             
               if (widget.post.mediaContent != null &&
                   widget.post.mediaContent!.isNotEmpty)
                 MediaCard(
                     ontap: (String url, MyFullMediaType type) {
                       if (type == MyFullMediaType.image) {
-                        WayaNav.toNamed("/view-media-full-page", arguments: {
-                          "url": url,
-                          "title":
-                              widget.post.contestApplication?.fullName ?? "",
-                          "createdAt": widget.post.createdAt,
-                          "likeCount": widget.post.likes,
-                          "isLike": widget.post.hasLiked,
-                          "showDescription": true,
-                          "discription": widget.post.description,
-                          "shareCount": widget.post.shares,
-                          "type": MyFullMediaType.image
-                        });
+                         WayaNavigationHelper.toImageDetailsScreen(
+                          null,
+                          [url],
+                        );
+
+                     
                       } else {
-                        WayaNav.toNamed("/view-media-full-page", arguments: {
-                          "url": url,
-                          "title":
-                              widget.post.contestApplication?.fullName ?? "",
-                          "createdAt": widget.post.createdAt,
-                          "likeCount": widget.post.likes,
-                          "isLike": widget.post.hasLiked,
-                          "showDescription": true,
-                          "discription": widget.post.description,
-                          "shareCount": widget.post.shares,
-                          "type": MyFullMediaType.video
-                        });
+                         WayaNav.to(
+                          transition: Transition.circularReveal,
+                          WayaVideoDetailScreen(
+                            file: null,
+                            videoUrl: url,
+                          ),
+                        );
+                    
                       }
                     },
                     mediaUrls: [
@@ -309,23 +291,15 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                             hasClickedShared.value = true;
                             //?do the sharing stuff
 
-                            final result =   await Share.share(
-                  WayaValueHelper.getShareableUrl(
-                      WayaAppRoutes.getContestantProfileRoute(
-                   widget.post.contestantProfileId??"",
-                   widget.post.contestId ?? ""
-                  )),
-                  subject: "Share Contestant Profile",
-                  );
-
-
-
-                          /*   final result = await Share.share(
+                            final result = await Share.share(
                               WayaValueHelper.getShareableUrl(
-                                  WayaAppRoutes.getContestDetailRoute(
+                                  WayaAppRoutes.getContestantProfileRoute(
+                                      widget.post.contestantProfileId ?? "",
                                       widget.post.contestId ?? "")),
-                              subject: "Share Post",
-                            ); */
+                              subject: "Share Contestant Profile",
+                            );
+
+                           
                             //?if shared increase the count
                             if (result.status == ShareResultStatus.success) {
                               viewModel.toggleShare(widget.post.contestId ?? "",
@@ -338,7 +312,6 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                           });
                         },
                       ),
-                     
                     ],
                   ),
                   WayaButton(
@@ -386,14 +359,7 @@ class _UgtPostAllCardState extends ConsumerState<UgtPostAllCard> {
                           voteFee: list[1].toString(),
                           isFree:
                               list[0].toLowerCase() == "free" ? true : false,
-                          //   amountPaid: "89",
-                          /* 
-                           contestId: contestantData.contestId ?? "",
-                        contestantId: contestantData.id ?? "",
-                        hostUserId: contestantData.profileId ?? "",
-                        amount: "0",
-                          
-                           */
+                         
                           model: ContestVoteModel(
                               contestId: widget.post.contestId ?? "",
                               contestantId:

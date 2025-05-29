@@ -147,12 +147,14 @@ class _PinEntryBottomSheetState extends ConsumerState<PinEntryBottomSheet> {
         WayaNav.goBack();
         WayaUtils.showModalSheet(context,
             child: VoteSuccessModal(
-              candidateName: widget.candidateName,
-              votingLink: WayaAppRoutes.getContestantProfileRoute(
-                widget.model.contestantId ?? "",
-                widget.model.contestId ?? "",
-              ),
-            ));
+                candidateName: widget.candidateName,
+                votingLink:
+                    "I have just voted for ${widget.candidateName} for the amazing performance join me and cast your votes ${WayaValueHelper.getShareableUrl(
+                  WayaAppRoutes.getContestantProfileRoute(
+                    widget.model.contestantId ?? "",
+                    widget.model.contestId ?? "",
+                  ),
+                )}"));
       } else {
         /* WayaUtils.showModalSheet(context,
             child: VoteSuccessModal(
@@ -607,10 +609,15 @@ class _ConfirmVoteOptionModalState extends ConsumerState<ConfirmVoteOptionModal>
                           WayaUtils.showModalSheet(context,
                               child: VoteSuccessModal(
                                 candidateName: widget.candidateName,
-                                votingLink: WayaAppRoutes.getContestantProfileRoute(
-                                  widget.model.contestantId ?? "",
-                                  widget.model.contestId ?? "",
-                                ),
+
+                                votingLink:
+                                    "I have just voted for ${widget.candidateName} for the amazing performance join me and cast your votes ${WayaValueHelper.getShareableUrl(
+                                  WayaAppRoutes.getContestantProfileRoute(
+                                    widget.model.contestantId ?? "",
+                                    widget.model.contestId ?? "",
+                                  ),
+                                )}",
+
                               ));
                         }
                         return;

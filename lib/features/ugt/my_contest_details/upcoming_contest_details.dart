@@ -230,7 +230,7 @@ class _UpcomingContestDetailsState
 
                     //? check if the participation date is in range
                     if (!isTodayInRange(model?.participationStartDate ?? "",
-                        model?.participationStartDate ?? "")) {
+                        model?.participationEndDate ?? "")) {
                       WayaSnackBar.showToast("Application Closed!!!");
                       return;
                     }

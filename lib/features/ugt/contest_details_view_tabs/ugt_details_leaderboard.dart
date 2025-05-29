@@ -64,32 +64,7 @@ class _UgtDetailsLeaderboardState extends ConsumerState<UgtDetailsLeaderboard> {
           },
         ),
         Gap(50)
-        //  if (posts.isEmpty) emptyWidget(),
-        /*   if (posts.isNotEmpty)
-          ListView.builder(
-            controller: _scrollController,
-            shrinkWrap: true,
-            itemCount: posts.length,
-            itemBuilder: (context, index) {
-              if (postNotifier.isLoading) {
-                return Center(child: CircularProgressIndicator());
-              }
-
-              final post = posts[index];
-              return GestureDetector(
-                onTap: () {
-                  ref.read(selectedContestProvider.notifier).state = post;
-                  WayaNav.toNamed('/upcoming-manage-contest-details');
-                },
-                child: ContestCard(
-                  post,
-                  postNotifier.toggleLike,
-                  postNotifier.toggleShare,
-                  postNotifier.doFollow,
-                ),
-              );
-            },
-          ), */
+      
       ],
     );
   }
