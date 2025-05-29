@@ -15,6 +15,11 @@ class EventRepository extends BaseRepository {
     return get("$serviceUrl/events/get-event?limit=$limit&page=$page");
   }
 
+  ///client/events/invite
+ Future<WayaRequestResponse> inviteUsers({required List<String> userId, required String eventLink, required String eventTitle}) {
+    return post("$serviceUrl/events/invite", {"userId": userId, "eventTitle": eventTitle,"eventLink": eventLink }, showErrors: true);
+  }
+
   Future<WayaRequestResponse> getUserEvents({required String userId, required int page}) {
     return get("$serviceUrl/events/get-event?userId=$userId&page=$page");
   }

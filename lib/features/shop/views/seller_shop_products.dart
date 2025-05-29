@@ -30,7 +30,7 @@ class _SellerShopProducts extends ConsumerState<SellerShopProducts> {
   late final shopNotifier = ref.read(manageShopVmProvider.notifier);
   bool isLoading = false;
   ShopDetailsModel? sellerShop;
-  List<SellerProduct>? sellerProducts;
+  List<SellerProduct> sellerProducts = [];
   @override
   void initState() {
     super.initState();
@@ -53,7 +53,7 @@ class _SellerShopProducts extends ConsumerState<SellerShopProducts> {
 
           if (products != null) {
             setState(() {
-              print("prods ${products.length}");
+             
               sellerProducts = products;
             });
           }

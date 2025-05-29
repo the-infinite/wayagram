@@ -115,6 +115,7 @@ import 'package:wayagram/features/shop/seller/views/seller_products.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/application_product_details.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
+import 'package:wayagram/features/shop/views/favorites_product.dart';
 import 'package:wayagram/features/shop/views/products_view_page.dart';
 import 'package:wayagram/features/shop/views/seller_shop_products.dart';
 import 'package:wayagram/features/support/views/chat.dart';
@@ -417,7 +418,8 @@ class WayaAppRoutes {
           vendorId: WayaNav.search['id'].toString(),
           shopId: WayaNav.search['shopId'].toString(),
         ),   
-    EventInvite.route: () =>     EventInvite()
+    EventInvite.route: () =>     EventInvite(),
+    FavoritesProducts.route : () => FavoritesProducts()
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
