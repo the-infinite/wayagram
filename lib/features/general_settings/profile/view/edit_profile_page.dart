@@ -65,6 +65,7 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
                       imageUrl: userState.userAccountModel?.data?.userdata
                           ?.profile?.coverImage,
                       isEdit: true,
+                      canDelete: true,
                     ),
                     Gap(15),
                   ],

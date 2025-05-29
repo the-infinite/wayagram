@@ -1,4 +1,3 @@
-
 import 'package:json_annotation/json_annotation.dart';
 
 part 'contest_contestant_model.g.dart';
@@ -31,8 +30,7 @@ class ContestContestantModelMean {
     );
   }
 
-  factory ContestContestantModelMean.fromJson(Map<String, dynamic> json) =>
-      _$ContestContestantModelMeanFromJson(json);
+  factory ContestContestantModelMean.fromJson(Map<String, dynamic> json) => _$ContestContestantModelMeanFromJson(json);
 
   Map<String, dynamic> toJson() => _$ContestContestantModelMeanToJson(this);
 }
@@ -158,8 +156,7 @@ class MyContestContestantModel {
       contestId: contestId ?? this.contestId,
       profilePhoto: profilePhoto ?? this.profilePhoto,
       bio: bio ?? this.bio,
-      expectationFromVoters:
-          expectationFromVoters ?? this.expectationFromVoters,
+      expectationFromVoters: expectationFromVoters ?? this.expectationFromVoters,
       introVideo: introVideo ?? this.introVideo,
       hasPaid: hasPaid ?? this.hasPaid,
       status: status ?? this.status,
@@ -171,8 +168,7 @@ class MyContestContestantModel {
     );
   }
 
-  factory MyContestContestantModel.fromJson(Map<String, dynamic> json) =>
-      _$MyContestContestantModelFromJson(json);
+  factory MyContestContestantModel.fromJson(Map<String, dynamic> json) => _$MyContestContestantModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$MyContestContestantModelToJson(this);
 }
@@ -245,13 +241,10 @@ class ContestApplicant {
     );
   }
 
-  factory ContestApplicant.fromJson(Map<String, dynamic> json) =>
-      _$ContestApplicantFromJson(json);
+  factory ContestApplicant.fromJson(Map<String, dynamic> json) => _$ContestApplicantFromJson(json);
 
   Map<String, dynamic> toJson() => _$ContestApplicantToJson(this);
 }
-
-
 
 @JsonSerializable()
 class Stage {
@@ -358,8 +351,7 @@ class Metadata {
     );
   }
 
-  factory Metadata.fromJson(Map<String, dynamic> json) =>
-      _$MetadataFromJson(json);
+  factory Metadata.fromJson(Map<String, dynamic> json) => _$MetadataFromJson(json);
 
   Map<String, dynamic> toJson() => _$MetadataToJson(this);
 }
@@ -380,8 +372,7 @@ class AppliedFilters {
     );
   }
 
-  factory AppliedFilters.fromJson(Map<String, dynamic> json) =>
-      _$AppliedFiltersFromJson(json);
+  factory AppliedFilters.fromJson(Map<String, dynamic> json) => _$AppliedFiltersFromJson(json);
 
   Map<String, dynamic> toJson() => _$AppliedFiltersToJson(this);
 }

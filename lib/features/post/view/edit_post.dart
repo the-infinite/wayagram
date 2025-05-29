@@ -37,7 +37,6 @@ class EditPost extends ConsumerStatefulWidget {
 
 class _EditPostScreenState extends ConsumerState<EditPost> {
   late TextEditingController _contentController;
-  File? _image;
   final ImagePicker picker = ImagePicker();
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _pickers = ImagePicker();
@@ -135,7 +134,7 @@ class _EditPostScreenState extends ConsumerState<EditPost> {
     //final user = _wayaLocalDataSource.getUser().user;
     final viewModel = ref.watch(createPageProvider);
     final wayaTheme = Theme.of(context);
-    final postId = ModalRoute.of(context)?.settings.arguments as String?;
+    //final postId = ModalRoute.of(context)?.settings.arguments as String?;
 
     return WayaScaffold(
         resizeToAvoidBottomInset: true,

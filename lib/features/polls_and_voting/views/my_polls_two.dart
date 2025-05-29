@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:wayagram/features/donation/widget/donation_tab.dart';
 import 'package:wayagram/features/polls_and_voting/views/active_polls.dart';
 import 'package:wayagram/features/polls_and_voting/views/inactive_polls.dart';
+import 'package:wayagram/features/polls_and_voting/views/pending_polls.dart';
 import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
 
 class MyPollsTwo extends ConsumerStatefulWidget {
@@ -27,11 +28,11 @@ class _MyPollsTwoState extends ConsumerState<MyPollsTwo> {
 
   @override
   Widget build(BuildContext context) {
-    //final dynamic args = ModalRoute.of(context)?.settings.arguments;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        //const Gap(10),
+
+
         Row(
           children: [
             DonationTabButton(
@@ -39,17 +40,24 @@ class _MyPollsTwoState extends ConsumerState<MyPollsTwo> {
               text: 'Active Polls',
               onTap: () => setState(() => _selectedIndex = 0),
             ),
-            const Gap(20),
+            const Gap(10),
             DonationTabButton(
               isSelected: _selectedIndex == 1,
-              text: 'Completed Polls',
+              text: 'Completed Poll',
               onTap: () => setState(() => _selectedIndex = 1),
+            ),
+            const Gap(10),
+            DonationTabButton(
+              isSelected: _selectedIndex == 2,
+              text: 'Pending Polls',
+              onTap: () => setState(() => _selectedIndex = 2),
             ),
           ],
         ),
+
         const Gap(20),
 
-        _selectedIndex == 0 ? ActivePolls() : InActivePolls(),
+        _selectedIndex == 0 ? ActivePolls() :_selectedIndex == 1 ? InActivePolls() : PendingPolls(),
       ],
     );
   }

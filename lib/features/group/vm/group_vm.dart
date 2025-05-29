@@ -374,7 +374,7 @@ class GroupVm extends StateNotifier<GroupState> {
       final response = await _groupRepository.inviteUserToGroup(groupId, role, targetId);
       state = state.copyWith(isLoading: false);
       if (response.success) {
-        await getGroupMembers(groupId);
+        getGroupMembers(groupId);
       } else {
         WayaNav.goBack();
       }
@@ -556,7 +556,10 @@ class GroupVm extends StateNotifier<GroupState> {
     } finally {}
   }
 
-  Future<void> getRecommendedGroups() async {
+  Future<void> getRecommendedGroups({int? page = 1,
+    int? limit = 10,
+    bool? hasNextPage,
+    }) async {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _groupRepository.recommendedGroup();
@@ -564,7 +567,11 @@ class GroupVm extends StateNotifier<GroupState> {
       if (response.success) {
         RecommendedGroupModel responseModel = RecommendedGroupModel.fromJson(response.data);
         wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
-        state = state.copyWith(recommendedGroupDocs: responseModel.data?.docs);
+        state = state.copyWith(
+            isLoading: false,
+            recommendedGroupDocs: responseModel.data?.docs,
+            hasNextPage: responseModel.data?.hasNextPage
+        );
       }
     } catch (e) {
       WayaDebugConsoleController.instance.addException(
@@ -575,6 +582,35 @@ class GroupVm extends StateNotifier<GroupState> {
       );
     } finally {}
   }
+
+ /* Future<void> getAllGroups({int? page = 1,
+    int? limit = 10,
+    bool? hasNextPage,
+  }) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _groupRepository.getAllGroups();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        RecommendedGroupModel responseModel = RecommendedGroupModel.fromJson(response.data);
+        wayaGroupCache.cacheAll(responseModel.data?.docs ?? []);
+        state = state.copyWith(
+            isLoading: false,
+            recommendedGroupDocs: responseModel.data?.docs,
+            hasNextPage: responseModel.data?.hasNextPage
+        );
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+  }*/
+
+
 
   Future<void> getEvent() async {
     try {

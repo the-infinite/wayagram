@@ -98,25 +98,35 @@ class _MomentUserInfoWidget extends ConsumerState<MomentUserInfoWidget> {
             if (!widget.isMine)
               GestureDetector(
                 onTap: () async {
-              
-
                   widget.pause();
 
-                //  if (context.mounted) {
-                  final response =   await WayaUtils.showModalSheet(
-                      context,
-                      child: Report(
-                          statuses: eventReport,
-                          currentStatus: '',
-                          momentId: widget.moment.id
-                          ),
-                    );
+                  //  if (context.mounted) {
+                  final response = await WayaUtils.showModalSheet(
+                    context,
+                    child: Report(
+                        statuses: eventReport,
+                        currentStatus: '',
+                        momentId: widget.moment.id),
+                  );
 
-                    if (response) {
-                      // }
+                    widget.continues();
 
-                  widget.continues();
-                    }
+                  // if (response) {
+                  if (response == false) {
+                  //  print("fwefewfw $response");
+                    return WayaSnackBar.showToast(
+                        "You already submit a report");
+                  }
+
+                  if (response == true) {
+                    return WayaSnackBar.showToast(
+                        "Moment reported successfully");
+                  }
+
+                  // }
+
+                
+                  // }
                 },
                 child: SvgPicture.asset(
                   WayaAssets.icons.mThreeDots.path,

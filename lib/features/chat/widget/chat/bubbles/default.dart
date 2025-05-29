@@ -1046,18 +1046,12 @@ class _ChatBubbleWidgetState extends ConsumerState<ChatBubbleWidget> {
                 child: widget.data.senderId == user.id
                     ? ValueListenableBuilder(
                         valueListenable: messageController,
-                        builder: (context, redraws, _) {
-                          final data = messageController.data;
-                          final messageHash = data.hashCode.toRadixString(16).padLeft(8, '0');
-                          final controllerHash = messageController.hashCode.toRadixString(16).padLeft(8, '0');
-                          debugPrint("Chat-IS: {$controllerHash}::$messageHash,${data.id}");
-                          return _MyBubbleWidget(
-                            data: data,
-                            chat: widget.chat!,
-                            controller: widget.controller,
-                            interactive: widget.interactive,
-                          );
-                        },
+                        builder: (context, redraws, _) => _MyBubbleWidget(
+                          data: messageController.data,
+                          chat: widget.chat!,
+                          controller: widget.controller,
+                          interactive: widget.interactive,
+                        ),
                       )
                     : ValueListenableBuilder(
                         valueListenable: messageController,

@@ -195,13 +195,12 @@ class _ActivePollsState extends ConsumerState<ActivePolls> {
 
                       WayaButton(
                         callback: (){
+                          debugPrint('ENDINg date ===>>>${poll.endDate}');
                           WayaNav.toNamed('/poll-dashboard',
-                              //arguments: '${poll.id}'
                               arguments: {
                                  'id':'${poll.id}',
                                 'endDate':'${poll.endDate}',
                               }
-
                           );
                         },
                         text: 'Manage Poll',

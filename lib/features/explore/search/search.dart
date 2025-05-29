@@ -14,21 +14,28 @@ import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/explore/widgets/event_card.dart';
 import 'package:wayagram/features/explore/widgets/moments_widget.dart';
+import 'package:wayagram/features/explore/widgets/polls_card.dart';
 import 'package:wayagram/features/moments/data/model/moment_response_model.dart';
 import 'package:wayagram/features/moments/views/view_moment.dart';
 import 'package:wayagram/features/explore/search/model/user_detail.dart';
+import 'package:wayagram/features/polls_and_voting/vm/create_poll_vm.dart';
+import 'package:wayagram/shared/cache/group.dart';
 import 'package:wayagram/shared/engagement/provider/services_provider.dart';
 import 'package:wayagram/features/explore/search/widgets/user_widget.dart';
 import 'package:wayagram/shared/features/moments/notifier/default.dart';
-import 'package:wayagram/shared/features/pages/notifier/default.dart';
+import 'package:wayagram/shared/features/profile/model/groups.dart';
+import 'package:wayagram/shared/features/profile/model/pages.dart';
+import 'package:wayagram/shared/features/profile/model/poll.dart';
 import 'package:wayagram/shared/features/profile/model/post.dart';
 import 'package:wayagram/shared/features/profile/widget/group.dart';
+import 'package:wayagram/shared/features/profile/widget/page.dart';
+import 'package:wayagram/shared/features/profile/widget/poll.dart';
 import 'package:wayagram/shared/features/profile/widget/post.dart';
+import 'package:wayagram/shared/features/user/resource/default.dart';
 
-import '../../../shared/features/group/notifier/default.dart';
-import '../../../shared/features/profile/model/groups.dart';
-import '../../../shared/features/profile/model/pages.dart';
-import '../../../shared/features/profile/widget/page.dart';
+import '../../group/vm/group_vm.dart';
+import '../../pages/vm/pages_vm.dart';
+import '../../polls_and_voting/data/model/fetch_all_polls.dart';
 
 class SearchView extends ConsumerStatefulWidget {
   static const route = "/search";
@@ -43,6 +50,7 @@ class _SearchState extends ConsumerState<SearchView> {
   final storage = WayaLocalDataSource.instance;
   List<EventDoc> events = [];
   List<MomentData> moments = [];
+  //List<PageModel> pages = [];
   final Set<String> seenIds = {};
   // Tracks selected services
   Set<String> selectedServices = {};
@@ -52,6 +60,12 @@ class _SearchState extends ConsumerState<SearchView> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(servicesProvider.notifier).getAllUsers();
+      //ref.read(createPageProvider.notifier).getRecommendedPages();
+      //ref.read(createGroupProvider.notifier).getRecommendedGroups();
+      ref.read(createPageProvider.notifier).getAllPages();
+      ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
+      ref.read(createGroupProvider.notifier).getAllGroups();
+       ref.read(createGroupProvider.notifier).getRecommendedGroups();
       //> fetch upcoming events
       final upcomingEvents = await ref
           .read(eventVmProvider.notifier)
@@ -90,6 +104,9 @@ class _SearchState extends ConsumerState<SearchView> {
   Widget build(BuildContext context) {
     final wayaTheme = Theme.of(context);
     final state = ref.watch(servicesProvider);
+    final pageState = ref.watch(createPageProvider);
+    final pollState = ref.watch(createPollVotingProvider);
+    final groupState = ref.read(createGroupProvider);
 
     final query = searchController.text.trim();
 
@@ -118,8 +135,6 @@ class _SearchState extends ConsumerState<SearchView> {
       query,
     );
 
-  
-
     //? Searching user data.
     final List<UserDetails> filteredAccounts =
         WayaUtils.strictSearch<UserDetails>(
@@ -135,28 +150,35 @@ class _SearchState extends ConsumerState<SearchView> {
       query,
     );
 
-    //? Groups
-    final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
-      myGroupNotifier.createdGroups,
-      ['name', 'description'],
-      query,
-    );
-
     //? Pages
     final List<PageModel> filteredPages = WayaUtils.strictSearch<PageModel>(
-      myPageNotifier.createdPages,
+      pageState.recommendedPages ?? [],
       ['name', 'description'],
       query,
     );
 
+    //? Poll
+    final List<Docs> filteredPolls = WayaUtils.strictSearch<Docs>(
+      pollState.fetchAllPols,
+      ['question', 'description'],
+      query,
+    );
+
+    //? Group
+    final List<GroupModel> filteredGroups = WayaUtils.strictSearch<GroupModel>(
+      groupState.getAllGroups ?? [],
+      ['name', 'description'],
+      query,
+    );
 
     final serviceData = {
       'Post': filteredPosts,
       'Account': filteredAccounts,
       'Moment': filteredMoments,
       'Event': filteredEvents,
-      'Group': filteredGroups,
-      'Page': filteredPages
+      'Page': filteredPages,
+      "Poll": filteredPolls,
+      "Group": filteredGroups
     };
     final matchingServices = serviceData.entries
         .where((entry) => (entry.value as List).isNotEmpty)
@@ -368,17 +390,64 @@ class _SearchState extends ConsumerState<SearchView> {
           ),
         ),
       );
-    } else if (service == 'Account' && data is List<UserDetails>) {
+    } else if (service == 'Group' && data is List<GroupModel>) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: data
-            .map((account) => SizedBox(
-                  child: FollowUserWidget(
-                    userId: account.id!,
-                  ),
-                ))
-            .toList(),
+        children: List.generate(
+          data.length,
+          (index) => SingleGroupWidget(
+            group: data[index],
+            index: index,
+          ),
+        ),
       );
+    } else if (service == 'Page' && data is List<PageModel>) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(
+          data.length,
+          (index) => SinglePageWidget(
+            page: data[index],
+            index: index,
+          ),
+        ),
+      );
+    } else if (service == 'Poll' && data is List<Docs>) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: List.generate(data.length, (index) {
+          final poll = data[index];
+          return poll.voteCount != null && poll.voteCount! > 0
+              ? PollsCard(poll: poll)
+              : WayaFutureSubscriber(
+                  future: UserResource.getUserDetails(poll.userData!.id!),
+                  builder: (context, data) {
+                    if (data == null) {
+                      return const SizedBox();
+                    }
+
+                    return SinglePollWidget(
+                      poll: PollModel.fromJson(poll.toJson()),
+                      user: data.$1,
+                    );
+                  },
+                );
+        }),
+      );
+    } else if (service == 'Account' && data is List<UserDetails>) {
+
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        ListView.builder(
+          itemCount: data.length,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+          return SizedBox(
+            child: FollowUserWidget(
+              userId: data[index].id!,
+            ),
+          );
+        }),
+      ]);
     } else if (service == 'Event' && data is List<EventDoc>) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -390,30 +459,8 @@ class _SearchState extends ConsumerState<SearchView> {
           ),
         ),
       );
-    } else if (service == 'Group' && data is List<GroupModel>) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: List.generate(
-          data.length,
-              (index) => SingleGroupWidget(
-                group: myGroupNotifier.createdGroups[index],
-                index: index,
-              ),
-        ),
-      );
     }
-    else if (service == 'Page' && data is List<PageModel>) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: List.generate(
-          data.length,
-              (index) => SinglePageWidget(
-            page: myPageNotifier.createdPages[index],
-            index: index,
-          ),
-        ),
-      );
-    }
+
     return SizedBox.shrink();
   }
 }

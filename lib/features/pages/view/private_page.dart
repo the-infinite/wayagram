@@ -11,6 +11,7 @@ import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
+import 'package:wayagram/shared/features/pages/notifier/default.dart';
 import 'edit_page_info.dart';
 import 'page_post.dart';
 import 'team_page.dart';
@@ -75,8 +76,6 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                   value: 0,
                   onTap: () {
                     WayaNav.goBack();
-                   /*  print(
-                        'Onclick ${widget.page.isPublic} ${widget.page.everyoneCanComment}'); */
                     WayaNav.toNamed('/pageSetting', arguments: {
                       'pageId': widget.page.id,
                       "isPublic": widget.page.isPublic,
@@ -93,8 +92,9 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                 PopupMenuItem<int>(
                   value: 1,
                   onTap: () async {
-                    await notifier.deletePage(context, pageId: widget.page.id);
-                    WayaNav.goBack();
+                    await myPageNotifier.deletePage(widget.page.id);
+
+                    WayaNav.goBack(closeOverlays: true);
                   },
                   child: WayaActionNav(
                     context: context,
@@ -110,14 +110,6 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
               ];
             },
           ),
-          /* InkWell(
-            onTap: () => Share.share(
-              WayaValueHelper.getShareableUrl(WayaAppRoutes.getPageDetailsPage(widget.page.id)),
-              subject: 'Share ${widget.page.name}',
-            ),
-            child:  WayaAssets.icons.genSet.moreHorz.svg(fit: BoxFit.none),
-          ),*/
-
           Gap(8)
         ],
       ),
@@ -225,15 +217,22 @@ class _PrivatePageState extends ConsumerState<PrivatePage>
                 //? Our followers.
                 Row(
                   children: [
-                    actionType(
-                      WayaValueHelper.formatNumber(widget.page.followerCount),
-                      'Followers',
+                    InkWell(
+                      onTap: (){
+                        WayaNav.toNamed('/pageFollowerScreen',
+                            arguments: {
+                          'pageId': widget.page.id
+                            });
+                      },
+                      child: actionType(
+                        WayaValueHelper.formatNumber(widget.page.followerCount),
+                        'Followers',
+                      ),
                     ),
 
                     //? This is fine.
                     const Gap(10),
 
-                    //?
                     actionType(
                       WayaValueHelper.formatNumber(viewModel.postCount ?? 0),
                       'Posts',

@@ -18,6 +18,7 @@ import 'package:wayagram/features/donation/view/see_all_pending_donation.dart';
 import 'package:wayagram/features/donation/view/see_all_rejected_donation.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail.dart';
+import 'package:wayagram/features/event/views/event_invite.dart';
 import 'package:wayagram/features/event/views/event_view.dart';
 import 'package:wayagram/features/chat/view/chat.dart';
 import 'package:wayagram/features/explore/views/chat_and_social.dart';
@@ -63,6 +64,7 @@ import 'package:wayagram/features/pages/view/add_team_member.dart';
 import 'package:wayagram/features/pages/view/confirm_page_details.dart';
 import 'package:wayagram/features/pages/view/create_page.dart';
 import 'package:wayagram/features/pages/view/create_page_post.dart';
+import 'package:wayagram/features/pages/view/page_follower.dart';
 import 'package:wayagram/features/pages/view/page_settings.dart';
 import 'package:wayagram/features/pages/view/pages.dart';
 import 'package:wayagram/features/pages/view/public_page.dart';
@@ -115,6 +117,7 @@ import 'package:wayagram/features/shop/seller/views/waya_deals/application_produ
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_deal_ad.dart';
 import 'package:wayagram/features/shop/seller/views/waya_deals/waya_gram_deals.dart';
 import 'package:wayagram/features/shop/views/products_view_page.dart';
+import 'package:wayagram/features/shop/views/seller_shop_products.dart';
 import 'package:wayagram/features/support/views/chat.dart';
 import 'package:wayagram/features/support/views/dispute.dart';
 import 'package:wayagram/features/support/views/request.dart';
@@ -332,6 +335,7 @@ class WayaAppRoutes {
         ChatProfilePage(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route: () => DisplayFeed(),
     GroupSetting.route: () => GroupSetting(),
+    PageFollowerScreen.route: () => PageFollowerScreen(id: WayaNav.search['id'].toString(),),
     AllUpcomingEvents.route: () => AllUpcomingEvents(),
     MediaMoment.route: () => MediaMoment(),
     MyMoments.route: () => MyMoments(),
@@ -411,6 +415,11 @@ class WayaAppRoutes {
           groupId: WayaNav.search['id'].toString(),
           chatId: WayaNav.search['chatId'].toString(),
         ),
+       SellerShopProducts.route: () => SellerShopProducts(
+          vendorId: WayaNav.search['id'].toString(),
+          shopId: WayaNav.search['shopId'].toString(),
+        ),   
+    EventInvite.route: () =>     EventInvite()
   };
 
   /// Helper that shows an example of the generator route pattern with GetX and
@@ -491,6 +500,8 @@ class WayaAppRoutes {
   static String getEventDetailsScreen(String id) =>
       "${EventDetail.route}?id=$id";
 
+
+
   /// Helper that shows an example of the generator route pattern with GetX and
   /// a little bit of hard coded magic.
   static String getContestDetailRoute(String id) =>
@@ -552,6 +563,9 @@ class WayaAppRoutes {
 
     static String getEditPostScreen(String postId, String content, String privacy, String media) =>
       "${EditPost.route}?postId=$postId&privacy=$privacy&initialContent=$content&initialMedia=$media";   
+
+      static String getSellerShopDetailScreen(String vendorId, String shopId) =>
+      "${SellerShopProducts.route}?id=$vendorId&shopId=$shopId";  
 
   /// This is fine.
   static List<GetPage> get getPages {

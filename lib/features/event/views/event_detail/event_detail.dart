@@ -15,6 +15,7 @@ import 'package:wayagram/features/event/bottom_sheets/report_event.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/event/views/event_detail/event_attendees.dart';
 import 'package:wayagram/features/event/views/event_detail/event_detail_widget.dart';
+import 'package:wayagram/features/event/views/event_invite.dart';
 import 'package:wayagram/features/event/vm/event_vm.dart';
 import 'package:wayagram/features/event/views/add_event/add_event.dart';
 import 'package:share_plus/share_plus.dart';
@@ -78,28 +79,29 @@ class _EventDetailState extends ConsumerState<EventDetail> {
     }
 
     bool isTicketSalesActive(EventDoc? event) {
-  if (event?.ticketSalesStartDate == null || event?.ticketSalesEndDate == null) {
-    return false;
-  }
+      if (event?.ticketSalesStartDate == null ||
+          event?.ticketSalesEndDate == null) {
+        return false;
+      }
 
-  final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day);
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
 
-  final start = DateTime(
-    event!.ticketSalesStartDate!.year,
-    event.ticketSalesStartDate!.month,
-    event.ticketSalesStartDate!.day,
-  );
+      final start = DateTime(
+        event!.ticketSalesStartDate!.year,
+        event.ticketSalesStartDate!.month,
+        event.ticketSalesStartDate!.day,
+      );
 
-  final end = DateTime(
-    event.ticketSalesEndDate!.year,
-    event.ticketSalesEndDate!.month,
-    event.ticketSalesEndDate!.day,
-  );
+      final end = DateTime(
+        event.ticketSalesEndDate!.year,
+        event.ticketSalesEndDate!.month,
+        event.ticketSalesEndDate!.day,
+      );
 
-  return (today.isAtSameMomentAs(start) || today.isAfter(start)) &&
-         (today.isAtSameMomentAs(end) || today.isBefore(end));
-}
+      return (today.isAtSameMomentAs(start) || today.isAfter(start)) &&
+          (today.isAtSameMomentAs(end) || today.isBefore(end));
+    }
 
     bool cannotJoin(EventDoc? event) {
       bool maxAttendeehasJoined =
@@ -169,11 +171,17 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                     SizedBox(
                       width: context.width * 0.45,
                       child: WayaButton(
-                        callback: () => Share.share(
+                        callback: () {
+                          WayaNav.toNamed(EventInvite.route,
+                              arguments: event.id);
+                          /**
+                           Share.share(
                           subject: "Share event",
                           WayaValueHelper.getShareableUrl(
                               WayaAppRoutes.getEventDetailsScreen(widget.id)),
-                        ),
+                        )
+                           */
+                        },
                         color: wayaTheme.colorScheme.transparent,
                         border: Border.all(
                             width: 1,
@@ -187,7 +195,7 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                                 color: wayaTheme.colorScheme.customPrimary),
                             const Gap(4),
                             Text(
-                              'Share Event',
+                              'Share Invite',
                               style:
                                   wayaTheme.textTheme.bodyMedium?.wayaCopyWith(
                                 fontWeight: FontWeight.w600,
@@ -203,7 +211,6 @@ class _EventDetailState extends ConsumerState<EventDetail> {
                       width: context.width * 0.45,
                       child: WayaButton(
                         callback: () {
-                       
                           WayaNav.toNamed(AddEvent.route,
                               arguments: viewModel.singleEvent);
                         },
