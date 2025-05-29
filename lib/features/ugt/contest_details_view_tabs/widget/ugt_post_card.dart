@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
+import 'package:wayagram/core/helpers/navigation.dart';
 import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/theme/extension/colors_extension.dart';
 import 'package:wayagram/core/theme/extension/textstyle_extension.dart';
@@ -27,6 +28,7 @@ import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/delete_post_modal.da
 import 'package:wayagram/features/ugt/vm/ugt_contestant_profile_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_post_vm.dart';
 import 'package:wayagram/features/ugt/vm/ugt_voters_contest_detail_vm.dart';
+import 'package:wayagram/shared/features/media/video.dart';
 import 'package:wayagram/shared/features/profile/widget/action_type.dart';
 
 import '../../data/model/ugt_post_model.dart' as contest;
@@ -206,7 +208,12 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                     //just a random id
                     ontap: (String url, MyFullMediaType type) {
                       if (type == MyFullMediaType.image) {
-                        WayaNav.toNamed("/view-media-full-page", arguments: {
+                        WayaNavigationHelper.toImageDetailsScreen(
+                          null,
+                          [url],
+                        );
+
+                        /*  WayaNav.toNamed("/view-media-full-page", arguments: {
                           "url": url,
                           "title": widget.contestApplicant?.contestApplicant
                                   ?.fullName ??
@@ -218,9 +225,16 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                           "discription": widget.post.description,
                           "shareCount": widget.post.shares,
                           "type": MyFullMediaType.image
-                        });
+                        }); */
                       } else {
-                        WayaNav.toNamed("/view-media-full-page", arguments: {
+                        WayaNav.to(
+                          transition: Transition.circularReveal,
+                          WayaVideoDetailScreen(
+                            file: null,
+                            videoUrl: url,
+                          ),
+                        );
+                        /*   WayaNav.toNamed("/view-media-full-page", arguments: {
                           "url": url,
                           "title": widget.contestApplicant?.contestApplicant
                                   ?.fullName ??
@@ -232,7 +246,7 @@ class _UgtPostCardState extends ConsumerState<UgtPostCard> {
                           "discription": widget.post.description,
                           "shareCount": widget.post.shares,
                           "type": MyFullMediaType.video
-                        });
+                        }); */
                       }
                     },
                     mediaUrls: [

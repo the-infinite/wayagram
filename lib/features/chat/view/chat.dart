@@ -99,11 +99,6 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
         //? Since there is something to be seen here.
         final chat = state.chat!;
         final inputController = ChatInputController.instance;
-        final chatUser = chat.other.chatUser;
-        final userStatus = (chatUser?.canSeeOnlineStatus ?? true) ? chatUser?.onlineStatus : ChatUserActivity.offline;
-        final lastSeenText = chatUser?.lastSeen != null && (chatUser?.canSeeLastSeen ?? true)
-            ? "Last seen ${WayaDateHelper.getSocialTimestamp(chat.other.chatUser!.lastSeen).toLowerCase()}"
-            : null;
 
         // Set this up.
         if (!_initialized) {
@@ -155,81 +150,94 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                         onTap: () => WayaNav.toNamed(WayaAppRoutes.getChatProfile(chat.id)),
                         child: ValueListenableBuilder(
                           valueListenable: wayaChatsCache,
-                          builder: (context, redraws, _) => Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            spacing: 5.w,
-                            children: [
-                              // First, the user's profile picture.
-                              ChatProfilePicture(
-                                user: chat.other.userData ?? ConversationState.self,
-                                showActive: chat.chatType != ChatType.group && userStatus == ChatUserActivity.online,
-                                lastSeen: chat.other.chatUser?.lastSeen,
-                                chat: chat,
-                                radius: 16,
-                              ),
+                          builder: (context, redraws, _) {
+                            // Ensure we area always using the most up to date version of this chat.
+                            final chat = wayaChatsCache.getCachedData(widget.chatId) ?? state.chat!;
+                            final chatUser = chat.other.chatUser;
+                            final userStatus = (chatUser?.canSeeOnlineStatus ?? true)
+                                ? chatUser?.onlineStatus
+                                : ChatUserActivity.offline;
+                            final lastSeenText = chatUser?.lastSeen != null && (chatUser?.canSeeLastSeen ?? true)
+                                ? "Last seen ${WayaDateHelper.getSocialTimestamp(chat.other.chatUser!.lastSeen).toLowerCase()}"
+                                : null;
 
-                              // Second, the user's name.
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      //* For the other person's name.
-                                      Text(
-                                        chat.name ??
-                                            chat.other.userData?.fullname ??
-                                            chat.other.chatUser?.displayName ??
-                                            "WayaGram User",
-                                        maxLines: 1,
-                                        style: WayaTextStyles.titleMedium.copyWith(
-                                          fontSize: 15.sp,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
+                            //? This is the correct chat.
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              spacing: 5.w,
+                              children: [
+                                // First, the user's profile picture.
+                                ChatProfilePicture(
+                                  user: chat.other.userData ?? ConversationState.self,
+                                  showActive: chat.chatType != ChatType.group && userStatus == ChatUserActivity.online,
+                                  lastSeen: chat.other.chatUser?.lastSeen,
+                                  chat: chat,
+                                  radius: 16,
+                                ),
 
-                                      //? For the message content...
-                                      if (chat.chatType == ChatType.group)
+                                // Second, the user's name.
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 10),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        //* For the other person's name.
                                         Text(
-                                          "${WayaValueHelper.formatNumber(chat.chatMembers.length)} members",
+                                          chat.name ??
+                                              chat.other.userData?.fullname ??
+                                              chat.other.chatUser?.displayName ??
+                                              "WayaGram User",
                                           maxLines: 1,
                                           style: WayaTextStyles.titleMedium.copyWith(
-                                            fontWeight: FontWeight.normal,
+                                            fontSize: 15.sp,
                                             overflow: TextOverflow.ellipsis,
-                                            color: WayaColors.greyColor500,
-                                            fontSize: 13.sp,
-                                          ),
-                                        )
-                                      else if (userStatus == ChatUserActivity.online)
-                                        Text(
-                                          "Online",
-                                          maxLines: 1,
-                                          style: WayaTextStyles.titleMedium.copyWith(
-                                            fontWeight: FontWeight.normal,
-                                            overflow: TextOverflow.ellipsis,
-                                            color: WayaColors.greyColor500,
-                                            fontSize: 13.sp,
-                                          ),
-                                        )
-                                      else if (lastSeenText != null)
-                                        Text(
-                                          lastSeenText,
-                                          maxLines: 1,
-                                          style: WayaTextStyles.titleMedium.copyWith(
-                                            fontWeight: FontWeight.normal,
-                                            overflow: TextOverflow.ellipsis,
-                                            color: WayaColors.greyColor500,
-                                            fontSize: 13.sp,
                                           ),
                                         ),
-                                    ],
+
+                                        //? For the message content...
+                                        if (chat.chatType == ChatType.group)
+                                          Text(
+                                            "${WayaValueHelper.formatNumber(chat.chatMembers.length)} members",
+                                            maxLines: 1,
+                                            style: WayaTextStyles.titleMedium.copyWith(
+                                              fontWeight: FontWeight.normal,
+                                              overflow: TextOverflow.ellipsis,
+                                              color: WayaColors.greyColor500,
+                                              fontSize: 13.sp,
+                                            ),
+                                          )
+                                        else if (userStatus == ChatUserActivity.online)
+                                          Text(
+                                            "Online",
+                                            maxLines: 1,
+                                            style: WayaTextStyles.titleMedium.copyWith(
+                                              fontWeight: FontWeight.normal,
+                                              overflow: TextOverflow.ellipsis,
+                                              color: WayaColors.greyColor500,
+                                              fontSize: 13.sp,
+                                            ),
+                                          )
+                                        else if (lastSeenText != null)
+                                          Text(
+                                            lastSeenText,
+                                            maxLines: 1,
+                                            style: WayaTextStyles.titleMedium.copyWith(
+                                              fontWeight: FontWeight.normal,
+                                              overflow: TextOverflow.ellipsis,
+                                              color: WayaColors.greyColor500,
+                                              fontSize: 13.sp,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
+                              ],
+                            );
+                          },
                         ),
                       ),
                     ),

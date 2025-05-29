@@ -30,7 +30,8 @@ class FullVideoView extends StatelessWidget {
       title: "View Video",
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Text("View Video", style: WayaTextStyles.headlineMedium.copyWith(color: Colors.white)),
+        title: Text("View Video",
+            style: WayaTextStyles.headlineMedium.copyWith(color: Colors.white)),
         leading: WayaBackButton(
           buttonBackgroundColor: Color(0xff121212),
           arrowColor: Colors.white,
@@ -46,7 +47,8 @@ class FullVideoView extends StatelessWidget {
               PopupMenuItem(
                   value: "download",
                   onTap: () async {
-                    bool hasSaved = await WayaFileHelper.saveNetworkImage(data["url"] ?? "");
+                    bool hasSaved = await WayaFileHelper.saveNetworkVideo(
+                        data["url"] ?? "");
 
                     if (hasSaved) {
                       WayaSnackBar.showToast("image saved", showSuccess: true);
@@ -56,8 +58,12 @@ class FullVideoView extends StatelessWidget {
                       );
                     }
                   },
-                  child: Text("Download Media", style: WayaTextStyles.bodyMedium)),
-              PopupMenuItem(value: "share", child: Text("Share Post Link", style: WayaTextStyles.bodyMedium)),
+                  child:
+                      Text("Download Media", style: WayaTextStyles.bodyMedium)),
+              PopupMenuItem(
+                  value: "share",
+                  child: Text("Share Post Link",
+                      style: WayaTextStyles.bodyMedium)),
             ],
             onSelected: (value) {
               // Handle selection

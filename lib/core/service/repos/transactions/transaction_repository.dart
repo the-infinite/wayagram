@@ -13,4 +13,10 @@ class TransactionRepository extends BaseRepository {
       'wayagram-wallet/api/v2/client/transactions/$transactionId',
     );
   }
+
+  Future<WayaRequestResponse> getTransactionForExport() {
+    return get(
+      'wayagram-wallet/api/v2/client/transactions/export',
+    );
+  }
 }

@@ -22,6 +22,12 @@ class WayaHelpers {
 
     return mimeType ?? 'application/octet-stream';
   }
+  //?using imagePath
+    static String? getContentTypeFromPath(String contentPathUrl) {
+    final mimeType = lookupMimeType(contentPathUrl);
+
+    return mimeType ?? 'application/octet-stream';
+  }
 
   static String formatMetrics(int number) {
     if (number == 0) return "0";

@@ -64,6 +64,7 @@ import 'package:wayagram/features/pages/view/add_team_member.dart';
 import 'package:wayagram/features/pages/view/confirm_page_details.dart';
 import 'package:wayagram/features/pages/view/create_page.dart';
 import 'package:wayagram/features/pages/view/create_page_post.dart';
+import 'package:wayagram/features/pages/view/page_follower.dart';
 import 'package:wayagram/features/pages/view/page_settings.dart';
 import 'package:wayagram/features/pages/view/pages.dart';
 import 'package:wayagram/features/pages/view/public_page.dart';
@@ -335,6 +336,7 @@ class WayaAppRoutes {
         ChatProfilePage(chatId: WayaNav.search['id'].toString()),
     DisplayFeed.route: () => DisplayFeed(),
     GroupSetting.route: () => GroupSetting(),
+    PageFollowerScreen.route: () => PageFollowerScreen(id: WayaNav.search['id'].toString(),),
     AllUpcomingEvents.route: () => AllUpcomingEvents(),
     MediaMoment.route: () => MediaMoment(),
     MyMoments.route: () => MyMoments(),
