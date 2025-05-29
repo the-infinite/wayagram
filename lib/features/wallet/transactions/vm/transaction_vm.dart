@@ -103,7 +103,7 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
   }
 
   Future<void> downloadPdf(String fileName) async {
-    state = state.copyWith(isLoadingSingle: true);
+    state = state.copyWith(isLoading: true);
 
     try {
       //? Request storage permission
@@ -117,42 +117,27 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
 
       //? Make GET request
       final response = await _transactionRepository.getTransactionForExport();
-
-      if (response.statusCode == 200) {
+      //debugPrint('PPDF Size $response');
+     /* if (response.statusCode == 200) {
+        debugPrint('PPDF ${response.data}');
         //? Get directory to save the file
         final directory = await getExternalStorageDirectory(); // Or getApplicationDocumentsDirectory()
         final filePath = '${directory!.path}/$fileName.pdf';
-        final file = File(filePath);
+        //final file = File(filePath);
 
         //? Write PDF bytes to file
-        await file.writeAsBytes(response.data);
+       // await file.writeAsBytes(response.data);
 
-        state = state.copyWith(filePath: filePath);
+       // state = state.copyWith(filePath: filePath);
       } else {
         state = state.copyWith(error: 'Failed to download PDF: ${response.statusCode}');
-      }
+      }*/
     } catch (e) {
       state = state.copyWith(error: 'Error: $e');
     }
   }
 
-  Future<void> getTransactionForExport() async {
-    try {
-      state = state.copyWith(isLoadingSingle: true);
-      final response =
-      await _transactionRepository.getTransactionForExport();
-      if (response.success) {
-        final transaction = TransactionDetail.fromJson(response.data["data"]);
-        log("$transaction");
-        state =
-            state.copyWith(isLoadingSingle: false, transaction: transaction);
-      } else {
-        state = state.copyWith(isLoadingSingle: false);
-      }
-    } catch (e) {
-      state = state.copyWith(isLoadingSingle: false);
-    }
-  }
+
 
   Future<void> verifyTransaction(
       String transactionId, String fundingOption) async {
