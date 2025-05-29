@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/wallet/transactions/vm/transaction_vm.dart';
-import 'package:wayagram/features/wallet/vm/wallet_vm.dart';
 
 class ExportTransaction extends ConsumerStatefulWidget {
   const ExportTransaction({super.key});

@@ -20,7 +20,6 @@ import 'package:wayagram/features/ugt/contest_profiles/contest_profile_stages_se
 import 'package:wayagram/features/ugt/create_contest_post/video_thumbnail_ugt.dart';
 import 'package:wayagram/features/ugt/data/model/contest_contestant_model.dart';
 import 'package:wayagram/features/ugt/data/model/contest_vote_model.dart';
-import 'package:wayagram/features/ugt/my_contest_details/full_video_view.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_details_stage_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/contest_vote_modal.dart';
 import 'package:wayagram/features/ugt/ugt_buttomsheet_modal/successful_modal.dart';
@@ -307,7 +306,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                         isFree: true,
                         model: ContestVoteModel(
 
-                            contestId: contestId ?? "",
+                            contestId: contestId,
                             contestantId: model?.id ?? "",
 
                             hostUserId: model?.contestApplicant?.userId ?? "",
@@ -330,7 +329,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
                       voteFee: list[1].toString(),
                       model: ContestVoteModel(
 
-                          contestId: contestId ?? "",
+                          contestId: contestId,
                           contestantId: model?.id ?? "",
 
                           hostUserId: model?.contestApplicant?.userId ?? "",

@@ -11,7 +11,6 @@ import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/shop/seller/data/model/seller_product_response_model.dart';
 import 'package:wayagram/features/shop/seller/vm/manage_shop_vm.dart';
 import 'package:wayagram/features/shop/seller/vm/seller_products_vm.dart';
-import 'package:wayagram/features/shop/widgets/about_product.dart';
 import 'package:wayagram/features/shop/widgets/products_grid.dart';
 import 'package:wayagram/shared/features/shop/model/default.dart';
 
