@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:wayagram/core/data/local_data_source.dart';
 import 'package:wayagram/features/ugt/data/model/context_for_you_state.dart';
 import 'package:wayagram/features/ugt/data/model/single_contestant_profile.dart';
@@ -80,6 +83,17 @@ class ContestForYou extends StateNotifier<ContextForYouState> {
     } catch (error) {
       return null;
     }
+  }
+  //> generate video preview
+  Future<File?> generateVideoPreview(String videoPath) async {
+    final thumb = await VideoThumbnail.thumbnailFile(
+      video: videoPath,
+      imageFormat: ImageFormat.JPEG,
+      maxHeight: 250,
+      quality: 60,
+    );
+
+    return thumb != null ? File(thumb) : null;
   }
 
   Future<SingleContestProfileBase?> fetchSingleContestantDetails(
