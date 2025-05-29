@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:wayagram/core/theme/extension/colors_extension.dart';
+import 'package:wayagram/core/theme/extension/text_theme_extension.dart';
 //import 'package:wayagram/core/theme/extension/padding_extension.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/shop/seller/data/model/product_response_model.dart';
@@ -9,7 +11,8 @@ class ProductsGrid extends StatelessWidget {
   final List<Product> products;
   final bool isWayaGramDeal;
 
-  const ProductsGrid({super.key, required this.products, this.isWayaGramDeal = false});
+  const ProductsGrid(
+      {super.key, required this.products, this.isWayaGramDeal = false});
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +42,8 @@ class ProductsGrid extends StatelessWidget {
                 Expanded(
                   child: userId == products[i + 1].vendorId
                       ? SellerProductCard(
-                          product: SellerProduct.fromJson(products[i + 1].toJson()),
+                          product:
+                              SellerProduct.fromJson(products[i + 1].toJson()),
                           isExplore: false,
                           sellerProduct: true,
                         )
@@ -72,6 +76,18 @@ class SellerProductGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //final spacing = context.height * 0.02;
+    final wayaTheme = Theme.of(context);
+
+    if (products.isEmpty) {
+      return Align(
+        alignment: Alignment.center,
+        child: Text(
+          "No Product",
+          style: wayaTheme.textTheme.descriptionStyle
+              .copyWith(color: wayaTheme.colorScheme.greyColor400),
+        ),
+      );
+    }
 
     return Column(
       children: [

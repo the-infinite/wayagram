@@ -10,6 +10,7 @@ import 'package:wayagram/core/data/model/new_requirement_model.dart';
 import 'package:wayagram/core/data/model/stage_pref_model.dart';
 import 'package:wayagram/core/helpers/value.dart';
 import 'package:wayagram/core/service/api_service/request_model.dart';
+import 'package:wayagram/core/utils/waya_helpers.dart';
 import 'package:wayagram/core/utils/waya_navigation.dart';
 import 'package:wayagram/core/utils/waya_routes.dart';
 import 'package:wayagram/core/utils/waya_utils.dart';
@@ -174,8 +175,11 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
         profileImageUrl = contestViewModel?.uploadCoverImages ?? "";
       }
     } else {
+      String mimeTypeImage =
+          WayaHelpers.getContentTypeFromPath(state.image) ?? "";
       profileImageUrl = await WayaFileRepository.instance.uploadFile(
         File(state.image),
+        "ugt-image-${Uuid().v4()}.${mimeTypeImage.split("/").last}",
       );
     }
 
@@ -311,10 +315,15 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
   ) async {
     print("Here heeee");
     isLoading.value = true;
-    final imageUrl = await WayaFileRepository.instance
-        .uploadFile(File(imagePath), "ugt-image-${Uuid().v4()}");
-    final videoUrl = await WayaFileRepository.instance
-        .uploadFile(File(videoPath), "ugt-video-${Uuid().v4()}");
+    String mimeTypeImage = WayaHelpers.getContentTypeFromPath(imagePath) ?? "";
+    final imageUrl = await WayaFileRepository.instance.uploadFile(
+        File(imagePath),
+        "ugt-image-${Uuid().v4()}.${mimeTypeImage.split("/").last}");
+
+    String mimeTypeVideo = WayaHelpers.getContentTypeFromPath(videoPath) ?? "";
+    final videoUrl = await WayaFileRepository.instance.uploadFile(
+        File(videoPath),
+        "ugt-video-${Uuid().v4()}.${mimeTypeVideo.split("/").last}");
     var model = ref.read(selectedAppliedContestProvider.notifier).state;
     var map = {
       "profileId": _localDataSource.getUserId().toString(),
@@ -356,13 +365,17 @@ class CreateContestNotifier extends StateNotifier<ContestState> {
     String? videoUrl = oldVideoPath;
 
     if (pickAnotherImage) {
-      imageUrl = await WayaFileRepository.instance
-          .uploadFile(File(imagePath), "ugt-image-${Uuid().v4()}");
+      String mimeTypeImage =
+          WayaHelpers.getContentTypeFromPath(imagePath) ?? "";
+      imageUrl = await WayaFileRepository.instance.uploadFile(File(imagePath),
+          "ugt-image-${Uuid().v4()}.${mimeTypeImage.split("/").last}");
     }
 
     if (pickAnotherVideo) {
-      videoUrl = await WayaFileRepository.instance
-          .uploadFile(File(videoPath), "ugt-video-${Uuid().v4()}");
+      String mimeTypeVideo =
+          WayaHelpers.getContentTypeFromPath(imagePath) ?? "";
+      videoUrl = await WayaFileRepository.instance.uploadFile(File(videoPath),
+          "ugt-video-${Uuid().v4()}.${mimeTypeVideo.split("/").last}");
     }
 
     var model = ref.read(selectedAppliedContestProvider.notifier).state;

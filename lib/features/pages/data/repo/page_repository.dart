@@ -183,8 +183,8 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/follow/following");
   }
 
-  Future<WayaRequestResponse> getFollowers() {
-    return get("$serviceUrl/follow/followers");
+  Future<WayaRequestResponse> getFollowers(String pageId) {
+    return get("$serviceUrl/pages/followers/$pageId");
   }
 
   Future<WayaRequestResponse> createPage(
@@ -282,7 +282,7 @@ class PageRepository extends BaseRepository {
     return get("$serviceUrl/pages/user/followings?page=$page&limit=$limit");
   }
 
-  Future<WayaRequestResponse> getRecommendedPages([int page = 1, int limit = 15]) {
+  Future<WayaRequestResponse> getRecommendedPages([int page = 1, int limit = 1500]) {
     return get("$serviceUrl/pages/recommended?page=$page&limit=$limit");
   }
 

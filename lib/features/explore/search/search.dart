@@ -50,7 +50,7 @@ class _SearchState extends ConsumerState<SearchView> {
   final storage = WayaLocalDataSource.instance;
   List<EventDoc> events = [];
   List<MomentData> moments = [];
-  List<PageModel> pages = [];
+  //List<PageModel> pages = [];
   final Set<String> seenIds = {};
   // Tracks selected services
   Set<String> selectedServices = {};
@@ -60,9 +60,11 @@ class _SearchState extends ConsumerState<SearchView> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(servicesProvider.notifier).getAllUsers();
-      ref.read(createPageProvider.notifier).getRecommendedPages();
+      //ref.read(createPageProvider.notifier).getRecommendedPages();
+      //ref.read(createGroupProvider.notifier).getRecommendedGroups();
+      ref.read(createPageProvider.notifier).getAllPages();
       ref.read(createPollVotingProvider.notifier).getAllPolls(page: 1);
-      ref.read(createGroupProvider.notifier).getRecommendedGroups();
+       ref.read(createGroupProvider.notifier).getRecommendedGroups();
       //> fetch upcoming events
       final upcomingEvents = await ref.read(eventVmProvider.notifier).getEventWithStatus(page: 1, limit: 1000);
       if (upcomingEvents != null) {
@@ -157,7 +159,7 @@ class _SearchState extends ConsumerState<SearchView> {
       query,
     );
 
-    //? Group
+     //? Group
     final filteredGroups = GroupsCache.instance.data.where((group) {
       return group.name.toLowerCase().contains(query.trim().toLowerCase());
     }).toList();
@@ -425,16 +427,19 @@ class _SearchState extends ConsumerState<SearchView> {
         }),
       );
     } else if (service == 'Account' && data is List<UserDetails>) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: data
-            .map((account) => SizedBox(
-                  child: FollowUserWidget(
-                    userId: account.id!,
-                  ),
-                ))
-            .toList(),
-      );
+
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        ListView.builder(
+          itemCount: data.length,
+          shrinkWrap: true,
+          itemBuilder: (context, index) {
+          return SizedBox(
+            child: FollowUserWidget(
+              userId: data[index].id!,
+            ),
+          );
+        }),
+      ]);
     } else if (service == 'Event' && data is List<EventDoc>) {
       return Column(
         crossAxisAlignment: CrossAxisAlignment.start,

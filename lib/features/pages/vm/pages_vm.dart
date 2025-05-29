@@ -15,6 +15,7 @@ import 'package:wayagram/core/theme/theme.dart';
 import 'package:wayagram/core/utils/utils.dart';
 import 'package:wayagram/features/chat/state/default.dart';
 import 'package:wayagram/features/pages/data/model/get_page_member_model.dart';
+import 'package:wayagram/features/pages/data/model/page_follower_model.dart';
 import 'package:wayagram/features/pages/data/model/page_popular_post_model.dart';
 import 'package:wayagram/features/pages/state/page_state.dart';
 import 'package:wayagram/features/pages/data/model/pages_users_follow_model.dart';
@@ -885,6 +886,45 @@ class PageVm extends StateNotifier<PageState> {
     try {
       state = state.copyWith(isLoading: true);
       final response = await _pageRepository.getRecommendedPages();
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PagesUsersFollowModel responseModel = PagesUsersFollowModel.fromJson(response.data);
+        wayaPageCache.cacheAll(responseModel.data?.docs ?? []);
+        state = state.copyWith(recommendedPages: responseModel.data?.docs);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.pages,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+  }
+
+  Future<void> getPageFollowers(String pageId) async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.getFollowers(pageId);
+      state = state.copyWith(isLoading: false);
+      if (response.success) {
+        PageFollowerModel responseModel = PageFollowerModel.fromJson(response.data);
+        state = state.copyWith(pageFollowerDocs: responseModel.data?.docs);
+      }
+    } catch (e) {
+      WayaDebugConsoleController.instance.addException(
+        WayaDebugHelpers.getMessage(e),
+        e,
+        WayaDebugEventModule.groups,
+        WayaDebugHelpers.getStackTrace(e),
+      );
+    } finally {}
+  }
+
+  Future<void> getAllPages() async {
+    try {
+      state = state.copyWith(isLoading: true);
+      final response = await _pageRepository.getAllPagesSearch();
       state = state.copyWith(isLoading: false);
       if (response.success) {
         PagesUsersFollowModel responseModel = PagesUsersFollowModel.fromJson(response.data);
