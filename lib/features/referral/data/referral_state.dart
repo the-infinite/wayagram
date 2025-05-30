@@ -12,6 +12,7 @@ class ReferralState {
   final ReferralCountModel? referralCount;
   final ReferralCountModel? referralEarned;
   final List<ReferralModel> referralList;
+  final List<ReferralModel> referralListCopy;
 
   ReferralState({
     this.page = 1,
@@ -24,6 +25,7 @@ class ReferralState {
     this.referralCount,
     this.referralEarned,
     this.referralList = const [],
+    this.referralListCopy = const [],
   });
 
   ReferralState copyWith({
@@ -37,12 +39,14 @@ class ReferralState {
     ReferralCountModel? referralCount,
     ReferralCountModel? referralEarned,
     List<ReferralModel>? referralList,
+    List<ReferralModel>? referralListCopy,
   }) =>
       ReferralState(
         earned: earned ?? this.earned,
         count: count ?? this.count,
         page: page ?? this.page,
         referralList: referralList ?? this.referralList,
+        referralListCopy: referralListCopy ?? this.referralListCopy,
         referralEarned: referralEarned ?? this.referralEarned,
         referralCount: referralCount ?? this.referralCount,
         isLoading: isLoading ?? this.isLoading,

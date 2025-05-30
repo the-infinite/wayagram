@@ -37,10 +37,19 @@ class _VideoThumbnailState extends State<VideoThumbnail> {
       child: _controller.value.isInitialized
           ? Stack(
               children: [
-                SizedBox(
-                    height: widget.height,
+                FittedBox(
+                  fit: BoxFit.cover,
+                  child: SizedBox(
                     width: widget.width,
-                    child: VideoPlayer(_controller)),
+                    height: widget.height ,
+                    child: VideoPlayer(_controller),
+                  ),
+                ),
+
+                /*   SizedBox(
+                    height: 250,
+                    width: widget.width,
+                    child: VideoPlayer(_controller)), */
                 Center(
                   child: Container(
                     decoration: BoxDecoration(

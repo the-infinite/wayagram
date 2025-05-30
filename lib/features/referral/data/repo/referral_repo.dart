@@ -18,6 +18,6 @@ class ReferralRepo extends BaseRepository {
       {String startDate = "1990-12-31", String endDate = "3021-12-31"}) {
     // /client/referral/users/:profileId?limit=&page=&startDate=&endDate=&isPaid=&isEligible=
     return get(
-        '$serviceUrl/client/referral/users/$profileId?limit=20&page=$page&startDate=$startDate&endDate=$endDate');
+        '$serviceUrl/client/referral/users/$profileId?limit=1000&page=$page&startDate=$startDate&endDate=$endDate');
   }
 }

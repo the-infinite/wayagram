@@ -115,6 +115,7 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
           onPopInvokedWithResult: (popping, _) {
             if (!popping) return;
             inputController.reset();
+            notifier.setInactive();
           },
           child: WayaScaffold(
             isLoading: false,
@@ -327,7 +328,9 @@ class _SingleChatScreenState extends ConsumerState<SingleChatScreen> {
                             Padding(
                               padding: const EdgeInsets.symmetric(horizontal: 40),
                               child: Text(
-                                "Start a conversation with ${chat.other.chatUser?.displayName} by sending the first message",
+                                chat.chatType == ChatType.group
+                                    ? "Start the conversation in ${chat.name ?? "Group Chat"} with your friends!"
+                                    : "Start the conversation with ${chat.other.userData?.fullname ?? chat.other.chatUser?.displayName ?? "WayaGram User"}",
                                 maxLines: 3,
                                 textAlign: TextAlign.center,
                                 style: WayaTextStyles.hintStyle,
