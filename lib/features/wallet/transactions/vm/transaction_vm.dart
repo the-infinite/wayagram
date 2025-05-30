@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:file_saver/file_saver.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
@@ -12,6 +13,7 @@ import 'package:wayagram/features/auth/transaction_pin/data/model/wallet_model.d
 import 'package:wayagram/features/wallet/data/repo/wallet_repository.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_model.dart';
 import 'package:wayagram/features/wallet/transactions/model/transaction_history_state_model.dart';
+import 'package:dio/dio.dart';
 
 class TransactionVm extends StateNotifier<TransactionHistoryState> {
   final TransactionRepository _transactionRepository;
@@ -102,8 +104,9 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
     }
   }
 
+
   Future<void> downloadPdf(String fileName) async {
-    state = state.copyWith(isLoadingSingle: true);
+    state = state.copyWith(isLoading: true);
 
     try {
       //? Request storage permission
@@ -118,14 +121,97 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
       //? Make GET request
       final response = await _transactionRepository.getTransactionForExport();
 
-      if (response.statusCode == 200) {
+      //? Use file_saver to save the PDF
+      /*final filePath = await FileSaver.instance.saveFile(
+        name: '$fileName.pdf',
+        //bytes: response.,
+        ext: 'pdf',
+        mimeType: MimeType.pdf,
+      );*/
+
+      //debugPrint('PPDF Size $response');
+     /* if (response.statusCode == 200) {
+        debugPrint('PPDF ${response.data}');
         //? Get directory to save the file
         final directory = await getExternalStorageDirectory(); // Or getApplicationDocumentsDirectory()
         final filePath = '${directory!.path}/$fileName.pdf';
-        final file = File(filePath);
+        //final file = File(filePath);
 
         //? Write PDF bytes to file
+       // await file.writeAsBytes(response.data);
+
+       // state = state.copyWith(filePath: filePath);
+      } else {
+        state = state.copyWith(error: 'Failed to download PDF: ${response.statusCode}');
+      }*/
+    } catch (e) {
+      state = state.copyWith(error: 'Error: $e');
+    }
+  }
+
+  Future<File> downloadPdfTwo(String fileName) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      // Request storage permission for Android
+      if (Platform.isAndroid) {
+        final status = await Permission.storage.request();
+        if (!status.isGranted) {
+          state = state.copyWith(error: 'Storage permission denied');
+          throw Exception('Storage permission denied');
+        }
+      }
+
+
+      //? Make GET request to fetch PDF
+      final response = await _transactionRepository.getTransactionForExportThree();
+
+      if (response.statusCode == 200) {
+        //? Get temporary directory
+        final dir = await getTemporaryDirectory();
+        //? Create file path
+        final file = File('${dir.path}/$fileName.pdf'); // Added .pdf extension
+        //? Write the bytes
         await file.writeAsBytes(response.data);
+
+        print("PDF saved at: ${file.path}");
+        state = state.copyWith(filePath: file.path, isLoading: false);
+        return file;
+      } else {
+        state = state.copyWith(error: 'Failed to download PDF: ${response.statusCode}', isLoading: false);
+        throw Exception('Failed to download PDF: ${response.statusCode}');
+      }
+    } catch (e) {
+      state = state.copyWith(error: 'Error: $e', isLoading: false);
+      throw Exception('Error downloading PDF: $e');
+    }
+  }
+
+  Future<void> downloadAndSavePdf(String fileName) async {
+    state = state.copyWith(isLoading: true);
+
+    try {
+      //? Request storage permission for Android
+      if (Platform.isAndroid) {
+        final status = await Permission.storage.request();
+        if (!status.isGranted) {
+          state = state.copyWith(error: 'Storage permission denied');
+          return;
+        }
+      }
+
+      //? Make GET request to fetch PDF
+      final response = await  _transactionRepository.getTransactionForExportThree();
+
+      if (response.statusCode == 200) {
+        debugPrint('DOWNLOAD PDF ===> ${response.data}');
+        //? Use file_saver to save the PDF
+        final filePath = await FileSaver.instance.saveFile(
+          name: '$fileName.pdf',
+          bytes: response.data,
+          ext: 'pdf',
+          mimeType: MimeType.pdf,
+        );
 
         state = state.copyWith(filePath: filePath);
       } else {
@@ -136,23 +222,7 @@ class TransactionVm extends StateNotifier<TransactionHistoryState> {
     }
   }
 
-  Future<void> getTransactionForExport() async {
-    try {
-      state = state.copyWith(isLoadingSingle: true);
-      final response =
-      await _transactionRepository.getTransactionForExport();
-      if (response.success) {
-        final transaction = TransactionDetail.fromJson(response.data["data"]);
-        log("$transaction");
-        state =
-            state.copyWith(isLoadingSingle: false, transaction: transaction);
-      } else {
-        state = state.copyWith(isLoadingSingle: false);
-      }
-    } catch (e) {
-      state = state.copyWith(isLoadingSingle: false);
-    }
-  }
+
 
   Future<void> verifyTransaction(
       String transactionId, String fundingOption) async {
