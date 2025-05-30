@@ -88,6 +88,7 @@ class Product extends BaseModel<Product> {
   final String? shopLogo;
   final String categoryName;
   final bool isDeleted;
+  final String? state;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -124,6 +125,7 @@ class Product extends BaseModel<Product> {
       required this.createdAt,
       required this.updatedAt,
       this.vendorId,
+      this.state,
       this.shopRating,
       this.shopLogo});
 
@@ -136,7 +138,8 @@ class Product extends BaseModel<Product> {
         description: json['description'] ?? '',
         price: json['price'],
         stockQuantity: json['stockQuantity'] ?? 0,
-        images: (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
+        images:
+            (json['images'] as List?)?.map((e) => e.toString()).toList() ?? [],
         height: json['height'],
         width: json['width'],
         color: json['color'] ?? '',
@@ -162,6 +165,7 @@ class Product extends BaseModel<Product> {
         updatedAt: DateTime.parse(json['updatedAt'] ?? ''),
         shopRating: json['shopRating'],
         vendorId: json['vendorId'] ?? '',
+state: json['state'] ?? '',
         shopLogo: json['shopLogo']);
   }
 
@@ -200,7 +204,8 @@ class Product extends BaseModel<Product> {
       'categoryName': categoryName,
       'shopRating': shopRating,
       'shopLogo': shopLogo,
-      'vendorId': vendorId
+      'vendorId': vendorId,
+      'state': state
     };
   }
 
@@ -273,7 +278,8 @@ class Product extends BaseModel<Product> {
         condition: condition ?? this.condition,
         wayagramDeal: wayagramDeal ?? this.wayagramDeal,
         dealStatus: dealStatus ?? this.dealStatus,
-        wayagramDealRejectedReason: wayagramDealRejectedReason ?? this.wayagramDealRejectedReason,
+        wayagramDealRejectedReason:
+            wayagramDealRejectedReason ?? this.wayagramDealRejectedReason,
         approve: approve ?? this.approve,
         deliveryCharge: deliveryCharge ?? this.deliveryCharge,
         options: options ?? this.options,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:wayagram/assetsgen/assets.gen.dart';
 import 'package:wayagram/core/components/components.dart';
@@ -19,18 +21,33 @@ import 'package:wayagram/features/referral/vm/referral_vm.dart';
 import 'package:wayagram/features/referral/widget/how_it_works.dart';
 import 'package:wayagram/features/ugt/my_contest_details/upcoming_contest_details.dart';
 
-class ReferralPage extends ConsumerWidget {
+class ReferralPage extends StatefulHookConsumerWidget {
   static const route = '/referral-page';
   const ReferralPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ReferralPage> createState() => _ReferralPageState();
+}
+
+class _ReferralPageState extends ConsumerState<ReferralPage> {
+  @override
+  Widget build(BuildContext context) {
     final viewModel = ref.watch(referralVm);
-    //final notifier = ref.watch(referralVm.notifier);
+    final notifier = ref.watch(referralVm.notifier);
     final shareService = ref.watch(shareProvider);
     final wayaTheme = Theme.of(context);
     String url =
         WayaAppRoutes.getProfileRoute(ConversationState.profile.userId ?? "");
+    useEffect(() {
+      Future.delayed(Duration(seconds: 1), () {
+        notifier.getAllUserReferrals(true);
+        notifier.getReferralCount();
+        notifier.getReferralEarned();
+      });
+
+      return null;
+    }, []);
+
     return WayaScaffold(
       isLoading: false,
       isScrollable: true,
@@ -196,11 +213,15 @@ class ReferralPage extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: wayaTheme.colorScheme.primary500, size: 20,),
+          Icon(
+            icon,
+            color: wayaTheme.colorScheme.primary500,
+            size: 20,
+          ),
           Gap(4),
           Text(label,
-              style: WayaTextStyles.bodyMedium
-                  .copyWith(color: wayaTheme.colorScheme.primary500, fontSize: 14.sp)),
+              style: WayaTextStyles.bodyMedium.copyWith(
+                  color: wayaTheme.colorScheme.primary500, fontSize: 14.sp)),
         ],
       ),
     );

@@ -297,6 +297,7 @@ class GroupNotifier extends ValueNotifier<int> {
     groupType,
     String coverImage,
     String profileImage,
+    String category,
   ) async {
     final coverImageUrl = await WayaFileRepository.instance.uploadFile(File(coverImage));
     final profileImageUrl = await WayaFileRepository.instance.uploadFile(File(profileImage));
@@ -308,7 +309,7 @@ class GroupNotifier extends ValueNotifier<int> {
     }
 
     try {
-      final response = await repo.createGroup(groupName, groupDesc, groupType, coverImageUrl, profileImageUrl);
+      final response = await repo.createGroup(groupName, groupDesc, groupType, coverImageUrl, profileImageUrl, category);
 
       //? If this is fine...
       if (response.success) {

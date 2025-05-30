@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
+import 'package:wayagram/core/data/model/model.dart';
 import 'package:wayagram/features/event/data/model/event_response_model.dart';
 import 'package:wayagram/features/group/data/model/all_group_member_model.dart';
 import 'package:wayagram/features/post/model/get_all_post.dart';
@@ -16,12 +17,14 @@ class GroupState {
   final TextEditingController content;
   late final File? image;
   final bool? hasNextPage;
+  final String category;
   String? profileImage;
   String? coverImage;
   String? name;
   String? desc;
   List<JoinRequestDocs>? docs;
   GetAllPost? allPostData;
+  final List<Select> categories;
   List<GroupModel>? getAllGroups;
   List<EventDoc>? fetchAllEventDocs;
   List<AllGroupMemberDocs>? allGroupMemberDocs;
@@ -62,6 +65,8 @@ class GroupState {
     this.coverImage = '',
     this.name = '',
     this.desc = '',
+    this.category = '',
+    this.categories = const [],
     this.groupPopularPostdocs = const [],
     this.docs = const [],
     this.groupPostdocs = const [],
@@ -82,6 +87,7 @@ class GroupState {
     TextEditingController? username,
     TextEditingController? content,
     bool? hasNextPage,
+    List<Select>? categories,
     List<JoinRequestDocs>? docs,
     List<GroupModel>? getAllGroups,
     List<EventDoc>? fetchAllEventDocs,
@@ -99,6 +105,7 @@ class GroupState {
     bool? isPrivate,
     bool? requireApproval,
     String? foundUserId,
+    String? category,
     String? roleType,
     String? profileImage,
     String? coverImage,
@@ -115,6 +122,8 @@ class GroupState {
       postCount: postCount ?? this.postCount,
       foundUserId: foundUserId ?? this.foundUserId,
       docs: docs ?? this.docs,
+      category: category ?? this.category,
+      categories: categories ?? this.categories,
       groupPopularPostdocs: groupPopularPostdocs ?? this.groupPopularPostdocs,
       getAllPost: getAllPost ?? this.getAllPost,
       getAllGroups: getAllGroups ?? this.getAllGroups,
