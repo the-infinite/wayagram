@@ -149,7 +149,7 @@ class _ContestProfilePageState extends ConsumerState<ContestProfilePage> {
         imageUrl.value = value;
       }); */
       notifier.generateVideoPreview(model?.introVideo ?? "").then((value) {
-        print("image path ${value?.path}");
+       
         imagePath.value = value?.path ?? "";
       });
       return null;

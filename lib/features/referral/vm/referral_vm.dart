@@ -38,6 +38,21 @@ class ReferralVm extends StateNotifier<ReferralState> {
     return _localDataSource.getUserId().toString();
   }
 
+  void filterList(String filterString) {
+    if (filterString.trim().isEmpty) {
+      state = state.copyWith(referralList: [...state.referralListCopy]);
+      return;
+    }
+    var list = state.referralListCopy.where((dispute) {
+      String name = dispute.referredUser?.displayName??"";
+      if (name.contains(filterString)) {
+        return true;
+      }
+      return false;
+    }).toList();
+    state = state.copyWith(referralList: [...list]);
+  }
+
   Future<void> getAllUserReferrals(
     bool isFirst,
   ) async {
@@ -64,12 +79,21 @@ class ReferralVm extends StateNotifier<ReferralState> {
             isLastPage: responseModel.data?.hasNextPage == true ? false : true);
         if (isFirst) {
           state = state.copyWith(
-              referralList: responseModel.data?.docs ?? [], page: 1);
+            referralList: responseModel.data?.docs ?? [],
+            referralListCopy: responseModel.data?.docs ?? [],
+            page: 1,
+          );
         } else {
-          state = state.copyWith(referralList: [
-            ...state.referralList,
-            ...responseModel.data?.docs ?? []
-          ]);
+          state = state.copyWith(
+            referralList: [
+              ...state.referralList,
+              ...responseModel.data?.docs ?? []
+            ],
+            referralListCopy: [
+              ...state.referralList,
+              ...responseModel.data?.docs ?? []
+            ],
+          );
         }
         state = state.copyWith(page: state.page + 1);
         // contestList = responseModel.data?.docs ?? [];
@@ -81,12 +105,11 @@ class ReferralVm extends StateNotifier<ReferralState> {
       debugPrint(e.toString());
     } finally {}
   }
-  void updateStartAndEndDate(String? startDate, String? endDate){
-   state = state.copyWith(startDate: startDate, endDate: endDate);
-}
-}
 
-
+  void updateStartAndEndDate(String? startDate, String? endDate) {
+    state = state.copyWith(startDate: startDate, endDate: endDate);
+  }
+}
 
 final referralVm = StateNotifierProvider<ReferralVm, ReferralState>(
   (ref) {
