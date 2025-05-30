@@ -200,7 +200,7 @@ class DioHttpClient implements WayaHttpClientInterface {
             options: Options(
               headers: {
                 HttpHeaders.acceptEncodingHeader: '*',
-                HttpHeaders.authorizationHeader: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyM2Y0YzU2NS1hYWExLTQ4MDUtYTg2Ny02N2U5NDRlMzM5MzIiLCJlbWFpbCI6ImRpYWxhZGFybGluZ3RvbjFAZ21haWwuY29tIiwidGVtcCI6ZmFsc2UsImlzQWRtaW4iOmZhbHNlLCJhY2NvdW50VHlwZSI6IlBFUlNPTkFMIiwiaXNPd25lciI6ZmFsc2UsImlhdCI6MTc0ODUwNzk2OCwiZXhwIjoxNzQ4NTExNTA4fQ.NEF62WWmaSrpqW6lMF0tkL6ct6YBmpqUaK2fOiTqJx4'
+                HttpHeaders.authorizationHeader: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiIyM2Y0YzU2NS1hYWExLTQ4MDUtYTg2Ny02N2U5NDRlMzM5MzIiLCJlbWFpbCI6ImRpYWxhZGFybGluZ3RvbjFAZ21haWwuY29tIiwidGVtcCI6ZmFsc2UsImlzQWRtaW4iOmZhbHNlLCJhY2NvdW50VHlwZSI6IlBFUlNPTkFMIiwiaXNPd25lciI6ZmFsc2UsImlhdCI6MTc0ODUzMTQ1NSwiZXhwIjoxNzQ4NTM0OTk1fQ.hlSjz1QIAWnU6D63KCzkfdW7Uy-65XLRQsKqhJVwzWE'
               },
             ),
             onReceiveProgress: (count, total) {
